@@ -253,8 +253,9 @@ class CheckpointState:
 def compute_code_hash() -> str:
     """Compute hash of all source files in src/breakout_research."""
     import os
+    src_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'src', 'breakout_research')
     hasher = hashlib.sha256()
-    for root, dirs, files in os.walk('src/breakout_research'):
+    for root, dirs, files in os.walk(src_dir):
         for f in sorted(files):
             if f.endswith('.py'):
                 path = os.path.join(root, f)
