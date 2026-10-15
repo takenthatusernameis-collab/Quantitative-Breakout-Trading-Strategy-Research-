@@ -1,7 +1,7 @@
 {
   "protocol_version": "v1",
   "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
-  "code_hash": "975e52807e5f8a59420fb9e4842d3b7d2613fc075cd27745a9a7da0b99f615c7",
+  "code_hash": "ab984545190a6f4766f110fdc580cd3f43f6547f981c893aa1660d92e8bbcd5a",
   "pilot_completed_at": "2026-10-15T18:27:38.003294+00:00",
   "pilot_passed": true,
   "assets_tested": 1,

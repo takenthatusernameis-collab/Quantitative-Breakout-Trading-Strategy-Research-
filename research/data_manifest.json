@@ -17,7 +17,7 @@
       "provider": "binance",
       "endpoint": "https://api.binance.com/api/v3/klines",
       "interval": "1h",
-      "retrieval_timestamp_utc": "2026-10-15T18:27:37.556373+00:00",
+      "retrieval_timestamp_utc": "2026-10-15T19:00:13.373103+00:00",
       "first_candle_timestamp": 1672531200000,
       "last_candle_timestamp": 1683327600000,
       "expected_candle_count": 3000,
@@ -27,12 +27,30 @@
       "download_attempts": 1,
       "fallback_used": true,
       "fallback_source": "synthetic",
-      "content_hash": "c6bf76d5a592c6f2307907b8d074bf982d39e1983ac804b7bd44f76d85d193ab"
+      "content_hash": "80149db9e68e5f53e5dd89883ee8c127b86cd31ad3cbb0793f81245440003743"
+    },
+    "ETHUSDT": {
+      "symbol": "ETHUSDT",
+      "provider": "binance",
+      "endpoint": "https://api.binance.com/api/v3/klines",
+      "interval": "1h",
+      "retrieval_timestamp_utc": "2026-10-15T19:00:13.341689+00:00",
+      "first_candle_timestamp": 1672531200000,
+      "last_candle_timestamp": 1683327600000,
+      "expected_candle_count": 3000,
+      "observed_candle_count": 3000,
+      "gaps": [],
+      "rejected_rows": 0,
+      "download_attempts": 1,
+      "fallback_used": true,
+      "fallback_source": "synthetic",
+      "content_hash": "ccf2f7b67eb81ec9f3050f7d193515eede5fb282bb65f1a032bbcf111c005365"
     }
   },
   "content_hashes": {
-    "BTCUSDT": "c6bf76d5a592c6f2307907b8d074bf982d39e1983ac804b7bd44f76d85d193ab"
+    "BTCUSDT": "80149db9e68e5f53e5dd89883ee8c127b86cd31ad3cbb0793f81245440003743",
+    "ETHUSDT": "ccf2f7b67eb81ec9f3050f7d193515eede5fb282bb65f1a032bbcf111c005365"
   },
   "notes": "This manifest will be populated as data is retrieved for each asset. Each asset entry will include: first/last valid candle timestamps, expected/observed candle counts, gaps, rejected rows, download attempts, fallback sources used, and content hash of normalized data.",
-  "retrieval_timestamp_utc": "2026-10-15T18:27:37.556401+00:00"
+  "retrieval_timestamp_utc": "2026-10-15T19:00:13.373117+00:00"
 }
