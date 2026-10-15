@@ -1,0 +1,192 @@
+{
+  "protocol_version": "v1",
+  "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+  "created_utc": "2026-10-15T17:10:38Z",
+  "universe": {
+    "source": "coinmarketcap",
+    "endpoint": "https://api.coinmarketcap.com/data-api/v3/cryptocurrency/listing",
+    "snapshot_timestamp_utc": "2026-10-15T17:10:38Z",
+    "eligible_quote": "USDT",
+    "exchange": "binance",
+    "market_type": "spot",
+    "top_n": 20,
+    "min_history_years": 3,
+    "exclusions": [
+      "stablecoins",
+      "wrapped_tokens",
+      "bridged_tokens",
+      "leveraged_tokens",
+      "synthetic_tokens",
+      "derivative_tokens"
+    ],
+    "benchmark_asset": "BTCUSDT",
+    "survivorship_disclaimer": "Current-universe snapshot used; historical point-in-time ranks unavailable. Results have survivorship limitations."
+  },
+  "strategy_grid": {
+    "entry_rule": [
+      "classic_high_breakout",
+      "close_breakout"
+    ],
+    "entry_lookback": [
+      12,
+      24,
+      48,
+      72,
+      120,
+      168,
+      336,
+      720
+    ],
+    "buffer_atr_multiple": [
+      0.0,
+      0.1,
+      0.25
+    ],
+    "confirmation": [
+      "one_close",
+      "two_close"
+    ],
+    "trend_filter": [
+      "none",
+      "asset_ema_168",
+      "asset_ema_24_168",
+      "btc_ema_168"
+    ],
+    "exit": [
+      "channel_12",
+      "channel_24",
+      "channel_48",
+      "atr_trail_1.5",
+      "atr_trail_2.5",
+      "atr_trail_4.0"
+    ],
+    "total_combinations": 2304
+  },
+  "data": {
+    "interval": "1h",
+    "provider": "binance",
+    "endpoint": "https://api.binance.com/api/v3/klines",
+    "max_retries": 3,
+    "backoff_seconds": 5,
+    "rate_limit_per_minute": 1200,
+    "warmup_bars": 720
+  },
+  "costs": {
+    "baseline": {
+      "taker_fee_bps": 10,
+      "slippage_bps": 5
+    },
+    "scenarios": [
+      1.0,
+      2.0,
+      3.0
+    ]
+  },
+  "execution": {
+    "mode": "long_only_cash",
+    "leverage": 1.0,
+    "max_positions_per_asset": 1,
+    "fractional_units": true,
+    "fill_at_next_open": true,
+    "adverse_fill_on_gap": true
+  },
+  "folds": {
+    "development_fraction": 0.8,
+    "holdout_fraction": 0.2,
+    "validation_windows": 4,
+    "window_fractions": [
+      0.4,
+      0.5,
+      0.6,
+      0.7
+    ],
+    "reset_state_between_folds": true
+  },
+  "selection": {
+    "max_candidates_per_asset": 1,
+    "min_trades_total": 30,
+    "min_trades_per_fold": 5,
+    "min_folds_with_min_trades": 3,
+    "positive_net_return_baseline": true,
+    "positive_net_return_2x_costs": true,
+    "positive_folds_required": 3,
+    "median_sharpe_gt_zero": true,
+    "median_sharpe_gt_buyhold": true,
+    "ranking_metric": "median_net_daily_sharpe",
+    "tiebreakers": [
+      "median_net_return",
+      "max_drawdown",
+      "turnover",
+      "config_id"
+    ],
+    "neighbor_analysis": true
+  },
+  "pilot": {
+    "max_configurations": 24,
+    "asset_selection": "highest_ranked_eligible",
+    "config_selection_rule": "cover_all_dimensions"
+  },
+  "metrics": {
+    "gross_total_return": true,
+    "net_total_return": true,
+    "annualized_return": true,
+    "daily_sharpe": true,
+    "max_drawdown": true,
+    "exposure": true,
+    "turnover": true,
+    "trade_count": true,
+    "win_rate": true,
+    "avg_win_loss": true,
+    "profit_factor": true,
+    "fee_slippage_drag": true
+  },
+  "baselines": [
+    "buyhold_asset",
+    "buyhold_btc",
+    "cash",
+    "fixed_breakout_baseline"
+  ],
+  "fixed_breakout_baseline": {
+    "entry_rule": "classic_high_breakout",
+    "entry_lookback": 24,
+    "buffer_atr_multiple": 0.0,
+    "confirmation": "one_close",
+    "trend_filter": "none",
+    "exit": "channel_24"
+  },
+  "status": {
+    "execution": [
+      "NOT_STARTED",
+      "PILOT_RUNNING",
+      "PILOT_PASS",
+      "CAMPAIGN_RUNNING",
+      "CAMPAIGN_PARTIAL",
+      "CAMPAIGN_COMPLETE",
+      "INVALIDATED",
+      "INFRASTRUCTURE_FAILURE",
+      "PERSISTENCE_FAILURE"
+    ],
+    "experiment": [
+      "COMPLETED",
+      "ZERO_TRADE_COMPLETED",
+      "EXCLUDED",
+      "INVALID_DATA",
+      "FAILED",
+      "NOT_RUN"
+    ],
+    "economic": [
+      "NO_CANDIDATE",
+      "INSUFFICIENT_EVIDENCE",
+      "CANDIDATE_PENDING_HOLDOUT",
+      "REJECTED_ON_HOLDOUT",
+      "PROVISIONAL_HISTORICAL_SURVIVAL",
+      "INCONCLUSIVE"
+    ]
+  },
+  "checkpointing": {
+    "batch_size": 50,
+    "atomic_writes": true,
+    "verify_on_resume": true,
+    "max_retries": 3
+  }
+}

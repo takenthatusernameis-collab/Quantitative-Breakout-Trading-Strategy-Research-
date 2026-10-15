@@ -1,0 +1,11 @@
+{
+  "protocol_version": "v1",
+  "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+  "code_hash": "375d99ccd622bdcb4942281848a0cb4009a76009402c62f86d52386d5ba4a7a7",
+  "pilot_completed_at": "2026-10-15T18:03:07.429480+00:00",
+  "pilot_passed": true,
+  "assets_tested": 1,
+  "configs_tested": 24,
+  "total_results": 24,
+  "campaign_authorized": true
+}
