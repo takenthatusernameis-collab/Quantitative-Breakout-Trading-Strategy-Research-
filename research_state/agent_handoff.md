@@ -316,3 +316,48 @@ All open items revalidated against live source at HEAD `63ccb62`:
 - No `test` failures, no unexplained errors; diagnostics ledger reviewed (recent runs informational/historical). Remote persistence of last handoff/prompts verified.
 - Next specific task: begin the full-grid historical campaign in validation-only mode under BRAIN-004/005 for the 18 eligible genuine assets (holdout mode off; frozen candidate gate required before any holdout access). Bounded, resumable, fail-closed; no full campaign claim until it completes.
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+## Authoritative Current Status — 2026-10-16 UTC (~17:05 UTC, HEAD 14c5bd3)
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
+- Local `main` HEAD: `14c5bd317e1083266003b813b8c33b4355195857` == `origin/main` (verified via `git ls-remote origin main`). **Match — remote SHA matches local HEAD.** This session runs inside GitHub Actions run #38934698322 (job `kilo`, workflow `Kilo General Agent Loop`, `GITHUB_ACTIONS=true`, `GITHUB_SHA=e8c6d01`); the run's step 4 already committed+pushed the diagnostics ledger as `14c5bd3`.
+- Worktree: ` M research_state/campaign_authorization.json` (uncommitted timestamp refresh to `authorized: true`, code_hash `03592c4f...`, zero reasons — BRAIN-002 gate passed; to be persisted by the workflow checkpoint via `stage_and_checkpoint`/`persist_checkpoint`). Probe artifact `research/results_manifest.json` (campaign_id=`probe`, empty shards, created by runtime verification) deleted; not committed.
+- Tests: `python3 -m pytest tests/` → **55 passed, exit 0**.
+- Runtime verification: `authorize_campaign()` → `authorized: true`, reasons `[]`, code_hash matches current `compute_code_hash() 03592c4f...`; data manifest has 18 genuine assets (all 26,280 candles, `fallback_used: false`); `ResultStore.reconcile()` returns 0 completed (fresh campaign, no units run yet); legacy `checkpoint.json` stale/untrusted (`completed_records: 81510`, `code_hash ab984545...`) — fails closed, resume derives from manifest-verified shard IDs.
+- Latest Actions runs: #38934698322 `in_progress` (this session, head `e8c6d01`); latest completed #38934126308 cancelled (head `5eda604`, stale code). Diagnostics ledger `research_state/workflow_run_diagnostics.jsonl` has 26 records (last captured 16:47 UTC). Run #38923356926 informational stale-run note retained (not actionable — runs stale code).
+
+## Blocker ledger (revalidated at HEAD 14c5bd3)
+
+| ID | Status | Notes |
+|---|--------|-------|
+| BRAIN-001 — real market data path | `RESOLVED_VERIFIED` | 18 genuine Binance assets via `data-api.binance.vision` failover (`api.binance.com` HTTP 451 → failover HTTP 200); XMRUSDT (3,011 candles) and MATICUSDT (7,883 candles) excluded for insufficient history with recorded reasons. ETHUSDT now genuine (`fallback_used: false`; synthetic entry archived). |
+| BRAIN-002 — independent pilot authorization | `RESOLVED_VERIFIED` | `campaign_authorization.json` `authorized: true`, zero reasons; code_hash `03592c4f...` matches current source; fail-closed validator verified (forged booleans blocked). |
+| BRAIN-003 — final-holdout isolation | `RESOLVED_VERIFIED` | `campaign.run(holdout_enabled=False)` skips the final holdout, writes zero holdout rows; frozen candidate manifest required before any holdout unit executes. Historical exposure `EXPOSED_OR_UNKNOWN`; no frozen candidates yet (no validation results). |
+| BRAIN-004 — deterministic resume | `RESOLVED_VERIFIED` | Manifest-derived resume cursor from verified experiment IDs; checkpoint counters untrusted legacy; crash-injection tests pass; committed at 3dfc559, remote-verified. |
+| BRAIN-005 — bounded durable results | `RESOLVED_VERIFIED` | `ResultStore` + immutable ≤4 MiB JSONL shards + `results_manifest.json` implemented and tested; legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; oversized-row fail-closed tested. Runtime shards/manifest not yet written (no campaign execution yet). |
+| Legacy `research_state/checkpoint.json` | STALE / untrusted | `code_hash ab984545...` does not match current `compute_code_hash() 03592c4f...`; `_verify_stale_checkpoint` fails closed. |
+| Stale Actions runs on old code | Informational, not actionable | Several completed/cancelled runs executed code behind current HEAD; current source passes local suite (55 passed). |
+
+## Brainstorming revalidation (this session)
+
+All open items revalidated against live source at HEAD `14c5bd3`: none is `BRAINSTORMING_REQUIRED`; BRAIN-001..005 all `RESOLVED_VERIFIED`. No new brainstorming item; no root cause was implemented in the same session as a design record (none created this session).
+
+## Session record — 2026-10-16 UTC (~17:05 UTC)
+
+- Timestamp: 2026-10-16T17:05:00Z. Branch: `main`. Base HEAD pre-session: `189d436` (stale relative to live `14c5bd3`); live HEAD `14c5bd3` == remote (verified via `git ls-remote origin main`).
+- Chosen task and why: Session-continuity revalidation (README 2A.A/B/C). All P0 gates already `RESOLVED_VERIFIED` and the campaign is authorized; no item is `BRAINSTORMING_REQUIRED`. Outranked starting the full grid because the full validation campaign cannot complete within this job's remaining budget and is correctly deferred to a later session; instead verified runtime gate-readiness (pilot authorization, store reconcile, manifest provenance) with a bounded, non-artifact-producing probe.
+- Actions taken:
+  1. Refreshed live SHAs: `git rev-parse HEAD` == `git ls-remote origin main` == `14c5bd317e1083266003b813b8c33b4355195857`; worktree clean except uncommitted `campaign_authorization.json`.
+  2. Revalidated all open brainstorming items against live source and run evidence; none `BRAINSTORMING_REQUIRED`.
+  3. Ran `python3 -m pytest tests/` → **55 passed, exit 0**.
+  4. Bounded runtime verification: `authorize_campaign()` → `authorized: true`, zero reasons, code_hash matches current source; 18 genuine assets (all 26,280 candles, `fallback_used: false`); `ResultStore.reconcile()` fresh (0 completed).
+  5. Deleted probe artifact `research/results_manifest.json` (campaign_id=`probe`, empty).
+- Commands/exit statuses: `git rev-parse HEAD` == `git ls-remote origin main` == `14c5bd3...`; `pytest` 55 passed exit 0; probe verification exit 0.
+- Confirmation: no synthetic data accepted as market history; no unchanged retry against a permanent failure; remote SHA matches local HEAD before any persistence claim.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`. No instruction gap; all work followed existing design records and README 2A gates. No quantitative safeguard weakened; at most one prompt change per session respected (none proposed).
+- Persistence status (separate fields, per README 2A.E):
+  - Local changes: `campaign_authorization.json` uncommitted (timestamp refresh); `agent_handoff.md` and `prompt_evolution.md` updated this session — to be persisted by the workflow checkpoint (`stage_and_checkpoint` → `persist_checkpoint` → remote-SHA verification).
+  - Checkpoint reconciliation: legacy `checkpoint.json` treated as untrusted; resume derives from manifest-verified shard IDs; checkpoint not rewritten.
+  - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- Unresolved blockers ranked: (1) legacy checkpoint code-hash mismatch (fails closed; resume from shards, not counters); (2) stale Actions runs on old code (informational only). All P0 gates resolved; none `BRAINSTORMING_REQUIRED`.
+- Next specific task (later session): begin the full-grid validation-mode campaign (`holdout_enabled=False`) on the 18 genuine assets via `CampaignRunner` (BRAIN-004 manifest-derived resume + bounded ≤4 MiB shards, BRAIN-003 holdout skip) to produce first validation results and candidate-freeze evidence; stop at first external blocker; never retry unchanged; claim a full campaign only after it completes.

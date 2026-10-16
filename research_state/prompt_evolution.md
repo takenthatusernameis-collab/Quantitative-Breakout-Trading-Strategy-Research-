@@ -462,3 +462,19 @@ Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` =
 **Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`. All P0 gates revalidated as `RESOLVED_VERIFIED`; no item `BRAINSTORMING_REQUIRED`. Prompt ingestion revalidated (README Section 2A). No instruction gap demonstrated.
 
 **Verification:** `git rev-parse HEAD` = `git ls-remote origin main` = `189d4363c67eac80a8b0ad24d7c19462834718b6`; pytest → 55 passed, exit 0.
+
+## Session prompt review — 2026-10-16 UTC (~17:05 UTC, HEAD 14c5bd3)
+
+Outcome: `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+Triggering evidence: live default-branch SHA `git rev-parse HEAD` == `git ls-remote origin main` == `14c5bd317e1083266003b813b8c33b4355195857` (match). `python3 -m pytest tests/` → 55 passed, exit 0. Bounded runtime verification: `authorize_campaign()` → `authorized: true`, zero reasons, code_hash `03592c4f...` matches current `compute_code_hash()`; data manifest 18 genuine assets (all 26,280 candles, `fallback_used: false`); `ResultStore.reconcile()` fresh (0 completed). All P0 brainstorming items BRAIN-001..005 revalidated at live HEAD: none is `BRAINSTORMING_REQUIRED`; all `RESOLVED_VERIFIED`. The prior handoff block (HEAD `189d436`) was STALE relative to live `14c5bd3`; corrected in this session's `agent_handoff.md`.
+
+Cause classification: no `PROMPT_GAP` demonstrated. The stale-handoff defect was a state-reporting issue, not an instruction gap. README Section 2A already governs revalidation against live source, fail-closed gates, truthful persistence, one bounded task per session, and no same-session implementation of a freshly brainstormed root cause.
+
+Revision summary: none. No README Section 2A change; no prompt revision proposed. No same-session implementation of a freshly brainstormed root cause (none created). No quantitative-method or holdout safeguard touched or weakened.
+
+Expected effect: none (no prompt change). Durable outputs: refreshed `agent_handoff.md` authoritative block at `14c5bd3`; runtime gate-readiness verified; next task documented (full-grid validation campaign in a later session).
+
+Rollback and review rule: N/A (no prompt change). If the full-grid campaign reveals a defect in BRAIN-004/005 runtime wiring, preserve evidence, revise the smallest defective clause, and log a new entry.
+
+Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` == `14c5bd317e1083266003b813b8c33b4355195857`; `python3 -m pytest tests/` → 55 passed exit 0; `authorize_campaign()` → authorized true.
