@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "lane_id": "next-breakout-hypothesis",
+  "status": "DESIGN_DRAFT",
+  "hypothesis_id": "H_RANGE_COMPRESSION_BREAKOUT_V1",
+  "direction": "long-only",
+  "instruments": "Binance spot USDT markets per v1 universe freeze",
+  "signal_time": "completed hourly close",
+  "execution_time": "next candle open (i+1)",
+  "fast_range_lookback": 24,
+  "slow_range_lookback": 168,
+  "max_range_ratio": 0.6,
+  "atr_period": 14,
+  "breakout_reference": "max close of preceding 24 bars",
+  "entry": "close[i] > reference + 0.25 * ATR[i-1] AND range compression condition",
+  "exit": "close below lowest low of preceding 24 bars",
+  "costs": {
+    "baseline_fee_bps_per_side": 10,
+    "baseline_slippage_bps_per_side": 5,
+    "stress_multipliers": [1, 2, 3]
+  },
+  "splits": {"development_pct": 80, "holdout_pct": 20, "validation_folds": [40, 50, 60, 70]},
+  "minimum_history_hours": 26280,
+  "confirmation": "one-close",
+  "filters": {"trend": "none"},
+  "frozen_params": true,
+  "no_historical_performance_claim_until_data_gate": true
+}
