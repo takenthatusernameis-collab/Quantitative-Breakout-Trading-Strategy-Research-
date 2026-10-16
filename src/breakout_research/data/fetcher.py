@@ -22,6 +22,14 @@ DEFAULT_RATE_LIMIT_PER_MINUTE = 1200
 DATASET_HASH_ALGORITHM = "sha256-canonical-hourly-csv-v1"
 DATASET_HEADER = "timestamp,open,high,low,close,volume\n"
 BINANCE_KLINES_ENDPOINT = "https://api.binance.com/api/v3/klines"
+# Binance documents this market-data-only host for public spot REST endpoints.
+# It is an endpoint of the same provider, not a different data provider.
+BINANCE_MARKET_DATA_KLINES_ENDPOINT = "https://data-api.binance.vision/api/v3/klines"
+BINANCE_KLINES_ENDPOINTS = (
+    BINANCE_KLINES_ENDPOINT,
+    BINANCE_MARKET_DATA_KLINES_ENDPOINT,
+)
+ENDPOINT_FAILOVER_STATUS_CODES = frozenset({403, 429, 451, 500, 502, 503, 504})
 
 
 class DataUnavailableError(RuntimeError):
@@ -36,10 +44,23 @@ class DataFetcher:
     RATE_LIMIT_PER_MINUTE = DEFAULT_RATE_LIMIT_PER_MINUTE
     MAX_PAGE_REQUESTS = 1000
 
-    def __init__(self, max_retries: int = 3, backoff_seconds: float = 5.0):
+    def __init__(
+        self,
+        max_retries: int = 3,
+        backoff_seconds: float = 5.0,
+        endpoints: Optional[Tuple[str, ...]] = None,
+    ):
         self.max_retries = max_retries
         self.backoff_seconds = backoff_seconds
         self.session = self._create_session()
+        configured_endpoints = endpoints or (self.BASE_URL, BINANCE_MARKET_DATA_KLINES_ENDPOINT)
+        self.endpoints = tuple(dict.fromkeys(
+            endpoint.rstrip("/") for endpoint in configured_endpoints if endpoint
+        ))
+        if not self.endpoints:
+            raise ValueError("At least one official Binance kline endpoint is required")
+        self.endpoint_used = self.endpoints[0]
+        self.endpoint_failures: List[str] = []
         self.request_count = 0
         self.last_minute = time.time()
 
@@ -77,7 +98,7 @@ class DataFetcher:
         end_time: Optional[int] = None,
         limit: int = MAX_LIMIT,
     ) -> List[List[Any]]:
-        """Fetch one Binance kline page, surfacing HTTP/API errors to the caller."""
+        """Fetch one kline page, fail over only across official Binance endpoints."""
         self._rate_limit()
         params: Dict[str, Any] = {
             "symbol": symbol,
@@ -89,14 +110,45 @@ class DataFetcher:
         if end_time is not None:
             params["endTime"] = int(end_time)
 
-        response = self.session.get(self.BASE_URL, params=params, timeout=30)
-        response.raise_for_status()
-        payload = response.json()
-        if not isinstance(payload, list):
-            raise DataUnavailableError(
-                f"Unexpected Binance response for {symbol}: expected a list of klines"
-            )
-        return payload
+        for index, endpoint in enumerate(self.endpoints):
+            try:
+                response = self.session.get(endpoint, params=params, timeout=30)
+                response.raise_for_status()
+            except requests.HTTPError as exc:
+                response_obj = getattr(exc, "response", None)
+                status_code = getattr(response_obj, "status_code", None)
+                if status_code is None:
+                    status_code = getattr(locals().get("response"), "status_code", None)
+                # Don't hide invalid symbols, malformed requests, or API contract changes.
+                # Rotate endpoints only for access/rate-limit/transient server failures.
+                if status_code not in ENDPOINT_FAILOVER_STATUS_CODES or index == len(self.endpoints) - 1:
+                    raise DataUnavailableError(
+                        f"Binance endpoint {endpoint} failed for {symbol}: HTTP {status_code}"
+                    ) from exc
+                if len(self.endpoint_failures) < 20:
+                    self.endpoint_failures.append(f"{endpoint}: HTTP {status_code}")
+                continue
+            except requests.RequestException as exc:
+                if len(self.endpoint_failures) < 20:
+                    self.endpoint_failures.append(f"{endpoint}: {type(exc).__name__}")
+                if index == len(self.endpoints) - 1:
+                    raise DataUnavailableError(
+                        f"All configured official Binance endpoints failed for {symbol}: "
+                        + "; ".join(self.endpoint_failures[-5:])
+                    ) from exc
+                continue
+
+            payload = response.json()
+            if not isinstance(payload, list):
+                raise DataUnavailableError(
+                    f"Unexpected Binance response for {symbol}: expected a list of klines"
+                )
+            self.endpoint_used = endpoint
+            return payload
+
+        raise DataUnavailableError(
+            f"No configured official Binance endpoint returned data for {symbol}"
+        )
 
     @staticmethod
     def _parse_page(klines: List[List[Any]], symbol: str) -> Tuple[List[int], List[Candle], int]:
@@ -379,6 +431,8 @@ def _new_manifest(spec: Dict[str, Any]) -> Dict[str, Any]:
         "data_source": {
             "provider": "binance",
             "endpoint": BINANCE_KLINES_ENDPOINT,
+            "endpoint_candidates": list(BINANCE_KLINES_ENDPOINTS),
+            "endpoint_policy": "same-provider failover; selected endpoint recorded per asset",
             "interval": "1h",
             "retrieval_timestamp_utc": None,
             "rate_limit_per_minute": data_spec.get("rate_limit_per_minute", DEFAULT_RATE_LIMIT_PER_MINUTE),
@@ -421,6 +475,8 @@ def update_data_manifest(
     dataset_path: Optional[str] = None,
     manifest_path: str = "research/data_manifest.json",
     specification_hash: Optional[str] = None,
+    endpoint: Optional[str] = None,
+    endpoint_failures: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Atomically record provenance, coverage and hashes; do not swallow persistence errors."""
     spec = load_research_spec()
@@ -441,7 +497,8 @@ def update_data_manifest(
     entry = {
         "symbol": asset,
         "provider": "synthetic" if fallback_used else "binance",
-        "endpoint": None if fallback_used else BINANCE_KLINES_ENDPOINT,
+        "endpoint": None if fallback_used else (endpoint or BINANCE_KLINES_ENDPOINT),
+        "endpoint_failures": list(endpoint_failures or []),
         "interval": "1h",
         "specification_hash": specification_hash or spec.get("specification_hash"),
         "retrieval_timestamp_utc": retrieval_time,
@@ -471,7 +528,9 @@ def update_data_manifest(
     manifest["data_source"].update(
         {
             "provider": "binance" if not fallback_used else "synthetic",
-            "endpoint": BINANCE_KLINES_ENDPOINT if not fallback_used else None,
+            "endpoint": (endpoint or BINANCE_KLINES_ENDPOINT) if not fallback_used else None,
+            "endpoint_candidates": list(BINANCE_KLINES_ENDPOINTS),
+            "endpoint_policy": "same-provider failover; selected endpoint recorded per asset",
             "interval": "1h",
             "retrieval_timestamp_utc": retrieval_time,
             "rate_limit_per_minute": spec.get("data", {}).get("rate_limit_per_minute", DEFAULT_RATE_LIMIT_PER_MINUTE),
@@ -698,6 +757,8 @@ def load_or_fetch_asset_data(
             dataset_path=stored_dataset_path,
             manifest_path=str(manifest_file),
             specification_hash=spec.get("specification_hash"),
+            endpoint=getattr(fetcher, "endpoint_used", BINANCE_KLINES_ENDPOINT),
+            endpoint_failures=getattr(fetcher, "endpoint_failures", []),
         )
     except Exception as exc:
         raise DataUnavailableError(
