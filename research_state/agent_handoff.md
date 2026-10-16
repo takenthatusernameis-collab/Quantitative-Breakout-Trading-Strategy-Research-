@@ -39,7 +39,18 @@ Do not begin the large campaign. Do not implement BRAIN-002 through BRAIN-005 in
 - A local commit, a successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
 - Preserve the single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
 
-## Post-merge Actions state refresh — 2026-10-16 09:59 UTC
+## Actions state refresh — 2026-10-16 10:04 UTC (supersedes the prior queue snapshot)
+
+Live GitHub Actions API observations after the prior status note:
+
+- Default branch `main`: `079857f24d2bf51d279c33dd6b743de5cbacb2c0`.
+- Run #5 (`38858495476`) is now `completed / cancelled`, updated at `2026-10-16T10:04:28Z`.
+- A fresh manual dispatch created run #6 (`38884773631`) at `2026-10-16T10:04:25Z`. Its `head_sha` is `079857f24d2bf51d279c33dd6b743de5cbacb2c0`, matching the current default-branch commit. However, its status is still `pending`; the Jobs API returns zero jobs so far. It has not checked out or tested the code yet.
+- Run #4 (`38834456753`) remains `in_progress` against the stale `47c2584309527961b5528ceb563fa5b4771db66f` SHA. The Jobs API still reports the Kilo step in progress. Its log-download attempt returned `BlobNotFound`, and the artifacts API reports zero artifacts. The cause of its unchanged status is unknown; do not state conclusively that it is stalled or safe to terminate based only on these observations.
+- The workflow's single concurrency group is `kilo-repository` with `cancel-in-progress: false`; run #6 appears queued while run #4 holds the slot. The connected tool surface still does not expose workflow-run cancellation/dispatch actions.
+- No code/test/canary result is attached to run #6 yet. Do not treat the matching `head_sha` by itself as proof of checkout or execution.
+
+**Next action:** inspect run #4's live state in the Actions UI and preserve any available recovery material. If it is still active and safe to terminate, cancel run #4 so run #6 can acquire the single concurrency slot. Then verify run #6 starts, confirm its actual checkout SHA and job logs, and review the agent task before accepting any result. Its only intended principal task is BRAIN-001 acceptance (Python compilation; 13 focused provider tests; complete test suite; bounded real-data canary; independent hash/provenance verification). Keep the full research campaign blocked.
 
 This snapshot was recorded after handoff PR #1 was merged as `7021d6c9b69ac61922cdf20dea018aa4f9ded2de`. The following are live API observations, not test-pass claims:
 
