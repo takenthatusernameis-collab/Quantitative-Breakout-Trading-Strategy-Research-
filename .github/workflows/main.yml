@@ -16,6 +16,11 @@ on:
         required: false
         default: "1000"
         type: number
+      diagnostics_only:
+        description: "Collect and verify completed-run diagnostics without starting Kilo"
+        required: false
+        default: false
+        type: boolean
 
 # The repository-scoped token can persist ordinary repository changes, but it
 # cannot authorize changes to GitHub Actions workflow files.
@@ -44,6 +49,16 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
+
+      - name: Test controller progress and diagnostic scanning
+        if: ${{ github.event_name == 'push' || inputs.diagnostics_only == true }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test_venv="$RUNNER_TEMP/controller-tests-venv"
+          python3 -m venv "$test_venv"
+          "$test_venv/bin/python" -m pip install --disable-pip-version-check --no-input pytest
+          "$test_venv/bin/python" -m pytest -q tests/test_controller_progress_accounting.py tests/test_workflow_diagnostics_scanner.py
 
       # Sole durable workflow-level diagnostics collector and ledger writer.
       # Do not add a parallel collector workflow, helper script, or second ledger
@@ -611,6 +626,7 @@ jobs:
           PYTHON
 
       - name: Commit and verify the diagnostics ledger
+        id: persist_diagnostics
         if: always() && steps.collect.outcome == 'success'
         continue-on-error: true
         shell: bash
@@ -678,6 +694,9 @@ jobs:
 
       - name: Run general-purpose Kilo agent loop
         id: kilo
+        # A workflow-file push is a diagnostics/test activation only: never launch
+        # the default 1,000-session worker just because maintainer workflow code changed.
+        if: ${{ github.event_name != 'push' && inputs.diagnostics_only != true }}
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1012,6 +1031,8 @@ jobs:
           retry_count=0
           provider_pressure_streak=0
           project_progress=0
+          session_has_committed_project_changes=0
+          verified_remote_sha=""
           checkpoint_count=0
           persistence_attempts=0
           final_phase="starting"
@@ -1064,6 +1085,7 @@ jobs:
                     fi
                     local_sha="$(git rev-parse HEAD)"
                     if [[ -n "$remote_sha" && "$remote_sha" == "$local_sha" ]]; then
+                      verified_remote_sha="$remote_sha"
                       checkpoint_count=$((checkpoint_count + 1))
                       echo "Verified durable checkpoint ${checkpoint_count} at ${remote_sha}."
                       return 0
@@ -1130,6 +1152,8 @@ jobs:
             local local_head_sha remote_tracking_sha
             checkpoint_failure_kind="validation"
             checkpoint_has_project_changes=0
+            session_has_committed_project_changes=0
+            verified_remote_sha=""
             # Keep workflow definitions maintainer-managed; the standard token cannot
             # authorize workflow-file changes. Remove agent-created workflow files too.
             git restore --source="$base_sha" --staged --worktree -- .github/workflows >/dev/null 2>&1 || true
@@ -1203,7 +1227,13 @@ jobs:
             # outstanding checkpoint that has never been remotely verified.
             local_head_sha="$(git rev-parse HEAD)"
             remote_tracking_sha="$(git rev-parse "origin/$DEFAULT_BRANCH" 2>/dev/null || true)"
-            if (( committed_this_iteration == 1 || pending_persistence_recovery == 1 )) || [[ -z "$remote_tracking_sha" || "$local_head_sha" != "$remote_tracking_sha" ]]; then
+            # A worker may have committed and pushed directly, leaving a clean worktree
+            # and even an updated origin tracking ref. Detect eligible Kilo commits in
+            # the session's base-to-HEAD range, but never credit them before verification.
+            if python3 scripts/controller_progress.py --base-sha "$base_sha" --head-sha "$local_head_sha"; then
+              session_has_committed_project_changes=1
+            fi
+            if (( committed_this_iteration == 1 || pending_persistence_recovery == 1 )) || [[ -z "$remote_tracking_sha" || "$local_head_sha" != "$remote_tracking_sha" || "$local_head_sha" != "$base_sha" ]]; then
               if ! persist_checkpoint; then
                 save_recovery_evidence "$base_sha"
                 checkpoint_failure_kind="persistence"
@@ -1217,9 +1247,14 @@ jobs:
               pending_persistence_recovery=0
               pending_persistence_has_project_changes=0
 
-              if (( checkpoint_has_project_changes == 1 )); then
+              local verified_head_sha
+              verified_head_sha="$(git rev-parse HEAD)"
+              # This is the only path for newly committed progress to be credited:
+              # meaningful net changes, a Kilo-committed change, and an exact remote SHA.
+              if [[ -n "$verified_remote_sha" && "$verified_remote_sha" == "$verified_head_sha" ]] &&
+                python3 scripts/controller_progress.py --base-sha "$base_sha" --head-sha "$verified_head_sha" --verified-remote-sha "$verified_remote_sha"; then
                 project_progress=1
-                echo "Meaningful repository progress checkpoint verified at $(git rev-parse HEAD)."
+                echo "Meaningful repository progress verified at remote SHA ${verified_remote_sha}."
               fi
             fi
             return 0
@@ -1328,7 +1363,7 @@ jobs:
                 if (( rc == 0 )); then failed_sessions=$((failed_sessions + 1)); fi
                 consecutive_failures=$((consecutive_failures + 1))
                 pending_persistence_recovery=1
-                if (( checkpoint_has_project_changes == 1 )); then
+                if (( checkpoint_has_project_changes == 1 || session_has_committed_project_changes == 1 )); then
                   pending_persistence_has_project_changes=1
                 fi
                 last_persistence_failure_session="$agent_index"
@@ -1438,6 +1473,24 @@ jobs:
             exit 1
           fi
 
+      - name: Verify diagnostics-only activation
+        if: ${{ always() && (github.event_name == 'push' || inputs.diagnostics_only == true) }}
+        shell: bash
+        env:
+          COLLECT_OUTCOME: ${{ steps.collect.outcome }}
+          PERSIST_OUTCOME: ${{ steps.persist_diagnostics.outcome }}
+        run: |
+          set -Eeuo pipefail
+          if [[ "$COLLECT_OUTCOME" != "success" ]]; then
+            echo "::error::Diagnostics-only activation did not complete the collector successfully."
+            exit 1
+          fi
+          if [[ "$PERSIST_OUTCOME" != "success" ]]; then
+            echo "::error::Diagnostics-only activation could not verify ledger persistence."
+            exit 1
+          fi
+          echo "Diagnostics-only activation verified: completed-run collection and ledger persistence both succeeded; Kilo was intentionally not started."
+
       # This artifact contains only Git recovery material for interrupted work.
       # Error messages/excerpts are persisted exclusively by the JSONL recorder above.
       - name: Upload recovery artifacts
@@ -1458,6 +1511,10 @@ jobs:
         if: always()
         shell: bash
         env:
+          EVENT_NAME: ${{ github.event_name }}
+          DIAGNOSTICS_ONLY: ${{ inputs.diagnostics_only }}
+          COLLECT_OUTCOME: ${{ steps.collect.outcome }}
+          PERSIST_OUTCOME: ${{ steps.persist_diagnostics.outcome }}
           STARTED: ${{ steps.kilo.outputs.KILO_SESSIONS_STARTED }}
           COMPLETED: ${{ steps.kilo.outputs.KILO_SESSIONS_COMPLETED }}
           FAILED: ${{ steps.kilo.outputs.KILO_FAILED_SESSIONS }}
@@ -1466,5 +1523,9 @@ jobs:
           PHASE: ${{ steps.kilo.outputs.KILO_FINAL_PHASE }}
           DETAIL: ${{ steps.kilo.outputs.KILO_FINAL_DETAIL }}
         run: |
+          if [[ "$EVENT_NAME" == "push" || "$DIAGNOSTICS_ONLY" == "true" ]]; then
+            echo "Diagnostics-only activation: Kilo worker skipped; collector=${COLLECT_OUTCOME:-unknown}; ledger persistence=${PERSIST_OUTCOME:-unknown}."
+            exit 0
+          fi
           echo "Kilo sessions started=${STARTED:-unknown}; completed=${COMPLETED:-unknown}; failed=${FAILED:-unknown}; verified checkpoints=${CHECKPOINTS:-unknown}; meaningful project progress=${PROJECT_PROGRESS:-unknown}."
           echo "Final phase=${PHASE:-unknown}; detail=${DETAIL:-unknown}."
