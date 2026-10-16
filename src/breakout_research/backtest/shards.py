@@ -12,6 +12,7 @@ import json
 import math
 import os
 import tempfile
+from numbers import Integral, Real
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Set, Tuple
@@ -61,8 +62,63 @@ def compute_experiment_id(
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+def _normalize_json_value(value: Any, path: str, non_finite_fields: List[str]) -> Any:
+    """Convert values to strict-JSON-safe primitives without losing metric context."""
+    if value is None or isinstance(value, (str, bool)):
+        return value
+    if isinstance(value, Integral):
+        return int(value)
+    if isinstance(value, Real):
+        number = float(value)
+        if not math.isfinite(number):
+            non_finite_fields.append(path or "$")
+            return None
+        return number
+    if isinstance(value, dict):
+        return {
+            key: _normalize_json_value(
+                child, f"{path}.{key}" if path else str(key), non_finite_fields
+            )
+            for key, child in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [
+            _normalize_json_value(child, f"{path}[{index}]", non_finite_fields)
+            for index, child in enumerate(value)
+        ]
+    return value
+
+
 def serialize_record(record: Dict[str, Any]) -> str:
-    return json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n"
+    """Serialize a result as strict JSONL and explicitly mark non-finite metrics."""
+    non_finite_fields: List[str] = []
+    normalized = _normalize_json_value(record, "", non_finite_fields)
+    if not isinstance(normalized, dict):
+        raise ResultStoreError("Result record must be a JSON object")
+    if non_finite_fields:
+        existing = normalized.get("non_finite_fields", [])
+        if not isinstance(existing, list):
+            existing = []
+        normalized["non_finite_fields"] = sorted(set(existing + non_finite_fields))
+        # Compatibility guard for any caller that still passes old +Infinity
+        # profit-factor output before metric-layer normalization is applied.
+        if "profit_factor" in non_finite_fields and not normalized.get("profit_factor_status"):
+            original_pf = record.get("profit_factor")
+            no_losses = (
+                isinstance(original_pf, Real)
+                and math.isinf(float(original_pf))
+                and float(original_pf) > 0
+                and record.get("trade_count", 0) > 0
+                and record.get("avg_loss") in (None, 0, 0.0)
+            )
+            normalized["profit_factor_status"] = "no_losses" if no_losses else "non_finite"
+    return (
+        json.dumps(
+            normalized, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+            allow_nan=False,
+        )
+        + "\n"
+    )
 
 
 def sha256_file(path: Path) -> str:

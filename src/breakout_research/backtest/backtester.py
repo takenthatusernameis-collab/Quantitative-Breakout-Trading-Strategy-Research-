@@ -1,6 +1,7 @@
 """Backtesting engine."""
 from typing import List, Tuple, Optional, Dict, Any
 from datetime import datetime, timezone
+import math
 import numpy as np
 
 from ..config import (
@@ -66,6 +67,7 @@ def _compute_metrics(equity_curve: List[float], timestamps: List[int],
             'avg_win': None,
             'avg_loss': None,
             'profit_factor': None,
+            'profit_factor_status': 'not_computed',
             'fee_drag': 0.0,
             'slippage_drag': 0.0,
             'turnover': 0.0,
@@ -110,19 +112,32 @@ def _compute_metrics(equity_curve: List[float], timestamps: List[int],
     # Exposure (fraction of bars in position)
     exposure = sum(1 for t in trades if t is not None) / n if n > 0 else 0.0
 
-    # Trade stats
+    # A profit factor with no losing trades is undefined; represent it as null,
+    # with an explicit status instead of a non-standard JSON Infinity.
     if len(trades) > 0:
         winning = [t.net_pnl for t in trades if t.net_pnl > 0]
         losing = [t.net_pnl for t in trades if t.net_pnl < 0]
-        win_rate = len(winning) / len(trades) if trades else 0
+        win_rate = len(winning) / len(trades)
         avg_win = sum(winning) / len(winning) if winning else 0
         avg_loss = sum(losing) / len(losing) if losing else 0
-        profit_factor = sum(winning) / abs(sum(losing)) if losing and abs(sum(losing)) > 0 else float('inf')
+        if not losing:
+            profit_factor = None
+            profit_factor_status = "no_losses"
+        else:
+            total_losses = abs(sum(losing))
+            candidate_profit_factor = sum(winning) / total_losses if total_losses > 0 else float("nan")
+            if total_losses > 0 and math.isfinite(total_losses) and math.isfinite(candidate_profit_factor):
+                profit_factor = candidate_profit_factor
+                profit_factor_status = "finite"
+            else:
+                profit_factor = None
+                profit_factor_status = "non_finite"
     else:
         win_rate = None
         avg_win = None
         avg_loss = None
         profit_factor = None
+        profit_factor_status = "no_trades"
 
     return {
         'gross_total_return': gross_total_return,
@@ -135,6 +150,7 @@ def _compute_metrics(equity_curve: List[float], timestamps: List[int],
         'avg_win': avg_win,
         'avg_loss': avg_loss,
         'profit_factor': profit_factor,
+        'profit_factor_status': profit_factor_status,
         'fee_drag': total_fees / initial_capital if initial_capital > 0 else 0.0,
         'slippage_drag': total_slippage / initial_capital if initial_capital > 0 else 0.0,
         'turnover': total_turnover / initial_capital if initial_capital > 0 else 0.0,
@@ -518,6 +534,7 @@ def run_fold_backtest(candles: List[Candle], config: StrategyConfig,
         avg_win=metrics['avg_win'],
         avg_loss=metrics['avg_loss'],
         profit_factor=metrics['profit_factor'],
+        profit_factor_status=metrics['profit_factor_status'],
         fee_drag=metrics['fee_drag'],
         slippage_drag=metrics['slippage_drag'],
         trades=trades,
