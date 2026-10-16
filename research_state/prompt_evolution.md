@@ -187,3 +187,21 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 **Rollback and review rule:** N/A (no prompt change).
 
 **Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `2dd6a4fda24590444631d2241607fc3e1acda914`; `git status` clean; `py_compile` OK; `pytest tests/` → 20 passed, exit 0; direct curl to Binance klines → HTTP 451 (~0.03s), loader fails closed with `DataUnavailableError`, no synthetic data accepted, `research/data/` absent; direct curl to api.github.com → HTTP 200 (git remote reachable). Stale in-progress Actions run #38891774797 (head `4b721e6`, cancel HTTP 403) may hold the `kilo-repository` concurrency slot. Handoff and prompt-evolution edits for this session committed and pushed below; remote SHA to be re-verified after push.
+
+## Session prompt review — 2026-10-16 UTC (~12:17 UTC)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** live default-branch SHA refreshed to `056723a73d3936976055783c3262a2c133e1e4cc` (one commit ahead of prior `2dd6a4f`; `2dd6a4f` touched only handoff/prompt-evolution state). One live defect was found and fixed: `.github/workflows/main.yml:348` `scan_log_archive()` called `sorted()` on raw `ZipInfo` objects (no `__lt__`), producing `"'<' not supported between instances of 'ZipInfo' and 'ZipInfo'"` and leaving every run with `log_capture_status: unavailable`. Fix commit `53ff09c` sorts by `item.filename`. Verified: old path reproduces the exact `TypeError` in a harness executing the extracted live function against a synthetic multi-entry zip; new path returns `status: scanned` and emits only `.txt` log signals. All prior claims revalidated against live HEAD (`fetcher.py` fail-closed/no synthetic call; `campaign.py` holdout not gated and cursor resets; `pilot.py` self-authorizes; `data_manifest.json` synthetic labels; `checkpoint.json` unreconciled). Live Binance canary → HTTP 451 (~0.07s), loader fails closed. `python3 -m pytest tests/` → 20 passed exit 0; workflow YAML parses cleanly.
+
+**Cause classification:** `IMPLEMENTATION_DEFECT` (localized ZipInfo sort in the diagnostic collector, fixed); `DATA_OR_EXTERNAL_SERVICE` (persistent Binance HTTP 451 egress block, unchanged). No PROMPT_GAP demonstrated; the open structural items (BRAIN-002–005) already have completed designs and are not instruction gaps.
+
+**Revision summary:** none. No README Section 2A change; no quantitative-method safeguard touched or weakened; no prompt revision is proposed. No same-session implementation of a brainstormed root cause occurred.
+
+**Expected effect:** none (no prompt change). The handoff was refreshed to HEAD `056723a`, the log-scan defect was fixed and verified, and the next action is unchanged.
+
+**Rollback and review rule:** N/A (no prompt change). The workflow fix can be rolled back by reverting commit `53ff09c` if it interferes with the diagnostic step; it is a one-line behavioral change confined to `scan_log_archive`.
+
+**Regression scenarios and status:** all P2/P3/P4/P5 regression scenarios remain as previously specified; behavioral tests NOT_RUN. The fixed `scan_log_archive()` behavior is deterministic over archive entry ordering and only reads `.txt` files.
+
+**Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `056723a73d3936976055783c3262a2c133e1e4cc`; `git status` clean; `py_compile` OK; `pytest tests/` → 20 passed, exit 0; direct curl to Binance klines → HTTP 451 (~0.07s), loader fails closed; direct curl to api.github.com → HTTP 200; remote SHA re-verified after push. Stale in-progress Actions run #38891774797 (head `4b721e6`, cancel HTTP 403) may hold the `kilo-repository` concurrency slot.
