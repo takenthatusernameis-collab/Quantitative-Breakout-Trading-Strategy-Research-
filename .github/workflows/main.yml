@@ -53,7 +53,6 @@ jobs:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           # The current run is still in progress during this scan. Its terminal
           # result is collected during the next scheduled/manual activation.
-          COLLECTOR_WORKFLOW_PATH: .github/workflows/no-standalone-collector.yml
         run: |
           set -Eeuo pipefail
           umask 077
@@ -72,7 +71,6 @@ jobs:
 
           REPOSITORY = os.environ["REPOSITORY"]
           TOKEN = os.environ["GITHUB_TOKEN"]
-          COLLECTOR_PATH = os.environ["COLLECTOR_WORKFLOW_PATH"]
           API = f"https://api.github.com/repos/{REPOSITORY}"
           LEDGER = Path("research_state/workflow_run_diagnostics.jsonl")
 
@@ -458,12 +456,6 @@ jobs:
 
           candidates = []
           for run in runs:
-              # Avoid a successful collector run causing a commit every five minutes.
-              # Failed/cancelled runs of the collector itself remain reportable.
-              workflow_path = (run.get("path") or "").split("@", 1)[0]
-              if workflow_path == COLLECTOR_PATH and run.get("conclusion") == "success":
-                  continue
-
               key = run_key(run)
               existing = records.get(key)
 
@@ -927,7 +919,7 @@ jobs:
           idle_timeout="${KILO_IDLE_TIMEOUT_SECONDS:-900}"
           if ! [[ "$idle_timeout" =~ ^[0-9]+$ ]] || (( idle_timeout < 60 )); then idle_timeout=900; fi
 
-          command='First inspect README.md and follow Section 2A; read research_state/agent_handoff.md and research_state/prompt_evolution.md; refresh the live default-branch SHA, latest Actions runs/logs, checkpoint, result/data manifests, and relevant recovery artifacts. Verify prior claims against evidence; then perform one highest-priority, safely bounded task, run relevant tests, verify remote persistence, and update the durable handoff plus prompt-evolution log. Prepare the next specific task for the next agent. Never repeat a permanent failure unchanged, accept synthetic data as market history, weaken frozen research/holdout rules, or claim a fix or push without verification.'
+          command='First inspect README.md and follow Section 2A; read research_state/agent_handoff.md, research_state/prompt_evolution.md, and research_state/workflow_run_diagnostics.jsonl. Review the latest completed-run diagnostic records, prioritizing current unexplained failures and incomplete log captures; verify each against current evidence and do not waste work on historical failures already fixed or not actionable. Refresh the live default-branch SHA, latest Actions runs/logs, checkpoint, result/data manifests, and relevant recovery artifacts. Verify prior claims against evidence; then perform one highest-priority, safely bounded task, run relevant tests, verify remote persistence, and update the durable handoff plus prompt-evolution log. Prepare the next specific task for the next agent. Never repeat a permanent failure unchanged, accept synthetic data as market history, weaken frozen research/holdout rules, or claim a fix or push without verification.'
 
           heartbeat() {
             local heartbeat_sleep_pid=""
