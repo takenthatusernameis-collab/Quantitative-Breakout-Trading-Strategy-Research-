@@ -63,6 +63,7 @@ class DataFetcher:
         if not self.endpoints:
             raise ValueError("At least one official Binance kline endpoint is required")
         self.endpoint_used = self.endpoints[0]
+        self.endpoints_used: List[str] = []
         self.endpoint_failures: List[str] = []
         self.request_count = 0
         self.last_minute = time.time()
@@ -153,6 +154,8 @@ class DataFetcher:
                     f"Unexpected Binance response for {symbol}: expected a list of klines"
                 )
             self.endpoint_used = endpoint
+            if endpoint not in self.endpoints_used:
+                self.endpoints_used.append(endpoint)
             return payload
 
         raise DataUnavailableError(
@@ -486,6 +489,7 @@ def update_data_manifest(
     specification_hash: Optional[str] = None,
     endpoint: Optional[str] = None,
     endpoint_failures: Optional[List[str]] = None,
+    endpoints_used: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Atomically record provenance, coverage and hashes; do not swallow persistence errors."""
     spec = load_research_spec()
@@ -502,11 +506,21 @@ def update_data_manifest(
         else None
     )
     content_hash = compute_content_hash(candles)
+    selected_endpoint = endpoint or BINANCE_KLINES_ENDPOINT
+    selected_endpoints = list(dict.fromkeys(endpoints_used or [selected_endpoint]))
+    if not fallback_used and (
+        selected_endpoint not in BINANCE_KLINES_ENDPOINTS
+        or any(item not in BINANCE_KLINES_ENDPOINTS for item in selected_endpoints)
+    ):
+        raise DataUnavailableError(
+            f"Refusing to manifest unapproved Binance endpoint provenance for {asset}"
+        )
 
     entry = {
         "symbol": asset,
         "provider": "synthetic" if fallback_used else "binance",
-        "endpoint": None if fallback_used else (endpoint or BINANCE_KLINES_ENDPOINT),
+        "endpoint": None if fallback_used else selected_endpoint,
+        "endpoints_used": [] if fallback_used else selected_endpoints,
         "endpoint_failures": list(endpoint_failures or []),
         "interval": "1h",
         "specification_hash": specification_hash or spec.get("specification_hash"),
@@ -623,7 +637,13 @@ def _verified_cache(
         raise DataUnavailableError(
             f"Top-level data manifest specification mismatch for {symbol}"
         )
-    if entry.get("provider") != "binance" or entry.get("endpoint") not in BINANCE_KLINES_ENDPOINTS:
+    endpoints_used = entry.get("endpoints_used", [entry.get("endpoint")])
+    if (
+        entry.get("provider") != "binance"
+        or entry.get("endpoint") not in BINANCE_KLINES_ENDPOINTS
+        or not isinstance(endpoints_used, list)
+        or any(endpoint not in BINANCE_KLINES_ENDPOINTS for endpoint in endpoints_used)
+    ):
         raise DataUnavailableError(
             f"Unapproved or ambiguous data provider/endpoint in cache manifest for {symbol}"
         )
@@ -768,6 +788,7 @@ def load_or_fetch_asset_data(
             specification_hash=spec.get("specification_hash"),
             endpoint=getattr(fetcher, "endpoint_used", BINANCE_KLINES_ENDPOINT),
             endpoint_failures=getattr(fetcher, "endpoint_failures", []),
+            endpoints_used=getattr(fetcher, "endpoints_used", None),
         )
     except Exception as exc:
         raise DataUnavailableError(
