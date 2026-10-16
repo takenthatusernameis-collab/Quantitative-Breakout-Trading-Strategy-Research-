@@ -2,13 +2,13 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-16 UTC (~13:30 UTC)
+## Authoritative Current Status — 2026-10-16 UTC (~13:45 UTC)
 
 **Same-run recovery context:** This is a new Kilo worker session inside the SAME active GitHub Actions run as the previous session (session 21), which ended because bounded remote checkpoint persistence failed. This session does NOT end the workflow; it diagnoses the persistence failure, preserves all local work, and attempted a materially different safe remedy.
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
-- Local `main` HEAD: `6531c4d03718ddd094d8aade0f16456d04d916fe` (rebased `chore(kilo): checkpoint agent session`), on top of remote `87cb46a49a6cfd035fb56fdab9e5434103e67e5c`. `git status` clean; no unstaged changes; branch up to date with `origin/main`.
-- Remote `origin main`: `6531c4d03718ddd094d8aade0f16456d04d916fe` (verified via `git ls-remote origin main`). **Remote SHA matches local HEAD — persistence ACHIEVED for the 3 state commits** (`bfccdcc`, `475130b`, `6531c4d`). 0 local-ahead commits remain on `main`.
+- Local `main` HEAD: `656a4d03923c9144d955f649c1ce9dce9bb6ac7e` (refresh state verification log). `git status` clean; no unstaged changes; branch up to date with `origin/main`.
+- Remote `origin main`: `656a4d03923c9144d955f649c1ce9dce9bb6ac7e` (verified via `git ls-remote origin main`). **Match.** **Remote SHA matches local HEAD — persistence ACHIEVED.** 0 local-ahead commits remain on `main`.
 - **Persistence remedy — CONFIRMED:** the deterministic `PERMISSION_BLOCKER` (GitHub App token lacks `workflows: write`; commit `d1b780b` modifies `.github/workflows/main.yml` and is an ancestor of all prior local commits) could not be cleared by retry. Materially different safe remedy applied: preserved all work on backup branch `backup/local-head-dcbb307-20261016` (contains `d1b780b` + `c8d348d` + `eb19a41` + `dcbb307`, recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`), then rebased the 3 state-only commits onto `87cb46a` (dropping the workflow-only `d1b780b`) and fast-forward pushed `origin/main`. Rollback: `git reset --hard backup/local-head-dcbb307-20261016` restores all original commits; re-attempt `d1b780b` once `workflows` write permission is obtained. History was NOT rewritten destructively — the original chain is preserved on the backup branch.
 - `d1b780b` (ZipInfo `scan_log_archive()` fix, `.github/workflows/main.yml`) remains **unpushed** on `backup/local-head-dcbb307-20261016`: `WAITING_EXTERNAL_INTERVENTION` — requires repository `workflows` write permission or a maintainer apply before it can be pushed to `main`.
 - Network canaries (this session): `api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=2` → **HTTP 451** (~persistent location/egress block, not transient). `api.github.com` reachable; `git push origin main` succeeded (authenticated git operations work).
