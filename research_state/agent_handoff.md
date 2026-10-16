@@ -308,3 +308,11 @@ All open items revalidated against live source at HEAD `63ccb62`:
 - No claim of an untouched holdout unless historical non-use is established; otherwise `EXPOSED_OR_UNKNOWN`.
 - A local commit, successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
 - Preserve single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
+
+## Authoritative Current Status — 2026-10-16 UTC (revalidation, HEAD 189d436)
+
+- Branch `main`: local HEAD `189d4363c67eac80a8b0ad24d7c19462834718b6` == `origin/main` (verified via `git ls-remote origin main`). Worktree clean. Tests: `python3 -m pytest tests/` → **55 passed, exit 0**.
+- All parallel lanes (0,10,20,30,40) remain `COMPLETE`. All P0 brainstorming items BRAIN-001..005 `RESOLVED_VERIFIED`; none is `BRAINSTORMING_REQUIRED`. Shared real-data gate condition now satisfied for all 18 genuinely covered assets; XMRUSDT and MATICUSDT remain excluded for insufficient history with recorded reasons. Campaign authorization `authorized: true` (BRAIN-002). Holdout phase-2 gating verified (BRAIN-003). Deterministic resume + bounded shards verified (BRAIN-004/005). No synthetic market history accepted.
+- No `test` failures, no unexplained errors; diagnostics ledger reviewed (recent runs informational/historical). Remote persistence of last handoff/prompts verified.
+- Next specific task: begin the full-grid historical campaign in validation-only mode under BRAIN-004/005 for the 18 eligible genuine assets (holdout mode off; frozen candidate gate required before any holdout access). Bounded, resumable, fail-closed; no full campaign claim until it completes.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.

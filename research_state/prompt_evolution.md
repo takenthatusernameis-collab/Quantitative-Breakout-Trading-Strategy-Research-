@@ -456,3 +456,9 @@ Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` =
 **Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `bdd5f285cc02369760c5a801aff995f970a327c7`; `pytest tests/` → 55 passed exit 0.
 
 **Next specific task:** Begin the full validation-phase campaign (`holdout_enabled=False`) on the 18 genuine assets via `CampaignRunner` (BRAIN-004 manifest-derived resume + bounded ≤4MiB shards, BRAIN-003 holdout skip) to produce first validation results and candidate freeze evidence; stop and record at first external blocker, never retrying unchanged. Acceptance: tests green exit 0, no synthetic data as market history, `candidate_frozen` manifest only after validation completes, remote SHA re-verified after any commit.
+
+## Session prompt review — 2026-10-16 UTC (revalidation at 189d436)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`. All P0 gates revalidated as `RESOLVED_VERIFIED`; no item `BRAINSTORMING_REQUIRED`. Prompt ingestion revalidated (README Section 2A). No instruction gap demonstrated.
+
+**Verification:** `git rev-parse HEAD` = `git ls-remote origin main` = `189d4363c67eac80a8b0ad24d7c19462834718b6`; pytest → 55 passed, exit 0.
