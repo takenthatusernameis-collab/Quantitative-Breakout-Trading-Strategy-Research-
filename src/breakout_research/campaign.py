@@ -27,8 +27,10 @@ from .backtest.checkpoint import CheckpointManager
 from .backtest.ledger import ResultLedger
 from .backtest.shards import ResultStore, compute_experiment_id
 from .candidate_freeze import load_candidate_manifest, candidate_config_ids, CANDIDATE_MANIFEST_PATH
+from .pilot_gate_validator import load_authorization, authorize_campaign, VALIDATOR_ARTIFACT_PATH
 
 DATA_MANIFEST_PATH = "research/data_manifest.json"
+VALIDATOR_ARTIFACT_PATH = "research_state/campaign_authorization.json"
 PILOT_GATE_PATH = "research_state/pilot_gate.json"
 CHECKPOINT_PATH = "research_state/checkpoint.json"
 SHARD_ROOT = "research/results_shards"
@@ -116,6 +118,7 @@ class CampaignRunner:
         self.holdout_fraction = self.spec['folds']['holdout_fraction']
         self.batch_size = self.spec['checkpointing']['batch_size']
         self.protocol_hash = self.spec['specification_hash']
+        self.code_hash = compute_code_hash()
 
     def _get_fold_bounds(self, candles: List) -> List[tuple]:
         """Calculate fold boundaries (start_time, end_time, fold_index, is_holdout)."""
@@ -171,19 +174,31 @@ class CampaignRunner:
             )
 
     def _verify_pilot_gate(self, protocol_hash: str, code_hash: str) -> None:
-        if not os.path.exists(PILOT_GATE_PATH):
-            raise RuntimeError("Pilot gate not found. Run pilot first.")
+        if not os.path.exists(VALIDATOR_ARTIFACT_PATH):
+            raise RuntimeError("Campaign authorization artifact not found. Run pilot validator first.")
+        try:
+            auth = load_authorization(VALIDATOR_ARTIFACT_PATH)
+        except Exception as exc:
+            raise RuntimeError(f"Failed to load campaign authorization artifact: {exc}") from exc
+        if not auth.get('authorized', False):
+            reasons = auth.get('reasons', [])
+            raise RuntimeError(f"Campaign not authorized by independent validator: {reasons}")
+        if auth.get('specification_hash') != protocol_hash:
+            raise RuntimeError("Specification hash mismatch. Authorization from different protocol version.")
+        if auth.get('code_hash') != code_hash:
+            raise RuntimeError("Code hash mismatch. Code has changed since authorization.")
+        try:
+            current_auth = authorize_campaign()
+            if not current_auth.get('authorized', False):
+                raise RuntimeError("Campaign authorization is stale or invalid after revalidation")
+            if current_auth.get('evidence_digest') != auth.get('evidence_digest'):
+                raise RuntimeError("Campaign authorization evidence digest changed after revalidation")
+        except Exception as exc:
+            msg = str(exc)
+            if "stale or invalid" in msg or "evidence digest changed" in msg:
+                raise
+            raise RuntimeError(f"Campaign authorization revalidation failed: {exc}") from exc
 
-        pilot_gate = _read_json_file(PILOT_GATE_PATH)
-
-        if not pilot_gate.get('campaign_authorized', False):
-            raise RuntimeError("Campaign not authorized by pilot gate.")
-
-        if pilot_gate.get('specification_hash') != protocol_hash:
-            raise RuntimeError("Specification hash mismatch. Pilot gate from different protocol version.")
-
-        if pilot_gate.get('code_hash') != code_hash:
-            raise RuntimeError("Code hash mismatch. Code has changed since pilot.")
 
     def _new_checkpoint_state(self, code_hash: str, completed_records: int,
                               next_unit: Dict[str, Any], asset_index: int = 0,

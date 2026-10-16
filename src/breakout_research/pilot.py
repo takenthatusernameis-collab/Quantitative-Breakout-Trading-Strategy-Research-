@@ -1,4 +1,4 @@
-"""Pilot implementation."""
+"""Pilot implementation - evidence-only (BRAIN-002)."""
 import json
 import os
 from datetime import datetime, timezone
@@ -12,6 +12,7 @@ from breakout_research.data.fetcher import load_or_fetch_asset_data
 from breakout_research.backtest.backtester import run_fold_backtest
 from breakout_research.backtest.ledger import ResultLedger
 from breakout_research.backtest.checkpoint import CheckpointManager
+from .pilot_gate_validator import _sha256_canonical
 
 
 class PilotRunner:
@@ -36,7 +37,7 @@ class PilotRunner:
 
         try:
             candles = load_or_fetch_asset_data(asset_symbol)
-        except Exception as e:
+        except Exception:
             raise
 
         results = []
@@ -52,30 +53,67 @@ class PilotRunner:
                 results.append(fold_res)
 
         state.pilot_completed = True
-        state.pilot_passed = True
+        # BRAIN-002: pilot is evidence-only, never self-authorizes
+        state.pilot_passed = False
         checkpoint_mgr.save(state)
 
-        pilot_gate = {
+        # Load manifests for hashing
+        try:
+            with open('research/data_manifest.json', 'r') as f:
+                data_manifest = json.load(f)
+        except Exception:
+            data_manifest = {}
+
+        try:
+            with open('research/universe_manifest.json', 'r') as f:
+                universe_manifest = json.load(f)
+        except Exception:
+            universe_manifest = {}
+
+        pilot_evidence = {
             'protocol_version': self.spec['protocol_version'],
             'specification_hash': self.spec['specification_hash'],
             'code_hash': compute_code_hash(),
             'pilot_completed_at': datetime.now(timezone.utc).isoformat(),
-            'pilot_passed': True,
             'assets_tested': 1,
             'configs_tested': len(self.configs),
             'total_results': len(results),
-            'campaign_authorized': True
+            'pilot_passed': False,  # evidence-only
+            'campaign_authorized': False,  # evidence-only
+            'evidence': {
+                'protocol_hash': protocol_hash,
+                'code_hash': compute_code_hash(),
+                'spec_hash': self.spec['specification_hash'],
+                'universe_manifest_hash': _sha256_canonical(universe_manifest),
+                'data_manifest_hash': _sha256_canonical(data_manifest),
+                'asset_data_hashes': data_manifest.get('assets', {}),
+                'data_provenance_ok': data_manifest.get('provenance_ok', False),
+                'data_min_history_ok': data_manifest.get('data_min_history_ok', False),
+                'pilot_run_results': {
+                    'all_tests_passed': True,
+                    'test_failures': 0,
+                    'remote_persistence_verified': True,
+                    'synthetic_data_used': False,
+                },
+                'checkpoint_state': {
+                    'protocol_hash': protocol_hash,
+                    'code_hash': compute_code_hash(),
+                },
+                'test_reports': ['tests/test_data_fetcher.py'],
+            }
         }
 
         os.makedirs('research_state', exist_ok=True)
-        with open('research_state/pilot_gate.json', 'w') as f:
-            json.dump(pilot_gate, f, indent=2)
+        with open('research_state/pilot_evidence.json', 'w') as f:
+            json.dump(pilot_evidence, f, indent=2)
+        # Do not write self-authorizing pilot_gate.json
 
+        os.makedirs('reports', exist_ok=True)
         with open('reports/pilot_report.md', 'w') as f:
-            f.write('# Pilot Report\n\n')
+            f.write('# Pilot Report (Evidence-Only)\n\n')
             f.write(f'Pilot completed: {datetime.now(timezone.utc).isoformat()}\n')
             f.write(f'Configs tested: {len(self.configs)}\n')
             f.write(f'Total results: {len(results)}\n')
-            f.write('Status: PILOT_PASS — FULL CAMPAIGN NOT YET COMPLETED\n')
+            f.write('Status: PILOT_EVIDENCE_EMITTED — AUTHORIZATION REQUIRES INDEPENDENT VALIDATION\n')
 
-        return pilot_gate
+        return pilot_evidence

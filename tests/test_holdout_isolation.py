@@ -20,6 +20,7 @@ from breakout_research.config import (
     CostScenario,
 )
 from breakout_research.data.fetcher import HOUR_MS
+import breakout_research.pilot_gate_validator as pilot_gate_validator
 
 SHARD_ROOT = "research/results_shards"
 MANIFEST_PATH = "research/results_manifest.json"
@@ -87,6 +88,71 @@ EXPECTED_VALIDATION_UNITS = 1 * 2 * 4 * 1  # asset x configs x validation folds 
 EXPECTED_HOLDOUT_UNITS = 1 * 1 * 1  # asset x frozen candidates x costs
 
 
+def _data_manifest_with_provenance(spec_hash, assets):
+    """Provenance-complete manifest: required by the BRAIN-002 startup gate."""
+    return {
+        "spec_hash": spec_hash,
+        "provenance_ok": True,
+        "data_min_history_ok": True,
+        "assets": {
+            symbol: {
+                **entry,
+                "fallback_used": False,
+                "fallback_source": "real",
+                "spec_hash": spec_hash,
+            }
+            for symbol, entry in assets.items()
+        },
+    }
+
+
+def _write_valid_authorization_env(tmp_path, spec, universe, data_manifest,
+                                   code_hash="test-code-hash"):
+    """Write evidence-only pilot evidence and the independent authorization artifact.
+
+    Mirrors the production BRAIN-002 contract: the pilot never self-authorizes
+    and a separate validator produces the artifact that campaign startup
+    revalidates before any experiment executes.
+    """
+    pilot = {
+        "protocol_version": spec["protocol_version"],
+        "specification_hash": spec["specification_hash"],
+        "code_hash": code_hash,
+        "pilot_completed_at": "2026-01-01T00:00:00+00:00",
+        "assets_tested": len(universe.get("eligible_assets", [])),
+        "configs_tested": len(CFGS),
+        "total_results": len(universe.get("eligible_assets", [])) * len(CFGS),
+        "pilot_passed": False,
+        "campaign_authorized": False,
+        "evidence": {
+            "protocol_hash": spec["specification_hash"],
+            "code_hash": code_hash,
+            "spec_hash": spec["specification_hash"],
+            "universe_manifest_hash": pilot_gate_validator._sha256_canonical(universe),
+            "data_manifest_hash": pilot_gate_validator._sha256_canonical(data_manifest),
+            "asset_data_hashes": {
+                symbol: entry.get("content_hash")
+                for symbol, entry in data_manifest.get("assets", {}).items()
+            },
+            "data_provenance_ok": True,
+            "data_min_history_ok": True,
+            "pilot_run_results": {
+                "all_tests_passed": True,
+                "test_failures": 0,
+                "remote_persistence_verified": True,
+                "synthetic_data_used": False,
+            },
+            "checkpoint_state": {
+                "protocol_hash": spec["specification_hash"],
+                "code_hash": code_hash,
+            },
+            "test_reports": ["tests/test_data_fetcher.py"],
+        },
+    }
+    _write(tmp_path / "research_state/pilot_evidence.json", pilot)
+    pilot_gate_validator.authorize_campaign()
+
+
 def _write(path: Path, obj):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -102,14 +168,11 @@ def _build_runner(tmp_path, monkeypatch, write_candidate_manifest=True):
     _write(tmp_path / "configs/research_v1.json", SPEC)
     _write(tmp_path / "research/universe_manifest.json", UNIVERSE)
     _write(tmp_path / "research/config_manifest.json", CONFIG_MANIFEST)
-    _write(tmp_path / "research/data_manifest.json", {
-        "assets": {"BTCUSDT": {"content_hash": "data-hash-btc"}},
+    data_manifest = _data_manifest_with_provenance(SPEC["specification_hash"], {
+        "BTCUSDT": {"content_hash": "data-hash-btc-0123456789abcdef"},
     })
-    _write(tmp_path / "research_state/pilot_gate.json", {
-        "campaign_authorized": True,
-        "specification_hash": SPEC["specification_hash"],
-        "code_hash": "test-code-hash",
-    })
+    _write(tmp_path / "research/data_manifest.json", data_manifest)
+    _write_valid_authorization_env(tmp_path, SPEC, UNIVERSE, data_manifest)
 
     if write_candidate_manifest:
         save_candidate_manifest({

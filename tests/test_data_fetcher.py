@@ -9,6 +9,7 @@ from breakout_research.config import Candle
 from types import SimpleNamespace
 
 import breakout_research.campaign as campaign_module
+import breakout_research.pilot_gate_validator as pilot_gate_validator
 from breakout_research.data import fetcher as fetcher_module
 from breakout_research.data.fetcher import (
     BINANCE_KLINES_ENDPOINT,
@@ -64,6 +65,92 @@ def tiny_spec():
 
 
 
+def _write_valid_authorization_env(tmp_path, symbol, code_hash="test-code-hash"):
+    """Evidence-only pilot evidence + independent authorization artifact.
+
+    Campaign startup now fail-closes on the BRAIN-002 validator; these fixtures
+    establish a valid authorization environment so the data-hard-stop tests
+    exercise the asset/BTC checks rather than the gate.
+    """
+    spec = {
+        "protocol_version": "v1",
+        "specification_hash": "test-spec",
+        "data": {"interval": "1h", "max_retries": 1, "backoff_seconds": 0},
+        "folds": {"validation_windows": 4, "window_fractions": [0.4, 0.5, 0.6, 0.7]},
+        "costs": {"scenarios": [1.0]},
+        "checkpointing": {"batch_size": 10},
+    }
+    universe = {
+        "protocol_version": "v1",
+        "specification_hash": "test-spec",
+        "eligible_assets": [{"symbol": symbol, "rank": 1}],
+    }
+    data_manifest = {
+        "spec_hash": "test-spec",
+        "provenance_ok": True,
+        "data_min_history_ok": True,
+        "assets": {
+            symbol: {
+                "content_hash": "data-hash-" + symbol,
+                "fallback_used": False,
+                "fallback_source": "real",
+                "spec_hash": "test-spec",
+            }
+        },
+    }
+    pilot = {
+        "protocol_version": spec["protocol_version"],
+        "specification_hash": spec["specification_hash"],
+        "code_hash": code_hash,
+        "pilot_completed_at": "2026-01-01T00:00:00+00:00",
+        "assets_tested": 1,
+        "configs_tested": 24,
+        "total_results": 24,
+        "pilot_passed": False,
+        "campaign_authorized": False,
+        "evidence": {
+            "protocol_hash": spec["specification_hash"],
+            "code_hash": code_hash,
+            "spec_hash": spec["specification_hash"],
+            "universe_manifest_hash": pilot_gate_validator._sha256_canonical(universe),
+            "data_manifest_hash": pilot_gate_validator._sha256_canonical(data_manifest),
+            "asset_data_hashes": {
+                s: e.get("content_hash") for s, e in data_manifest["assets"].items()
+            },
+            "data_provenance_ok": True,
+            "data_min_history_ok": True,
+            "pilot_run_results": {
+                "all_tests_passed": True,
+                "test_failures": 0,
+                "remote_persistence_verified": True,
+                "synthetic_data_used": False,
+            },
+            "checkpoint_state": {
+                "protocol_hash": spec["specification_hash"],
+                "code_hash": code_hash,
+            },
+            "test_reports": ["tests/test_data_fetcher.py"],
+        },
+    }
+    (tmp_path / "research_state").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "research_state/pilot_evidence.json").write_text(
+        json.dumps(pilot, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    (tmp_path / "research").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "research/universe_manifest.json").write_text(
+        json.dumps(universe, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    (tmp_path / "configs").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "configs/research_v1.json").write_text(
+        json.dumps(spec, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    (tmp_path / "research/data_manifest.json").write_text(
+        json.dumps(data_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    pilot_gate_validator.authorize_campaign()
+    return spec, universe, data_manifest
+
+
 def _prepare_campaign_runner(tmp_path, monkeypatch, symbol="OTHERUSDT", loader=None):
     monkeypatch.chdir(tmp_path)
     state = SimpleNamespace(
@@ -93,19 +180,9 @@ def _prepare_campaign_runner(tmp_path, monkeypatch, symbol="OTHERUSDT", loader=N
 
     research_state = tmp_path / "research_state"
     research_state.mkdir()
-    (research_state / "pilot_gate.json").write_text(
-        json.dumps({
-            "campaign_authorized": True,
-            "specification_hash": "test-spec",
-            "code_hash": "test-code-hash",
-        }),
-        encoding="utf-8",
-    )
     research_dir = tmp_path / "research"
     research_dir.mkdir()
-    (research_dir / "data_manifest.json").write_text(
-        json.dumps({"assets": {}}), encoding="utf-8"
-    )
+    _write_valid_authorization_env(tmp_path, symbol)
 
     runner = campaign_module.CampaignRunner.__new__(campaign_module.CampaignRunner)
     runner.protocol_hash = "test-spec"
