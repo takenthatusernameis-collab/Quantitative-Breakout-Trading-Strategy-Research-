@@ -231,7 +231,7 @@
       "market_cap_usd": 10233749732,
       "name": "Monero",
       "binance_spot_verified": true,
-      "exclusion_reason": null
+      "exclusion_reason": "insufficient_hourly_history: observed 3011 candles, required 26280 (3-year minimum)"
     },
     {
       "rank": 18,
@@ -249,7 +249,7 @@
       "market_cap_usd": 3200000000,
       "name": "Polygon",
       "binance_spot_verified": true,
-      "exclusion_reason": null
+      "exclusion_reason": "insufficient_hourly_history: observed 7883 candles, required 26280 (3-year minimum)"
     },
     {
       "rank": 20,

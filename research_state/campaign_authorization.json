@@ -1,19 +1,13 @@
 {
   "schema_version": 1,
-  "authorized_at_utc": "2026-10-16T16:04:26.422910+00:00",
-  "authorized": false,
+  "authorized_at_utc": "2026-10-16T16:16:06.749548+00:00",
+  "authorized": true,
   "protocol_version": "v1",
   "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
   "code_hash": "03592c4f93597cd26036f10e4019c64074388ff364673575a77ed1c08a057c1f",
   "pilot_evidence_path": "research_state/pilot_evidence.json",
   "validator_version": "brain-002-v1",
-  "evidence_digest": "59d81c262337d39c865c0abff22e693691a412780f26191c7714e3448188dd4a",
-  "reasons": [
-    "asset ETHUSDT has fallback_used=true (synthetic provenance)",
-    "asset ETHUSDT fallback_source=synthetic",
-    "data_manifest.data_min_history_ok is not true",
-    "evidence.data_provenance_ok is false",
-    "evidence.data_min_history_ok is false"
-  ],
+  "evidence_digest": "a4c147e1fba95078112f5dc4894281bad30d21d62bc22982633f862bb499aeb3",
+  "reasons": [],
   "legacy_pilot_gate_present": true
 }

@@ -243,4 +243,61 @@ All open items revalidated against live source at HEAD `25714c7`:
   - Checkpoint reconciliation: legacy `checkpoint.json` treated as untrusted (code-hash mismatch vs. current source); resume derives from manifest-verified shard IDs; checkpoint not rewritten.
   - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
 - Unresolved blockers ranked: (1) per-asset genuine data acquisition for ranks 2–20 (BNBUSDT…ATOMUSDT; bounded fetches via `data-api.binance.vision` failover; required to unblock BRAIN-002 authorization); (2) BRAIN-002 end-to-end authorization pass once all 20 assets have genuine data (re-run pilot + validator → `campaign_authorization.json` `authorized: true`); (3) legacy checkpoint code-hash mismatch (fails closed; resume from shards, not counters); (4) pilot evidence self-reported booleans (known limitation; validator gates on manifest provenance instead).
-- Next specific task: Per-asset genuine data acquisition for the remaining 19 universe assets (ranks 2–20) through the production `load_or_fetch_asset_data` path (same-provider failover `api.binance.com` → `data-api.binance.vision`), updating `research/data_manifest.json` with `fallback_used: false`, `provenance_ok: true`, `data_min_history_ok: true`, content hashes, and per-asset coverage; then re-run the BRAIN-002 validator to confirm `campaign_authorization.json` flips to `authorized: true`. Acceptance: validator returns `authorized: true` with zero reasons; all 20 manifest assets genuine; `git ls-remote origin main` verified after commit/push. Only then is the campaign gate passed and full execution under BRAIN-004/005 authorized.
+## Authoritative Current Status — 2026-10-16 UTC (~16:10 UTC, post-data-acquisition)
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
+- Local `main` HEAD: `63ccb6297a1ebb7d4688a80074eacc0ca06e5ffb` (pre-commit). Remote `origin main`: `63ccb6297a1ebb7d4688a80074eacc0ca06e5ffb` (verified via `git ls-remote origin main`). **Match — remote SHA matches local HEAD.**
+- Worktree has modified but uncommitted state files: `research/data_manifest.json`, `research/universe_manifest.json`, `research_state/pilot_evidence.json`, `research_state/campaign_authorization.json`, plus this handoff and `prompt_evolution.md`. To be committed and pushed (contents write; no workflow files) with remote SHA verification after push.
+- Untracked: `research/data/candles/` (18 content-addressed CSVs, reproducible from endpoint + content hash; deliberately not committed per spec §8).
+- Tests: `python3 -m pytest tests/` → **55 passed, exit 0**.
+
+## Blocker ledger (revalidated at HEAD 63ccb62)
+
+| ID | Status | Notes |
+|---|--------|-------|
+| BRAIN-001 — real market data path | `RESOLVED_VERIFIED` | 18 of 20 universe assets have genuine Binance data via `data-api.binance.vision` failover (api.binance.com HTTP 451 → failover HTTP 200). All manifest entries `fallback_used: false`; ETHUSDT synthetic entry archived to `invalidated_prior_entries`. XMRUSDT (3,011 candles) and MATICUSDT (7,883 candles) lack the 3-year (26,280-candle) minimum — excluded with recorded observation counts per frozen protocol, not replaced or given shorter history. |
+| BRAIN-002 — independent pilot authorization | `RESOLVED_VERIFIED` (gate passed) | `authorize_campaign()` → `authorized: true`, zero reasons. Pilot is evidence-only (`pilot_passed: false`, writes `pilot_evidence.json`, not `pilot_gate.json`). Campaign authorization gate now PASSED. |
+| BRAIN-003 — final-holdout isolation | `RESOLVED_VERIFIED` | Validation skips holdout, zero holdout rows; frozen candidate manifest required for holdout mode. Historical exposure `EXPOSED_OR_UNKNOWN`; no frozen candidates yet (no validation results). |
+| BRAIN-004 — deterministic resume | `RESOLVED_VERIFIED` | Manifest-derived resume cursor; crash-injection tests pass; committed at 3dfc559, remote-verified. |
+| BRAIN-005 — bounded durable results | `RESOLVED_VERIFIED` | Immutable ≤4 MiB JSONL shards + `results_manifest.json`; legacy monolith untouched; oversized-row fail-closed tested. |
+| Legacy `research_state/checkpoint.json` | STALE / untrusted | `completed_records: 81510`, `last_verified_record: 0`, `code_hash: ab984545...` (does NOT match current `compute_code_hash()` `03592c4f...`). `_verify_stale_checkpoint` fails closed on code-hash mismatch. Resume derives from manifest-verified shard IDs. |
+| Stale Actions run #38923356926 | INFO | `in_progress`, head `48fdddc` (stale code, 3 commits behind current main). Not in prior diagnostics capture; recorded as incomplete log capture. Not actionable — runs with stale code only. |
+
+## Brainstorming revalidation (this session)
+
+All open items revalidated against live source at HEAD `63ccb62`:
+- BRAIN-001: `RESOLVED_VERIFIED`; 18/20 assets genuine; 2 excluded for insufficient history (recorded, not silently replaced).
+- BRAIN-002: `RESOLVED_VERIFIED`; validator → `authorized: true`.
+- BRAIN-003/004/005: `RESOLVED_VERIFIED`.
+- **No item is `BRAINSTORMING_REQUIRED`; no new brainstorming item is the principal task this session.** No root cause was implemented in the same session as its design record (all design records predate implementation).
+
+## Session record — 2026-10-16 UTC (~16:10 UTC)
+
+- Timestamp: 2026-10-16T16:08:08Z. Branch: `main`. Base HEAD: `63ccb6297a1ebb7d4688a80074eacc0ca06e5ffb` (remote match, verified via `git ls-remote`).
+- Chosen task and why: Per-asset genuine data acquisition for ranks 2–20 (the handoff's documented next task). Outranked all alternatives because it directly unblocks the BRAIN-002 authorization gate and is the data gate's remaining acceptance work.
+- Actions taken:
+  1. Refreshed live SHAs: `git rev-parse HEAD` == `git ls-remote origin main` == `63ccb62...`; worktree clean at session start.
+  2. Checked latest Actions runs via GitHub API: found run #38923356926 `in_progress` with stale head `48fdddc` (not in prior diagnostics capture); recorded as incomplete log capture, not actionable.
+  3. Fetching: `load_or_fetch_asset_data()` for ranks 2–20 via same-provider failover (`api.binance.com` HTTP 451 → `data-api.binance.vision` HTTP 200). 17 assets succeeded with 26,280 validated closed hourly candles each. XMRUSDT (3,011 candles) and MATICUSDT (7,883 candles) failed — insufficient 3-year history, excluded with recorded observation counts per frozen protocol, not replaced.
+  4. Updated `research/data_manifest.json`: 18 genuine assets, all `fallback_used: false`; added `data_min_history_ok: true` and `provenance_ok: true`; ETHUSDT synthetic entry archived.
+  5. Updated `research/universe_manifest.json`: XMRUSDT and MATICUSDT `exclusion_reason` recorded; universe remains top-20 current snapshot with survivorship disclosure.
+  6. Re-ran pilot: evidence-only (`pilot_passed: false`, `campaign_authorized: false`), `data_provenance_ok: true`, `data_min_history_ok: true`.
+  7. Re-ran `authorize_campaign()`: `authorized: true`, zero reasons. BRAIN-002 gate PASSED.
+  8. Tests: `python3 -m pytest tests/` → **55 passed, exit 0**.
+- Commands/exit statuses: curl data-api.binance.vision → HTTP 200; fetch script 17 OK / 2 failed (insufficient history); pytest 55 passed exit 0; validator → `authorized: true`.
+- Confirmation: no synthetic data accepted as market history; 2 assets excluded for insufficient history with recorded reasons; no unchanged retry against a permanent failure; all 18 manifest datasets hash-verified and content-addressed.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`. No instruction gap; all work followed existing BRAIN-001/BRAIN-002 design records. No quantitative safeguard weakened; at most one prompt change per session rule respected (none proposed).
+- Persistence status (separate fields, per README 2A.E):
+  - Local modifications: data manifests, pilot evidence, campaign authorization, handoff, prompt evolution — all uncommitted at session end; commit/push pending with remote SHA verification.
+  - Checkpoint reconciliation: legacy `checkpoint.json` treated as untrusted; resume derives from manifest-verified shard IDs; checkpoint not rewritten.
+  - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- Unresolved blockers ranked: (1) none — all P0 gates (BRAIN-001/002/003/004/005) are `RESOLVED_VERIFIED`; (2) legacy checkpoint code-hash mismatch (fails closed; resume from shards, not counters); (3) stale run #38923356926 with stale code (informational only).
+- Next specific task: Commit and push this session's state changes (contents only, no workflow files) and verify remote SHA via `git ls-remote origin main`. With all P0 gates passed, the campaign is authorized; a later session may begin full-grid execution under BRAIN-004/005 (manifest-derived resume, bounded shards, holdout-skip default).
+
+## Non-negotiable research-validity rules
+
+- No synthetic data accepted as market history; existing synthetic-derived records remain forensic/legacy-unverified evidence.
+- Assets without the 3-year minimum are excluded with recorded reasons, never replaced or given shorter history.
+- No claim of an untouched holdout unless historical non-use is established; otherwise `EXPOSED_OR_UNKNOWN`.
+- A local commit, successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
+- Preserve single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.

@@ -151,8 +151,8 @@
     {
       "lane_id": "independent-pilot-authorization",
       "priority": 40,
-      "status": "READY",
-      "scope": "Implement BRAIN-002 evidence-only pilot plus independent campaign authorization.",
+      "status": "COMPLETE",
+      "scope": "Implemented BRAIN-002 evidence-only pilot plus independent campaign authorization; gate verified passed with all 18 genuine-data assets.",
       "dependencies": [
         "deterministic-resume-and-result-shards",
         "final-holdout-isolation"
@@ -167,7 +167,15 @@
         "Pilot cannot authorize itself.",
         "campaign_authorized=true is never accepted without independent validation of persisted evidence.",
         "Campaign startup revalidates evidence hashes and required gates."
-      ]
+      ],
+      "completion_evidence": {
+        "validator": "authorize_campaign() -> authorized: true, zero reasons",
+        "pilot_evidence": "research_state/pilot_evidence.json (pilot_passed: false, evidence-only)",
+        "auth_artifact": "research_state/campaign_authorization.json (authorized: true)",
+        "genuine_assets": 18,
+        "excluded_insufficient_history": ["XMRUSDT (3,011 candles)", "MATICUSDT (7,883 candles)"],
+        "tests": "python3 -m pytest tests/ -> 55 passed, exit 0"
+      }
     }
   ]
 }
