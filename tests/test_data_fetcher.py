@@ -267,6 +267,8 @@ def test_loader_replaces_synthetic_manifest_record_with_verified_real_cache(tmp_
 
     class FakeFetcher:
         calls = 0
+        endpoint_used = BINANCE_MARKET_DATA_KLINES_ENDPOINT
+        endpoint_failures = [f"{BINANCE_KLINES_ENDPOINT}: HTTP 451"]
 
         def fetch_full_history(self, symbol, interval="1h", start_time=None, end_time=None):
             self.calls += 1
@@ -287,6 +289,8 @@ def test_loader_replaces_synthetic_manifest_record_with_verified_real_cache(tmp_
     entry = manifest["assets"]["TESTUSDT"]
     assert entry["fallback_used"] is False
     assert entry["provider"] == "binance"
+    assert entry["endpoint"] == BINANCE_MARKET_DATA_KLINES_ENDPOINT
+    assert entry["endpoint_failures"] == [f"{BINANCE_KLINES_ENDPOINT}: HTTP 451"]
     assert entry["hash_algorithm"] == DATASET_HASH_ALGORITHM
     assert entry["content_hash"] == compute_content_hash(first)
     assert manifest["invalidated_prior_entries"]["TESTUSDT"][0]["fallback_source"] == "synthetic"
