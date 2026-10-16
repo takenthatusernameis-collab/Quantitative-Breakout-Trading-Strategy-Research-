@@ -74,7 +74,7 @@
     {
       "lane_id": "next-breakout-hypothesis",
       "priority": 10,
-      "status": "IN_PROGRESS",
+      "status": "COMPLETE",
       "scope": "Identify one materially distinct breakout hypothesis by inspecting existing specifications/results first; write a preregistered, testable protocol and deterministic known-answer fixtures.",
       "dependencies": [],
       "permitted_while_data_gate_blocked": true,
@@ -88,7 +88,11 @@
         "Signal time, execution time, stops, costs, fold boundaries and invalid-data behavior are specified.",
         "No historical profitability claim is made before the real-data gate passes.",
         "A later confirmatory evaluation window is preregistered if any candidate selection exposed historical holdout data."
-      ]
+      ],
+      "completion_evidence": {
+        "protocol_status": "PREREGISTERED",
+        "tests": "research/strategies/next-breakout-hypothesis/tests/known_answer_fixtures.yaml"
+      }
     },
     {
       "lane_id": "deterministic-resume-and-result-shards",

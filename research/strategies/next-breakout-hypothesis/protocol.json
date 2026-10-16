@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "lane_id": "next-breakout-hypothesis",
-  "status": "DESIGN_DRAFT",
+  "status": "PREREGISTERED",
   "hypothesis_id": "H_RANGE_COMPRESSION_BREAKOUT_V1",
   "direction": "long-only",
   "instruments": "Binance spot USDT markets per v1 universe freeze",

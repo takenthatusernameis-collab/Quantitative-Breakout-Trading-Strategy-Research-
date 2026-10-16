@@ -1,0 +1,31 @@
+# Known-answer fixtures for next-breakout-hypothesis (range compression breakout).
+# Deterministic, no market data. Values hand-calculable.
+
+fixtures:
+  - id: NBR-001
+    description: Quiet compression then breakout -> entry at next open
+    series:
+      # fast range (last 24) compressed relative to slow range (last 168)
+      fast_range: 0.30
+      slow_range: 1.00
+      max_range_ratio: 0.6
+      close_i: 101.0
+      reference: 100.0
+      atr_i_minus_1: 0.8
+      buffer_multiple: 0.25
+    expected:
+      compression_ok: true
+      threshold: 100.2
+      close_gt_threshold: true
+      signal_at_i: true
+      entry_time: i+1_open
+  - id: NBR-002
+    description: No compression -> no signal despite breakout
+    expected:
+      compression_ok: false
+      signal_at_i: false
+  - id: NBR-003
+    description: Compression but excursion below threshold -> no entry
+    expected:
+      compression_ok: true
+      signal_at_i: false
