@@ -39,6 +39,17 @@ Do not begin the large campaign. Do not implement BRAIN-002 through BRAIN-005 in
 - A local commit, a successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
 - Preserve the single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
 
+## Post-merge Actions state refresh — 2026-10-16 09:59 UTC
+
+This snapshot was recorded after handoff PR #1 was merged as `7021d6c9b69ac61922cdf20dea018aa4f9ded2de`. The following are live API observations, not test-pass claims:
+
+- Default-branch `main` was observed at `7021d6c9b69ac61922cdf20dea018aa4f9ded2de`.
+- The repository-wide Actions API returned five runs. Run #4 (`38834456753`) was still `in_progress`, with its single job and main Kilo step started at `2026-10-16T05:01:25Z`. Run #5 (`38858495476`) remained `pending`; its run record still points at old `head_sha` `47c2584309527961b5528ceb563fa5b4771db66f`. The three older runs were cancelled/failed as listed in their run records.
+- Run #4's job/log API did not provide retrievable logs during this inspection; the log-download attempt returned `BlobNotFound`. Do not infer a Kilo task outcome from the job's `in_progress` status alone.
+- Both active/queued run records refer to the older workflow commit, so neither establishes that the merged handoff or the latest main source was exercised by the Kilo task text. The workflow currently supports manual `workflow_dispatch`, but the connected tool surface does not expose dispatch or cancellation actions.
+- A local `git ls-remote` check failed with `Could not resolve host: github.com`. No pytest, Python compilation, live Binance request, full campaign, or independent data-hash verification was performed by this status refresh.
+- **Next operator action:** preserve any available recovery artifacts, cancel the stale active/queued runs in the GitHub Actions UI, and manually dispatch the single existing workflow from current `main` with the smallest practical session budget. Confirm the run's `head_sha`/checkout and logs before treating it as a fresh verification run. The intended task remains BRAIN-001 acceptance; keep the full campaign blocked. Do not create a second workflow to work around the queue.
+
 ---
 
 ## Historical handoff snapshots and prior evidence
