@@ -205,3 +205,17 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 **Regression scenarios and status:** all P2/P3/P4/P5 regression scenarios remain as previously specified; behavioral tests NOT_RUN. The fixed `scan_log_archive()` behavior is deterministic over archive entry ordering and only reads `.txt` files.
 
 **Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `056723a73d3936976055783c3262a2c133e1e4cc`; `git status` clean; `py_compile` OK; `pytest tests/` → 20 passed, exit 0; direct curl to Binance klines → HTTP 451 (~0.07s), loader fails closed; direct curl to api.github.com → HTTP 200; remote SHA re-verified after push. Stale in-progress Actions run #38891774797 (head `4b721e6`, cancel HTTP 403) may hold the `kilo-repository` concurrency slot.
+
+## Session prompt review — 2026-10-16 UTC (~12:28 UTC)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** live default-branch SHA refreshed to `940a35679eff2d5b13203ad1f7772b4bcbf079bf` (prior handoff top block named `33d2a13`; now one commit behind, state-only commit). `git ls-remote origin main` == `940a35679eff2d5b13203ad1f7772b4bcbf079bf`. Binance klines → HTTP 451 (~0.07s); loader fails closed. `pytest tests/` → 20 passed, exit 0. Workflow file `.github/workflows/main.yml` local-only ZipInfo fix still unstaged (PERMISSION_BLOCKER). All five open brainstorming items already carry completed structured design records (BRAIN-001 = `IMPLEMENTATION_IN_PROGRESS`/`WAITING_EXTERNAL_INTERVENTION`; BRAIN-002–005 = `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`); no item is `BRAINSTORMING_REQUIRED`, so no new brainstorming item was created and no root cause was implemented this session.
+
+**Cause classification:** `DATA_OR_EXTERNAL_SERVICE` (persistent Binance HTTP 451 egress block); `PERMISSION_BLOCKER` (workflow push missing `workflows` permission); no `PROMPT_GAP` demonstrated.
+
+**Revision summary:** none. No README Section 2A change; no quantitative-method safeguard touched or weakened. Next specific task unchanged: await restored egress to api.binance.com (or explicit approval of an alternative source), then rerun the bounded BTCUSDT canary through `load_or_fetch_asset_data`, independently recompute the dataset SHA-256, re-read persisted manifest/CSV from the default branch, mark BRAIN-001 `RESOLVED_VERIFIED`, and proceed to BRAIN-004/005 (transaction/shard + manifest-derived resume cursor), then BRAIN-003 (validation/freeze/holdout phase boundary), then BRAIN-002 (evidence-only pilot + independent validator). Separately obtain `workflows` write permission or a maintainer apply for the local ZipInfo log-scan fix.
+
+**Regression scenarios and status:** all P2/P3/P4/P5 scenarios remain as specified; behavioral tests NOT_RUN. No safeguard removed or weakened.
+
+**Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `940a35679eff2d5b13203ad1f7772b4bcbf079bf`; `git status` clean working tree (local-only unstaged workflow diff excepted); `py_compile`/pytest → 20 passed exit 0; direct curl to Binance klines → HTTP 451 (~0.07s), loader fails closed; direct curl to api.github.com → HTTP 200.

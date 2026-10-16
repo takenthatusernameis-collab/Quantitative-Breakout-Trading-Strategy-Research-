@@ -1,3 +1,11 @@
+## Note — authoritative default-branch snapshot refreshed (2026-10-16 UTC, ~12:28 UTC)
+
+- Remote default-branch HEAD = `940a35679eff2d5b13203ad1f7772b4bcbf079bf` (verbatim match to `git ls-remote origin main`). Local working tree clean except the local-only `.github/workflows/main.yml` ZipInfo sort fix (unstaged, push rejected `PERMISSION_BLOCKER`).
+- Live Binance canary → HTTP 451 (~0.07s); loader fails closed with `DataUnavailableError`; no synthetic data accepted; manifest and data dir untouched.
+- Tests: `pytest tests/` → 20 passed, exit 0 at HEAD `940a356`.
+- No open brainstorming item is `BRAINSTORMING_REQUIRED`; all five items already carry structured design records. No item was implemented this session; BRAIN-001 remains `IMPLEMENTATION_IN_PROGRESS`/`WAITING_EXTERNAL_INTERVENTION`, BRAIN-002–005 remain `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
+- Next specific task: restore egress to api.binance.com (or obtain explicit approval of an alternative source) → rerun bounded BTCUSDT canary via `load_or_fetch_asset_data`, independently recompute the dataset SHA-256, re-read the persisted manifest/CSV from the default branch, mark BRAIN-001 `RESOLVED_VERIFIED`, then implement BRAIN-004 (transaction + shard + manifest-derived resume cursor) with BRAIN-005 (≤4 MiB immutable shards) in one transaction, next BRAIN-003 (validation/freeze/holdout phase boundary), then BRAIN-002 (evidence-only pilot + independent validator). Separately obtain `workflows` write permission or a maintainer apply for the local ZipInfo log-scan fix.
+
 # Authoritative Current Status — 2026-10-16 UTC
 
 **This block is the single source of current task/status truth.** Older snapshots below are historical records unless explicitly revalidated in a later dated section. Do not infer that an old statement is current merely because it appears earlier in the file.
