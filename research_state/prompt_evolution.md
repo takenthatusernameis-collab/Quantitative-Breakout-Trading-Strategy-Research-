@@ -510,3 +510,11 @@ Expected effect: none (no prompt change). Durable outputs: refreshed `agent_hand
 Rollback and review rule: N/A (no prompt change).
 
 Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` == `6804546...`; `pytest` 68 passed exit 0; shard ceiling check OK (max 46,162 bytes ≤ 4 MiB); remote SHA re-verified after push; controller-refreshed `campaign_authorization.json` committed as `6804546` and pushed.
+
+## Session prompt review — 2026-10-16T20:44:45Z
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Evidence:** revalidated BRAIN-001..005 at HEAD `5e55c1c`; none `BRAINSTORMING_REQUIRED`. Completed bounded validation batch (ETHUSDT + BNBUSDT prefix, 98,798 records, 1,978 shards) under strict fail-closed rules; no synthetic data as market history; holdout remains off. Tests 68 passed. No instruction gap demonstrated — README Section 2A gates followed (truthful persistence claims only after remote SHA verification, manifest-derived resume, bounded shards ≤4 MiB, fail-closed). No quantitative safeguard weakened.
+
+**Verification:** `git rev-parse HEAD` == `git ls-remote origin main` == `5e55c1c...`; `pytest` 68 passed exit 0; `reconcile()` verified 98,798 IDs; all shards ≤4 MiB; commit pushed and SHA verified.

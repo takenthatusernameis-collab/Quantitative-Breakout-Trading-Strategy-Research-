@@ -457,3 +457,33 @@ All open items revalidated against live source at HEAD `6804546`: none is `BRAIN
 ## Next specific task (later session)
 
 Continue bounded validation-phase campaign batches (`holdout_enabled=False`) across the remaining 17 genuine assets via `CampaignRunner --max-assets=1` per batch (BRAIN-004 manifest-derived resume + BRAIN-005 bounded ≤4 MiB shards, BRAIN-003 holdout skip). Each batch checkpoints at the 50-record boundary; resume derives from manifest-verified shard IDs, never checkpoint counters. Stop and record at the first external blocker; never retry unchanged; claim a full campaign only after it completes and its results are persisted and remote-verified. Candidate freeze only after validation results exist; never access holdout data. Acceptance: tests green exit 0, no synthetic data as market history, `candidate_frozen` manifest only after validation completes, remote SHA re-verified after any commit.
+
+## Authoritative Current Status — 2026-10-16T20:39:26Z (post-5e55c1c, batch continuation)
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
+- Local `main` HEAD: `5e55c1c476075076b3d5b99884df293fe793f89a` == `origin/main` (verified via `git ls-remote origin main`; push `6804546..5e55c1c` succeeded).
+- Current `compute_code_hash()`: `382e314141d4826e29ae1c00e720aa3320a2f71fe00723ff07dfa025b79abfb8` matches `campaign_authorization.json` code_hash; authorization `authorized: true`.
+- Worktree clean except untracked `research/data/candles/` (deliberately not committed per spec §8).
+- Tests: `python3 -m pytest tests/` → **68 passed, exit 0**.
+
+## Validation progress (campaign_id `fcf04f6ea9f54e5c28da1b48d6e2cc8ed09d190bd63a54091d072c2f8a4eeea4`)
+
+- Completed records: **98,798** (ETHUSDT and BNBUSDT prefix, validation-only; holdout off). BNBUSDT at asset_index 3, config_index 1321/2304, fold_index 0, cost_index 1.
+- Shards: **1,978** immutable JSONL shards, **85.0 MB** total; all ≤4 MiB (max ~46 KB).
+- Manifest: `spec_hash` fixed to `2d22e702...` matching configuration; `total_records: 98798`.
+- Checkpoint: `completed_records: 98798`, `last_verified_record: 98798` consistent; resume derived from manifest-verified IDs (legacy checkpoint untrusted).
+- No synthetic data accepted as market history; holdout remains off; no frozen candidates yet (no validation results complete).
+
+## Persistence & authorization
+
+- Commit `5e55c1c`: pushed; `git ls-remote origin main` == local HEAD (verified). Contains results batch + shard manifest + small state fixes.
+- `campaign_authorization.json`: `authorized: true`, zero reasons, code_hash `382e314...`.
+- Legacy run-29 artifacts isolated to `research/results_shards/legacy_unverified/` (non-strict JSON preserved byte-identical).
+
+## Brainstorming revalidation
+
+All BRAIN-001..005 `RESOLVED_VERIFIED`; none `BRAINSTORMING_REQUIRED`. Parallel lanes all `COMPLETE`.
+
+## Next specific task (later session)
+
+Continue bounded validation-phase batches (`holdout_enabled=False`, `--max-assets=1`) across remaining 16 assets (after BNBUSDT completes). At each batch checkpoint at batch_size; resume via manifest-derived IDs; verify remote SHA after commit. No code changes mid-campaign. Candidate freeze only after full validation; holdout never accessed.
