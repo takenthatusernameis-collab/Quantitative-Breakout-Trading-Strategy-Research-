@@ -984,7 +984,7 @@ jobs:
                 if ! git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD; then
                   if ! timeout --kill-after=5s 30s git rebase --autostash "origin/$DEFAULT_BRANCH"; then
                     git rebase --abort >/dev/null 2>&1 || true
-                    echo "::error::Remote reconciliation failed or timed out; preserving recovery evidence and ending this activation."
+                    echo "::error::Remote reconciliation failed or timed out; ending this checkpoint attempt. The controller will preserve local work and start a fresh Kilo session in the same workflow run."
                     return 1
                   fi
                 fi
@@ -1026,7 +1026,7 @@ jobs:
               (( push_backoff > 30 )) && push_backoff=30
             done
 
-            echo "::error::Checkpoint persistence failed after ${attempts_this_checkpoint} bounded attempts. The current Kilo activation will stop, preserve recovery artifacts, and leave the next scheduled/manual activation free to start."
+            echo "::error::Checkpoint persistence failed after ${attempts_this_checkpoint} bounded attempts. Only this worker session's checkpoint attempt is ending; the controller will preserve local work and continue with a fresh Kilo session in the same workflow run. Remote persistence remains unverified."
             return 1
           }
 
