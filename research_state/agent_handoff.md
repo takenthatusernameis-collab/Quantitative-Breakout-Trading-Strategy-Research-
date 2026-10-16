@@ -149,3 +149,12 @@ Structured design recorded in `research_state/brainstorming_queue.md` (option B:
 Structured decisions recorded in `research_state/brainstorming_queue.md`; each `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`; none implemented. See queue for full comparisons, staged plans, acceptance tests, rollback, and external dependencies.
 
 **Truthfulness rule:** this handoff documents evidence observed at the current commit/run. It does not prove economic validity, remote persistence beyond the verified SHA, or a trading edge.
+
+## Session recovery note — 2026-10-16 UTC (same-run recovery)
+
+- Remote default-branch HEAD after state-only push: `e2a348e7c56cb1dc57ab134334bb843a346eae9a` (`git ls-remote` verified).
+- Local `main` HEAD remains `86d6269...` with only the deployable recovery patch on top of `e2a348e` (workflow `scan_log_archive` sort fix). The push of that one-line workflow change is REJECTED by the GitHub App permission `PERMISSION_BLOCKER` (no `workflows` write permission); no branch form can carry it. A recovery bundle and `.patch` are preserved at `/home/runner/work/_temp/kilo-tmp/`.
+- Tests: `pytest tests/` → 20 passed exit 0 at this session; `py_compile` OK.
+- BRAIN-001 live canary still `WAITING_EXTERNAL_INTERVENTION` (Binance HTTP 451 reconfirmed).
+- BRAIN-002–005 remain `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`; none implemented; full campaign remains blocked.
+- Next precise task: obtain `workflows` permission or a maintainer apply to deploy the ZipInfo fix; await restored egress to `api.binance.com` (or explicit approval of an alternative source) → rerun bounded BTCUSDT canary via `load_or_fetch_asset_data`, independently recompute dataset SHA-256, re-read persisted manifest/CSV from default branch, mark BRAIN-001 `RESOLVED_VERIFIED`, then implement BRAIN-004 + BRAIN-005 as one transaction/shard architecture, next BRAIN-003, then BRAIN-002. Do not claim persistence until remote SHA matches.
