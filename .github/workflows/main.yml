@@ -1,7 +1,14 @@
 name: Kilo General Agent Loop
 
 on:
-  # Manual-only: make repository changes without launching Actions automatically.
+  # Validate workflow changes immediately, without needing a pull request or a manual dispatch.
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/main.yml"
+  schedule:
+    - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       agents:
@@ -53,7 +60,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           # The current run is still in progress during this scan. Its terminal
-          # result is collected during a later manual activation.
+          # result is collected during the next scheduled/manual activation.
         run: |
           set -Eeuo pipefail
           umask 077
