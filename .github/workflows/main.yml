@@ -51,14 +51,15 @@ jobs:
           persist-credentials: true
 
       - name: Test controller progress and diagnostic scanning
+        id: controller_tests
         if: ${{ github.event_name == 'push' || inputs.diagnostics_only == true }}
         shell: bash
         run: |
           set -Eeuo pipefail
           test_venv="$RUNNER_TEMP/controller-tests-venv"
           python3 -m venv "$test_venv"
-          "$test_venv/bin/python" -m pip install --disable-pip-version-check --no-input pytest
-          "$test_venv/bin/python" -m pytest -q tests/test_controller_progress_accounting.py tests/test_workflow_diagnostics_scanner.py
+          "$test_venv/bin/python" -m pip install --disable-pip-version-check --no-input pytest numpy requests
+          "$test_venv/bin/python" -m pytest -q tests/test_controller_progress_accounting.py tests/test_workflow_diagnostics_scanner.py tests/test_nonfinite_result_serialization.py tests/test_campaign_resume.py
 
       # Sole durable workflow-level diagnostics collector and ledger writer.
       # Do not add a parallel collector workflow, helper script, or second ledger
@@ -67,6 +68,7 @@ jobs:
       # The current run's own terminal result is picked up on a later manual activation.
       - name: Inspect completed runs and update the diagnostics ledger
         id: collect
+        if: always()
         continue-on-error: true
         shell: bash
         env:
@@ -1477,10 +1479,15 @@ jobs:
         if: ${{ always() && (github.event_name == 'push' || inputs.diagnostics_only == true) }}
         shell: bash
         env:
+          TEST_OUTCOME: ${{ steps.controller_tests.outcome }}
           COLLECT_OUTCOME: ${{ steps.collect.outcome }}
           PERSIST_OUTCOME: ${{ steps.persist_diagnostics.outcome }}
         run: |
           set -Eeuo pipefail
+          if [[ "$TEST_OUTCOME" != "success" ]]; then
+            echo "::error::Diagnostics-only activation's targeted regression tests did not pass."
+            exit 1
+          fi
           if [[ "$COLLECT_OUTCOME" != "success" ]]; then
             echo "::error::Diagnostics-only activation did not complete the collector successfully."
             exit 1

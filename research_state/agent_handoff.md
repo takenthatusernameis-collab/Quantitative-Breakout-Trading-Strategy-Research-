@@ -389,3 +389,13 @@ All open items revalidated against live source at HEAD `14c5bd3`: none is `BRAIN
 ### Next specific task (later session)
 
 Begin the full-grid validation-phase campaign (`holdout_enabled=False`) on the 18 genuine assets via `CampaignRunner` (BRAIN-004 manifest-derived resume + bounded ≤4 MiB shards, BRAIN-003 holdout skip) to produce first validation results and candidate-freeze evidence. Stop and record at the first external blocker; never retry unchanged; claim a full campaign only after it completes and its results are persisted and remote-verified. Acceptance: tests green exit 0, no synthetic data as market history, `candidate_frozen` manifest only after validation completes, remote SHA re-verified after any commit.
+
+
+## Authoritative update — strict JSON result serialization (2026-10-16 UTC)
+
+- Run #29 (`38946688433`) completed successfully. The controller reported one verified durable checkpoint and meaningful progress, both at remote SHA `f947e1e3b16672272003dc9f88019d7b141cbb8a`. A later collector activation needs to record run #29's own terminal result.
+- Run #29 persisted a validation-only BTCUSDT campaign prefix: 8,500 records across 170 immutable shards in `research/results_manifest.json`. At least one record encoded `profit_factor: Infinity` when the backtest had no losing trades. This is not standards-compliant JSON.
+- Correction: future backtests use `profit_factor: null` with `profit_factor_status: "no_losses"`; result-shard serialization normalizes any other non-finite numeric fields to null with a `non_finite_fields` annotation and serializes with `allow_nan=False`. Regression tests parse generated JSONL using a parser that rejects `NaN` and `Infinity`.
+- Do not rewrite finalized shards in place: their checksums and the immutable-shard rule are evidence. Existing run #29 shards remain historical artifacts and may contain old non-standard values; do not treat them as clean strict-JSON outputs. Preserve the manifest and shards unchanged unless an explicit verified migration creates a separately identified normalized artifact set.
+- These source changes alter `compute_code_hash()`. The existing `campaign_authorization.json` and `results_manifest.json` remain tied to the prior code hash. Do not resume the existing campaign until authorization is revalidated for the new source and the old manifest/results are safely isolated or migrated. Do not access holdout data.
+- Merge verification must prove: (1) controller-accounting tests still pass, (2) strict JSON serialization and campaign-resume tests pass, and (3) a subsequent diagnostics-only activation records run #29 as success with complete log capture. A workflow-file push must not start Kilo.
