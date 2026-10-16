@@ -151,3 +151,21 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 **Evidence:** this session revalidated all open brainstorming items against current source at HEAD `38689e417fdfc0f4d20b417e1adeb67b6df30735`. The only blocker is a persistent external provider/location block (HTTP 451 from `api.binance.com`, confirmed by direct curl); the remaining P0 items (BRAIN-002 self-authorizing pilot, BRAIN-003 holdout not gated, BRAIN-004 cursor reset/unreconciled counters, BRAIN-005 monolithic 51.7 MB results file) are unimplemented design items, not instruction gaps. README Section 2A already requires real data, fail-closed behavior, truthful `NOT_RUN` statuses, no synthetic fallback, one bounded task per session, and no same-session implementation of a freshly brainstormed root cause. No quantitative-method safeguard was touched or weakened; no prompt revision is proposed.
 
 **Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `38689e417fdfc0f4d20b417e1adeb67b6df30735` (prior top block naming `6710279` is STALE); `git status` clean; `py_compile` OK; `pytest tests/` → 20 passed, exit 0; direct curl to Binance klines → HTTP 451 (~0.1s), loader fails closed with `DataUnavailableError`, no synthetic data accepted, `research/data/` absent. Handoff update is local-only (not committed/pushed; commit was not requested).
+
+## Session prompt review — 2026-10-16 UTC (~11:56 UTC)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** live default-branch SHA refreshed to `6443209843af55b72464f7f21e33041016371a4b` (prior handoff top block named `38689e4`, now STALE — one commit behind). All five open brainstorming items revalidated against live source and current run evidence. No item is `BRAINSTORMING_REQUIRED`; all have completed structured design. BRAIN-001 source fix CONFIRMED (no synthetic call in `load_or_fetch_asset_data`; fail-closed; 26,280-candle floor enforced) but live canary remains `WAITING_EXTERNAL_INTERVENTION` (persistent HTTP 451). BRAIN-002–005 remain `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` and unimplemented (holdout not gated in `campaign.py:147`; cursor reset in `campaign.py:109-112,141-143,148-149`; monolithic `results.jsonl` 51,688,138 bytes; `checkpoint.last_verified_record: 0`).
+
+**Cause classification:** `DATA_OR_EXTERNAL_SERVICE` (persistent Binance HTTP 451 egress block) and `UNKNOWN` (no new instruction gap; the open items are pre-existing structural design items already brainstormed).
+
+**Revision summary:** none. No PROMPT_GAP demonstrated. README Section 2A already governs this situation: real data required, fail-closed, no synthetic fallback, truthful `NOT_RUN`, one bounded task per session, no same-session implementation of a freshly brainstormed root cause, and campaign blocked until P0 gates pass.
+
+**Expected effect:** none (no change). The refreshed handoff corrects the stale SHA and revalidates blocker statuses against live source.
+
+**Regression scenarios and status:** all P2/P3/P4/P5 regression scenarios remain as previously specified; behavioral tests NOT_RUN. No safeguard removed or weakened.
+
+**Rollback and review rule:** N/A (no prompt change).
+
+**Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `6443209843af55b72464f7f21e33041016371a4b`; `git status` clean; `py_compile` OK; `pytest tests/` → 20 passed, exit 0; direct curl to Binance klines → HTTP 451 (~0.1s), loader fails closed with `DataUnavailableError`, no synthetic data accepted, `research/data/` absent. Stale in-progress Actions run #38891774797 (head `4b721e6`, 7 commits behind, cancel HTTP 403) may hold the `kilo-repository` concurrency slot. Handoff and prompt-evolution edits committed and pushed as part of this session; remote SHA re-verified after push.
