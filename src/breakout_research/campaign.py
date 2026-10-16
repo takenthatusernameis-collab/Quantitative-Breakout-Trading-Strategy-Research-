@@ -111,23 +111,27 @@ class CampaignRunner:
             state.current_fold_index = 0
             state.current_cost_index = 0
 
-            # Load asset data
+            # Load required asset data. Do not silently skip an eligible asset: that would
+            # change the frozen universe and let a partial campaign look complete.
             try:
                 candles = load_or_fetch_asset_data(asset_symbol)
-                print(f"  Loaded {len(candles)} candles for {asset_symbol}")
+                print(f"  Loaded {len(candles)} validated hourly candles for {asset_symbol}")
             except Exception as e:
-                print(f"  Failed to load data for {asset_symbol}: {e}")
-                state.current_asset_index = asset_idx + 1
-                checkpoint_mgr.save(state)
-                continue
+                raise RuntimeError(
+                    f"Campaign blocked: required eligible asset {asset_symbol} has no verified "
+                    f"protocol-compliant history; no asset skip or synthetic fallback is allowed: {e}"
+                ) from e
 
-            # Get BTC candles for BTC trend filter
+            # A BTC trend-filter configuration must not silently degrade to no filter.
             btc_candles = None
             if asset_symbol != 'BTCUSDT':
                 try:
                     btc_candles = load_or_fetch_asset_data('BTCUSDT')
-                except Exception:
-                    pass
+                except Exception as e:
+                    raise RuntimeError(
+                        f"Campaign blocked: validated BTCUSDT benchmark history is required "
+                        f"for {asset_symbol}, but it is unavailable: {e}"
+                    ) from e
 
             fold_bounds = self._get_fold_bounds(candles)
 
