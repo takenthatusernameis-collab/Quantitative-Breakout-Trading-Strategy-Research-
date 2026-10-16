@@ -5,10 +5,10 @@ This file records evidence-based revisions to the agent-session instructions in 
 ## Current policy
 
 - **Prompt contract:** README Section 2A, “Mandatory session continuity, recovery, and self-improving prompt protocol”.
-- **Prompt revision introduced:** `P2-2026-10-16-SESSION-CONTINUITY`.
-- **Source README commit:** `d067aedc263cffe7326a54ec0195ede032855beb`.
-- **README blob SHA after this revision:** `008457a045ef2c1319210393f5b31f7f6baf47c4`.
-- **Initial rollout status:** README prompt committed in `d067aedc263cffe7326a54ec0195ede032855beb`; workflow startup now explicitly directs Kilo to Section 2A and both durable files in `b2bf404a7f4408699541abbe2e131066a39759d7`. Static repository checks passed. Behavioral effectiveness remains `NOT_YET_VERIFIED` until a fresh session demonstrably follows the startup contract. Do not claim that this prompt has already improved agent outcomes.
+- **Prompt revision introduced:** `P3-2026-10-16-BRAINSTORMING-ESCALATION-GATE` (P2 is preserved below as historical context).
+- **Source README commit:** `59162f578e271497f6442752d11ee86a6fd56dd0`.
+- **README blob SHA after this revision:** `cea879e5c8fbb2e957cb74809611a44a000cc180`.
+- **Initial rollout status:** README prompt updated in `59162f578e271497f6442752d11ee86a6fd56dd0`; workflow startup was updated in `15f5358257e9c34c4f781aab10634cc6ee3cab7c` to read the brainstorming queue and prohibit implementation of the same newly brainstormed root cause in that session. Static repository checks remain separate from behavioral success. Effectiveness is `NOT_YET_VERIFIED` until later sessions demonstrate correct routing. Do not claim that the new gate has already improved outcomes.
 - **Prompt regression outcomes:** the mandatory scenario battery is specified in README Section 2A. Actual agent-behavior regressions are **NOT_RUN** until a fresh session exercises the protocol. Static presence checks should be recorded separately from behavioral success.
 
 ## P2-2026-10-16-SESSION-CONTINUITY
@@ -63,3 +63,46 @@ Reduce repeated rediscovery, unchanged retries, undocumented failed attempts, st
 ### Rollback and review rule
 
 If future sessions show that this contract causes prompt churn, repeated work, worse persistence, or weaker research safeguards, preserve the evidence, revise the smallest defective clause, and record a new entry. Do not remove safeguards merely because they block completion. A revision is not considered effective until observed future runs demonstrate the intended behavior.
+
+
+## P3-2026-10-16-BRAINSTORMING-ESCALATION-GATE
+
+### Triggering evidence
+
+Direct inspection of current tracked source and state showed structural blockers unlikely to be corrected by prompt refinement, extra logging, retries, or workflow hardening alone:
+- `load_or_fetch_asset_data()` directly generates synthetic candles, while the checked-in data manifest labels BTCUSDT/ETHUSDT as synthetic fallback data.
+- The pilot implementation directly sets `pilot_passed` and `campaign_authorized` to true without deterministic evidence checks.
+- The campaign loop iterates all configurations over all folds, including the final holdout, without using `is_holdout` to gate access.
+- The campaign restores a checkpoint but resets config/fold/cost cursors at the start of the asset loop; the current checkpoint says 81,510 completed records while `last_verified_record` is 0.
+- The current result file is about 51.7 MB; historical run #2 logged a failed ~429.9 MB attempted file push.
+
+Sources are itemized with direct links and statuses in `research_state/brainstorming_queue.md`. The diagnostics JSONL was empty at review time, so these are source/state audit findings rather than events proven to have been captured by the new recorder.
+
+### Cause classification
+
+Primarily `IMPLEMENTATION_DEFECT`, `RESEARCH_DESIGN_RISK`, `PERSISTENCE_FAILURE`, and `PLATFORM_LIMIT`. The observed evidence does not support treating these as mere `PROMPT_GAP` issues.
+
+### Revision summary — minimal instruction change
+
+Added `research_state/brainstorming_queue.md` as a design-decision queue (not a second diagnostic log). Updated README Section 2A and the Kilo startup instruction so that confirmed permanent boundaries, cross-component blockers, and failures surviving two materially different evidence-backed attempts must enter a time-bounded brainstorming phase. Each design record must compare materially different options, state prerequisites/tradeoffs, recommend a staged intervention, specify acceptance evidence and rollback, and mark any unavailable external action. The same root cause must not be implemented in the session that creates its brainstorming decision record. Added the current blockers to the queue and updated the handoff to require brainstorming before implementation.
+
+### Expected effect
+
+Reduce repetitive same-root-cause patching, distinguish actual architectural/platform decisions from prompt gaps, protect research validity, and produce a reviewable deterministic implementation plan. This is a hypothesis, not a measured result.
+
+### Regression scenarios and status
+
+| Scenario | Required behavior | Status at revision |
+|---|---|---|
+| Confirmed synthetic data path | Enter brainstorming; prohibit economic conclusions and campaign continuation on synthetic data | Static source/manifests verified; agent-behavior regression NOT_RUN |
+| Self-authorizing pilot gate | Brainstorm independent deterministic authorization evidence | Static source verified; regression NOT_RUN |
+| Holdout exposed before candidate freeze | Brainstorm phase separation and consumed-holdout handling | Static campaign loop verified; result-exposure audit NOT_RUN |
+| Resume cursor reset / checkpoint mismatch | Brainstorm stable-ID reconciliation and crash-safe commit protocol | Static code/checkpoint verified; interruption regression NOT_RUN |
+| Oversized result persistence | Brainstorm bounded durable storage; never retry the same oversized monolith unchanged | Repository size and historical run evidence reviewed; shard implementation/test NOT_RUN |
+| Routine localized test defect | Continue normal bounded correction loop instead of needless escalation | Rule documented; behavioral regression NOT_RUN |
+| Transient external failure | Retain bounded transient retry only when evidence supports transience | Rule documented; behavioral regression NOT_RUN |
+| External permission/provider prerequisite | Mark `WAITING_EXTERNAL_INTERVENTION`, do not bypass controls | Rule documented; behavioral regression NOT_RUN |
+
+### Rollback and review rule
+
+If future runs show brainstorming merely postpones safe, obvious fixes, revise the entry threshold using evidence. Do not remove the gate for confirmed permanent/structural failures merely to make the workflow appear productive. Keep the queue separate from the one durable workflow error ledger.
