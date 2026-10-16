@@ -1,7 +1,9 @@
 name: Kilo General Agent Loop
 
 on:
-  # Manual-only: make repository changes without launching Actions automatically.
+  # Keep the recurring Kilo activation; each scheduled run uses the default of 1 session.
+  schedule:
+    - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       agents:
