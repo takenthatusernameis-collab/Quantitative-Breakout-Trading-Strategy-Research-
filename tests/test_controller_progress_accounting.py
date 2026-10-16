@@ -31,7 +31,10 @@ def make_repo(tmp_path: Path) -> tuple[Path, str]:
     git(repo, "config", "user.name", "kilo-autonomous")
     git(repo, "config", "user.email", KILO_COMMITTER_EMAIL)
     (repo / "README.md").write_text("baseline\n", encoding="utf-8")
-    git(repo, "add", "README.md")
+    state_file = repo / "research_state" / "agent_handoff.md"
+    state_file.parent.mkdir(parents=True, exist_ok=True)
+    state_file.write_text("baseline\n", encoding="utf-8")
+    git(repo, "add", "README.md", "research_state/agent_handoff.md")
     git(repo, "commit", "-m", "baseline")
     return repo, git(repo, "rev-parse", "HEAD")
 
