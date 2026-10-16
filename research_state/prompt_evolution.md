@@ -427,3 +427,22 @@ Triggering evidence: live HEAD `166e5a826b0ea0e258c30fcc21b26acf030d4cdf` == ori
 Revision summary: none. No README Section 2A change; no prompt revision proposed. No same-session implementation of a freshly brainstormed root cause.
 
 Regression scenarios and status: all P2–P6 scenarios remain as specified; no behavior changed this session. Remote persistence verified before any claim.
+
+## Session prompt review — 2026-10-16 UTC (~16:05 UTC, post-25714c7)
+
+Outcome: NO_PROMPT_CHANGE_JUSTIFIED.
+
+Triggering evidence: live HEAD `25714c72419e36d2210513c375238c20c73fe014` == origin/main (verified via `git ls-remote origin main`); `python3 -m pytest tests/` → 55 passed, exit 0. The last authoritative handoff block (14:50, at `166e5a8`) was STALE relative to live HEAD: commits `48fdddc`/`e97040d` had already implemented BRAIN-002 (evidence-only pilot + independent validator + campaign revalidation), but the handoff still listed BRAIN-002 as a pending lane-40 task. This session repaired the handoff and end-to-end verified BRAIN-002:
+- Pilot ran on genuine BTCUSDT data (24 configs, 24 results): `pilot_passed: false`, `campaign_authorized: false`, evidence-only (`pilot_evidence.json`, not `pilot_gate.json`).
+- Validator `authorize_campaign()` → `authorized: false`, precise reasons: ETHUSDT `fallback_used: true` (synthetic provenance), `fallback_source: synthetic`, `data_min_history_ok` not true, `data_provenance_ok`/`data_min_history_ok` false. Campaign correctly BLOCKED until all 20 universe assets have genuine data.
+- No synthetic data accepted as market history; ETHUSDT remains forensic-only in `research/data_manifest.json`; BTCUSDT genuine (`fallback_used: false`, 26,280 candles, content hash `08c1f8eb...`).
+
+Cause classification: stale state-reporting defect (handoff not updated after BRAIN-002 implementation commits), not an instruction gap. No PROMPT_GAP demonstrated; README Section 2A already governs revalidation against live source, fail-closed gates, truthful persistence, one bounded task per session, and no same-session implementation of a freshly brainstormed root cause.
+
+Revision summary: none. No README Section 2A change; no quantitative-method safeguard touched or weakened; no same-session implementation of a freshly brainstormed root cause (BRAIN-002 design record predates its implementation). No new `BRAINSTORMING_REQUIRED` item; none of the open items is `BRAINSTORMING_REQUIRED`.
+
+Expected effect: none (no prompt change). Durable outputs: repaired `agent_handoff.md` authoritative block at `25714c7`; `research_state/pilot_evidence.json` and `research_state/campaign_authorization.json` generated (fail-closed state, uncommitted pending this session's push); next task documented (per-asset genuine data acquisition for ranks 2–20, then validator re-run to flip `campaign_authorization.json` to `authorized: true`).
+
+Rollback and review rule: N/A (no prompt change). If push verification fails, preserve local commit evidence and re-attempt only after confirming remote state; no unchanged retry against a deterministic rejection.
+
+Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` == `25714c72419e36d2210513c375238c20c73fe014`; `python3 -m pytest tests/` → 55 passed exit 0; pilot run → evidence-only, no self-authorization; validator → `authorized: false` with precise reasons; remote SHA == local HEAD (no local-ahead commits).

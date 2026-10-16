@@ -195,3 +195,52 @@ All open items revalidated against live source at HEAD `166e5a8`:
 - No claim of an untouched holdout unless historical non-use is established; otherwise `EXPOSED_OR_UNKNOWN`.
 - A local commit, successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
 - Preserve single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
+
+## Authoritative Current Status — 2026-10-16 UTC (~16:05 UTC, post-25714c7)
+
+**Same-run recovery context:** this session continues inside GitHub Actions run #38912568557 (job `kilo`, workflow `Kilo General Agent Loop`) and does not end the workflow.
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
+- Local `main` HEAD: `25714c72419e36d2210513c375238c20c73fe014`. Remote `origin main`: `25714c72419e36d2210513c375238c20c73fe014` (verified via `git ls-remote origin main`). **Match — remote SHA matches local HEAD.** No local-ahead commits.
+- Worktree clean. HEAD advanced from `166e5a8` (last handoff block) via `48fdddc` (lane 30 completion + handoff refresh), `e97040d` (checkpoint), `25714c7` (diagnostics capture). Commits `48fdddc`/`e97040d` contain the BRAIN-002 implementation (`src/breakout_research/pilot_gate_validator.py`, evidence-only `pilot.py`, `campaign.py` authorization revalidation). **The prior handoff block's claim that BRAIN-002 is a pending lane-40 task is STALE and is corrected here.**
+- Tests: `python3 -m pytest tests/` → **55 passed, exit 0** (was 47; +8 pilot-authorization tests in `test_pilot_authorization.py` + `test_campaign_authorization_revalidation.py`). All data-fetcher tests mocked — no live network in the suite.
+- Real-data artifacts: BTCUSDT CSV local + reproducible (content hash `08c1f8eb...`, 26,280 validated closed hourly candles, 2023-10-17 → 2026-10-15); `research/data_manifest.json` BTCUSDT entry `fallback_used: false`, spec hash verified. ETHUSDT entry remains `fallback_used: true / synthetic` — forensic-only evidence, not relabeled.
+
+## Tests
+- `python3 -m pytest tests/` → **55 passed, exit 0**. All data-fetcher tests are mocked — no live network in the suite.
+
+## Blocker ledger (revalidated at HEAD 25714c7)
+
+| ID | Status | Notes |
+|---|--------|-------|
+| BRAIN-001 — real market data path | `RESOLVED_VERIFIED` (path verified) | BTCUSDT genuine data acquired via `data-api.binance.vision` HTTP 200 (api.binance.com HTTP 451 → failover). 26,280 validated candles, manifest hash-verified. Per-asset acquisition for ranks 2–20 pending. |
+| BRAIN-002 — independent pilot authorization | `IMPLEMENTED`, end-to-end verified fail-closed | `pilot_gate_validator.py` committed; `pilot.py` evidence-only (`pilot_passed: false`, writes `pilot_evidence.json`, not `pilot_gate.json`); `campaign.run()` calls `_verify_pilot_gate()` requiring `campaign_authorization.json` with `authorized: true` and revalidates at startup. Pilot run on BTCUSDT: 24 configs, 24 results, evidence-only. Validator → `authorized: false` with reasons (ETHUSDT synthetic provenance, `data_min_history_ok`/`provenance_ok` not true). Campaign correctly BLOCKED until all 20 universe assets have genuine data. Limitation: `pilot_evidence.pilot_run_results.remote_persistence_verified`/`all_tests_passed` are self-reported booleans, not independently recomputed by the pilot; the validator gates on manifest provenance rather than re-running tests. |
+| BRAIN-003 — final-holdout isolation | `RESOLVED_VERIFIED` (lane 30 complete) | Validation skips holdout, zero holdout rows; frozen candidate manifest required for holdout mode. Historical exposure `EXPOSED_OR_UNKNOWN`; no frozen candidates yet (no validation results; campaign blocked by BRAIN-002 data gate). |
+| BRAIN-004 — deterministic resume | `RESOLVED_VERIFIED` | Manifest-derived resume cursor; crash-injection tests pass; committed at 3dfc559, remote-verified. |
+| BRAIN-005 — bounded durable results | `RESOLVED_VERIFIED` | Immutable ≤4 MiB JSONL shards + `results_manifest.json`; legacy monolith untouched; oversized-row fail-closed tested. |
+| Legacy `research_state/checkpoint.json` | STALE / untrusted | `completed_records: 81510`, `last_verified_record: 0`, `code_hash: ab984545...` (does NOT match current `compute_code_hash()` `03592c4f...`). `_verify_stale_checkpoint` fails closed on code-hash mismatch. Resume derives from manifest-verified shard IDs; checkpoint treated as legacy evidence, not resumed from. |
+| Stale Actions runs at d2113f3 / older failed runs | Historical, not actionable | Failed runs #38912902106, #38914509970, #38917095416, #38917116565 executed code behind current HEAD (14657ae / 6f75816 / a43c030); current source (25714c7) passes the local suite (55 passed). Not reopened. |
+| ZipInfo workflow diagnostic fix | `RESOLVED_EXTERNALLY` | Reached `main` via PR #5 (commit `2dabff1`); backup branch retained. |
+
+## Brainstorming revalidation (this session)
+
+All open items revalidated against live source at HEAD `25714c7`:
+- BRAIN-001: `RESOLVED_VERIFIED` path; per-asset acquisition for ranks 2–20 is the data gate's remaining acceptance work.
+- BRAIN-002: root cause confirmed present and now IMPLEMENTED (evidence-only pilot + independent validator + campaign revalidation). Fail-closed verified: validator returns `authorized: false` with precise reasons. Not `BRAINSTORMING_REQUIRED`.
+- BRAIN-003/004/005: `RESOLVED_VERIFIED`.
+- **No item is `BRAINSTORMING_REQUIRED`; no new brainstorming item is the principal task this session.** No root cause was implemented in the same session as its design record (all design records predate implementation).
+
+## Session record — 2026-10-16 UTC (~16:05 UTC)
+
+- Timestamp: 2026-10-16T16:05:00Z. Branch: `main`. Base HEAD pre-session: `166e5a826b0ea0e258c30fcc21b26acf030d4cdf` (stale relative to live `25714c7`). Final: `25714c72419e36d2210513c375238c20c73fe014` == remote (verified).
+- Chosen task and why: Repair the stale handoff and end-to-end verify BRAIN-002 (independent pilot authorization), because the last authoritative block (14:50, at `166e5a8`) predates the BRAIN-002 implementation commits and misstates it as pending. Outranked starting per-asset acquisition because the authorization gate's fail-closed behavior needed concrete evidence before declaring the gate satisfied.
+- Exact attempted change and files affected: No source changes this session (BRAIN-002 source already committed at `48fdddc`/`e97040d`). Generated durable state artifacts: `research_state/pilot_evidence.json` (pilot evidence-only output), `research_state/campaign_authorization.json` (validator output, `authorized: false`). This handoff and `prompt_evolution.md` updated.
+- Commands/exit statuses: `python3 -m pytest tests/` → **55 passed, exit 0**; `PYTHONPATH=src python3 -c "PilotRunner().run()"` → pilot on BTCUSDT: 24 assets/configs, 24 results, `pilot_passed: false`, `campaign_authorized: false`; `PYTHONPATH=src python3 -c "authorize_campaign()"` → `authorized: false`, reasons: ETHUSDT synthetic provenance, `data_min_history_ok`/`provenance_ok` not true; `git rev-parse HEAD` == `git ls-remote origin main` == `25714c7...`.
+- Confirmation: real-data path verified for BTCUSDT; pilot is evidence-only (no self-authorization); validator fails closed with precise, actionable reasons; no synthetic data accepted as market history; no unchanged retry against a permanent failure.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`. The stale handoff was a state-reporting defect, not an instruction gap; README Section 2A already governs revalidation, fail-closed gates, truthful persistence, and one bounded task per session. No quantitative safeguard weakened; at most one prompt change per session rule respected (none proposed). See `prompt_evolution.md` this-session entry.
+- Persistence status (separate fields, per README 2A.E):
+  - Local commit on `main`: none new this session beyond prior `25714c7`; **remote persistence verified** — `git ls-remote origin main` == `25714c7...` (HEAD == remote, no local-ahead). Generated state artifacts (`pilot_evidence.json`, `campaign_authorization.json`) are uncommitted local files; to be committed with this handoff and verified via remote SHA after push.
+  - Checkpoint reconciliation: legacy `checkpoint.json` treated as untrusted (code-hash mismatch vs. current source); resume derives from manifest-verified shard IDs; checkpoint not rewritten.
+  - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- Unresolved blockers ranked: (1) per-asset genuine data acquisition for ranks 2–20 (BNBUSDT…ATOMUSDT; bounded fetches via `data-api.binance.vision` failover; required to unblock BRAIN-002 authorization); (2) BRAIN-002 end-to-end authorization pass once all 20 assets have genuine data (re-run pilot + validator → `campaign_authorization.json` `authorized: true`); (3) legacy checkpoint code-hash mismatch (fails closed; resume from shards, not counters); (4) pilot evidence self-reported booleans (known limitation; validator gates on manifest provenance instead).
+- Next specific task: Per-asset genuine data acquisition for the remaining 19 universe assets (ranks 2–20) through the production `load_or_fetch_asset_data` path (same-provider failover `api.binance.com` → `data-api.binance.vision`), updating `research/data_manifest.json` with `fallback_used: false`, `provenance_ok: true`, `data_min_history_ok: true`, content hashes, and per-asset coverage; then re-run the BRAIN-002 validator to confirm `campaign_authorization.json` flips to `authorized: true`. Acceptance: validator returns `authorized: true` with zero reasons; all 20 manifest assets genuine; `git ls-remote origin main` verified after commit/push. Only then is the campaign gate passed and full execution under BRAIN-004/005 authorized.

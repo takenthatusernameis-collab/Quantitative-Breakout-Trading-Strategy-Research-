@@ -1,0 +1,97 @@
+{
+  "protocol_version": "v1",
+  "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+  "code_hash": "03592c4f93597cd26036f10e4019c64074388ff364673575a77ed1c08a057c1f",
+  "pilot_completed_at": "2026-10-16T16:04:03.446028+00:00",
+  "assets_tested": 1,
+  "configs_tested": 24,
+  "total_results": 24,
+  "pilot_passed": false,
+  "campaign_authorized": false,
+  "evidence": {
+    "protocol_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+    "code_hash": "03592c4f93597cd26036f10e4019c64074388ff364673575a77ed1c08a057c1f",
+    "spec_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+    "universe_manifest_hash": "06d8450d3a7546b35b0c8dd330c3300521a5f7a56f394a908f8bbbb5923666b0",
+    "data_manifest_hash": "e0261397b01e6159948b77a5a7cc2b8edc380b0785400080935955a9459beb62",
+    "asset_data_hashes": {
+      "BTCUSDT": {
+        "content_hash": "08c1f8eb22a04e3007d3761f834aea30a6d7d77c2195dbfb19297ecb6507d0bc",
+        "dataset_path": "research/data/candles/BTCUSDT_1h_08c1f8eb22a04e30.csv",
+        "download_attempts": 27,
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "endpoint_failures": [
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451",
+          "https://api.binance.com/api/v3/klines: HTTP 451"
+        ],
+        "endpoints_used": [
+          "https://data-api.binance.vision/api/v3/klines"
+        ],
+        "expected_candle_count": 26280,
+        "fallback_source": "",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697551200000,
+        "gaps": [],
+        "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+        "interval": "1h",
+        "last_candle_timestamp": 1792155600000,
+        "observed_candle_count": 26280,
+        "provider": "binance",
+        "rejected_rows": 0,
+        "retrieval_timestamp_utc": "2026-10-16T14:08:11.004082+00:00",
+        "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+        "symbol": "BTCUSDT"
+      },
+      "ETHUSDT": {
+        "content_hash": "ccf2f7b67eb81ec9f3050f7d193515eede5fb282bb65f1a032bbcf111c005365",
+        "download_attempts": 1,
+        "endpoint": "https://api.binance.com/api/v3/klines",
+        "expected_candle_count": 3000,
+        "fallback_source": "synthetic",
+        "fallback_used": true,
+        "first_candle_timestamp": 1672531200000,
+        "gaps": [],
+        "interval": "1h",
+        "last_candle_timestamp": 1683327600000,
+        "observed_candle_count": 3000,
+        "provider": "binance",
+        "rejected_rows": 0,
+        "retrieval_timestamp_utc": "2026-10-15T19:00:13.341689+00:00",
+        "symbol": "ETHUSDT"
+      }
+    },
+    "data_provenance_ok": false,
+    "data_min_history_ok": false,
+    "pilot_run_results": {
+      "all_tests_passed": true,
+      "test_failures": 0,
+      "remote_persistence_verified": true,
+      "synthetic_data_used": false
+    },
+    "checkpoint_state": {
+      "protocol_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+      "code_hash": "03592c4f93597cd26036f10e4019c64074388ff364673575a77ed1c08a057c1f"
+    },
+    "test_reports": [
+      "tests/test_data_fetcher.py"
+    ]
+  }
+}
