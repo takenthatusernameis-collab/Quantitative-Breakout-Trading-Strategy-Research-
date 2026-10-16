@@ -974,23 +974,28 @@ jobs:
               # cannot defeat the retry budget.
               if timeout 20s git fetch origin "$DEFAULT_BRANCH"; then
                 if ! git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD; then
-                  if ! git rebase --autostash "origin/$DEFAULT_BRANCH"; then
+                  if ! timeout 30s git rebase --autostash "origin/$DEFAULT_BRANCH"; then
                     git rebase --abort >/dev/null 2>&1 || true
-                    echo "::error::Remote reconciliation hit conflicts; preserving recovery evidence and ending this activation."
+                    echo "::error::Remote reconciliation failed or timed out; preserving recovery evidence and ending this activation."
                     return 1
                   fi
                 fi
 
                 if git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD 2>/dev/null; then
                   if timeout 30s git push origin "HEAD:$DEFAULT_BRANCH"; then
-                    remote_sha="$(timeout 10s git ls-remote origin "refs/heads/$DEFAULT_BRANCH" 2>/dev/null | awk 'NR==1 {print $1}')"
+                    if remote_output="$(timeout 10s git ls-remote origin "refs/heads/$DEFAULT_BRANCH" 2>/dev/null)"; then
+                      remote_sha="$(printf '%s\\n' "$remote_output" | awk 'NR==1 {print $1}')"
+                    else
+                      remote_sha=""
+                      echo "::warning::Remote verification query failed or timed out on persistence attempt ${persistence_attempts}."
+                    fi
                     local_sha="$(git rev-parse HEAD)"
                     if [[ -n "$remote_sha" && "$remote_sha" == "$local_sha" ]]; then
                       checkpoint_count=$((checkpoint_count + 1))
                       echo "Verified durable checkpoint ${checkpoint_count} at ${remote_sha}."
                       return 0
                     fi
-                    echo "::warning::Remote advanced or verification was inconclusive on persistence attempt ${persistence_attempts}; refetching."
+                    echo "::warning::Remote advanced or verification was inconclusive on persistence attempt ${persistence_attempts}; bounded reconciliation will continue."
                   else
                     echo "::warning::Push failed on persistence attempt ${persistence_attempts}; bounded reconciliation will continue."
                   fi
