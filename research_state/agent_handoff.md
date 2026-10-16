@@ -102,3 +102,6 @@ The six-attempt persistence budget, hard per-command timeouts, single workflow f
 
 
 **Same-run continuation smoke test (2026-10-16 UTC):** a local Bash smoke test passed for the controller branch logic: simulated session 1 hit persistence failure, the outer loop continued instead of terminating, session 2 received the recovery context, and pending state cleared only after simulated verification. `bash -n` passed for that smoke-test harness. This validates the intended branch behavior in isolation; it does not substitute for parsing the complete embedded workflow script or observing a live Actions run. Latest source still needs a fresh-run end-to-end verification.
+
+
+**Pending-state re-verification hardening:** after reviewing the equal-SHA edge case, `stage_and_checkpoint()` now calls `persist_checkpoint()` whenever `pending_persistence_recovery == 1`, even if the local remote-tracking SHA appears equal to `HEAD`. This forces a fresh fetch/push/remote-SHA verification before the controller clears the pending flag; an earlier uncertain push acknowledgement cannot leave the next session in a permanently stale recovery state.
