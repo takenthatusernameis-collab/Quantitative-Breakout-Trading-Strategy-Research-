@@ -614,9 +614,9 @@ def _verified_cache(
         raise DataUnavailableError(
             f"Top-level data manifest specification mismatch for {symbol}"
         )
-    if entry.get("provider") != "binance" or entry.get("endpoint") != BINANCE_KLINES_ENDPOINT:
+    if entry.get("provider") != "binance" or entry.get("endpoint") not in BINANCE_KLINES_ENDPOINTS:
         raise DataUnavailableError(
-            f"Unapproved or ambiguous data provider in cache manifest for {symbol}"
+            f"Unapproved or ambiguous data provider/endpoint in cache manifest for {symbol}"
         )
     if entry.get("interval") != "1h" or entry.get("specification_hash") != expected_spec_hash:
         raise DataUnavailableError(
