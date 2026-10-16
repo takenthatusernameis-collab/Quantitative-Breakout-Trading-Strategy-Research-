@@ -326,3 +326,10 @@ Residual: `d1b780b` (ZipInfo `scan_log_archive()` fix) remains on backup branch 
 ### Rollback and review rule
 
 If the rebased state commits cause issues, restore via `git reset --hard backup/local-head-dcbb307-20261016` (original chain intact). Do not force-push `main`. Push `d1b780b` only after `workflows` write permission is confirmed. No prompt revision this session; revisit only with observed PROMPT_GAP evidence.
+
+## Session prompt review — 2026-10-16 UTC (current)
+
+- Live SHA verified: local/remote both bb20c46fa36fe726a1f272b60f07bfa315b1d717.
+- tests/: 20 passed; Binance klines HTTP 451 (loader fail-closed, no synthetic fallback accepted).
+- Workflow ZipInfo fix committed locally but push rejected for missing `workflows` permission; preserved on `backup/workflow-fix-9f28d24`; main held at bb20c46. UNpushed remains WAITING_EXTERNAL_INTERVENTION.
+- BRAIN-001 IMPLEMENTATION_IN_PROGRESS/WAITING_EXTERNAL (live canary HTTP 451); BRAIN-002..005 DESIGN_READY and unimplemented. No BRAINSTORMING_REQUIRED principal task. NO_PROMPT_CHANGE_JUSTIFIED.
