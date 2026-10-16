@@ -5,6 +5,9 @@ from pathlib import Path
 import pytest
 
 from breakout_research.config import Candle
+from types import SimpleNamespace
+
+import breakout_research.campaign as campaign_module
 from breakout_research.data import fetcher as fetcher_module
 from breakout_research.data.fetcher import (
     BINANCE_KLINES_ENDPOINT,
@@ -55,6 +58,85 @@ def tiny_spec():
         "data": {"interval": "1h", "max_retries": 1, "backoff_seconds": 0},
         "universe": {"min_history_years": 1 / (365 * 24)},
     }
+
+
+
+def _prepare_campaign_runner(tmp_path, monkeypatch, symbol="OTHERUSDT", loader=None):
+    monkeypatch.chdir(tmp_path)
+    state = SimpleNamespace(
+        current_asset_index=0,
+        current_config_index=0,
+        current_fold_index=0,
+        current_cost_index=0,
+        completed_records=0,
+        pilot_completed=False,
+        pilot_passed=False,
+    )
+
+    class FakeCheckpointManager:
+        def load(self):
+            return state
+
+        def create_initial(self, protocol_hash):
+            return state
+
+        def save(self, _state):
+            return None
+
+    monkeypatch.setattr(campaign_module, "CheckpointManager", FakeCheckpointManager)
+    monkeypatch.setattr(campaign_module, "ResultLedger", lambda: object())
+    monkeypatch.setattr(campaign_module, "compute_code_hash", lambda: "test-code-hash")
+    monkeypatch.setattr(campaign_module, "load_or_fetch_asset_data", loader)
+
+    research_state = tmp_path / "research_state"
+    research_state.mkdir()
+    (research_state / "pilot_gate.json").write_text(
+        json.dumps({
+            "campaign_authorized": True,
+            "specification_hash": "test-spec",
+            "code_hash": "test-code-hash",
+        }),
+        encoding="utf-8",
+    )
+
+    runner = campaign_module.CampaignRunner.__new__(campaign_module.CampaignRunner)
+    runner.protocol_hash = "test-spec"
+    runner.assets = [{"symbol": symbol, "rank": 1}]
+    runner.configs = []
+    runner.cost_multipliers = []
+    runner.fold_count = 1
+    runner.validation_windows = []
+    runner.dev_fraction = 0.8
+    runner.holdout_fraction = 0.2
+    runner.batch_size = 10
+    return runner, state
+
+
+def test_campaign_stops_instead_of_silently_skipping_required_asset(tmp_path, monkeypatch):
+    def unavailable_loader(symbol):
+        raise DataUnavailableError("provider unavailable")
+
+    runner, state = _prepare_campaign_runner(
+        tmp_path, monkeypatch, symbol="OTHERUSDT", loader=unavailable_loader
+    )
+    with pytest.raises(RuntimeError, match="required eligible asset OTHERUSDT"):
+        runner.run()
+    assert state.current_asset_index == 0
+
+
+def test_campaign_stops_if_btc_benchmark_history_is_unavailable(tmp_path, monkeypatch):
+    def loader(symbol):
+        if symbol == "BTCUSDT":
+            raise DataUnavailableError("BTC unavailable")
+        return [candle(100 * HOUR_MS)]
+
+    runner, state = _prepare_campaign_runner(
+        tmp_path, monkeypatch, symbol="OTHERUSDT", loader=loader
+    )
+    with pytest.raises(RuntimeError, match="validated BTCUSDT benchmark history is required"):
+        runner.run()
+    assert state.current_asset_index == 0
+
 
 
 def test_frozen_three_year_spec_resolves_to_26280_hourly_candles():
