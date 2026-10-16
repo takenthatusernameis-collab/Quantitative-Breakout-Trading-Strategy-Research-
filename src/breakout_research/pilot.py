@@ -35,7 +35,7 @@ class PilotRunner:
         asset_symbol = asset['symbol']
 
         try:
-            candles = load_or_fetch_asset_data(asset_symbol, min_candles=1000)  # smaller for pilot
+            candles = load_or_fetch_asset_data(asset_symbol)
         except Exception as e:
             raise
 
