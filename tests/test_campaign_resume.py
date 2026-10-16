@@ -14,6 +14,7 @@ import pytest
 
 import breakout_research.campaign as campaign_module
 from breakout_research.campaign import _data_manifest_hash, _read_json_file
+from breakout_research.candidate_freeze import save_candidate_manifest
 from breakout_research.backtest.shards import ResultStore, ResultStoreError, compute_experiment_id
 from breakout_research.backtest.backtester import run_fold_backtest as real_run_fold_backtest
 from breakout_research.config import (
@@ -85,7 +86,7 @@ CONFIG_MANIFEST = {
 }
 
 EXPECTED_VALIDATION_UNITS = 2 * 2 * 4 * 2  # assets x configs x validation folds x costs
-EXPECTED_FULL_UNITS = 2 * 2 * 5 * 2  # including holdout
+EXPECTED_FULL_UNITS = 2 * 2 * 4 * 2 + 2 * 1 * 1 * 2  # validation + one frozen candidate per asset on holdout
 
 
 def _write(path: Path, obj):
@@ -114,6 +115,13 @@ def _build_runner(tmp_path, monkeypatch, batch_size=4):
         "specification_hash": SPEC["specification_hash"],
         "code_hash": "test-code-hash",
     })
+    save_candidate_manifest({
+        "frozen": True,
+        "candidates": {
+            "BTCUSDT": {"config_id": "cfg_test_0001", "parameters": {}, "freeze_commit": "test"},
+            "ETHUSDT": {"config_id": "cfg_test_0001", "parameters": {}, "freeze_commit": "test"},
+        },
+    }, str(tmp_path / "research/candidate_manifest.json"))
 
     candles = make_candles()
     def loader(symbol):
@@ -181,7 +189,7 @@ def test_full_mode_includes_holdout_once(tmp_path, monkeypatch):
 
     records = _all_records(tmp_path)
     holdout = [r for r in records if r["is_holdout"]]
-    assert len(holdout) == 2 * 2 * 2  # assets x configs x costs
+    assert len(holdout) == 2 * 1 * 2  # frozen assets(candidates) x costs
     assert all(r["fold_index"] == 4 for r in holdout)
     ids = [r["experiment_id"] for r in records]
     assert len(ids) == len(set(ids))
