@@ -157,6 +157,7 @@ At session start, capture the current UTC time, default branch and commit SHA, w
 - `README.md` and the exact research protocol/configuration that govern the current campaign;
 - `research_state/agent_handoff.md` for the latest task, prior attempts, unresolved blockers, and next-step queue;
 - `research_state/prompt_evolution.md` for prior prompt changes, reasons, and regression outcomes;
+- `research_state/brainstorming_queue.md` for structural, deterministic, permanent-limit, and externally constrained blockers that must enter design exploration before another implementation attempt;
 - `research_state/checkpoint.json`, `research_state/pilot_gate.json`, data/universe/config manifests, result-ledger metadata, recent commits, relevant tests, workflow logs, and available recovery artifacts.
 
 If a file or artifact is absent or inaccessible, record that fact; do not claim to have inspected it. Seek recent Actions diagnostics and recovery artifacts through the supported repository/CLI mechanisms when available. Inspect the actual artifacts rather than relying on workflow titles or success icons alone.
@@ -187,6 +188,16 @@ Use one primary cause label, with secondary labels when needed:
 - `UNKNOWN`: evidence is insufficient to classify the cause.
 
 Do not label infrastructure or data failure as an economic strategy failure. Do not label an implementation defect as a prompt defect merely because an agent was involved. When the cause is `UNKNOWN`, run the smallest diagnostic that can discriminate among plausible causes before making a broad change.
+
+### C1. Brainstorming phase for blockers unlikely to yield to incremental agent fixes
+
+Use `research_state/brainstorming_queue.md` as the durable design queue. It is **not** a second error log: completed workflow-run diagnostics remain in `research_state/workflow_run_diagnostics.jsonl`; the queue records design decisions and intervention plans.
+
+Move a blocker into `BRAINSTORMING_REQUIRED` immediately when there is a confirmed permanent platform limit, permission/external boundary without a safe agent-side remedy, or a cross-component architecture/design issue; also escalate after two materially different evidence-backed repair attempts fail for the same root cause. A prompt edit, extra logging, retry loop, or workflow hardening is not a substitute for changing the actual limiting mechanism. Do not escalate a routine, localized defect with a clear fix and acceptance test, and do not mistake a transient failure for a permanent limit.
+
+When an open P0 item needs brainstorming, make it the session's **principal task**. Revalidate current evidence, separate facts from assumptions, compare at least two materially different designs (three where useful), assess correctness, research validity, permissions, external dependencies, cost, persistence, migration/rollback, and likely failure modes, then document a recommendation plus falsifying evidence and exact acceptance tests in the queue and handoff. **Do not implement that same blocker in the same session that creates its brainstorming decision record.** Set `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` only when the design, prerequisites, staged steps, tests, and rollback are explicit; use `WAITING_EXTERNAL_INTERVENTION` when a necessary human/provider/permission action is unavailable. A later session can implement a design-ready item and must verify it. The brainstorming phase is a time-bounded decision gate, not permission to park a blocker indefinitely.
+
+The queue is advisory until revalidated against live source and run evidence. Do not claim that an empty diagnostic ledger or an unexecuted test proves that an issue was automatically detected or resolved. Never weaken the frozen protocol or holdout safeguards as an expedient.
 
 ### D. Select one highest-value, bounded task
 
