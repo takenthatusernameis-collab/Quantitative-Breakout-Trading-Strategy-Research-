@@ -268,6 +268,7 @@ def test_loader_replaces_synthetic_manifest_record_with_verified_real_cache(tmp_
     class FakeFetcher:
         calls = 0
         endpoint_used = BINANCE_MARKET_DATA_KLINES_ENDPOINT
+        endpoints_used = [BINANCE_MARKET_DATA_KLINES_ENDPOINT]
         endpoint_failures = [f"{BINANCE_KLINES_ENDPOINT}: HTTP 451"]
 
         def fetch_full_history(self, symbol, interval="1h", start_time=None, end_time=None):
@@ -290,6 +291,7 @@ def test_loader_replaces_synthetic_manifest_record_with_verified_real_cache(tmp_
     assert entry["fallback_used"] is False
     assert entry["provider"] == "binance"
     assert entry["endpoint"] == BINANCE_MARKET_DATA_KLINES_ENDPOINT
+    assert entry["endpoints_used"] == [BINANCE_MARKET_DATA_KLINES_ENDPOINT]
     assert entry["endpoint_failures"] == [f"{BINANCE_KLINES_ENDPOINT}: HTTP 451"]
     assert entry["hash_algorithm"] == DATASET_HASH_ALGORITHM
     assert entry["content_hash"] == compute_content_hash(first)
@@ -444,6 +446,7 @@ def test_fetcher_fails_over_after_endpoint_451_and_records_actual_endpoint():
     assert payload == [raw_kline(first_candle)]
     assert calls == list(BINANCE_KLINES_ENDPOINTS)
     assert fetcher.endpoint_used == BINANCE_MARKET_DATA_KLINES_ENDPOINT
+    assert fetcher.endpoints_used == [BINANCE_MARKET_DATA_KLINES_ENDPOINT]
     assert any("HTTP 451" in failure for failure in fetcher.endpoint_failures)
 
 
