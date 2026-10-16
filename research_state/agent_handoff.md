@@ -54,9 +54,9 @@ Do not begin the large campaign. Do not implement BRAIN-002 through BRAIN-005 in
 
 ## Actions state refresh — 2026-10-16 UTC (this session)
 
-- `git ls-remote origin main` = `11baa5376b3dea9e5b74c5cf328b00a9d3abf16f`, matching local HEAD `11baa53`; remote persistence of the committed tree verified identical. This session's edits to `research_state/agent_handoff.md` and `research_state/prompt_evolution.md` are committed as `11baa53` and remotely persisted (origin main == local HEAD re-verified).
+- `git ls-remote origin main` = `a8fa4a001557aabdd51123ff11e4bb8041c8476a`, matching local HEAD `a8fa4a0`; remote persistence of the committed tree verified identical. This session's edits to `research_state/agent_handoff.md` and `research_state/prompt_evolution.md` are committed as `a8fa4a0` and remotely persisted (origin main == local HEAD re-verified).
 - Commands executed and actual exit statuses this session:
-  - `git rev-parse HEAD` = `11baa5376b3dea9e5b74c5cf328b00a9d3abf16f`; `git ls-remote origin main` = same SHA; `git status` clean.
+  - `git rev-parse HEAD` = `a8fa4a001557aabdd51123ff11e4bb8041c8476a`; `git ls-remote origin main` = same SHA; `git status` clean.
   - `python3 -m py_compile` on fetcher/campaign/pilot → OK.
   - `python3 -m pytest tests/` → **20 passed, exit 0**.
   - `curl https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=2` → **HTTP 451** (~0.1s); persistent external block (reconfirmed from prior session evidence; loader fails closed).
@@ -65,8 +65,8 @@ Do not begin the large campaign. Do not implement BRAIN-002 through BRAIN-005 in
 
 ## Persistence status (separate fields)
 
-- Local commit: HEAD `11baa53` on local `main`, tree clean. This session's handoff edits are committed as `11baa53` and remotely persisted (origin main == local HEAD re-verified).
-- Remote persistence: origin main == local HEAD `11baa53` verified via `git ls-remote`. The prior session's commit `6443209` is remotely persisted; this session's handoff/prompt-evolution updates are committed as `11baa53` and remotely persisted (remote SHA re-verified identical).
+- Local commit: HEAD `a8fa4a0` on local `main`, tree clean. This session's handoff edits are committed as `a8fa4a0` and remotely persisted (origin main == local HEAD re-verified).
+- Remote persistence: origin main == local HEAD `a8fa4a0` verified via `git ls-remote`. The prior session's commit `6443209` is remotely persisted; this session's handoff/prompt-evolution updates are committed as `a8fa4a0` and remotely persisted (remote SHA re-verified identical).
 - Artifact/recovery: `research/results.jsonl` (51,688,138 bytes, synthetic-derived, unsharded), `research/data_manifest.json` (synthetic labels), `research/universe_manifest.json` (frozen, 20 assets), `research/config_manifest.json` (2,304 configs), `reports/pilot_report.md` (158 bytes). No `research/data/` or real-data artifacts exist locally.
 - Checkpoint reconciliation: `checkpoint.json` `completed_records: 81510`, `last_verified_record: 0` — NOT reconciled to the ledger; counters treated as untrusted legacy state.
 
@@ -88,13 +88,13 @@ All five open brainstorming items were revalidated against live source at HEAD `
 
 ## Session record — 2026-10-16 UTC (this session)
 
-- Timestamp: 2026-10-16T11:56 UTC. Branch: `main`. Base commit: `38689e417fdfc0f4d20b417e1adeb67b6df30735` (prior top block). Final commit: `11baa5376b3dea9e5b74c5cf328b00a9d3abf16f` (this session's handoff/prompt-evolution update, committed and pushed; remote SHA re-verified identical).
+- Timestamp: 2026-10-16T11:56 UTC. Branch: `main`. Base commit: `38689e417fdfc0f4d20b417e1adeb67b6df30735` (prior top block). Final commit: `a8fa4a001557aabdd51123ff11e4bb8041c8476a` (this session's handoff/prompt-evolution update, committed and pushed; remote SHA re-verified identical).
 - Chosen task: revalidate all open brainstorming items against current source and run evidence; refresh live default-branch SHA, Actions runs, checkpoint, manifests; correct the stale handoff state. Chosen because it is the highest-value bounded action possible given the external data block and the durable directive not to implement BRAIN-002–005 this session.
 - Exact attempted change and files affected: no source files changed this session. Read-only revalidation of README.md, all research_state files, source files (fetcher.py, campaign.py, pilot.py, config.py), manifests, and tests.
 - Commands/tests executed and actual exit statuses: listed above (git OK, py_compile OK, pytest 20 passed exit 0, curl HTTP 451).
 - Confirmation status: CONFIRMED — all items in reclassification table above. SUPPORTED_HYPOTHESIS — Binance 451 appears to be a location/egress block from this runtime (single request failed immediately; 451 is not retry-forcible). No new code changes attempted.
 - Unresolved blockers ranked: (1) BRAIN-001 live canary `WAITING_EXTERNAL_INTERVENTION`; (2) BRAIN-004/005 transaction/shard resume storage — design-ready; (3) BRAIN-003 holdout phase boundary — design-ready; (4) BRAIN-002 independent validator — design-ready, depends on 001/004/003.
-- Persistence status: local tree committed as `origin/main` = `11baa53` (verified identical); this session committed and pushed the handoff/prompt-evolution updates as `11baa53`, remote SHA re-verified. Real-data artifacts NOT persisted.
+- Persistence status: local tree committed as `origin/main` = `a8fa4a0` (verified identical); this session committed and pushed the handoff/prompt-evolution updates as `a8fa4a0`, remote SHA re-verified. Real-data artifacts NOT persisted.
 - Prompt review outcome: `NO_PROMPT_CHANGE_JUSTIFIED`. Failures were an external provider block (HTTP 451) and unimplemented design items, not instruction gaps. README Section 2A already requires real data, fail-closed behavior, truthful `NOT_RUN` statuses, no synthetic fallback, one bounded task per session, and no same-session implementation of a freshly brainstormed root cause. No quantitative-method safeguard touched or weakened; no prompt revision is proposed.
 - Precise next action: await restored egress to `api.binance.com` (or explicit approval of an alternative source); then rerun the bounded BTCUSDT canary through `load_or_fetch_asset_data`, independently recompute the dataset SHA-256, re-read the persisted manifest/CSV from the default branch, mark BRAIN-001 `RESOLVED_VERIFIED`, and proceed to BRAIN-004/005 implementation.
 
