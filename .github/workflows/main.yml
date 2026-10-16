@@ -953,45 +953,68 @@ jobs:
           backoff=15
 
           persist_checkpoint() {
+            # A checkpoint gets a small, bounded retry budget. Persistent push or
+            # permission failures must not monopolize this six-hour workflow run.
             local push_backoff=5 local_delay remaining remote_sha local_sha
-            while true; do
+            local attempts_this_checkpoint=0
+            local max_checkpoint_attempts=6
+
+            while (( attempts_this_checkpoint < max_checkpoint_attempts )); do
               remaining=$((cutoff_epoch - $(date +%s)))
               if (( remaining <= 0 )); then
                 echo "::error::Persistence could not be verified before the global cutoff."
                 return 1
               fi
+
+              attempts_this_checkpoint=$((attempts_this_checkpoint + 1))
               persistence_attempts=$((persistence_attempts + 1))
-              if ! git fetch origin "$DEFAULT_BRANCH"; then
-                echo "::warning::Fetch failed during persistence attempt ${persistence_attempts}; retrying."
-              elif ! git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD; then
-                if ! git rebase --autostash "origin/$DEFAULT_BRANCH"; then
-                  git rebase --abort >/dev/null 2>&1 || true
-                  echo "::error::Remote reconciliation hit conflicts; refusing an automatic conflict strategy that could discard remote work."
-                  return 1
-                fi
-              fi
-              if git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD 2>/dev/null; then
-                if git push origin "HEAD:$DEFAULT_BRANCH"; then
-                  remote_sha="$(git ls-remote origin "refs/heads/$DEFAULT_BRANCH" 2>/dev/null | awk 'NR==1 {print $1}')"
-                  local_sha="$(git rev-parse HEAD)"
-                  if [[ -n "$remote_sha" && "$remote_sha" == "$local_sha" ]]; then
-                    checkpoint_count=$((checkpoint_count + 1))
-                    echo "Verified durable checkpoint ${checkpoint_count} at ${remote_sha}."
-                    return 0
+              echo "Checkpoint persistence attempt ${attempts_this_checkpoint}/${max_checkpoint_attempts} (activation total ${persistence_attempts})."
+
+              # Bound individual Git network calls too, so a stalled connection
+              # cannot defeat the retry budget.
+              if timeout 20s git fetch origin "$DEFAULT_BRANCH"; then
+                if ! git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD; then
+                  if ! git rebase --autostash "origin/$DEFAULT_BRANCH"; then
+                    git rebase --abort >/dev/null 2>&1 || true
+                    echo "::error::Remote reconciliation hit conflicts; preserving recovery evidence and ending this activation."
+                    return 1
                   fi
-                  echo "::warning::Remote advanced during verification; refetching."
-                else
-                  echo "::warning::Push failed on persistence attempt ${persistence_attempts}; refetching and reconciling."
                 fi
+
+                if git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD 2>/dev/null; then
+                  if timeout 30s git push origin "HEAD:$DEFAULT_BRANCH"; then
+                    remote_sha="$(timeout 10s git ls-remote origin "refs/heads/$DEFAULT_BRANCH" 2>/dev/null | awk 'NR==1 {print $1}')"
+                    local_sha="$(git rev-parse HEAD)"
+                    if [[ -n "$remote_sha" && "$remote_sha" == "$local_sha" ]]; then
+                      checkpoint_count=$((checkpoint_count + 1))
+                      echo "Verified durable checkpoint ${checkpoint_count} at ${remote_sha}."
+                      return 0
+                    fi
+                    echo "::warning::Remote advanced or verification was inconclusive on persistence attempt ${persistence_attempts}; refetching."
+                  else
+                    echo "::warning::Push failed on persistence attempt ${persistence_attempts}; bounded reconciliation will continue."
+                  fi
+                else
+                  echo "::warning::Local commit is not based on the fetched default branch after reconciliation."
+                fi
+              else
+                echo "::warning::Fetch timed out or failed on persistence attempt ${persistence_attempts}."
+              fi
+
+              if (( attempts_this_checkpoint >= max_checkpoint_attempts )); then
+                break
               fi
               remaining=$((cutoff_epoch - $(date +%s)))
-              if (( remaining <= 0 )); then return 1; fi
+              if (( remaining <= 0 )); then break; fi
               local_delay=$push_backoff
               (( local_delay > remaining )) && local_delay=$remaining
               sleep "$local_delay"
-              (( push_backoff < 60 )) && push_backoff=$((push_backoff * 2))
-              (( push_backoff > 60 )) && push_backoff=60
+              (( push_backoff < 30 )) && push_backoff=$((push_backoff * 2))
+              (( push_backoff > 30 )) && push_backoff=30
             done
+
+            echo "::error::Checkpoint persistence failed after ${attempts_this_checkpoint} bounded attempts. The current Kilo activation will stop, preserve recovery artifacts, and leave the next scheduled/manual activation free to start."
+            return 1
           }
 
           save_recovery_evidence() {
