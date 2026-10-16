@@ -8,7 +8,7 @@
 - Latest verified `main` commit during this inspection: [`f9e841115fda0d7d992cb106a3e0b877474fc696`](https://github.com/takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-/commit/f9e841115fda0d7d992cb106a3e0b877474fc696), recorded at 2026-10-16 09:20:19 UTC. Re-fetch `main` before acting; this is an inspection timestamp, not a guarantee it remains HEAD.
 - The live brainstorming queue records BRAIN-002 through BRAIN-005 as `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. Design-ready means the design is documented; it does not mean implemented, tested, or resolved.
 - Exactly one workflow file was observed: `.github/workflows/main.yml` (blob `c4d85d7efabacf6382eae9b171bc9d791ad46fa1` at the inspection snapshot). Do not add another workflow as a shortcut.
-- The connected GitHub tool surface used for this inspection did not provide a reliable repository-wide current Actions-run listing, workflow dispatch, or cancellation operation. The older run #4/#5 status notes lower in this document are **historical observations only**; refresh them from live Actions UI/API before using them.
+- A live GitHub Actions API query during this inspection returned run #4 (`38834456753`) as `in_progress` and run #5 (`38858495476`) as `pending`; both are scheduled runs whose `head_sha` is the older `47c2584309527961b5528ceb563fa5b4771db66f`, not the latest verified `main` snapshot above. These runs therefore do not establish that the newer BRAIN-001 implementation or this handoff update was tested. Re-fetch status before acting. The connected tool can inspect run status and jobs but does not expose workflow dispatch or cancellation here.
 
 ## Current blocker ledger
 
