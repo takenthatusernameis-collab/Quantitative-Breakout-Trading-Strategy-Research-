@@ -446,3 +446,13 @@ Expected effect: none (no prompt change). Durable outputs: repaired `agent_hando
 Rollback and review rule: N/A (no prompt change). If push verification fails, preserve local commit evidence and re-attempt only after confirming remote state; no unchanged retry against a deterministic rejection.
 
 Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` == `25714c72419e36d2210513c375238c20c73fe014`; `python3 -m pytest tests/` → 55 passed exit 0; pilot run → evidence-only, no self-authorization; validator → `authorized: false` with precise reasons; remote SHA == local HEAD (no local-ahead commits).
+
+## Session prompt review — 2026-10-16 UTC (~16:22 UTC, refresh)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** Live SHA `bdd5f285cc02369760c5a801aff995f970a327c7` == `git ls-remote origin main`; worktree clean; `pytest tests/` → 55 passed, exit 0. All five brainstorming items revalidated at this HEAD: none is `BRAINSTORMING_REQUIRED`; BRAIN-001..005 all `RESOLVED_VERIFIED`; all 5 parallel strategy lanes `COMPLETE`; campaign authorization `authorized: true`. No instruction gap demonstrated; no quantitative-method or holdout safeguard touched or weakened; at most one prompt change per session rule respected (none proposed).
+
+**Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `bdd5f285cc02369760c5a801aff995f970a327c7`; `pytest tests/` → 55 passed exit 0.
+
+**Next specific task:** Begin the full validation-phase campaign (`holdout_enabled=False`) on the 18 genuine assets via `CampaignRunner` (BRAIN-004 manifest-derived resume + bounded ≤4MiB shards, BRAIN-003 holdout skip) to produce first validation results and candidate freeze evidence; stop and record at first external blocker, never retrying unchanged. Acceptance: tests green exit 0, no synthetic data as market history, `candidate_frozen` manifest only after validation completes, remote SHA re-verified after any commit.
