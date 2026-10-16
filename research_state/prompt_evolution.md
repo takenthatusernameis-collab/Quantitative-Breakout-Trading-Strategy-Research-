@@ -286,3 +286,43 @@ All existing prompt regression scenarios remain specified; no behavioral regress
 
 ### Rollback and review rule
 No prompt change made; if future sessions show instruction gaps, revise smallest clause with evidence and log new entry. Do not weaken holdout/data/persistence safeguards.
+
+
+## P6-2026-10-16-SAME-RUN-RECOVERY-PERSISTENCE-REMEDY
+
+### Triggering evidence
+
+- New Kilo worker session inside the SAME active GitHub Actions run as previous session (session 21); previous session ended because bounded remote checkpoint persistence failed.
+- Local `main` HEAD `dcbb307c556ec52401db84131656db18c9f65f91`, 4 commits ahead of remote `origin main` `87cb46a49a6cfd035fb56fdab9e5434103e67e5c`: `d1b780b` (touches `.github/workflows/main.yml`), `c8d348d`, `eb19a41`, `dcbb307` (state checkpoints only).
+- Direct `git push origin main` rejected deterministically: `remote rejected main -> main (refusing to allow a GitHub App to create or update workflow .github/workflows/main.yml without 'workflows' permission)`. GitHub App token lacks `workflows: write`. Because `d1b780b` is an ancestor of every local-ahead commit, no ref form can carry them while the permission is missing; unchanged retry is a deterministic failure (README 2A.G #8).
+- `git fetch origin` confirmed remote `87cb46a`; `git merge-base --is-ancestor` OK; `git status` clean; recovery bundle (`recovery-bundle.bundle`, verified complete) + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- `pytest tests/` → 20 passed, exit 0. Binance canary → HTTP 451 (persistent DATA_OR_EXTERNAL_SERVICE); api.github.com reachable.
+
+### Cause classification
+
+`PERMISSION_BLOCKER` (external — missing `workflows: write` on the GitHub App token), compounded by `DATA_OR_EXTERNAL_SERVICE` (Binance HTTP 451 egress block) and `WAITING_EXTERNAL_INTERVENTION` (stale run #38891774797 concurrency slot, cancel HTTP 403). No `PROMPT_GAP` identified; README Section 2A already governs truthful persistence reporting, no unchanged retries, and verified-remote-before-claiming.
+
+### Revision summary
+
+`NO_PROMPT_CHANGE_JUSTIFIED`. No README Section 2A change; no quantitative-method safeguard touched or weakened; no same-session implementation of a freshly brainstormed root cause.
+
+Materially different safe remedy applied (root cause confirmed, recovery bundle preserved, rollback documented):
+1. Created backup branch `backup/local-head-dcbb307-20261016` at local `dcbb307`, preserving all 4 local commits including `d1b780b` (no reset, no discard, no destructive history rewrite).
+2. Rebased the 3 state-only commits (`c8d348d`, `eb19a41`, `dcbb307`) onto remote `87cb46a`, dropping the workflow-only commit `d1b780b` (rebase applied cleanly; `d1b780b` touched only `.github/workflows/main.yml`).
+3. Fast-forward pushed `origin/main` (pushed commits touch no workflow files). Push SUCCEEDED: `87cb46a..6531c4d main -> main`.
+4. Verified persistence by direct state check: `git ls-remote origin main` == local `main` == `6531c4d03718ddd094d8aade0f16456d04d916fe`. Persistence claimed ONLY after SHA verification.
+
+Residual: `d1b780b` (ZipInfo `scan_log_archive()` fix) remains on backup branch `backup/local-head-dcbb307-20261016`, unpushed, `WAITING_EXTERNAL_INTERVENTION` — requires repository `workflows` write permission or a maintainer apply before it can reach `main`. Rollback: `git reset --hard backup/local-head-dcbb307-20261016` restores the original chain; re-attempt `d1b780b` when permission is obtained.
+
+### Regression tests and actual status
+
+| Scenario | Required behavior | Status this session |
+|---|---|---|
+| Worker success but failed persistence | Report persistence failure until remote state verified | Verified via `git ls-remote`; persistence not claimed before SHA match |
+| Permanent permission rejection | Do not retry unchanged; materially different remedy or external intervention | Rebase excluding workflow commit + fast-forward push succeeded; `d1b780b` pending permission |
+| Repeated failure across sessions | New evidence or materially different approach | Remedy differed from the rejected unchanged push; verified by remote SHA |
+| Synthetic fallback data | Block campaign; no synthetic as market history | Loader fail-closed confirmed by grep; `generate_synthetic_candles` only in `cache.py` test fixture |
+
+### Rollback and review rule
+
+If the rebased state commits cause issues, restore via `git reset --hard backup/local-head-dcbb307-20261016` (original chain intact). Do not force-push `main`. Push `d1b780b` only after `workflows` write permission is confirmed. No prompt revision this session; revisit only with observed PROMPT_GAP evidence.
