@@ -169,3 +169,21 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 **Rollback and review rule:** N/A (no prompt change).
 
 **Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `a8fa4a001557aabdd51123ff11e4bb8041c8476a`; `git status` clean; `py_compile` OK; `pytest tests/` → 20 passed, exit 0; direct curl to Binance klines → HTTP 451 (~0.1s), loader fails closed with `DataUnavailableError`, no synthetic data accepted, `research/data/` absent. Stale in-progress Actions run #38891774797 (head `4b721e6`, 7 commits behind, cancel HTTP 403) may hold the `kilo-repository` concurrency slot. Handoff and prompt-evolution edits committed and pushed as `a8fa4a0`; remote SHA re-verified identical after push.
+
+## Session prompt review — 2026-10-16 UTC (~12:11 UTC)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** live default-branch SHA refreshed to `2dd6a4fda24590444631d2241607fc3e1acda914` (prior handoff top block named `6443209`/`a8fa4a0`, now STALE — two commits behind current HEAD `2dd6a4f`; intervening `chore(kilo)` checkpoint commits touched only `research_state/prompt_evolution.md` and `research_state/agent_handoff.md`). All five open brainstorming items revalidated against live source at HEAD `2dd6a4f` and current run evidence. No item is `BRAINSTORMING_REQUIRED`; all have completed structured design. BRAIN-001 source fix CONFIRMED (no synthetic call in `load_or_fetch_asset_data`; fail-closed; 26,280-candle floor enforced) but live canary remains `WAITING_EXTERNAL_INTERVENTION` (persistent HTTP 451, reconfirmed ~0.03s this session). BRAIN-002–005 remain `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` and unimplemented (holdout not gated in `campaign.py:147`; cursor reset in `campaign.py:109-112,141-143,148-149`; monolithic `results.jsonl` 51,688,138 bytes; `checkpoint.last_verified_record: 0`).
+
+**Cause classification:** `DATA_OR_EXTERNAL_SERVICE` (persistent Binance HTTP 451 egress block) and `UNKNOWN` (no new instruction gap; the open items are pre-existing structural design items already brainstormed).
+
+**Revision summary:** none. No PROMPT_GAP demonstrated. README Section 2A already governs this situation: real data required, fail-closed, no synthetic fallback, truthful `NOT_RUN`, one bounded task per session, no same-session implementation of a freshly brainstormed root cause, and campaign blocked until P0 gates pass.
+
+**Expected effect:** none (no change). The refreshed handoff corrects the stale SHA blocks (`6443209`, `a8fa4a0`, `38689e4`, `00ac7359`, `00174e4`), revalidates all prior claims against live HEAD `2dd6a4f`, and records the fresh canary evidence.
+
+**Regression scenarios and status:** all P2/P3/P4/P5 regression scenarios remain as previously specified; behavioral tests NOT_RUN. No safeguard removed or weakened.
+
+**Rollback and review rule:** N/A (no prompt change).
+
+**Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `2dd6a4fda24590444631d2241607fc3e1acda914`; `git status` clean; `py_compile` OK; `pytest tests/` → 20 passed, exit 0; direct curl to Binance klines → HTTP 451 (~0.03s), loader fails closed with `DataUnavailableError`, no synthetic data accepted, `research/data/` absent; direct curl to api.github.com → HTTP 200 (git remote reachable). Stale in-progress Actions run #38891774797 (head `4b721e6`, cancel HTTP 403) may hold the `kilo-repository` concurrency slot. Handoff and prompt-evolution edits for this session committed and pushed below; remote SHA to be re-verified after push.
