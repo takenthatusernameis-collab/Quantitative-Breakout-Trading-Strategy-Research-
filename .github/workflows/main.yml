@@ -1,19 +1,13 @@
 name: Kilo General Agent Loop
 
 on:
-  # Validate workflow changes immediately, without needing a pull request or a manual dispatch.
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/main.yml"
-  # Recurring activations are dispatched by scheduler.yml only when this workflow is idle.
+  # Manual-only: make repository changes without launching Actions automatically.
   workflow_dispatch:
     inputs:
       agents:
         description: "Maximum sequential Kilo worker sessions for this activation"
         required: false
-        default: "1000"
+        default: "1"
         type: number
 
 # The repository-scoped token can persist ordinary repository changes, but it
@@ -48,7 +42,7 @@ jobs:
       # Do not add a parallel collector workflow, helper script, or second ledger
       # writer. The worker retry/watchdog below handles execution resilience only;
       # this step classifies completed runs and persists their diagnostic records.
-      # The current run's own terminal result is picked up on the next activation.
+      # The current run's own terminal result is picked up on a later manual activation.
       - name: Inspect completed runs and update the diagnostics ledger
         id: collect
         continue-on-error: true
@@ -59,7 +53,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           # The current run is still in progress during this scan. Its terminal
-          # result is collected during the next scheduled/manual activation.
+          # result is collected during a later manual activation.
         run: |
           set -Eeuo pipefail
           umask 077
