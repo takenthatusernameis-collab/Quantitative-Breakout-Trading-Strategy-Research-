@@ -237,6 +237,37 @@ def test_loader_fails_closed_on_provider_error_without_synthetic_fallback(tmp_pa
     assert not (tmp_path / "data_manifest.json").exists()
 
 
+
+def test_real_cache_requires_explicit_false_fallback_flag(tmp_path, monkeypatch):
+    monkeypatch.setattr(fetcher_module, "load_research_spec", tiny_spec)
+
+    class FakeFetcher:
+        def fetch_full_history(self, symbol, interval="1h", start_time=None, end_time=None):
+            return [candle(start_time)], 0, 1
+
+    monkeypatch.setattr(fetcher_module, "DataFetcher", FakeFetcher)
+    data_dir = tmp_path / "candles"
+    manifest_path = tmp_path / "data_manifest.json"
+    load_or_fetch_asset_data(
+        "TESTUSDT", min_candles=1, data_dir=str(data_dir), manifest_path=str(manifest_path)
+    )
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["assets"]["TESTUSDT"]["fallback_used"] = "false"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    monkeypatch.setattr(
+        fetcher_module,
+        "DataFetcher",
+        lambda: (_ for _ in ()).throw(AssertionError("ambiguous provenance must not be refreshed silently")),
+    )
+
+    with pytest.raises(DataUnavailableError, match="explicit no-fallback attestation"):
+        load_or_fetch_asset_data(
+            "TESTUSDT", min_candles=1, data_dir=str(data_dir), manifest_path=str(manifest_path)
+        )
+
+
+
 def test_manifest_persistence_failure_does_not_return_a_loaded_dataset(tmp_path, monkeypatch):
     monkeypatch.setattr(fetcher_module, "load_research_spec", tiny_spec)
 
