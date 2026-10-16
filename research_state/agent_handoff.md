@@ -142,20 +142,56 @@ All open items revalidated against live source at HEAD `3dfc559`:
 - Unresolved blockers ranked: (1) BRAIN-003 phase 2 (frozen candidate manifest + holdout evaluator; historical exposure audit); (2) BRAIN-002 independent pilot authorization (depends on lane 30 + lane 20); (3) per-asset real-data acquisition for remaining 19 assets (bounded fetches, gated by BRAIN-002/003); (4) stale run #38891774797 concurrency slot (last known `WAITING_EXTERNAL_INTERVENTION`, revalidate).
 - Next specific task: lane `final-holdout-isolation` (priority 30, `READY`, no dependencies) — BRAIN-003 phase 2: selector writes frozen candidate manifest (hash-bound, max 1 candidate/asset), separate holdout evaluator consumes only frozen candidates, tests prove development code never reads holdout bounds, historical exposure labeled `EXPOSED_OR_UNKNOWN` unless proven. Acceptance: validation runner creates zero holdout rows; evaluator rejects full-grid/stale-hash inputs; idempotent; then BRAIN-002 validator (lane 40).
 
+## Authoritative Current Status — 2026-10-16 UTC (~14:50 UTC, post-166e5a8)
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
+- Local `main` HEAD: `166e5a826b0ea0e258c30fcc21b26acf030d4cdf`. Remote `origin main`: `166e5a826b0ea0e258c30fcc21b26acf030d4cdf` (push `9c52c32..166e5a8 main -> main` succeeded; post-push `git fetch` confirmed origin/main == local HEAD). **Match — remote SHA matches local HEAD.**
+- Worktree clean. Remote main also contains unrelated merged commits `c6c5e49`, `7eecd34`, `9c52c32` (PR #6 diagnostics fix + workflow validation) that were rebased under this session's commit; none touch tests or research protocol files.
+- Tests: `python3 -m pytest tests/` → **47 passed, exit 0** (32 pre-existing + 15 new in test_candidate_freeze.py and test_holdout_isolation.py). All data-fetcher tests are mocked — no live network in the suite.
+
+## Blocker ledger (revalidated at HEAD 166e5a8)
+
+| ID | Status | Notes |
+|---|--------|-------|
+| BRAIN-001 — real market data path | `RESOLVED_VERIFIED` | Path committed; canary passed via `data-api.binance.vision` HTTP 200 from runner (run #38912568557); 26,280 validated BTCUSDT candles; manifest hash-verified. Per-asset acquisition for remaining 19 assets pending campaign authorization. |
+| BRAIN-002 — independent pilot authorization | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` → lane `READY` | `pilot.py` still self-authorizes (`pilot.py:54-68`); `pilot_gate.json` legacy `campaign_authorized: true` is untrusted. Dependencies (lane 20, lane 30) now satisfied — lane 40 is the next READY lane and the principal task for a later session. |
+| BRAIN-003 — final-holdout isolation | `RESOLVED_VERIFIED` (lane 30 complete) | Phase 1: `campaign.run(holdout_enabled=False)` skips holdout, writes zero holdout rows (tested). Phase 2: `candidate_freeze.py` hash-verified frozen manifest (max 1 candidate/asset); holdout mode requires the manifest before any holdout unit executes; 15 new tests pass. Historical exposure remains `EXPOSED_OR_UNKNOWN`; no frozen candidates exist yet (no validation results; campaign blocked by BRAIN-002). |
+| BRAIN-004 — deterministic resume | `RESOLVED_VERIFIED` | Manifest-derived resume cursor; crash-injection tests pass; committed at 3dfc559, remote-verified. |
+| BRAIN-005 — bounded durable results | `RESOLVED_VERIFIED` | Immutable ≤4 MiB JSONL shards + `results_manifest.json`; legacy monolith untouched; oversized-row fail-closed tested. |
+| Stale Actions runs at `d2113f3` | `INFO` | Runs 38917486349 (in_progress) and 38917520314 (pending) execute code one commit behind `dd51fce` (several behind current main); `concurrency.cancel-in-progress: false`, so they run to completion with stale code. Recorded; not blocking. |
+| Stale run #38891774797 concurrency slot | RESOLVED | Run completed/cancelled at 2026-10-16T14:03:43Z; `kilo-repository` concurrency slot freed. |
+| ZipInfo workflow diagnostic fix | `RESOLVED_EXTERNALLY` | Reached `main` via PR #5 (commit `2dabff1`); backup branch `backup/local-head-dcbb307-20261016` retained. |
+
+## Brainstorming revalidation (this session)
+
+All open items revalidated against live source at HEAD `166e5a8`:
+- BRAIN-001: `RESOLVED_VERIFIED`.
+- BRAIN-002: root cause confirmed present in source (`pilot.py` self-authorization); design record complete; **unblocked now that lanes 20 and 30 are COMPLETE** — lane 40 `READY`.
+- BRAIN-003: phase separation implemented and tested; lane 30 `COMPLETE`; exposure label `EXPOSED_OR_UNKNOWN` retained.
+- BRAIN-004/005: `RESOLVED_VERIFIED`.
+- **No item is `BRAINSTORMING_REQUIRED`; no new brainstorming item is the principal task this session.** No root cause was implemented in the same session as its design record (all design records predate this session).
+
+## Session record — 2026-10-16 UTC (~14:50 UTC)
+
+- Timestamp: 2026-10-16T14:10-14:50Z. Branch: `main`. Base HEAD pre-session: `dd51fced442cecb9eb3df57b23741333a5b454f2` == remote at session start. Final: `166e5a826b0ea0e258c30fcc21b26acf030d4cdf` == remote (verified after push; post-push fetch confirmed).
+- Chosen task and why: lane `final-holdout-isolation` (priority 30, `READY`, no dependencies) — the highest-priority independent READY lane per `parallel_strategy_lanes.json`; outranks lane 40 (depends on 20+30, now satisfied but not yet executed) and lane 10 (COMPLETE this session prior block).
+- Exact attempted change and files affected:
+  1. `tests/test_candidate_freeze.py` — new: manifest hash excludes itself, save/load roundtrip, reject unfrozen/tampered/multiple-candidates/missing-config_id manifests, config ID extraction.
+  2. `tests/test_holdout_isolation.py` — new: validation never yields or writes holdout units; holdout mode yields only frozen candidate units; holdout run rejects missing/unfrozen/tampered manifest fail-closed; manifest verified before any holdout execution.
+- Commands/exit statuses: `pip install pytest numpy`; `python3 -m pytest tests/` → **47 passed, exit 0**; `git rebase origin/main` clean; `git push origin main` → `9c52c32..166e5a8 main -> main` succeeded; `git ls-remote origin main` == `166e5a8...` (verified, plus post-push fetch).
+- Confirmation: no synthetic data accepted as market history (fixtures isolated and labeled); no unchanged retry against a permanent failure (rebase+push integrated concurrent remote advances); remote persistence claimed only after SHA verification.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`. No instruction gap; all work followed existing design records. No quantitative safeguard weakened; at most one prompt change per session rule respected (none proposed). See `prompt_evolution.md` this-session entry.
+- Persistence status (separate fields, per README 2A.E):
+  - Local commit on `main`: `166e5a8...`; **remote persistence verified** — `git ls-remote origin main` == `166e5a8...` after push, confirmed again by direct fetch.
+  - Checkpoint reconciliation: legacy `checkpoint.json` (`completed_records: 81510`, `last_verified_record: 0`) preserved as untrusted legacy evidence; resume derives from manifest-verified shard IDs.
+  - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- Unresolved blockers ranked: (1) BRAIN-002 independent pilot authorization — lane 40 `READY`, dependencies satisfied, principal next task; (2) per-asset real-data acquisition for remaining 19 assets (bounded fetches, gated by BRAIN-002/003); (3) stale runs at `d2113f3` completing with stale code.
+- Next specific task: lane `independent-pilot-authorization` (priority 40, `READY`, dependencies satisfied) — BRAIN-002: evidence-only pilot + independent validator + campaign startup revalidation. Acceptance: forged `pilot_passed`/`campaign_authorized` booleans cannot authorize; missing/synthetic/stale evidence returns `BLOCKED`; negative and positive tests with real exit codes; campaign startup revalidates evidence hashes and gates. Then per-asset real-data acquisition proceeds under campaign execution.
+
 ## Non-negotiable research-validity rules
 
-- No full campaign while applicable P0 gates remain unresolved.
+- No full campaign while applicable P0 gates remain unresolved (BRAIN-002 open).
 - Existing synthetic-derived records remain forensic/legacy-unverified evidence; do not relabel as observed market history or use for economic claims.
-- No claim of an untouched holdout unless historical non-use is established; otherwise `EXPOSED_OR_UNKNOWN`; preregister a new confirmatory period if needed.
+- No claim of an untouched holdout unless historical non-use is established; otherwise `EXPOSED_OR_UNKNOWN`.
 - A local commit, successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
 - Preserve single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
-
-## Authoritative Current Status — 2026-10-16 UTC (post-3149f23, session revalidation)
-
-- Local `main` HEAD: `3149f2375985efa12bac3c8f28aff6203967c6fa`, verified clean — `git rev-parse HEAD == git ls-remote origin main == 3149f2375985efa12bac3c8f28aff6203967c6fa`. Up to date with origin/main.
-- Tests: `python3 -m pytest tests/` → 32 passed, exit 0 (install pytest/numpy before run; suite uses no live network).
-- BRAIN revalidation: no open item is `BRAINSTORMING_REQUIRED`. BRAIN-001 `RESOLVED_VERIFIED` (path + canary); BRAIN-002/003 `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (BRAIN-003 phase 1 implemented); BRAIN-004/005 `RESOLVED_VERIFIED` (sharded store + manifest-derived resume).
-- Active lane: `next-breakout-hypothesis` (`research_state/parallel_strategy_lanes.json`) status `IN_PROGRESS`, priority 10, storage artifacts started at `research/strategies/next-breakout-hypothesis/` (hypothesis.md, protocol.json status `DESIGN_DRAFT`, tests/README.md placeholder). `final-holdout-isolation` (priority 30) remains `READY` with no dependencies.
-- Shared data gate: `BLOCKED_EXTERNAL` for historical backtest/performance/economic/full campaign. BRAIN-002/BRAIN-003 phase 2 still required before any campaign authorization.
-- No prompt change: NO_PROMPT_CHANGE_JUSTIFIED. No quantitative safeguard changed; holdout guard intact.
-- Next precise task: deepen the next-breakout-hypothesis lane — add deterministic known-answer fixture tests under `research/strategies/next-breakout-hypothesis/tests/`, refine `protocol.json` from `DESIGN_DRAFT` to `PREREGISTERED`, and land the lane as science-only (no historical performance claims) before BRAIN-003 phase 2 and BRAIN-002 validator lane 40 execute in dependency order.

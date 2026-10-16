@@ -125,8 +125,8 @@
     {
       "lane_id": "final-holdout-isolation",
       "priority": 30,
-      "status": "READY",
-      "scope": "Implement BRAIN-003 phase separation while real-data acquisition proceeds independently.",
+      "status": "COMPLETE",
+      "scope": "Implemented BRAIN-003 phase separation while real-data acquisition proceeds independently.",
       "dependencies": [],
       "permitted_while_data_gate_blocked": true,
       "required_artifacts": [
@@ -138,7 +138,15 @@
         "Development and validation code cannot access final holdout rows.",
         "Holdout evaluation consumes only a frozen candidate and frozen protocol.",
         "Historical exposure remains EXPOSED_OR_UNKNOWN unless independently established."
-      ]
+      ],
+      "completion_evidence": {
+        "commit": "166e5a826b0ea0e258c30fcc21b26acf030d4cdf",
+        "remote_sha_verified": "166e5a826b0ea0e258c30fcc21b26acf030d4cdf via git ls-remote origin main (post-push fetch confirmed)",
+        "tests": "python3 -m pytest tests/ -> 47 passed, exit 0 (15 new tests: test_candidate_freeze.py, test_holdout_isolation.py)",
+        "implementation": "campaign.py run(holdout_enabled=False) skips all final-holdout units and writes zero holdout rows (BRAIN-003 phase 1, re-tested); candidate_freeze.py enforces hash-verified frozen manifest with at most one candidate per asset; holdout_enabled=True requires the manifest before any holdout unit executes and rejects missing/unfrozen/tampered manifests fail-closed.",
+        "coverage": "test_iter_units_validation_skips_holdout_folds_entirely; test_iter_units_holdout_only_yields_frozen_candidates; test_validation_run_writes_zero_holdout_rows; test_holdout_run_requires_frozen_candidate_manifest; test_holdout_run_rejects_unfrozen_manifest; test_holdout_run_rejects_tampered_manifest_hash; test_holdout_candidate_manifest_is_verified_before_any_holdout_execution; manifest hash/tamper/unfrozen/multiple-candidates/missing-config_id tests."
+      },
+      "notes": "No research/candidate_manifest.json exists yet: no validation results exist while the campaign remains blocked by BRAIN-002, so there are no frozen candidates. Candidate freeze requires completed validation on genuine data. Historical holdout exposure remains EXPOSED_OR_UNKNOWN (legacy results are synthetic-marked in data_manifest.json; the pilot gate is self-authorized and untrusted). Lane 40 (independent-pilot-authorization) dependencies are now satisfied; it is the next READY lane."
     },
     {
       "lane_id": "independent-pilot-authorization",
