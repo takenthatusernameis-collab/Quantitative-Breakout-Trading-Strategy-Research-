@@ -1,0 +1,53 @@
+name: Kilo Idle Scheduler
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+# This dispatcher is deliberately separate from the long-running Kilo workflow.
+# It may supersede another dispatcher, but it must never occupy the Kilo run's
+# concurrency group or replace a queued manual/push validation.
+concurrency:
+  group: kilo-idle-scheduler
+  cancel-in-progress: true
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Dispatch Kilo only when the main workflow is idle
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          # The main workflow is the single writer. Do not enqueue a scheduled
+          # activation while any manual, push-triggered, or previous scheduled
+          # activation is queued or running.
+          active_runs="$(gh run list --workflow main.yml --limit 100 --json databaseId,status,event,createdAt)"
+          active_count="$(jq '[.[] | select(.status != "completed")] | length' <<< "$active_runs")"
+
+          if (( active_count > 0 )); then
+            echo "Main Kilo workflow has ${active_count} queued/running run(s); skipping this schedule tick."
+            exit 0
+          fi
+
+          # Recheck immediately before dispatch, reducing the race window for
+          # a manual/push activation arriving during the first API query.
+          active_runs="$(gh run list --workflow main.yml --limit 100 --json databaseId,status,event,createdAt)"
+          active_count="$(jq '[.[] | select(.status != "completed")] | length' <<< "$active_runs")"
+
+          if (( active_count > 0 )); then
+            echo "Main Kilo workflow became busy; skipping dispatch."
+            exit 0
+          fi
+
+          gh workflow run main.yml --ref main --field agents=1000
+          echo "Dispatched a scheduled Kilo activation because no main-workflow run was queued or running."
