@@ -113,7 +113,7 @@ class CampaignRunner:
 
             # Load asset data
             try:
-                candles = load_or_fetch_asset_data(asset_symbol, min_candles=1000)
+                candles = load_or_fetch_asset_data(asset_symbol)
                 print(f"  Loaded {len(candles)} candles for {asset_symbol}")
             except Exception as e:
                 print(f"  Failed to load data for {asset_symbol}: {e}")
@@ -125,7 +125,7 @@ class CampaignRunner:
             btc_candles = None
             if asset_symbol != 'BTCUSDT':
                 try:
-                    btc_candles = load_or_fetch_asset_data('BTCUSDT', min_candles=1000)
+                    btc_candles = load_or_fetch_asset_data('BTCUSDT')
                 except Exception:
                     pass
 
