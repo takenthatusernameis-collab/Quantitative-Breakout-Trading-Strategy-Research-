@@ -7,8 +7,7 @@ on:
       - main
     paths:
       - ".github/workflows/main.yml"
-  schedule:
-    - cron: "*/5 * * * *"
+  # Recurring activations are dispatched by scheduler.yml only when this workflow is idle.
   workflow_dispatch:
     inputs:
       agents:
