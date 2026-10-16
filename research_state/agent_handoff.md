@@ -149,3 +149,13 @@ All open items revalidated against live source at HEAD `3dfc559`:
 - No claim of an untouched holdout unless historical non-use is established; otherwise `EXPOSED_OR_UNKNOWN`; preregister a new confirmatory period if needed.
 - A local commit, successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
 - Preserve single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
+
+## Authoritative Current Status — 2026-10-16 UTC (post-3149f23, session revalidation)
+
+- Local `main` HEAD: `3149f2375985efa12bac3c8f28aff6203967c6fa`, verified clean — `git rev-parse HEAD == git ls-remote origin main == 3149f2375985efa12bac3c8f28aff6203967c6fa`. Up to date with origin/main.
+- Tests: `python3 -m pytest tests/` → 32 passed, exit 0 (install pytest/numpy before run; suite uses no live network).
+- BRAIN revalidation: no open item is `BRAINSTORMING_REQUIRED`. BRAIN-001 `RESOLVED_VERIFIED` (path + canary); BRAIN-002/003 `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (BRAIN-003 phase 1 implemented); BRAIN-004/005 `RESOLVED_VERIFIED` (sharded store + manifest-derived resume).
+- Active lane: `next-breakout-hypothesis` (`research_state/parallel_strategy_lanes.json`) status `IN_PROGRESS`, priority 10, storage artifacts started at `research/strategies/next-breakout-hypothesis/` (hypothesis.md, protocol.json status `DESIGN_DRAFT`, tests/README.md placeholder). `final-holdout-isolation` (priority 30) remains `READY` with no dependencies.
+- Shared data gate: `BLOCKED_EXTERNAL` for historical backtest/performance/economic/full campaign. BRAIN-002/BRAIN-003 phase 2 still required before any campaign authorization.
+- No prompt change: NO_PROMPT_CHANGE_JUSTIFIED. No quantitative safeguard changed; holdout guard intact.
+- Next precise task: deepen the next-breakout-hypothesis lane — add deterministic known-answer fixture tests under `research/strategies/next-breakout-hypothesis/tests/`, refine `protocol.json` from `DESIGN_DRAFT` to `PREREGISTERED`, and land the lane as science-only (no historical performance claims) before BRAIN-003 phase 2 and BRAIN-002 validator lane 40 execute in dependency order.

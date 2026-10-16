@@ -408,3 +408,11 @@ N/A (no prompt change). If push verification fails, the local commit evidence is
 
 `git rev-parse HEAD` == `git ls-remote origin main` == `14657aee0a2602e0d793ae4eff0eb87dd753d370` pre-push; post-push remote SHA verified identical; `python3 -m pytest tests/` → 24 passed exit 0; curl binance.com klines → HTTP 451 (~0.17s), loader fails closed; curl data-api.binance.vision → HTTP 200 (~0.57s), canary passed; curl api.github.com → HTTP 200.
 
+
+## Session prompt review — 2026-10-16 UTC (current, post-3149f23)
+
+Outcome: NO_PROMPT_CHANGE_JUSTIFIED.
+
+Triggering evidence: live HEAD `3149f2375985efa12bac3c8f28aff6203967c6fa` == origin/main; tests/ suite `python3 -m pytest tests/` → 32 passed, exit 0. Revalidated all open brainstorming items: none is `BRAINSTORMING_REQUIRED`; BRAIN-001 `RESOLVED_VERIFIED`, BRAIN-004/005 `RESOLVED_VERIFIED`, BRAIN-002/003 `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. The active work is a science-only design lane (`next-breakout-hypothesis`) with no BRAINSTORMING_REQUIRED principal task required. No instruction gap demonstrated; README Section 2A already governs fail-closed data, no synthetic fallback, no same-session implementation of freshly brainstormed root causes, truthful NOT_RUN statuses, and blocked campaign gates. No quantitative safeguard touched or weakened.
+
+Regression scenarios and status: all P2–P6 scenarios remain as specified; no behavior changed this session. Remote persistence verified before any claim.
