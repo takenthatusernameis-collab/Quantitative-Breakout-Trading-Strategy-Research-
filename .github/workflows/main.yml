@@ -39,9 +39,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
 
-# Poll all completed workflow runs at each activation. This is intentionally
-# inside the existing workflow so the repository has one maintained workflow
-# file; the running workflow's own final result is observed on the next scan.
+      # Poll all completed workflow runs at each activation. This is intentionally
+      # inside the existing workflow so the repository has one maintained workflow
+      # file; the running workflow's own final result is observed on the next scan.
       - name: Inspect completed runs and update the diagnostics ledger
         id: collect
         continue-on-error: true
