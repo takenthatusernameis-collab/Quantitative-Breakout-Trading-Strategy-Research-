@@ -93,8 +93,8 @@
     {
       "lane_id": "deterministic-resume-and-result-shards",
       "priority": 20,
-      "status": "READY",
-      "scope": "Implement BRAIN-004 and BRAIN-005 as one isolated reliability task without requiring market data.",
+      "status": "COMPLETE",
+      "scope": "Implemented BRAIN-004 and BRAIN-005 as one isolated reliability task without requiring market data.",
       "dependencies": [],
       "permitted_while_data_gate_blocked": true,
       "required_artifacts": [
@@ -108,7 +108,15 @@
         "Crash injection proves no silent skips or duplicate committed experiments.",
         "Legacy monolithic result is preserved until integrity is verified.",
         "No force-push is used to erase historical blobs."
-      ]
+      ],
+      "evidence": {
+        "commit": "3dfc5590b1a9a5027ebfca4de3a4c6a464fb6e61",
+        "remote_sha_verified": "3dfc5590b1a9a5027ebfca4de3a4c6a464fb6e61 via git ls-remote origin main",
+        "tests": "python3 -m pytest tests/ -> 32 passed, exit 0 (8 new tests in tests/test_campaign_resume.py)",
+        "implementation": "src/breakout_research/campaign.py run() now uses backtest.shards.ResultStore: stable experiment IDs (compute_experiment_id), manifest-derived resume cursor, bounded immutable <=4 MiB JSONL shards under research/results_shards/<campaign_id>/, research/results_manifest.json, legacy research/results.jsonl untouched, holdout-skip gate default off (BRAIN-003 phase 1), fail-closed stale checkpoint and oversized-row rejection.",
+        "shards_fix": "src/breakout_research/backtest/shards.py ShardWriter no longer reopens finalized shards on resume; reconcile() adopts shards by correct per-path shard index."
+      },
+      "notes": "Real per-asset acquisition for the full 20-asset universe remains pending campaign execution once BRAIN-002/003 authorization gates pass. ETHUSDT manifest entry remains synthetic forensic evidence and is not relabeled. Next READY lane: final-holdout-isolation (priority 30)."
     },
     {
       "lane_id": "final-holdout-isolation",

@@ -267,6 +267,23 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 
 **Rollback and review rule:** N/A (no prompt change). History preserved; no reset or rewrite performed.
 
+
+## Session prompt review — 2026-10-16 UTC (~14:25 UTC, post-3dfc559)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** live default-branch SHA refreshed to `3dfc5590b1a9a5027ebfca4de3a4c6a464fb6e61` (local == `git ls-remote origin main`, verified after push). All five brainstorming items revalidated against live source: none is `BRAINSTORMING_REQUIRED`; BRAIN-001 `RESOLVED_VERIFIED`; BRAIN-004/005 implemented and verified; BRAIN-002/003 remain `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. The session's principal task (BRAIN-004 + BRAIN-005 wiring) was an already-designed item, implemented only after its design record existed — consistent with README Section 2A, no instruction gap caused or blocked the work.
+
+**Cause classification:** no `PROMPT_GAP` demonstrated. The pre-existing structural defects (cursor resets, holdout exposure, monolithic results, untrusted checkpoint counters) were design items with completed brainstorming records, implemented per their staged plans with tests and remote-persistence verification.
+
+**Revision summary:** none. No README Section 2A change; no quantitative-method safeguard touched or weakened; no same-session implementation of a freshly brainstormed root cause (none was created). The `d1b780b` ZipInfo workflow fix reached `main` externally via PR #5 (commit `2dabff1`), clearing its `WAITING_EXTERNAL_INTERVENTION` permission block.
+
+**Regression scenarios and status:** all P2/P3/P4/P5 regression scenarios remain as previously specified; behavioral tests for lanes 20/30/40 remain NOT_RUN until those lanes execute end to end. The new `tests/test_campaign_resume.py` covers crash-injection, counter tampering, holdout skip, idempotent resume, oversized-row rejection, stale-checkpoint rejection, and deterministic ID binding — all passing (`32 passed, exit 0`).
+
+**Rollback and review rule:** N/A (no prompt change). If resume or shard behavior proves defective in later runs, preserve evidence, revise the smallest defective clause, and log a new entry; do not remove fail-closed or holdout safeguards.
+
+**Verification this session:** `git rev-parse HEAD` == `git ls-remote origin main` == `3dfc5590b1a9a5027ebfca4de3a4c6a464fb6e61`; `git status` clean (except untracked reproducible `research/data/`); `python3 -m pytest tests/` → 32 passed, exit 0; push `ded58a8..3dfc559` fast-forwarded `origin/main` and remote SHA was re-verified before any persistence claim.
+
 ## P4-2026-10-16-SAME-RUN-RECOVERY-VERIFICATION
 
 ### Triggering evidence
