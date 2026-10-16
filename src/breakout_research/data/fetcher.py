@@ -125,15 +125,17 @@ class DataFetcher:
                     status_code = getattr(response, "status_code", None)
                 # Don't hide invalid symbols, malformed requests, or API contract changes.
                 # Rotate endpoints only for access/rate-limit/transient server failures.
-                if (
-                    status_code not in ENDPOINT_FAILOVER_STATUS_CODES
-                    or index == len(self.endpoints) - 1
-                ):
+                if status_code not in ENDPOINT_FAILOVER_STATUS_CODES:
                     raise DataUnavailableError(
                         f"Binance endpoint {endpoint} failed for {symbol}: HTTP {status_code}"
                     ) from exc
                 if len(self.endpoint_failures) < 20:
                     self.endpoint_failures.append(f"{endpoint}: HTTP {status_code}")
+                if index == len(self.endpoints) - 1:
+                    raise DataUnavailableError(
+                        f"All configured official Binance endpoints failed for {symbol}: "
+                        + "; ".join(self.endpoint_failures[-5:])
+                    ) from exc
                 continue
             except requests.RequestException as exc:
                 if len(self.endpoint_failures) < 20:
