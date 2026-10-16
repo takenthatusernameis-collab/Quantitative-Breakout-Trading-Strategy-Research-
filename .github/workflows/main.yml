@@ -1,15 +1,13 @@
 name: Kilo General Agent Loop
 
 on:
-  # Keep the recurring Kilo activation; each scheduled run uses the default of 1 session.
-  schedule:
-    - cron: "*/5 * * * *"
+  # Manual-only: make repository changes without launching Actions automatically.
   workflow_dispatch:
     inputs:
       agents:
         description: "Maximum sequential Kilo worker sessions for this activation"
         required: false
-        default: "1000"
+        default: "1"
         type: number
 
 # The repository-scoped token can persist ordinary repository changes, but it
