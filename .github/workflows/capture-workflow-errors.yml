@@ -70,7 +70,7 @@ jobs:
           # Bounded work prevents historical backfill from overrunning the job.
           PAGE_SIZE = 100
           MAX_RUN_PAGES = 10
-          MAX_NEW_RUNS_PER_INVOCATION = 100
+          MAX_NEW_RUNS_PER_INVOCATION = 50
           MAX_ARCHIVE_BYTES = 30 * 1024 * 1024
           MAX_LOG_FILE_BYTES = 5 * 1024 * 1024
           MAX_ERROR_LINES_PER_RUN = 20
@@ -416,30 +416,30 @@ jobs:
                   })
                   return record
 
-              if record["potential_errors"]:
-                  try:
-                      log_signals, log_status = scan_log_archive(run)
-                      record["log_capture_status"] = log_status
-                      record["potential_errors"].extend(log_signals)
+              # Scan logs even when the run appears successful; failures can be handled or suppressed.
+              try:
+                  log_signals, log_status = scan_log_archive(run)
+                  record["log_capture_status"] = log_status
+                  record["potential_errors"].extend(log_signals)
 
-                      if log_status in ("archive_not_readable_as_zip", "archive_exceeded_30MiB_limit"):
-                          record["potential_errors"].append({
-                              "type": "diagnostic_capture_warning",
-                              "stage": "read_log_archive",
-                              "detail": log_status,
-                          })
-                  except Exception as exc:
-                      record["log_capture_status"] = "unavailable"
+                  if log_status in ("archive_not_readable_as_zip", "archive_exceeded_30MiB_limit"):
                       record["potential_errors"].append({
-                          "type": "diagnostic_capture_error",
-                          "stage": "download_or_scan_logs",
-                          "detail": str(exc)[:300],
+                          "type": "diagnostic_capture_warning",
+                          "stage": "read_log_archive",
+                          "detail": log_status,
                       })
-                      record["capture_status"] = (
-                          "partial"
-                          if record["capture_attempts"] < MAX_CAPTURE_ATTEMPTS
-                          else "incomplete_final"
-                      )
+              except Exception as exc:
+                  record["log_capture_status"] = "unavailable"
+                  record["potential_errors"].append({
+                      "type": "diagnostic_capture_error",
+                      "stage": "download_or_scan_logs",
+                      "detail": str(exc)[:300],
+                  })
+                  record["capture_status"] = (
+                      "partial"
+                      if record["capture_attempts"] < MAX_CAPTURE_ATTEMPTS
+                      else "incomplete_final"
+                  )
 
               return record
 
