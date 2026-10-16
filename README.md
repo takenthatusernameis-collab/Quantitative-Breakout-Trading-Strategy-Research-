@@ -1,3 +1,33 @@
+# 0. Automation-first parallel research lanes
+
+This section is an execution policy, not optional guidance. At every worker-session start, read `research_state/parallel_strategy_lanes.json`, refresh its status against current source and persisted evidence, and select the highest-priority independent lane that is `READY`. Do not spend another session repeating a known external failure while an independent lane remains actionable.
+
+## Shared-gate rule
+
+A blocked real-data gate blocks **historical backtests, performance claims, economic conclusions and full campaigns**. It does not block:
+- discovery of a materially distinct strategy hypothesis;
+- writing and freezing an executable protocol;
+- strategy implementation with deterministic known-answer fixtures;
+- test-driven work on checkpoint recovery, immutable result storage, holdout isolation or independent pilot authorization;
+- a bounded provider/endpoint preflight that either succeeds with verified data or records a precise external blocker.
+
+Never use synthetic fixtures as historical market evidence. Never shorten the frozen 3-year / 26,280-hour minimum to get a green run. Distinguish `strategy correctness`, `evaluation validity`, `data readiness`, `economic outcome` and `infrastructure completion` as separate statuses.
+
+## Lane execution contract
+
+1. Inspect the queue, existing research specifications, result ledger and prior lane artifacts before choosing a hypothesis. Avoid renaming or reparameterizing an already tested idea as a "new" strategy.
+2. Keep strategy-specific protocols, implementation, fixtures and reports inside `research/strategies/<lane_id>/`. Do not edit another lane's artifacts. Shared infrastructure changes require dedicated tests and must not be mixed with a strategy's performance report.
+3. A lane that needs real data may progress through discovery, preregistration, implementation and deterministic fixtures. When ready for backtesting while BRAIN-001 remains blocked, set it to `READY_FOR_BACKTEST`, record the exact gate and move to another `READY` lane.
+4. Update the queue only after the result or artifact is persisted and verified. Use `BLOCKED_EXTERNAL` only for a reproduced external/permission limit; use `COMPLETE` only after acceptance checks; use `REJECTED` for a valid negative research result, never for an infrastructure failure.
+5. Preserve independent lane artifacts and frozen hashes. Do not treat worker success, a green workflow, a self-reported boolean, or a checkpoint counter as proof of acceptance.
+6. Run the smallest discriminating test first. If it falsifies an implementation assumption, fix it; if an external dependency blocks the test, record the endpoint/status and continue to the next independent lane. No unbounded retry loops.
+
+## Practical parallelism boundary
+
+This repository intentionally retains one workflow and one repository-wide Kilo concurrency group. The lane queue prevents a blocked data dependency from blocking *all research work*, but it does not create simultaneous jobs inside this repository. Genuine compute parallelism must use separate strategy repositories or separately authorized execution environments. Do not add a second workflow here to bypass the existing permissions or concurrency policy. Each lane must still obey the same data and holdout gates before making economic claims.
+
+---
+
 # 1. Initial prompt diagnosis
 
 The prompt is already unusually strong on reproducibility and operational recovery. The biggest remaining danger is not missing more requirements; it is leaving a few critical decisions ambiguous enough that Kilo could implement the wrong experiment correctly, run thousands of tests, and produce convincing but misleading results.

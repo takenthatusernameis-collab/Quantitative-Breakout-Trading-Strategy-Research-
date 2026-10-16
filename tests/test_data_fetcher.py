@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
+import requests
 
 from breakout_research.config import Candle
 from types import SimpleNamespace
@@ -11,6 +12,8 @@ import breakout_research.campaign as campaign_module
 from breakout_research.data import fetcher as fetcher_module
 from breakout_research.data.fetcher import (
     BINANCE_KLINES_ENDPOINT,
+    BINANCE_MARKET_DATA_KLINES_ENDPOINT,
+    BINANCE_KLINES_ENDPOINTS,
     DATASET_HASH_ALGORITHM,
     DataFetcher,
     DataUnavailableError,
@@ -264,6 +267,9 @@ def test_loader_replaces_synthetic_manifest_record_with_verified_real_cache(tmp_
 
     class FakeFetcher:
         calls = 0
+        endpoint_used = BINANCE_MARKET_DATA_KLINES_ENDPOINT
+        endpoints_used = [BINANCE_MARKET_DATA_KLINES_ENDPOINT]
+        endpoint_failures = [f"{BINANCE_KLINES_ENDPOINT}: HTTP 451"]
 
         def fetch_full_history(self, symbol, interval="1h", start_time=None, end_time=None):
             self.calls += 1
@@ -284,6 +290,9 @@ def test_loader_replaces_synthetic_manifest_record_with_verified_real_cache(tmp_
     entry = manifest["assets"]["TESTUSDT"]
     assert entry["fallback_used"] is False
     assert entry["provider"] == "binance"
+    assert entry["endpoint"] == BINANCE_MARKET_DATA_KLINES_ENDPOINT
+    assert entry["endpoints_used"] == [BINANCE_MARKET_DATA_KLINES_ENDPOINT]
+    assert entry["endpoint_failures"] == [f"{BINANCE_KLINES_ENDPOINT}: HTTP 451"]
     assert entry["hash_algorithm"] == DATASET_HASH_ALGORITHM
     assert entry["content_hash"] == compute_content_hash(first)
     assert manifest["invalidated_prior_entries"]["TESTUSDT"][0]["fallback_source"] == "synthetic"
@@ -399,3 +408,116 @@ def test_real_cache_hash_mismatch_blocks_instead_of_silently_refetching(tmp_path
         load_or_fetch_asset_data(
             "TESTUSDT", min_candles=1, data_dir=str(data_dir), manifest_path=str(manifest_path)
         )
+
+
+
+def test_fetcher_fails_over_after_endpoint_451_and_records_actual_endpoint():
+    first_candle = candle(1_700_000_000_000)
+    calls = []
+
+    class FakeResponse:
+        def __init__(self, status_code, payload=None):
+            self.status_code = status_code
+            self.payload = payload if payload is not None else []
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise requests.HTTPError(
+                    f"HTTP {self.status_code}",
+                    response=SimpleNamespace(status_code=self.status_code),
+                )
+
+        def json(self):
+            return self.payload
+
+    class FakeSession:
+        def get(self, url, **_kwargs):
+            calls.append(url)
+            if url == BINANCE_KLINES_ENDPOINT:
+                return FakeResponse(451)
+            return FakeResponse(200, [raw_kline(first_candle)])
+
+    fetcher = DataFetcher(max_retries=1, backoff_seconds=0)
+    fetcher._rate_limit = lambda: None
+    fetcher.session = FakeSession()
+
+    payload = fetcher.fetch_klines("BTCUSDT")
+
+    assert payload == [raw_kline(first_candle)]
+    assert calls == list(BINANCE_KLINES_ENDPOINTS)
+    assert fetcher.endpoint_used == BINANCE_MARKET_DATA_KLINES_ENDPOINT
+    assert fetcher.endpoints_used == [BINANCE_MARKET_DATA_KLINES_ENDPOINT]
+    assert any("HTTP 451" in failure for failure in fetcher.endpoint_failures)
+
+
+def test_fetcher_does_not_fail_over_for_non_retriable_bad_request():
+    calls = []
+
+    class FakeResponse:
+        status_code = 400
+
+        def raise_for_status(self):
+            raise requests.HTTPError(
+                "HTTP 400",
+                response=SimpleNamespace(status_code=400),
+            )
+
+    class FakeSession:
+        def get(self, url, **_kwargs):
+            calls.append(url)
+            return FakeResponse()
+
+    fetcher = DataFetcher(max_retries=1, backoff_seconds=0)
+    fetcher._rate_limit = lambda: None
+    fetcher.session = FakeSession()
+
+    with pytest.raises(DataUnavailableError, match="HTTP 400"):
+        fetcher.fetch_klines("NOT_A_SYMBOL")
+
+    assert calls == [BINANCE_KLINES_ENDPOINT]
+
+
+def test_official_endpoint_failover_stays_with_binance_market_data():
+    assert BINANCE_KLINES_ENDPOINTS == (
+        BINANCE_KLINES_ENDPOINT,
+        BINANCE_MARKET_DATA_KLINES_ENDPOINT,
+    )
+    assert BINANCE_MARKET_DATA_KLINES_ENDPOINT == (
+        "https://data-api.binance.vision/api/v3/klines"
+    )
+
+
+
+def test_fetcher_reports_both_official_endpoint_failures_when_all_are_blocked():
+    calls = []
+
+    class FakeResponse:
+        def __init__(self, status_code):
+            self.status_code = status_code
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise requests.HTTPError(
+                    f"HTTP {self.status_code}",
+                    response=SimpleNamespace(status_code=self.status_code),
+                )
+
+    class FakeSession:
+        def get(self, url, **_kwargs):
+            calls.append(url)
+            status = 451 if url == BINANCE_KLINES_ENDPOINT else 403
+            return FakeResponse(status)
+
+    fetcher = DataFetcher(max_retries=1, backoff_seconds=0)
+    fetcher._rate_limit = lambda: None
+    fetcher.session = FakeSession()
+
+    with pytest.raises(DataUnavailableError) as exc_info:
+        fetcher.fetch_klines("BTCUSDT")
+
+    message = str(exc_info.value)
+    assert calls == list(BINANCE_KLINES_ENDPOINTS)
+    assert BINANCE_KLINES_ENDPOINT in message
+    assert BINANCE_MARKET_DATA_KLINES_ENDPOINT in message
+    assert "HTTP 451" in message
+    assert "HTTP 403" in message

@@ -333,3 +333,26 @@ If the rebased state commits cause issues, restore via `git reset --hard backup/
 - tests/: 20 passed; Binance klines HTTP 451 (loader fail-closed, no synthetic fallback accepted).
 - Workflow ZipInfo fix committed locally but push rejected for missing `workflows` permission; preserved on `backup/workflow-fix-9f28d24`; main held at bb20c46. UNpushed remains WAITING_EXTERNAL_INTERVENTION.
 - BRAIN-001 IMPLEMENTATION_IN_PROGRESS/WAITING_EXTERNAL (live canary HTTP 451); BRAIN-002..005 DESIGN_READY and unimplemented. No BRAINSTORMING_REQUIRED principal task. NO_PROMPT_CHANGE_JUSTIFIED.
+
+
+## Prompt/automation review — 2026-10-16 (non-blocking research lanes)
+
+### Observed failure mode
+A live provider restriction (Binance API HTTP 451) was incorrectly operationally capable of freezing unrelated research work. Repeating the same full-run attempt could not clear a permissions or egress boundary. Separately, the public-market-data-only Binance REST host was not yet included in a bounded same-provider endpoint preflight.
+
+### Material improvement
+- Added an automation-first lane contract near the top of `README.md`: the worker reads a machine-readable queue, picks the highest-priority independent `READY` lane, records exact blockers, and continues data-independent work while the historical-data gate is closed.
+- Added `research_state/parallel_strategy_lanes.json` with acceptance artifacts and dependencies for (1) official Binance endpoint preflight, (2) a materially distinct next breakout hypothesis, (3) deterministic resume plus bounded result shards, (4) holdout isolation, and (5) independent pilot authorization.
+- Added explicit failover between two official Binance spot klines endpoints. HTTP 403/429/451 and transient server/network failures can trigger the alternate endpoint; invalid-request/API-contract failures do not. The actually used endpoint and bounded failover diagnostics are recorded in the manifest and approved caches accept only endpoints in the allowlist.
+- Added regression tests for HTTP 451 failover, actual-endpoint selection, cache provenance, and refusing failover for a non-retriable HTTP 400.
+- No synthetic fallback, shortened history floor, or permission bypass was introduced.
+
+### Validation status and next action
+- Changes are implemented on branch `automation/parallel-lanes-data-failover-20261016`; they are **not yet merged to main**.
+- Static source/manifest review confirms both endpoint URLs are allowlisted, the chosen endpoint is persisted, and cache verification accepts only an approved endpoint.
+- The Python test suite has **not** been executed on this branch. The next run must run `python3 -m pytest tests/` before accepting the change and then attempt the bounded live BTCUSDT canary through the actual Actions runner.
+- If both official endpoints return an external block, record both statuses as `BLOCKED_EXTERNAL` and immediately move to an independent strategy-design or recovery/storage lane. Do not retry an unchanged blocked canary indefinitely.
+- The separate workflow scanner fix remains unmerged because the connected GitHub App lacks `workflows` write permission; do not claim that defect is repaired here.
+
+### Scope boundary
+This queue enables independent work to progress; it does not enable simultaneous runs inside this repository because the existing workflow retains one concurrency group. True compute parallelism requires separate strategy repositories or separately authorized runners. Data, provenance, and holdout requirements remain mandatory for all economic conclusions.

@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "updated_utc": "2026-10-16",
+  "repository": "takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-",
+  "operating_mode": "automation_first_independent_lanes",
+  "shared_gates": {
+    "real_market_data": {
+      "gate_id": "BRAIN-001",
+      "status": "BLOCKED_EXTERNAL",
+      "reason": "Binance api.binance.com canary returned HTTP 451; official market-data-only endpoint has not yet been canaried.",
+      "requirement": "At least 26280 validated closed hourly candles per required asset, genuine provenance, content hashes, persisted artifacts, independent readback.",
+      "blocks": [
+        "historical_backtest",
+        "performance_claim",
+        "economic_conclusion",
+        "full_campaign"
+      ],
+      "does_not_block": [
+        "hypothesis_discovery",
+        "literature_or_methodology_review",
+        "preregistration",
+        "strategy_implementation",
+        "deterministic_unit_fixtures",
+        "recovery_storage_work",
+        "holdout_isolation_work",
+        "pilot_validator_work"
+      ]
+    }
+  },
+  "lane_policy": {
+    "queue_owner": "research_state/parallel_strategy_lanes.json",
+    "lane_output_root": "research/strategies/<lane_id>/",
+    "status_values": [
+      "READY",
+      "IN_PROGRESS",
+      "BLOCKED_EXTERNAL",
+      "READY_FOR_BACKTEST",
+      "COMPLETE",
+      "REJECTED"
+    ],
+    "priority_rule": "Select the READY lane with the lowest numeric priority whose dependencies are satisfied. If one lane is blocked externally, work the next independent READY lane.",
+    "isolation_rule": "Keep strategy code, protocol, tests, reports, and state lane-local. Changes to shared campaign/data/checkpoint files must be reviewed separately and must not be mixed with hypothesis experiments.",
+    "synthetic_fixture_rule": "Synthetic candles may be used only for deterministic software fixtures and must never be presented as market history or economic evidence.",
+    "concurrency_note": "The repository currently has one workflow concurrency group and one shared main branch. This queue removes research-task coupling but does not create simultaneous jobs in this repository. For actual compute parallelism, run lanes in separate repositories or separately authorized workflows; do not add another workflow to this repository as a workaround."
+  },
+  "lanes": [
+    {
+      "lane_id": "binance-official-endpoint-preflight",
+      "priority": 0,
+      "status": "READY",
+      "scope": "Research the official market-data-only Binance endpoint and validate explicit same-provider failover; keep a strict fail-closed policy.",
+      "dependencies": [],
+      "permitted_while_data_gate_blocked": true,
+      "required_artifacts": [
+        "endpoint_canary_report.json",
+        "endpoint failover tests",
+        "provenance readback showing selected endpoint"
+      ],
+      "completion_criteria": [
+        "Canary is run from the intended GitHub Actions runner.",
+        "HTTP status and response source are recorded.",
+        "If both official endpoints fail, report BLOCKED_EXTERNAL without synthetic fallback."
+      ]
+    },
+    {
+      "lane_id": "next-breakout-hypothesis",
+      "priority": 10,
+      "status": "READY",
+      "scope": "Identify one materially distinct breakout hypothesis by inspecting existing specifications/results first; write a preregistered, testable protocol and deterministic known-answer fixtures.",
+      "dependencies": [],
+      "permitted_while_data_gate_blocked": true,
+      "required_artifacts": [
+        "research/strategies/next-breakout-hypothesis/hypothesis.md",
+        "research/strategies/next-breakout-hypothesis/protocol.json",
+        "research/strategies/next-breakout-hypothesis/tests/"
+      ],
+      "completion_criteria": [
+        "Hypothesis is falsifiable and materially different from existing tested configurations.",
+        "Signal time, execution time, stops, costs, fold boundaries and invalid-data behavior are specified.",
+        "No historical profitability claim is made before the real-data gate passes.",
+        "A later confirmatory evaluation window is preregistered if any candidate selection exposed historical holdout data."
+      ]
+    },
+    {
+      "lane_id": "deterministic-resume-and-result-shards",
+      "priority": 20,
+      "status": "READY",
+      "scope": "Implement BRAIN-004 and BRAIN-005 as one isolated reliability task without requiring market data.",
+      "dependencies": [],
+      "permitted_while_data_gate_blocked": true,
+      "required_artifacts": [
+        "crash-recovery tests",
+        "bounded immutable JSONL shard writer (each shard <= 4 MiB)",
+        "manifest with hashes/counts/experiment IDs",
+        "legacy migration verification or explicit legacy-unverified status"
+      ],
+      "completion_criteria": [
+        "Resume cursor is derived from verified result records, not counters.",
+        "Crash injection proves no silent skips or duplicate committed experiments.",
+        "Legacy monolithic result is preserved until integrity is verified.",
+        "No force-push is used to erase historical blobs."
+      ]
+    },
+    {
+      "lane_id": "final-holdout-isolation",
+      "priority": 30,
+      "status": "READY",
+      "scope": "Implement BRAIN-003 phase separation while real-data acquisition proceeds independently.",
+      "dependencies": [],
+      "permitted_while_data_gate_blocked": true,
+      "required_artifacts": [
+        "frozen candidate hash",
+        "development-only candidate selection tests",
+        "holdout evaluator tests"
+      ],
+      "completion_criteria": [
+        "Development and validation code cannot access final holdout rows.",
+        "Holdout evaluation consumes only a frozen candidate and frozen protocol.",
+        "Historical exposure remains EXPOSED_OR_UNKNOWN unless independently established."
+      ]
+    },
+    {
+      "lane_id": "independent-pilot-authorization",
+      "priority": 40,
+      "status": "READY",
+      "scope": "Implement BRAIN-002 evidence-only pilot plus independent campaign authorization.",
+      "dependencies": [
+        "deterministic-resume-and-result-shards",
+        "final-holdout-isolation"
+      ],
+      "permitted_while_data_gate_blocked": true,
+      "required_artifacts": [
+        "independent validator",
+        "negative tests for forged authorization booleans",
+        "campaign startup revalidation tests"
+      ],
+      "completion_criteria": [
+        "Pilot cannot authorize itself.",
+        "campaign_authorized=true is never accepted without independent validation of persisted evidence.",
+        "Campaign startup revalidates evidence hashes and required gates."
+      ]
+    }
+  ]
+}
