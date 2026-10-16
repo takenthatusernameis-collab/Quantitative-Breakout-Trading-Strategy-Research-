@@ -26,6 +26,7 @@ def _load_scanner():
 
     wanted_constants = {
         "MAX_ERROR_LINES_PER_RUN",
+        "MAX_NEW_RUNS_PER_INVOCATION",
         "MAX_ERROR_CANDIDATES_PER_RUN",
         "MAX_PRIORITY_ERROR_CANDIDATES",
         "MAX_LOG_FILE_BYTES",
@@ -52,7 +53,10 @@ def _load_scanner():
             }
             if names & wanted_constants:
                 selected.append(node)
-        elif isinstance(node, ast.FunctionDef) and node.name in {"redact", "scan_log_archive"}:
+        elif isinstance(node, ast.FunctionDef) and node.name in {
+            "run_key", "redact", "scan_log_archive",
+            "select_runs_for_processing", "preserve_additional_fields",
+        }:
             selected.append(node)
 
     namespace = {"io": io, "re": re, "zipfile": zipfile}
@@ -129,3 +133,124 @@ def test_scanner_marks_small_clean_scan_without_excerpt_limit():
     assert status == "scanned"
     assert len(signals) == 1
     assert signals[0]["signal_kind"] == "kilo_invalid_argument_turn_abort"
+
+
+
+def _api_completed_run(run_id, conclusion):
+    return {
+        "id": run_id,
+        "run_attempt": 1,
+        "status": "completed",
+        "conclusion": conclusion,
+        "updated_at": "2026-10-16T20:00:00Z",
+        "created_at": "2026-10-16T19:00:00Z",
+    }
+
+
+def _stale_ledger_record(run_id, status):
+    return {
+        "run_id": run_id,
+        "run_attempt": 1,
+        "status": status,
+        "conclusion": "",
+        "run_completed_at": None,
+        "capture_status": "complete",
+        "log_capture_status": "n/a",
+        "next_action": "preserve this repository-specific note",
+    }
+
+
+def test_completed_success_refreshes_stale_in_progress_record():
+    scanner = _load_scanner()
+    run = _api_completed_run(201, "success")
+    previous = _stale_ledger_record(201, "in_progress")
+
+    selected = scanner["select_runs_for_processing"](
+        [run], {"201:1": previous}
+    )
+
+    assert selected == [(run, previous)]
+    refreshed = scanner["preserve_additional_fields"](
+        {
+            "run_id": 201,
+            "run_attempt": 1,
+            "status": run["status"],
+            "conclusion": run["conclusion"],
+            "run_completed_at": run["updated_at"],
+            "capture_status": "complete",
+        },
+        previous,
+    )
+    assert refreshed["status"] == "completed"
+    assert refreshed["conclusion"] == "success"
+    assert refreshed["run_completed_at"] == "2026-10-16T20:00:00Z"
+    assert refreshed["next_action"] == "preserve this repository-specific note"
+
+
+def test_completed_cancelled_run_refreshes_stale_pending_record():
+    scanner = _load_scanner()
+    run = _api_completed_run(202, "cancelled")
+    previous = _stale_ledger_record(202, "pending")
+
+    selected = scanner["select_runs_for_processing"](
+        [run], {"202:1": previous}
+    )
+
+    assert selected == [(run, previous)]
+
+
+def test_fully_terminal_record_with_complete_capture_is_not_reprocessed():
+    scanner = _load_scanner()
+    run = _api_completed_run(203, "success")
+    previous = {
+        "run_id": 203,
+        "run_attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "run_completed_at": run["updated_at"],
+        "capture_status": "complete",
+    }
+
+    selected = scanner["select_runs_for_processing"](
+        [run], {"203:1": previous}
+    )
+
+    assert selected == []
+
+
+def test_partial_capture_is_still_retried_after_terminal_state_is_recorded():
+    scanner = _load_scanner()
+    run = _api_completed_run(204, "failure")
+    previous = {
+        "run_id": 204,
+        "run_attempt": 1,
+        "status": "completed",
+        "conclusion": "failure",
+        "run_completed_at": run["updated_at"],
+        "capture_status": "partial",
+    }
+
+    selected = scanner["select_runs_for_processing"](
+        [run], {"204:1": previous}
+    )
+
+    assert selected == [(run, previous)]
+
+
+def test_missing_completion_timestamp_is_repaired_even_if_other_fields_are_terminal():
+    scanner = _load_scanner()
+    run = _api_completed_run(205, "success")
+    previous = {
+        "run_id": 205,
+        "run_attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "run_completed_at": None,
+        "capture_status": "complete",
+    }
+
+    selected = scanner["select_runs_for_processing"](
+        [run], {"205:1": previous}
+    )
+
+    assert selected == [(run, previous)]

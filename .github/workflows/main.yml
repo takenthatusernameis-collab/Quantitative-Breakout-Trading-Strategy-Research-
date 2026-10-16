@@ -532,36 +532,59 @@ jobs:
 
               return record
 
+          def select_runs_for_processing(runs, records):
+              """Select new/partial records and repair terminal metadata left stale by an active-run snapshot."""
+              candidates = []
+              for run in runs:
+                  key = run_key(run)
+                  existing = records.get(key)
+
+                  # A worker can write a ledger entry while its own run is still active.
+                  # When that run later appears in this completed-run query, refresh it even
+                  # if log capture was previously marked complete. Terminal metadata is
+                  # authoritative only when status, conclusion, and completion timestamp exist.
+                  missing_terminal_metadata = existing is not None and (
+                      existing.get("status") != "completed"
+                      or not existing.get("conclusion")
+                      or not existing.get("run_completed_at")
+                  )
+
+                  if (
+                      existing is None
+                      or existing.get("capture_status") == "partial"
+                      or missing_terminal_metadata
+                  ):
+                      candidates.append((run, existing))
+
+              # Prioritize recent completed runs so fresh failures are recorded promptly.
+              # Older unrecorded runs still drain on later activations once recent runs
+              # have ledger entries; the cap prevents a historical backfill from overrunning.
+              candidates.sort(key=lambda pair: (
+                  pair[0].get("updated_at") or pair[0].get("created_at") or "",
+                  int(pair[0].get("id") or 0),
+                  int(pair[0].get("run_attempt", 1)),
+              ), reverse=True)
+              return candidates[:MAX_NEW_RUNS_PER_INVOCATION]
+
+
+          def preserve_additional_fields(record, previous):
+              """Refresh known API fields while preserving repository-specific ledger metadata."""
+              for key, value in (previous or {}).items():
+                  record.setdefault(key, value)
+              return record
+
+
           LEDGER.parent.mkdir(parents=True, exist_ok=True)
           records = load_ledger()
           runs, hit_page_limit = fetch_all_completed_runs()
-
-          candidates = []
-          for run in runs:
-              key = run_key(run)
-              existing = records.get(key)
-
-              if existing is None:
-                  candidates.append((run, None))
-              elif existing.get("capture_status") == "partial":
-                  candidates.append((run, existing))
-
-          # Prioritize recent completed runs so fresh failures are recorded promptly.
-          # Older unrecorded runs still drain on later activations once recent runs
-          # have ledger entries; the cap prevents a historical backfill from overrunning.
-          candidates.sort(key=lambda pair: (
-              pair[0].get("updated_at") or pair[0].get("created_at") or "",
-              int(pair[0].get("id") or 0),
-              int(pair[0].get("run_attempt", 1)),
-          ), reverse=True)
-          candidates = candidates[:MAX_NEW_RUNS_PER_INVOCATION]
+          candidates = select_runs_for_processing(runs, records)
 
           error_records_added = 0
           partial_records = 0
 
           for run, previous in candidates:
               key = run_key(run)
-              record = summarize_run(run, previous)
+              record = preserve_additional_fields(summarize_run(run, previous), previous)
               records[key] = record
 
               if record["potential_errors"]:
