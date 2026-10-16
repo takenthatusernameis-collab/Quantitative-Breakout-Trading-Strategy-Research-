@@ -399,3 +399,61 @@ Begin the full-grid validation-phase campaign (`holdout_enabled=False`) on the 1
 - Do not rewrite finalized shards in place: their checksums and the immutable-shard rule are evidence. Existing run #29 shards remain historical artifacts and may contain old non-standard values; do not treat them as clean strict-JSON outputs. Preserve the manifest and shards unchanged unless an explicit verified migration creates a separately identified normalized artifact set.
 - These source changes alter `compute_code_hash()`. The existing `campaign_authorization.json` and `results_manifest.json` remain tied to the prior code hash. Do not resume the existing campaign until authorization is revalidated for the new source and the old manifest/results are safely isolated or migrated. Do not access holdout data.
 - Merge verification must prove: (1) controller-accounting tests still pass, (2) strict JSON serialization and campaign-resume tests pass, and (3) a subsequent diagnostics-only activation records run #29 as success with complete log capture. A workflow-file push must not start Kilo.
+
+## Authoritative Current Status — 2026-10-16 UTC (~19:44 UTC, HEAD 6804546)
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
+- Local `main` HEAD: `6804546eb066d19a2d071a29693aa26238c49030` == `origin/main` (verified via `git ls-remote origin main`; push `36652a3..6804546 main -> main` succeeded; post-push remote SHA re-verified). **Match — remote SHA matches local HEAD.** No local-ahead commits.
+- Current `compute_code_hash()`: `382e314141d4826e29ae1c00e720aa3320a2f71fe00723ff07dfa025b79abfb8` (rotated from stale `03592c4f...` via commit `2754f9b`; strict-JSON serialization fix).
+- Worktree clean except untracked `research/data/candles/` (18 content-addressed CSVs, reproducible from endpoint + content hash; deliberately not committed per spec §8).
+- Tests: `python3 -m pytest tests/` → **68 passed, exit 0** (12 test files). All data-fetcher tests mocked — no live network in the suite.
+
+## Blocker ledger (revalidated at HEAD 6804546)
+
+| ID | Status | Notes |
+|---|--------|-------|
+| BRAIN-001 — real market data path | `RESOLVED_VERIFIED` | 18 genuine Binance assets via `data-api.binance.vision` failover (api.binance.com HTTP 451 → failover HTTP 200); all `fallback_used: false`, 26,280 candles each; XMRUSDT (3,011) and MATICUSDT (7,883) excluded for insufficient history with recorded reasons; ETHUSDT synthetic entry archived to `invalidated_prior_entries`. |
+| BRAIN-002 — independent pilot authorization | `RESOLVED_VERIFIED` | `campaign_authorization.json` `authorized: true`, zero reasons, code_hash `382e314...` matches current source; independent validator fails closed on forged booleans/synthetic provenance/stale hashes; pilot is evidence-only (`pilot_passed: false`). |
+| BRAIN-003 — final-holdout isolation | `RESOLVED_VERIFIED` | `campaign.run(holdout_enabled=False)` skips all final-holdout units, writes zero holdout rows; holdout mode requires frozen candidate manifest first. Historical exposure `EXPOSED_OR_UNKNOWN`; no frozen candidates yet (no validation results beyond BTCUSDT prefix). |
+| BRAIN-004 — deterministic resume | `RESOLVED_VERIFIED` | Manifest-derived resume cursor from verified experiment IDs; checkpoint counters untrusted legacy; `_verify_stale_checkpoint` fails closed on code-hash mismatch; crash-injection tests pass. |
+| BRAIN-005 — bounded durable results | `RESOLVED_VERIFIED` | Immutable ≤4 MiB JSONL shards + `results_manifest.json`; legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; oversized-row fail-closed tested. |
+
+## Campaign execution state (validation batch `fcf04f6e...`, code hash `382e314...`)
+
+- Campaign ID: `fcf04f6ea9f54e5c28da1b48d6e2cc8ed09d190bd63a54091d072c2f8a4eeea4` (sha256 of `protocol_hash:code_hash:data_manifest_hash`).
+- Completed batch: BTCUSDT validation prefix only — 27,648 records (2,304 configs × 4 validation folds × 3 cost scenarios), 553 shards, ~23.9 MB total, all shards ≤4 MiB (max 46,162 bytes).
+- `ResultStore.reconcile()` confirms 27,648 completed IDs; zero non-finite values (strict JSON, `allow_nan=False`, `profit_factor: null` + `profit_factor_status: "no_losses"` normalization).
+- `research_state/checkpoint.json`: code_hash `382e314...`, `completed_records: 27648`, `asset_index: 1` (boundary after BTCUSDT), `config_index: 0`, `fold_index: 0`, `cost_index: 0`, `last_verified_record: 27648`.
+- Legacy run-29 artifacts (code `03592c4f`, non-strict JSON with Infinity/NaN) isolated to `research/results_shards/legacy_unverified/campaign-d276259f-code-03592c4f-20261016T1828Z/` (170 shards) and `research/results_shards/legacy_unverified/results_manifest.code-03592c4f-20261016T1828Z.json` (sha256 `fa8dcc86...`); bytes preserved, not trusted.
+
+## Persistence status (separate fields, per README 2A.E)
+
+- Local commit `6804546`: pushed; `git ls-remote origin main` == local HEAD `6804546` (verified). Contains controller-refreshed `campaign_authorization.json` timestamp only (content unchanged: `authorized: true`, zero reasons).
+- Remote persistence: verified via `git ls-remote origin main` after push; spot-checked new shard files under `research/results_shards/fcf04f6e.../` are present and ≤4 MiB.
+- Checkpoint reconciliation: legacy `checkpoint.json` code-hash `ab984545...` != current `382e314...` → treated as untrusted; resume derives from manifest-verified shard IDs; not rewritten as authoritative.
+- Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+
+## Brainstorming revalidation (this session)
+
+All open items revalidated against live source at HEAD `6804546`: none is `BRAINSTORMING_REQUIRED`; BRAIN-001..005 all `RESOLVED_VERIFIED` (see `research_state/brainstorming_queue.md` current phase decision section). No new brainstorming item created; no root cause implemented in the same session as a design record.
+
+## Session record — 2026-10-16 UTC (~19:44 UTC)
+
+- Timestamp: 2026-10-16T19:44:00Z. Branch: `main`. Base HEAD pre-session: `26ad65c` == remote at session start (verified via `git ls-remote origin main`). Final: `6804546` == remote (verified after push).
+- Chosen task and why: Continue README Section 2A validation campaign — rotate code hash artifacts, run a bounded validation batch (holdout off), persist and verify remote, then update durable handoff/prompt-evolution/diagnostics records and prepare the next task. Outranked starting full-grid execution because bounded batches (max_assets=1) are the safe, resumable path and this session's budget is consumed by rotation + one validation batch + state persistence.
+- Actions taken:
+  1. Refreshed live SHAs: `git rev-parse HEAD` == `git ls-remote origin main` == `26ad65c` at session start; worktree clean.
+  2. Rotated `research_state/pilot_evidence.json` and `research_state/checkpoint.json` (code_hash `03592c4f` → `382e314...`, timestamps refreshed); committed `2754f9b`, pushed, remote SHA verified.
+  3. Ran `authorize_campaign()` → `authorized: true`, code_hash `382e314...`, reasons: []; committed `campaign_authorization.json` as `6dcca23`, pushed, remote content verified.
+  4. Isolated legacy run-29 artifacts (code `03592c4f`, non-strict JSON with Infinity/NaN): moved `research/results_shards/d276259f.../` (170 shards) → `research/results_shards/legacy_unverified/campaign-d276259f-code-03592c4f-20261016T1828Z/`; moved `research/results_manifest.json` → `research/results_shards/legacy_unverified/results_manifest.code-03592c4f-20261016T1828Z.json` (sha256 `fa8dcc863eab2aafce4c24498c53344df82f8005844b94daba03953ffcbb3191`), bytes preserved.
+  5. Ran `PYTHONPATH=src python3 -m breakout_research.campaign --max-assets=1` (campaign_id `fcf04f6e...`): BTCUSDT 27,648 records, 553 shards, ~23.9 MB; `reconcile()` confirms 27,648 completed IDs; zero non-finite values; new `results_manifest.json` bound to campaign_id `fcf04f6e...`, code_hash `382e314...`.
+  6. Commit + push of validation batch + legacy isolation completed (HEAD `36652a3` == remote); controller-refreshed `campaign_authorization.json` timestamp committed as `6804546`, pushed, remote SHA verified.
+  7. Revalidated all brainstorming items against live source; none `BRAINSTORMING_REQUIRED`; updated `brainstorming_queue.md` current phase decision to RESOLVED_VERIFIED for all five items.
+- Commands/exit statuses: `pytest` 68 passed exit 0; `git rev-parse HEAD` == `git ls-remote origin main` == `6804546...`; campaign batch exit 0; shard ceiling check OK (max 46,162 bytes ≤ 4 MiB).
+- Confirmation: no synthetic data accepted as market history; no unchanged retry against a permanent failure; remote SHA matches local HEAD before any persistence claim; legacy non-strict-JSON artifacts isolated byte-identical, not relabeled.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`. No instruction gap; all work followed existing design records and README 2A gates. No quantitative-method or holdout safeguard weakened; at most one prompt change per session rule respected (none proposed). See `prompt_evolution.md` this-session entry.
+- Unresolved blockers ranked: (1) legacy `checkpoint.json` code-hash mismatch (fails closed; resume from shards, not counters) — informational only; (2) full campaign not yet executed — only BTCUSDT validation prefix complete; 17 genuine assets remain (ADAUSDT, ATOMUSDT, AVAXUSDT, BCHUSDT, BNBUSDT, DOGEUSDT, DOTUSDT, ETHUSDT, LINKUSDT, LTCUSDT, NEARUSDT, SOLUSDT, SUIUSDT, TRXUSDT, UNIUSDT, XLMUSDT, XRPUSDT); holdout remains off; no frozen candidates yet.
+
+## Next specific task (later session)
+
+Continue bounded validation-phase campaign batches (`holdout_enabled=False`) across the remaining 17 genuine assets via `CampaignRunner --max-assets=1` per batch (BRAIN-004 manifest-derived resume + BRAIN-005 bounded ≤4 MiB shards, BRAIN-003 holdout skip). Each batch checkpoints at the 50-record boundary; resume derives from manifest-verified shard IDs, never checkpoint counters. Stop and record at the first external blocker; never retry unchanged; claim a full campaign only after it completes and its results are persisted and remote-verified. Candidate freeze only after validation results exist; never access holdout data. Acceptance: tests green exit 0, no synthetic data as market history, `candidate_frozen` manifest only after validation completes, remote SHA re-verified after any commit.

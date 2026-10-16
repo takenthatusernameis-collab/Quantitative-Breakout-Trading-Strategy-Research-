@@ -493,3 +493,20 @@ Expected effect: none (no prompt change). Durable outputs: refreshed `agent_hand
 Rollback and review rule: N/A (no prompt change).
 
 Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` == `fd768a3...`; `pytest` 57 passed exit 0; remote SHA re-verified after push.
+
+
+## Session prompt review — 2026-10-16 UTC (~19:44 UTC, HEAD 6804546)
+
+Outcome: `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+Triggering evidence: live default-branch SHA `git rev-parse HEAD` == `git ls-remote origin main` == `6804546eb066d19a2d071a29693aa26238c49030` (match); worktree clean except untracked reproducible `research/data/candles/` (content-addressed, not committed per spec §8); `python3 -m pytest tests/` → 68 passed, exit 0 (12 test files; all data-fetcher tests mocked, no live network in suite). Current `compute_code_hash()` `382e314...` (rotated from stale `03592c4f...` via strict-JSON serialization fix); `campaign_authorization.json` `authorized: true`, zero reasons, code_hash `382e314...`; `pilot_evidence.json` code_hash `382e314...`, 18 genuine Binance assets all `fallback_used: false`; checkpoint `completed_records: 27648`, `asset_index: 1` (boundary after BTCUSDT validation prefix). Campaign batch `fcf04f6e...`: 553 shards, ~23.9 MB, all ≤4 MiB, `reconcile()` confirms 27,648 completed IDs, zero non-finite values. Legacy run-29 artifacts isolated byte-identical to `research/results_shards/legacy_unverified/`. All five brainstorming items BRAIN-001..005 revalidated at live HEAD `6804546`: none `BRAINSTORMING_REQUIRED`; all `RESOLVED_VERIFIED`. `brainstorming_queue.md` current phase decision updated to RESOLVED_VERIFIED for all five items.
+
+Cause classification: no `PROMPT_GAP` demonstrated. All work followed existing BRAIN-001..005 design records and README Section 2A gates (fail-closed code-hash verification, independent pilot validator, holdout-skip default, manifest-derived resume, bounded shards, no synthetic fallback, truthful persistence with remote SHA verification, one bounded task per session). No quantitative-method or holdout safeguard touched or weakened; no same-session implementation of a freshly brainstormed root cause (none created).
+
+Revision summary: none. No README Section 2A change; no prompt revision proposed; no same-session implementation of a freshly brainstormed root cause.
+
+Expected effect: none (no prompt change). Durable outputs: refreshed `agent_handoff.md` authoritative block at `6804546`; `brainstorming_queue.md` current phase decision updated; next task documented (bounded validation batches across remaining 17 genuine assets, max_assets=1 per batch, holdout off).
+
+Rollback and review rule: N/A (no prompt change).
+
+Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` == `6804546...`; `pytest` 68 passed exit 0; shard ceiling check OK (max 46,162 bytes ≤ 4 MiB); remote SHA re-verified after push; controller-refreshed `campaign_authorization.json` committed as `6804546` and pushed.
