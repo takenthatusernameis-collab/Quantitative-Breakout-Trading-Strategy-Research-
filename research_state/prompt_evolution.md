@@ -219,3 +219,19 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 **Regression scenarios and status:** all P2/P3/P4/P5 scenarios remain as specified; behavioral tests NOT_RUN. No safeguard removed or weakened.
 
 **Verification this session:** `git rev-parse HEAD` = `git ls-remote origin main` = `940a35679eff2d5b13203ad1f7772b4bcbf079bf`; `git status` clean working tree (local-only unstaged workflow diff excepted); `py_compile`/pytest → 20 passed exit 0; direct curl to Binance klines → HTTP 451 (~0.07s), loader fails closed; direct curl to api.github.com → HTTP 200.
+
+## Session prompt review — 2026-10-16 UTC (~12:31 UTC)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** live default-branch SHA refreshed to `92a091c276b3e71aa944af90716c96b7c3b9bb23`. **A previously claimed fix was found NOT persisted:** the prior session's handoff/prompt-evolution entries asserted the ZipInfo log-scan fix was "committed to HEAD" (commit `53ff09c`) and that the working tree was "clean". Direct inspection of `git show 92a091c:.github/workflows/main.yml` disproves this — `scan_log_archive()` at lines 348-352 still calls `sorted(item for item in archive.infolist() ...)` on raw `ZipInfo` objects. Reproduced the exact `TypeError: '<' not supported between instances of 'ZipInfo' and 'ZipInfo'` against the committed workflow source. Five of seven diagnostics-ledger entries still carry `log_capture_status: unavailable` for this reason.
+
+**Cause classification:** `IMPLEMENTATION_DEFECT` (the fix was never pushed — a `PERMISSION_BLOCKER`, not a code defect); `PERMISSION_BLOCKER` (push of `.github/workflows/main.yml` rejected: "refusing to allow a GitHub App to create or update workflow ... without 'workflows' permission"); `DATA_OR_EXTERNAL_SERVICE` (persistent Binance HTTP 451 egress block, reconfirmed ~0.03s). No `PROMPT_GAP` demonstrated.
+
+**Revision summary:** none. No README Section 2A change; no quantitative-method safeguard touched or weakened. The real fix applied this session is a one-line code change (`sorted(..., key=lambda item: item.filename)` at `.github/workflows/main.yml:348-352`), committed locally as `aece407447a5ae6b3075729d430492870a7b4003`, but remote push was REJECTED. README Section 2A already requires truthful status reporting, no claim of remote persistence without SHA verification, and one bounded task per session — all followed.
+
+**Expected effect:** none (no prompt change). The handoff corrects the false "committed to HEAD" claim, revalidates all five brainstorming items against live source, and records the fresh canary evidence.
+
+**Regression scenarios and status:** all P2/P3/P4/P5 regression scenarios remain as specified; behavioral tests NOT_RUN. The `scan_log_archive` fix is deterministic over archive entry ordering and only reads `.txt` files; it does not alter any research-protocol safeguard.
+
+**Verification this session:** `git rev-parse HEAD` = `aece407447a5ae6b3075729d430492870a7b4003`; `git ls-remote origin main` = `92a091c276b3e71aa944af90716c96b7c3b9bb23` (local HEAD one commit AHEAD, remote still defective); `git status` clean except the committed workflow fix; `py_compile` of all 14 source modules → OK; `pytest tests/` → 20 passed, exit 0; direct curl to Binance klines → HTTP 451 (~0.03s), loader fails closed with `DataUnavailableError`, no synthetic data accepted, `research/data/` absent; direct curl to api.github.com → HTTP 200; `git push origin main` → REJECTED (`PERMISSION_BLOCKER`, missing `workflows` permission); run #38891774797 still `in_progress`/`conclusion=None`, updated 11:08:12Z, head `4b721e6` (7+ commits behind), cancel via REST API → HTTP 401 ("Must have admin rights to Repository"), logs download → HTTP 403, job logs → HTTP 404 — all unavailable to this integration.
