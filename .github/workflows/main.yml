@@ -39,9 +39,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
 
-      # Poll all completed workflow runs at each activation. This is intentionally
-      # inside the existing workflow so the repository has one maintained workflow
-      # file; the running workflow's own final result is observed on the next scan.
+      # Sole durable workflow-level diagnostics collector and ledger writer.
+      # Do not add a parallel collector workflow, helper script, or second ledger
+      # writer. The worker retry/watchdog below handles execution resilience only;
+      # this step classifies completed runs and persists their diagnostic records.
+      # The current run's own terminal result is picked up on the next activation.
       - name: Inspect completed runs and update the diagnostics ledger
         id: collect
         continue-on-error: true
@@ -1280,6 +1282,9 @@ jobs:
             exit 1
           fi
 
+      # Preserve Kilo-local logs and recovery patches as artifacts. This is a
+      # recovery-evidence backup, not another error collector or repair mechanism;
+      # research_state/workflow_run_diagnostics.jsonl has one writer above.
       - name: Upload Kilo failure logs
         if: always()
         continue-on-error: true
