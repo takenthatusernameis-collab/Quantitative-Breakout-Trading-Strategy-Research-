@@ -350,7 +350,7 @@ jobs:
           idle_timeout="${KILO_IDLE_TIMEOUT_SECONDS:-900}"
           if ! [[ "$idle_timeout" =~ ^[0-9]+$ ]] || (( idle_timeout < 60 )); then idle_timeout=900; fi
 
-          command='Execute the task assigned by the previous agent and prepare a task for the next agent!'
+          command='First inspect README.md and follow Section 2A; read research_state/agent_handoff.md and research_state/prompt_evolution.md; refresh the live default-branch SHA, latest Actions runs/logs, checkpoint, result/data manifests, and relevant recovery artifacts. Verify prior claims against evidence; then perform one highest-priority, safely bounded task, run relevant tests, verify remote persistence, and update the durable handoff plus prompt-evolution log. Prepare the next specific task for the next agent. Never repeat a permanent failure unchanged, accept synthetic data as market history, weaken frozen research/holdout rules, or claim a fix or push without verification.'
 
           heartbeat() {
             local heartbeat_sleep_pid=""
