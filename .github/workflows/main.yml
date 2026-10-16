@@ -89,6 +89,9 @@ jobs:
           MAX_ARCHIVE_BYTES = 30 * 1024 * 1024
           MAX_LOG_FILE_BYTES = 5 * 1024 * 1024
           MAX_ERROR_LINES_PER_RUN = 20
+          # Keep candidate buffers bounded; explicit Kilo failures outrank generic matches.
+          MAX_ERROR_CANDIDATES_PER_RUN = 200
+          MAX_PRIORITY_ERROR_CANDIDATES = 50
           MAX_EXCERPT_CHARS = 500
           MAX_CAPTURE_ATTEMPTS = 3
 
@@ -100,8 +103,20 @@ jobs:
           NO_REDIRECT_OPENER = urllib.request.build_opener(NoRedirectHandler)
 
           ANSI_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
+          # GitHub Actions wraps echoed inline shell/source lines in cyan ANSI. Filter these
+          # before stripping ANSI so code containing words like "failed" is not misclassified.
+          COMMAND_ECHO_RE = re.compile(
+              r"^(?:\d{4}-\d{2}-\d{2}T\S+Z\s+)?\x1b\[36;1m.*\x1b\[0m\s*$"
+          )
+          KILO_INVALID_ARGUMENT_ABORT_RE = re.compile(
+              r"""(?i)stopped after\s+\d+\s+consecutive invalid[- ]argument failures for the ["']edit["'] tool"""
+          )
+          KILO_EDIT_INVALID_ARGUMENT_RE = re.compile(
+              r"""(?i)\b(?:the\s+)?edit tool was called with invalid arguments\b"""
+          )
           ERROR_RE = re.compile(
               r"(?i)(::error::|\bexception\b|\btraceback\b|\bfatal\b|"
+              r"\b(?:[A-Za-z_][A-Za-z0-9_.]*(?:Error|Exception)|Error)\s*:\s*|"
               r"\bfailed\b|\bfailure\b|\bpermission denied\b|\btimed out\b|"
               r"\btimeout\b|\bModuleNotFoundError\b|\bAssertionError\b|"
               r"\bHTTP(?:/[\d.]+)?\s+(?:4\d\d|5\d\d)\b|\b(?:429|500|502|503|504)\b|"
@@ -350,12 +365,15 @@ jobs:
               return errors
 
           def scan_log_archive(run):
-              """Extract only redacted, bounded error-like lines, never raw logs."""
+              """Scan completed-run logs, filter echoed source, and prioritize actionable errors."""
               archive_bytes, truncated = download_log_archive(run)
               if truncated:
                   return [], "archive_exceeded_30MiB_limit"
 
-              candidates = []
+              abort_candidates = []
+              edit_argument_candidates = []
+              ordinary_candidates = []
+              candidate_overflow = False
               try:
                   with zipfile.ZipFile(io.BytesIO(archive_bytes)) as archive:
                       files = sorted(
@@ -371,24 +389,53 @@ jobs:
                               continue
                           try:
                               raw = archive.read(item)
-                              text = raw.decode("utf-8", errors="replace")
+                              log_text = raw.decode("utf-8", errors="replace")
                           except (OSError, RuntimeError, zipfile.BadZipFile):
                               continue
 
-                          for line_number, line in enumerate(text.splitlines(), start=1):
-                              if ERROR_RE.search(line):
-                                  candidates.append({
-                                      "type": "log_signal",
-                                      "log_file": item.filename[:180],
-                                      "line_number": line_number,
-                                      "excerpt": redact(line),
-                                  })
-                                  if len(candidates) >= MAX_ERROR_LINES_PER_RUN:
-                                      return candidates, "scanned_with_excerpt_limit"
+                          for line_number, raw_line in enumerate(log_text.splitlines(), start=1):
+                              # Suppress GitHub's cyan echo of inline workflow source before
+                              # ANSI removal; otherwise source code fills the excerpt budget.
+                              if COMMAND_ECHO_RE.match(raw_line):
+                                  continue
+
+                              line = ANSI_RE.sub("", raw_line)
+                              abort_match = KILO_INVALID_ARGUMENT_ABORT_RE.search(line)
+                              edit_match = KILO_EDIT_INVALID_ARGUMENT_RE.search(line)
+                              if not abort_match and not edit_match and not ERROR_RE.search(line):
+                                  continue
+
+                              candidate = {
+                                  "type": "log_signal",
+                                  "log_file": item.filename[:180],
+                                  "line_number": line_number,
+                                  "excerpt": redact(line),
+                              }
+                              if abort_match:
+                                  candidate["signal_kind"] = "kilo_invalid_argument_turn_abort"
+                                  bucket = abort_candidates
+                                  bucket_limit = MAX_PRIORITY_ERROR_CANDIDATES
+                              elif edit_match:
+                                  candidate["signal_kind"] = "kilo_edit_tool_invalid_arguments"
+                                  bucket = edit_argument_candidates
+                                  bucket_limit = MAX_ERROR_CANDIDATES_PER_RUN
+                              else:
+                                  bucket = ordinary_candidates
+                                  bucket_limit = MAX_ERROR_CANDIDATES_PER_RUN
+
+                              if len(bucket) < bucket_limit:
+                                  bucket.append(candidate)
+                              else:
+                                  candidate_overflow = True
               except (zipfile.BadZipFile, OSError, ValueError):
                   return [], "archive_not_readable_as_zip"
 
-              return candidates, "scanned"
+              # The terminal Kilo abort signal comes first, then its underlying tool errors,
+              # then generic errors. This prevents unrelated matches from hiding the key event.
+              candidates = abort_candidates + edit_argument_candidates + ordinary_candidates
+              excerpt_limit_reached = candidate_overflow or len(candidates) > MAX_ERROR_LINES_PER_RUN
+              status = "scanned_with_excerpt_limit" if excerpt_limit_reached else "scanned"
+              return candidates[:MAX_ERROR_LINES_PER_RUN], status
 
           def summarize_run(run, previous=None):
               previous_attempts = int((previous or {}).get("capture_attempts", 0))
