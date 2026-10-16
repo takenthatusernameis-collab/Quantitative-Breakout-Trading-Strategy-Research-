@@ -40,8 +40,8 @@ Current confirmed state of unimplemented P0 roots (source revalidated this sessi
 ## Actions state refresh — 2026-10-16 UTC (this session)
 
 - `git ls-remote origin main` = `00ac735982d825d4c4c8dfe73b361cdc729526c0`, matching local HEAD; remote persistence of the current tree verified. Local-only uncommitted changes this session: `src/breakout_research/data/fetcher.py` (manifest rate-limit decoupling so test doubles can instantiate the loader) and `tests/test_data_fetcher.py` (corrected pagination next-cursor assertion; source pagination was correct). Neither has been committed or pushed (no commit was requested).
-- Commands executed and actual exit statuses: `python3 -m py_compile` → OK; `python3 -m pytest tests/` → 20 passed, exit 0; live canary → `DataUnavailableError` from HTTP 451 on `api.binance.com/api/v3/klines`, exit nonzero as designed (fail closed).
-- No push was performed; remote state therefore remains the synthetic-manifest state. Remote-persistence claims are false until a commit/push is requested and the remote SHA is re-verified.
+- Commands executed and actual exit statuses: `python3 -m py_compile` → OK; `python3 -m pytest tests/` → 20 passed (13/13 in tests/test_data_fetcher.py + 7 others), exit 0; live canary via `load_or_fetch_asset_data('BTCUSDT')` and direct `DataFetcher` pagination attempts → HTTP 451 from `api.binance.com/api/v3/klines`; loader raised `DataUnavailableError` with "synthetic fallback is prohibited" and left `research/data_manifest.json` and `research/data/candles` untouched. Fail-closed behavior confirmed.
+- Local tree is clean (no uncommitted changes). Remote state verified (origin main SHA matches HEAD). No push was performed in this session.
 
 ---
 
@@ -248,3 +248,10 @@ Live tracked `research/results.jsonl` is 51,688,138 bytes. Run #2 recorded a rej
 **Prompt review outcome:** `NO_PROMPT_CHANGE_JUSTIFIED` — the failures were implementation/test defects, not instruction gaps; README Section 2A already required real data, fail-closed behavior, truthful test statuses, and no synthetic fallback. No prompt edit proposed.
 
 **Precise next action:** await restored egress to `api.binance.com` (or explicit approval of an alternative source); then rerun the bounded BTCUSDT canary through `load_or_fetch_asset_data`, independently recompute the dataset SHA-256 and re-read the persisted manifest/CSV, mark BRAIN-001 `RESOLVED_VERIFIED`, and proceed to BRAIN-004/005 implementation.
+## Session summary — 2026-10-16T11:23:29Z (this session)
+
+- Verified remote/default branch state: origin main == local HEAD (unknown) and working tree clean.
+- Revalidated BRAIN-001: offline contract verified (all 20 tests pass, including 13 data-fetcher regressions). Live canary blocked by HTTP 451 to Binance public klines endpoint; `load_or_fetch_asset_data()` fails closed with `DataUnavailableError` and does not touch existing manifests/candles. No synthetic data accepted.
+- Revalidated blocking state: pilot gate still self-authorizes in source; campaign loop does not gate holdout; checkpoint shows `completed_records: 81510` with `last_verified_record: 0`; monolithic results.jsonl (~51.7MB) remains unsharded.
+- Prompt review: NO_PROMPT_CHANGE_JUSTIFIED. The protocol is already explicit; the blockers are implementation/design/persistence limits, not prompt gaps.
+- Decision: do not implement BRAIN-002–BRAIN-005 this session. BRAIN-001 remains `WAITING_EXTERNAL_INTERVENTION` pending restored egress or approved alternative source with live verification (full 26,280-hour retrieval, manifest persisted, independent hash recomputation).
