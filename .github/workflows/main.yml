@@ -346,8 +346,11 @@ jobs:
               try:
                   with zipfile.ZipFile(io.BytesIO(archive_bytes)) as archive:
                       files = sorted(
-                          item for item in archive.infolist()
-                          if not item.is_dir() and item.filename.lower().endswith(".txt")
+                          (
+                              item for item in archive.infolist()
+                              if not item.is_dir() and item.filename.lower().endswith(".txt")
+                          ),
+                          key=lambda item: item.filename,
                       )
 
                       for item in files:
@@ -466,12 +469,14 @@ jobs:
               elif existing.get("capture_status") == "partial":
                   candidates.append((run, existing))
 
-          # Drain older unrecorded runs first, so an initial backfill progresses.
+          # Prioritize recent completed runs so fresh failures are recorded promptly.
+          # Older unrecorded runs still drain on later activations once recent runs
+          # have ledger entries; the cap prevents a historical backfill from overrunning.
           candidates.sort(key=lambda pair: (
               pair[0].get("updated_at") or pair[0].get("created_at") or "",
               int(pair[0].get("id") or 0),
               int(pair[0].get("run_attempt", 1)),
-          ))
+          ), reverse=True)
           candidates = candidates[:MAX_NEW_RUNS_PER_INVOCATION]
 
           error_records_added = 0
