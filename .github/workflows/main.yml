@@ -575,16 +575,16 @@ jobs:
 
           backoff=2
           for attempt in 1 2 3 4 5 6; do
-            if ! timeout 10s git fetch origin \
+            if ! timeout --kill-after=3s 10s git fetch origin \
               "+refs/heads/${DEFAULT_BRANCH}:refs/remotes/origin/${DEFAULT_BRANCH}"; then
               echo "::warning::Diagnostics fetch attempt ${attempt}/6 failed or timed out."
-            elif ! timeout 15s git rebase "origin/${DEFAULT_BRANCH}"; then
+            elif ! timeout --kill-after=3s 15s git rebase "origin/${DEFAULT_BRANCH}"; then
               git rebase --abort >/dev/null 2>&1 || true
               echo "::error::Diagnostics reconciliation conflicted or timed out; skipping further retries so Kilo can start."
               exit 1
-            elif timeout 20s git push origin "HEAD:refs/heads/${DEFAULT_BRANCH}"; then
+            elif timeout --kill-after=5s 20s git push origin "HEAD:refs/heads/${DEFAULT_BRANCH}"; then
               local_sha="$(git rev-parse HEAD)"
-              if remote_output="$(timeout 8s git ls-remote origin "refs/heads/${DEFAULT_BRANCH}")"; then
+              if remote_output="$(timeout --kill-after=2s 8s git ls-remote origin "refs/heads/${DEFAULT_BRANCH}")"; then
                 remote_sha="$(awk 'NR == 1 { print $1 }' <<< "$remote_output")"
               else
                 remote_sha=""
@@ -974,9 +974,9 @@ jobs:
 
               # Bound individual Git network calls too, so a stalled connection
               # cannot defeat the retry budget.
-              if timeout 20s git fetch origin "$DEFAULT_BRANCH"; then
+              if timeout --kill-after=5s 20s git fetch origin "$DEFAULT_BRANCH"; then
                 if ! git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD; then
-                  if ! timeout 30s git rebase --autostash "origin/$DEFAULT_BRANCH"; then
+                  if ! timeout --kill-after=5s 30s git rebase --autostash "origin/$DEFAULT_BRANCH"; then
                     git rebase --abort >/dev/null 2>&1 || true
                     echo "::error::Remote reconciliation failed or timed out; preserving recovery evidence and ending this activation."
                     return 1
@@ -984,8 +984,8 @@ jobs:
                 fi
 
                 if git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD 2>/dev/null; then
-                  if timeout 30s git push origin "HEAD:$DEFAULT_BRANCH"; then
-                    if remote_output="$(timeout 10s git ls-remote origin "refs/heads/$DEFAULT_BRANCH" 2>/dev/null)"; then
+                  if timeout --kill-after=5s 30s git push origin "HEAD:$DEFAULT_BRANCH"; then
+                    if remote_output="$(timeout --kill-after=3s 10s git ls-remote origin "refs/heads/$DEFAULT_BRANCH" 2>/dev/null)"; then
                       remote_sha="$(awk 'NR==1 {print $1}' <<< "$remote_output")"
                     else
                       remote_sha=""
