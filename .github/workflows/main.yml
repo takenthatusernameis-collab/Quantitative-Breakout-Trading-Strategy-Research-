@@ -7,7 +7,7 @@ on:
       agents:
         description: "Maximum sequential Kilo worker sessions for this activation"
         required: false
-        default: "1"
+        default: "1000"
         type: number
 
 # The repository-scoped token can persist ordinary repository changes, but it
