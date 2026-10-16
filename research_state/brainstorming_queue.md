@@ -41,7 +41,7 @@ Until that design note exists, **do not attempt another implementation of the sa
 ## BRAIN-001 — Real historical market data path is bypassed
 
 **Priority:** P0 — blocks any economic conclusion  
-**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (implementation deferred to a later session; see structured design decision below)  
+**Status:** `IMPLEMENTATION_IN_PROGRESS` (source changes committed; acceptance tests and live-data evidence remain outstanding)  
 **Cause labels:** `IMPLEMENTATION_DEFECT`, `DATA_OR_EXTERNAL_SERVICE`, potentially `PLATFORM_LIMIT`  
 **Confidence:** direct source and manifest evidence confirmed; a working genuine-data path is not demonstrated.
 
@@ -133,6 +133,23 @@ Use stable, deterministic canonical serialization for hashes, not process-depend
 - **External intervention:** no API credential is assumed for Binance's public klines endpoint, but network availability has not been tested. If it is blocked or the endpoint cannot provide required history, record the specific failure and wait for an explicitly approved data source or runtime/network change.
 
 **Next task:** implement option B in a later session, after rechecking this design against current `main`. Keep this item at `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` until the implementation and acceptance evidence exist; then separately record implementation and validation status.
+
+### Implementation handoff / current verification state — 2026-10-16 UTC
+
+**Changes committed to `main`:**
+- `5c5ffe56d3ee484da43bf3f8c5044f5560be3028` — rewrote `src/breakout_research/data/fetcher.py` around a real Binance hourly provider, forward/backward pagination with a bounded page count and no-progress checks, strict candle validation, a canonical SHA-256 dataset format, immutable hash-named CSV snapshots, verified cache reads, and atomic manifest writing. The campaign-facing loader contains no synthetic generator import/call.
+- `33520ae77dbc18ad2941eacd367245ed3cb11111` — removed the misleading `min_candles=1000` override from the campaign call sites.
+- `c808a41844abec367bd4c59a37097c54efefbd0b` — removed the pilot's smaller-history override. The loader takes the maximum of any caller request and the frozen protocol minimum (`ceil(min_history_years × 365 × 24)`, 26,280 for the current three-year hourly protocol).
+- `f23d0097834bde9fd872dbdd90686e78577118ad` and `d0c22425b15ec0e3ef545ea4fd140ec838d8a723` — added ten regression tests covering the three-year minimum, strict hourly validation, timestamp alignment, deterministic content hashes, paginated requests, synthetic-manifest invalidation, provider failure, manifest-write failure and corrupted-cache rejection.
+
+**Safety behavior now present in source:** the loader requests complete closed hourly candles through the frozen required range; rejects missing/invalid/gapped/duplicate/unordered/misaligned/non-finite data and any rejected provider row; never returns generated candles; stores data as content-addressed CSV and manifest metadata; archives prior manifest entries when different data supersedes them; fails closed if a cache claiming to be real cannot be verified; and raises an explicit error when the provider or manifest persistence fails.
+
+**Verification limitations:** the connected GitHub API confirms these commits are on `main`, but this execution container cannot resolve `github.com` for a local clone. Therefore the ten tests have **not been executed**, the new source has not received a local `py_compile`/pytest run, and no live Binance API canary was performed. Remote source persistence is verified; runtime/test acceptance is not. Keep this item `IMPLEMENTATION_IN_PROGRESS`, not `RESOLVED_VERIFIED`, until a fresh environment runs the regression suite and a bounded live canary successfully validates a real, full-length history and its manifest/hash.
+
+**Important migration note:** existing synthetic entries are not accepted as cache data. When a real snapshot is successfully persisted, the old entry is copied into `invalidated_prior_entries` before the current asset entry is replaced. Existing synthetic result rows remain forensic-only and do not become real-data evidence.
+
+**Remaining BRAIN-001 acceptance gates:** run all existing tests plus `tests/test_data_fetcher.py`; correct any failures; exercise pagination with real three-year bounds; run a one-symbol opt-in Binance canary only in a network-enabled test environment; independently re-fetch the persisted CSV and manifest from the default branch and recompute the content hash. Do not start or trust the full campaign while BRAIN-002 (pilot gate) and BRAIN-003 (holdout protection) remain open. BRAIN-002–BRAIN-005 have not been implemented in this session.
+
 ---
 
 ## BRAIN-002 — Pilot gate self-authorizes without proving prerequisites
@@ -249,6 +266,6 @@ C. External durable storage only if its required access, retention, and free/ope
 
 ## Current phase decision
 
-At initial triage, all five entries were `BRAINSTORMING_REQUIRED`. After the structured design review above, BRAIN-001 is now `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`; BRAIN-002 through BRAIN-005 remain `BRAINSTORMING_REQUIRED`. No entry is marked fixed. These statuses are design workflow states, not claims that the error-recorder detected them—the diagnostics ledger was empty at inspection. A later session may implement BRAIN-001's selected design, but must revalidate it against live main first. Do not launch or trust the full campaign while applicable P0 research-validity blockers remain open.
+At initial triage, all five entries were `BRAINSTORMING_REQUIRED`. BRAIN-001 has since received a structured design decision and source changes have been committed, so it is now `IMPLEMENTATION_IN_PROGRESS` pending actual test execution and a bounded live-data canary. BRAIN-002 through BRAIN-005 remain `BRAINSTORMING_REQUIRED`; none is claimed fixed. These statuses are design/workflow states, not claims that the error recorder discovered the issues—the diagnostics ledger was empty at inspection. Do not launch or trust the full campaign while applicable P0 research-validity blockers remain open.
 
 **Out of scope:** ordinary bounded retries for demonstrated transient network errors, routine lint/test failures with an evidence-backed local fix, and recovery bundles/patches needed to preserve interrupted work. Those remain in the normal measured correction loop and are not duplicate durable error records.
