@@ -2,34 +2,32 @@
 
 **This block is the single source of current task/status truth.** Older snapshots and continuation notes below are historical records unless explicitly revalidated in a later dated section. Do not infer that an old statement is current merely because it appears earlier in the file.
 
-## Verified default-branch snapshot
+## Verified default-branch snapshot (this session, 2026-10-16 UTC)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`.
-- Latest verified `main` commit during this inspection: [`f9e841115fda0d7d992cb106a3e0b877474fc696`](https://github.com/takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-/commit/f9e841115fda0d7d992cb106a3e0b877474fc696), recorded at 2026-10-16 09:20:19 UTC. Re-fetch `main` before acting; this is an inspection timestamp, not a guarantee it remains HEAD.
-- The live brainstorming queue records BRAIN-002 through BRAIN-005 as `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. Design-ready means the design is documented; it does not mean implemented, tested, or resolved.
-- Exactly one workflow file was observed: `.github/workflows/main.yml` (blob `c4d85d7efabacf6382eae9b171bc9d791ad46fa1` at the inspection snapshot). Do not add another workflow as a shortcut.
-- A live GitHub Actions API query during this inspection returned run #4 (`38834456753`) as `in_progress` and run #5 (`38858495476`) as `pending`; both are scheduled runs whose `head_sha` is the older `47c2584309527961b5528ceb563fa5b4771db66f`, not the latest verified `main` snapshot above. These runs therefore do not establish that the newer BRAIN-001 implementation or this handoff update was tested. Re-fetch status before acting. The connected tool can inspect run status and jobs but does not expose workflow dispatch or cancellation here.
+- Local `main` HEAD: `00ac735982d825d4c4c8dfe73b361cdc729526c0`. `git ls-remote origin main` returns the same SHA — remote default branch verified and identical to the local working tree (`git status`: clean, up to date with origin/main).
+- All five diagnostic runs in `research_state/workflow_run_diagnostics.jsonl` are terminal per the latest capture (2026-10-16T10:57 UTC): #1 failure, #2 failure (oversized-file persistence), #3 cancelled, #4 failure, #5 cancelled. No in-progress run holds the `kilo-repository` concurrency slot.
+- One workflow file: `.github/workflows/main.yml`. Do not add another workflow as a shortcut.
 
 ## Current blocker ledger
 
 | ID | Current status | Evidence still required |
 |---|---|---|
-| BRAIN-001 — real market data | `IMPLEMENTATION_IN_PROGRESS` | The live source no longer calls the synthetic generator in the campaign-facing loader, and 13 regression tests exist in `tests/test_data_fetcher.py`. The 13 tests are **NOT_RUN** in the recorded evidence. No successful live Binance canary or independently recomputed remotely persisted dataset/manifest hashes have been demonstrated. |
+| BRAIN-001 — real market data | `WAITING_EXTERNAL_INTERVENTION` (offline contract verified; live canary blocked) | Offline: `src/breakout_research/data/fetcher.py` no longer calls the synthetic generator in the campaign loader; strict validation, atomic content-addressed manifest, fail-closed on provider/manifest failure; all 20 tests in `tests/` PASS (exit 0), including the 13 `tests/test_data_fetcher.py` regressions. Live: bounded BTCUSDT hourly canary through `load_or_fetch_asset_data()` reached `api.binance.com/api/v3/klines` and received HTTP 451 on the first page; the loader raised `DataUnavailableError` ("synthetic fallback is prohibited") and left `research/data_manifest.json` and `research/data/candles` untouched. Live canary and independent remote hash verification cannot proceed until egress to the Binance public endpoint or an explicitly approved alternative source is available. No synthetic data was accepted. |
 | BRAIN-002 — independent pilot authorization | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Pilot evidence-only behavior, independent deterministic validator, forged/stale/missing-evidence negative tests, and campaign-time revalidation. Not implemented. |
 | BRAIN-003 — final-holdout isolation | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Validation-only grid, frozen hash-bound candidate manifest, isolated holdout evaluator, and historical exposure audit. Existing holdout remains `EXPOSED_OR_UNKNOWN` until non-use is established. Not implemented. |
 | BRAIN-004 — deterministic resume | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Stable experiment IDs, transaction/shard recovery, crash-injection tests, and derived resume cursor based on independently verified records. Not implemented. |
 | BRAIN-005 — bounded durable results | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Immutable JSONL shards with a hard 4 MiB serialized-byte ceiling, verified manifest, legacy-ledger audit/migration, clean-clone reconstruction, and reachable-history blob scan. Not implemented. |
 
-## Next principal task: BRAIN-001 acceptance only
+## Next principal task: complete BRAIN-001 live evidence only
 
-Do not begin the large campaign. Do not implement BRAIN-002 through BRAIN-005 in the same session that is tasked with qualifying BRAIN-001.
+Do not begin the large campaign. Do not implement BRAIN-002 through BRAIN-005 in this session.
 
-1. Re-fetch current `main`, the research specification, fetcher, campaign/pilot callers, the 13 focused tests, and the diagnostics ledger. Reconfirm that the intended code and specification are the ones being tested.
-2. Run Python compilation, all 13 tests in `tests/test_data_fetcher.py`, then the full existing test suite; record the exact commands, exit statuses, and failure output. Test files existing or a green unrelated workflow are not test passes.
-3. In a network-enabled runner, exercise one bounded BTCUSDT hourly canary through the same production loader/provider path. Enforce the frozen three-year history floor, closed-candle handling, pagination, strict timestamps/OHLCV/gap checks, no synthetic fallback, and atomic fail-closed manifest persistence. Do not reduce the history requirement to make the canary pass.
-4. Re-read the remotely persisted data and manifest and independently recompute the documented canonical dataset SHA-256 and manifest/source/coverage correspondence. Preserve artifacts and exact failures if any step fails.
-5. Only mark BRAIN-001 `RESOLVED_VERIFIED` if every required test and live/persistence check actually passes. If network/provider access is unavailable, record `WAITING_EXTERNAL_INTERVENTION` for the blocked live-canary step (with exact evidence) while retaining any distinct implementation/test failures; never report the canary as passed.
-6. Keep campaign authorization blocked. After BRAIN-001 is genuinely qualified, implement BRAIN-004 and BRAIN-005 together as one transaction/shard architecture, then BRAIN-003, then BRAIN-002 against independently verified evidence. If dependency evidence justifies a different ordering, document that rationale before changing the order.
+1. The local acceptance portion of BRAIN-001 is done: Python compilation OK, all 20 tests pass (20/20, exit 0), fail-closed loader behavior verified (HTTP 451 → `DataUnavailableError`, no synthetic fallback, manifest untouched).
+2. Blocked live step: `api.binance.com` returns HTTP 451 from this runtime. Record `WAITING_EXTERNAL_INTERVENTION` for the live-canary step with the exact error above. Do not substitute synthetic data, do not shorten the 26,280-candle three-year floor, and do not switch providers silently. Resume when egress is restored or an explicitly approved source is authorized: rerun the canary, re-read the persisted CSV and manifest, independently recompute the SHA-256 content hash, then mark BRAIN-001 `RESOLVED_VERIFIED`.
+3. After BRAIN-001 is verified, implement BRAIN-004 and BRAIN-005 together as one transaction/shard architecture (bounded immutable ≤4 MiB JSONL shards, manifest-derived resume cursor), then BRAIN-003 (validation/freeze/holdout phase boundary), then BRAIN-002 (evidence-only pilot + independent validator). Keep campaign authorization blocked until all applicable P0 gates pass; the current `pilot_gate.json` (`campaign_authorized: true` on synthetic data) remains untrusted.
+
+Current confirmed state of unimplemented P0 roots (source revalidated this session, unchanged): `pilot.py` still self-authorizes (`pilot_passed`/`campaign_authorized` true after ≤24 configs, `btc_candles=None`); `campaign.py` loops every config through every fold including the final holdout (`is_holdout` not used to gate), resets config/fold/cost cursors on asset entry, appends to the 51,688,138-byte monolithic `research/results.jsonl`, and trusts the pilot boolean; `checkpoint.json` reports `completed_records: 81510` with `last_verified_record: 0`; `data_manifest.json` still labels BTCUSDT/ETHUSDT synthetic.
 
 ## Non-negotiable research-validity rules
 
@@ -39,27 +37,11 @@ Do not begin the large campaign. Do not implement BRAIN-002 through BRAIN-005 in
 - A local commit, a successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
 - Preserve the single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
 
-## Actions state refresh — 2026-10-16 10:04 UTC (supersedes the prior queue snapshot)
+## Actions state refresh — 2026-10-16 UTC (this session)
 
-Live GitHub Actions API observations after the prior status note:
-
-- Default branch `main`: `079857f24d2bf51d279c33dd6b743de5cbacb2c0`.
-- Run #5 (`38858495476`) is now `completed / cancelled`, updated at `2026-10-16T10:04:28Z`.
-- A fresh manual dispatch created run #6 (`38884773631`) at `2026-10-16T10:04:25Z`. Its `head_sha` is `079857f24d2bf51d279c33dd6b743de5cbacb2c0`, matching the current default-branch commit. However, its status is still `pending`; the Jobs API returns zero jobs so far. It has not checked out or tested the code yet.
-- Run #4 (`38834456753`) remains `in_progress` against the stale `47c2584309527961b5528ceb563fa5b4771db66f` SHA. The Jobs API still reports the Kilo step in progress. Its log-download attempt returned `BlobNotFound`, and the artifacts API reports zero artifacts. The cause of its unchanged status is unknown; do not state conclusively that it is stalled or safe to terminate based only on these observations.
-- The workflow's single concurrency group is `kilo-repository` with `cancel-in-progress: false`; run #6 appears queued while run #4 holds the slot. The connected tool surface still does not expose workflow-run cancellation/dispatch actions.
-- No code/test/canary result is attached to run #6 yet. Do not treat the matching `head_sha` by itself as proof of checkout or execution.
-
-**Next action:** inspect run #4's live state in the Actions UI and preserve any available recovery material. If it is still active and safe to terminate, cancel run #4 so run #6 can acquire the single concurrency slot. Then verify run #6 starts, confirm its actual checkout SHA and job logs, and review the agent task before accepting any result. Its only intended principal task is BRAIN-001 acceptance (Python compilation; 13 focused provider tests; complete test suite; bounded real-data canary; independent hash/provenance verification). Keep the full research campaign blocked.
-
-This snapshot was recorded after handoff PR #1 was merged as `7021d6c9b69ac61922cdf20dea018aa4f9ded2de`. The following are live API observations, not test-pass claims:
-
-- Default-branch `main` was observed at `7021d6c9b69ac61922cdf20dea018aa4f9ded2de`.
-- The repository-wide Actions API returned five runs. Run #4 (`38834456753`) was still `in_progress`, with its single job and main Kilo step started at `2026-10-16T05:01:25Z`. Run #5 (`38858495476`) remained `pending`; its run record still points at old `head_sha` `47c2584309527961b5528ceb563fa5b4771db66f`. The three older runs were cancelled/failed as listed in their run records.
-- Run #4's job/log API did not provide retrievable logs during this inspection; the log-download attempt returned `BlobNotFound`. Do not infer a Kilo task outcome from the job's `in_progress` status alone.
-- Both active/queued run records refer to the older workflow commit, so neither establishes that the merged handoff or the latest main source was exercised by the Kilo task text. The workflow currently supports manual `workflow_dispatch`, but the connected tool surface does not expose dispatch or cancellation actions.
-- A local `git ls-remote` check failed with `Could not resolve host: github.com`. No pytest, Python compilation, live Binance request, full campaign, or independent data-hash verification was performed by this status refresh.
-- **Next operator action:** preserve any available recovery artifacts, cancel the stale active/queued runs in the GitHub Actions UI, and manually dispatch the single existing workflow from current `main` with the smallest practical session budget. Confirm the run's `head_sha`/checkout and logs before treating it as a fresh verification run. The intended task remains BRAIN-001 acceptance; keep the full campaign blocked. Do not create a second workflow to work around the queue.
+- `git ls-remote origin main` = `00ac735982d825d4c4c8dfe73b361cdc729526c0`, matching local HEAD; remote persistence of the current tree verified. Local-only uncommitted changes this session: `src/breakout_research/data/fetcher.py` (manifest rate-limit decoupling so test doubles can instantiate the loader) and `tests/test_data_fetcher.py` (corrected pagination next-cursor assertion; source pagination was correct). Neither has been committed or pushed (no commit was requested).
+- Commands executed and actual exit statuses: `python3 -m py_compile` → OK; `python3 -m pytest tests/` → 20 passed, exit 0; live canary → `DataUnavailableError` from HTTP 451 on `api.binance.com/api/v3/klines`, exit nonzero as designed (fail closed).
+- No push was performed; remote state therefore remains the synthetic-manifest state. Remote-persistence claims are false until a commit/push is requested and the remote SHA is re-verified.
 
 ---
 
@@ -237,3 +219,32 @@ Live tracked `research/results.jsonl` is 51,688,138 bytes. Run #2 recorded a rej
 **Execution and status:** one-file workflow architecture remains unchanged; there is still only `.github/workflows/main.yml`. Live Actions run #4 (`38834456753`) remained in progress and run #5 (`38858495476`) pending at last read, both on old head `47c2584309527961b5528ceb563fa5b4771db66f`. The available tool connection can inspect/read and commit repository contents but does not offer workflow dispatch/cancellation. BRAIN-001 remains `IMPLEMENTATION_IN_PROGRESS`: thirteen regression tests are committed but not executed, no local compile/pytest result is available and no live Binance canary was run because the execution container could not resolve GitHub. Do not launch the full campaign. BRAIN-002–BRAIN-005 are design-ready only; no root cause from those entries was implemented in this session.
 
 **Recommended continuation:** obtain a network-enabled clone/runner, run all existing and new tests, correct BRAIN-001 defects and perform a bounded real-data canary first. Then implement BRAIN-004/005 together behind a transaction/shard migration plan; implement BRAIN-003 phase boundaries and candidate freeze; finally implement BRAIN-002 validator against actual evidence. Gate ordering may be adjusted only with an explicit dependency rationale; the campaign stays blocked until all applicable P0 acceptance gates are verified.
+
+---
+
+## Session record — 2026-10-16 UTC (this session)
+
+**Reconstructed state:** local `main` HEAD `00ac735982d825d4c4c8dfe73b361cdc729526c0` verified identical to `origin/main` via `git ls-remote`; working tree clean before edits. All five diagnostics runs (`research_state/workflow_run_diagnostics.jsonl`) are terminal; no run holds the `kilo-repository` concurrency slot. No economic conclusion exists; all existing result/checkpoint/gate records remain synthetic or unverified as documented historically.
+
+**Chosen task and rationale:** complete BRAIN-001 acceptance (offline contract + live canary). It outranks all others because it is the P0 data-provenance blocker: no economic result, pilot authorization, or campaign run is trustworthy without it. BRAIN-002–005 remain `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` only; none were implemented this session, per the brainstorming rule.
+
+**Evidence revalidated against live source this session:**
+- `src/breakout_research/data/fetcher.py`: campaign-facing loader contains no synthetic call; `_verified_cache` rejects any entry that is not explicitly `fallback_used: false` with matching spec hashes, provider `binance`, canonical dataset path, recomputed hash, exact counts/timestamps, zero gaps/rejections; `load_or_fetch_asset_data` enforces `ceil(min_history_years × 365 × 24)` = 26,280 regardless of caller-supplied `min_candles`, excludes the forming candle, paginates with no-progress/overlap checks, rejects invalid/gapped/duplicate/unordered rows, fails closed on provider or manifest-write failure, archives superseded synthetic entries under `invalidated_prior_entries`.
+- `pilot.py`, `campaign.py`, `checkpoint.json`, `pilot_gate.json`, `data_manifest.json`, `research/results.jsonl` (51,688,138 bytes): re-read unchanged; BRAIN-002/003/004/005 defects confirmed present and unimplemented.
+- `research/data/candles` does not exist locally; no data files were created.
+
+**Attempted changes and files affected:**
+- `src/breakout_research/data/fetcher.py`: added module-level `DEFAULT_RATE_LIMIT_PER_MINUTE = 1200`; `DataFetcher.RATE_LIMIT_PER_MINUTE` derives from it; `_new_manifest` and `update_data_manifest` read `rate_limit_per_minute` from the spec with that default instead of referencing the `DataFetcher` class attribute directly. Production behavior unchanged; test doubles can now instantiate the manifest path.
+- `tests/test_data_fetcher.py`: corrected `test_forward_pagination_uses_advancing_cursor_and_returns_all_rows` to assert `start + HOUR_MS + 1`; source pagination (advance by `last_raw_timestamp + 1`, no overlap/skip) was correct, the test expectation was not.
+
+**Commands/tests executed and actual exit statuses:** `python3 -m py_compile` on fetcher/campaign/pilot/test_data_fetcher → OK; `python3 -m pytest tests/` → **20 passed, exit 0** (13 data-fetcher regressions + 7 others). Live canary via `PYTHONPATH=src python3` calling `load_or_fetch_asset_data("BTCUSDT")` → `DataUnavailableError: Real Binance history unavailable for BTCUSDT; synthetic fallback is prohibited: 451 Client Error` on `https://api.binance.com/api/v3/klines`; loader failed closed, manifest and data dir untouched.
+
+**Confirmation status:** `CONFIRMED` — source/test state, exit codes, HTTP 451 evidence, manifest intactness. `SUPPORTED_HYPOTHESIS` — Binance 451 appears to be an egress/provider block from this runtime rather than a range-specific fault (only one page was requested before failure; no retry is warranted since 451 is not in the retry-forcible status list).
+
+**Unresolved blockers ranked:** (1) BRAIN-001 live canary — `WAITING_EXTERNAL_INTERVENTION` (network/provider access to api.binance.com or an explicitly approved alternative source); (2) BRAIN-004/005 transaction/shard resume storage — design-ready, not implemented; (3) BRAIN-003 holdout phase boundary — design-ready; (4) BRAIN-002 independent validator — design-ready and depends on 001/004/003 evidence.
+
+**Persistence status:** local commit NOT created (no commit requested); remote NOT updated; `origin/main` remains `00ac735` with the synthetic manifest. Do not claim remote delivery.
+
+**Prompt review outcome:** `NO_PROMPT_CHANGE_JUSTIFIED` — the failures were implementation/test defects, not instruction gaps; README Section 2A already required real data, fail-closed behavior, truthful test statuses, and no synthetic fallback. No prompt edit proposed.
+
+**Precise next action:** await restored egress to `api.binance.com` (or explicit approval of an alternative source); then rerun the bounded BTCUSDT canary through `load_or_fetch_asset_data`, independently recompute the dataset SHA-256 and re-read the persisted manifest/CSV, mark BRAIN-001 `RESOLVED_VERIFIED`, and proceed to BRAIN-004/005 implementation.

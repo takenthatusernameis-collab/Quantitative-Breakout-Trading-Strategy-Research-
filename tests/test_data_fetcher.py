@@ -234,7 +234,7 @@ def test_forward_pagination_uses_advancing_cursor_and_returns_all_rows(monkeypat
     assert rejected == 0
     assert request_count == 2
     assert len(calls) == 2
-    assert calls[1][0] == start + 2 * HOUR_MS + 1
+    assert calls[1][0] == start + HOUR_MS + 1
 
 
 def test_loader_replaces_synthetic_manifest_record_with_verified_real_cache(tmp_path, monkeypatch):

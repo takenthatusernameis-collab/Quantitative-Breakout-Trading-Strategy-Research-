@@ -18,6 +18,7 @@ from ..config import Candle, load_research_spec
 
 
 HOUR_MS = 60 * 60 * 1000
+DEFAULT_RATE_LIMIT_PER_MINUTE = 1200
 DATASET_HASH_ALGORITHM = "sha256-canonical-hourly-csv-v1"
 DATASET_HEADER = "timestamp,open,high,low,close,volume\n"
 BINANCE_KLINES_ENDPOINT = "https://api.binance.com/api/v3/klines"
@@ -32,7 +33,7 @@ class DataFetcher:
 
     BASE_URL = BINANCE_KLINES_ENDPOINT
     MAX_LIMIT = 1000
-    RATE_LIMIT_PER_MINUTE = 1200
+    RATE_LIMIT_PER_MINUTE = DEFAULT_RATE_LIMIT_PER_MINUTE
     MAX_PAGE_REQUESTS = 1000
 
     def __init__(self, max_retries: int = 3, backoff_seconds: float = 5.0):
@@ -380,7 +381,7 @@ def _new_manifest(spec: Dict[str, Any]) -> Dict[str, Any]:
             "endpoint": BINANCE_KLINES_ENDPOINT,
             "interval": "1h",
             "retrieval_timestamp_utc": None,
-            "rate_limit_per_minute": DataFetcher.RATE_LIMIT_PER_MINUTE,
+            "rate_limit_per_minute": data_spec.get("rate_limit_per_minute", DEFAULT_RATE_LIMIT_PER_MINUTE),
             "max_retries": data_spec.get("max_retries", 3),
             "backoff_seconds": data_spec.get("backoff_seconds", 5),
         },
@@ -473,7 +474,7 @@ def update_data_manifest(
             "endpoint": BINANCE_KLINES_ENDPOINT if not fallback_used else None,
             "interval": "1h",
             "retrieval_timestamp_utc": retrieval_time,
-            "rate_limit_per_minute": DataFetcher.RATE_LIMIT_PER_MINUTE,
+            "rate_limit_per_minute": spec.get("data", {}).get("rate_limit_per_minute", DEFAULT_RATE_LIMIT_PER_MINUTE),
         }
     )
     manifest["retrieval_timestamp_utc"] = retrieval_time

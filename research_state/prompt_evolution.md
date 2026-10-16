@@ -135,3 +135,11 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 **Current statuses:** BRAIN-001 remains `IMPLEMENTATION_IN_PROGRESS` (13 tests and live canary are not run); BRAIN-002 through BRAIN-005 are `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` only. No root cause from BRAIN-002–005 was changed in this design session. Full campaign stays blocked.
 
 **Validation caveat:** latest main, queue, source files, checkpoint, gate, results object size, workflow file list and Actions run records were read through GitHub. Runtime pytest/compile and live data access remain `NOT_RUN` due to local DNS/network failure and no available workflow-dispatch/cancel operation in the connected tool surface. Do not claim tests or an end-to-end workflow passed. Next step is to obtain a network-enabled runner and qualify BRAIN-001, then implement the transaction/shard pair (BRAIN-004/005), the holdout phase boundary (BRAIN-003), and independent authorization (BRAIN-002) in dependency-aware steps.
+
+## Session prompt review — 2026-10-16 UTC
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Evidence:** the session's failures were an implementation/test defect (`fetcher.py` manifest creation referenced `DataFetcher.RATE_LIMIT_PER_MINUTE`, unavailable on test doubles; one pagination test asserted the wrong next cursor), not an instruction gap. README Section 2A already requires real data, fail-closed behavior, truthful `NOT_RUN` statuses, no synthetic fallback, one bounded task per session, and no implementation of a freshly brainstormed root cause in the same session. All were followed. No quantitative-method safeguard was touched or weakened; no prompt revision is proposed.
+
+**Verification this session:** `git ls-remote origin main` = `00ac735982d825d4c4c8dfe73b361cdc729526c0` matches local HEAD; `py_compile` OK; `pytest tests/` → 20 passed, exit 0; live BTCUSDT canary → HTTP 451 from `api.binance.com/api/v3/klines`, loader failed closed with `DataUnavailableError`, no synthetic data accepted, manifest and data dir untouched. Local edits to `fetcher.py` and `tests/test_data_fetcher.py` are uncommitted and not remotely persisted.
