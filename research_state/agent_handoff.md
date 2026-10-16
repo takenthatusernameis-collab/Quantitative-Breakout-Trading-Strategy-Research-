@@ -487,3 +487,10 @@ All BRAIN-001..005 `RESOLVED_VERIFIED`; none `BRAINSTORMING_REQUIRED`. Parallel 
 ## Next specific task (later session)
 
 Continue bounded validation-phase batches (`holdout_enabled=False`, `--max-assets=1`) across remaining 16 assets (after BNBUSDT completes). At each batch checkpoint at batch_size; resume via manifest-derived IDs; verify remote SHA after commit. No code changes mid-campaign. Candidate freeze only after full validation; holdout never accessed.
+
+## Authoritative Current Status — 2026-10-16 UTC (batch continuation)
+
+- Branch `main`, HEAD `d2bee792cac9ac6db6f0f727db9a715d541480aa` == `origin/main`. Worktree clean except untracked `research/data/candles/`.
+- Tests: `python3 -m pytest tests/` → **73 passed, exit 0**.
+- Validation progress (campaign_id `fcf04f6e...`): **138,240 verified records** (5 assets complete through SOLUSDT), 17,848 executed this session, 119,015,791 shard bytes, all shards ≤4 MiB. Holdout off; no frozen candidates yet.
+- Next specific task (later session): continue bounded validation batches (`--max-assets=7` then 9, 11, …) across remaining 13 assets (ADAUSDT, ATOMUSDT, AVAXUSDT, BCHUSDT, DOGEUSDT, DOTUSDT, LINKUSDT, LTCUSDT, NEARUSDT, SUIUSDT, TRXUSDT, UNIUSDT, XLMUSDT). Resume via manifest-verified IDs; verify remote SHA after commit; no code changes mid-campaign. Candidate freeze only after full validation; holdout never accessed.
