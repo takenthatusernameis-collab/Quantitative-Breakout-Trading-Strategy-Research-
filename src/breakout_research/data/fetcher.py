@@ -53,7 +53,10 @@ class DataFetcher:
         self.max_retries = max_retries
         self.backoff_seconds = backoff_seconds
         self.session = self._create_session()
-        configured_endpoints = endpoints or (self.BASE_URL, BINANCE_MARKET_DATA_KLINES_ENDPOINT)
+        configured_endpoints = endpoints or (
+            self.BASE_URL,
+            BINANCE_MARKET_DATA_KLINES_ENDPOINT,
+        )
         self.endpoints = tuple(dict.fromkeys(
             endpoint.rstrip("/") for endpoint in configured_endpoints if endpoint
         ))
@@ -111,6 +114,7 @@ class DataFetcher:
             params["endTime"] = int(end_time)
 
         for index, endpoint in enumerate(self.endpoints):
+            response = None
             try:
                 response = self.session.get(endpoint, params=params, timeout=30)
                 response.raise_for_status()
@@ -118,10 +122,13 @@ class DataFetcher:
                 response_obj = getattr(exc, "response", None)
                 status_code = getattr(response_obj, "status_code", None)
                 if status_code is None:
-                    status_code = getattr(locals().get("response"), "status_code", None)
+                    status_code = getattr(response, "status_code", None)
                 # Don't hide invalid symbols, malformed requests, or API contract changes.
                 # Rotate endpoints only for access/rate-limit/transient server failures.
-                if status_code not in ENDPOINT_FAILOVER_STATUS_CODES or index == len(self.endpoints) - 1:
+                if (
+                    status_code not in ENDPOINT_FAILOVER_STATUS_CODES
+                    or index == len(self.endpoints) - 1
+                ):
                     raise DataUnavailableError(
                         f"Binance endpoint {endpoint} failed for {symbol}: HTTP {status_code}"
                     ) from exc
