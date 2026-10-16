@@ -575,35 +575,37 @@ jobs:
 
           backoff=2
           for attempt in 1 2 3 4 5 6; do
-            git fetch origin \
-              "+refs/heads/${DEFAULT_BRANCH}:refs/remotes/origin/${DEFAULT_BRANCH}"
-
-            if ! git rebase "origin/${DEFAULT_BRANCH}"; then
+            if ! timeout 10s git fetch origin \
+              "+refs/heads/${DEFAULT_BRANCH}:refs/remotes/origin/${DEFAULT_BRANCH}"; then
+              echo "::warning::Diagnostics fetch attempt ${attempt}/6 failed or timed out."
+            elif ! timeout 15s git rebase "origin/${DEFAULT_BRANCH}"; then
               git rebase --abort >/dev/null 2>&1 || true
-              echo "::error::Remote reconciliation conflicted; refusing to overwrite concurrent repository changes."
+              echo "::error::Diagnostics reconciliation conflicted or timed out; skipping further retries so Kilo can start."
               exit 1
-            fi
-
-            if git push origin "HEAD:refs/heads/${DEFAULT_BRANCH}"; then
+            elif timeout 20s git push origin "HEAD:refs/heads/${DEFAULT_BRANCH}"; then
               local_sha="$(git rev-parse HEAD)"
-              remote_sha="$(
-                git ls-remote origin "refs/heads/${DEFAULT_BRANCH}" |
-                awk 'NR == 1 { print $1 }'
-              )"
+              if remote_output="$(timeout 8s git ls-remote origin "refs/heads/${DEFAULT_BRANCH}")"; then
+                remote_sha="$(awk 'NR == 1 { print $1 }' <<< "$remote_output")"
+              else
+                remote_sha=""
+                echo "::warning::Diagnostics remote-SHA verification failed or timed out on attempt ${attempt}/6."
+              fi
 
               if [[ -n "$remote_sha" && "$remote_sha" == "$local_sha" ]]; then
                 echo "Verified diagnostics ledger at remote SHA ${remote_sha}."
                 exit 0
               fi
 
-              echo "::warning::Remote SHA changed during verification; reconciling again."
+              echo "::warning::Diagnostics push/verification attempt ${attempt}/6 was inconclusive; bounded reconciliation will continue."
             else
-              echo "::warning::Push attempt ${attempt} failed; fetching and reconciling again."
+              echo "::warning::Diagnostics push attempt ${attempt}/6 failed or timed out."
             fi
 
-            sleep "$backoff"
-            (( backoff < 30 )) && backoff=$((backoff * 2))
-            (( backoff > 30 )) && backoff=30
+            if (( attempt < 6 )); then
+              sleep "$backoff"
+              (( backoff < 30 )) && backoff=$((backoff * 2))
+              (( backoff > 30 )) && backoff=30
+            fi
           done
 
           echo "::error::Diagnostics ledger could not be pushed and remotely verified."
