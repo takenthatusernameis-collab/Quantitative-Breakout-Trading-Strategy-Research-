@@ -6,8 +6,8 @@
   "shared_gates": {
     "real_market_data": {
       "gate_id": "BRAIN-001",
-      "status": "BLOCKED_EXTERNAL",
-      "reason": "Historical backtests remain blocked until BRAIN-002/003/004/005 gates pass. Binance api.binance.com returns HTTP 451 from the Actions runner; failover endpoint data-api.binance.vision returned HTTP 200 and yielded 26,280 validated closed BTCUSDT hourly candles (run #38912568557). Per-asset acquisition is still pending campaign-gate authorization.",
+      "status": "CONDITION_SATISFIED_NOT_EXECUTED",
+      "reason": "All P0 gates (BRAIN-001..005) are RESOLVED_VERIFIED; campaign_authorization.json authorized: true with code_hash matching current source (HEAD fd768a3); 18 of 20 universe assets have genuine Binance data via data-api.binance.vision failover (content-hash verified, fallback_used: false); XMRUSDT (3,011 candles) and MATICUSDT (7,883 candles) excluded for insufficient history with recorded reasons. Nothing external blocks the campaign. Remaining block: no validation campaign has executed yet (research/results_shards/ unwritten, zero completed records, no frozen candidates, legacy checkpoint untrusted). Historical backtests, performance claims and economic conclusions therefore remain blocked until the validation campaign runs under BRAIN-003/004/005 and its results are persisted.",
       "requirement": "At least 26280 validated closed hourly candles per required asset, genuine provenance, content hashes, persisted artifacts, independent readback.",
       "blocks": [
         "historical_backtest",

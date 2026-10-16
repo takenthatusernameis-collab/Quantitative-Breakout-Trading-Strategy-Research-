@@ -360,4 +360,32 @@ All open items revalidated against live source at HEAD `14c5bd3`: none is `BRAIN
   - Checkpoint reconciliation: legacy `checkpoint.json` treated as untrusted; resume derives from manifest-verified shard IDs; checkpoint not rewritten.
   - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
 - Unresolved blockers ranked: (1) legacy checkpoint code-hash mismatch (fails closed; resume from shards, not counters); (2) stale Actions runs on old code (informational only). All P0 gates resolved; none `BRAINSTORMING_REQUIRED`.
-- Next specific task (later session): begin the full-grid validation-mode campaign (`holdout_enabled=False`) on the 18 genuine assets via `CampaignRunner` (BRAIN-004 manifest-derived resume + bounded ≤4 MiB shards, BRAIN-003 holdout skip) to produce first validation results and candidate-freeze evidence; stop at first external blocker; never retry unchanged; claim a full campaign only after it completes.
+## Authoritative Current Status — 2026-10-16 UTC (~17:53 UTC, HEAD fd768a3)
+
+- Branch `main`, local HEAD `fd768a3d1aaf62442083fb06d0f7e72c74910363` == `origin/main` (verified via `git ls-remote origin main`). Worktree clean. HEAD advanced from `14c5bd3` via `8f32c6a` and `fd768a3` (workflow-run diagnostics captures only; no source changes).
+- Tests: `python3 -m pytest tests/` → **57 passed, exit 0** (pytest + numpy installed in this session solely to run the suite; all data-fetcher tests mocked, no live network in suite).
+- Latest Actions runs/logs: diagnostics ledger `research_state/workflow_run_diagnostics.jsonl` complete through run #38941374532 (failure, head `27ff9e026`, 17:39:34Z — agent edit-tool invalid-argument turn aborts; source and tests green; historical, not actionable), #38941312370 cancelled (head `27ff9e026`), #38941061115 cancelled (head `ca1436ad8`, PR #7 merge). Latest successful run #38934698322 (head `e8c6d011`, 16:47Z). No in-progress runs; log capture complete.
+- Revalidated prior claims at live HEAD: `compute_code_hash()` == `03592c4f93597cd26036f10e4019c64074388ff364673575a77ed1c08a057c1f` == `campaign_authorization.json` code_hash; `config_manifest.json` total_configurations == 2304 with spec hash `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085` matching the data manifest and authorization artifact; `generate_synthetic_candles` exists only in `src/breakout_research/data/cache.py` (test fixture), not in the campaign loader path; `campaign.run(holdout_enabled=False)` skips all final-holdout units and writes zero holdout rows; `pilot.py` sets `pilot_passed: False` / `campaign_authorized: False` (evidence-only, no self-authorization).
+- Manifests: `research/data_manifest.json` — 18 genuine Binance assets via `data-api.binance.vision` failover (`api.binance.com` HTTP 451 → failover HTTP 200), all 26,280 closed hourly candles, `fallback_used: false`, gaps [], rejected_rows 0; BTCUSDT/ETHUSDT synthetic prior entries retained in `invalidated_prior_entries` (forensic only). `research/universe_manifest.json` — CoinGecko current snapshot 2026-10-15T17:10:38Z, top 20 ranks, XMRUSDT (3,011 candles) and MATICUSDT (7,883 candles) excluded with recorded `insufficient_hourly_history` reasons; survivorship disclaimer recorded. Legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; no `research/results_shards/` written yet (no campaign execution).
+- Checkpoint: legacy `research_state/checkpoint.json` stale/untrusted (`code_hash ab984545...` != current `03592c4f...`, `last_verified_record: 0`); `_verify_stale_checkpoint` fails closed; resume derives from manifest-verified shard IDs; not rewritten.
+- Authorization: `research_state/campaign_authorization.json` `authorized: true`, zero reasons, code_hash matches current source; pilot evidence-only (`pilot_evidence.json`, `pilot_passed: false`). Legacy `pilot_gate.json` (`pilot_passed: true`, `campaign_authorized: true`, stale code_hash) retained as untrusted audit history.
+- Brainstorming revalidation: all open items BRAIN-001..005 revalidated at live HEAD `fd768a3`; none is `BRAINSTORMING_REQUIRED`; all `RESOLVED_VERIFIED`. All 5 parallel strategy lanes `COMPLETE`. No root cause was implemented this session (no design record created this session).
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED` — no instruction gap; all work followed existing design records and README 2A gates; no quantitative-method or holdout safeguard touched or weakened; at most one prompt change per session rule respected (none proposed). Entry appended to `prompt_evolution.md`.
+
+### Persistence status (separate fields, per README 2A.E)
+
+- Local commit: none yet this session (state revalidation only); `agent_handoff.md`, `prompt_evolution.md` and `parallel_strategy_lanes.json` to be committed and pushed (contents only, no workflow files), with remote SHA verification after push.
+- Remote persistence: last verified `git ls-remote origin main` == `fd768a3...` == local HEAD at session start; to be re-verified after this session's push.
+- Checkpoint reconciliation: legacy checkpoint untrusted; resume from manifest-verified shard IDs.
+- Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+
+### Unresolved blockers ranked
+
+1. None P0 — BRAIN-001..005 all `RESOLVED_VERIFIED`; no item `BRAINSTORMING_REQUIRED`.
+2. Legacy `checkpoint.json` code-hash mismatch (fails closed; resume from shards, not counters) — informational only.
+3. Historical edit-tool invalid-argument failures in workflow runs #38941061115/#38941312370/#38941374532 (17:37–17:53 UTC) — agent tool-usage failures; source and tests green; log capture complete; not actionable.
+4. Full campaign not yet executed — `research/results_shards/` unwritten, zero completed records, no frozen candidates, legacy checkpoint untrusted.
+
+### Next specific task (later session)
+
+Begin the full-grid validation-phase campaign (`holdout_enabled=False`) on the 18 genuine assets via `CampaignRunner` (BRAIN-004 manifest-derived resume + bounded ≤4 MiB shards, BRAIN-003 holdout skip) to produce first validation results and candidate-freeze evidence. Stop and record at the first external blocker; never retry unchanged; claim a full campaign only after it completes and its results are persisted and remote-verified. Acceptance: tests green exit 0, no synthetic data as market history, `candidate_frozen` manifest only after validation completes, remote SHA re-verified after any commit.
