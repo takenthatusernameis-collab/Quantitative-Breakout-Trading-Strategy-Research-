@@ -54,9 +54,26 @@
 
 1. Refresh `main`, Actions runs, the latest commit, current checkpoint, pilot gate and data manifest. Reclassify every item above as confirmed, stale, resolved-with-evidence, or disproven.
 2. Do not launch or continue the full campaign while genuine data and valid pilot authorization remain unproven.
-3. Fix and test the top-priority validity blocker, then repair bounded result persistence and deterministic resume.
+3. Before implementation, route structural/P0 blockers through `research_state/brainstorming_queue.md`; compare materially different interventions, acceptance tests, rollback and external prerequisites first. Do not implement a blocker in the same session that creates its brainstorming decision record.
 4. Audit candidate/holdout separation before any candidate selection or economic conclusion.
 5. Update this handoff with actual evidence and one next task. If the attempted fix fails, preserve the failure and state what new evidence justifies the next approach.
 6. Update `research_state/prompt_evolution.md` only if the session demonstrates a prompt-level gap; never revise the frozen research specification to make a gate pass.
 
 **Truthfulness rule:** this handoff documents evidence observed at a past commit/run. It does not prove that code/tests/fixes were executed or that the current remote state is unchanged.
+
+
+## Current directive — brainstorming gate for structural blockers (2026-10-16 UTC)
+
+The live source audit found several issues that should not go straight into another incremental Kilo patch loop. The durable queue is now `research_state/brainstorming_queue.md`; its statuses are design workflow states, not a second diagnostics log. The sole run-level error ledger remains `research_state/workflow_run_diagnostics.jsonl`.
+
+- **P0 / BRAIN-001 — Data provenance:** `src/breakout_research/data/fetcher.py` directly generates synthetic candles in `load_or_fetch_asset_data()`; the data manifest marks BTCUSDT and ETHUSDT as synthetic fallbacks. Real historical market data is not verified.
+- **P0 / BRAIN-002 — Pilot gate:** `src/breakout_research/pilot.py` unconditionally emits positive pilot and campaign-authorization booleans; the campaign trusts that boolean plus hashes, which cannot establish real data or successful prerequisite checks.
+- **P0 / BRAIN-003 — Holdout separation:** `src/breakout_research/campaign.py` loops all configs through every fold, including the final holdout; the `is_holdout` flag does not gate access. Revalidate which old results were exposed and do not call the same period untouched without evidence.
+- **P0 / BRAIN-004 — Resume integrity:** campaign startup resets the loaded configuration/fold/cost cursor to zero for the current asset. Checkpoint counters also show `completed_records: 81510` but `last_verified_record: 0`; actual duplicates/losses still need reconciliation.
+- **P1 / BRAIN-005 — Result persistence:** the current result file is about 51.7 MB in the repository tree; a historical run reported a rejected ~429.9 MB attempted file. The next design must bound file/blob sizes and make shards/checkpoints recoverable.
+
+These are **direct code/state findings**, not claims from automated diagnostics. At review time the workflow diagnostics JSONL was empty, and no end-to-end success of the new recorder was established. All five entries remain `BRAINSTORMING_REQUIRED`; none is claimed resolved.
+
+**Next-session protocol:** choose one highest-priority queue entry, revalidate its evidence, compare at least two materially different interventions (three where useful), and document recommendation, risks, tests, rollback, and external dependencies. Do not implement that same root cause during the session that creates its design record. A later session can proceed once the item is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`; if an unavailable authorization/provider/human action blocks it, mark `WAITING_EXTERNAL_INTERVENTION`.
+
+The brainstorming protocol is recorded in README Section 2A, and the Kilo startup command now reads the queue and enforces this gate. Keep the frozen research protocol intact; a methodology change requires a separately versioned, preregistered specification.
