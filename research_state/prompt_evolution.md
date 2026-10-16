@@ -106,3 +106,14 @@ Reduce repetitive same-root-cause patching, distinguish actual architectural/pla
 ### Rollback and review rule
 
 If future runs show brainstorming merely postpones safe, obvious fixes, revise the entry threshold using evidence. Do not remove the gate for confirmed permanent/structural failures merely to make the workflow appear productive. Keep the queue separate from the one durable workflow error ledger.
+
+
+## P4-2026-10-16-REAL-DATA-PROVIDER-CONTRACT-IMPLEMENTATION
+
+**Trigger:** Structured source revalidation showed `load_or_fetch_asset_data()` calling the synthetic generator directly, swallowing all data-manifest write errors, and letting the campaign/pilot override the frozen three-year hourly history minimum with `min_candles=1000`. The current manifest labels BTCUSDT/ETHUSDT synthetic, so an ordinary green pilot report cannot support an economic conclusion.
+
+**Prompt improvement:** require a campaign-facing real-provider contract, a specification-derived minimum that caller parameters cannot weaken, fully closed candles, strict timestamp/OHLCV/gap/count validation, atomic content-addressed dataset/manifest persistence, independent cache provenance/hash verification, and fail-closed behavior for provider/manifest failures. Explicitly require preservation of prior synthetic manifest entries as invalidated evidence and make tests cover bad provider/cache paths. Prohibit a full campaign while independent pilot authorization and holdout isolation remain unresolved.
+
+**Changes committed:** provider implementation `5c5ffe56d3ee484da43bf3f8c5044f5560be3028`; caller floor removals `33520ae77dbc18ad2941eacd367245ed3cb11111`, `c808a41844abec367bd4c59a37097c54efefbd0b`; ten new data-contract regression tests `d0c22425b15ec0e3ef545ea4fd140ec838d8a723`. BRAIN-001 is `IMPLEMENTATION_IN_PROGRESS`.
+
+**Evidence status:** commit presence verified through GitHub reads. The execution container could not resolve `github.com`; the repository could not be cloned. Python syntax compilation, pytest execution, live Binance connectivity and the complete three-year canary are therefore `NOT_RUN`. Do not promote to `RESOLVED_VERIFIED` or authorize a campaign based on the commit alone. Next session must re-read `main`, run focused + complete tests, correct any failures, execute a bounded live data canary, and independently verify the remote data and manifest hashes. BRAIN-002–BRAIN-005 remain in brainstorming and were not implemented.
