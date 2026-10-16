@@ -1,6 +1,12 @@
 name: Kilo General Agent Loop
 
 on:
+  # Validate workflow changes immediately, without needing a pull request or a manual dispatch.
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/main.yml"
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
