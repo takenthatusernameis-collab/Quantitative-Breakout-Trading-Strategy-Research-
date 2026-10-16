@@ -266,3 +266,23 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 **Verification this session:** `git rev-parse HEAD` = `c8d348dd779b5e0612dce0bceb93d6e47719ad95`; `git ls-remote origin main` = `87cb46a49a6cfd035fb56fdab9e5434103e67e5c` (local 2 ahead, remote unchanged; persistence NOT claimed); `git merge-base --is-ancestor 87cb46a c8d348d` → OK; `pytest tests/` → 20 passed exit 0; curl binance klines → HTTP 451 (~0.12s); curl api.github.com → HTTP 200; gh Actions runs/jobs inspected (stale run #38891774797 still `in_progress`).
 
 **Rollback and review rule:** N/A (no prompt change). History preserved; no reset or rewrite performed.
+
+## P4-2026-10-16-SAME-RUN-RECOVERY-VERIFICATION
+
+### Triggering evidence
+- New Kilo worker session inside the SAME active GitHub Actions run as previous session (session 21); previous session ended because bounded remote checkpoint persistence failed.
+- Local HEAD is `eb19a41ddf564885be5a1be3e75e3ac0229e514e`; remote `origin main` is `87cb46a49a6cfd035fb56fdab9e5434103e67e5c` (3 commits ahead).
+- Push rejected due to missing `workflows` write permission (GitHub App token lacks `workflows: write`) because commit `d1b780b` modifies `.github/workflows/main.yml`.
+- Live Binance canary → HTTP 451; loader fails closed (DataUnavailableError), no synthetic fallback in campaign path. Tests pass (20/20). Recovery artifacts preserved; no local work discarded; no history rewrite.
+
+### Cause classification
+`PERMISSION_BLOCKER` (external) combined with external data block and unimplemented design items. No prompt gap identified.
+
+### Revision summary
+Appended this session record to prompt_evolution.md documenting same-run recovery state: verified SHAs, confirmed persistence blocker reason, preserved recovery artifacts, revalidated brainstorming items (all design-ready/blocked by external factors), confirmed fail-closed behavior and tests. No changes to quantitative methodology or frozen safeguards.
+
+### Regression tests and actual status
+All existing prompt regression scenarios remain specified; no behavioral regressions observed. Persistence reporting remains truthful (not claimed). No unchanged retries attempted.
+
+### Rollback and review rule
+No prompt change made; if future sessions show instruction gaps, revise smallest clause with evidence and log new entry. Do not weaken holdout/data/persistence safeguards.
