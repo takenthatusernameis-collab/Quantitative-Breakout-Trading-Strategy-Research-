@@ -482,3 +482,39 @@ def test_official_endpoint_failover_stays_with_binance_market_data():
     assert BINANCE_MARKET_DATA_KLINES_ENDPOINT == (
         "https://data-api.binance.vision/api/v3/klines"
     )
+
+
+
+def test_fetcher_reports_both_official_endpoint_failures_when_all_are_blocked():
+    calls = []
+
+    class FakeResponse:
+        def __init__(self, status_code):
+            self.status_code = status_code
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise requests.HTTPError(
+                    f"HTTP {self.status_code}",
+                    response=SimpleNamespace(status_code=self.status_code),
+                )
+
+    class FakeSession:
+        def get(self, url, **_kwargs):
+            calls.append(url)
+            status = 451 if url == BINANCE_KLINES_ENDPOINT else 403
+            return FakeResponse(status)
+
+    fetcher = DataFetcher(max_retries=1, backoff_seconds=0)
+    fetcher._rate_limit = lambda: None
+    fetcher.session = FakeSession()
+
+    with pytest.raises(DataUnavailableError) as exc_info:
+        fetcher.fetch_klines("BTCUSDT")
+
+    message = str(exc_info.value)
+    assert calls == list(BINANCE_KLINES_ENDPOINTS)
+    assert BINANCE_KLINES_ENDPOINT in message
+    assert BINANCE_MARKET_DATA_KLINES_ENDPOINT in message
+    assert "HTTP 451" in message
+    assert "HTTP 403" in message
