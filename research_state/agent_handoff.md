@@ -1,9 +1,55 @@
-# Agent Handoff — Revalidate Before Acting
+# Authoritative Current Status — 2026-10-16 UTC
+
+**This block is the single source of current task/status truth.** Older snapshots and continuation notes below are historical records unless explicitly revalidated in a later dated section. Do not infer that an old statement is current merely because it appears earlier in the file.
+
+## Verified default-branch snapshot
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`.
+- Latest verified `main` commit during this inspection: [`f9e841115fda0d7d992cb106a3e0b877474fc696`](https://github.com/takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-/commit/f9e841115fda0d7d992cb106a3e0b877474fc696), recorded at 2026-10-16 09:20:19 UTC. Re-fetch `main` before acting; this is an inspection timestamp, not a guarantee it remains HEAD.
+- The live brainstorming queue records BRAIN-002 through BRAIN-005 as `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. Design-ready means the design is documented; it does not mean implemented, tested, or resolved.
+- Exactly one workflow file was observed: `.github/workflows/main.yml` (blob `c4d85d7efabacf6382eae9b171bc9d791ad46fa1` at the inspection snapshot). Do not add another workflow as a shortcut.
+- The connected GitHub tool surface used for this inspection did not provide a reliable repository-wide current Actions-run listing, workflow dispatch, or cancellation operation. The older run #4/#5 status notes lower in this document are **historical observations only**; refresh them from live Actions UI/API before using them.
+
+## Current blocker ledger
+
+| ID | Current status | Evidence still required |
+|---|---|---|
+| BRAIN-001 — real market data | `IMPLEMENTATION_IN_PROGRESS` | The live source no longer calls the synthetic generator in the campaign-facing loader, and 13 regression tests exist in `tests/test_data_fetcher.py`. The 13 tests are **NOT_RUN** in the recorded evidence. No successful live Binance canary or independently recomputed remotely persisted dataset/manifest hashes have been demonstrated. |
+| BRAIN-002 — independent pilot authorization | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Pilot evidence-only behavior, independent deterministic validator, forged/stale/missing-evidence negative tests, and campaign-time revalidation. Not implemented. |
+| BRAIN-003 — final-holdout isolation | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Validation-only grid, frozen hash-bound candidate manifest, isolated holdout evaluator, and historical exposure audit. Existing holdout remains `EXPOSED_OR_UNKNOWN` until non-use is established. Not implemented. |
+| BRAIN-004 — deterministic resume | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Stable experiment IDs, transaction/shard recovery, crash-injection tests, and derived resume cursor based on independently verified records. Not implemented. |
+| BRAIN-005 — bounded durable results | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Immutable JSONL shards with a hard 4 MiB serialized-byte ceiling, verified manifest, legacy-ledger audit/migration, clean-clone reconstruction, and reachable-history blob scan. Not implemented. |
+
+## Next principal task: BRAIN-001 acceptance only
+
+Do not begin the large campaign. Do not implement BRAIN-002 through BRAIN-005 in the same session that is tasked with qualifying BRAIN-001.
+
+1. Re-fetch current `main`, the research specification, fetcher, campaign/pilot callers, the 13 focused tests, and the diagnostics ledger. Reconfirm that the intended code and specification are the ones being tested.
+2. Run Python compilation, all 13 tests in `tests/test_data_fetcher.py`, then the full existing test suite; record the exact commands, exit statuses, and failure output. Test files existing or a green unrelated workflow are not test passes.
+3. In a network-enabled runner, exercise one bounded BTCUSDT hourly canary through the same production loader/provider path. Enforce the frozen three-year history floor, closed-candle handling, pagination, strict timestamps/OHLCV/gap checks, no synthetic fallback, and atomic fail-closed manifest persistence. Do not reduce the history requirement to make the canary pass.
+4. Re-read the remotely persisted data and manifest and independently recompute the documented canonical dataset SHA-256 and manifest/source/coverage correspondence. Preserve artifacts and exact failures if any step fails.
+5. Only mark BRAIN-001 `RESOLVED_VERIFIED` if every required test and live/persistence check actually passes. If network/provider access is unavailable, record `WAITING_EXTERNAL_INTERVENTION` for the blocked live-canary step (with exact evidence) while retaining any distinct implementation/test failures; never report the canary as passed.
+6. Keep campaign authorization blocked. After BRAIN-001 is genuinely qualified, implement BRAIN-004 and BRAIN-005 together as one transaction/shard architecture, then BRAIN-003, then BRAIN-002 against independently verified evidence. If dependency evidence justifies a different ordering, document that rationale before changing the order.
+
+## Non-negotiable research-validity rules
+
+- No full campaign while applicable P0 gates remain unresolved.
+- Existing synthetic-derived records remain forensic/legacy-unverified evidence; do not relabel them as observed market history or use them to make economic claims.
+- No claim of an untouched holdout unless historical non-use is established; otherwise use `EXPOSED_OR_UNKNOWN` and preregister a new confirmatory period if needed.
+- A local commit, a successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
+- Preserve the single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
+
+---
+
+## Historical handoff snapshots and prior evidence
+
+The entries that follow preserve prior diagnoses, implementation notes, and failure records. Their timestamped statements are useful evidence of what was observed then, but the top status block governs current task selection. Where a later dated entry conflicts with an earlier snapshot, use the later entry only after independently re-fetching its supporting source/evidence.
+
 
 **Snapshot time:** 2026-10-16 (UTC; see linked run records for exact timestamps)  
 **Purpose:** transfer prior work and failure knowledge so the next session does not rediscover problems. This is a historical snapshot, not a claim that every issue remains unresolved. Recheck the current default-branch commit and latest Actions state before relying on any item.
 
-## Current known repository state at last inspection
+## Historical repository state snapshot (superseded by the authoritative status above)
 
 - Default branch: `main`.
 - Latest commit before the README prompt update: `47c2584309527961b5528ceb563fa5b4771db66f` (`chore(kilo): checkpoint agent session`).
@@ -62,7 +108,7 @@
 **Truthfulness rule:** this handoff documents evidence observed at a past commit/run. It does not prove that code/tests/fixes were executed or that the current remote state is unchanged.
 
 
-## Current directive — brainstorming gate for structural blockers (2026-10-16 UTC)
+## Historical directive — initial brainstorming gate (superseded by structured design decisions below) (2026-10-16 UTC)
 
 The live source audit found several issues that should not go straight into another incremental Kilo patch loop. The durable queue is now `research_state/brainstorming_queue.md`; its statuses are design workflow states, not a second diagnostics log. The sole run-level error ledger remains `research_state/workflow_run_diagnostics.jsonl`.
 
@@ -72,7 +118,7 @@ The live source audit found several issues that should not go straight into anot
 - **P0 / BRAIN-004 — Resume integrity:** campaign startup resets the loaded configuration/fold/cost cursor to zero for the current asset. Checkpoint counters also show `completed_records: 81510` but `last_verified_record: 0`; actual duplicates/losses still need reconciliation.
 - **P1 / BRAIN-005 — Result persistence:** the current result file is about 51.7 MB in the repository tree; a historical run reported a rejected ~429.9 MB attempted file. The next design must bound file/blob sizes and make shards/checkpoints recoverable.
 
-These are **direct code/state findings**, not claims from automated diagnostics. At review time the workflow diagnostics JSONL was empty, and no end-to-end success of the new recorder was established. All five entries remain `BRAINSTORMING_REQUIRED`; none is claimed resolved.
+These are **direct code/state findings**, not claims from automated diagnostics. At the time of this historical snapshot, the workflow diagnostics JSONL was empty, and no end-to-end success of the new recorder had been established. The then-current status was `BRAINSTORMING_REQUIRED`; this status was superseded by the structured design decisions recorded later in this file and in the current block above.
 
 **Next-session protocol:** choose one highest-priority queue entry, revalidate its evidence, compare at least two materially different interventions (three where useful), and document recommendation, risks, tests, rollback, and external dependencies. Do not implement that same root cause during the session that creates its design record. A later session can proceed once the item is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`; if an unavailable authorization/provider/human action blocks it, mark `WAITING_EXTERNAL_INTERVENTION`.
 
