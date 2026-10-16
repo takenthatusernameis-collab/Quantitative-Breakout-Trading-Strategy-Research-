@@ -356,3 +356,38 @@ A live provider restriction (Binance API HTTP 451) was incorrectly operationally
 
 ### Scope boundary
 This queue enables independent work to progress; it does not enable simultaneous runs inside this repository because the existing workflow retains one concurrency group. True compute parallelism requires separate strategy repositories or separately authorized runners. Data, provenance, and holdout requirements remain mandatory for all economic conclusions.
+
+## Session prompt review — 2026-10-16 UTC (~14:10 UTC)
+
+### Outcome
+
+`NO_PROMPT_CHANGE_JUSTIFIED`.
+
+### Triggering evidence
+
+- Live default-branch SHA refreshed: `git rev-parse HEAD` == `git ls-remote origin main` == `14657aee0a2602e0d793ae4eff0eb87dd753d370` (prior handoff blocks named `656a4d0`, `056723a`, `92a091c`, etc. are STALE — the `automation/parallel-lanes-data-failover-20261016` branch was merged to `main`).
+- All five open brainstorming items revalidated against live source at HEAD `14657ae`. BRAIN-001 implementation (real Binance provider, same-provider failover, fail-closed loader, verified cache, atomic manifest) is committed; bounded BTCUSDT canary PASSED from the intended Actions runner (run #38912568557): `api.binance.com` HTTP 451 persistent block, `data-api.binance.vision` HTTP 200 selected via loader failover; 26,280 validated closed hourly candles fetched in 5.8s, 0 rejected, 0 gaps; `research/data_manifest.json` BTCUSDT entry `fallback_used: false`, spec + content hash verified locally; canary report at `research_state/endpoint_canary_report.json`. Lane `binance-official-endpoint-preflight` moved to `COMPLETE` in `parallel_strategy_lanes.json`.
+- ETHUSDT manifest entry remains `fallback_used: true / synthetic` — forensic-only, not relabeled.
+- Tests: `python3 -m pytest tests/` → 24 passed, exit 0 (pytest + numpy installed in the container solely to run the suite; all data-fetcher tests are mocked, no live network in the suite).
+- `git push origin main` for this session's evidence changes succeeded for non-workflow files (`contents: write`); remote SHA re-verified after push. `d1b780b` ZipInfo workflow fix remains on `backup/local-head-dcbb307-20261016`, `WAITING_EXTERNAL_INTERVENTION` (`workflows` write permission). Stale run #38891774797 still `in_progress`, cancel HTTP 403.
+
+### Cause classification
+
+`DATA_OR_EXTERNAL_SERVICE` (Binance `api.binance.com` HTTP 451 egress block, now worked around via the documented alternate official endpoint — not a code defect); `PERMISSION_BLOCKER` (workflows write for `d1b780b`); no `PROMPT_GAP` demonstrated. README Section 2A already governs: real data required, fail-closed, no synthetic fallback, truthful `NOT_RUN`, one bounded task per session, no same-session implementation of a freshly brainstormed root cause, campaign blocked until P0 gates pass.
+
+### Revision summary
+
+None. No README Section 2A change; no quantitative-method safeguard touched or weakened; no same-session implementation of a freshly brainstormed root cause. No new `BRAINSTORMING_REQUIRED` item; BRAIN-002–005 remain `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` and unimplemented.
+
+### Expected effect
+
+None (no prompt change). Durable outputs: refreshed handoff to HEAD `14657ae`, BRAIN-001 canary evidence committed and remotely persisted, lane 0 `COMPLETE`, checkpoint reconciliation and campaign-store wiring left as the verified next task (BRAIN-004/005).
+
+### Rollback and review rule
+
+N/A (no prompt change). If push verification fails, the local commit evidence is preserved and the push is re-attempted only after confirming the remote state; no unchanged retry against a deterministic permission rejection.
+
+### Verification this session
+
+`git rev-parse HEAD` == `git ls-remote origin main` == `14657aee0a2602e0d793ae4eff0eb87dd753d370` pre-push; post-push remote SHA verified identical; `python3 -m pytest tests/` → 24 passed exit 0; curl binance.com klines → HTTP 451 (~0.17s), loader fails closed; curl data-api.binance.vision → HTTP 200 (~0.57s), canary passed; curl api.github.com → HTTP 200.
+

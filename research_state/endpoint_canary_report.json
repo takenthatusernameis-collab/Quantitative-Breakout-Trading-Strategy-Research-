@@ -1,0 +1,52 @@
+{
+  "lane_id": "binance-official-endpoint-preflight",
+  "run_id": 38912568557,
+  "run_attempt": 1,
+  "captured_at_utc": "2026-10-16T14:08:11Z",
+  "runner": "GitHub Actions hosted runner, job 'kilo', workflow 'Kilo General Agent Loop'",
+  "purpose": "Canary the official Binance market-data klines endpoints from the intended runner and verify the campaign-facing loader end to end.",
+  "endpoints": [
+    {
+      "url": "https://api.binance.com/api/v3/klines",
+      "status": 451,
+      "usable": false,
+      "note": "Persistent location/egress block; in ENDPOINT_FAILOVER_STATUS_CODES so the loader rotates"
+    },
+    {
+      "url": "https://data-api.binance.vision/api/v3/klines",
+      "status": 200,
+      "usable": true,
+      "selected": true,
+      "note": "Official Binance market-data-only host; same provider, failover target"
+    }
+  ],
+  "canary": {
+    "symbol": "BTCUSDT",
+    "interval": "1h",
+    "required_candles": 26280,
+    "observed_candles": 26280,
+    "first_candle_timestamp": 1697551200000,
+    "last_candle_timestamp": 1792155600000,
+    "content_hash": "08c1f8eb22a04e3007d3761f834aea30a6d7d77c2195dbfb19297ecb6507d0bc",
+    "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+    "download_attempts": 27,
+    "rejected_rows": 0,
+    "gaps": 0,
+    "load_seconds": 5.8,
+    "total_seconds": 6.7
+  },
+  "manifest_readback": {
+    "file": "research/data_manifest.json",
+    "asset": "BTCUSDT",
+    "provider": "binance",
+    "endpoint": "https://data-api.binance.vision/api/v3/klines",
+    "fallback_used": false,
+    "fallback_source": "",
+    "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+    "dataset_path": "research/data/candles/BTCUSDT_1h_08c1f8eb22a04e30.csv",
+    "spec_hash_match": true,
+    "content_hash_match": true
+  },
+  "conclusion": "Both official Binance klines endpoints canaried from the intended runner: api.binance.com HTTP 451 (blocked), data-api.binance.vision HTTP 200 (selected via loader failover). End-to-end real-data path verified: 26,280 validated closed hourly candles fetched, hashed, and provenance-manifested with fallback_used=false. Lane completion criteria met. Full per-asset acquisition for the 20-asset universe remains pending campaign execution (blocked until BRAIN-002/003/004/005 gates pass); this is a bounded path canary, not a full data download.",
+  "next": "Persist manifest change to origin/main, verify remote SHA, mark lane COMPLETE and BRAIN-001 RESOLVED_VERIFIED; then proceed to BRAIN-004/005 (deterministic resume + bounded shards)."
+}

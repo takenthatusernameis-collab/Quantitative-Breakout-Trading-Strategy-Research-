@@ -47,20 +47,29 @@
     {
       "lane_id": "binance-official-endpoint-preflight",
       "priority": 0,
-      "status": "READY",
-      "scope": "Research the official market-data-only Binance endpoint and validate explicit same-provider failover; keep a strict fail-closed policy.",
+      "status": "COMPLETE",
+      "scope": "Researched the official market-data-only Binance endpoint and validated explicit same-provider failover; strict fail-closed policy retained.",
       "dependencies": [],
       "permitted_while_data_gate_blocked": true,
       "required_artifacts": [
-        "endpoint_canary_report.json",
-        "endpoint failover tests",
-        "provenance readback showing selected endpoint"
+        "research_state/endpoint_canary_report.json",
+        "endpoint failover tests (tests/test_data_fetcher.py)",
+        "provenance readback showing selected endpoint (manifest entry for BTCUSDT)"
       ],
       "completion_criteria": [
         "Canary is run from the intended GitHub Actions runner.",
         "HTTP status and response source are recorded.",
         "If both official endpoints fail, report BLOCKED_EXTERNAL without synthetic fallback."
-      ]
+      ],
+      "evidence": {
+        "run_id": 38912568557,
+        "captured_at_utc": "2026-10-16T14:08:11Z",
+        "api_binance_com": "HTTP 451 (persistent block, failover-eligible)",
+        "data_api_binance_vision": "HTTP 200 (selected via loader failover)",
+        "btc_load": "26,280 validated closed hourly BTCUSDT candles, 27 requests, 0 rejected, 0 gaps, content hash 08c1f8eb22a04e3007d3761f834aea30a6d7d77c2195dbfb19297ecb6507d0bc",
+        "manifest": "research/data_manifest.json BTCUSDT entry: provider=binance, endpoint=data-api.binance.vision, fallback_used=false, spec+content hash verified locally"
+      },
+      "notes": "Real per-asset acquisition for the full 20-asset universe is not part of this lane; it proceeds under campaign execution once BRAIN-002/003/004/005 authorization gates pass. ETHUSDT manifest entry remains synthetic forensic evidence and is not relabeled."
     },
     {
       "lane_id": "next-breakout-hypothesis",
