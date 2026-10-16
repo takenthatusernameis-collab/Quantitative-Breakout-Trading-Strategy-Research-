@@ -228,7 +228,11 @@ jobs:
               raise RuntimeError(f"log archive request failed after retries: {last_error}")
 
           def run_key(run):
-              return f"{run.get('id')}:{run.get('run_attempt', 1)}"
+              run_id = run.get("id") or run.get("run_id")
+              if run_id is None:
+                  return None
+              attempt = run.get("run_attempt") or 1
+              return f"{run_id}:{attempt}"
 
           def load_ledger():
               records = {}
@@ -242,8 +246,11 @@ jobs:
                       try:
                           record = json.loads(line)
                           key = run_key(record)
-                          if key and key != "None:1":
+                          if key is not None:
                               records[key] = record
+                          else:
+                              # Keep non-run diagnostic events distinct; several may lack run IDs.
+                              records[f"non-run-diagnostic:{line_number}"] = record
                       except (json.JSONDecodeError, TypeError):
                           raise RuntimeError(
                               f"Existing diagnostics ledger is invalid at line {line_number}; "
@@ -504,8 +511,8 @@ jobs:
               records.values(),
               key=lambda item: (
                   item.get("run_completed_at") or item.get("created_at") or "",
-                  int(item.get("run_id") or 0),
-                  int(item.get("run_attempt", 1)),
+                  int(item.get("run_id") or item.get("id") or 0),
+                  int(item.get("run_attempt") or 1),
               ),
           )
 
