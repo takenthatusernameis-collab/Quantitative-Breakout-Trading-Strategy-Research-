@@ -65,6 +65,36 @@ def test_frozen_three_year_spec_resolves_to_26280_hourly_candles():
     assert _required_hourly_candles(spec) == 26280
 
 
+
+def test_loader_does_not_allow_callers_to_weaken_three_year_history_requirement(tmp_path, monkeypatch):
+    spec = {
+        "protocol_version": "v1",
+        "specification_hash": "frozen-spec",
+        "data": {"interval": "1h"},
+        "universe": {"min_history_years": 3},
+    }
+    monkeypatch.setattr(fetcher_module, "load_research_spec", lambda: spec)
+    observed = {}
+
+    class EmptyFetcher:
+        def fetch_full_history(self, symbol, interval="1h", start_time=None, end_time=None):
+            observed.update(symbol=symbol, interval=interval, start_time=start_time, end_time=end_time)
+            return [], 0, 1
+
+    monkeypatch.setattr(fetcher_module, "DataFetcher", EmptyFetcher)
+    with pytest.raises(DataUnavailableError, match="no valid candles"):
+        load_or_fetch_asset_data(
+            "TESTUSDT",
+            min_candles=1000,
+            data_dir=str(tmp_path / "candles"),
+            manifest_path=str(tmp_path / "data_manifest.json"),
+        )
+
+    assert observed["end_time"] - observed["start_time"] == (26280 - 1) * HOUR_MS
+    assert observed["interval"] == "1h"
+
+
+
 def test_hourly_validator_rejects_gap_duplicate_bad_values_and_misalignment():
     start = 100 * HOUR_MS
     assert len(validate_hourly_candles([candle(start), candle(start + HOUR_MS)], 2)) == 0
