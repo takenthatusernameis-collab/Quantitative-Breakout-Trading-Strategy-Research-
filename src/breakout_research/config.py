@@ -184,6 +184,7 @@ class FoldResult:
     profit_factor: Optional[float]
     fee_drag: float
     slippage_drag: float
+    profit_factor_status: str = "not_computed"
     trades: List[Trade] = field(default_factory=list)
     equity_curve: List[float] = field(default_factory=list)
     timestamps: List[int] = field(default_factory=list)

@@ -203,6 +203,10 @@ def _campaign_id(tmp_path):
     ).hexdigest()
 
 
+def _reject_nonstandard_json_constant(value):
+    raise ValueError(f"Non-standard JSON constant in result shard: {value}")
+
+
 def _all_records(tmp_path):
     campaign_id = _campaign_id(tmp_path)
     shard_dir = tmp_path / SHARD_ROOT / campaign_id
@@ -211,7 +215,7 @@ def _all_records(tmp_path):
         for path in sorted(shard_dir.glob("shard_*.jsonl")):
             for line in path.read_text(encoding="utf-8").splitlines():
                 if line.strip():
-                    records.append(json.loads(line))
+                    records.append(json.loads(line, parse_constant=_reject_nonstandard_json_constant))
     return records
 
 
