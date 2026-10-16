@@ -1185,8 +1185,6 @@ jobs:
             else
               failed_sessions=$((failed_sessions + 1))
               consecutive_failures=$((consecutive_failures + 1))
-              mkdir -p "$RUNNER_TEMP/kilo-failure-logs"
-              tail -n 2000 "$session_log" > "$RUNNER_TEMP/kilo-failure-logs/session-${agent_index}.log" || true
               if grep -Eiq '(^|[^0-9])429([^0-9]|$)|rate[ _-]?limit|resource[_ -]?exhausted|quota.*(exceed|limit)|current[:= ]*402.*limit[:= ]*400|provider.{0,30}(capacity|overload)' "$session_log"; then
                 provider_pressure=1
                 provider_pressure_streak=$((provider_pressure_streak + 1))
@@ -1197,8 +1195,6 @@ jobs:
             fi
 
             if ! stage_and_checkpoint "$base_sha"; then
-              mkdir -p "$RUNNER_TEMP/kilo-failure-logs"
-              tail -n 2000 "$session_log" > "$RUNNER_TEMP/kilo-failure-logs/checkpoint-failure-session-${agent_index}.log" || true
               save_recovery_evidence "$base_sha"
               fatal_persistence=1
               final_phase="checkpoint-failure"
@@ -1271,7 +1267,7 @@ jobs:
             echo "- Final phase: ${final_phase} — ${final_detail}"
             echo "- Idle timeout: ${idle_timeout}s; workflow safety cutoff: 355 minutes"
             echo
-            echo "A successful worker exit is not by itself proof of task correctness. Review the worker logs and persisted repository changes."
+            echo "A successful worker exit is not by itself proof of task correctness. Review the central diagnostic ledger and persisted repository changes."
           } >> "$GITHUB_STEP_SUMMARY"
           if (( fatal_persistence == 1 )); then
             echo "::error::Checkpoint validation or persistence failed; see recovery artifacts and the summary above."
@@ -1282,17 +1278,15 @@ jobs:
             exit 1
           fi
 
-      # Preserve Kilo-local logs and recovery patches as artifacts. This is a
-      # recovery-evidence backup, not another error collector or repair mechanism;
-      # research_state/workflow_run_diagnostics.jsonl has one writer above.
-      - name: Upload Kilo failure logs
+      # This artifact contains only Git recovery material for interrupted work.
+      # Error messages/excerpts are persisted exclusively by the JSONL recorder above.
+      - name: Upload recovery artifacts
         if: always()
         continue-on-error: true
         uses: actions/upload-artifact@v7.0.2
         with:
-          name: kilo-failure-logs-${{ github.run_id }}
+          name: kilo-recovery-artifacts-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/kilo-failure-logs/
             ${{ runner.temp }}/kilo-recovery-*.bundle
             ${{ runner.temp }}/kilo-working-tree-*.patch
             ${{ runner.temp }}/kilo-index-*.patch
