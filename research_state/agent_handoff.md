@@ -78,3 +78,13 @@ All open items revalidated against live source at HEAD `14657ae`:
 - No claim of an untouched holdout unless historical non-use is established; otherwise `EXPOSED_OR_UNKNOWN`; preregister a new confirmatory period if needed.
 - A local commit, successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
 - Preserve single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
+
+## Session revalidation — 2026-10-16 UTC (post-14:10 SHA 4a6c96d)
+
+- Live default-branch SHA: `git rev-parse HEAD` == `git ls-remote origin main` == `4a6c96d5f7846b8d8d6f0fda9945f7e1d948af72` (match).
+- Worktree clean.
+- Latest Actions run #38912568557 succeeded; run #38912902106 in progress; stale run #38891774797 now cancelled.
+- All open brainstorming items revalidated; none is `BRAINSTORMING_REQUIRED`; BRAIN-001 `RESOLVED_VERIFIED` path (canary HTTP 451 → failover HTTP 200, 26,280 validated candles); BRAIN-002–005 remain `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`, unimplemented.
+- Shared data gate reason refreshed in `parallel_strategy_lanes.json`; status remains `BLOCKED_EXTERNAL` for historical backtests (gated by BRAIN-002–005).
+- No prompt change (NO_PROMPT_CHANGE_JUSTIFIED); no implementation attempted this session.
+- Next specific task: implement BRAIN-004 + BRAIN-005 wiring in a later session with crash-injection tests; BRAIN-003 phase boundary and BRAIN-002 validator follow.

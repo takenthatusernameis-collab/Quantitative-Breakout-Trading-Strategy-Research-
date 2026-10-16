@@ -7,7 +7,7 @@
     "real_market_data": {
       "gate_id": "BRAIN-001",
       "status": "BLOCKED_EXTERNAL",
-      "reason": "Binance api.binance.com canary returned HTTP 451; official market-data-only endpoint has not yet been canaried.",
+      "reason": "Historical backtests remain blocked until BRAIN-002/003/004/005 gates pass. Binance api.binance.com returns HTTP 451 from the Actions runner; failover endpoint data-api.binance.vision returned HTTP 200 and yielded 26,280 validated closed BTCUSDT hourly candles (run #38912568557). Per-asset acquisition is still pending campaign-gate authorization.",
       "requirement": "At least 26280 validated closed hourly candles per required asset, genuine provenance, content hashes, persisted artifacts, independent readback.",
       "blocks": [
         "historical_backtest",
