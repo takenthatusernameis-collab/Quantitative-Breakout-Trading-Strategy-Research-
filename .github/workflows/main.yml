@@ -1138,7 +1138,7 @@ jobs:
             # outstanding checkpoint that has never been remotely verified.
             local_head_sha="$(git rev-parse HEAD)"
             remote_tracking_sha="$(git rev-parse "origin/$DEFAULT_BRANCH" 2>/dev/null || true)"
-            if (( committed_this_iteration == 1 )) || [[ -z "$remote_tracking_sha" || "$local_head_sha" != "$remote_tracking_sha" ]]; then
+            if (( committed_this_iteration == 1 || pending_persistence_recovery == 1 )) || [[ -z "$remote_tracking_sha" || "$local_head_sha" != "$remote_tracking_sha" ]]; then
               if ! persist_checkpoint; then
                 save_recovery_evidence "$base_sha"
                 checkpoint_failure_kind="persistence"
