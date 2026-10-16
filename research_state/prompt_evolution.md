@@ -251,3 +251,18 @@ If future runs show brainstorming merely postpones safe, obvious fixes, revise t
 **Regression scenarios and status:** all P2/P3/P4/P5 regression scenarios remain as specified; behavioral tests NOT_RUN. No safeguard removed or weakened. The permanent-oversized-file and permission-boundary scenarios are reinforced by this session's direct evidence.
 
 **Rollback and review rule:** N/A (no prompt change). The local ZipInfo fix is preserved as commit `d1b780b` plus recovery artifacts (`.patch` and `recovery-bundle.bundle`) in `/home/runner/work/_temp/kilo-tmp/`; remote redeployment requires `workflows` write permission or a maintainer apply. History is preserved; no reset or rewrite was performed.
+
+
+## Session prompt review — 2026-10-16 UTC (~13:13 UTC, session 21 same-run recovery)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** same-run recovery inside the active GitHub Actions run; previous session (session 20) ended on bounded remote checkpoint persistence failure. Local HEAD `c8d348d` is exactly 2 commits ahead of remote `87cb46a`; `git push origin main` was not re-attempted because the rejection is deterministic (`PERMISSION_BLOCKER`: GitHub App token lacks `workflows: write` for `.github/workflows/main.yml`, commit `d1b780b` is an ancestor of `c8d348d`). Binance canary → HTTP 451 (~0.12s, persistent `DATA_OR_EXTERNAL_SERVICE`); api.github.com → HTTP 200; gh API authenticated and functional. Tests: `pytest tests/` → 20 passed, exit 0. All five brainstorming items revalidated at HEAD `c8d348d`; none is `BRAINSTORMING_REQUIRED`; BRAIN-002/003/004/005 root causes remain in source and are `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`; BRAIN-001 `IMPLEMENTATION_IN_PROGRESS` with live canary `WAITING_EXTERNAL_INTERVENTION`. Stale run #38891774797 still `in_progress` (head `4b721e6`, cancel HTTP 403).
+
+**Revision summary:** none. No README Section 2A change; no quantitative-method safeguard touched or weakened; no same-session implementation of a freshly brainstormed root cause. No new brainstorming item created. The persistence failure is an external permission boundary, not an instruction gap.
+
+**Expected effect:** none (no prompt change). Durable outputs: refreshed handoff (HEAD `c8d348d`, 2 local-ahead commits, persistence NOT claimed), appended diagnostics ledger entry, preserved local commits and recovery artifacts in `/home/runner/work/_temp/kilo-tmp/`.
+
+**Verification this session:** `git rev-parse HEAD` = `c8d348dd779b5e0612dce0bceb93d6e47719ad95`; `git ls-remote origin main` = `87cb46a49a6cfd035fb56fdab9e5434103e67e5c` (local 2 ahead, remote unchanged; persistence NOT claimed); `git merge-base --is-ancestor 87cb46a c8d348d` → OK; `pytest tests/` → 20 passed exit 0; curl binance klines → HTTP 451 (~0.12s); curl api.github.com → HTTP 200; gh Actions runs/jobs inspected (stale run #38891774797 still `in_progress`).
+
+**Rollback and review rule:** N/A (no prompt change). History preserved; no reset or rewrite performed.
