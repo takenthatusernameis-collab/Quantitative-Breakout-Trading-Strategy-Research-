@@ -423,6 +423,8 @@ def update_data_manifest(
 ) -> Dict[str, Any]:
     """Atomically record provenance, coverage and hashes; do not swallow persistence errors."""
     spec = load_research_spec()
+    if not fallback_used and not dataset_path:
+        raise DataUnavailableError("Real market data cannot be manifested without a persisted dataset path")
     path = Path(manifest_path)
     manifest = _read_manifest_file(path, spec)
     retrieval_time = datetime.now(timezone.utc).isoformat()
@@ -542,8 +544,16 @@ def _verified_cache(
     # Old synthetic records are not caches. They are archived when real data replaces them.
     if entry.get("fallback_used") is True or entry.get("fallback_source") == "synthetic" or entry.get("provider") == "synthetic":
         return None
+    if entry.get("fallback_used") is not False or entry.get("fallback_source") not in ("", None):
+        raise DataUnavailableError(
+            f"Cached data for {symbol} lacks an explicit no-fallback attestation"
+        )
 
     expected_spec_hash = spec.get("specification_hash")
+    if manifest.get("specification_hash") != expected_spec_hash:
+        raise DataUnavailableError(
+            f"Top-level data manifest specification mismatch for {symbol}"
+        )
     if entry.get("provider") != "binance" or entry.get("endpoint") != BINANCE_KLINES_ENDPOINT:
         raise DataUnavailableError(
             f"Unapproved or ambiguous data provider in cache manifest for {symbol}"
@@ -556,6 +566,14 @@ def _verified_cache(
         raise DataUnavailableError(
             f"Cached data for {symbol} lacks the required dataset path/hash algorithm"
         )
+    if entry.get("gaps") != [] or entry.get("rejected_rows") != 0:
+        raise DataUnavailableError(f"Cached data manifest reports gaps or rejected rows for {symbol}")
+    if not isinstance(entry.get("download_attempts"), int) or entry["download_attempts"] < 1:
+        raise DataUnavailableError(f"Cached data lacks verified download-attempt metadata for {symbol}")
+    try:
+        datetime.fromisoformat(entry["retrieval_timestamp_utc"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise DataUnavailableError(f"Cached data lacks a valid retrieval timestamp for {symbol}") from exc
 
     stored_path = Path(str(entry["dataset_path"]))
     resolved_path = stored_path if stored_path.is_absolute() else (Path.cwd() / stored_path)
