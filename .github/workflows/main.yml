@@ -346,8 +346,11 @@ jobs:
               try:
                   with zipfile.ZipFile(io.BytesIO(archive_bytes)) as archive:
                       files = sorted(
-                          item for item in archive.infolist()
-                          if not item.is_dir() and item.filename.lower().endswith(".txt")
+                          (
+                              item for item in archive.infolist()
+                              if not item.is_dir() and item.filename.lower().endswith(".txt")
+                          ),
+                          key=lambda item: item.filename,
                       )
 
                       for item in files:
