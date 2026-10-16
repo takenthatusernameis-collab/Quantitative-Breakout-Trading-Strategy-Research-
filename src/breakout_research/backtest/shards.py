@@ -144,16 +144,13 @@ class ShardWriter:
         self.campaign_dir.mkdir(parents=True, exist_ok=True)
         existing = _list_shard_files(self.shard_root, campaign_id)
         self.next_index = len(existing)
-        if existing:
-            last_path = existing[-1]
-            self.current_bytes = last_path.stat().st_size
-            self._handle = last_path.open("a", encoding="utf-8")
-        else:
-            self.current_bytes = 0
-            self._handle = None
+        # Shards are immutable: never reopen or rewrite a finalized shard.
+        # A new shard is opened on the first append of this session; a shard
+        # left unflushed by a crashed session stays as an unreferenced .tmp and
+        # is never adopted as committed evidence.
+        self.current_bytes = 0
+        self._handle = None
         self.current_path: Optional[Path] = None
-        if self._handle is not None:
-            self.current_path = last_path
 
     def _open_new_shard(self) -> None:
         if self._handle is not None:
@@ -359,7 +356,7 @@ class ResultStore:
         fails closed.
         """
         completed: Dict[str, Dict[str, Any]] = {}
-        shard_infos: List[Dict[str, Any]] = []
+        shard_infos: List[Tuple[Path, Dict[str, Any]]] = []
         total_bytes = 0
         for path in _list_shard_files(self.shard_root, self.campaign_id):
             info = self._verify_shard(path)
@@ -374,7 +371,7 @@ class ResultStore:
                     "record": info["records_payload"][info["experiment_ids"].index(record_id)],
                     "shard": str(path),
                 }
-            shard_infos.append(info)
+            shard_infos.append((path, info))
             total_bytes += info["bytes"]
         manifest = self._read_manifest()
         if (
@@ -385,13 +382,12 @@ class ResultStore:
             raise ResultStoreError("Result manifest bound to different spec/code/data versions")
         # Adopt verified shards missing from the manifest; drop manifest entries
         # whose files no longer verify.
-        known_paths = {info["path"] for info in shard_infos}
         adopted: List[Dict[str, Any]] = []
-        for info in shard_infos:
+        for path, info in shard_infos:
             adopted.append(
                 {
                     "path": info["path"],
-                    "shard_index": info["shard_index"],
+                    "shard_index": int(path.stem.split("_")[1]),
                     "sha256": info["sha256"],
                     "bytes": info["bytes"],
                     "records": info["records"],

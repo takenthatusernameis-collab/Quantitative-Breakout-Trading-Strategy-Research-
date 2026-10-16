@@ -101,6 +101,11 @@ def _prepare_campaign_runner(tmp_path, monkeypatch, symbol="OTHERUSDT", loader=N
         }),
         encoding="utf-8",
     )
+    research_dir = tmp_path / "research"
+    research_dir.mkdir()
+    (research_dir / "data_manifest.json").write_text(
+        json.dumps({"assets": {}}), encoding="utf-8"
+    )
 
     runner = campaign_module.CampaignRunner.__new__(campaign_module.CampaignRunner)
     runner.protocol_hash = "test-spec"
