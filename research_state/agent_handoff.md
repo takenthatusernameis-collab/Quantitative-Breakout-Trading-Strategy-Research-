@@ -1,3 +1,97 @@
+# Agent Handoff — Quantitative Breakout Trading Strategy Research
+
+This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated in a later dated section.
+
+## Authoritative Current Status — 2026-10-16 UTC (~12:56 UTC)
+
+**Same-run recovery context:** this is a new Kilo worker session inside the SAME active GitHub Actions run as the previous session (session 18), which ended because bounded remote checkpoint persistence failed. This session does NOT end the workflow; it diagnoses the persistence failure, preserves all local work, and attempts a materially different safe remedy where justified.
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
+- Local `main` HEAD: `d1b780b4f112dc99d07ca0cad6cb1467cd76ea25` — commit `fix: sort log archive entries by filename to avoid ZipInfo TypeError` (12:34:49 UTC). `git show d1b780b --stat`: `.github/workflows/main.yml | 5 +++--` (3 insertions, 2 deletions). The commit touches ONLY the workflow file; it adds `key=lambda item: item.filename` to `scan_log_archive()` at main.yml:348-352.
+- Remote `origin main`: `87cb46a49a6cfd035fb56fdab9e5434103e67e5c` (`git ls-remote origin main`, verbatim match). Remote IS an ancestor of local (`git merge-base --is-ancestor` OK). Local is exactly **1 commit ahead** of remote. `git status` clean; no unstaged changes.
+- **Persistence failure — DIRECTLY REPRODUCED this session:** `git push origin main` → `remote rejected main -> main (refusing to allow a GitHub App to create or update workflow .github/workflows/main.yml without 'workflows' permission)`, exit 1. Root cause = `PERMISSION_BLOCKER`: the GitHub App token lacks `workflows: write`. Since the only local-ahead commit modifies solely `.github/workflows/main.yml`, no ref form/branch can carry it while the token lacks that permission; retrying unchanged is a deterministic failure (README 2A.G #8) and must not be repeated.
+- Remote persistence is **NOT claimed**: remote SHA `87cb46a` ≠ local SHA `d1b780b`. Do not claim persistence until the remote SHA matches.
+- Recovery artifacts preserved (local history NOT reset, NOT rewritten): `/home/runner/work/_temp/kilo-tmp/0001-fix-sort-log-archive-entries-by-filename-to-avoid-Zi.patch` and `/home/runner/work/_temp/kilo-tmp/recovery-bundle.bundle` (5,957,049 bytes). Remedy: obtain repository `workflows` write permission or a maintainer apply, then push `d1b780b` and verify `git ls-remote origin main == d1b780b`.
+- Concurrency: stale scheduled Actions run #38891774797, job `kilo` (id 116942729233), `in_progress` since 11:08:11Z, head `4b721e642aa8e3eb7aba6bfca119e757168c327a` (~7+ commits behind, executes stale code, conclusion null). Workflow `concurrency: group: kilo-repository, cancel-in-progress: false`; cancel previously returned HTTP 403 (integration lacks admin rights). The stale run may hold the `kilo-repository` concurrency slot until it completes or hits its job timeout (6h max for hosted jobs).
+- Latest Actions runs (gh API, authenticated, 2026-10-16): #38891774797 in_progress/schedule/head 4b721e6 (stale, above); #38884773631 success/workflow_dispatch/head 079857f/completed 11:04 UTC; #38858495476 cancelled; #38834456753 failure; #38821712668 cancelled; #38801198121 failure (oversized-file persistence); #38775084686 failure. No completed run validates current HEAD `d1b780b`.
+- Network canaries (this session): `api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=2` → **HTTP 451** (~0.14s, persistent location/egress block, not transient, not symbol-specific). `api.github.com` → **HTTP 200** (git remote reachable).
+- Fail-closed loader: `src/breakout_research/data/fetcher.py:655` raises `...synthetic fallback is prohibited`; no `generate_synthetic_candles()` call in the campaign loader path; `research/data/` absent locally; no synthetic data accepted as market history.
+- Tests: `python3 -m pytest tests/` → **20 passed, exit 0** (13 data-fetcher + config/folds/indicators). `py_compile` of all source modules OK (exercised by test import).
+- Manifests/state (read directly this session):
+  - `research/data_manifest.json`: BTCUSDT/ETHUSDT `fallback_used: true`, `fallback_source: synthetic`, 3,000 candles, `specification_hash: "pending"` — invalid for economic claims; forensic evidence only.
+  - `research_state/checkpoint.json`: `completed_records: 81510`, `last_verified_record: 0`, cursor resets present — counters unreconciled to the ledger; untrusted legacy state.
+  - `research_state/pilot_gate.json`: `campaign_authorized: true` after 24 configs / 1 asset — self-authorizing, untrusted.
+  - `research/universe_manifest.json`: frozen, 20 assets. `research/config_manifest.json`: 2,304 nominal configurations. `research/results.jsonl`: 51,688,138 bytes, monolithic, synthetic-derived.
+- Source revalidated directly this session (claims from prior handoff confirmed):
+  - `campaign.py:147` unpacks `is_holdout` but never gates the final holdout — full grid loops all folds (BRAIN-003 cause confirmed).
+  - `campaign.py:109-112, 141-143` reset `current_config_index`/`current_fold_index`/`current_cost_index` on asset/config entry — mid-asset cursor not honored (BRAIN-004 cause confirmed).
+  - `campaign.py:193` appends to monolithic `research/results.jsonl`; `state.completed_records` trusted, `last_verified_record` not derived (BRAIN-004/005 causes confirmed).
+  - `pilot.py:54-68` sets `pilot_passed = True` and `campaign_authorized: True` directly with no independent evidence (BRAIN-002 cause confirmed).
+  - `.github/workflows/main.yml:348-352` now sorts by `item.filename` locally (fix verified in prior repro harness: old path raised the exact `TypeError: '<' not supported between instances of 'ZipInfo' and 'ZipInfo'`; new path returns `status: scanned`). Not remotely persisted (PERMISSION_BLOCKER).
+- Evidence reclassification: all prior stale SHA claims (`92a091c`, `aece407`, `940a356`, `33d2a13`, `056723a`, `2dd6a4f`, ...) are STALE relative to live HEAD `d1b780b` / remote `87cb46a`.
+
+## Persistence status (separate fields, per README 2A.E)
+
+- Local commit: `d1b780b` on local `main`, tree clean, commit preserved; recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- Remote persistence: NOT achieved. `git push origin main` rejected — `PERMISSION_BLOCKER` (no `workflows` write permission). Remote `origin main` = `87cb46a` ≠ local `d1b780b`. Persistence claim status: FALSE until remote SHA verifies.
+- Real-data artifacts: NOT persisted (none exist locally; blocked by external provider HTTP 451).
+- Checkpoint reconciliation: NOT performed; `checkpoint.json` counters untrusted (`completed_records: 81510`, `last_verified_record: 0`).
+
+## Blocker ledger
+
+| ID | Status | Evidence still required / notes |
+|----|--------|---------------------------------|
+| Persistence of local-ahead commit `d1b780b` | `PERMISSION_BLOCKER` / `WAITING_EXTERNAL_INTERVENTION` | Push REJECTED: missing `workflows` write permission on GitHub App token. Commit touches only `.github/workflows/main.yml`. Requires repository `workflows` permission or a maintainer apply; then verify remote SHA == `d1b780b`. |
+| BRAIN-001 — real market data path | `IMPLEMENTATION_IN_PROGRESS`; live step `WAITING_EXTERNAL_INTERVENTION` | Local source CONFIRMED (no synthetic call in loader; fail-closed; 26,280-candle protocol floor; 20 tests pass). Live canary blocked by persistent HTTP 451 to api.binance.com. Do not substitute synthetic data, do not shorten the history floor, do not switch providers silently. |
+| Stale run #38891774797 holds concurrency slot | `WAITING_EXTERNAL_INTERVENTION` | `in_progress` since 11:08:11Z, head `4b721e6`, cancel HTTP 403. May block new workflow_dispatch runs until completion/timeout. |
+| BRAIN-002 — independent pilot authorization | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Not implemented; self-authorizing gate confirmed in `pilot.py:54-68`. Depends on BRAIN-001/003/004. |
+| BRAIN-003 — final-holdout isolation | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Not implemented; `is_holdout` unpacked, never used in `campaign.py:147`. Holdout `EXPOSED_OR_UNKNOWN`. |
+| BRAIN-004 — deterministic resume | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Not implemented; cursor resets confirmed; checkpoint counters unreconciled (`last_verified_record: 0`). |
+| BRAIN-005 — bounded durable results | `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` | Not implemented; monolithic `results.jsonl` 51,688,138 bytes; historical ~429.9 MB push rejection. |
+| ZipInfo log-scan defect | FIXED LOCALLY, NOT REMOTELY PERSISTED | Localized `IMPLEMENTATION_DEFECT`, fixed at `d1b780b`; push blocked by `PERMISSION_BLOCKER`; not `BRAINSTORMING_REQUIRED`. |
+
+## Brainstorming revalidation summary (this session, HEAD `d1b780b`)
+
+All five open brainstorming items revalidated against live source and current run evidence:
+- BRAIN-001: source fix CONFIRMED; live canary `WAITING_EXTERNAL_INTERVENTION` (HTTP 451). Status `IMPLEMENTATION_IN_PROGRESS`.
+- BRAIN-002: pilot self-authorization CONFIRMED present; unimplemented. `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
+- BRAIN-003: holdout not gated CONFIRMED present; unimplemented. `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
+- BRAIN-004: cursor reset + unreconciled checkpoint CONFIRMED present; unimplemented. `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
+- BRAIN-005: monolithic 51.7 MB results.jsonl CONFIRMED; unimplemented. `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
+- **No item is `BRAINSTORMING_REQUIRED`; no new brainstorming item is the principal task this session.** The ZipInfo defect is a localized implementation defect (fixed locally, blocked remotely by permission), not a cross-component design issue.
+
+## Prior attempt history (revalidated; do not repeat unchanged)
+
+- BRAIN-001 source fix committed in prior sessions; loader real-provider only, fail-closed, 26,280-candle floor. Tests VERIFIED this session (20 passed). Live canary still externally blocked.
+- BRAIN-002/003/004/005: designs recorded in `research_state/brainstorming_queue.md`; none implemented. Root causes still present in current source (confirmed above).
+- Do not retry `git push origin main` unchanged (deterministic `PERMISSION_BLOCKER`). Do not retry the monolithic `results.jsonl` push or unlimited reconcile loop (permanent platform limit, historical ~429.9 MB rejection).
+- Do not reset or discard local commit `d1b780b`; do not rewrite history unless a confirmed root cause requires it, and then only after preserving a recovery bundle and documenting the rollback plan.
+
+## Session record — 2026-10-16 UTC (~12:56 UTC, same-run recovery)
+
+- Timestamp: 2026-10-16T12:56 UTC. Branch: `main`. Base commit: `87cb46a` (remote). Final commit: `d1b780b` (local, unpushed).
+- Chosen task: reconstruct state per README Section 2A; refresh live default-branch SHA, Actions runs/logs, checkpoint, result/data manifests, recovery artifacts; revalidate all open brainstorming items against current source and run evidence; diagnose the push/fetch/reconciliation failure; run tests; verify remote persistence; update durable handoff and prompt-evolution log; prepare next specific task. Chosen because the prior session ended on a persistence failure and the current blocker must be verified before any further work.
+- Exact attempted change and files affected: NO source changes this session. Attempted `git push origin main` — REJECTED (permission blocker on workflow file). Verified `git fetch origin` (remote `87cb46a`), `git ls-remote origin main`, ancestry (remote is ancestor of local), network canaries (binance 451, github 200), re-read source/manifests/checkpoint/gate.
+- Commands/tests executed and actual exit statuses: `git fetch origin` OK; `git push origin main` → exit 1 (remote rejected, workflows permission); `git merge-base --is-ancestor` OK; `pytest tests/` → 20 passed exit 0; curl binance → HTTP 451 (~0.14s); curl api.github.com → HTTP 200; gh API run list OK.
+- Confirmation status: CONFIRMED — persistence failure root cause (`PERMISSION_BLOCKER`, no `workflows` write), stale run concurrency hold, all brainstorming root causes in current source, test results, canary blocks.
+- Unresolved blockers ranked: (1) `d1b780b` persistence `PERMISSION_BLOCKER`/`WAITING_EXTERNAL_INTERVENTION`; (2) BRAIN-001 live canary `WAITING_EXTERNAL_INTERVENTION` (HTTP 451); (3) stale run concurrency slot `WAITING_EXTERNAL_INTERVENTION`; (4) BRAIN-004/005 transaction/shard resume storage — design-ready; (5) BRAIN-003 holdout phase boundary — design-ready; (6) BRAIN-002 independent validator — design-ready.
+- Prompt review outcome: `NO_PROMPT_CHANGE_JUSTIFIED`. Failures were an external permission block (workflows write), an external data block (HTTP 451), and unimplemented design items — not instruction gaps. README Section 2A already requires real data, fail-closed behavior, truthful statuses, no synthetic fallback, truthful persistence reporting, one bounded task per session, and no same-session implementation of a freshly brainstormed root cause. No quantitative-method safeguard touched or weakened; no prompt revision proposed.
+- Precise next action: await `workflows` write permission (or a maintainer apply) to deploy the local ZipInfo fix, then push `d1b780b` and verify remote SHA == `d1b780b` before claiming persistence; await restored egress to api.binance.com (or explicit approval of an alternative source), then rerun the bounded BTCUSDT canary via `load_or_fetch_asset_data`, independently recompute the dataset SHA-256, re-read the persisted manifest/CSV from the default branch, mark BRAIN-001 `RESOLVED_VERIFIED`, then implement BRAIN-004 + BRAIN-005 as one transaction/shard architecture (bounded immutable ≤4 MiB JSONL shards, manifest-derived resume cursor), then BRAIN-003 (validation/freeze/holdout phase boundary), then BRAIN-002 (evidence-only pilot + independent validator). Keep the full campaign blocked until all applicable P0 gates pass.
+
+## Non-negotiable research-validity rules
+
+- No full campaign while applicable P0 gates remain unresolved.
+- Existing synthetic-derived records remain forensic/legacy-unverified evidence; do not relabel as observed market history or use for economic claims.
+- No claim of an untouched holdout unless historical non-use is established; otherwise `EXPOSED_OR_UNKNOWN`; preregister a new confirmatory period if needed.
+- A local commit, a successful worker exit, committed tests, or GitHub workflow success alone is not proof of correctness, remote persistence, or a trading edge.
+- Preserve the single-workflow design, frozen protocol, previous results, and rollback evidence. Never force-push solely to erase oversized historical blobs.
+
+---
+
+## Superseded earlier blocks (verbatim archive — 2026-10-16 sessions, pre-recovery)
+
+The blocks below were the pre-recovery handoff content. They contain stale SHA claims (naming `92a091c`, `aece407`, `940a356`, `33d2a13`, `056723a`, `2dd6a4f` as current) that are **superseded** by live state (`d1b780b` local / `87cb46a` remote). They are retained verbatim for evidence only; do not treat them as current.
+
 ## Note — authoritative default-branch snapshot refreshed (2026-10-16 UTC, ~12:31 UTC)
 
 - Remote default-branch HEAD = `92a091c276b3e71aa944af90716c96b7c3b9bb23` (verbatim match to `git ls-remote origin main`). Local HEAD = `aece407447a5ae6b3075729d430492870a7b4003` (one commit AHEAD of remote — the ZipInfo fix; push REJECTED `PERMISSION_BLOCKER`). Remote still carries the DEFECTIVE `scan_log_archive()`.
@@ -47,7 +141,7 @@
 | Live Binance canary → HTTP 451 | CONFIRMED | Direct curl returned HTTP 451 (~0.07s); loader raises `DataUnavailableError`, no synthetic fallback, manifest/data dir untouched. |
 | Stale legacy claims at HEAD `2dd6a4f`, `6443209`, `a8fa4a0`, `38689e4`, `6710279`, `00ac7359`, `00174e4` | STALE | Each is behind current HEAD `33d2a13`; all such claims rechecked against live HEAD this session. |
 | All 20 tests pass, exit 0 | CONFIRMED | Ran `python3 -m pytest tests/` → 20 passed, exit 0 (13 data-fetcher + 7 others) at HEAD `2dd6a4f`. |
-| Live Binance canary → HTTP 451 | CONFIRMED | Direct curl returned HTTP 451 (~0.03s); loader raises `DataUnavailableError`, no synthetic fallback, manifest/data dir untouched. |
+| Live Binance canary → HTTP 451 | CONFIRMED | Direct curl returned HTTP 451 (~0.03s); loader raises `DataUnavailableError`, no synthetic fallback, manifest and data dir untouched. |
 
 ## Current blocker ledger
 
