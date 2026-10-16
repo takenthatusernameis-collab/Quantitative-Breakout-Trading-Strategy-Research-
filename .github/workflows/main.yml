@@ -984,7 +984,7 @@ jobs:
                 if git merge-base --is-ancestor "origin/$DEFAULT_BRANCH" HEAD 2>/dev/null; then
                   if timeout 30s git push origin "HEAD:$DEFAULT_BRANCH"; then
                     if remote_output="$(timeout 10s git ls-remote origin "refs/heads/$DEFAULT_BRANCH" 2>/dev/null)"; then
-                      remote_sha="$(printf '%s\\n' "$remote_output" | awk 'NR==1 {print $1}')"
+                      remote_sha="$(awk 'NR==1 {print $1}' <<< "$remote_output")"
                     else
                       remote_sha=""
                       echo "::warning::Remote verification query failed or timed out on persistence attempt ${persistence_attempts}."
