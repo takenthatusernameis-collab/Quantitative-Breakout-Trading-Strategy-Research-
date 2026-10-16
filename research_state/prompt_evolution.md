@@ -8,7 +8,7 @@ This file records evidence-based revisions to the agent-session instructions in 
 - **Prompt revision introduced:** `P2-2026-10-16-SESSION-CONTINUITY`.
 - **Source README commit:** `d067aedc263cffe7326a54ec0195ede032855beb`.
 - **README blob SHA after this revision:** `008457a045ef2c1319210393f5b31f7f6baf47c4`.
-- **Initial rollout status:** written and committed; startup integration and behavioral effectiveness must be verified. Do not claim that this prompt has already improved agent outcomes.
+- **Initial rollout status:** README prompt committed in `d067aedc263cffe7326a54ec0195ede032855beb`; workflow startup now explicitly directs Kilo to Section 2A and both durable files in `b2bf404a7f4408699541abbe2e131066a39759d7`. Static repository checks passed. Behavioral effectiveness remains `NOT_YET_VERIFIED` until a fresh session demonstrably follows the startup contract. Do not claim that this prompt has already improved agent outcomes.
 - **Prompt regression outcomes:** the mandatory scenario battery is specified in README Section 2A. Actual agent-behavior regressions are **NOT_RUN** until a fresh session exercises the protocol. Static presence checks should be recorded separately from behavioral success.
 
 ## P2-2026-10-16-SESSION-CONTINUITY
