@@ -565,6 +565,7 @@ Full campaign execution must be deterministic and safely resumable.
 - Use temporary files and atomic replacement for local checkpoint updates. Verify record counts, hashes, schema and protocol identity before accepting a checkpoint.
 - On restart, reconcile the checkpoint against the actual result ledger; do not trust a checkpoint that claims results not present in the ledger.
 - Retry transient network and persistence errors only a bounded number of times with backoff. Do not endlessly retry deterministic validation failures.
+- In the Kilo workflow, one checkpoint persistence operation is limited to six reconciliation attempts, with bounded timeouts on fetch, rebase, push, and remote-SHA verification. If the limit is exhausted or reconciliation conflicts, preserve the recovery bundle/patch, terminate the current activation with an explicit persistence failure, and release the workflow concurrency slot so the next scheduled/manual activation can start. Do not hold the job open until the global cutoff and do not claim unpersisted changes were saved.
 - Before a time or resource cutoff, stop starting new experiments, persist completed work, write an interruption report and return an accurate partial status.
 - On resume, continue at the next missing deterministic unit. If code, data or specification hashes changed, invalidate affected results explicitly and rerun only what is justified. Preserve old evidence for audit.
 - Keep asset processing order and result serialization deterministic.
