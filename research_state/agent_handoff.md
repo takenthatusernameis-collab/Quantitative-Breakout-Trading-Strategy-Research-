@@ -68,3 +68,17 @@ Constraints: preserve the repository's workflow/schedule and single-writer concu
 - Authorization valid: code_hash `3dbeee5a...`, spec_hash `2d22e702...`, pilot evidence validates (True).
 - Started `ContinuousCycleCoordinator.run_cycle(holdout_enabled=False)`; cohort 0 = 20 assets; cycle_id `3226843c...`; run exceeded 120s timeout, state saved mid-cycle (current_cycle_id set, not in completed_cycle_ids). Cycle not yet complete; rerun/resume required.
 - Next task: resume/complete bounded cycle for cohort 0; verify result manifest hashes/counts; update handoff with completion evidence.
+## Status update — 2026-10-17 UTC (cycle resumed in background)
+
+- Resumed bounded cohort-0 cycle via ContinuousCycleCoordinator.run_cycle(holdout_enabled=False); process running (bgp_14b147a33001eqaUNcztDn3D3x). ResultStore resume from verified shards active.
+- Cycle not yet complete; verification pending.
+
+### Next specific task (next agent — initial task message)
+
+**Task: Verify completion of cohort-0 bounded cycle and advance.**
+
+1. Re-anchor HEAD == origin/main; inspect working tree and shard counts.
+2. Check process status; if complete, verify results_manifest hashes/counts (2,304 configs x folds x costs) and cycle_report.json state COMPLETE.
+3. Mark state completed (completed_cycle_ids contains cycle_id, next_cohort_index advanced).
+4. If still running, wait/monitor; do not start a second cycle.
+5. Update handoff with completion evidence; then discover/test next cohort.
