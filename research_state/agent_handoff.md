@@ -555,3 +555,47 @@ Execute BRAIN-003 phase 2 holdout evaluation over the frozen candidates. Run `Ca
 ## Next specific task (next agent — initial task message)
 
 Generate the holdout evaluation report from the persisted holdout shards. Read all 54 holdout records from `research/results_shards/707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c/shard_000000.jsonl` (campaign_id `707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c`, code_hash `1f8a7ec0...`), compute per-asset holdout metrics (net total return, daily Sharpe, max drawdown, trade count, exposure, costs) across the 3 cost scenarios, compare against buy-and-hold BTCUSDT and cash baselines, and write `reports/holdout_evaluation_report.json` with spec/code/data hashes and the holdout campaign_id. Verify: (1) report record count matches 54 shard records, (2) all report assets match the 18 frozen candidates, (3) no non-finite values (strict JSON, `allow_nan=False`), (4) report code_hash matches current source `1f8a7ec0...`. Commit+push contents only (no workflow files) and re-verify remote SHA via `git ls-remote origin main`. Precondition: source must be unchanged since `a986f17` (code_hash `1f8a7ec0...` must match `campaign_authorization.json`); if any source change occurs, re-run `authorize_campaign()` first — the gate fails closed on code-hash mismatch.
+
+## Authoritative Current Status — 2026-10-17 UTC (~03:55 UTC, HEAD 13066f4)
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
+- Local `main` HEAD: `13066f4c90ad91efa9f256c7bca86d699dc608c0` == `origin/main` (push `173aa4c..13066f4 main -> main` succeeded; post-push `git ls-remote origin main` == local HEAD verified). **Match — remote SHA matches local HEAD.** No local-ahead commits. Worktree clean.
+- Current `compute_code_hash()`: `1f8a7ec03f84c6ce90c372655e58c692a0c15728dd680396a272e22fb93de576` matches `campaign_authorization.json` code_hash (`authorized: true`, zero reasons).
+- Tests: `python3 -m pytest tests/` → **73 passed, exit 0**. All data-fetcher tests mocked — no live network in the suite.
+- `research/data/candles/` (18 content-addressed CSVs) remains deliberately untracked per spec §8; reproducible from endpoint + content hash.
+
+## Blocker ledger (revalidated at HEAD 13066f4)
+
+| ID | Status | Notes |
+|---|--------|-------|
+| BRAIN-001 — real market data path | `RESOLVED_VERIFIED` | 18 genuine Binance assets via `data-api.binance.vision` failover; all `fallback_used: false`; XMRUSDT/MATICUSDT excluded for insufficient history with recorded reasons. |
+| BRAIN-002 — independent pilot authorization | `RESOLVED_VERIFIED` | `campaign_authorization.json` `authorized: true`, zero reasons, code_hash `1f8a7ec0...` matches current source; fail-closed validator verified. |
+| BRAIN-003 — final-holdout isolation | `RESOLVED_VERIFIED` (phase 2 complete; report done) | Holdout evaluation over 18 frozen candidates: 54 records persisted in bounded shards (49,351 bytes, single shard ≤4 MiB). Holdout evaluation report `reports/holdout_evaluation_report.json`: 54 per-asset records across 3 cost scenarios vs cash and buy-and-hold BTCUSDT baselines (+15.9% net baseline-costs BTC buy-and-hold over the holdout window); 11/18 assets net-positive at baseline costs; 4 (DOTUSDT, SOLUSDT, SUIUSDT, TRXUSDT) above buy-and-hold BTC. All verification checks pass (record count == 54, assets match frozen candidates, no non-finite values, strict JSON `allow_nan=False`, code_hash matches source and authorization). Historical exposure `EXPOSED_OR_UNKNOWN` retained. |
+| BRAIN-004 — deterministic resume | `RESOLVED_VERIFIED` | Manifest-derived resume cursor; checkpoint counters untrusted legacy; crash-injection tests pass. |
+| BRAIN-005 — bounded durable results | `RESOLVED_VERIFIED` | Immutable ≤4 MiB JSONL shards + `results_manifest.json`; holdout shard 49,351 bytes ≤ 4 MiB; legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; legacy run-29 non-strict-JSON artifacts isolated to `legacy_unverified/`. |
+
+## Brainstorming revalidation (this session)
+
+All open items revalidated at live source HEAD `13066f4`: none is `BRAINSTORMING_REQUIRED`; BRAIN-001..005 all `RESOLVED_VERIFIED`. No new brainstorming item; no root cause implemented in the same session as a design record.
+
+## Session record — 2026-10-17 UTC (~03:55 UTC)
+
+- Timestamp: 2026-10-17T03:55:00Z. Branch: `main`. Base HEAD pre-session: `173aa4c` == remote (verified via `git ls-remote origin main`). Final: `13066f4c90ad91efa9f256c7bca86d699dc608c0` == remote (verified after push).
+- Chosen task and why: Complete the documented next task — generate the BRAIN-003 phase 2 holdout evaluation report from the persisted holdout shards. This was the only remaining task after holdout execution; all P0 gates already `RESOLVED_VERIFIED` and the campaign was authorized.
+- Exact attempted change and files affected:
+  1. `reports/holdout_evaluation_report.json` — new: holdout evaluation report from `research/results_shards/707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c/shard_000000.jsonl` (54 records; campaign_id `707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c`; code_hash `1f8a7ec0...`). Per-asset holdout metrics across cost multipliers 1.0/2.0/3.0 vs cash and buy-and-hold BTCUSDT baselines; spec/code/data hashes; strict JSON (`allow_nan=False`).
+  2. `research_state/campaign_authorization.json` — timestamp refresh only (`authorized: true`, code_hash `1f8a7ec0...` unchanged).
+- Commands/exit statuses: report generator → 54 records verified (experiment_id recomputation from bound spec/code/data hashes), 49,351 shard bytes, all acceptance checks true; `python3 -m pytest tests/` → **73 passed, exit 0**; `git push origin main` → `173aa4c..13066f4 main -> main` succeeded; `git ls-remote origin main` == `13066f4...` (verified).
+- Confirmation: no synthetic data accepted as market history; holdout data accessed exclusively through frozen candidates (freeze complete at `3e937dd`); no unchanged retry against a permanent failure; remote SHA matches local HEAD before persistence claim.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`. No instruction gap; all work followed existing BRAIN-003 design records and README 2A gates. No quantitative-method or holdout safeguard weakened; at most one prompt change per session rule respected (none proposed). See `prompt_evolution.md` this-session entry.
+- Persistence status (separate fields, per README 2A.E):
+  - Local commit `13066f4`: pushed; `git ls-remote origin main` == local HEAD `13066f4` (verified). Contents only — no workflow files, no `research/data/` CSVs.
+  - Checkpoint reconciliation: checkpoint counters untrusted legacy; resume derives from manifest-verified shard IDs; checkpoint not treated as authoritative.
+  - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- Unresolved blockers ranked: (1) none P0 — BRAIN-001..005 all `RESOLVED_VERIFIED`; all 5 parallel lanes `COMPLETE`; (2) legacy `checkpoint.json` code-hash history (fails closed; counters untrusted) — informational only.
+
+## Next specific task (next agent — initial task message)
+
+All BRAIN-001..005 gates are `RESOLVED_VERIFIED` and the v1 research cycle is complete through holdout evaluation: 497,664 validation records across 18 genuine assets (campaign_id `fcf04f6ea9f54e5c28da1b48d6e2cc8ed09d190bd63a54091d072c2f8a4eeea4`), 18 frozen candidates (`research/candidate_manifest.json`, freeze commit `3e937dd`, manifest_hash `9ea6b1c3...`), 54 holdout records persisted in bounded shards, and the holdout evaluation report at `reports/holdout_evaluation_report.json`.
+
+Produce the final research report summarizing the v1 campaign outcome. Read `reports/holdout_evaluation_report.json` (54 holdout records, 3 cost scenarios) and the validation sweep evidence (`research/results_shards/fcf04f6e...`), then write `reports/final_research_report.json` containing: per-asset holdout results vs cash and buy-and-hold BTCUSDT baselines at each cost scenario; per-asset economic conclusion (`PROVISIONAL_HISTORICAL_SURVIVAL` / `REJECTED_ON_HOLDOUT` / `INSUFFICIENT_EVIDENCE` per `config.py` `EconomicConclusion`) applying the preregistered qualification policy (positive net at baseline and 2× costs, ≥30 validation trades, median validation Sharpe above buy-and-hold, parameter-neighborhood stability); the multiple-testing caveat (2,304 correlated configurations per asset, not independent hypotheses); spec/code/data hashes and both campaign IDs; holdout exposure note (`EXPOSED_OR_UNKNOWN`). Verify: strict JSON (`allow_nan=False`), record counts tie to persisted shards, report code_hash equals current `compute_code_hash()` (re-run `authorize_campaign()` first if the source changed — the gate fails closed on code-hash mismatch). Never access holdout data outside the 18 frozen candidates. Commit+push contents only (no workflow files) and re-verify remote SHA via `git ls-remote origin main`. Stop — no further campaign execution is justified; all P0 gates resolved.
