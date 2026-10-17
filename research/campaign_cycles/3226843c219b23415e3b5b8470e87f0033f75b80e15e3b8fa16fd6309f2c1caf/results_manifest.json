@@ -1,0 +1,189 @@
+{
+  "campaign_id": "91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f",
+  "code_hash": "3dbeee5a92566d36b4eb1a9553ea47ee91408b590eb5199be4313026d2ebd2ea",
+  "created_utc": "2026-10-17T17:06:46.611555+00:00",
+  "data_manifest_hash": "d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c",
+  "schema_version": "result-shard-v1",
+  "shards": [
+    {
+      "bytes": 1838,
+      "experiment_ids": [
+        "244a1d3182fc927e43e15d78df3610f7667f85914eed77c3c0b4ab4330df3359",
+        "4c8a6312183d49e8cb2e68baab7aa96ac21d67ea25f465cc4dbf8688c51d086d"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000000.jsonl",
+      "records": 2,
+      "sha256": "80894d55a9686113889d54c119e6d6ea5c1645d5d7528de17297af748f426029",
+      "shard_index": 0
+    },
+    {
+      "bytes": 1847,
+      "experiment_ids": [
+        "bc90c51e9a50b2441ef045ea3e4b35e7ff07a576845b93d138f38d66530c8c43",
+        "3a0b4557b0fa5db7711db7b28e3f2d6b43c35bf4f6b722907ead88612c5c52ab"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000001.jsonl",
+      "records": 2,
+      "sha256": "624b29e1befca4bb17d9083c44926af73ae8fadd16edd3293d105da76a1e4113",
+      "shard_index": 1
+    },
+    {
+      "bytes": 1835,
+      "experiment_ids": [
+        "fa5e1f2c45c6b3a41f25f53ee5eed7f81b999468207f87a44614bcc55688792e",
+        "3716c87ecc58535168594b52d43aa1744cdfc067108ddce74e7f9b7107748029"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000002.jsonl",
+      "records": 2,
+      "sha256": "57f17e97841ef5e7737f5227011b8f15fbca33bd0390868cf1cfa3421051427c",
+      "shard_index": 2
+    },
+    {
+      "bytes": 1835,
+      "experiment_ids": [
+        "8debfc072fd762fae329b76f049032f4fe22d578148a6a6b44c556a178144433",
+        "910ee7867192cbfc15c8923ddf13bb6ab3f7455b04e44987e30a817185c466af"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000003.jsonl",
+      "records": 2,
+      "sha256": "f6c8ce35fcde21236d7334e9045f92400ccb87515987450cb8cf0003aaca72dc",
+      "shard_index": 3
+    },
+    {
+      "bytes": 1842,
+      "experiment_ids": [
+        "4f842bbacc705979cb41adcb7bb7065f3892121606869d81a9a8705595f1b012",
+        "dd2c7cf5605953043ee74dae1daf5ac6c620b793be854f97a642892c1be8bab9"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000004.jsonl",
+      "records": 2,
+      "sha256": "7f64b3627a5295c57ea620b8ab03e1768b121d550810ebd7f4d344ca910508e4",
+      "shard_index": 4
+    },
+    {
+      "bytes": 1851,
+      "experiment_ids": [
+        "4108102271a854dc50f5b85b856f10012f6d1c4abe9548838fdf990740654e43",
+        "ae82bc78bdc928355d10491ca0cbb9eff6821bcd60befadc87a4a81b68679463"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000005.jsonl",
+      "records": 2,
+      "sha256": "7e5c343a724a8cad759cb1331c5703c8e3473bd34843e93ec8179dc021ff3309",
+      "shard_index": 5
+    },
+    {
+      "bytes": 1847,
+      "experiment_ids": [
+        "d3c83cea4a6d39b5f529d019bc19e4310192ceae0d3f6d5147e821a9282bb7c4",
+        "6547f7b8145c848e0e74abf3b1373cf14cc031c3dfa7014cbaccef053c508522"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000006.jsonl",
+      "records": 2,
+      "sha256": "2dd605f05f2f096439a61de706e2fb823c6b262861e0661b2c7a329931bbb499",
+      "shard_index": 6
+    },
+    {
+      "bytes": 1830,
+      "experiment_ids": [
+        "37976d3a380b70485a5a1bafbf927366328a26afa684bafd0586bf91095ea815",
+        "00ced27b9ff09b4177a04f14c22489257d7d65c15a466c7c09d82ea466d4b2c9"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000007.jsonl",
+      "records": 2,
+      "sha256": "2e13bc6881d4ec219c6bbdf3eb2d4a08bcdb95150779740a8f4cb73fd1a9efa3",
+      "shard_index": 7
+    },
+    {
+      "bytes": 1839,
+      "experiment_ids": [
+        "9a819ac06b6cd2071c22f03e1a3eb819c10b7f751e102f77051ee26b05de397c",
+        "e3e5b4fd6819dbcb015e5b2ece3e9565f2d2ff2e81d438d6bf214ae12ddf608c"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000008.jsonl",
+      "records": 2,
+      "sha256": "f6635319a28b0a4f13a7f1e1c59e5843927f850f6e0a1d16192d597680b4fa45",
+      "shard_index": 8
+    },
+    {
+      "bytes": 1844,
+      "experiment_ids": [
+        "a9443d302099652ba92e8e4bb7494f805090e1de259933f93cd5c0269a181952",
+        "cf8ae45d5c510028844eaeb9a74e0a398d5f30fc993b42b8d8950449ad6dce91"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000009.jsonl",
+      "records": 2,
+      "sha256": "82b271374df4162c3943ab7c5dbab143ebd6d64221200d22345f4c8f555098c0",
+      "shard_index": 9
+    },
+    {
+      "bytes": 1840,
+      "experiment_ids": [
+        "1ef87a287bed7f3620c6e1190de6b4a29e0a915ce92d682d183abf29a11ee144",
+        "e85ba10828ae8981fa9d2e00947cd29e62e468d82b91452eeb0d06faf85de683"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000010.jsonl",
+      "records": 2,
+      "sha256": "6511a2b37752ac3e760924f74b203386f4a57e8684e3bd8cbe543bb9d995b623",
+      "shard_index": 10
+    },
+    {
+      "bytes": 1833,
+      "experiment_ids": [
+        "7039ca368d131560cd0b5df1ff8a9067f366685de5acc9b122bd59958f134dec",
+        "ca424cf8f02b2ef895e2b6d6d96791772be9fa4092626a14f7775d8ac9b46ee1"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000011.jsonl",
+      "records": 2,
+      "sha256": "f5137a81f623223c5c9f5a88f651d52e1883b74b43c6ca95ce0ae3c23a105416",
+      "shard_index": 11
+    },
+    {
+      "bytes": 1832,
+      "experiment_ids": [
+        "372f8017a9b970df9d71a3be63d79e0be580735f1a7d440e6631b3f497bb6374",
+        "e90f4dfdb5fd14c53af86807c70b9aabb2883cc94abc417e301609d5ebd14869"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000012.jsonl",
+      "records": 2,
+      "sha256": "91f68241b5247380c3905f6467232a18bb6984e13d5986f9adb28ab81630394c",
+      "shard_index": 12
+    },
+    {
+      "bytes": 1843,
+      "experiment_ids": [
+        "ee257e0415b34de2e6381fc18fb5e9429ec086e10f63c2794868b1c780725a7f",
+        "c656ca943d26db6837d7d1d76364ce67652f7e1098b96691acf11daf31fbfa5f"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000013.jsonl",
+      "records": 2,
+      "sha256": "662f0124aec24ce87946246d5b38d9d0816d00ed23bd5aec18f5280894e13d7b",
+      "shard_index": 13
+    },
+    {
+      "bytes": 1852,
+      "experiment_ids": [
+        "7baed2d6648208764bdbeb1818811258b51044c4a3fd74763effb7ad57559a42",
+        "09e07f6bca649acdb213f688fa759d2485374dfafd67397899ae568dfc2e2f84"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000014.jsonl",
+      "records": 2,
+      "sha256": "1316a6004672933e66ba833f1eeb1c46faf0535784c5d396d37a081062d0f5df",
+      "shard_index": 14
+    },
+    {
+      "bytes": 1841,
+      "experiment_ids": [
+        "d337f36e876d1cf8467649c1d7d6b66a23fe9e695ee0628f06b037a1c18c8387",
+        "599a518e5db8072d3b4ecdbda8f03bb182a79bb7aa35c3b441a3a127002051b6"
+      ],
+      "path": "research/campaign_cycles/3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf/results_shards/91d0c775b0052270a0ed36c2f97d505e2422997070162d567c02b99314d5bd7f/shard_000015.jsonl",
+      "records": 2,
+      "sha256": "c76657f10c504d77d3d59498a94d9d7b549034abdf2c25678b7245956900cc5e",
+      "shard_index": 15
+    }
+  ],
+  "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+  "total_bytes": 29449,
+  "total_records": 32,
+  "updated_utc": "2026-10-17T17:07:31.308373+00:00"
+}

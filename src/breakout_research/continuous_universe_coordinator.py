@@ -82,7 +82,11 @@ class ContinuousCycleCoordinator:
         end = start + COHORT_SIZE
         return eligible[start:end]
 
-    def run_cycle(self, holdout_enabled: bool = False) -> Dict[str, Any]:
+    def run_cycle(self, holdout_enabled: bool = False,
+                  max_assets: Optional[int] = None,
+                  max_configs: Optional[int] = None,
+                  max_folds: Optional[int] = None,
+                  max_costs: Optional[int] = None) -> Dict[str, Any]:
         state = load_continuous_state()
         universe = load_universe_manifest(UNIVERSE_MANIFEST_PATH)
         snapshot_id, snapshot_universe = self._make_universe_snapshot(universe)
@@ -117,8 +121,11 @@ class ContinuousCycleCoordinator:
         save_continuous_state(state)
         cycle_manifest_path = str(cycle_dir / "results_manifest.json")
         cycle_shard_root = str(cycle_dir / "results_shards")
-        result = run_campaign(holdout_enabled=False, max_assets=None,
-                              manifest_path=cycle_manifest_path, shard_root=cycle_shard_root)
+        result = run_campaign(holdout_enabled=False, max_assets=len(cohort),
+                              manifest_path=cycle_manifest_path, shard_root=cycle_shard_root,
+                              assets_override=cohort,
+                              max_configs=max_configs, max_folds=max_folds,
+                              max_costs=max_costs)
         cycle_dir.mkdir(parents=True, exist_ok=True)
         report = {
             "cycle_id": cycle_id,

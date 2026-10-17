@@ -281,7 +281,10 @@ class CampaignRunner:
                     yield unit, experiment_id
 
     def run(self, holdout_enabled: bool = False, max_assets: Optional[int] = None,
-            manifest_path: Optional[str] = None, shard_root: Optional[str] = None) -> Dict[str, Any]:
+            manifest_path: Optional[str] = None, shard_root: Optional[str] = None,
+            assets_override: Optional[List[Dict[str, Any]]] = None,
+            max_configs: Optional[int] = None, max_folds: Optional[int] = None,
+            max_costs: Optional[int] = None) -> Dict[str, Any]:
         """Run validation (default) or full campaign, resumably and idempotently.
 
         With holdout_enabled=False (default) only the four validation folds are
@@ -338,14 +341,28 @@ class CampaignRunner:
             if not candidate_ids:
                 raise RuntimeError("Holdout evaluation requires at least one frozen candidate")
 
-        assets_to_process = self.assets[:max_assets] if max_assets else self.assets
+        assets_to_process = assets_override if assets_override else (
+            self.assets[:max_assets] if max_assets else self.assets
+        )
         total_configs = len(self.configs)
         total_costs = len(self.cost_multipliers)
+        if max_configs is not None:
+            configs_to_run = self.configs[:max_configs]
+        else:
+            configs_to_run = self.configs
+        if max_costs is not None:
+            costs_to_run = self.cost_multipliers[:max_costs]
+        else:
+            costs_to_run = self.cost_multipliers
+        if max_folds is not None:
+            active_fold_count = min(self.fold_count, max_folds)
+        else:
+            active_fold_count = self.fold_count
 
         print(f"Starting campaign (holdout_enabled={holdout_enabled}): "
-              f"{len(assets_to_process)} assets, {total_configs} configs, "
-              f"{self.fold_count - (0 if holdout_enabled else 1)} active folds, "
-              f"{total_costs} cost scenarios")
+              f"{len(assets_to_process)} assets, {len(configs_to_run)} configs, "
+              f"{active_fold_count - (0 if holdout_enabled else 1)} active folds, "
+              f"{len(costs_to_run)} cost scenarios")
         print(f"Verified completed units: {len(completed_ids)}")
 
         records_since_checkpoint = 0
@@ -381,9 +398,13 @@ class CampaignRunner:
                     ) from exc
 
             fold_bounds = self._get_fold_bounds(candles)
+            if max_folds is not None and not holdout_enabled:
+                # Bound validation-window coverage only; the final holdout is
+                # always the last bound and is excluded when holdout is disabled.
+                fold_bounds = fold_bounds[:max_folds]
 
             for unit, experiment_id in self._iter_units(
-                assets_to_process, self.configs, self.cost_multipliers,
+                assets_to_process, configs_to_run, costs_to_run,
                 fold_bounds, holdout_enabled, asset_index, data_hashes,
                 protocol_hash, code_hash, candidate_ids,
             ):
@@ -472,11 +493,16 @@ class CampaignRunner:
 
 
 def run_campaign(holdout_enabled: bool = False, max_assets: Optional[int] = None,
-                 manifest_path: Optional[str] = None, shard_root: Optional[str] = None) -> Dict[str, Any]:
+                 manifest_path: Optional[str] = None, shard_root: Optional[str] = None,
+                 assets_override: Optional[List[Dict[str, Any]]] = None,
+                 max_configs: Optional[int] = None, max_folds: Optional[int] = None,
+                 max_costs: Optional[int] = None) -> Dict[str, Any]:
     """Entry point to run the campaign."""
     runner = CampaignRunner()
     return runner.run(holdout_enabled=holdout_enabled, max_assets=max_assets,
-                      manifest_path=manifest_path, shard_root=shard_root)
+                      manifest_path=manifest_path, shard_root=shard_root,
+                      assets_override=assets_override,
+                      max_configs=max_configs, max_folds=max_folds, max_costs=max_costs)
 
 
 if __name__ == '__main__':
