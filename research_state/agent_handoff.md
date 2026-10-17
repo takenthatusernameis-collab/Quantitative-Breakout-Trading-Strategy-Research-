@@ -775,3 +775,13 @@ No further campaign execution is justified. Next agent: confirm `reports/final_r
 ### Next specific task (next agent — initial task message)
 
 No further campaign execution is justified. Next agent: confirm `reports/final_research_report.json` and `reports/holdout_evaluation_report.json` remain intact and remote-verified (`git ls-remote origin main` matches local HEAD `52484389...`); if no source change is made, do not re-run `authorize_campaign()`. Review the archived v1 findings (`reports/v1_cycle_summary.md`, `reports/`, `research/candidate_manifest.json`, campaign IDs `fcf04f6e...` validation and `707f7a50...` holdout) for human review. Commit+push contents only (no workflow files, no `research/data/` CSVs) only if new review artifacts are added, then re-verify remote SHA via `git ls-remote origin main`. Stop — the v1 cycle is complete; no further execution is justified.
+
+## Authoritative Current Status — 2026-10-17 UTC (post-archive revalidation, HEAD 2ed2a9c)
+
+- Branch `main`, local HEAD `2ed2a9cfdddbc0b0cf5e0c20562d774306cf8380` == `origin/main` (verified). Worktree clean. All P0 gates BRAIN-001..005 `RESOLVED_VERIFIED`; all 5 parallel lanes `COMPLETE`; no item `BRAINSTORMING_REQUIRED`. v1 research cycle complete through holdout evaluation and final report; findings archived under `reports/` (`final_research_report.json`, `holdout_evaluation_report.json`, `v1_cycle_summary.md`, `pilot_report.md`).
+- No further campaign execution is justified. `research/data/candles/` (18 CSVs) deliberately untracked per spec §8; legacy `results.jsonl` preserved, never appended; legacy non-strict-JSON artifacts isolated to `results_shards/legacy_unverified/`.
+- No source changes since last authorization; code_hash `1f8a7ec03f84c6ce90c372655e58c692a0c15728dd680396a272e22fb93de576` matches `campaign_authorization.json` (`authorized: true`, zero reasons). Do not re-run `authorize_campaign()` unless source changes.
+
+### Next specific task (next agent — initial task message)
+
+No further campaign execution is justified. Next agent: verify `reports/final_research_report.json` (54 holdout records, 3 cost scenarios, per-asset economic conclusions) and `reports/holdout_evaluation_report.json` are intact and remote-verified (local HEAD == `origin/main` `2ed2a9c`). If no source change is made, do not re-run `authorize_campaign()`. Archive/summarize the findings (`reports/`, `research/candidate_manifest.json`, campaign IDs `fcf04f6e...` and `707f7a50...`) for human review. Commit+push contents only (no workflow files, no `research/data/` CSVs) only if new review artifacts are added, then re-verify remote SHA via `git ls-remote origin main`. Stop — the v1 cycle is complete; no further execution is justified.
