@@ -75,7 +75,9 @@ Constraints: preserve the repository's workflow/schedule and single-writer concu
 
 ### Next specific task (next agent — initial task message)
 
-**Task: Verify completion of cohort-0 bounded cycle and advance.**
+**Task: Resume/verify cohort-0 bounded cycle (still running).**
+
+Process `bgp_14b20c2d1001pq7VFRH9tsU9xb` running `ContinuousCycleCoordinator.run_cycle(holdout_enabled=False)`; state `current_cycle_id=3226843c...`, `completed_cycle_ids=[]`. Do not start a second cycle. Poll process status; on exit verify `cycle_report.json` state COMPLETE, manifest hashes/counts (2,304 configs × folds × costs), then update state and handoff.
 
 1. Re-anchor HEAD == origin/main; inspect working tree and shard counts.
 2. Check process status; if complete, verify results_manifest hashes/counts (2,304 configs x folds x costs) and cycle_report.json state COMPLETE.
