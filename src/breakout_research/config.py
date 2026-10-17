@@ -265,23 +265,23 @@ def compute_code_hash() -> str:
     return hasher.hexdigest()
 
 
-def load_research_spec() -> Dict[str, Any]:
-    with open('configs/research_v1.json', 'r') as f:
+def load_research_spec(path: str = 'configs/research_v1.json') -> Dict[str, Any]:
+    with open(path, 'r') as f:
         return json.load(f)
 
 
-def load_universe_manifest() -> Dict[str, Any]:
-    with open('research/universe_manifest.json', 'r') as f:
+def load_universe_manifest(path: str = 'research/universe_manifest.json') -> Dict[str, Any]:
+    with open(path, 'r') as f:
         return json.load(f)
 
 
-def load_config_manifest() -> Dict[str, Any]:
-    with open('research/config_manifest.json', 'r') as f:
+def load_config_manifest(path: str = 'research/config_manifest.json') -> Dict[str, Any]:
+    with open(path, 'r') as f:
         return json.load(f)
 
 
-def load_data_manifest() -> Dict[str, Any]:
-    with open('research/data_manifest.json', 'r') as f:
+def load_data_manifest(path: str = 'research/data_manifest.json') -> Dict[str, Any]:
+    with open(path, 'r') as f:
         return json.load(f)
 
 
