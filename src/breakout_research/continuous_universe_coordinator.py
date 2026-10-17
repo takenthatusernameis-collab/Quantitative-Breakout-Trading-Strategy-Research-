@@ -115,7 +115,10 @@ class ContinuousCycleCoordinator:
         state.current_cohort = {"cohort_index": state.next_cohort_index, "assets": [a["symbol"] for a in cohort]}
         state.current_snapshot = {"snapshot_id": snapshot_id}
         save_continuous_state(state)
-        result = run_campaign(holdout_enabled=False, max_assets=None)
+        cycle_manifest_path = str(cycle_dir / "results_manifest.json")
+        cycle_shard_root = str(cycle_dir / "results_shards")
+        result = run_campaign(holdout_enabled=False, max_assets=None,
+                              manifest_path=cycle_manifest_path, shard_root=cycle_shard_root)
         cycle_dir.mkdir(parents=True, exist_ok=True)
         report = {
             "cycle_id": cycle_id,

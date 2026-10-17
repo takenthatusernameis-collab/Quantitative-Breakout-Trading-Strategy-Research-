@@ -280,7 +280,8 @@ class CampaignRunner:
                     }
                     yield unit, experiment_id
 
-    def run(self, holdout_enabled: bool = False, max_assets: Optional[int] = None) -> Dict[str, Any]:
+    def run(self, holdout_enabled: bool = False, max_assets: Optional[int] = None,
+            manifest_path: Optional[str] = None, shard_root: Optional[str] = None) -> Dict[str, Any]:
         """Run validation (default) or full campaign, resumably and idempotently.
 
         With holdout_enabled=False (default) only the four validation folds are
@@ -309,13 +310,16 @@ class CampaignRunner:
             f"{protocol_hash}:{code_hash}:{data_manifest_hash}".encode("utf-8")
         ).hexdigest()
 
+        effective_manifest_path = manifest_path or MANIFEST_PATH
+        effective_shard_root = shard_root or SHARD_ROOT
+
         store = ResultStore(
             campaign_id=campaign_id,
             spec_hash=protocol_hash,
             code_hash=code_hash,
             data_manifest_hash=data_manifest_hash,
-            shard_root=SHARD_ROOT,
-            manifest_path=MANIFEST_PATH,
+            shard_root=effective_shard_root,
+            manifest_path=effective_manifest_path,
         )
 
         # Authoritative resume: completed experiment IDs from verified shards.
@@ -467,10 +471,12 @@ class CampaignRunner:
         }
 
 
-def run_campaign(holdout_enabled: bool = False, max_assets: Optional[int] = None) -> Dict[str, Any]:
+def run_campaign(holdout_enabled: bool = False, max_assets: Optional[int] = None,
+                 manifest_path: Optional[str] = None, shard_root: Optional[str] = None) -> Dict[str, Any]:
     """Entry point to run the campaign."""
     runner = CampaignRunner()
-    return runner.run(holdout_enabled=holdout_enabled, max_assets=max_assets)
+    return runner.run(holdout_enabled=holdout_enabled, max_assets=max_assets,
+                      manifest_path=manifest_path, shard_root=shard_root)
 
 
 if __name__ == '__main__':

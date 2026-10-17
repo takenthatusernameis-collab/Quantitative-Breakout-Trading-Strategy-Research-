@@ -26,11 +26,11 @@
     ],
     "cohort_index": 0
   },
-  "current_cycle_id": "45e666eeacbab2cdc2f0f4339c2b870e77b916748bbbae79b5d9ed3ba49e36d2",
+  "current_cycle_id": "d9068f5ef4e180d9ec9340add705b06894e9d85845726b2fb17591f71139baf5",
   "current_snapshot": {
-    "snapshot_id": "d41d7c002098aaf6e715c5468ef3d8e3ebcb99cd7941a47e796d304f2ad77cce"
+    "snapshot_id": "869cbbf4e3fc6f253a6a17be30e5f987a2a7c1554145dce961a56af7cc712c08"
   },
   "next_cohort_index": 0,
   "schema_version": 1,
-  "updated_utc": "2026-10-17T16:29:38.374733+00:00"
+  "updated_utc": "2026-10-17T16:43:44.989543+00:00"
 }
