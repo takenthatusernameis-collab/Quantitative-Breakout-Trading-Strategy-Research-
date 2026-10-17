@@ -609,3 +609,15 @@ Produce the final research report summarizing the v1 campaign outcome. Read `rep
 ### Next specific task (next agent — initial task message)
 
 No further campaign execution is justified. Next agent: review `reports/final_research_report.json` and `reports/holdout_evaluation_report.json`; if any source change is made, re-run `authorize_campaign()` first (gate fails closed on code-hash mismatch). Otherwise, archive/summarize findings for human review. Commit+push contents only (no workflow files) and re-verify remote SHA via `git ls-remote origin main`.
+
+
+## Authoritative Current Status — 2026-10-17 UTC (~04:10 UTC, prior task complete)
+
+- Prior agent task complete: `reports/final_research_report.json` committed at `74325d0f3cd23bee281758aad4e5b9df368d090a` and pushed; `git ls-remote origin main` == local HEAD `74325d0...` verified (match, no local-ahead). Worktree clean. Tests: `python3 -m pytest tests/` → 73 passed, exit 0.
+- v1 research cycle complete: BRAIN-001..005 all `RESOLVED_VERIFIED`; 497,664 validation records across 18 genuine assets (campaign_id `fcf04f6ea9f54e5c28da1b48d6e2cc8ed09d190bd63a54091d072c2f8a4eeea4`); 18 frozen candidates (`research/candidate_manifest.json`, freeze commit `3e937dd`, manifest_hash `9ea6b1c3...`); 54 holdout records in bounded shards (campaign_id `707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c`, 49,351 bytes ≤4 MiB); holdout evaluation report `reports/holdout_evaluation_report.json`; final research report `reports/final_research_report.json` (code_hash `1f8a7ec03f84c6ce90c372655e58c692a0c15728dd680396a272e22fb93de576` matches `campaign_authorization.json` and current source; `authorized: true`, zero reasons).
+- `research/data/candles/` (18 content-addressed CSVs) deliberately untracked per spec §8; reproducible from endpoint + content hash. Legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; legacy non-strict-JSON artifacts isolated to `results_shards/legacy_unverified/`.
+- No source changes since the last authorization; code_hash `1f8a7ec0...` matches `campaign_authorization.json`; `authorize_campaign()` re-run NOT required (gate would pass unchanged). No further campaign execution justified; all P0 gates resolved; no item `BRAINSTORMING_REQUIRED`; all 5 parallel lanes `COMPLETE`.
+
+### Next specific task (next agent — initial task message)
+
+No further campaign execution is justified. Confirm `reports/final_research_report.json` (54 holdout records, 3 cost scenarios, per-asset economic conclusions) and `reports/holdout_evaluation_report.json` are intact and remote-verified (local HEAD `74325d0` == `origin/main` `74325d0`, verified). If no source change is made, do not re-run `authorize_campaign()`. Archive/summarize the findings (`reports/`, `research/candidate_manifest.json`, campaign IDs `fcf04f6e...` and `707f7a50...`) for human review. Commit+push contents only (no workflow files, no `research/data/` CSVs) only if new review artifacts are added, then re-verify remote SHA via `git ls-remote origin main`. Stop — the v1 cycle is complete; no further execution is justified.
