@@ -494,3 +494,9 @@ Continue bounded validation-phase batches (`holdout_enabled=False`, `--max-asset
 - Validation sweep complete: 497,664 verified records across 18 genuine assets, holdout off, no frozen candidates yet.
 - `candidate_freeze.py` currently provides only manifest helpers (hash/save/load/candidate_config_ids); it has no selection function or CLI to derive a best candidate per asset from validation shards. BRAIN-003 phase 2 candidate freeze therefore remains unimplemented.
 - Next specific task: implement a deterministic candidate-selection function (best validation config per asset by a pre-registered metric, e.g. median profit factor / drawdown tradeoff) in `candidate_freeze.py`, expose a `--freeze` CLI that reads `research/results_manifest.json` + shards, writes `research/candidate_manifest.json` with spec/code/data hashes and `frozen: true`, max 1 candidate/asset; then verify holdout evaluator rejects full-grid/stale-hash inputs; tests green exit 0; remote SHA re-verified after commit. Never access holdout data before freeze.
+
+## Authoritative Current Status — candidate freeze implemented (HEAD pending)
+
+- `candidate_freeze.py` now includes deterministic `select_best_candidate()` (max median profit_factor, tie-break lower median max_drawdown then lower config_id; validation records only) and `freeze_from_results()` plus `--freeze` CLI reading results manifest + shards, writing frozen `research/candidate_manifest.json` with spec/code/data hashes.
+- Tests: 73 passed, exit 0.
+- Next specific task (next agent): Run `PYTHONPATH=src python3 -m breakout_research.candidate_freeze --freeze` (or `--freeze-commit <sha>`) to produce `research/candidate_manifest.json` from the completed 497,664-record validation sweep; verify holdout evaluator rejects full-grid/stale-hash inputs; commit+push contents only (no workflow files); verify remote SHA via `git ls-remote origin main`. Never access holdout data before freeze.
