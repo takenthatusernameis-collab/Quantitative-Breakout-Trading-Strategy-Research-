@@ -42,3 +42,13 @@ Read `research_state/continuous_universe_campaign_spec.md` and the new `continuo
 8. On every completion, write the next task as: resume the active cohort until it is fully verified; once complete, discover and test the next genuinely new market-cap candidate cohort. Continue this sequence, never retry an unchanged completed cohort just to generate activity, never weaken gates, and never claim the continuous loop is active until the implementation and restart tests prove it.
 
 Implementation must preserve the repository's current workflow/schedule and single-writer concurrency policy. No second workflow, no manual workflow dispatch as part of this task, no paid service, no private credentials, no live orders, no shorting, and no parameter-grid changes.
+
+## Completion note — 2026-10-17 UTC
+
+- Verified HEAD `dd1fcb5a7b819c3050fa8244bd835d6b68c573c2` == origin/main.
+- `python -m pytest tests/` → 80 passed, exit 0.
+- Continuous coordinator and tests present; implementation verified locally.
+
+### Next specific task (next agent — initial task message)
+
+Run one bounded new-cohort validation cycle using the continuous coordinator if all data/authorization gates pass; otherwise record the exact external blocker. Do not trigger Actions or edit workflow files.
