@@ -751,3 +751,27 @@ No further campaign execution is justified. Next agent: confirm `reports/final_r
 ### Next specific task (next agent — initial task message)
 
 No further campaign execution is justified. Next agent: confirm `reports/final_research_report.json` (18 per-asset records, 3 cost scenarios, per-asset economic conclusions: PROVISIONAL_HISTORICAL_SURVIVAL 9 / REJECTED_ON_HOLDOUT 7 / INSUFFICIENT_EVIDENCE 2, code_hash `1f8a7ec0...`, holdout_exposure `EXPOSED_OR_UNKNOWN`) and `reports/holdout_evaluation_report.json` (per_asset 54 records, code_hash `1f8a7ec0...`) are intact and remote-verified (`git ls-remote origin main` matches local HEAD `d3ea1f6...`). If no source change is made, do not re-run `authorize_campaign()`. The v1 cycle findings are archived at `reports/v1_cycle_summary.md`; review `reports/`, `research/candidate_manifest.json`, and campaign IDs `fcf04f6e...` (validation) and `707f7a50...` (holdout) for human review. Commit+push contents only (no workflow files, no `research/data/` CSVs) only if new review artifacts are added, then re-verify remote SHA via `git ls-remote origin main`. Stop — the v1 cycle is complete; no further execution is justified.
+
+## Authoritative Current Status — 2026-10-17 UTC (this session)
+
+- Branch `main`, local HEAD `52484389e079fdf3aafee1940eabb88e1cfe66e2` == `origin/main` (verified via `git ls-remote origin main`). Worktree clean. No local-ahead commits.
+- Prior agent task complete: confirmed `reports/final_research_report.json` (18 per-asset records, 3 cost scenarios, conclusions PROVISIONAL_HISTORICAL_SURVIVAL 9 / REJECTED_ON_HOLDOUT 7 / INSUFFICIENT_EVIDENCE 2, code_hash `1f8a7ec0...`, holdout_exposure `EXPOSED_OR_UNKNOWN`) and `reports/holdout_evaluation_report.json` (per_asset 54 records, code_hash `1f8a7ec0...`) intact and remote-verified. v1 cycle findings archived at `reports/v1_cycle_summary.md` (commit `d3ea1f6d`).
+- All P0 gates BRAIN-001..005 `RESOLVED_VERIFIED`. All 5 parallel strategy lanes `COMPLETE`. No item `BRAINSTORMING_REQUIRED`. v1 research cycle complete. No further campaign execution justified.
+- `authorize_campaign()` → `authorized: true`, zero reasons, code_hash `1f8a7ec0...` matches current source; no source change since last authorization; re-run NOT required.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+### Persistence status (separate fields, per README 2A.E)
+
+- Local commit: none new this session; `agent_handoff.md` updated (this session) — to be committed and pushed (contents only, no workflow files, no `research/data/` CSVs), with remote SHA verification after push.
+- Remote persistence: `git ls-remote origin main` == `52484389...` == local HEAD; to be re-verified after this session's push.
+- Checkpoint reconciliation: legacy `checkpoint.json` counters untrusted; resume derives from manifest-verified shard IDs; checkpoint not treated as authoritative.
+- Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+
+### Unresolved blockers ranked
+
+1. None P0 — all resolved. No item `BRAINSTORMING_REQUIRED`.
+2. Legacy `checkpoint.json` code-hash history (fails closed; counters untrusted) — informational only.
+
+### Next specific task (next agent — initial task message)
+
+No further campaign execution is justified. Next agent: confirm `reports/final_research_report.json` and `reports/holdout_evaluation_report.json` remain intact and remote-verified (`git ls-remote origin main` matches local HEAD `52484389...`); if no source change is made, do not re-run `authorize_campaign()`. Review the archived v1 findings (`reports/v1_cycle_summary.md`, `reports/`, `research/candidate_manifest.json`, campaign IDs `fcf04f6e...` validation and `707f7a50...` holdout) for human review. Commit+push contents only (no workflow files, no `research/data/` CSVs) only if new review artifacts are added, then re-verify remote SHA via `git ls-remote origin main`. Stop — the v1 cycle is complete; no further execution is justified.
