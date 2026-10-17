@@ -669,3 +669,25 @@ No further campaign execution is justified. Next agent: verify `reports/final_re
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 - Persistence status: local changes `agent_handoff.md` uncommitted; remote SHA matches local HEAD; no push performed this session.
 - Unresolved blockers: none P0.
+
+## Authoritative Current Status — 2026-10-17 UTC (~04:16 UTC, HEAD 1304886)
+
+- Branch `main`, local HEAD `1304886b785ddf5ffebb7dc80f6452f73ce903a6` == `origin/main` (verified via `git ls-remote origin main`). Worktree clean. No local-ahead commits.
+- Prior agent task complete: `reports/final_research_report.json` committed at `74325d0` and pushed; remote-verified. Confirmed intact and consistent this session.
+- Current `compute_code_hash()` = `1f8a7ec03f84c6ce90c372655e58c692a0c15728dd680396a272e22fb93de576` matches `reports/final_research_report.json`, `reports/holdout_evaluation_report.json`, `research_state/campaign_authorization.json` (`authorized: true`, zero reasons), and `research/candidate_manifest.json`'s `code_hash` field (frozen at `382e314...` at freeze time, unchanged since). No source change since last authorization; `authorize_campaign()` re-run NOT required (gate would pass unchanged).
+- Verification performed this session: holdout shard `research/results_shards/707f7a50.../shard_000000.jsonl` → 54 records, 18 assets matching the frozen candidates, 0 non-finite strings (strict JSON, `allow_nan=False`). `reports/final_research_report.json` → 18 per-asset records, `asset_count` 18, `holdout_exposure: EXPOSED_OR_UNKNOWN`, conclusions `PROVISIONAL_HISTORICAL_SURVIVAL` 9 / `REJECTED_ON_HOLDOUT` 7 / `INSUFFICIENT_EVIDENCE` 2. `reports/holdout_evaluation_report.json` → 54 records, code_hash matches. `research/candidate_manifest.json` → `frozen: true`, 18 candidates, `manifest_hash` `9ea6b1c3...`, freeze commit `3e937dd`.
+- All P0 gates BRAIN-001..005 `RESOLVED_VERIFIED`; all 5 parallel lanes `COMPLETE`; no item `BRAINSTORMING_REQUIRED`. v1 research cycle complete: 497,664 validation records (campaign_id `fcf04f6e...`), 18 frozen candidates, 54 holdout records (campaign_id `707f7a50...`, 49,351 bytes ≤4 MiB), holdout evaluation report, final research report.
+- `research/data/candles/` (18 content-addressed CSVs) deliberately untracked per spec §8. Legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; legacy non-strict-JSON artifacts isolated to `results_shards/legacy_unverified/`.
+
+### Persistence status (separate fields, per README 2A.E)
+- Local commit: none new this session beyond prior `1304886`; `agent_handoff.md` updated (this session) — to be committed and pushed (contents only, no workflow files, no `research/data/` CSVs), with remote SHA verification after push.
+- Remote persistence: `git ls-remote origin main` == `1304886...` == local HEAD; to be re-verified after this session's push.
+- Checkpoint reconciliation: legacy `checkpoint.json` counters untrusted; resume derives from manifest-verified shard IDs; checkpoint not treated as authoritative.
+- Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+
+### Unresolved blockers ranked
+1. None P0 — all resolved. No item `BRAINSTORMING_REQUIRED`.
+2. Legacy `checkpoint.json` code-hash history (fails closed; counters untrusted) — informational only.
+
+### Next specific task (next agent — initial task message)
+No further campaign execution is justified. Next agent: confirm `reports/final_research_report.json` (18 per-asset records, 3 cost scenarios, per-asset economic conclusions, code_hash `1f8a7ec0...`) and `reports/holdout_evaluation_report.json` (54 records) are intact and remote-verified (local HEAD == `origin/main`, verified via `git ls-remote origin main`). If no source change is made, do not re-run `authorize_campaign()`. Archive/summarize the findings (`reports/final_research_report.json`, `reports/holdout_evaluation_report.json`, `research/candidate_manifest.json`, campaign IDs `fcf04f6e...` validation and `707f7a50...` holdout) for human review. Commit+push contents only (no workflow files, no `research/data/` CSVs) only if new review artifacts are added, then re-verify remote SHA via `git ls-remote origin main`. Stop — the v1 cycle is complete; no further execution is justified.
