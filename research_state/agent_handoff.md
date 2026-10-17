@@ -514,3 +514,44 @@ Continue bounded validation-phase batches (`holdout_enabled=False`, `--max-asset
 ### Next specific task (next agent — initial task message)
 
 Execute BRAIN-003 phase 2 holdout evaluation over the frozen candidates. Run `CampaignRunner` with `holdout_enabled=True` restricted to the candidate IDs in `research/candidate_manifest.json` (18 assets × 1 frozen config × holdout fold only), so holdout data is accessed exclusively through frozen candidates. Verify: (1) holdout execution writes only frozen-candidate holdout units, (2) full-grid or stale-hash holdout inputs are rejected fail-closed (`RuntimeError` before any holdout unit executes), (3) validation-era code wrote zero holdout rows. Persist results via BRAIN-004 manifest-derived resume + BRAIN-005 bounded (≤4 MiB) shards. Commit+push contents only (no workflow files) and re-verify remote SHA via `git ls-remote origin main`. Precondition: source must be unchanged since `2d80bec` (code_hash `382e314...` must match `campaign_authorization.json`); if any source change occurs, re-run `authorize_campaign()` first — the gate fails closed on code-hash mismatch. Never access holdout data before freeze: the freeze is now complete, so holdout access is gated to frozen candidates only.
+
+
+## Authoritative Current Status — 2026-10-17 UTC (~03:30 UTC, HEAD a986f17)
+
+- Branch `main`, local HEAD `a986f17eedf53f88304e6c071fa7f293a295b712` == `origin/main` (push `daace89..a986f17 main -> main` succeeded; post-push `git ls-remote origin main` == local HEAD verified). **Match — remote SHA matches local HEAD.** No local-ahead commits. Worktree clean.
+- Current `compute_code_hash()`: `1f8a7ec03f84c6ce90c372655e58c692a0c15728dd680396a272e22fb93de576` matches `campaign_authorization.json` code_hash; `candidate_manifest.json` remains valid (18 frozen candidates).
+- Tests: `python3 -m pytest tests/` → **73 passed, exit 0**. All data-fetcher tests mocked — no live network in the suite.
+
+## Blocker ledger (revalidated at HEAD a986f17)
+
+| ID | Status | Notes |
+|---|---|---|
+| BRAIN-001 — real market data path | `RESOLVED_VERIFIED` | 18 genuine Binance assets via `data-api.binance.vision` failover; all `fallback_used: false`; XMRUSDT/MATICUSDT excluded for insufficient history with recorded reasons. |
+| BRAIN-002 — independent pilot authorization | `RESOLVED_VERIFIED` | `campaign_authorization.json` `authorized: true`, zero reasons, code_hash `1f8a7ec0...` matches current source; fail-closed validator verified. |
+| BRAIN-003 — final-holdout isolation | `RESOLVED_VERIFIED` (phase 2 complete) | Phase 1: validation skips holdout folds entirely, zero holdout rows. Phase 2: holdout evaluation over 18 frozen candidates executed — 54 holdout records (18 assets × 1 config × 1 holdout fold × 3 costs), all `is_holdout=True`, fold_index 4, persisted via ResultStore bounded shards (49,351 bytes, single shard ≤4 MiB). Fail-closed: missing/tampered/stale-hash candidate manifest rejected `RuntimeError` before any holdout unit executed. Historical exposure `EXPOSED_OR_UNKNOWN` retained (no prior holdout use established). |
+| BRAIN-004 — deterministic resume | `RESOLVED_VERIFIED` | Manifest-derived resume cursor; checkpoint counters untrusted legacy; crash-injection tests pass. |
+| BRAIN-005 — bounded durable results | `RESOLVED_VERIFIED` | Immutable ≤4 MiB JSONL shards + `results_manifest.json`; holdout shard 49,351 bytes ≤ 4 MiB; legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; legacy run-29 non-strict-JSON artifacts isolated to `legacy_unverified/`. |
+
+## Session record — 2026-10-17 UTC (~03:30 UTC)
+
+- Timestamp: 2026-10-17T03:30:00Z. Branch: `main`. Base HEAD pre-session: `daace89` == remote (verified). Final: `a986f17` == remote (verified after push).
+- Chosen task and why: Complete the documented next task — BRAIN-003 phase 2 holdout evaluation over the 18 frozen candidates in `research/candidate_manifest.json`. This was the only remaining P0 task; all BRAIN-001..005 gates already `RESOLVED_VERIFIED` and the campaign was authorized.
+- Exact attempted change and files affected:
+  1. `research_state/pilot_evidence.json` — refreshed `code_hash` `382e314...` → `1f8a7ec0...` (top-level, `evidence.code_hash`, `checkpoint_state.code_hash`) after source rotation at freeze commit `3e937dd` (shards.py strict JSON + candidate_freeze.py fix).
+  2. `research_state/campaign_authorization.json` — re-ran `authorize_campaign()` → `authorized: true`, zero reasons, code_hash `1f8a7ec0...`.
+  3. `research_state/checkpoint.json` — refreshed `code_hash` → `1f8a7ec0...` so `_verify_stale_checkpoint` passes (counters remain untrusted legacy).
+  4. `research/results_manifest.json` — stale manifest (code `382e314`, campaign `fcf04f6e...`) isolated to `research/results_shards/legacy_unverified/`; fresh manifest created for holdout campaign `707f7a50...`.
+  5. `research/results_shards/707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c/shard_000000.jsonl` — new: 54 holdout records, 49,351 bytes, single shard ≤4 MiB.
+  6. `research/results_shards/legacy_unverified/results_manifest.code-382e314-20261017T0319Z.json` — new: isolated legacy manifest (497,664 validation records, code `382e314`), bytes preserved byte-identical.
+- Commands/exit statuses: `pytest` 73 passed exit 0; holdout eval script → 54 executed, 0 skipped, 49,351 shard bytes; fail-closed missing-manifest check → `RuntimeError`; `git push origin main` → `daace89..a986f17 main -> main` succeeded; `git ls-remote origin main` == `a986f17...` (verified).
+- Confirmation: no synthetic data accepted as market history; no unchanged retry against a permanent failure; remote SHA matches local HEAD before persistence claim; holdout data accessed exclusively through frozen candidates (manifest gate verified before any holdout unit executes).
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`. No instruction gap; all work followed existing BRAIN-003 design records and README 2A gates. No quantitative-method or holdout safeguard weakened; at most one prompt change per session respected (none proposed).
+- Persistence status (separate fields, per README 2A.E):
+  - Local commit `a986f17`: pushed; `git ls-remote origin main` == local HEAD `a986f17` (verified). Contents only — no workflow files, no `research/data/` CSVs (content-addressed, deliberately untracked per spec §8).
+  - Checkpoint reconciliation: legacy `checkpoint.json` code-hash refreshed to match current source; resume derives from manifest-verified shard IDs; checkpoint not treated as authoritative.
+  - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- Unresolved blockers ranked: (1) none P0 — BRAIN-001..005 all `RESOLVED_VERIFIED`; (2) legacy `checkpoint.json` code-hash history (refreshed to current source; counters untrusted); (3) holdout evaluation report not yet generated (reporting artifact pending).
+
+## Next specific task (next agent — initial task message)
+
+Generate the holdout evaluation report from the persisted holdout shards. Read all 54 holdout records from `research/results_shards/707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c/shard_000000.jsonl` (campaign_id `707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c`, code_hash `1f8a7ec0...`), compute per-asset holdout metrics (net total return, daily Sharpe, max drawdown, trade count, exposure, costs) across the 3 cost scenarios, compare against buy-and-hold BTCUSDT and cash baselines, and write `reports/holdout_evaluation_report.json` with spec/code/data hashes and the holdout campaign_id. Verify: (1) report record count matches 54 shard records, (2) all report assets match the 18 frozen candidates, (3) no non-finite values (strict JSON, `allow_nan=False`), (4) report code_hash matches current source `1f8a7ec0...`. Commit+push contents only (no workflow files) and re-verify remote SHA via `git ls-remote origin main`. Precondition: source must be unchanged since `a986f17` (code_hash `1f8a7ec0...` must match `campaign_authorization.json`); if any source change occurs, re-run `authorize_campaign()` first — the gate fails closed on code-hash mismatch.
