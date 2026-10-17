@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_utc": "2026-10-16",
+  "updated_utc": "2026-10-17T15:51:49.829Z",
   "repository": "takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-",
   "operating_mode": "automation_first_independent_lanes",
   "shared_gates": {
@@ -173,9 +173,40 @@
         "pilot_evidence": "research_state/pilot_evidence.json (pilot_passed: false, evidence-only)",
         "auth_artifact": "research_state/campaign_authorization.json (authorized: true)",
         "genuine_assets": 18,
-        "excluded_insufficient_history": ["XMRUSDT (3,011 candles)", "MATICUSDT (7,883 candles)"],
+        "excluded_insufficient_history": [
+          "XMRUSDT (3,011 candles)",
+          "MATICUSDT (7,883 candles)"
+        ],
         "tests": "python3 -m pytest tests/ -> 55 passed, exit 0"
       }
+    },
+    {
+      "lane_id": "continuous-market-cap-universe-cycles",
+      "priority": 5,
+      "status": "READY",
+      "scope": "Implement crash-safe continuous market-cap candidate-universe cycles that run the unchanged 2,304-configuration grid on each genuinely new eligible cohort, preserve immutable per-cycle evidence, and advance only after verified completion.",
+      "dependencies": [
+        "deterministic-resume-and-result-shards",
+        "final-holdout-isolation",
+        "independent-pilot-authorization"
+      ],
+      "permitted_while_data_gate_blocked": true,
+      "required_artifacts": [
+        "research_state/continuous_universe_campaign_spec.md",
+        "runnable per-snapshot cycle coordinator integrated with the campaign runner",
+        "cycle-specific immutable universe/data/authorization/result manifests and reports",
+        "offline tests for snapshot advancement, duplicate detection, restart recovery, authorization binding, and holdout isolation"
+      ],
+      "completion_criteria": [
+        "The full frozen 2,304-configuration grid and validation/cost combinations are preserved for each eligible new cohort.",
+        "A cycle advances only after exact expected result IDs, hashes, manifests, and remote persistence are independently verified.",
+        "A genuinely new universe/cohort receives a separate canonical identity; identical snapshot/data work is safely deduplicated without overwriting prior evidence.",
+        "Every new cycle revalidates authorization against exact code/spec/universe/data hashes and fails closed on stale or missing evidence.",
+        "Continuous mode never reuses or opens the prior EXPOSED_OR_UNKNOWN final holdout.",
+        "All offline tests pass; the existing Actions workflow is unchanged and no Actions run is dispatched.",
+        "After implementation, exactly one bounded cycle is attempted only if its gates pass; otherwise a precise external or authorization blocker is persisted."
+      ],
+      "notes": "This lane supersedes the previous 'human review only; no further campaign execution' handoff instruction for new, separately identified candidate-universe discovery cycles only. It does not authorize rerunning or altering the completed v1 campaign or its holdout. Implement source and tests; a design/handoff-only change is not completion."
     }
   ]
 }
