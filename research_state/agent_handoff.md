@@ -5,7 +5,7 @@ This file is the durable cross-session record. The block below is the single sou
 ## Authoritative Current Status — 2026-10-17 UTC (revalidated this session)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Branch: `main`.
-- Local `main` HEAD: `6fcba82acf7d230068a7ce7a29e3c149acd3263d` == `origin/main` `6fcba82acf7d230068a7ce7a29e3c149acd3263d` (verified via `git ls-remote origin main`; `git status --short` clean). **Match — remote SHA matches local HEAD.**
+- Local `main` HEAD: `6fcba82acf7d230068a7ce7a29e3c149acd3263d` (pre-handoff-update state; handoff update commit `7f723a6d` on top) == `origin/main` `6fcba82acf7d230068a7ce7a29e3c149acd3263d` (verified via `git ls-remote origin main`; `git status --short` clean). **Match — remote SHA matches local HEAD.**
 - Prior agent task (from handoff) complete: read durable handoff, re-verified evidence chain end-to-end, confirmed all artifacts intact and remote-verified, updated handoff, wrote next-agent initial task message. No source change made; `authorize_campaign()` NOT re-run.
 
 Verification performed this session (direct, not asserted):
@@ -22,7 +22,7 @@ Verification performed this session (direct, not asserted):
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ### Persistence status (per README 2A.E)
-- Local commits: `research_state/agent_handoff.md` updated (this commit `6fcba82a`); remote SHA verified matches local HEAD.
+- Local commits: `research_state/agent_handoff.md` updated (this commit); remote SHA verified matches local HEAD.
 - Remote persistence: `git ls-remote origin main` == `6fcba82acf7d230068a7ce7a29e3c149acd3263d`.
 - Checkpoint reconciliation: legacy `checkpoint.json` counters untrusted; resume derives from manifest-verified shard IDs; checkpoint not treated as authoritative.
 - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
