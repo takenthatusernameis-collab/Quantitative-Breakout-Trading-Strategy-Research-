@@ -157,6 +157,51 @@ def _shard_path(shard_root: Path, campaign_id: str, index: int) -> Path:
     return shard_root / campaign_id / f"{SHARD_NAME_PREFIX}{index:06d}{SHARD_NAME_SUFFIX}"
 
 
+def iter_campaign_records(shard_root: str, campaign_id: str) -> List[Dict[str, Any]]:
+    """Read every verified result record for a campaign, in shard order.
+
+    Used by the candidate selector (BRAIN-003 phase 2) to consume only
+    completed validation results. Records are read back from immutable shards
+    and re-verified: an experiment_id that does not recompute from its own
+    content raises ResultStoreError, so a corrupted or hand-edited shard cannot
+    silently feed the selector.
+    """
+    records: List[Dict[str, Any]] = []
+    for path in _list_shard_files(Path(shard_root), campaign_id):
+        with path.open("r", encoding="utf-8") as handle:
+            for line_number, line in enumerate(handle, start=1):
+                if not line.strip():
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise ResultStoreError(
+                        f"Shard {path} has unparseable JSON on line {line_number}: {exc}"
+                    ) from exc
+                if not isinstance(record, dict) or "experiment_id" not in record:
+                    raise ResultStoreError(
+                        f"Shard {path} line {line_number} is not a valid result record"
+                    )
+                recomputed = compute_experiment_id(
+                    spec_hash=record.get("specification_hash", ""),
+                    code_hash=record.get("code_hash", ""),
+                    data_hash=record.get("data_hash", ""),
+                    asset=record.get("asset", ""),
+                    config_id=record.get("config_id", ""),
+                    fold_index=record.get("fold_index", 0),
+                    start_time=record.get("start_time", 0),
+                    end_time=record.get("end_time", 0),
+                    is_holdout=record.get("is_holdout", False),
+                    cost_multiplier=record.get("cost_multiplier", 0.0),
+                )
+                if recomputed != record["experiment_id"]:
+                    raise ResultStoreError(
+                        f"Shard {path} line {line_number}: experiment_id does not match record content"
+                    )
+                records.append(record)
+    return records
+
+
 def _list_shard_files(shard_root: Path, campaign_id: str) -> List[Path]:
     campaign_dir = shard_root / campaign_id
     if not campaign_dir.is_dir():
