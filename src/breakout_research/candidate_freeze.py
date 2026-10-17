@@ -97,7 +97,7 @@ def freeze_from_results(results_manifest_path: str = "research/results_manifest.
     records = []
     campaign_dir = os.path.join(shards_root, manifest["campaign_id"])
     for shard in manifest.get("shards", []):
-        shard_path = os.path.join(campaign_dir, shard["filename"])
+        shard_path = shard.get("path") or os.path.join(campaign_dir, shard["filename"])
         with open(shard_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
