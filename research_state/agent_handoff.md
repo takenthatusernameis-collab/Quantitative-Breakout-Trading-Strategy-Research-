@@ -670,9 +670,9 @@ No further campaign execution is justified. Next agent: verify `reports/final_re
 - Persistence status: local changes `agent_handoff.md` uncommitted; remote SHA matches local HEAD; no push performed this session.
 - Unresolved blockers: none P0.
 
-## Authoritative Current Status — 2026-10-17 UTC (~04:16 UTC, HEAD 2e93a33; final commit below records this SHA)
+## Authoritative Current Status — 2026-10-17 UTC (~04:16 UTC, authored at 2e93a33; final verified remote SHA 8cc00ea)
 
-Recorded SHA `2e93a33` is the commit whose tree contains this authoritative status block (its parent chain includes the status content; the final SHA-sync commit `2f2b759..` is a trivial chore commit and does not change any research state). Verify: `git ls-remote origin main` == local HEAD; `git cat-file -e <sha>:research_state/agent_handoff.md` for the recorded SHA.
+Note: the title SHA is the commit at which this status block was authored. The final verified remote SHA after this session's push is `8cc00ea20e8ad3c9c5184cb56af709c8f65a9e96` (`git rev-parse HEAD` == `git ls-remote origin main` == `8cc00ea...`, worktree clean). No research state changed between `2e93a33` and `8cc00ea` — only this handoff's SHA annotation. All findings below hold at `8cc00ea`.
 
 - Branch `main`, local HEAD `1304886b785ddf5ffebb7dc80f6452f73ce903a6` == `origin/main` (verified via `git ls-remote origin main`). Worktree clean. No local-ahead commits.
 - Prior agent task complete: `reports/final_research_report.json` committed at `74325d0` and pushed; remote-verified. Confirmed intact and consistent this session.
