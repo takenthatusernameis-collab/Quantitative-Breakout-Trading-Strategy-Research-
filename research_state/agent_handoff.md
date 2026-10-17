@@ -488,11 +488,9 @@ All BRAIN-001..005 `RESOLVED_VERIFIED`; none `BRAINSTORMING_REQUIRED`. Parallel 
 
 Continue bounded validation-phase batches (`holdout_enabled=False`, `--max-assets=1`) across remaining 16 assets (after BNBUSDT completes). At each batch checkpoint at batch_size; resume via manifest-derived IDs; verify remote SHA after commit. No code changes mid-campaign. Candidate freeze only after full validation; holdout never accessed.
 
-## Authoritative Current Status — 2026-10-16 UTC (batch continuation)
+## Authoritative Current Status — 2026-10-16 UTC (post-revalidation)
 
-- Branch `main`, HEAD `d2bee792cac9ac6db6f0f727db9a715d541480aa` == `origin/main`. Worktree clean except untracked `research/data/candles/`.
-- Tests: `python3 -m pytest tests/` → **73 passed, exit 0**.
-- Validation progress (campaign_id `fcf04f6e...`): **138,240 verified records** (5 assets complete through SOLUSDT), 17,848 executed this session, 119,015,791 shard bytes, all shards ≤4 MiB. Holdout off; no frozen candidates yet.
-## Next specific task (later session)
-
-Validation sweep for all 18 eligible assets is COMPLETE (commit `5cdfa70`, 73 tests passing, remote SHA verified). Next task: BRAIN-003 phase 2 candidate freeze — run `candidate_freeze.py` to write a hash-bound frozen candidate manifest (max 1 candidate/asset) from the completed validation results; then run the separate holdout evaluator only against frozen candidates. Holdout remains off until candidates are frozen. Acceptance: `candidate_frozen` manifest written with spec/code/data hashes; evaluator rejects full-grid/stale-hash inputs; holdout mode tested; tests green exit 0; remote SHA re-verified after commit. Never access holdout data before freeze.
+- Branch `main`, HEAD `d2bee792cac9ac6db6f0f727db9a715d541480aa` == `origin/main`. Tests: 73 passed, exit 0.
+- Validation sweep complete: 497,664 verified records across 18 genuine assets, holdout off, no frozen candidates yet.
+- `candidate_freeze.py` currently provides only manifest helpers (hash/save/load/candidate_config_ids); it has no selection function or CLI to derive a best candidate per asset from validation shards. BRAIN-003 phase 2 candidate freeze therefore remains unimplemented.
+- Next specific task: implement a deterministic candidate-selection function (best validation config per asset by a pre-registered metric, e.g. median profit factor / drawdown tradeoff) in `candidate_freeze.py`, expose a `--freeze` CLI that reads `research/results_manifest.json` + shards, writes `research/candidate_manifest.json` with spec/code/data hashes and `frozen: true`, max 1 candidate/asset; then verify holdout evaluator rejects full-grid/stale-hash inputs; tests green exit 0; remote SHA re-verified after commit. Never access holdout data before freeze.
