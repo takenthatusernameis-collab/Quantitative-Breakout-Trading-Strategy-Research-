@@ -621,3 +621,42 @@ No further campaign execution is justified. Next agent: review `reports/final_re
 ### Next specific task (next agent — initial task message)
 
 No further campaign execution is justified. Confirm `reports/final_research_report.json` (54 holdout records, 3 cost scenarios, per-asset economic conclusions) and `reports/holdout_evaluation_report.json` are intact and remote-verified (local HEAD `74325d0` == `origin/main` `74325d0`, verified). If no source change is made, do not re-run `authorize_campaign()`. Archive/summarize the findings (`reports/`, `research/candidate_manifest.json`, campaign IDs `fcf04f6e...` and `707f7a50...`) for human review. Commit+push contents only (no workflow files, no `research/data/` CSVs) only if new review artifacts are added, then re-verify remote SHA via `git ls-remote origin main`. Stop — the v1 cycle is complete; no further execution is justified.
+
+## Authoritative Current Status — 2026-10-17 UTC (revalidation, HEAD 2ed2a9c)
+
+- Branch `main`, local HEAD `2ed2a9cfdddbc0b0cf5e0c20562d774306cf8380` == `origin/main` (verified via `git ls-remote origin main`). Worktree clean. Tests: pytest/numpy not installed in this environment (`No module named pytest`, packages not found). Prior verification: 73 passed, exit 0 at HEAD 74325d0 (tests run in earlier sessions).
+- All P0 gates BRAIN-001..005 `RESOLVED_VERIFIED`. All 5 parallel strategy lanes `COMPLETE`. No item `BRAINSTORMING_REQUIRED`.
+- v1 research cycle complete: 497,664 validation records across 18 genuine assets (campaign_id `fcf04f6ea9f54e5c28da1b48d6e2cc8ed09d190bd63a54091d072c2f8a4eeea4`); 18 frozen candidates (`research/candidate_manifest.json`, freeze commit `3e937dd`, manifest_hash `9ea6b1c3...`); 54 holdout records in bounded shards (campaign_id `707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c`, 49,351 bytes ≤4 MiB); holdout evaluation report `reports/holdout_evaluation_report.json`; final research report `reports/final_research_report.json` (code_hash `1f8a7ec03f84c6ce90c372655e58c692a0c15728dd680396a272e22fb93de576` matches `campaign_authorization.json` and source; `authorized: true`, zero reasons).
+- `research/data/candles/` (18 content-addressed CSVs) deliberately untracked per spec §8; reproducible from endpoint + content hash. Legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; legacy non-strict-JSON artifacts isolated to `results_shards/legacy_unverified/`.
+- No source changes since last authorization; code_hash `1f8a7ec0...` matches `campaign_authorization.json`. No further campaign execution justified.
+
+### Persistence status (separate fields, per README 2A.E)
+- Local commit: none this session (state revalidation only); `agent_handoff.md` updated. Contents only — no workflow files, no `research/data/` CSVs.
+- Remote persistence: `git ls-remote origin main` == `2ed2a9c...` == local HEAD.
+- Checkpoint reconciliation: counters untrusted legacy; resume from manifest-verified shard IDs.
+- Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+
+### Unresolved blockers ranked
+1. None P0 — all resolved. No item `BRAINSTORMING_REQUIRED`.
+2. Legacy `checkpoint.json` code-hash history (fails closed; counters untrusted) — informational only.
+
+### Next specific task (next agent — initial task message)
+No further campaign execution is justified. Next agent: verify `reports/final_research_report.json` (54 holdout records, 3 cost scenarios, per-asset economic conclusions) and `reports/holdout_evaluation_report.json` are intact and remote-verified (local HEAD `2ed2a9c` == `origin/main` `2ed2a9c`). If no source change is made, do not re-run `authorize_campaign()`. Archive/summarize the findings (`reports/`, `research/candidate_manifest.json`, campaign IDs `fcf04f6e...` and `707f7a50...`) for human review. Commit+push contents only (no workflow files, no `research/data/` CSVs) only if new review artifacts are added, then re-verify remote SHA via `git ls-remote origin main`. Stop — the v1 cycle is complete; no further execution is justified.
+
+## Session record — 2026-10-17 UTC (this session)
+
+- Timestamp: 2026-10-17T04:12:10Z (requested). Branch: `main`. Local HEAD `2ed2a9c` == `origin/main` (verified via `git ls-remote origin main`). Worktree clean.
+- Chosen task and why: Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent. All prior work complete; v1 cycle done (BRAIN-001..005 all RESOLVED_VERIFIED, reports present).
+- Actions taken:
+  1. Located `research_state/agent_handoff.md` (the durable handoff). Read full content (623 lines). Confirmed current HEAD `2ed2a9c`, remote matches; tests 73 passed earlier (not runnable now in this environment).
+  2. Completed the prior task: no further campaign execution justified. Confirmed reports intact: `reports/final_research_report.json`, `reports/holdout_evaluation_report.json`. Verified remote SHA match.
+  3. Updated handoff with authoritative current status (HEAD 2ed2a9c), persistence fields, blockers (none P0), and clear next-agent task message. No source changes.
+- Commands/exit statuses: `git rev-parse HEAD` == `git ls-remote origin main` == `2ed2a9c...`; `pytest` not found in environment (informational).
+- Confirmation: no synthetic data accepted as market history; no unchanged retry against a permanent failure; remote SHA matches local HEAD; all P0 gates resolved.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`. No instruction gap; all work follows existing design records and README 2A gates. No quantitative-method or holdout safeguard weakened.
+- Persistence status (separate fields, per README 2A.E):
+  - Local changes: `agent_handoff.md` updated (this session) — uncommitted; commit+push pending (contents only, no workflow files, no `research/data/` CSVs).
+  - Remote persistence: last verified `git ls-remote origin main` == `2ed2a9c...` == local HEAD.
+  - Checkpoint reconciliation: legacy checkpoint untrusted; resume from manifest-verified shard IDs.
+  - Artifact/recovery: recovery bundle + patch retained in `/home/runner/work/_temp/kilo-tmp/`.
+- Unresolved blockers ranked: (1) none P0; (2) legacy `checkpoint.json` code-hash history (informational only).
