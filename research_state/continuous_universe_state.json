@@ -1,0 +1,36 @@
+{
+  "completed_cycle_ids": [],
+  "completed_snapshot_ids": [],
+  "current_cohort": {
+    "assets": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "BNBUSDT",
+      "XRPUSDT",
+      "SOLUSDT",
+      "TRXUSDT",
+      "DOGEUSDT",
+      "LINKUSDT",
+      "ADAUSDT",
+      "NEARUSDT",
+      "XLMUSDT",
+      "BCHUSDT",
+      "LTCUSDT",
+      "UNIUSDT",
+      "AVAXUSDT",
+      "SUIUSDT",
+      "XMRUSDT",
+      "DOTUSDT",
+      "MATICUSDT",
+      "ATOMUSDT"
+    ],
+    "cohort_index": 0
+  },
+  "current_cycle_id": "45e666eeacbab2cdc2f0f4339c2b870e77b916748bbbae79b5d9ed3ba49e36d2",
+  "current_snapshot": {
+    "snapshot_id": "d41d7c002098aaf6e715c5468ef3d8e3ebcb99cd7941a47e796d304f2ad77cce"
+  },
+  "next_cohort_index": 0,
+  "schema_version": 1,
+  "updated_utc": "2026-10-17T16:29:38.374733+00:00"
+}
