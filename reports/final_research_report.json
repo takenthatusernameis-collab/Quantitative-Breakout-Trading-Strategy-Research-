@@ -1,0 +1,688 @@
+{
+  "schema_version": "final-research-report-v1",
+  "report_type": "final_research_report",
+  "generated_utc": "2026-10-17T04:10:00Z",
+  "holdout_campaign_id": "707f7a50ffc9bc2f9b9415d15fa09ec720fbf8750fc362acf5aa13bd9308090c",
+  "validation_campaign_id": "fcf04f6ea9f54e5c28da1b48d6e2cc8ed09d190bd63a54091d072c2f8a4eeea4",
+  "asset_count": 18,
+  "per_asset": [
+    {
+      "asset": "ADAUSDT",
+      "config_id": "cfg_1513",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": -0.032251551005760284,
+          "exposure": 0.005137963843958135,
+          "gross_total_return": -0.0613785611153342,
+          "max_drawdown": 0.2777934762706094,
+          "net_total_return": -0.0613785611153342,
+          "trade_count": 27,
+          "turnover": 47.282139412566664,
+          "win_rate": 0.25925925925925924
+        },
+        "2.0": {
+          "daily_sharpe": -0.23213468674683205,
+          "exposure": 0.005137963843958135,
+          "gross_total_return": -0.11075599818212777,
+          "max_drawdown": 0.3026980486219583,
+          "net_total_return": -0.11075599818212777,
+          "trade_count": 27,
+          "turnover": 46.0584601332116,
+          "win_rate": 0.25925925925925924
+        },
+        "3.0": {
+          "daily_sharpe": -0.4279003385645086,
+          "exposure": 0.005137963843958135,
+          "gross_total_return": -0.1575587293232731,
+          "max_drawdown": 0.3273848053904021,
+          "net_total_return": -0.1575587293232731,
+          "trade_count": 27,
+          "turnover": 44.8773689950522,
+          "win_rate": 0.25925925925925924
+        }
+      },
+      "economic_conclusion": "REJECTED_ON_HOLDOUT"
+    },
+    {
+      "asset": "ATOMUSDT",
+      "config_id": "cfg_0629",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": -1.6294685799443425,
+          "exposure": 0.0068506184586108465,
+          "gross_total_return": -0.28250613632631577,
+          "max_drawdown": 0.32623440124988784,
+          "net_total_return": -0.28250613632631577,
+          "trade_count": 36,
+          "turnover": 58.139882218951904,
+          "win_rate": 0.25
+        },
+        "2.0": {
+          "daily_sharpe": -1.9793992994214782,
+          "exposure": 0.0068506184586108465,
+          "gross_total_return": -0.33238591462425265,
+          "max_drawdown": 0.37181816428513226,
+          "net_total_return": -0.33238591462425265,
+          "trade_count": 36,
+          "turnover": 56.23165729000259,
+          "win_rate": 0.25
+        },
+        "3.0": {
+          "daily_sharpe": -2.3158089095840486,
+          "exposure": 0.0068506184586108465,
+          "gross_total_return": -0.3788205531617262,
+          "max_drawdown": 0.4143385488466072,
+          "net_total_return": -0.3788205531617262,
+          "trade_count": 36,
+          "turnover": 54.40940835419196,
+          "win_rate": 0.25
+        }
+      },
+      "economic_conclusion": "REJECTED_ON_HOLDOUT"
+    },
+    {
+      "asset": "AVAXUSDT",
+      "config_id": "cfg_1012",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 1.08485233011386,
+          "exposure": 0.0019029495718363464,
+          "gross_total_return": 0.1185698561643767,
+          "max_drawdown": 0.09232635019651037,
+          "net_total_return": 0.1185698561643767,
+          "trade_count": 10,
+          "turnover": 20.718946401286086,
+          "win_rate": 0.5
+        },
+        "2.0": {
+          "daily_sharpe": 0.9262519702568487,
+          "exposure": 0.0019029495718363464,
+          "gross_total_return": 0.09640421080661762,
+          "max_drawdown": 0.09550071265983483,
+          "net_total_return": 0.09640421080661762,
+          "trade_count": 10,
+          "turnover": 20.51645676902453,
+          "win_rate": 0.5
+        },
+        "3.0": {
+          "daily_sharpe": 0.758019946144823,
+          "exposure": 0.0019029495718363464,
+          "gross_total_return": 0.07466700057467988,
+          "max_drawdown": 0.09866601017102306,
+          "net_total_return": 0.07466700057467988,
+          "trade_count": 10,
+          "turnover": 20.316538673353996,
+          "win_rate": 0.4
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    },
+    {
+      "asset": "BCHUSDT",
+      "config_id": "cfg_0553",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 0.17369679692007362,
+          "exposure": 0.0020932445290199808,
+          "gross_total_return": -0.0035564880442505455,
+          "max_drawdown": 0.2572248659232279,
+          "net_total_return": -0.0035564880442505455,
+          "trade_count": 11,
+          "turnover": 21.576912768067775,
+          "win_rate": 0.2727272727272727
+        },
+        "2.0": {
+          "daily_sharpe": 0.089682213493659,
+          "exposure": 0.0020932445290199808,
+          "gross_total_return": -0.025254979388547327,
+          "max_drawdown": 0.2616715024295572,
+          "net_total_return": -0.025254979388547327,
+          "trade_count": 11,
+          "turnover": 21.34880493355762,
+          "win_rate": 0.2727272727272727
+        },
+        "3.0": {
+          "daily_sharpe": 0.006319399396741044,
+          "exposure": 0.0020932445290199808,
+          "gross_total_return": -0.04649150697406567,
+          "max_drawdown": 0.2660937318259626,
+          "net_total_return": -0.04649150697406567,
+          "trade_count": 11,
+          "turnover": 21.123868659074656,
+          "win_rate": 0.2727272727272727
+        }
+      },
+      "economic_conclusion": "REJECTED_ON_HOLDOUT"
+    },
+    {
+      "asset": "BNBUSDT",
+      "config_id": "cfg_1036",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": -1.3051506077673887,
+          "exposure": 0.0017126546146527116,
+          "gross_total_return": -0.04536433463257617,
+          "max_drawdown": 0.06876925661312427,
+          "net_total_return": -0.04536433463257617,
+          "trade_count": 9,
+          "turnover": 17.417055488667618,
+          "win_rate": 0.2222222222222222
+        },
+        "2.0": {
+          "daily_sharpe": -1.728975075240912,
+          "exposure": 0.0017126546146527116,
+          "gross_total_return": -0.06240673161509567,
+          "max_drawdown": 0.07804208550063611,
+          "net_total_return": -0.06240673161509567,
+          "trade_count": 9,
+          "turnover": 17.270834457035075,
+          "win_rate": 0.2222222222222222
+        },
+        "3.0": {
+          "daily_sharpe": -2.0904858019771315,
+          "exposure": 0.0017126546146527116,
+          "gross_total_return": -0.07915321262355829,
+          "max_drawdown": 0.08759432984936022,
+          "net_total_return": -0.07915321262355829,
+          "trade_count": 9,
+          "turnover": 17.126237648726384,
+          "win_rate": 0.2222222222222222
+        }
+      },
+      "economic_conclusion": "REJECTED_ON_HOLDOUT"
+    },
+    {
+      "asset": "BTCUSDT",
+      "config_id": "cfg_1009",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 0.16281253439401933,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": 0.0080662607685892,
+          "max_drawdown": 0.09742308964019088,
+          "net_total_return": 0.0080662607685892,
+          "trade_count": 8,
+          "turnover": 15.88954125024433,
+          "win_rate": 0.375
+        },
+        "2.0": {
+          "daily_sharpe": -0.021352581977769524,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": -0.007946380244532156,
+          "max_drawdown": 0.10102888845236276,
+          "net_total_return": -0.007946380244532156,
+          "trade_count": 8,
+          "turnover": 15.769597891202295,
+          "win_rate": 0.375
+        },
+        "3.0": {
+          "daily_sharpe": -0.20041176405730043,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": -0.02371251774386128,
+          "max_drawdown": 0.10462208181595654,
+          "net_total_return": -0.02371251774386128,
+          "trade_count": 8,
+          "turnover": 15.650838400635415,
+          "win_rate": 0.125
+        }
+      },
+      "economic_conclusion": "INSUFFICIENT_EVIDENCE"
+    },
+    {
+      "asset": "DOGEUSDT",
+      "config_id": "cfg_0664",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": -0.654379052281805,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": -0.04732791347591228,
+          "max_drawdown": 0.10158517336152557,
+          "net_total_return": -0.04732791347591228,
+          "trade_count": 8,
+          "turnover": 16.146184092111874,
+          "win_rate": 0.125
+        },
+        "2.0": {
+          "daily_sharpe": -0.871783418756621,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": -0.06246064504169226,
+          "max_drawdown": 0.11364192969436912,
+          "net_total_return": -0.06246064504169226,
+          "trade_count": 8,
+          "turnover": 16.026393521937905,
+          "win_rate": 0.125
+        },
+        "3.0": {
+          "daily_sharpe": -1.077888413225911,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": -0.07736041868996435,
+          "max_drawdown": 0.1255432540440231,
+          "net_total_return": -0.07736041868996435,
+          "trade_count": 8,
+          "turnover": 15.907768497245241,
+          "win_rate": 0.125
+        }
+      },
+      "economic_conclusion": "REJECTED_ON_HOLDOUT"
+    },
+    {
+      "asset": "DOTUSDT",
+      "config_id": "cfg_0300",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 0.9530028906577486,
+          "exposure": 0.003805899143672693,
+          "gross_total_return": 0.20228818044501787,
+          "max_drawdown": 0.18161618357169929,
+          "net_total_return": 0.20228818044501787,
+          "trade_count": 20,
+          "turnover": 41.92420243450916,
+          "win_rate": 0.35
+        },
+        "2.0": {
+          "daily_sharpe": 0.7839864937810869,
+          "exposure": 0.003805899143672693,
+          "gross_total_return": 0.15511106526718213,
+          "max_drawdown": 0.19300221837437564,
+          "net_total_return": 0.15511106526718213,
+          "trade_count": 20,
+          "turnover": 41.06999272513496,
+          "win_rate": 0.3
+        },
+        "3.0": {
+          "daily_sharpe": 0.6181018813967917,
+          "exposure": 0.003805899143672693,
+          "gross_total_return": 0.10976284694418337,
+          "max_drawdown": 0.20423543950521814,
+          "net_total_return": 0.10976284694418337,
+          "trade_count": 20,
+          "turnover": 40.23841001715048,
+          "win_rate": 0.3
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    },
+    {
+      "asset": "ETHUSDT",
+      "config_id": "cfg_1128",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 0.2993571487894564,
+          "exposure": 0.00038058991436726926,
+          "gross_total_return": 0.0185034806234964,
+          "max_drawdown": 0.05841043420854386,
+          "net_total_return": 0.0185034806234964,
+          "trade_count": 2,
+          "turnover": 3.982083936957719,
+          "win_rate": 0.5
+        },
+        "2.0": {
+          "daily_sharpe": 0.2468854664008754,
+          "exposure": 0.00038058991436726926,
+          "gross_total_return": 0.014434554642262811,
+          "max_drawdown": 0.059823525102678334,
+          "net_total_return": 0.014434554642262811,
+          "trade_count": 2,
+          "turnover": 3.9760972258709226,
+          "win_rate": 0.5
+        },
+        "3.0": {
+          "daily_sharpe": 0.19494952509346686,
+          "exposure": 0.00038058991436726926,
+          "gross_total_return": 0.010379853147722133,
+          "max_drawdown": 0.06123567299321308,
+          "net_total_return": 0.010379853147722133,
+          "trade_count": 2,
+          "turnover": 3.970122481538578,
+          "win_rate": 0.5
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    },
+    {
+      "asset": "LINKUSDT",
+      "config_id": "cfg_1105",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 0.2945975494294888,
+          "exposure": 0.0017126546146527116,
+          "gross_total_return": 0.026810758386322596,
+          "max_drawdown": 0.17643731456488115,
+          "net_total_return": 0.026810758386322596,
+          "trade_count": 9,
+          "turnover": 17.973273299003914,
+          "win_rate": 0.3333333333333333
+        },
+        "2.0": {
+          "daily_sharpe": 0.1808482691767804,
+          "exposure": 0.0017126546146527116,
+          "gross_total_return": 0.008479873416080773,
+          "max_drawdown": 0.18136758717942966,
+          "net_total_return": 0.008479873416080773,
+          "trade_count": 9,
+          "turnover": 17.818481036772823,
+          "win_rate": 0.3333333333333333
+        },
+        "3.0": {
+          "daily_sharpe": 0.06877452941992372,
+          "exposure": 0.0017126546146527116,
+          "gross_total_return": -0.009532722895188453,
+          "max_drawdown": 0.18627079805743033,
+          "net_total_return": -0.009532722895188453,
+          "trade_count": 9,
+          "turnover": 17.66543075779802,
+          "win_rate": 0.3333333333333333
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    },
+    {
+      "asset": "LTCUSDT",
+      "config_id": "cfg_1106",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 0.3134247931213719,
+          "exposure": 0.001141769743101808,
+          "gross_total_return": 0.03164022607606421,
+          "max_drawdown": 0.17646865262639774,
+          "net_total_return": 0.03164022607606421,
+          "trade_count": 6,
+          "turnover": 11.495080922105883,
+          "win_rate": 0.3333333333333333
+        },
+        "2.0": {
+          "daily_sharpe": 0.24649044672471887,
+          "exposure": 0.001141769743101808,
+          "gross_total_return": 0.01932533340563314,
+          "max_drawdown": 0.17975866405928706,
+          "net_total_return": 0.01932533340563314,
+          "trade_count": 6,
+          "turnover": 11.432351862575207,
+          "win_rate": 0.3333333333333333
+        },
+        "3.0": {
+          "daily_sharpe": 0.1800587654229843,
+          "exposure": 0.001141769743101808,
+          "gross_total_return": 0.007151372818885102,
+          "max_drawdown": 0.18303717399913777,
+          "net_total_return": 0.007151372818885102,
+          "trade_count": 6,
+          "turnover": 11.370073514292638,
+          "win_rate": 0.3333333333333333
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    },
+    {
+      "asset": "NEARUSDT",
+      "config_id": "cfg_2040",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": -0.5852004273846776,
+          "exposure": 0.003805899143672693,
+          "gross_total_return": -0.22935437745165327,
+          "max_drawdown": 0.373442747705225,
+          "net_total_return": -0.22935437745165327,
+          "trade_count": 20,
+          "turnover": 35.70938122354453,
+          "win_rate": 0.2
+        },
+        "2.0": {
+          "daily_sharpe": -0.7059297060468988,
+          "exposure": 0.003805899143672693,
+          "gross_total_return": -0.25959408028463077,
+          "max_drawdown": 0.38462820600441205,
+          "net_total_return": -0.25959408028463077,
+          "trade_count": 20,
+          "turnover": 35.04760349891546,
+          "win_rate": 0.2
+        },
+        "3.0": {
+          "daily_sharpe": -0.8249543749637018,
+          "exposure": 0.003805899143672693,
+          "gross_total_return": -0.2886614923322564,
+          "max_drawdown": 0.39561944539229993,
+          "net_total_return": -0.2886614923322564,
+          "trade_count": 20,
+          "turnover": 34.40230199916328,
+          "win_rate": 0.2
+        }
+      },
+      "economic_conclusion": "REJECTED_ON_HOLDOUT"
+    },
+    {
+      "asset": "SOLUSDT",
+      "config_id": "cfg_0828",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 1.5301689323527738,
+          "exposure": 0.0028544243577545195,
+          "gross_total_return": 0.21556083711214924,
+          "max_drawdown": 0.0967713293739702,
+          "net_total_return": 0.21556083711214924,
+          "trade_count": 15,
+          "turnover": 32.789112948761264,
+          "win_rate": 0.5333333333333333
+        },
+        "2.0": {
+          "daily_sharpe": 1.3017629170046776,
+          "exposure": 0.0028544243577545195,
+          "gross_total_return": 0.17960899195553448,
+          "max_drawdown": 0.10710734767678368,
+          "net_total_return": 0.17960899195553448,
+          "trade_count": 15,
+          "turnover": 32.290618327532684,
+          "win_rate": 0.5333333333333333
+        },
+        "3.0": {
+          "daily_sharpe": 1.076754692840233,
+          "exposure": 0.0028544243577545195,
+          "gross_total_return": 0.14470321418307558,
+          "max_drawdown": 0.1173306294648658,
+          "net_total_return": 0.14470321418307558,
+          "trade_count": 15,
+          "turnover": 31.80187203520063,
+          "win_rate": 0.4666666666666667
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    },
+    {
+      "asset": "SUIUSDT",
+      "config_id": "cfg_0602",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 1.429084451931706,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": 0.4390650391219526,
+          "max_drawdown": 0.213445771232031,
+          "net_total_return": 0.4390650391219526,
+          "trade_count": 8,
+          "turnover": 16.934640731636343,
+          "win_rate": 0.625
+        },
+        "2.0": {
+          "daily_sharpe": 1.3743527483503484,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": 0.4162061926722916,
+          "max_drawdown": 0.21501848739495802,
+          "net_total_return": 0.4162061926722916,
+          "trade_count": 8,
+          "turnover": 16.801558932439868,
+          "win_rate": 0.375
+        },
+        "3.0": {
+          "daily_sharpe": 1.3197703787994408,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": 0.3936992423256208,
+          "max_drawdown": 0.21658884624838043,
+          "net_total_return": 0.3936992423256208,
+          "trade_count": 8,
+          "turnover": 16.66982218892358,
+          "win_rate": 0.375
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    },
+    {
+      "asset": "TRXUSDT",
+      "config_id": "cfg_0098",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 1.7741454996053656,
+          "exposure": 0.006470028544243577,
+          "gross_total_return": 0.18116977627735395,
+          "max_drawdown": 0.09605898740493134,
+          "net_total_return": 0.18116977627735395,
+          "trade_count": 34,
+          "turnover": 79.36618576351431,
+          "win_rate": 0.35294117647058826
+        },
+        "2.0": {
+          "daily_sharpe": 1.0629911012795474,
+          "exposure": 0.006470028544243577,
+          "gross_total_return": 0.10512235969127123,
+          "max_drawdown": 0.10863536492164882,
+          "net_total_return": 0.10512235969127123,
+          "trade_count": 34,
+          "turnover": 76.7079490751203,
+          "win_rate": 0.35294117647058826
+        },
+        "3.0": {
+          "daily_sharpe": 0.4021968328673941,
+          "exposure": 0.006470028544243577,
+          "gross_total_return": 0.033937080870868525,
+          "max_drawdown": 0.1477220107718575,
+          "net_total_return": 0.033937080870868525,
+          "trade_count": 34,
+          "turnover": 74.16542581473308,
+          "win_rate": 0.3235294117647059
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    },
+    {
+      "asset": "UNIUSDT",
+      "config_id": "cfg_0521",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": -0.7031192072685897,
+          "exposure": 0.0028544243577545195,
+          "gross_total_return": -0.10865149796728765,
+          "max_drawdown": 0.23280035406410632,
+          "net_total_return": -0.10865149796728765,
+          "trade_count": 15,
+          "turnover": 29.124125007431726,
+          "win_rate": 0.4
+        },
+        "2.0": {
+          "daily_sharpe": -0.901221061491492,
+          "exposure": 0.0028544243577545195,
+          "gross_total_return": -0.13501432765649715,
+          "max_drawdown": 0.2385376907723192,
+          "net_total_return": -0.13501432765649715,
+          "trade_count": 15,
+          "turnover": 28.70069303699174,
+          "win_rate": 0.4
+        },
+        "3.0": {
+          "daily_sharpe": -1.0927801399965,
+          "exposure": 0.0028544243577545195,
+          "gross_total_return": -0.16061009528889536,
+          "max_drawdown": 0.2442353488307488,
+          "net_total_return": -0.16061009528889536,
+          "trade_count": 15,
+          "turnover": 28.285352568116707,
+          "win_rate": 0.3333333333333333
+        }
+      },
+      "economic_conclusion": "REJECTED_ON_HOLDOUT"
+    },
+    {
+      "asset": "XLMUSDT",
+      "config_id": "cfg_1108",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 0.15238663439569086,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": 0.006796991385373804,
+          "max_drawdown": 0.1553244194174258,
+          "net_total_return": 0.006796991385373804,
+          "trade_count": 8,
+          "turnover": 15.708254319477387,
+          "win_rate": 0.25
+        },
+        "2.0": {
+          "daily_sharpe": -0.05394176724435022,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": -0.009195487902497553,
+          "max_drawdown": 0.15869890215698632,
+          "net_total_return": -0.009195487902497553,
+          "trade_count": 8,
+          "turnover": 15.589547720428724,
+          "win_rate": 0.25
+        },
+        "3.0": {
+          "daily_sharpe": -0.25244605524686065,
+          "exposure": 0.001522359657469077,
+          "gross_total_return": -0.024941774052368783,
+          "max_drawdown": 0.16206158810175428,
+          "net_total_return": -0.024941774052368783,
+          "trade_count": 8,
+          "turnover": 15.472019684800092,
+          "win_rate": 0.25
+        }
+      },
+      "economic_conclusion": "INSUFFICIENT_EVIDENCE"
+    },
+    {
+      "asset": "XRPUSDT",
+      "config_id": "cfg_2189",
+      "holdout_metrics_by_cost": {
+        "1.0": {
+          "daily_sharpe": 1.161836337535265,
+          "exposure": 0.0007611798287345385,
+          "gross_total_return": 0.05580619240454853,
+          "max_drawdown": 0.13291136545550966,
+          "net_total_return": 0.05580619240454853,
+          "trade_count": 4,
+          "turnover": 8.14622476567286,
+          "win_rate": 0.5
+        },
+        "2.0": {
+          "daily_sharpe": 1.0130357706684245,
+          "exposure": 0.0007611798287345385,
+          "gross_total_return": 0.047387142170875994,
+          "max_drawdown": 0.1346451102633844,
+          "net_total_return": 0.047387142170875994,
+          "trade_count": 4,
+          "turnover": 8.11726951792946,
+          "win_rate": 0.5
+        },
+        "3.0": {
+          "daily_sharpe": 0.8564577198927429,
+          "exposure": 0.0007611798287345385,
+          "gross_total_return": 0.039031048890345844,
+          "max_drawdown": 0.136376256399477,
+          "net_total_return": 0.039031048890345844,
+          "trade_count": 4,
+          "turnover": 8.088447388806138,
+          "win_rate": 0.5
+        }
+      },
+      "economic_conclusion": "PROVISIONAL_HISTORICAL_SURVIVAL"
+    }
+  ],
+  "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+  "code_hash": "1f8a7ec03f84c6ce90c372655e58c692a0c15728dd680396a272e22fb93de576",
+  "data_manifest_hash": "d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c",
+  "candidate_manifest_hash": "9ea6b1c3439c6087650aca549373642e0afe8460e0eee76f520cc1ac2bd30597",
+  "holdout_exposure": "EXPOSED_OR_UNKNOWN",
+  "multiple_testing_caveat": "2304 correlated configurations per asset, not independent hypotheses",
+  "verification": {
+    "record_count": 54,
+    "assets_match_frozen": true,
+    "non_finite": false,
+    "strict_json": true
+  }
+}
