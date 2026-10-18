@@ -2,10 +2,10 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 17:22Z) — CAMPAIGN FINISHED, NO NEW UNIVERSE SNAPSHOT
+## Authoritative Current Status — 2026-10-18 UTC (re-verified 17:22Z) — CAMPAIGN FINISHED, NO NEW UNIVERSE SNAPSHOT
 
-- This handoff file is itself the latest checkpoint commit on `main`. The exact HEAD is the commit that contains this file; `git log -1 --oneline` shows it. Local `main` is one checkpoint commit ahead of origin/main `2819066f…` (the campaign completion commit). `git status --short` is clean.
-- The auto-regenerated `authorized_at_utc` timestamp in `campaign_authorization.json` (currently `2026-10-18T17:09:54Z`, stable) is the only non-handoff working-tree change since origin/main; it was committed. No `src/`, manifest, or cycle changes exist.
+- This handoff file is itself the latest checkpoint commit on `main`. HEAD = `d64720eb chore(kilo): checkpoint agent session`; origin/main = `d64720eb…`. Local and remote are in sync; commit pushed. `git status --short` is clean.
+- `campaign_authorization.json`: `authorized_at_utc` = `2026-10-18T17:22:44.569389+00:00`, `authorized` = true. No `src/`, manifest, cycle, or authorization changes since origin/main.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` — matches `checkpoint.json` and `campaign_authorization.json`.
 - Tests: 80/80 passed (`PYTHONPATH=src python3 -m pytest tests/ -q`).
 - **No new universe snapshot:** all 5 snapshots in `research/universe_snapshots/` (`6b453df0…`, `869cbbf4…`, `d13d22e6…`, `d41d7c00…`, `e004c6ff…`) hash to the same `baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3` and contain byte-identical 20-asset manifests (18 verified + XMRUSDT/MATICUSDT excluded for insufficient history). Snapshot `e004c6ff…` is the only one referenced by the completed cycle; the other four are unreferenced historical artifacts. Cohort 1 remains empty.
@@ -35,7 +35,7 @@ Revalidated all integrity checks: code hash `d0dca298869fadfe3ee80b54010f8cb0d19
 ## Initial task message for next agent
 **Subject: Quantitative Breakout Trading Strategy Research — Campaign COMPLETE, no further action required**
 
-**Status:** Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is fully complete and persisted on `main`. Tests 80/80 passing. Campaign reported as finished. The exact local HEAD is the commit containing this handoff file (`git log -1 --oneline`); it is one checkpoint commit ahead of origin/main `2819066f…`.
+**Status:** Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is fully complete and persisted on `main`. Tests 80/80 passing. Campaign reported as finished. Local HEAD = `d64720eb chore(kilo): checkpoint agent session`; origin/main = `d64720eb…`. Local and remote are in sync; commit pushed.
 
 **What was done:**
 - 497,664 verified experiment records across 18 assets (27,648 per asset), stored as 9,972 contiguous JSONL shards in `research/campaign_cycles/0f52f6c9.../results_shards/577e87e2.../`.
@@ -49,5 +49,6 @@ Revalidated all integrity checks: code hash `d0dca298869fadfe3ee80b54010f8cb0d19
 **Verification commands to re-check integrity:**
 - `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → expect `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`
 - `PYTHONPATH=src python3 -m pytest tests/ -q` → expect 80 passed
-- `git status --short` → expect clean tree; `git log -1 --oneline` → expect the commit containing this handoff file (one checkpoint commit ahead of origin/main `2819066f…`)
+- `git status --short` → expect clean tree; `git log -1 --oneline` → expect `d64720eb chore(kilo): checkpoint agent session` (in sync with origin/main)
+- `git ls-remote origin main` → expect `d64720eb…`
 - `sha256sum research/universe_snapshots/*/universe_manifest.json` → all five expect `baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3`
