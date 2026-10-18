@@ -2,7 +2,7 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 16:13Z) — COHORT-0 COMPLETE
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 16:19Z) — COHORT-0 COMPLETE, INTEGRITY CONFIRMED
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
 - **Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is COMPLETE.** 497,664 verified records (18 assets × 27,648), 9,972 contiguous shards (`shard_000000.jsonl`–`shard_009971.jsonl`), `cycle_report.json` state=COMPLETE written, `next_cohort_index` = 1, cycle id added to `completed_cycle_ids`, snapshot id `e004c6ff...` added to `completed_snapshot_ids`.
@@ -49,18 +49,8 @@ This file is the durable cross-session record. The block below is the single sou
 
 ## Initial task message for next agent
 
-**Task: Confirm cohort-0 completion integrity and report the campaign as finished (no further cycles are discoverable).**
+**Task: Campaign is finished — no action required until a new universe refresh.**
 
-Cohort-0 is COMPLETE. Do NOT re-run the full campaign. Do NOT modify `src/`, the authorization artifact (beyond what is already present), or the universe manifest. Do NOT touch the orphan cycle `3226843c...`.
+Cohort-0 completion integrity CONFIRMED (2026-10-18T16:19Z): 80/80 tests passed; cycle `0f52f6c9...` has 9,972 contiguous shards (shard_000000–shard_009971) and `cycle_report.json` state=COMPLETE; `research_state/checkpoint.json` completed_records=497664, current_asset_index=18; `continuous_universe_state.json` next_cohort_index=1 with completed_cycle_ids/completed_snapshot_ids populated. No cohort 1 exists (universe has 20 eligible assets; 18 verified consumed, 2 delisted).
 
-Current state (2026-10-18T16:13Z, HEAD `57ee4074b01b6d841712da316759c20572b1f814`, origin==HEAD, 0 ahead/behind; `src/`+`tests/` unchanged since `52e557a0`):
-- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` COMPLETE: 497,664 records (18 assets × 27,648), 9,972 contiguous shards (shard_000000.jsonl–shard_009971.jsonl), `cycle_report.json` state=COMPLETE, `next_cohort_index`=1. Campaign not running.
-- `research/data_manifest.json`: 18 verified assets (all 26,280/26,280); `XMRUSDT`/`MATICUSDT` absent.
-- `research/universe_manifest.json`: unchanged; `XMRUSDT` (rank 17) and `MATICUSDT` (rank 19) carry `exclusion_reason` (insufficient hourly history); `DOTUSDT` (rank 18) and `ATOMUSDT` (rank 20) have `exclusion_reason: null` and ARE in `data_manifest.json`.
-- `research_state/checkpoint.json`: `completed_records`=497664, `current_asset_index`=18, `pilot_completed/pilot_passed`=true.
-- `research_state/continuous_universe_state.json`: `next_cohort_index`=1, `completed_cycle_ids`/`completed_snapshot_ids` populated, `current_cycle_id`=`0f52f6c9...`.
-- Orphan cycle `3226843c...` unreferenced; not a valid completion; left unmodified.
-
-Constraints: single-writer; no second workflow; no manual Actions dispatch; no paid service/private credentials; no live orders/shorting; no parameter-grid changes; tests must remain 80 passed (verified 80 passed). No source-code, authorization, or universe-manifest changes.
-
-Status: Cohort-0 COMPLETE. No cohort 1 exists (universe has exactly 20 eligible assets; all 18 verified ones are consumed). Campaign is finished pending a new universe refresh.
+Do NOT re-run the campaign. Do NOT modify `src/`, authorization artifact, universe manifest, or orphan cycle `3226843c...`. Await a new universe snapshot/refresh before any further cycle work. Report campaign as finished.
