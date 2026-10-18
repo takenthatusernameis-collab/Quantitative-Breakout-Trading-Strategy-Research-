@@ -74,3 +74,22 @@ Constraints: single-writer concurrency; no second workflow; no manual Actions di
 ## Status
 
 Cohort-0 bounded cycle BLOCKED on missing verified data for `XMRUSDT`/`MATICUSDT`. Blocker escalated to user this session; awaiting direction on data provision or formal re-scope. Cannot complete or advance to cohort 1 until resolved.
+
+## Session update — 2026-10-18T06:13:07Z (this session)
+
+- Read the durable handoff. Confirmed prior-agent task status: COMPLETE (escalation delivered). Block remains ACTIVE.
+- Revalidated repository state: HEAD `46604113ae13bba59e3fd74634787eaf77e57a24` == origin/main, working tree clean except pre-existing orphan .tmp shards. `python -m pytest tests/` -> 80 passed.
+- Cohort-0 cycle `0f52f6c9...` blocked at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 (assets 1–16 complete). `cycle_report.json` absent. Campaign not running.
+- Data manifest: 18 verified assets; `XMRUSDT` and `MATICUSDT` absent. Binance endpoints return HTTP 451 / insufficient 3-year hourly history. No authorized alternate source. Fail-closed gate holds.
+- Prior agent escalation is sufficient; no re-scope, skip, or synthetic fallback performed.
+
+## Next specific task (next agent — initial task message)
+
+**Task: Await user direction on the cohort-0 data blocker; do NOT re-scope or skip unilaterally. If authorized, complete cohort-0 and test cohort 1.**
+
+Constraints/guardrails:
+- Cohort-0 cycle blocked at `XMRUSDT`. Do not restart campaign blindly (will fail at same asset).
+- Only proceed if user authorizes (a) verified 3-year hourly data for `XMRUSDT`/`MATICUSDT` added to `research/data_manifest.json` with full attestation, or (b) formal re-scope of cohort 0 to 18 assets with updated cycle metadata.
+- If authorized to complete cohort-0: produce `cycle_report.json` COMPLETE with correct totals/shard hashes, add cycle to `completed_cycle_ids`, set `next_cohort_index` → 1. Then discover/test cohort 1 (one bounded cycle, `holdout_enabled=False`).
+- If authorized to re-scope cohort-0: update cohort composition/cycle metadata explicitly; record methodology change rationale per protocol.
+- Never use synthetic fallback or skip. No Actions dispatch/editing workflows. No parameter changes, paid services, private creds, live orders, shorting. Keep tests at 80 passed.
