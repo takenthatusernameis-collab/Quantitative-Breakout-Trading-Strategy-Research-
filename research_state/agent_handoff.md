@@ -2,11 +2,11 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 16:25Z) — COHORT-0 COMPLETE, INTEGRITY CONFIRMED
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 16:40Z) — COHORT-0 COMPLETE, INTEGRITY CONFIRMED
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
 - **Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is COMPLETE.** 497,664 verified records (18 assets × 27,648), 9,972 contiguous shards (`shard_000000.jsonl`–`shard_009971.jsonl`), `cycle_report.json` state=COMPLETE written, `next_cohort_index` = 1, cycle id added to `completed_cycle_ids`, snapshot id `e004c6ff0c18a2db6948453bc1488138808563ddfa7138185d693c5bc741106a` added to `completed_snapshot_ids`.
-- `git rev-parse HEAD` = `d8b9456af46271ce40a063748d2889b94d43e8e9` (local == origin/main). The prior commit `b4aeacee` ("Update SOXL paper journal...") touched only `docs/soxl_paper_journal.txt` (unrelated to breakout research lane); already on main.
+- `git rev-parse HEAD` = `72a9ca75844f7c32b0645d6b2aac75ae5d9bb7e8` (local == origin/main). Checkpoint commit added atop `d8b9456a`.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (recomputed via `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; matches `research_state/checkpoint.json`).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085` (from `config.load_research_spec()`).
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (computed from `research/data_manifest.json`).
