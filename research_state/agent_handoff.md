@@ -5,7 +5,7 @@ This file is the durable cross-session record. The block below is the single sou
 ## Authoritative Current Status — 2026-10-18 UTC
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
-- Re-anchored this session: `git rev-parse HEAD` = `0f1a8bab1ad4ad25663258eac42d70e5ccc6ae6d` == `git ls-remote origin main`; branch up to date with origin/main. (Ahead of the prior `7215e124`: shard writes + state-file updates committed.)
+- Re-anchored this session: `git rev-parse HEAD` = `46604113ae13bba59e3fd74634787eaf77e57a24` == `git ls-remote origin main`; branch up to date with origin/main. (Ahead of the prior `0f1a8bab`: `chore(kilo): checkpoint agent session` ×2 — investigation result + prior-agent escalation recorded; no source change, `code_hash` unchanged `d0dca298...`.)
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (current source).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c`.
@@ -47,27 +47,30 @@ This file is the durable cross-session record. The block below is the single sou
 - Binance endpoints (`api.binance.com`, `data-api.binance.vision`) remain HTTP 451 / insufficient history; no verified 3-year hourly history obtainable. No alternate provider authorized (no paid service, no private credentials).
 - Conclusion: verified data for `XMRUSDT` and `MATICUSDT` CANNOT be obtained under current constraints. Fail-closed gate holds; no skip, no synthetic fallback, no unilateral re-scope performed.
 
+## Prior-agent task — COMPLETE (escalation delivered this session)
+
+- Prior agent task ("Escalate cohort-0 data blocker for authorization decision; do NOT complete/re-scope unilaterally") completed: blocker documented with investigation result and escalated to user. Block remains **ACTIVE**, awaiting user direction on (a) verified 3-year hourly data for `XMRUSDT`/`MATICUSDT` via an authorized source, or (b) a formal re-scope of cohort 0 to the 18 available assets. No re-scope, skip, or synthetic fallback performed.
+
 ## Next specific task (next agent — initial task message)
 
-**Task: Escalate cohort-0 data blocker for authorization decision; do NOT complete/re-scope unilaterally.**
+**Task: Await user direction on the cohort-0 data blocker; then, only if authorized, complete cohort-0 and test cohort 1. Do NOT re-scope or skip unilaterally.**
 
-1. Acknowledge state: cohort-0 cycle `0f52f6c9...` BLOCKED at asset 17 `XMRUSDT`; 442,368/552,960 records (assets 1–16); `cycle_report.json` absent; `next_cohort_index`=0; campaign not running. Data for `XMRUSDT`/`MATICUSDT` confirmed unobtainable (no local cache, Binance 451/insufficient, no authorized alternate provider).
-2. Do NOT re-scope cohort 0 to 18 assets, skip assets, or use synthetic fallback without explicit user/methodology authorization (changes `cycle_id`, expected total, `completed_cycle_ids`).
-3. Escalate to user: request direction on (a) providing verified 3-year hourly data for XMR/MATIC via an authorized source, or (b) formally re-scoping cohort 0 to the 18 available assets with updated cycle metadata.
-4. Until authorized, keep fail-closed gates; do not trigger GitHub Actions or edit workflow files; preserve v1 artifacts. Tests remain 80 passed.
-5. If/when authorized re-scope or data arrives, complete cohort-0 (`cycle_report.json` state COMPLETE, totals == expected, shards verify, `completed_cycle_ids` contains `0f52f6c9...`, `next_cohort_index`→1), then discover/test cohort 1 (one bounded cycle, `holdout_enabled=False`).
+Current state (revalidated this session):
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete). `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running; will fail again at `XMRUSDT` if restarted.
+- `research/data_manifest.json`: 18 verified assets. `XMRUSDT` and `MATICUSDT` absent (no verified 3-year hourly history). Binance endpoints return HTTP 451 / insufficient history; no local cache; no authorized alternate provider, paid service, or private credentials. Fail-closed gate holds — no skip, no synthetic fallback.
+- Escalation delivered to user this session; awaiting direction.
 
-Constraints: single-writer concurrency; no second workflow; no manual Actions dispatch; no paid service; no private credentials; no live orders; no shorting; no parameter-grid changes.
+Do NOT:
+- Re-scope cohort 0 to 18 assets, skip `XMRUSDT`/`MATICUSDT`, or use synthetic fallback without explicit user/methodology authorization (changes `cycle_id`, expected total, `completed_cycle_ids`).
+- Trigger GitHub Actions, edit workflow files, or dispatch manual runs.
+- Change parameters, selection, or holdout rules.
 
-## Work completed this session (summary)
+If/when the user authorizes (a) verified 3-year hourly data for `XMRUSDT`/`MATICUSDT` added to `research/data_manifest.json` with full attestation, or (b) a formal re-scope of cohort 0 to 18 assets with updated cycle metadata:
+1. Complete cohort-0: `cycle_report.json` state COMPLETE, totals == expected, all shard hashes/counts verify, `completed_cycle_ids` contains `0f52f6c9...`, `next_cohort_index` → 1.
+2. Then discover and test cohort 1 (one bounded cycle, `holdout_enabled=False`).
 
-- Re-anchored to HEAD `0f1a8bab...`; verified `compute_code_hash()` = `d0dca298...`; tests 80 passed.
-- Confirmed `run_cycle` deterministically targets existing cycle `0f52f6c9...` (cycle_id MATCH).
-- Resumed cohort-0 campaign via `run_cohort0_resume.py`; processed assets 1–16 (442,368 records).
-- Campaign FAILED at asset 17 `XMRUSDT`: insufficient hourly history (2973 < 26,280); fail-closed, no fallback. Process exited; not running.
-- Identified blocker: `XMRUSDT` and `MATICUSDT` absent from `research/data_manifest.json` (18 of 20 cohort assets have verified data).
-- No workflow/Actions changes; v1 artifacts preserved.
+Constraints: single-writer concurrency; no second workflow; no manual Actions dispatch; no paid service; no private credentials; no live orders; no shorting; no parameter-grid changes. Tests must remain 80 passed.
 
 ## Status
 
-Cohort-0 bounded cycle BLOCKED on missing verified data for `XMRUSDT`/`MATICUSDT`. Cannot complete or advance to cohort 1 until the data blocker is resolved or the cohort is formally re-scoped.
+Cohort-0 bounded cycle BLOCKED on missing verified data for `XMRUSDT`/`MATICUSDT`. Blocker escalated to user this session; awaiting direction on data provision or formal re-scope. Cannot complete or advance to cohort 1 until resolved.
