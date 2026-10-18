@@ -99,13 +99,17 @@ Status: Cohort-0 BLOCKED on delisted `XMRUSDT`/`MATICUSDT`. Awaiting user direct
 - Hashes match recorded values. `checkpoint.json` vs `pilot_evidence.json` discrepancy noted (no reconciliation attempted). Authorization caveat noted (post-dates exclusions, reasons=[]).
 - `pytest` constraint carries forward (80 passed previously).
 
+## Session update — 2026-10-18T15:09Z (this session)
+
+- Completed prior agent task: "await and apply user direction on the cohort-0 universe/authorization question". Re-verified state: HEAD `9353e551cd9d29cec1387980920ac1edc9cc99e5` (origin == HEAD, 0 ahead/behind), working tree clean. `src/` and `tests/` unchanged since `52e557a0`. No user direction received; nothing to apply. No unilateral re-scope, skip, or synthetic fallback performed. Blocker remains ACTIVE at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). Fail-closed gates hold. Orphan cycle `3226843c...` unreferenced, left unmodified. `pytest` constraint carries forward (80 passed previously).
+
 ## Initial task message for next agent
 
 **Task: Await and apply user direction on the cohort-0 universe/authorization question.** Do not act on the blocker without explicit user direction.
 
 The blocker is confirmed genuine: `XMRUSDT` last traded ~2024-02-20 and `MATICUSDT` last traded ~2024-09-10 (both delisted from Binance spot); 26,280 candles unobtainable by any re-fetch. **Do NOT re-scope, skip, or synthesize unilaterally.**
 
-Current state (2026-10-18T15:07Z, HEAD `204750c3841f0bdc5cbb53c4eee4feca47131fe1`, clean, `src/`+`tests/` unchanged since `52e557a0`):
+Current state (2026-10-18T15:09Z, HEAD `9353e551cd9d29cec1387980920ac1edc9cc99e5`, clean, `src/`+`tests/` unchanged since `52e557a0`):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1–16 complete through SUIUSDT), 8,863 contiguous shards (0–8862), `cycle_report.json` absent, `next_cohort_index`=0, campaign not running.
 - `research/data_manifest.json`: 18 verified assets (all 26,280/26,280); `XMRUSDT`/`MATICUSDT` absent. Fail-closed gates hold (`src/breakout_research/campaign.py:378-387`, `fetcher.py:743`, `pilot_gate_validator.py:64-69`).
 - `research/universe_manifest.json`: `XMRUSDT` (rank 17) and `MATICUSDT` (rank 19) carry `exclusion_reason` (insufficient hourly history) since `b08421db` (2026-10-16T16:18:32Z). `DOTUSDT` (rank 18) and `ATOMUSDT` (rank 20) have `exclusion_reason: null` and ARE present in `data_manifest.json` — these are the only two assets still needed to complete cohort-0.
