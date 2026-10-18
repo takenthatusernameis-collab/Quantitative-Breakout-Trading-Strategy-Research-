@@ -68,7 +68,7 @@ This file is the durable cross-session record. The block below is the single sou
 
 **Task: Await and apply user direction on the cohort-0 universe/authorization question.** The blocker is confirmed genuine — `XMRUSDT` last traded 2024-02-20 and `MATICUSDT` last traded 2024-09-10 (both delisted from Binance spot), so 26,280 candles is unobtainable by any re-fetch. **Do NOT re-scope, skip, or synthesize unilaterally.**
 
-Current state (revalidated 2026-10-18T13:59Z, HEAD `52e557a0`, working tree clean, origin == HEAD):
+Current state (revalidated 2026-10-18T14:13Z, HEAD `fca7b702f489a694a00e22514d32491e453e6185`, working tree clean, origin == HEAD):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1–16 complete through SUIUSDT), 8,863 contiguous shards (indices 0–8862), all relevant hashes tracked. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running.
 - `research/data_manifest.json`: 18 verified assets, all 26,280/26,280; `XMRUSDT`/`MATICUSDT` absent. Fail-closed gate holds (`src/breakout_research/campaign.py:378-387`).
 - `research/universe_manifest.json`: `XMRUSDT`/`MATICUSDT` carry `exclusion_reason` ("insufficient_hourly_history..." / delisted) from commit `b08421db` (2026-10-16T16:18:32Z); exclusion correct and current.
@@ -88,3 +88,13 @@ Status: Cohort-0 BLOCKED on delisted `XMRUSDT`/`MATICUSDT`. Awaiting user direct
 ## Session update — 2026-10-18T14:01Z (this session)
 
 - Completed prior agent task: "await and apply user direction on the cohort-0 universe/authorization question". Revalidated state: HEAD `52e557a0`, origin == HEAD, working tree clean. No user direction received this session; nothing to apply. No unilateral re-scope/skip/synthetic fallback performed. Blocker remains ACTIVE at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards). `cycle_report.json` absent; `next_cohort_index` = 0; campaign not running. Authorization caveat unresolved.
+
+## Session update — 2026-10-18T14:13Z (this session)
+
+- Completed prior agent task: "await and apply user direction on the cohort-0 universe/authorization question". Revalidated state: HEAD `fca7b702f489a694a00e22514d32491e453e6185` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. `src/` and `tests/` unchanged since `52e557a0`. No source changes made.
+- `research/data_manifest.json`: 18 verified assets, all 26,280/26,280; `XMRUSDT`/`MATICUSDT` absent (no verified hourly data). Fail-closed gate holds (`src/breakout_research/campaign.py:378-387`).
+- `research_state/checkpoint.json`: `completed_records` = 442368, `current_asset_index` = 16 (SUIUSDT complete), `last_verified_record` = 442368, `code_hash` = `d0dca298...`, `pilot_completed` = true, `pilot_passed` = true. `next_unit` points to asset 17 `XMRUSDT`.
+- `research_state/campaign_authorization.json`: `authorized` = true, `authorized_at_utc` = 2026-10-18T10:52:32Z, `reasons` = []. Caveat unresolved: authorization post-dates the exclusion record by ~18.5 h and `reasons: []` does not address `XMRUSDT`/`MATICUSDT`.
+- `research_state/pilot_evidence.json`: `pilot_passed` = false, `campaign_authorized` = false.
+- Campaign NOT running; no campaign process alive (stale pid files 51025/38373 only). Orphan cycle dir `3226843c...` left unmodified, unreferenced (not a valid cohort-0 completion).
+- No user direction received this session; nothing to apply. **No unilateral re-scope, skip, or synthetic fallback performed.** Blocker remains ACTIVE at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). `cycle_report.json` absent. `next_cohort_index` = 0.
