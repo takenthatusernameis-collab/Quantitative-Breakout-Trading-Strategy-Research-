@@ -2,11 +2,11 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 16:37Z) — COHORT-0 COMPLETE, INTEGRITY RE-CONFIRMED LIVE
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 16:40Z) — COHORT-0 COMPLETE, INTEGRITY RE-CONFIRMED LIVE
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
 - **Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is COMPLETE.** 497,664 verified records (18 assets × 27,648), 9,972 contiguous shards (`shard_000000.jsonl`–`shard_009971.jsonl`), `cycle_report.json` state=COMPLETE written, `next_cohort_index` = 1, cycle id added to `completed_cycle_ids`, snapshot id `e004c6ff0c18a2db6948453bc1488138808563ddfa7138185d693c5bc741106a` added to `completed_snapshot_ids`.
-- `git rev-parse HEAD` = `367390561ff13f9f816577eacf6495f00c03860f` (local == origin/main; `git status --short` empty). Latest commit `36739056` is a handoff-only checkpoint atop `06385347`.
+- `git rev-parse HEAD` = `94bcffa3a74bfc17ae241ea4dee26c71d84e88b8` (local == origin/main; `git status --short` empty). Latest commit `94bcffa3` is a handoff-only checkpoint atop `36739056`.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (recomputed via `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; matches `research_state/checkpoint.json` and `campaign_authorization.json`).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085` (from `config.load_research_spec()`, matches `universe_manifest.json` and `campaign_authorization.json`).
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (recomputed via sha256 over canonical JSON of `research/data_manifest.json`; matches `results_manifest.json`).
@@ -60,9 +60,9 @@ This file is the durable cross-session record. The block below is the single sou
 
 - **None.** Working tree clean (`git status --short` empty). Tests: 80/80 passed.
 
-## Completion verified by this agent — 2026-10-18T16:37Z
+## Completion verified by this agent — 2026-10-18T16:40Z
 
-Verified live against HEAD `367390561ff13f9f816577eacf6495f00c03860f` (local == origin/main, `git status --short` empty):
+Verified live against HEAD `94bcffa3a74bfc17ae241ea4dee26c71d84e88b8` (local == origin/main, `git status --short` empty):
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` — matches `checkpoint.json` and `campaign_authorization.json`.
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085` — matches `universe_manifest.json` and `campaign_authorization.json`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` — recomputed (sha256 over canonical JSON of `research/data_manifest.json`); matches `results_manifest.json` in the completed cycle dir.
@@ -70,6 +70,8 @@ Verified live against HEAD `367390561ff13f9f816577eacf6495f00c03860f` (local == 
 - `continuous_universe_state.json`: `next_cohort_index`=1, `completed_cycle_ids`=[0f52f6c9...], `completed_snapshot_ids`=[e004c6ff...]. Cohort 1 empty (20 eligible assets; 18 verified consumed + 2 delisted exclusions).
 - Tests: 80/80 passed (`PYTHONPATH=src python3 -m pytest -q`).
 - No further cycles discoverable. Campaign reported as finished.
+- Verified shard-level record count: summed `wc -l` over all 9,972 shard files in `research/campaign_cycles/0f52f6c9.../results_shards/577e87e2.../` = 497,664, matching `results_manifest.json` total_records.
+- Verified `git status --short` empty at HEAD `94bcffa3`; only `agent_handoff.md` and `campaign_authorization.json` changed since `36739056` (both handoff/checkpoint artifacts, no source changes).
 
 ## Initial task message for next agent
 
