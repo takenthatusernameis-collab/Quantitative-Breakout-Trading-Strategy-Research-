@@ -2,10 +2,10 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 10:54Z)
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 11:08Z)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
-- Re-anchored this session: `git rev-parse HEAD` = `c1496e12ec41c36a0298fe0b7e7821995713f2a7` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. Source unchanged.
+- Re-anchored this session: `git rev-parse HEAD` = `c962d3daa861e9bf5528b63f25f4baafcc0c8a72` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. Source unchanged.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (current source; unchanged).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (recomputed on live `research/data_manifest.json`).
@@ -125,11 +125,21 @@ Status: Cohort-0 bounded cycle BLOCKED on insufficient verified history for `XMR
 - Environment: `pytest` not installed in sandbox; prior 80-passed baseline not re-runnable here.
 - Prior-agent task confirmed complete; clear initial task message for next agent preserved below.
 
+## Session update — 2026-10-18T11:08:35Z (this session)
+
+- Read the durable handoff; prior-agent task (escalation of cohort-0 data blocker) CONFIRMED COMPLETE. Block remains ACTIVE; no user direction received. No re-scope, skip, or synthetic fallback performed.
+- Re-anchored repository state: HEAD `c962d3daa861e9bf5528b63f25f4baafcc0c8a72` (branch main, `git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. Source unchanged: `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`.
+- Revalidated on-disk: `research/data_manifest.json` = 18 verified assets only; `XMRUSDT` and `MATICUSDT` absent vs 26,280 required. Fail-closed gate holds. Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` blocked at asset 17 `XMRUSDT` (442,368/552,960 records, 8863 shards 0–8862 complete through SUIUSDT). `next_cohort_index` = 0; campaign not running. `research_state/campaign_authorization.json`: authorized=true, code_hash matches current.
+- Authorization caveat noted: authorization post-dates universe exclusion record; text does not address `XMRUSDT`/`MATICUSDT`. Escalated to user; not resolved unilaterally.
+- Orphan cycle dir `research/campaign_cycles/3226843c...` remains unreferenced, not treated as valid cohort-0 completion; left on disk unmodified.
+- Environment: `pytest` not installed in sandbox; prior 80-passed baseline not re-runnable here.
+- Prior-agent task confirmed complete; initial task message for next agent refreshed below.
+
 ## Initial task message for next agent
 
 **Task: Await user direction on the cohort-0 data blocker; then, only if authorized, complete cohort-0 and test cohort 1. Do NOT re-scope or skip unilaterally.**
 
-Current state (revalidated 2026-10-18T11:05:35Z, HEAD `c1496e12ec41c36a0298fe0b7e7821995713f2a7`, working tree clean, origin == HEAD):
+Current state (revalidated 2026-10-18T11:08:35Z, HEAD `c962d3daa861e9bf5528b63f25f4baafcc0c8a72`, working tree clean, origin == HEAD):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1-16 complete through SUIUSDT), 8863 shards (indices 0-8862 complete). `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running.
 - `research/data_manifest.json`: 18 verified assets only; `XMRUSDT` and `MATICUSDT` absent vs 26,280 required. Fail-closed gate holds.
 - `research/universe_manifest.json`: `XMRUSDT`/`MATICUSDT` carry `exclusion_reason` (insufficient history) from commit `b08421db` (2026-10-16T16:18:32Z).
