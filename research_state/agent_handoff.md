@@ -2,7 +2,7 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 15:03Z)
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 15:05Z)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
 - Re-anchored this session: `git rev-parse HEAD` = `883ad84f5e571bb3d5abbe8256762ed0254288b0` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. `src/` and `tests/` unchanged since `52e557a0`.
@@ -51,20 +51,35 @@ This file is the durable cross-session record. The block below is the single sou
 - Completed prior agent task: "await and apply user direction on the cohort-0 universe/authorization question". Revalidated state: HEAD `8d24eed81fb72871118c81f1fa8f84c1de269aac` (origin == HEAD, 0 ahead/behind), working tree clean. `src/` and `tests/` unchanged. No user direction received; nothing to apply. No unilateral re-scope, skip, or synthetic fallback performed.
 - Blocker remains ACTIVE at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). Fail-closed gates hold. Orphan cycle dir left unmodified/unreferenced. `pytest` not installed; 80-passed constraint carries forward.
 
+## Session update — 2026-10-18T15:05Z (this session)
+
+- Completed prior agent task: "await and apply user direction on the cohort-0 universe/authorization question". Revalidated full state: HEAD `204750c3841f0bdc5cbb53c4eee4feca47131fe1` (origin == HEAD, 0 ahead/behind), working tree clean, `src/` and `tests/` unchanged since `52e557a0`.
+- No user direction received; nothing to apply. No unilateral re-scope, skip, or synthetic fallback performed. Blocker remains ACTIVE at asset 17 `XMRUSDT`.
+- Independently re-verified on-disk state (not from handoff claims):
+  - Valid cycle `0f52f6c9.../results_shards/577e87e2.../` = **8,863 shard files** (`shard_000000.jsonl`–`shard_008862.jsonl`, contiguous 0–8862), **442,368 records** (line-counted, matches `results_manifest.json` and `checkpoint.json`). No `cycle_report.json`.
+  - Orphan cycle `3226843c.../results_shards/91d0c775.../` = 8,878 shard files (`shard_000000`–`shard_008877`), still unreferenced; left unmodified.
+  - `research/data_manifest.json`: 18 verified assets, all 26,280/26,280; `XMRUSDT`/`MATICUSDT` absent.
+  - `research/universe_manifest.json`: `XMRUSDT` (rank 17) and `MATICUSDT` (rank 19) carry `exclusion_reason` (insufficient hourly history). `DOTUSDT` (rank 18) and `ATOMUSDT` (rank 20) have `exclusion_reason: null` and ARE present in `data_manifest.json` — these are the two assets still needed to complete cohort-0.
+  - Hash re-verification: recomputed `data_manifest_hash` via `campaign._data_manifest_hash`, `continuous_universe._data_manifest_hash`, and `pilot._sha256_canonical` — all three = `d8b0cb7e...cbd7c`, matching recorded values. `universe_manifest_hash` = `beff09c1...f2b2c`, matching. No stale hashes.
+  - `checkpoint.json`: `completed_records`=442368, `current_asset_index`=16, `pilot_completed/passed` = true (note: `pilot_evidence.json` still says `pilot_passed: false` — the two disagree; both are unchanged, no reconciliation attempted).
+  - `continuous_universe_state.json`: `next_cohort_index`=0, `current_cycle_id`=`0f52f6c9...`, `completed_cycle_ids`=[]. Cohort asset list still 20 entries including `XMRUSDT`/`MATICUSDT`.
+  - No campaign process running (verified `ps`). `pytest` was not installed in this environment; installed `pytest`+`numpy` locally to run the constraint check: **80 passed, exit 0** (unchanged).
+
 ## Initial task message for next agent
 
 **Task: Await and apply user direction on the cohort-0 universe/authorization question.** Do not act on the blocker without explicit user direction.
 
 The blocker is confirmed genuine: `XMRUSDT` last traded ~2024-02-20 and `MATICUSDT` last traded ~2024-09-10 (both delisted from Binance spot); 26,280 candles unobtainable by any re-fetch. **Do NOT re-scope, skip, or synthesize unilaterally.**
 
-Current state (2026-10-18T14:59Z, HEAD `883ad84f5e571bb3d5abbe8256762ed0254288b0`, clean):
+Current state (2026-10-18T15:05Z, HEAD `204750c3841f0bdc5cbb53c4eee4feca47131fe1`, clean, `src/`+`tests/` unchanged since `52e557a0`):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1–16 complete through SUIUSDT), 8,863 contiguous shards (0–8862), `cycle_report.json` absent, `next_cohort_index`=0, campaign not running.
 - `research/data_manifest.json`: 18 verified assets (all 26,280/26,280); `XMRUSDT`/`MATICUSDT` absent. Fail-closed gates hold (`src/breakout_research/campaign.py:378-387`, `fetcher.py:743`, `pilot_gate_validator.py:64-69`).
-- `research/universe_manifest.json`: `XMRUSDT`/`MATICUSDT` carry `exclusion_reason` (delisted) since `b08421db` (2026-10-16T16:18:32Z).
-- `research_state/checkpoint.json`: `completed_records`=442368, `current_asset_index`=16.
-- `research_state/campaign_authorization.json`: authorized=true, `authorized_at_utc` 2026-10-18T10:52:32Z, reasons=[], code_hash `d0dca298...`. Caveat: authorization post-dates exclusion record and does not address the two assets.
+- `research/universe_manifest.json`: `XMRUSDT` (rank 17) and `MATICUSDT` (rank 19) carry `exclusion_reason` (insufficient hourly history) since `b08421db` (2026-10-16T16:18:32Z). `DOTUSDT` (rank 18) and `ATOMUSDT` (rank 20) have `exclusion_reason: null` and ARE present in `data_manifest.json` — these are the only two assets still needed to complete cohort-0.
+- `research_state/checkpoint.json`: `completed_records`=442368, `current_asset_index`=16, `pilot_completed/passed`=true. **Discrepancy:** `pilot_evidence.json` still says `pilot_passed: false`; both unchanged, no reconciliation attempted.
+- `research_state/campaign_authorization.json`: authorized=true, `authorized_at_utc` 2026-10-18T10:52:32Z, reasons=[], code_hash `d0dca298...`. Caveat: authorization post-dates exclusion record and does not address the two delisted assets.
 - `research_state/pilot_evidence.json`: `pilot_passed=false`, `campaign_authorized=false`.
-- Orphan cycle `3226843c...` unreferenced; not a valid completion; left unmodified.
+- Orphan cycle `3226843c...` (8,878 shards) unreferenced; not a valid completion; left unmodified.
+- Hash re-verification (this session): `data_manifest_hash` recomputed 3 ways = `d8b0cb7e...cbd7c` (matches); `universe_manifest_hash` = `beff09c1...f2b2c` (matches). No stale hashes.
 
 Constraints: single-writer; no second workflow; no manual Actions dispatch; no paid service/private credentials; no live orders/shorting; no parameter-grid changes; tests must remain 80 passed. No unilateral re-scope, skip, or synthetic fallback.
 
