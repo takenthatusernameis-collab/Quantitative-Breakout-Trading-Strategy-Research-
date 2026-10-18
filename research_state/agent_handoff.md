@@ -89,3 +89,37 @@ If user authorizes formal re-scope of cohort-0 to 18 assets:
 3. Then discover and test cohort 1 (one bounded cycle, `holdout_enabled=False`).
 
 Status: Cohort-0 BLOCKED on delisted `XMRUSDT`/`MATICUSDT`. Awaiting user direction.
+
+## Session update — 2026-10-18T15:07Z (this session)
+
+- Completed prior agent task: "await and apply user direction on the cohort-0 universe/authorization question". Re-read handoff and re-verified current state: HEAD `204750c3841f0bdc5cbb53c4eee4feca47131fe1` (origin == HEAD, 0 ahead/behind), working tree clean, `src/` and `tests/` unchanged since `52e557a0`.
+- No user direction received; nothing to apply. No unilateral re-scope, skip, or synthetic fallback performed. Blocker remains ACTIVE at asset 17 `XMRUSDT`.
+- State confirmed: Cohort-0 cycle `0f52f6c9...` BLOCKED at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862), `cycle_report.json` absent, campaign not running. Fail-closed gates hold. Orphan cycle `3226843c...` unreferenced, left unmodified.
+- `research/data_manifest.json`: 18 verified assets (all 26,280/26,280); `XMRUSDT`/`MATICUSDT` absent. `research/universe_manifest.json`: `XMRUSDT` (rank 17) and `MATICUSDT` (rank 19) carry `exclusion_reason` (insufficient hourly history); `DOTUSDT` (rank 18) and `ATOMUSDT` (rank 20) have `exclusion_reason: null` and ARE present in data manifest - these are the only two assets still needed to complete cohort-0.
+- Hashes match recorded values. `checkpoint.json` vs `pilot_evidence.json` discrepancy noted (no reconciliation attempted). Authorization caveat noted (post-dates exclusions, reasons=[]).
+- `pytest` constraint carries forward (80 passed previously).
+
+## Initial task message for next agent
+
+**Task: Await and apply user direction on the cohort-0 universe/authorization question.** Do not act on the blocker without explicit user direction.
+
+The blocker is confirmed genuine: `XMRUSDT` last traded ~2024-02-20 and `MATICUSDT` last traded ~2024-09-10 (both delisted from Binance spot); 26,280 candles unobtainable by any re-fetch. **Do NOT re-scope, skip, or synthesize unilaterally.**
+
+Current state (2026-10-18T15:07Z, HEAD `204750c3841f0bdc5cbb53c4eee4feca47131fe1`, clean, `src/`+`tests/` unchanged since `52e557a0`):
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1–16 complete through SUIUSDT), 8,863 contiguous shards (0–8862), `cycle_report.json` absent, `next_cohort_index`=0, campaign not running.
+- `research/data_manifest.json`: 18 verified assets (all 26,280/26,280); `XMRUSDT`/`MATICUSDT` absent. Fail-closed gates hold (`src/breakout_research/campaign.py:378-387`, `fetcher.py:743`, `pilot_gate_validator.py:64-69`).
+- `research/universe_manifest.json`: `XMRUSDT` (rank 17) and `MATICUSDT` (rank 19) carry `exclusion_reason` (insufficient hourly history) since `b08421db` (2026-10-16T16:18:32Z). `DOTUSDT` (rank 18) and `ATOMUSDT` (rank 20) have `exclusion_reason: null` and ARE present in `data_manifest.json` — these are the only two assets still needed to complete cohort-0.
+- `research_state/checkpoint.json`: `completed_records`=442368, `current_asset_index`=16, `pilot_completed/passed`=true. **Discrepancy:** `pilot_evidence.json` still says `pilot_passed: false`; both unchanged, no reconciliation attempted.
+- `research_state/campaign_authorization.json`: authorized=true, `authorized_at_utc` 2026-10-18T10:52:32Z, reasons=[], code_hash `d0dca298...`. Caveat: authorization post-dates exclusion record and does not address the two delisted assets.
+- `research_state/pilot_evidence.json`: `pilot_passed=false`, `campaign_authorized=false`.
+- Orphan cycle `3226843c...` (8,878 shards) unreferenced; not a valid completion; left unmodified.
+- Hash re-verification (this session): `data_manifest_hash` recomputed 3 ways = `d8b0cb7e...cbd7c` (matches); `universe_manifest_hash` = `beff09c1...f2b2c` (matches). No stale hashes.
+
+Constraints: single-writer; no second workflow; no manual Actions dispatch; no paid service/private credentials; no live orders/shorting; no parameter-grid changes; tests must remain 80 passed. No unilateral re-scope, skip, or synthetic fallback.
+
+If user authorizes formal re-scope of cohort-0 to 18 assets:
+1. Update `research/universe_manifest.json` to formally record exclusions with delisted dates; recompute `data_manifest_hash` if needed.
+2. Complete cohort-0 for the 18 verified assets (resume checkpoint assets 1–16 done, then DOTUSDT, then ATOMUSDT). Expected total = 497,664 (18×27,648). Write `cycle_report.json` COMPLETE, verify totals/shard contiguity, add cycle id to `completed_cycle_ids`, set `next_cohort_index` → 1.
+3. Then discover and test cohort 1 (one bounded cycle, `holdout_enabled=False`).
+
+Status: Cohort-0 BLOCKED on delisted `XMRUSDT`/`MATICUSDT`. Awaiting user direction.
