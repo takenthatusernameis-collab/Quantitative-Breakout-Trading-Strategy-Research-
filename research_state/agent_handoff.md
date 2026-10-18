@@ -2,7 +2,7 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 13:48Z)
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 13:59Z)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
 - Re-anchored this session: `git rev-parse HEAD` = `52e557a0b48fc3ea56a19c7826c953e92f15a66c` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. `src/` and `tests/` unchanged.
@@ -39,18 +39,17 @@ This file is the durable cross-session record. The block below is the single sou
 - Empirical probe (Binance API `data-api.binance.vision/api/v3/klines`): `XMRUSDT` ends at 2024-02-20 02:00 UTC (2967 candles); `MATICUSDT` ends at 2024-09-10 02:00 UTC (7839 candles). Both delisted from Binance spot; 26280 candles unobtainable by any re-fetch. Fail-closed gate (`src/breakout_research/campaign.py:378-387`) prevents skip/synthetic fallback.
 - Consequence: cohort-0 cannot reach expected total; `cycle_report.json` cannot be written; `next_cohort_index` cannot advance to 1.
 
-## Session update — 2026-10-18T13:48Z (this session)
+## Session update — 2026-10-18T13:59Z (this session)
 
-- Read the durable handoff. Prior-agent task ("await and apply user direction on the cohort-0 universe/authorization question") revalidated: blocker confirmed genuine (both delisted, history ends well before 3-year requirement). **No user direction received** this session. Nothing to apply; **no unilateral re-scope, skip, or synthetic fallback performed**. Prior task complete as a confirmed wait.
-- Re-anchored repository state: HEAD `52e557a0` (branch main, origin == HEAD, 0 ahead / 0 behind). Working tree clean. `src/`/`tests/` unchanged. No source changes made.
-- Blocker remains ACTIVE and genuine. Cohort-0 cycle blocked at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). `next_cohort_index` = 0. Campaign not running. Authorization caveat unresolved.
+- Completed prior agent task: "await and apply user direction on the cohort-0 universe/authorization question". Blocker confirmed genuine — `XMRUSDT` last traded 2024-02-20 and `MATICUSDT` last traded 2024-09-10 (both delisted from Binance spot). **No user direction received** this session. Nothing to apply; **no unilateral re-scope, skip, or synthetic fallback performed**. Working tree clean; HEAD `52e557a0`, origin == HEAD, 0 ahead/0 behind. No source changes made.
+- Blocker remains ACTIVE at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running. Authorization caveat unresolved.
 - Orphan cycle dir `3226843c...` left unmodified, unreferenced (not a valid cohort-0 completion).
 
 ## Initial task message for next agent
 
 **Task: Await and apply user direction on the cohort-0 universe/authorization question.** The blocker is confirmed genuine — `XMRUSDT` last traded 2024-02-20 and `MATICUSDT` last traded 2024-09-10 (both delisted from Binance spot), so 26,280 candles is unobtainable by any re-fetch. **Do NOT re-scope, skip, or synthesize unilaterally.**
 
-Current state (revalidated 2026-10-18T13:48Z, HEAD `52e557a0`, working tree clean, origin == HEAD):
+Current state (revalidated 2026-10-18T13:59Z, HEAD `52e557a0`, working tree clean, origin == HEAD):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1–16 complete through SUIUSDT), 8,863 contiguous shards (indices 0–8862), all relevant hashes tracked. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running.
 - `research/data_manifest.json`: 18 verified assets, all 26,280/26,280; `XMRUSDT`/`MATICUSDT` absent. Fail-closed gate holds (`src/breakout_research/campaign.py:378-387`).
 - `research/universe_manifest.json`: `XMRUSDT`/`MATICUSDT` carry `exclusion_reason` ("insufficient_hourly_history..." / delisted) from commit `b08421db` (2026-10-16T16:18:32Z); exclusion correct and current.
