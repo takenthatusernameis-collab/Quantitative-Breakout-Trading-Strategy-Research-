@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/src/breakout_research/campaign.py", line 450, in run
+    store.flush()
+  File "/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/src/breakout_research/backtest/shards.py", line 523, in flush
+    shard_infos = self.writer.flush()
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/src/breakout_research/backtest/shards.py", line 302, in flush
+    self._promote_current_shard()
+  File "/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/src/breakout_research/backtest/shards.py", line 275, in _promote_current_shard
+    os.replace(temporary_path, self.current_path)
+FileNotFoundError: [Errno 2] No such file or directory: 'research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d/results_shards/577e87e2dc37b496b4d0c9e1a2eeecc9a777f01698591fc395dddb12f45708cb/shard_004647.jsonl.tmp' -> 'research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d/results_shards/577e87e2dc37b496b4d0c9e1a2eeecc9a777f01698591fc395dddb12f45708cb/shard_004647.jsonl'
+Starting campaign (holdout_enabled=False): 20 assets, 2304 configs, 4 active folds, 3 cost scenarios
+Verified completed units: 231950
+
+Processing asset 1/20: BTCUSDT (rank 1)
+
+Processing asset 2/20: ETHUSDT (rank 2)
+
+Processing asset 3/20: BNBUSDT (rank 3)
+
+Processing asset 4/20: XRPUSDT (rank 4)
+
+Processing asset 5/20: SOLUSDT (rank 5)
+
+Processing asset 6/20: TRXUSDT (rank 6)
+
+Processing asset 7/20: DOGEUSDT (rank 7)
+
+Processing asset 8/20: LINKUSDT (rank 8)
+
+Processing asset 9/20: ADAUSDT (rank 9)
