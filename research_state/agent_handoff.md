@@ -2,10 +2,10 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 12:46Z)
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 12:48Z)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
-- `git rev-parse HEAD` = `6b47f39d37f18253cfa07095aaabdce92c6138cf` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. Source unchanged.
+- `git rev-parse HEAD` = `d1f725615d59702af3e23cb758f3a50e20cd00d1` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. Source unchanged.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (current source; unchanged).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c`.
@@ -42,13 +42,13 @@ This file is the durable cross-session record. The block below is the single sou
 - Consequence: cohort-0 cannot reach expected total; `cycle_report.json` (state COMPLETE) cannot be written; `next_cohort_index` cannot advance to 1.
 - Assets 18 `DOTUSDT` and 20 `ATOMUSDT` are verified in the data manifest but **unprocessed** (they come after the blocked `XMRUSDT`/`MATICUSDT` in cohort order). A re-scope to 18 assets would process assets 1–16, then `DOTUSDT`, then `ATOMUSDT`; expected total = 497,664 records (18 × 27,648).
 
-## Session update — 2026-10-18T12:46Z (this session)
+## Session update — 2026-10-18T12:48Z (this session)
 
 - Read the durable handoff; prior-agent task (escalation of cohort-0 data blocker) **CONFIRMED COMPLETE**. Block remains ACTIVE; no user direction received since 12:45Z. No re-scope, skip, or synthetic fallback performed.
-- Re-anchored repository state: HEAD `6b47f39d37f18253cfa07095aaabdce92c6138cf` (branch main, origin == HEAD). Working tree clean except `research_state/agent_handoff*`. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (== current). No source changes.
+- Re-anchored repository state: HEAD `d1f725615d59702af3e23cb758f3a50e20cd00d1` (branch main, `git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (== current). No source changes.
 - Blocker remains ACTIVE and genuine: `XMRUSDT` (last candle 2024-02-20) and `MATICUSDT` (last candle 2024-09-10) delisted from Binance spot; 26,280 candles unobtainable by any re-fetch. Fail-closed gate holds. Cohort-0 cycle blocked at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). `next_cohort_index` = 0. Campaign not running. Authorization caveat unresolved.
 - On-disk state revalidated unchanged: `research/data_manifest.json` = 18 verified assets; `research/universe_manifest.json` carries `exclusion_reason` on both (correct, remains correct). `research_state/checkpoint.json`: `completed_records` = 442368, `current_asset_index` = 16, code_hash matches current. `research_state/campaign_authorization.json`: authorized=true, reasons=[], code_hash matches current.
-- Orphan cycle dir `3226843c...` left on disk, unmodified, unreferenced — not a valid cohort-0 completion.
+- **Orphan cycle dir `3226843c...` independently re-verified this session:** on disk = 8,879 files (1 dir + 8,878 `shard_000000.jsonl`–`shard_008877.jsonl` files) but `results_manifest.json` lists only 1,156 shard entries with `shard_index` 7719–8874 (non-contiguous), `code_hash` = `3dbeee5a92566d36b4eb1a9553ea47ee91408b590eb5199be4313026d2ebd2ea` (older, != current). Not referenced by any state file. Left on disk, unmodified; not a valid cohort-0 completion.
 
 ## Initial task message for next agent
 
@@ -56,13 +56,13 @@ This file is the durable cross-session record. The block below is the single sou
 
 The blocker is confirmed genuine — `XMRUSDT` last traded 2024-02-20 and `MATICUSDT` last traded 2024-09-10 (both delisted from Binance spot), so 26,280 candles is unobtainable by any re-fetch. **Do NOT re-scope, skip, or synthesize unilaterally.**
 
-Current state (revalidated 2026-10-18T12:46Z, HEAD `6b47f39d`, working tree clean, origin == HEAD):
+Current state (revalidated 2026-10-18T12:48Z, HEAD `d1f72561`, working tree clean, origin == HEAD):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1–16 complete through SUIUSDT), 8,863 contiguous shards (indices 0–8862), all hashes match current. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running.
 - `research/data_manifest.json`: 18 verified assets, all 26,280/26,280; `XMRUSDT`/`MATICUSDT` absent. Fail-closed gate holds.
 - `research/universe_manifest.json`: `XMRUSDT`/`MATICUSDT` carry `exclusion_reason` (insufficient history) from commit `b08421db` (2026-10-16T16:18:32Z); both delisted (last candles 2024-02-20 and 2024-09-10); exclusion correct and current.
 - `research_state/checkpoint.json`: `completed_records` = 442368, `current_asset_index` = 16, code_hash matches current.
 - `research_state/campaign_authorization.json`: authorized=true, `authorized_at_utc` 2026-10-18T10:52:32Z, reasons=[], code_hash matches current. Caveat: authorization post-dates exclusion record by ~18.5 h and text does not address `XMRUSDT`/`MATICUSDT`.
-- Orphan cycle dir `3226843c...` (57,686 records/8,878 shards, manifest only 1,156 non-contiguous shards, older code_hash) unreferenced; not a valid cohort-0 completion; left unmodified.
+- Orphan cycle dir `3226843c...` (8,878 on-disk shard files vs 1,156 non-contiguous manifest entries 7719–8874, older code_hash) unreferenced; not a valid cohort-0 completion; left unmodified.
 
 Constraints/Do NOTs: single-writer; no second workflow; no manual Actions dispatch; no paid service/private credentials; no live orders/shorting; no parameter-grid changes; tests must remain 80 passed. No unilateral re-scope, skip, or synthetic fallback.
 
