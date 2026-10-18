@@ -6,7 +6,7 @@ This file is the durable cross-session record. The block below is the single sou
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
 - **Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is COMPLETE.** 497,664 verified records (18 assets × 27,648), 9,972 contiguous shards (`shard_000000.jsonl`–`shard_009971.jsonl`), `cycle_report.json` state=COMPLETE written, `next_cohort_index` = 1, cycle id added to `completed_cycle_ids`, snapshot id `e004c6ff0c18a2db6948453bc1488138808563ddfa7138185d693c5bc741106a` added to `completed_snapshot_ids`.
-- `git rev-parse HEAD` = `94bcffa3a74bfc17ae241ea4dee26c71d84e88b8` (local == origin/main; `git status --short` empty). Latest commit `94bcffa3` is a handoff-only checkpoint atop `36739056`.
+- `git rev-parse HEAD` = `ece410d051ba5c637cb061c6eead8cae9ad591d4` (local == origin/main; `git status --short` empty). Latest commit `ece410d0` is a handoff-only checkpoint atop `94bcffa3`.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (recomputed via `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; matches `research_state/checkpoint.json` and `campaign_authorization.json`).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085` (from `config.load_research_spec()`, matches `universe_manifest.json` and `campaign_authorization.json`).
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (recomputed via sha256 over canonical JSON of `research/data_manifest.json`; matches `results_manifest.json`).
@@ -62,7 +62,7 @@ This file is the durable cross-session record. The block below is the single sou
 
 ## Completion verified by this agent — 2026-10-18T16:40Z
 
-Verified live against HEAD `94bcffa3a74bfc17ae241ea4dee26c71d84e88b8` (local == origin/main, `git status --short` empty):
+Verified live against HEAD `ece410d051ba5c637cb061c6eead8cae9ad591d4` (local == origin/main, `git status --short` empty):
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` — matches `checkpoint.json` and `campaign_authorization.json`.
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085` — matches `universe_manifest.json` and `campaign_authorization.json`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` — recomputed (sha256 over canonical JSON of `research/data_manifest.json`); matches `results_manifest.json` in the completed cycle dir.
@@ -75,6 +75,20 @@ Verified live against HEAD `94bcffa3a74bfc17ae241ea4dee26c71d84e88b8` (local == 
 
 ## Initial task message for next agent
 
-**Task: Campaign finished — no action required. Await a new universe snapshot/refresh.**
+**Subject: Quantitative Breakout Trading Strategy Research — Campaign COMPLETE, no further action required**
 
-Do NOT re-run the campaign. Do NOT modify `src/`, authorization artifact, universe manifest, or orphan cycle `3226843c...`. Report campaign as finished.
+**Status:** Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is fully complete and persisted on `main` at HEAD `ece410d051ba5c637cb061c6eead8cae9ad591d4`. Working tree clean, 80/80 tests passing.
+
+**What was done:**
+- 497,664 verified experiment records across 18 assets (27,648 per asset), stored as 9,972 contiguous JSONL shards in `research/campaign_cycles/0f52f6c9.../results_shards/577e87e2.../`.
+- `cycle_report.json` state=COMPLETE; `results_manifest.json` total_records=497664; `continuous_universe_state.json` records `next_cohort_index`=1, `completed_cycle_ids`=[0f52f6c9...], `completed_snapshot_ids`=[e004c6ff...].
+- Two delisted assets (`XMRUSDT`, `MATICUSDT`) were excluded via `assets_override` in `scripts/resume_cycle_cohort0.py`; source code, authorization artifact, and universe manifest were NOT modified. `holdout_enabled=False`.
+
+**Why nothing further is needed:** The universe contains exactly 20 eligible assets; cohort 0 consumed 18 verified + 2 excluded. Cohort 1 is empty — no further cycles are discoverable from the current snapshot `e004c6ff...`.
+
+**Your task:** Await a new universe snapshot/refresh. Do NOT re-run the campaign. Do NOT modify `src/`, the authorization artifact, the universe manifest, or the orphan cycle dir `3226843c...`. Report the campaign as finished.
+
+**Verification commands to re-check integrity:**
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → expect `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`
+- `PYTHONPATH=src python3 -m pytest -q` → expect 80 passed
+- `git status --short` → expect empty; `git rev-parse HEAD` → expect `ece410d051ba5c637cb061c6eead8cae9ad591d4`
