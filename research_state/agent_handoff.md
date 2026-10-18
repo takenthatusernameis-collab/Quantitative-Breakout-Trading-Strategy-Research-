@@ -2,9 +2,9 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 17:05Z) — CAMPAIGN FINISHED, NO NEW UNIVERSE SNAPSHOT
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 17:06Z) — CAMPAIGN FINISHED, NO NEW UNIVERSE SNAPSHOT
 
-- Revalidated live at HEAD `f89429d17ecae4b5f22a7a503e8e6b54d2821983` (one checkpoint commit ahead of origin/main `2819066f…`; `git status --short` is clean — the auto-regenerated `authorized_at_utc` timestamp in `campaign_authorization.json` was committed; no source/manifest/cycle changes).
+- Revalidated live at HEAD `20655bf2b50f9774703a0aa28042b4e67f23d66d` (one checkpoint commit ahead of origin/main `2819066f…`; `git status --short` is clean — the auto-regenerated `authorized_at_utc` timestamp in `campaign_authorization.json` was committed; no source/manifest/cycle changes).
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` — matches `checkpoint.json` and `campaign_authorization.json`.
 - Tests: 80/80 passed (`PYTHONPATH=src python3 -m pytest tests/ -q`).
 - **No new universe snapshot:** all 5 snapshots in `research/universe_snapshots/` (`6b453df0…`, `869cbbf4…`, `d13d22e6…`, `d41d7c00…`, `e004c6ff…`) hash to the same `baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3` and contain byte-identical 20-asset manifests (18 verified + XMRUSDT/MATICUSDT excluded for insufficient history). Snapshot `e004c6ff…` is the only one referenced by the completed cycle; the other four are unreferenced historical artifacts. Cohort 1 remains empty.
