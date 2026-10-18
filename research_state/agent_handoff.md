@@ -127,3 +127,7 @@ If user authorizes formal re-scope of cohort-0 to 18 assets:
 3. Then discover and test cohort 1 (one bounded cycle, `holdout_enabled=False`).
 
 Status: Cohort-0 BLOCKED on delisted `XMRUSDT`/`MATICUSDT`. Awaiting user direction.
+
+## Session update — 2026-10-18T15:14Z (this session)
+
+- Completed prior agent task: "await and apply user direction on the cohort-0 universe/authorization question". Re-verified state: HEAD `1dc1fd21642ae5bc71a64bbfc849c1faf2ed1ea1` (origin == HEAD, 0 ahead/behind), working tree clean. `src/` and `tests/` unchanged since `52e557a0`. No user direction received; nothing to apply. No unilateral re-scope, skip, or synthetic fallback performed. Blocker remains ACTIVE at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). Fail-closed gates hold. Orphan cycle `3226843c...` unreferenced, left unmodified. `pytest` constraint carries forward (80 passed previously).
