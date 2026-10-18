@@ -1,0 +1,54 @@
+# SOXL Paper Trading Journal
+## Systematic challenge: Outperform buy-and-hold SOXL on hourly candles
+**Start date:** 2026-07-24 09:30 ET  
+**Starting capital:** $10,000 paper  
+**Data source:** Yahoo Finance via yfinance (period=60d, interval=1h) — 420 hourly bars through 2026-10-16 15:30 ET  
+**Costs:** 0.10% round-trip (0.05% commission + 0.05% slippage) applied on position changes  
+**Benchmark:** Pure SOXL buy-and-hold from same start price (~$142.78)
+
+### Strategy v0 (seed)
+Volatility-aware selective long:
+- Compute 20-hour SMA and 14-hour average true range proxy (High-Low).
+- Long signal only when Close > SMA20 **and** ATR < 1.2× rolling 50h median ATR.
+- Target allocation 50% of equity when signal is True, else 0% (cash).
+- Rebalance only when delta notional > $100.
+- Hard note: SOXL is a 3× daily-reset leveraged product — path-dependent decay is real; sitting in cash during high-vol regimes is the primary risk control.
+
+### Session 1 — Initial simulation (full 60d block)
+**Timestamp / candle index:** 2026-07-24 09:30 (index 0) to 2026-10-16 15:30 (index 419)  
+**Action:** Forward-simulated the seed strategy on the full available hourly series.  
+**Entry details:** No single entry; continuous rebalancing per rules above. First possible signal after ~50-bar warmup (~2026-08-04).  
+**Reasoning:** Seed idea from prompt (vol-aware mean-reversion / breakout around rolling average). In a leveraged product, the highest-value decision is often *when not to be invested*. Inverse-to-vol sizing approximated by binary 0/50% with ATR filter.  
+**Immediate result (end of block):**  
+- Strategy equity: $9,733.77  
+- SOXL buy-hold equity: $6,561.41  
+- Excess return: +48.35% relative  
+- Strategy max DD: -20.55%  
+- Buy-hold max DD: -44.62%  
+- % time invested: ~36%  
+- Approximate trade count: 48  
+
+**Honesty note:** This period was a strong downtrend for SOXL (~-34% buy-hold). The strategy’s edge came almost entirely from reduced exposure during high-volatility declines, not from superior entry timing. Absolute return is still negative. No claim of structural edge yet — only that the risk rule improved the path versus pure hold in this sample.
+
+### One concrete improvement hypothesis
+**Hypothesis:** Add a simple trailing exit / tighter risk filter — reduce target allocation from 50% to 30% whenever the strategy’s rolling 20h equity drawdown exceeds 8%.  
+**Test result:** Not yet run.  
+**Expected:** Lower max DD, possibly lower absolute return in recovery phases.  
+
+### Current standing vs benchmark
+| Metric              | Strategy | Buy-Hold SOXL |
+|---------------------|----------|---------------|
+| Final equity        | $9,734   | $6,561        |
+| Total return        | -2.66%   | -34.39%       |
+| Max drawdown        | -20.6%   | -44.6%        |
+| % time invested     | 36%      | 100%          |
+| Excess return       | +48% rel | —             |
+
+### Next experiment
+1. Implement the 30% / 8% DD circuit-breaker variant and re-simulate on the same 420 bars.  
+2. Record whether max DD improves and whether excess return is preserved.  
+3. If neutral or better, keep the tighter risk rule as the new baseline.  
+4. Then advance to a fresh forward block once more hourly data becomes available, or generate a short synthetic continuation matching recent realized vol for testing only (explicitly labeled).
+
+---
+*All trades paper-only. No real orders. Leverage decay and path dependency of SOXL explicitly acknowledged. Journal will be updated after each small, testable change.*
