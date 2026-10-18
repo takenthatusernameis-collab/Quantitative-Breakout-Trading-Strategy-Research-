@@ -156,3 +156,12 @@ Cohort-0 bounded cycle BLOCKED on insufficient verified history for `XMRUSDT` (3
 - Re-anchored repository state: HEAD `fd8ba1cf65c43c36f18503f9e71546316a713512` (main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged).
 - Prior-agent task already COMPLETE; no new authorized action without user direction. Blocker remains ACTIVE.
 - Clear initial task message for next agent preserved in the "Next specific task" section above (await user direction; do not re-scope or skip unilaterally).
+
+## Session update — 2026-10-18T08:50:48Z (this session)
+
+- Read durable handoff; prior-agent task (escalation of cohort-0 data blocker) CONFIRMED COMPLETE. Block remains ACTIVE; no user direction received. No re-scope, skip, or synthetic fallback performed.
+- Re-anchored repository state: HEAD `0ceb65d4121a02d56726a543358717914edf9648` (main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged; HEAD delta is checkpoint-only).
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` remains BLOCKED at asset 17 `XMRUSDT` (3,011 candles) / `MATICUSDT` (7,883 candles) vs 26,280 required. `cycle_report.json` absent. Campaign not running; will fail again at `XMRUSDT` if restarted.
+- `research/data_manifest.json`: 18 verified assets, all at 26,280/26,280 observed/expected. `XMRUSDT` and `MATICUSDT` absent. Fail-closed gate holds.
+- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current), `authorized_at_utc` = `2026-10-18T08:50:24.954445+00:00` (committed at HEAD `0ceb65d4`).
+- Clear initial task message for next agent preserved in the "Next specific task" section above (await user direction; do not re-scope or skip unilaterally).
