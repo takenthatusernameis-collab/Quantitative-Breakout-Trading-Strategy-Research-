@@ -45,10 +45,12 @@ This file is the durable cross-session record. The block below is the single sou
 
 - **None.** Working tree clean (`git status --short` empty). Tests: 80/80 passed.
 
+## Completion verified by this agent — 2026-10-18
+
+Verified: working tree clean; HEAD `06385347` (up to date with origin/main); `compute_code_hash()` = `d0dca298...` matches checkpoint; cohort-0 complete (497,664 records, 9,972 contiguous shards). No further cycles discoverable. Campaign reported as finished.
+
 ## Initial task message for next agent
 
-**Task: Campaign is finished — no action required until a new universe refresh.**
+**Task: Campaign finished — no action required. Await a new universe snapshot/refresh.**
 
-Cohort-0 completion integrity CONFIRMED (2026-10-18T16:25Z, revalidated live against HEAD `d8b9456`): 80/80 tests passed; cycle `0f52f6c9...` has 9,972 contiguous shards (shard_000000–shard_009971) and `cycle_report.json` state=COMPLETE; `research_state/checkpoint.json` completed_records=497664, current_asset_index=18; `continuous_universe_state.json` next_cohort_index=1 with completed_cycle_ids/completed_snapshot_ids populated. Identity hashes re-verified: `compute_code_hash()`=`d0dca298...`, `specification_hash`=`2d22e702...`, `data_manifest_hash`=`d8b0cb7e...`. No cohort 1 exists (universe has 20 eligible assets; 18 verified consumed, 2 delisted). Working tree clean; artifacts persisted to `main`. Local==origin/main.
-
-Do NOT re-run the campaign. Do NOT modify `src/`, authorization artifact, universe manifest, or orphan cycle `3226843c...`. Await a new universe snapshot/refresh before any further cycle work. Report campaign as finished.
+Do NOT re-run the campaign. Do NOT modify `src/`, authorization artifact, universe manifest, or orphan cycle `3226843c...`. Report campaign as finished.
