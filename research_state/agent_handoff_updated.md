@@ -41,15 +41,21 @@ This file is the durable cross-session record. The block below is the single sou
 - Consequence: cohort-0 cycle **cannot** reach 552,960 records and `cycle_report.json` (state COMPLETE) cannot be written. `next_cohort_index` cannot advance to 1, so cohort 1 cannot start.
 - Unblocking requires either (a) verified 3-year hourly data for `XMRUSDT` and `MATICUSDT` added to `research/data_manifest.json` with full attestation, or (b) a formal re-scope of cohort 0 to the 18 available assets (a methodology/cohort-composition change — NOT authorized unilaterally; changes `cycle_id`, expected total, and `completed_cycle_ids` semantics).
 
+## Investigation result — 2026-10-18 UTC (this session)
+
+- Searched local filesystem: no `XMRUSDT`/`MATICUSDT` candle files under `research/data/candles/`; no entries in `research/data_manifest.json` (18 verified assets only).
+- Binance endpoints (`api.binance.com`, `data-api.binance.vision`) remain HTTP 451 / insufficient history; no verified 3-year hourly history obtainable. No alternate provider authorized (no paid service, no private credentials).
+- Conclusion: verified data for `XMRUSDT` and `MATICUSDT` CANNOT be obtained under current constraints. Fail-closed gate holds; no skip, no synthetic fallback, no unilateral re-scope performed.
+
 ## Next specific task (next agent — initial task message)
 
-**Task: Resolve the cohort-0 data blocker; then complete cohort-0 bounded cycle; then discover and test cohort 1.**
+**Task: Escalate cohort-0 data blocker for authorization decision; do NOT complete/re-scope unilaterally.**
 
-1. Acknowledge current state: cohort-0 cycle `0f52f6c9...` is BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 done). `cycle_report.json` absent. `next_cohort_index` = 0. Campaign process failed (not running). Authorization and hashes are valid; tests pass (80).
-2. Investigate data for `XMRUSDT` and `MATICUSDT`: confirm whether verified 3-year hourly history can be obtained (Binance is blocked/insufficient; no local cache in `research/data_manifest.json`). Do NOT skip assets or use synthetic fallback (fail-closed).
-3. If data cannot be obtained, do NOT unilaterally re-scope the cohort. Escalate/document the blocker and await direction on cohort composition (dropping XMR/MATIC changes `cycle_id`, expected total, and `completed_cycle_ids`).
-4. Only once cohort-0 is fully verified complete (`cycle_report.json` state `COMPLETE`, manifest totals == 552,960, all shard hashes/counts verify, `completed_cycle_ids` contains `0f52f6c9...`, `next_cohort_index` advanced to 1), proceed to discover and test cohort 1 (one bounded cycle, `holdout_enabled=False`).
-5. Maintain fail-closed gates for authorization/data; do not trigger GitHub Actions or edit workflow files. Preserve v1 artifacts immutable.
+1. Acknowledge state: cohort-0 cycle `0f52f6c9...` BLOCKED at asset 17 `XMRUSDT`; 442,368/552,960 records (assets 1–16); `cycle_report.json` absent; `next_cohort_index`=0; campaign not running. Data for `XMRUSDT`/`MATICUSDT` confirmed unobtainable (no local cache, Binance 451/insufficient, no authorized alternate provider).
+2. Do NOT re-scope cohort 0 to 18 assets, skip assets, or use synthetic fallback without explicit user/methodology authorization (changes `cycle_id`, expected total, `completed_cycle_ids`).
+3. Escalate to user: request direction on (a) providing verified 3-year hourly data for XMR/MATIC via an authorized source, or (b) formally re-scoping cohort 0 to the 18 available assets with updated cycle metadata.
+4. Until authorized, keep fail-closed gates; do not trigger GitHub Actions or edit workflow files; preserve v1 artifacts. Tests remain 80 passed.
+5. If/when authorized re-scope or data arrives, complete cohort-0 (`cycle_report.json` state COMPLETE, totals == expected, shards verify, `completed_cycle_ids` contains `0f52f6c9...`, `next_cohort_index`→1), then discover/test cohort 1 (one bounded cycle, `holdout_enabled=False`).
 
 Constraints: single-writer concurrency; no second workflow; no manual Actions dispatch; no paid service; no private credentials; no live orders; no shorting; no parameter-grid changes.
 
