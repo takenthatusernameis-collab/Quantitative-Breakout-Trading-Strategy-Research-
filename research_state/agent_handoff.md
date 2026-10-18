@@ -2,10 +2,10 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 08:29Z)
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 08:45Z)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
-- Re-anchored this session: `git rev-parse HEAD` = `98cad4c49fdaee65df928a02fc19c9d790fca650` (branch main, up to date with origin). Working tree clean. Two checkpoint-only commits since `af17d03d` (touching only `research_state/agent_handoff.md` and `research_state/agent_handoff_updated.md`); source unchanged vs `e8df60ce`; `compute_code_hash()` == `d0dca298...`.
+- Re-anchored this session: `git rev-parse HEAD` = `981bd9d26bc2ced5a434215a42ba5e550d31e912` (branch main, up to date with origin). Working tree clean. One checkpoint-only commit since `1e6bd2ae` (touching only `research_state/agent_handoff.md`, `research_state/agent_handoff_updated.md`, `research_state/campaign_authorization.json`); source unchanged; `compute_code_hash()` == `d0dca298...`.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (current source; unchanged).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (recomputed via `campaign._data_manifest_hash()` on the live file — matches).
@@ -14,7 +14,7 @@ This file is the durable cross-session record. The block below is the single sou
 
 ## Authorization status — PASSED (re-bound)
 
-- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current), `authorized_at_utc` = `2026-10-18T08:21:15.329616+00:00` (as committed at HEAD `af17d03d`; the working tree is clean).
+- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current), `authorized_at_utc` = `2026-10-18T08:44:07.909866+00:00` (as committed at HEAD `981bd9d2`; the working tree is clean).
 - `research_state/pilot_evidence.json`: Updated with current code hash; `pilot_passed=false`, `campaign_authorized=false` (evidence-only). `pilot_gate_validator.validate_pilot_evidence()` -> `True, []` (re-run this session).
 - `CampaignRunner._verify_pilot_gate()` passes with current protocol/code hashes.
 
@@ -54,10 +54,10 @@ This file is the durable cross-session record. The block below is the single sou
 
 **Task: Await user direction on the cohort-0 data blocker; then, only if authorized, complete cohort-0 and test cohort 1. Do NOT re-scope or skip unilaterally.**
 
-Current state (revalidated this session, HEAD `98cad4c49fdaee65df928a02fc19c9d790fca650`, working tree clean):
-- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete), 8863 shards (indices 0–8862 all present), `total_records` = 442368. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running; will fail again at `XMRUSDT` if restarted.
-- `research/data_manifest.json`: 18 verified assets. `XMRUSDT` (3,011 candles) and `MATICUSDT` (7,883 candles) absent — both far below the 26,280 required. **Live re-probe this session:** `api.binance.com` still HTTP 451, but `data-api.binance.vision` returns **HTTP 200** with valid hourly candles, so the blocker is *insufficient history*, not endpoint reachability. No authorized alternate provider, paid service, or private credentials. Fail-closed gate holds — no skip, no synthetic fallback.
-- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current), `authorized_at_utc` = `2026-10-18T08:21:15.329616+00:00` (committed at HEAD).
+Current state (revalidated this session, HEAD `981bd9d26bc2ced5a434215a42ba5e550d31e912`, working tree clean):
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete), 8863 shards (indices 0–8862 all present), `total_records` = 442368, no `state` field. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running; will fail again at `XMRUSDT` if restarted.
+- `research/data_manifest.json`: 18 verified assets, all 26,280/26,280 observed/expected. `XMRUSDT` (3,011 continuous hourly candles, 2023-10-17 → 2024-02-19) and `MATICUSDT` (7,883 continuous candles → 2025-09-09) absent — both far below the 26,280 required. **Live re-probe this session:** `api.binance.com` still HTTP 451; `data-api.binance.vision` returns HTTP 200 with valid continuous hourly candles, so the blocker is *insufficient history*, not endpoint reachability. No authorized alternate provider, paid service, or private credentials. Fail-closed gate holds — no skip, no synthetic fallback.
+- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current), `authorized_at_utc` = `2026-10-18T08:44:07.909866+00:00` (committed at HEAD).
 - Escalation delivered to user; awaiting direction.
 
 Do NOT:
@@ -159,16 +159,19 @@ Cohort-0 bounded cycle BLOCKED on insufficient verified history for `XMRUSDT` (3
 
 Cohort-0 bounded cycle BLOCKED on insufficient verified history for `XMRUSDT` (3,011 candles) and `MATICUSDT` (7,883 candles) vs the 26,280 required — endpoint reachability is NOT the blocker (data-api.binance.vision returns HTTP 200). Blocker escalated to user; awaiting direction on data provision or formal re-scope. Cannot complete or advance to cohort 1 until resolved.
 
-## Session update — 2026-10-18T08:43:43Z (this session)
-
-- Read durable handoff and confirmed prior-agent task: COMPLETE (escalation of cohort-0 data blocker delivered to user; no user direction received this session). Block remains ACTIVE. No re-scope, skip, or synthetic fallback performed.
-- Re-anchored repository state: HEAD `983e64fdbbbbf01119b2c669166bd275d4800f7c` (main, origin up to date). Working tree clean. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged).
-- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` remains BLOCKED at asset 17 `XMRUSDT`. `cycle_report.json` absent. Campaign not running.
-- No user direction received this session. Prior-agent task (escalation) confirmed COMPLETE. Clear initial task message for next agent preserved in the "Next specific task" section above.
-
 ## Session update — 2026-10-18T08:44:00Z (this session)
 
 - Read durable handoff; prior-agent task (escalation of cohort-0 data blocker) CONFIRMED COMPLETE. Block remains ACTIVE; no user direction received. No re-scope, skip, or synthetic fallback performed.
 - Re-anchored repository state: HEAD `1e6bd2aecfd28e9e1b02026c058045b188e79a81` (main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged).
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` remains BLOCKED at asset 17 `XMRUSDT` (3,011 candles) / `MATICUSDT` (7,883 candles) vs 26,280 required. `cycle_report.json` absent. Campaign not running.
+- Clear initial task message for next agent preserved in the "Next specific task" section above (await user direction; do not re-scope or skip unilaterally).
+
+## Session update — 2026-10-18T08:45:00Z (this session)
+
+- Read durable handoff; prior-agent task (escalation of cohort-0 data blocker) CONFIRMED COMPLETE. Block remains ACTIVE; no user direction received. No re-scope, skip, or synthetic fallback performed.
+- Re-anchored repository state: HEAD `981bd9d26bc2ced5a434215a42ba5e550d31e912` (main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged; the commit ahead of `1e6bd2ae` is checkpoint-only, touching only handoff/authorization state).
+- Independently recomputed hashes this session: `code_hash` = `d0dca298...` (== current); `_data_manifest_hash(live research/data_manifest.json)` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (== recorded). `research/data_manifest.json` still contains exactly 18 verified assets, all at 26,280/26,280 observed/expected candles.
+- **Independent live re-probe of Binance this session (network access available):** `https://api.binance.com/api/v3/klines?symbol=XMRUSDT` -> **HTTP 451** (still blocked). `https://data-api.binance.vision/api/v3/klines?symbol=XMRUSDT` paginated from `1697558400000` (2023-10-17T00:00Z) forward yields exactly **3,011** continuous hourly candles ending at `1708394400000` (2024-02-19), 0 gap-jumps; `MATICUSDT` yields exactly **7,883** continuous candles ending at `1725933600000` (2025-09-09), 0 gap-jumps. Both far below the required 26,280. Confirms the blocker is **insufficient history**, not endpoint reachability. Read-only probe only; no new authorized provider, paid service, or private credentials used.
+- Confirmed fail-closed gate in source: `src/breakout_research/campaign.py:378-387` raises `RuntimeError` on `DataUnavailableError` for any required eligible asset — no asset skip, no synthetic fallback. `assets_override` in `continuous_universe_coordinator.py:124` only filters the asset list; cohort 0 still includes all 20 assets (`XMRUSDT`, `DOTUSDT`, `MATICUSDT`, `ATOMUSDT`), so restarting the campaign fails again at `XMRUSDT`.
+- `research/campaign_cycles/0f52f6c9.../results_manifest.json`: `total_records` = 442,368, shards present through index 8862, no `state` field (incomplete). `cycle_report.json` ABSENT. `research_state/continuous_universe_state.json`: `next_cohort_index` = 0, `current_cycle_id` = `0f52f6c9...`, `completed_cycle_ids` = []. `research_state/checkpoint.json`: `completed_records` = 442368, `current_asset_index` = 16, `code_hash` = `d0dca298...` (== current).
 - Clear initial task message for next agent preserved in the "Next specific task" section above (await user direction; do not re-scope or skip unilaterally).
