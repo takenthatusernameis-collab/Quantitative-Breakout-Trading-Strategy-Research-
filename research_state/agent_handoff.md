@@ -48,11 +48,17 @@ This file is the durable cross-session record. The block below is the single sou
 - Blocker remains ACTIVE and genuine. Cohort-0 cycle blocked at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). `next_cohort_index` = 0. Campaign not running. Authorization caveat unresolved.
 - Orphan cycle dir `3226843c...` unreferenced; not a valid cohort-0 completion; left unmodified.
 
+## Session update — 2026-10-18T13:47Z (this session)
+
+- Read the durable handoff. Prior-agent task ("await and apply user direction on the cohort-0 universe/authorization question") revalidated: blocker confirmed genuine and unchanged. **No user direction on re-scoping received this session** (board carries no peer messages/direction). Nothing to apply; **no unilateral re-scope, skip, or synthetic fallback performed**. Prior task complete as a confirmed wait.
+- Re-anchored repository state: HEAD `c16f0715` (branch main, origin == HEAD, 0 ahead / 0 behind). Working tree clean. `src/`/`tests/` unchanged. `compute_code_hash()` = `d67b1cf1...` (current source). No source changes made by this agent.
+- Blocker remains ACTIVE and genuine. Cohort-0 cycle blocked at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). `next_cohort_index` = 0. Campaign not running. Authorization caveat unresolved.
+
 ## Initial task message for next agent
 
 **Task: Await and apply user direction on the cohort-0 universe/authorization question.** The blocker is confirmed genuine — `XMRUSDT` last traded 2024-02-20 and `MATICUSDT` last traded 2024-09-10 (both delisted from Binance spot), so 26,280 candles is unobtainable by any re-fetch. **Do NOT re-scope, skip, or synthesize unilaterally.**
 
-Current state (revalidated 2026-10-18T13:41Z, HEAD `9b37b2be`, working tree clean, origin == HEAD):
+Current state (revalidated 2026-10-18T13:47Z, HEAD `c16f0715`, working tree clean, origin == HEAD):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1–16 complete through SUIUSDT), 8,863 contiguous shards (indices 0–8862), all relevant hashes tracked. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running.
 - `research/data_manifest.json`: 18 verified assets, all 26,280/26,280; `XMRUSDT`/`MATICUSDT` absent. Fail-closed gate holds.
 - `research/universe_manifest.json`: `XMRUSDT`/`MATICUSDT` carry `exclusion_reason` (insufficient history) from commit `b08421db` (2026-10-16T16:18:32Z); both delisted (last candles 2024-02-20 and 2024-09-10); exclusion correct and current.
