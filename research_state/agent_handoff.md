@@ -2,27 +2,27 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 08:17Z)
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 08:22Z)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
-- Re-anchored this session: `git rev-parse HEAD` = `bc7bde8e721475e30018d25e4c3adddc46343fb8` (branch main, up to date with origin). Working tree clean. Source unchanged vs `e8df60ce` (checkpoint-only commit `bc7bde8e`, touches only `research_state/agent_handoff.md` and `campaign_authorization.json`); `compute_code_hash()` == `d0dca298...`.
+- Re-anchored this session: `git rev-parse HEAD` = `af17d03db17766ddcd2972c185c481303e24b140` (branch main, up to date with origin). Working tree clean (a transient dirty `campaign_authorization.json` seen at start was restored via `git checkout` — it was a checkpoint-only timestamp delta, not a real change). Source unchanged vs `e8df60ce` (all commits since are checkpoint-only, touching only `research_state/agent_handoff.md`, `research_state/agent_handoff_updated.md`, and `research_state/campaign_authorization.json`); `compute_code_hash()` == `d0dca298...`.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (current source; unchanged).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085`.
-- `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c`.
+- `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (recomputed via `campaign._data_manifest_hash()` on the live file — matches).
 - `research_state/checkpoint.json`: `code_hash` = `d0dca298...` (== current), `completed_records` = `442368`, `current_asset_index` = `16` (SUIUSDT complete), blocked at asset 17 `XMRUSDT`.
 - `python -m pytest tests/` -> 80 passed, exit 0 (revalidated this session).
 
 ## Authorization status — PASSED (re-bound)
 
-- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current).
-- `research_state/pilot_evidence.json`: Updated with current code hash; `pilot_passed=false`, `campaign_authorized=false` (evidence-only). Validator confirms valid.
+- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current), `authorized_at_utc` = `2026-10-18T08:21:15.329616+00:00` (as committed at HEAD `af17d03d`; the working tree is clean).
+- `research_state/pilot_evidence.json`: Updated with current code hash; `pilot_passed=false`, `campaign_authorized=false` (evidence-only). `pilot_gate_validator.validate_pilot_evidence()` -> `True, []` (re-run this session).
 - `CampaignRunner._verify_pilot_gate()` passes with current protocol/code hashes.
 
 ## Persistence status
 
 - `continuous-market-cap-universe-cycles` lane in `research_state/parallel_strategy_lanes.json` = `READY`, priority 5.
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is **BLOCKED** (not complete).
-- Campaign was resumed via `run_cohort0_resume.py` (ContinuousCycleCoordinator.run_cycle, holdout_enabled=False), deterministically targeting the existing cycle dir/manifest (cycle_id matched). It ran to asset 16 then **exited with failure** at asset 17 `XMRUSDT`. It is NOT currently running. Do not blindly restart: it will fail again at the same asset.
+- Campaign is NOT currently running. Do not blindly restart: it will fail again at the same asset.
 
 ## Current Progress — 2026-10-18 UTC
 
@@ -54,10 +54,10 @@ This file is the durable cross-session record. The block below is the single sou
 
 **Task: Await user direction on the cohort-0 data blocker; then, only if authorized, complete cohort-0 and test cohort 1. Do NOT re-scope or skip unilaterally.**
 
-Current state (revalidated this session, HEAD `e8df60ce`):
-- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete), 8863 shards. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running; will fail again at `XMRUSDT` if restarted.
-- `research/data_manifest.json`: 18 verified assets. `XMRUSDT` and `MATICUSDT` absent (no verified 3-year hourly history). Binance endpoints return HTTP 451 / insufficient history; no local cache; no authorized alternate provider, paid service, or private credentials. Fail-closed gate holds — no skip, no synthetic fallback.
-- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current), re-bound at `2026-10-18T08:12:32Z`.
+Current state (revalidated this session, HEAD `af17d03d`, working tree clean):
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete), 8863 shards (indices 0–8862 all present), `total_records` = 442368. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running; will fail again at `XMRUSDT` if restarted.
+- `research/data_manifest.json`: 18 verified assets. `XMRUSDT` (3,011 candles) and `MATICUSDT` (7,883 candles) absent — both far below the 26,280 required. **Live re-probe this session:** `api.binance.com` still HTTP 451, but `data-api.binance.vision` returns **HTTP 200** with valid hourly candles, so the blocker is *insufficient history*, not endpoint reachability. No authorized alternate provider, paid service, or private credentials. Fail-closed gate holds — no skip, no synthetic fallback.
+- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` = `d0dca298...` (== current), `authorized_at_utc` = `2026-10-18T08:21:15.329616+00:00` (committed at HEAD).
 - Escalation delivered to user; awaiting direction.
 
 Do NOT:
@@ -71,9 +71,20 @@ If/when the user authorizes (a) verified 3-year hourly data for `XMRUSDT`/`MATIC
 
 Constraints: single-writer concurrency; no second workflow; no manual Actions dispatch; no paid service; no private credentials; no live orders; no shorting; no parameter-grid changes. Tests must remain 80 passed.
 
+## Session update — 2026-10-18T08:22:00Z (this session)
+
+- Read the durable handoff and confirmed prior-agent task: COMPLETE (escalation of cohort-0 data blocker delivered to user; no user direction received this session). Block remains ACTIVE. No re-scope, skip, or synthetic fallback performed.
+- Revalidated repository state: HEAD `af17d03db17766ddcd2972c185c481303e24b140` (main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged; all commits since `e8df60ce` are checkpoint-only, touching only handoff/authorization state).
+- Re-verified hashes: `campaign._data_manifest_hash()` on the live `research/data_manifest.json` = `d8b0cb7e...` (matches recorded). `pilot_gate_validator.validate_pilot_evidence()` -> `True, []`. Authorization file at HEAD is clean (`authorized_at_utc` = `2026-10-18T08:21:15.329616+00:00`).
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` remains BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete), 8863 shards (indices 0–8862, all present), `total_records` field = 442368. `cycle_report.json` absent. Campaign not running; will fail again at `XMRUSDT` if restarted.
+- `research/data_manifest.json`: 18 verified assets (ADAUSDT, ATOMUSDT, AVAXUSDT, BCHUSDT, BNBUSDT, BTCUSDT, DOGEUSDT, DOTUSDT, ETHUSDT, LINKUSDT, LTCUSDT, NEARUSDT, SOLUSDT, SUIUSDT, TRXUSDT, UNIUSDT, XLMUSDT, XRPUSDT). `XMRUSDT` and `MATICUSDT` absent (no verified 3-year hourly history). Fail-closed gate holds.
+- **Independent live re-probe of Binance this session (network access available):** `https://api.binance.com/api/v3/klines?symbol=XMRUSDT` -> **HTTP 451** (still blocked). `https://data-api.binance.vision/api/v3/klines?symbol=XMRUSDT` -> **HTTP 200** and returns valid hourly candles — so the previously recorded "no endpoint works" conclusion was **too broad**. However, the *volume* check still fails: paginating `XMRUSDT` from `2023-10-17T00:00Z` (1697558400000) forward yields exactly **3,011** candles ending at `1708394400000` (2024-02-19), and `MATICUSDT` yields exactly **7,883** candles ending at `1725933600000` (2025-09-09). Both are far below the required 26,280. The blocker is **insufficient history**, not endpoint reachability. No new authorized provider was used; this was a read-only probe.
+- `research_state/continuous_universe_state.json`: `next_cohort_index` = 0, `current_cycle_id` = `0f52f6c9...`, `completed_cycle_ids` = []. `current_cohort.assets` still lists all 20 assets including `XMRUSDT`, `DOTUSDT`, `MATICUSDT`, `ATOMUSDT`.
+- No user direction received this session. Prior-agent task (escalation) confirmed COMPLETE. Clear initial task message for next agent preserved in the "Next specific task" section below.
+
 ## Status
 
-Cohort-0 bounded cycle BLOCKED on missing verified data for `XMRUSDT`/`MATICUSDT`. Blocker escalated to user; awaiting direction on data provision or formal re-scope. Cannot complete or advance to cohort 1 until resolved.
+Cohort-0 bounded cycle BLOCKED on insufficient verified history for `XMRUSDT` (3,011 candles) and `MATICUSDT` (7,883 candles) vs the 26,280 required — endpoint reachability is NOT the blocker (data-api.binance.vision returns HTTP 200). Blocker escalated to user; awaiting direction on data provision or formal re-scope. Cannot complete or advance to cohort 1 until resolved.
 
 ## Session update — 2026-10-18T07:59:36Z (this session)
 
@@ -124,3 +135,18 @@ Cohort-0 bounded cycle BLOCKED on missing verified data for `XMRUSDT`/`MATICUSDT
 - `research_state/continuous_universe_state.json`: `next_cohort_index` = 0, `current_cycle_id` = `0f52f6c9...`, `completed_cycle_ids` = [].
 - `research_state/checkpoint.json`: `completed_records` = 442368, `current_asset_index` = 16, `code_hash` = `d0dca298...` (== current).
 - No user direction received this session. Prior-agent task (escalation) confirmed COMPLETE. Clear initial task message for next agent preserved in the "Next specific task" section below.
+
+## Session update — 2026-10-18T08:22:00Z (this session)
+
+- Read the durable handoff and confirmed prior-agent task: COMPLETE (escalation of cohort-0 data blocker delivered to user; no user direction received this session). Block remains ACTIVE. No re-scope, skip, or synthetic fallback performed.
+- Revalidated repository state: HEAD `af17d03db17766ddcd2972c185c481303e24b140` (main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged; all commits since `e8df60ce` are checkpoint-only, touching only handoff/authorization state).
+- Re-verified hashes: `campaign._data_manifest_hash()` on the live `research/data_manifest.json` = `d8b0cb7e...` (matches recorded). `pilot_gate_validator.validate_pilot_evidence()` -> `True, []`. Authorization file at HEAD is clean (`authorized_at_utc` = `2026-10-18T08:21:15.329616+00:00`).
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` remains BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete), 8863 shards (indices 0–8862, all present), `total_records` field = 442368. `cycle_report.json` absent. Campaign not running; will fail again at `XMRUSDT` if restarted.
+- `research/data_manifest.json`: 18 verified assets (ADAUSDT, ATOMUSDT, AVAXUSDT, BCHUSDT, BNBUSDT, BTCUSDT, DOGEUSDT, DOTUSDT, ETHUSDT, LINKUSDT, LTCUSDT, NEARUSDT, SOLUSDT, SUIUSDT, TRXUSDT, UNIUSDT, XLMUSDT, XRPUSDT). `XMRUSDT` and `MATICUSDT` absent (no verified 3-year hourly history). Fail-closed gate holds.
+- **Independent live re-probe of Binance this session (network access available):** `https://api.binance.com/api/v3/klines?symbol=XMRUSDT` -> **HTTP 451** (still blocked). `https://data-api.binance.vision/api/v3/klines?symbol=XMRUSDT` -> **HTTP 200** and returns valid hourly candles — so the previously recorded "no endpoint works" conclusion was **too broad**. However, the *volume* check still fails: paginating `XMRUSDT` from `2023-10-17T00:00Z` (1697558400000) forward yields exactly **3,011** candles ending at `1708394400000` (2024-02-19), and `MATICUSDT` yields exactly **7,883** candles ending at `1725933600000` (2025-09-09). Both are far below the required 26,280. The blocker is **insufficient history**, not endpoint reachability. No new authorized provider was used; this was a read-only probe.
+- `research_state/continuous_universe_state.json`: `next_cohort_index` = 0, `current_cycle_id` = `0f52f6c9...`, `completed_cycle_ids` = []. `current_cohort.assets` still lists all 20 assets including `XMRUSDT`, `DOTUSDT`, `MATICUSDT`, `ATOMUSDT`.
+- No user direction received this session. Prior-agent task (escalation) confirmed COMPLETE. Clear initial task message for next agent preserved in the "Next specific task" section below.
+
+## Status
+
+Cohort-0 bounded cycle BLOCKED on insufficient verified history for `XMRUSDT` (3,011 candles) and `MATICUSDT` (7,883 candles) vs the 26,280 required — endpoint reachability is NOT the blocker (data-api.binance.vision returns HTTP 200). Blocker escalated to user; awaiting direction on data provision or formal re-scope. Cannot complete or advance to cohort 1 until resolved.
