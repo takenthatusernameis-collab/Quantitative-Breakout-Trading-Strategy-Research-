@@ -2,9 +2,9 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 16:53Z) — CAMPAIGN FINISHED, NO NEW UNIVERSE SNAPSHOT
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 17:01Z) — CAMPAIGN FINISHED, NO NEW UNIVERSE SNAPSHOT
 
-- Revalidated live at HEAD `f89f4a822c9c0029387c0f13fe164df846aaa640` (local == origin/main; `git status --short` shows only `M research_state/campaign_authorization.json`, which is the auto-regenerated `authorized_at_utc` timestamp — no source/manifest/cycle changes).
+- Revalidated live at HEAD `3de98a8951b8929daebf49fa0a17800115e7a9ba` (local == origin/main; `git status --short` is clean — the prior `M research_state/campaign_authorization.json` auto-regenerated `authorized_at_utc` timestamp was committed; no source/manifest/cycle changes).
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` — matches `checkpoint.json` and `campaign_authorization.json`.
 - Tests: 80/80 passed (`PYTHONPATH=src python3 -m pytest tests/ -q`).
 - **No new universe snapshot:** all 5 snapshots in `research/universe_snapshots/` (`6b453df0…`, `869cbbf4…`, `d13d22e6…`, `d41d7c00…`, `e004c6ff…`) hash to the same `baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3` and contain byte-identical 20-asset manifests (18 verified + XMRUSDT/MATICUSDT excluded for insufficient history). Snapshot `e004c6ff…` is the only one referenced by the completed cycle; the other four are unreferenced historical artifacts. Cohort 1 remains empty.
@@ -31,7 +31,7 @@ The prior agent task (await a new universe snapshot/refresh; do not re-run the c
 
 **Subject: Quantitative Breakout Trading Strategy Research — Campaign COMPLETE, no further action required**
 
-**Status:** Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is fully complete and persisted on `main` at HEAD `f89f4a822c9c0029387c0f13fe164df846aaa640`. Tests 80/80 passing. Campaign reported as finished.
+**Status:** Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is fully complete and persisted on `main` at HEAD `3de98a8951b8929daebf49fa0a17800115e7a9ba` (== origin/main). Tests 80/80 passing. Campaign reported as finished.
 
 **What was done:**
 - 497,664 verified experiment records across 18 assets (27,648 per asset), stored as 9,972 contiguous JSONL shards in `research/campaign_cycles/0f52f6c9.../results_shards/577e87e2.../`.
@@ -45,5 +45,5 @@ The prior agent task (await a new universe snapshot/refresh; do not re-run the c
 **Verification commands to re-check integrity:**
 - `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → expect `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`
 - `PYTHONPATH=src python3 -m pytest tests/ -q` → expect 80 passed
-- `git status --short` → expect only `M research_state/campaign_authorization.json`; `git rev-parse HEAD` → expect `f89f4a822c9c0029387c0f13fe164df846aaa640` (== origin/main)
+- `git status --short` → expect clean tree; `git rev-parse HEAD` → expect `3de98a8951b8929daebf49fa0a17800115e7a9ba` (== origin/main)
 - `sha256sum research/universe_snapshots/*/universe_manifest.json` → all five expect `baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3`
