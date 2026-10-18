@@ -227,3 +227,11 @@ If/when the user authorizes (a) verified 3-year hourly data for `XMRUSDT`/`MATIC
 2. Then discover and test cohort 1 (one bounded cycle, `holdout_enabled=False`).
 
 Constraints: single-writer concurrency; no second workflow; no manual Actions dispatch; no paid service; no private credentials; no live orders; no shorting; no parameter-grid changes. Tests must remain 80 passed.
+
+## Session update — 2026-10-18T09:16:36Z (this session)
+
+- Read durable handoff; prior-agent task (escalation of cohort-0 data blocker) CONFIRMED COMPLETE. Block remains ACTIVE; no user direction received. No re-scope, skip, or synthetic fallback performed.
+- Re-anchored repository state: HEAD `a661dbedd9f4ba433466f59dbcceec13aa667b84` (main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged).
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` remains BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete), 8,863 shards (indices 0–8862 all present), `total_records` = 442368, `state` null/incomplete. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running; will fail again at `XMRUSDT` if restarted.
+- `research/data_manifest.json`: 18 verified assets; `XMRUSDT` and `MATICUSDT` absent (no verified 3-year hourly history). Fail-closed gate holds — no skip, no synthetic fallback.
+- Escalation delivered to user; awaiting direction. No user direction received this session.
