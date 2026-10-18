@@ -6,7 +6,7 @@ This file is the durable cross-session record. The block below is the single sou
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
 - **Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is COMPLETE.** 497,664 verified records (18 assets × 27,648), 9,972 contiguous shards (`shard_000000.jsonl`–`shard_009971.jsonl`), `cycle_report.json` state=COMPLETE written, `next_cohort_index` = 1, cycle id added to `completed_cycle_ids`, snapshot id `e004c6ff0c18a2db6948453bc1488138808563ddfa7138185d693c5bc741106a` added to `completed_snapshot_ids`.
-- `git rev-parse HEAD` = `ece410d051ba5c637cb061c6eead8cae9ad591d4` (local == origin/main; `git status --short` empty). Latest commit `ece410d0` is a handoff-only checkpoint atop `94bcffa3`.
+- `git rev-parse HEAD` = `95bd7771daa027bfb682a79a1871881686f57e14` (local == origin/main; `git status --short` empty). Latest commit `95bd7771` is a handoff-only checkpoint atop `ece410d0`.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (recomputed via `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; matches `research_state/checkpoint.json` and `campaign_authorization.json`).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085` (from `config.load_research_spec()`, matches `universe_manifest.json` and `campaign_authorization.json`).
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (recomputed via sha256 over canonical JSON of `research/data_manifest.json`; matches `results_manifest.json`).
@@ -62,7 +62,7 @@ This file is the durable cross-session record. The block below is the single sou
 
 ## Completion verified by this agent — 2026-10-18T16:40Z
 
-Verified live against HEAD `ece410d051ba5c637cb061c6eead8cae9ad591d4` (local == origin/main, `git status --short` empty):
+Verified live against HEAD `95bd7771daa027bfb682a79a1871881686f57e14` (local == origin/main, `git status --short` empty):
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` — matches `checkpoint.json` and `campaign_authorization.json`.
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085` — matches `universe_manifest.json` and `campaign_authorization.json`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` — recomputed (sha256 over canonical JSON of `research/data_manifest.json`); matches `results_manifest.json` in the completed cycle dir.
@@ -77,7 +77,7 @@ Verified live against HEAD `ece410d051ba5c637cb061c6eead8cae9ad591d4` (local == 
 
 **Subject: Quantitative Breakout Trading Strategy Research — Campaign COMPLETE, no further action required**
 
-**Status:** Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is fully complete and persisted on `main` at HEAD `ece410d051ba5c637cb061c6eead8cae9ad591d4`. Working tree clean, 80/80 tests passing.
+**Status:** Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is fully complete and persisted on `main` at HEAD `95bd7771daa027bfb682a79a1871881686f57e14`. Working tree clean, 80/80 tests passing.
 
 **What was done:**
 - 497,664 verified experiment records across 18 assets (27,648 per asset), stored as 9,972 contiguous JSONL shards in `research/campaign_cycles/0f52f6c9.../results_shards/577e87e2.../`.
@@ -91,4 +91,4 @@ Verified live against HEAD `ece410d051ba5c637cb061c6eead8cae9ad591d4` (local == 
 **Verification commands to re-check integrity:**
 - `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → expect `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`
 - `PYTHONPATH=src python3 -m pytest -q` → expect 80 passed
-- `git status --short` → expect empty; `git rev-parse HEAD` → expect `ece410d051ba5c637cb061c6eead8cae9ad591d4`
+- `git status --short` → expect empty; `git rev-parse HEAD` → expect `95bd7771daa027bfb682a79a1871881686f57e14`
