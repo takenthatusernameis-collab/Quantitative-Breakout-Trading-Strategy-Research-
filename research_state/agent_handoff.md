@@ -49,6 +49,6 @@ Revalidated all integrity checks: code hash `d0dca298869fadfe3ee80b54010f8cb0d19
 **Verification commands to re-check integrity:**
 - `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → expect `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`
 - `PYTHONPATH=src python3 -m pytest tests/ -q` → expect 80 passed
-- `git status --short` → expect clean tree; `git log -1 --oneline` → expect `cac01d83 chore(kilo): checkpoint agent session` (in sync with origin/main)
+- `git status --short` → expect clean tree; `git log -1 --oneline` → expect `c90efccd chore(kilo): checkpoint agent session` (in sync with origin/main)
 - `git ls-remote origin main` → expect `878175df…`
 - `sha256sum research/universe_snapshots/*/universe_manifest.json` → all five expect `baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3`
