@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-CYCLE_ID = "3226843c219b23415e3b5b8470e87f0033f75b80e15e3b8fa16fd6309f2c1caf"
+CYCLE_ID = "0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d"
 CYCLE_DIR = Path(f"research/campaign_cycles/{CYCLE_ID}")
 MANIFEST_PATH = str(CYCLE_DIR / "results_manifest.json")
 SHARD_ROOT = str(CYCLE_DIR / "results_shards")

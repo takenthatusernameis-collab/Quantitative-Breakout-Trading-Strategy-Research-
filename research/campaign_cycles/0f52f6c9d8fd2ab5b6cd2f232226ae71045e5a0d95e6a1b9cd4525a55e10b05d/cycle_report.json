@@ -1,0 +1,53 @@
+{
+  "cycle_id": "0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d",
+  "snapshot_id": "e004c6ff0c18a2db6948453bc1488138808563ddfa7138185d693c5bc741106a",
+  "cohort_index": 0,
+  "state": "COMPLETE",
+  "result": {
+    "status": "CAMPAIGN_PARTIAL",
+    "total_experiments": 497664,
+    "executed_this_session": 20022,
+    "assets_processed": 18,
+    "holdout_enabled": false,
+    "shard_bytes": 428259601
+  },
+  "cohort_assets": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "SOLUSDT",
+    "TRXUSDT",
+    "DOGEUSDT",
+    "LINKUSDT",
+    "ADAUSDT",
+    "NEARUSDT",
+    "XLMUSDT",
+    "BCHUSDT",
+    "LTCUSDT",
+    "UNIUSDT",
+    "AVAXUSDT",
+    "SUIUSDT",
+    "DOTUSDT",
+    "ATOMUSDT"
+  ],
+  "excluded_assets": [
+    {
+      "symbol": "XMRUSDT",
+      "rank": 17,
+      "exclusion_reason": "insufficient_hourly_history: observed 3011 candles, required 26280 (3-year minimum); delisted from Binance spot (last trade ~2024-02-20)"
+    },
+    {
+      "symbol": "MATICUSDT",
+      "rank": 19,
+      "exclusion_reason": "insufficient_hourly_history: observed 7883 candles, required 26280 (3-year minimum); delisted from Binance spot (last trade ~2024-09-10)"
+    }
+  ],
+  "expected_total": 497664,
+  "actual_total": 497664,
+  "shards": 9972,
+  "shard_contiguity": "0..9971",
+  "per_asset_records": 27648,
+  "holdout_evaluated": false,
+  "completed_utc": "2026-10-18T16:40:00.000000+00:00"
+}
