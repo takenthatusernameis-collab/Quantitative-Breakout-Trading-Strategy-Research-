@@ -2,10 +2,10 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 09:51Z)
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 09:55Z)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
-- Re-anchored this session: `git rev-parse HEAD` = `83b419b9693c40bb7ce54b8c2cb3643625f97c94` (branch main, origin up to date). Working tree clean. Source unchanged.
+- Re-anchored this session: `git rev-parse HEAD` = `aa059e62dee4152c03d8829d6098ae2eed0b349a` (branch main, origin up to date). Working tree clean. Source unchanged.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (current source; unchanged).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (recomputed on live `research/data_manifest.json`).
@@ -46,7 +46,7 @@ This file is the durable cross-session record. The block below is the single sou
 
 **Task: Await user direction on the cohort-0 data blocker; then, only if authorized, complete cohort-0 and test cohort 1. Do NOT re-scope or skip unilaterally.**
 
-Current state (revalidated 2026-10-18T09:51Z, HEAD `83b419b9693c40bb7ce54b8c2cb3643625f97c94`, working tree clean):
+Current state (revalidated 2026-10-18T09:55Z, HEAD `aa059e62dee4152c03d8829d6098ae2eed0b349a`, working tree clean):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 records (assets 1–16 complete: BTC,ETH,BNB,XRP,SOL,TRX,DOGE,LINK,ADA,NEAR,XLM,BCH,LTC,UNI,AVAX,SUI), 8863 shards (indices 0–8862 all present). `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running; will fail again at `XMRUSDT` if restarted.
 - `research/data_manifest.json`: 18 verified assets only; `XMRUSDT` (~3,011 candles) and `MATICUSDT` (~7,883 candles) absent vs 26,280 required. Insufficient history, not endpoint reachability. No authorized alternate provider, paid service, or private credentials. Fail-closed gate holds.
 - `research_state/checkpoint.json`: code_hash == current, `completed_records` = 442368, `current_asset_index` = 16.
@@ -68,9 +68,10 @@ Constraints: single-writer concurrency; no second workflow; no manual Actions di
 
 Status: Cohort-0 bounded cycle BLOCKED on insufficient verified history for `XMRUSDT` and `MATICUSDT`. Blocker escalated to user; awaiting direction on data provision or formal re-scope. Cannot complete or advance to cohort 1 until resolved.
 
-## Session update — 2026-10-18T09:51:47Z (this session)
+## Session update — 2026-10-18T09:55:47Z (this session)
 
 - Read the durable handoff; prior-agent task (escalation of cohort-0 data blocker) CONFIRMED COMPLETE. Block remains ACTIVE; no user direction received. No re-scope, skip, or synthetic fallback performed.
-- Re-anchored repository state: HEAD `83b419b9693c40bb7ce54b8c2cb3643625f97c94` (branch main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged).
+- Re-anchored repository state: HEAD `aa059e62dee4152c03d8829d6098ae2eed0b349a` (branch main, origin up to date). Working tree clean. `python -m pytest tests/` -> 80 passed, exit 0. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (unchanged).
 - Revalidated: `research/data_manifest.json` = 18 verified assets only; `XMRUSDT` (~3,011 candles) and `MATICUSDT` (~7,883 candles) absent vs 26,280 required. Fail-closed gate holds. Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` blocked at asset 17 `XMRUSDT` (442,368/552,960 records). `next_cohort_index` = 0; campaign not running.
-- Prior-agent task confirmed complete; initial task message for next agent written above.
+- `research_state/campaign_authorization.json`: `authorized=true`, `code_hash` matches current, `authorized_at_utc` = `2026-10-18T09:55:40.722242+00:00`.
+- Prior-agent task confirmed complete; initial task message for next agent preserved below.
