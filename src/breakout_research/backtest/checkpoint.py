@@ -1,9 +1,8 @@
-"""Checkpointing and state management."""
-import json
-import os
-from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from ..config import CheckpointState, compute_code_hash
+import os
+import json
+from datetime import datetime, timezone
 
 
 class CheckpointManager:

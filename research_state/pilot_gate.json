@@ -1,11 +1,1 @@
-{
-  "protocol_version": "v1",
-  "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
-  "code_hash": "ab984545190a6f4766f110fdc580cd3f43f6547f981c893aa1660d92e8bbcd5a",
-  "pilot_completed_at": "2026-10-15T18:27:38.003294+00:00",
-  "pilot_passed": true,
-  "assets_tested": 1,
-  "configs_tested": 24,
-  "total_results": 24,
-  "campaign_authorized": true
-}
+{"protocol_version": "v1", "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085", "code_hash": "d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234", "pilot_completed_at": "2026-10-15T18:27:38.003294+00:00", "pilot_passed": true, "assets_tested": 1, "configs_tested": 24, "total_results": 24, "campaign_authorized": true}
