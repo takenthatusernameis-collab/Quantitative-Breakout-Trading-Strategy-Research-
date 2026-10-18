@@ -295,11 +295,21 @@ Status: Cohort-0 BLOCKED on insufficient verified history for `XMRUSDT`/`MATICUS
 - Environment: `pytest` not installed in sandbox (`/usr/bin/python3: No module named pytest`); prior 80-passed baseline not re-runnable here. No campaign processes running.
 - Prior-agent task confirmed complete; refreshed initial task message for next agent below.
 
+## Session update — 2026-10-18T11:43:11Z (this session)
+
+- Read the durable handoff; prior-agent task (escalation of cohort-0 data blocker) CONFIRMED COMPLETE. Block remains ACTIVE; no user direction received. No re-scope, skip, or synthetic fallback performed.
+- Re-anchored repository state: HEAD `957516c1836218603775b8cfe4d81dc748309257` (branch main, `git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. Source unchanged: `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`.
+- Revalidated on-disk: `research/data_manifest.json` = 18 verified assets only; `XMRUSDT` and `MATICUSDT` absent vs 26,280 required. Fail-closed gate holds. Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` blocked at asset 17 `XMRUSDT` (442,368/552,960 records, 8863 shards 0–8862 complete through SUIUSDT). `next_cohort_index` = 0; campaign not running. `research_state/campaign_authorization.json`: authorized=true, code_hash matches current.
+- Authorization caveat noted: authorization post-dates universe exclusion record by ~18.5h and text does not address `XMRUSDT`/`MATICUSDT`. Escalated to user; not resolved unilaterally.
+- Orphan cycle dir `3226843c...` remains unreferenced, not treated as valid cohort-0 completion; left unmodified.
+- Environment: `pytest` not installed in sandbox (`/usr/bin/python3: No module named pytest`); prior 80-passed baseline not re-runnable here. No campaign processes running.
+- Prior-agent task confirmed complete; refreshed initial task message for next agent below.
+
 ## Initial task message for next agent
 
 **Task: Await user direction on the cohort-0 data blocker; then, only if authorized, complete cohort-0 and test cohort 1. Do NOT re-scope or skip unilaterally.**
 
-Current state (revalidated 2026-10-18T11:29:24Z, HEAD `60d6663491589e72e9e86e98d6555700bf601c3b`, working tree clean, origin == HEAD; only handoff files changed since `c962d3da...`):
+Current state (revalidated 2026-10-18T11:43:11Z, HEAD `957516c1836218603775b8cfe4d81dc748309257`, working tree clean, origin == HEAD):
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1-16 complete through SUIUSDT), 8863 shards (indices 0-8862 complete). `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running.
 - `research/data_manifest.json`: 18 verified assets only; `XMRUSDT` and `MATICUSDT` absent vs 26,280 required. Fail-closed gate holds.
 - `research/universe_manifest.json`: `XMRUSDT`/`MATICUSDT` carry `exclusion_reason` (insufficient history) from commit `b08421db` (2026-10-16T16:18:32Z).
