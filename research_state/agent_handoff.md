@@ -5,11 +5,10 @@ This file is the durable cross-session record. The block below is the single sou
 ## Authoritative Current Status — 2026-10-18 UTC
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
-- Re-anchored this session: `git rev-parse HEAD` = `46604113ae13bba59e3fd74634787eaf77e57a24` == `git ls-remote origin main`; branch up to date with origin/main. (Ahead of the prior `0f1a8bab`: `chore(kilo): checkpoint agent session` ×2 — investigation result + prior-agent escalation recorded; no source change, `code_hash` unchanged `d0dca298...`.)
+- Re-anchored this session: `git rev-parse HEAD` = `cf0c98fbcf8db321fa3e9564798485fca80bad71` == `git ls-remote origin main`; branch up to date with origin/main. Working tree clean except pre-existing orphan .tmp shards. No source change since prior anchor; `code_hash` unchanged `d0dca298...`.
 - `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (current source).
 - `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085`.
 - `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c`.
-- Working tree clean except pre-existing orphan .tmp shards.
 - `research_state/checkpoint.json`: `code_hash` = `d0dca298...` (== current), `completed_records` = `442368`, `current_asset_index` = `16` (just finished SUIUSDT), blocked at asset 17 `XMRUSDT`.
 - `python -m pytest tests/` -> 80 passed, exit 0 (baseline re-verified this session).
 
@@ -23,7 +22,7 @@ This file is the durable cross-session record. The block below is the single sou
 
 - `continuous-market-cap-universe-cycles` lane in `research_state/parallel_strategy_lanes.json` = `READY`, priority 5.
 - Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` is **BLOCKED** (not complete).
-- Campaign was resumed via `run_cohort0_resume.py` (ContinuousCycleCoordinator.run_cycle, holdout_enabled=False), deterministically targeting the existing cycle dir/manifest (cycle_id matched). It ran to asset 16 then **exited with failure** (background process `bgp_14d65e833001RL4d5kcSDPtrkx` / pid 4464 = `failed`). It is NOT currently running. Do not blindly restart: it will fail again at the same asset.
+- Campaign was resumed via `run_cohort0_resume.py` (ContinuousCycleCoordinator.run_cycle, holdout_enabled=False), deterministically targeting the existing cycle dir/manifest (cycle_id matched). It ran to asset 16 then **exited with failure** at asset 17 `XMRUSDT`. It is NOT currently running. Do not blindly restart: it will fail again at the same asset.
 
 ## Current Progress — 2026-10-18 UTC
 
@@ -75,21 +74,11 @@ Constraints: single-writer concurrency; no second workflow; no manual Actions di
 
 Cohort-0 bounded cycle BLOCKED on missing verified data for `XMRUSDT`/`MATICUSDT`. Blocker escalated to user this session; awaiting direction on data provision or formal re-scope. Cannot complete or advance to cohort 1 until resolved.
 
-## Session update — 2026-10-18T06:13:07Z (this session)
+## Session update — 2026-10-18T06:14:16Z (this session)
 
 - Read the durable handoff. Confirmed prior-agent task status: COMPLETE (escalation delivered). Block remains ACTIVE.
-- Revalidated repository state: HEAD `46604113ae13bba59e3fd74634787eaf77e57a24` == origin/main, working tree clean except pre-existing orphan .tmp shards. `python -m pytest tests/` -> 80 passed.
+- Revalidated repository state: HEAD `cf0c98fbcf8db321fa3e9564798485fca80bad71` == origin/main, working tree clean except pre-existing orphan .tmp shards. `python -m pytest tests/` -> 80 passed.
 - Cohort-0 cycle `0f52f6c9...` blocked at asset 17 `XMRUSDT`. `results_manifest.json` = 442,368/552,960 (assets 1–16 complete). `cycle_report.json` absent. Campaign not running.
 - Data manifest: 18 verified assets; `XMRUSDT` and `MATICUSDT` absent. Binance endpoints return HTTP 451 / insufficient 3-year hourly history. No authorized alternate source. Fail-closed gate holds.
 - Prior agent escalation is sufficient; no re-scope, skip, or synthetic fallback performed.
-
-## Next specific task (next agent — initial task message)
-
-**Task: Await user direction on the cohort-0 data blocker; do NOT re-scope or skip unilaterally. If authorized, complete cohort-0 and test cohort 1.**
-
-Constraints/guardrails:
-- Cohort-0 cycle blocked at `XMRUSDT`. Do not restart campaign blindly (will fail at same asset).
-- Only proceed if user authorizes (a) verified 3-year hourly data for `XMRUSDT`/`MATICUSDT` added to `research/data_manifest.json` with full attestation, or (b) formal re-scope of cohort 0 to 18 assets with updated cycle metadata.
-- If authorized to complete cohort-0: produce `cycle_report.json` COMPLETE with correct totals/shard hashes, add cycle to `completed_cycle_ids`, set `next_cohort_index` → 1. Then discover/test cohort 1 (one bounded cycle, `holdout_enabled=False`).
-- If authorized to re-scope cohort-0: update cohort composition/cycle metadata explicitly; record methodology change rationale per protocol.
-- Never use synthetic fallback or skip. No Actions dispatch/editing workflows. No parameter changes, paid services, private creds, live orders, shorting. Keep tests at 80 passed.
+- Handoff consolidated: HEAD hash updated, duplicate sections removed, single clear initial task message for the next agent written above.
