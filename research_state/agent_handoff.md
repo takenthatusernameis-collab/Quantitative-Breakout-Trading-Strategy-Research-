@@ -72,3 +72,31 @@ If the user authorizes a formal re-scope of cohort-0 to 18 assets (the only viab
 3. Then discover and test cohort 1 (one bounded cycle, `holdout_enabled=False`).
 
 Status: Cohort-0 BLOCKED on delisted `XMRUSDT`/`MATICUSDT`. Awaiting user direction.
+
+## Session update — 2026-10-18T12:53Z (this session)
+
+- Read the durable handoff; prior-agent task (await and apply user direction on the cohort-0 universe/authorization question) CONFIRMED COMPLETE as a no-op wait: no user direction received since 12:48Z. No re-scope, skip, or synthetic fallback performed.
+- Re-anchored repository state: HEAD `d1f725615d59702af3e23cb758f3a50e20cd00d1` (branch main, origin == HEAD, 0 ahead / 0 behind). Working tree clean. `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (== current). No source changes.
+- Blocker remains ACTIVE and genuine: `XMRUSDT` (last candle 2024-02-20) and `MATICUSDT` (last candle 2024-09-10) delisted from Binance spot; 26,280 candles unobtainable. Fail-closed gate holds. Cohort-0 cycle blocked at asset 17 `XMRUSDT` (442,368/552,960 records, 8,863 contiguous shards 0–8862). `next_cohort_index` = 0. Campaign not running. Authorization caveat unresolved.
+- No board messages or pending user direction.
+
+## Initial task message for next agent
+
+**Task: Await and apply user direction on the cohort-0 universe/authorization question.** The blocker is confirmed genuine — `XMRUSDT` last traded 2024-02-20 and `MATICUSDT` last traded 2024-09-10 (both delisted from Binance spot), so 26,280 candles is unobtainable by any re-fetch. **Do NOT re-scope, skip, or synthesize unilaterally.**
+
+Current state (revalidated 2026-10-18T12:53Z, HEAD `d1f72561`, working tree clean, origin == HEAD):
+- Cohort-0 cycle `0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d` BLOCKED at asset 17 `XMRUSDT`. 442,368/552,960 records (assets 1–16 complete through SUIUSDT), 8,863 contiguous shards (indices 0–8862), all hashes match current. `cycle_report.json` absent. `next_cohort_index` = 0. Campaign not running.
+- `research/data_manifest.json`: 18 verified assets, all 26,280/26,280; `XMRUSDT`/`MATICUSDT` absent. Fail-closed gate holds.
+- `research/universe_manifest.json`: `XMRUSDT`/`MATICUSDT` carry `exclusion_reason` (insufficient history) from commit `b08421db` (2026-10-16T16:18:32Z); both delisted (last candles 2024-02-20 and 2024-09-10); exclusion correct and current.
+- `research_state/checkpoint.json`: `completed_records` = 442368, `current_asset_index` = 16, code_hash matches current.
+- `research_state/campaign_authorization.json`: authorized=true, `authorized_at_utc` 2026-10-18T10:52:32Z, reasons=[], code_hash matches current. Caveat: authorization post-dates exclusion record by ~18.5 h and text does not address `XMRUSDT`/`MATICUSDT`.
+- Orphan cycle dir `3226843c...` (8,878 on-disk shard files vs 1,156 non-contiguous manifest entries 7719–8874, older code_hash) unreferenced; not a valid cohort-0 completion; left unmodified.
+
+Constraints/Do NOTs: single-writer; no second workflow; no manual Actions dispatch; no paid service/private credentials; no live orders/shorting; no parameter-grid changes; tests must remain 80 passed. No unilateral re-scope, skip, or synthetic fallback.
+
+If the user authorizes a formal re-scope of cohort-0 to 18 assets (the only viable path — `XMRUSDT`/`MATICUSDT` are delisted and unobtainable):
+1. Update `research/universe_manifest.json`: mark `XMRUSDT`/`MATICUSDT` as formally excluded (`exclusion_reason` = "delisted from Binance spot; last candle 2024-02-20 / 2024-09-10, below 3-year minimum"), keeping the 20 assets in `eligible_assets` order but with verified history for the 18.
+2. Complete cohort-0 for the 18 verified assets: resume checkpoint (assets 1–16 already done), then `DOTUSDT` (asset 18), then `ATOMUSDT` (asset 20). Expected total = 497,664 records (18 × 27,648). Write `cycle_report.json` COMPLETE, verify totals and shard contiguity, add the cycle id to `completed_cycle_ids`, set `next_cohort_index` -> 1.
+3. Then discover and test cohort 1 (one bounded cycle, `holdout_enabled=False`).
+
+Status: Cohort-0 BLOCKED on delisted `XMRUSDT`/`MATICUSDT`. Awaiting user direction.
