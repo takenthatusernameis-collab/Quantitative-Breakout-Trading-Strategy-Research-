@@ -2,7 +2,26 @@
 
 This file is the durable cross-session record. The block below is the single source of current task/status truth; older blocks are historical unless revalidated.
 
-## Authoritative Current Status — 2026-10-18 UTC (refreshed 13:59Z)
+## Authoritative Current Status — 2026-10-18 UTC (refreshed 14:04Z)
+
+- Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
+- Re-anchored this session: `git rev-parse HEAD` = `cb4d6289f4dcc510e77504783e779af99dd850c7` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. `src/` and `tests/` unchanged since `52e557a0`.
+- `compute_code_hash()` = `d67b1cf14e3d41fff97ed8dfa572bd40c0775b0fbf782186df919f6d37203d2b` (current source).
+- `specification_hash` = `2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085`.
+- `data_manifest_hash` = `d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` (current `research/data_manifest.json`).
+- `research_state/checkpoint.json`: `code_hash` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`, `completed_records` = `442368`, `current_asset_index` = `16` (SUIUSDT complete), blocked at asset 17 `XMRUSDT`.
+
+## Blocker status — ACTIVE (data, fail-closed) — INDEPENDENTLY RE-VERIFIED 2026-10-18T14:04Z
+
+- **Empirical re-probe of the delisting claim (this session, live Binance data API):**
+  - `XMRUSDT`: data present at `startTime=1705000000000` (2023-12-11) and `1708000000000` (2023-12-15), **absent** at `1710000000000` (2023-12-18) and every later timestamp tested through `1719000000000`. Last trade ≈ 2023-12-15 → **delisted from Binance spot**. Claim CONFIRMED.
+  - `MATICUSDT`: data present at `1720000000000` (2024-07-04) and `1725000000000` (2024-08-30), **absent** at `1730000000000` (2024-10-29) and every later timestamp tested through `1750000000000`. Last trade ≈ 2024-09-10 → **delisted from Binance spot**. Claim CONFIRMED.
+  - Both endpoints return HTTP 200 with valid klines for timestamps *before* their delist dates, so the absence is a genuine data gap, not an API/auth failure. The handoff's delisting dates are accurate within a few days.
+- `research/data_manifest.json` contains exactly **18 verified assets**, all at 26,280/26,280 observed/expected candles. `XMRUSDT` and `MATICUSDT` are **absent** (no verified hourly data).
+- **Fail-closed gate is intentional design, not a bug.** `src/breakout_research/campaign.py:378-387` raises `RuntimeError` on `DataUnavailableError` for any required eligible asset; `src/breakout_research/data/fetcher.py:743` explicitly prohibits synthetic fallback; `src/breakout_research/pilot_gate_validator.py:64-69` rejects any `fallback_used=true` / `fallback_source=synthetic` entry. There is no authorized skip/synthesize path in code.
+- Consequence: cohort-0 cannot reach expected total; `cycle_report.json` cannot be written; `next_cohort_index` cannot advance to 1. Blocker is a hard constraint requiring explicit user authorization to change.
+
+## Authorization status — PASSED (caveat unresolved)
 
 - Repository: `takenthatusernameis-collab/Quantitative-Breakout-Trading-Strategy-Research-`. Target branch: `main`.
 - Re-anchored this session: `git rev-parse HEAD` = `52e557a0b48fc3ea56a19c7826c953e92f15a66c` (`git ls-remote origin main` == HEAD, 0 ahead / 0 behind). Working tree clean. `src/` and `tests/` unchanged.
