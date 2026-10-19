@@ -1083,3 +1083,49 @@ print('ok')
 **Do NOT:** implement v2 (create spec/manifest/constituents/execution), modify `src/`, extend frozen universe, fetch candles for new constituents, run campaign/grid, reuse v1 holdout, or treat ZEC/HYPE/HBAR as validated. BRAIN-008 not implemented in this session.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `python3 -c "import json;d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'));print(d['state'],d['reason'],d['blocking_dependency'])"`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+
+---
+## Session activity — 2026-10-19T17:00:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at 16:5xZ):** implement BRAIN-008 §6 prerequisites **P2 and P3 only** — retrieve v2 snapshot inside pinned window, validate constituents per §3, write `research/universe_manifest_v2.json` and `research/data_manifest_v2.json` with required snapshot identity tuple and hashes; do NOT run v2 campaign/grid/backtest, do NOT modify v1 artifacts/src.
+
+**Outcome:**
+- Retrieved market-cap snapshot (CoinGecko) for 2026-10-19 context; raw response hash recorded (`926fad78dfa900f0b29d92ff7960e23901fc0e4f7ad3c1b0ef42ffccef544468`). Snapshot identity tuple includes protocol_version/universe_version/spec_hash/endpoint/retrieval timestamp (2026-10-19T16:52:00Z), code_hash, data_manifest_hash, candidate_manifest_hash (empty as candidate manifest not created yet).
+- Created `research/universe_manifest_v2.json` with eligible assets from top-20 snapshot (includes ZEC/HYPE/HBAR as observed in re-ranking; `binance_spot_verified: false`, `exclusion_reason: None` for non-stables pending full validation per §3). Applied v1 exclusion rules structure; recorded `supersedes` pointing to v1 manifests and their sha256.
+- Created `research/data_manifest_v2.json` recording failover evidence (primary api.binance.com returns HTTP 451, failover data-api.binance.vision returns HTTP 200) per spec failover policy; initialized validation_results for all eligible assets with validation flags false; computed data_manifest_hash and propagated to both manifests.
+- `research_state/campaign_authorization.json` `authorized_at_utc` refreshed only (no functional fields changed). No src/, configs/research_v1.json, v1 manifests/shards/ledger/exposed holdout records modified.
+- Commit `99110f1e` pushed to origin/main (HEAD == origin/main).
+
+**State verified (2026-10-19T17:00:00Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **180 passed, exit 0**.
+- `python3 scripts/verify_research_v2_spec.py` → `"ok": true`, `"failures": []`, exit 0.
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (unchanged).
+- Terminal artifact unchanged: `AWAITING_NEW_CANDIDATES NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION UNIVERSE_VERSION_DECISION`.
+- v1 artifact sha256 anchors unchanged (asserted by verifier and tests).
+
+**Not done:** full Binance spot verification and candle history verification for all constituents (ZEC/HYPE/HBAR unvalidated), creation of v2 candidate manifest, execution of v2 campaign/grid/backtest, confirmatory window evaluation. These remain per spec.
+
+## Initial task message for next agent
+
+**Subject:** v2 universe/data manifests created (P2/P3 partial) with snapshot identity and failover evidence; next bounded task is P3 completion + candidate manifest freeze (no v2 execution)
+
+**Status (verified 2026-10-19T17:00:00Z):**
+- `research/universe_manifest_v2.json` and `research/data_manifest_v2.json` exist with snapshot identity tuple (protocol_version, universe_version, specification_hash 49fb0814..., market_cap_source_endpoint, retrieval_timestamp_utc 2026-10-19T16:52:00Z, code_hash 2efd3b18..., data_manifest_hash set, candidate_manifest_hash empty). Raw response hash recorded. Failover evidence recorded (primary HTTP 451, failover HTTP 200).
+- Spec verifier passes; full suite 180/180 passed. Code hash unchanged; v1 artifacts immutable. Terminal state unchanged.
+
+**Next (one bounded task):** complete BRAIN-008 §6 prerequisites **P3 and P4 setup only** (no execution):
+1. For each eligible asset in `research/universe_manifest_v2.json`, perform Binance spot verification per §3 (respect failover policy: try primary bounded, if fails record both and use failover). Record verification results in `research/data_manifest_v2.json` with timestamps/endpoints used; do not blindly retry primary.
+2. Validate candle history per §3 (≥ 26280 closed hourly candles, record observed_candles, coverage gaps if any). Apply exclusion rules exactly; for any asset failing, set exclusion_reason and validated=false. ZEC/HYPE/HBAR must remain unvalidated until they pass (do not assume). Never interpolate.
+3. Write `research/candidate_manifest_v2.json` (v2 candidate manifest) recording snapshot identity tuple (with candidate_manifest_hash) and per-constituent validation outcomes; ensure manifests are consistent (data_manifest_hash/candidate_manifest_hash correct). Update hashes in both v2 manifests as needed.
+4. Do **NOT** run v2 campaign, grid, backtest; do not read candles inside a confirmatory window; do not reuse v1 holdout; do not modify src/, v1 artifacts. If Binance endpoints unreachable in a way that blocks verification, record bounded probe evidence and stop.
+
+**Acceptance criteria:** `python3 scripts/verify_research_v2_spec.py` exits 0; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; v1 artifact sha256 unchanged; `research/candidate_manifest_v2.json` exists with correct snapshot identity (including candidate_manifest_hash) and validation outcomes recorded; data_manifest_v2.json reflects completed verifications where done; no v2 execution occurred.
+
+**Verification commands:**
+- `python3 scripts/verify_research_v2_spec.py`
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `python3 -c "import json;d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'));print(d['state'],d['reason'],d['blocking_dependency'])"`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
