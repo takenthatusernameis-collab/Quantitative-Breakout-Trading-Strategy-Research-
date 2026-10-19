@@ -1,0 +1,390 @@
+{
+  "binance_failover_evidence": {
+    "failover": {
+      "endpoint": "https://data-api.binance.vision/api/v3/ping",
+      "http_status": 200,
+      "probed_at_utc": "2026-10-19T16:52:00Z",
+      "reachable": true
+    },
+    "policy": "one bounded request to primary; if fails use failover and record both statuses",
+    "primary": {
+      "endpoint": "https://api.binance.com/api/v3/ping",
+      "http_status": 451,
+      "probed_at_utc": "2026-10-19T16:52:00Z",
+      "reachable": false
+    }
+  },
+  "candles_verified": false,
+  "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+  "created_utc": "2026-10-19T16:52:00Z",
+  "eligible_assets": [
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "bitcoin",
+      "exclusion_reason": null,
+      "market_cap_usd": 1646318511025,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "BTCUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "ethereum",
+      "exclusion_reason": null,
+      "market_cap_usd": 293235198630,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "ETHUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "tether",
+      "exclusion_reason": "stablecoin_excluded",
+      "market_cap_usd": 183549323726,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "USDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "binancecoin",
+      "exclusion_reason": null,
+      "market_cap_usd": 95499522854,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "BNBUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "ripple",
+      "exclusion_reason": null,
+      "market_cap_usd": 82135912987,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "XRPUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "usd-coin",
+      "exclusion_reason": "stablecoin_excluded",
+      "market_cap_usd": 72239966227,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "USDCUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "solana",
+      "exclusion_reason": null,
+      "market_cap_usd": 61512232486,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "SOLUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "tron",
+      "exclusion_reason": null,
+      "market_cap_usd": 31440222219,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "TRXUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "figure-heloc",
+      "exclusion_reason": null,
+      "market_cap_usd": 24979248960,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "FIGR_HELOCUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "zcash",
+      "exclusion_reason": null,
+      "market_cap_usd": 19330861941,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "ZECUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "hyperliquid",
+      "exclusion_reason": null,
+      "market_cap_usd": 17439590455,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "HYPEUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "dogecoin",
+      "exclusion_reason": null,
+      "market_cap_usd": 12395450263,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "DOGEUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "monero",
+      "exclusion_reason": null,
+      "market_cap_usd": 11253060456,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "XMRUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "usds",
+      "exclusion_reason": "stablecoin_excluded",
+      "market_cap_usd": 10212771413,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "USDSUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "whitebit",
+      "exclusion_reason": null,
+      "market_cap_usd": 9502529463,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "WBTUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "chainlink",
+      "exclusion_reason": null,
+      "market_cap_usd": 9181579951,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "LINKUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "leo-token",
+      "exclusion_reason": null,
+      "market_cap_usd": 8318575519,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "LEOUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "cardano",
+      "exclusion_reason": null,
+      "market_cap_usd": 8179111031,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "ADAUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "near",
+      "exclusion_reason": null,
+      "market_cap_usd": 6486719521,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "NEARUSDT",
+      "validated": false
+    },
+    {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "rain",
+      "exclusion_reason": null,
+      "market_cap_usd": 6395619099,
+      "min_candles": 26280,
+      "observed_candles": null,
+      "symbol": "RAINUSDT",
+      "validated": false
+    }
+  ],
+  "exclusion_reasons": {},
+  "market_cap_source": {
+    "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1",
+    "note": "Current-universe snapshot used; historical point-in-time ranks unavailable. Results have survivorship limitations.",
+    "provider": "coingecko",
+    "raw_response_hash": "926fad78dfa900f0b29d92ff7960e23901fc0e4f7ad3c1b0ef42ffccef544468",
+    "retrieval_timestamp_utc": "2026-10-19T16:52:00Z"
+  },
+  "protocol_version": "v2",
+  "snapshot_identity": {
+    "candidate_manifest_hash": "",
+    "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "data_manifest_hash": "b116abc388abef134dfa474914898643372f819b5658f4648903b815b59044b0",
+    "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1",
+    "market_cap_source_retrieval_timestamp_utc": "2026-10-19T16:52:00Z",
+    "protocol_version": "v2",
+    "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+    "universe_version": "v2"
+  },
+  "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+  "supersedes": {
+    "data_manifest_path": "research/data_manifest.json",
+    "data_manifest_sha256": "cf39de420cfc7328bd4a244c7f485e4b81c01dae108f17f2719d6ca6e7310580",
+    "protocol_version": "v1"
+  },
+  "universe_version": "v2",
+  "validation_results": {
+    "ADAUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "BNBUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "BTCUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "DOGEUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "ETHUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "FIGR_HELOCUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "HYPEUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "LEOUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "LINKUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "NEARUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "RAINUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "SOLUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "TRXUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "USDCUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": "stablecoin_excluded",
+      "validated": false
+    },
+    "USDSUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": "stablecoin_excluded",
+      "validated": false
+    },
+    "USDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": "stablecoin_excluded",
+      "validated": false
+    },
+    "WBTUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "XMRUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "XRPUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    },
+    "ZECUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "validated": false
+    }
+  }
+}
