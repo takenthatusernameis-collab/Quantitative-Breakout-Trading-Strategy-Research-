@@ -110,3 +110,23 @@ Acceptance criteria:
 3. `reconcile()` still passes; record count increases only by the bounded cycle.
 4. `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed.
 5. `git status --short` clean except run artifacts; HEAD == origin/main.
+
+## Session activity — 2026-10-19T02:55Z (this session)
+
+Task: Bounded campaign dry-run under current code (post-gate).
+
+Outcome: VERIFIED. Single bounded cycle (max_assets=1, max_configs=1, max_folds=2, max_costs=1, holdout off) ran without ResultStoreError; unit already completed so 0 new records, store idempotent. reconcile passes (413,990 completed IDs / 414,037 records / 102 shards). Checkpoint reconciled to manifest-verified 413,990. Tests 80 passed. Git diff limited to run artifacts (manifest updated_utc, authorization authorized_at_utc, checkpoint counters). No src/ or universe manifest modified.
+
+## Initial task message for next agent
+
+Subject: Continue bounded validation batches across remaining genuine assets
+
+Status: Gates green; result store runnable (reconcile passes: 413,990 completed IDs / 414,037 records / 102 shards). Tests 80 passed. Checkpoint now manifest-verified (413,990). Git has run-artifact changes pending commit.
+
+Next: continue bounded validation campaign batches across remaining genuine assets (max_assets=1 per batch, holdout off); commit/push state updates and verify remote SHA. Do NOT run the full campaign in one session. Do NOT modify src/, authorization artifact, or universe manifest.
+
+Acceptance criteria:
+1. Each batch completes without ResultStoreError; holdout rows absent.
+2. `reconcile()` passes after each batch; record count increases only by executed units.
+3. `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed.
+4. Commit/push state updates; `git ls-remote origin main` == local HEAD; working tree clean.
