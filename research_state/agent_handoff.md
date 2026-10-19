@@ -818,3 +818,51 @@ The 67 entries in this range were the same verification loop: read the prior han
 - `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664`
 - `PYTHONPATH=src python3 scripts/select_candidates_cycle0.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --out /tmp/check_selection.json`
 - `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
+
+---
+
+## Session activity — 2026-10-19T16:09:07Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at 16:00Z):** Review BRAIN-008 and determine next action.
+
+**Outcome:** BRAIN-008 decision record written in `research_state/brainstorming_queue.md` as `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. The record specifies universe versioning (new versioned universe if pursued, v1 immutable), comparability (cycle 0 units not comparable to v2), data validation plan for new constituents (Binance spot verification, ≥ 26280 hourly candles, 3 years, hash-verifiable), confirmatory holdout plan (v2 candidates remain `CANDIDATE_PENDING_HOLDOUT`, fresh unexposed window, v1 holdout never reused), alternatives (A: defer - selected, B: new v2, C: supplement inside v1 rejected), recommendation to defer until preregistered v2 spec exists with full validation. No implementation changes.
+
+**State verified (2026-10-19T16:09:07Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 165 passed, exit 0
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`
+- `research_state/campaign_authorization.json` code_hash matches; authorized true
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664` → verified true
+- Terminal artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json`: state `AWAITING_NEW_CANDIDATES`, dependency `UNIVERSE_VERSION_DECISION`, universe provider HTTP 200
+- Working tree clean (only brainstorming queue updated)
+- HEAD at session end: `f90f2346f2d540b339ca1b7aa5ca727def1e43fd` (unchanged from prior commit; no new commit made in this session as implementation not required)
+
+**Not done:** Implementation of v2 is not authorized per BRAIN-008 decision (§6, §10). No `src/`, configs, shards, ledger, checkpoint counters, or authorization changes.
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-008 decision record written (DESIGN_READY) — next action is to review state and decide next bounded task
+
+**Status (verified 2026-10-19T16:09:07Z):**
+- BRAIN-008 (P0): `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. Decision record in `research_state/brainstorming_queue.md` covers universe versioning, comparability, data validation, holdout plan, alternatives (A: defer selected), falsifiers, rollback, staged acceptance tests. Recommendation: defer until preregistered v2 spec exists with validated constituents.
+- BRAIN-006 (P0): `IMPLEMENTED_VERIFIED` (conforming selector + baselines, v2 candidate manifest analysis, pilot re-run, authorization updated).
+- BRAIN-007 (P1): `RESOLVED_VERIFIED` (linkage index, validation-only counters with `holdout_exposed_count`, terminal state with observed provider evidence).
+- All tests: 165 passed, exit 0. Code hash `2efd3b18...` matches authorization. HEAD == origin/main (`f90f2346`). Working tree clean.
+
+**Next (one bounded task):** Review current state (brainstorming queue, terminal state artifact, existing v2 analysis artifacts). Given BRAIN-008 recommends deferring v2 execution until a preregistered v2 spec and validated constituents exist, determine the appropriate next bounded task. Possible options: (1) document the terminal state as evidence-backed (already done; see `reports/terminal_state_exhausted_universe.md`), (2) do not implement v2; instead consider improving documentation or addressing any remaining non-P0 items, (3) if no further bounded task is clear, record that state in handoff. Do **not** implement v2 execution in this session.
+
+**Constraints:** Preserve per-cycle immutability. Do not modify `configs/`, shards, ledger, v1 manifest (`research/candidate_manifest.json`), exposed holdout records, or run campaign/grid. No re-use of v1 holdout. Do not treat `research/candidate_manifest_v2.json` (analysis artifact) as an execution manifest.
+
+**Verification commands:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `grep '"code_hash"' research_state/campaign_authorization.json`
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664`
+- `python3 -c "
+import json
+d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'))
+assert d['state']=='AWAITING_NEW_CANDIDATES' and d['blocking_dependency']=='UNIVERSE_VERSION_DECISION'
+print('ok')
+"`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`

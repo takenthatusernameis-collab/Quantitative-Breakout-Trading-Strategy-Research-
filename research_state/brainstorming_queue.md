@@ -772,7 +772,7 @@ All 5 parallel strategy lanes `COMPLETE`. No root cause was implemented in the s
 **Revalidation 2026-10-19 UTC (code hash `d0dca29...`, HEAD `63c780c9...`):** BRAIN-001..005 remain `RESOLVED_VERIFIED` — real-data provenance, independent authorization, holdout isolation, manifest-derived resume, and bounded durable shards are all still satisfied in the live tree. Two new items were opened from record-level evidence that the earlier verification loop never produced:
 
 - BRAIN-006 (P0) — `BRAINSTORMING_REQUIRED`. The preregistered selection rule in `configs/research_v1.json` → `selection` is not implemented anywhere; the only selector ranks by median profit_factor and applies none of the preregistered gates, and no buy-and-hold baseline metric exists to support the `median_sharpe_gt_buyhold` gate. The 18 frozen candidates and the v1 holdout conclusions inherit that deviation.
-- BRAIN-007 (P1) — `RESOLVED_VERIFIED`. Implemented linkage index (`src/breakout_research/linkage_index.py`), validation-only checkpoint counters with `holdout_exposed_count` and counter reconstruction/forgery detection in `src/breakout_research/backtest/checkpoint.py`, and a terminal state for the exhausted universe that does not append to `completed_cycle_ids` or advance `next_cohort_index`. **Corrected 2026-10-19T15:43Z:** the terminal state no longer asserts a hard-coded Binance HTTP 451 as "provider evidence"; it records observed provider evidence, and it is now `AWAITING_NEW_CANDIDATES` (the market-cap provider is reachable — see BRAIN-008).
+- BRAIN-007 (P1) — `RESOLVED_VERIFIED`. Implemented linkage index (`src/breakout_research/linkage_index.py`), validation-only checkpoint counters with `holdout_exposed_count` and counter reconstruction/forgery detection in `src/breakout_research/backtest/checkpoint.py`, and a terminal state for the exhausted universe that does not append to `completed_cycle_ids` or advance `next_cohort_index`. **Corrected 2026-10-19T15:43Z:** the terminal state no longer asserts a hard-coded Binance HTTP 451 as "provider evidence"; it records observed provider evidence, and it is now `AWAITING_NEW_CANDIDATES` (the market-cap provider is reachable — see BRAIN-008 (DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION)).
 
 Neither new item may be implemented in the session that writes its design decision (README Section 2A C1). The next bounded task is the prerequisite impact quantification for BRAIN-006 — re-derive candidates for continuous cycle 0 under the preregistered rule from the verified validation records and quantify the divergence from `research/candidate_manifest.json` — which is read-only, offline, and holdout-safe. Any later `src/` change rotates the code hash and requires pilot re-run plus re-authorization before further campaign execution.
 
@@ -848,33 +848,82 @@ repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and doc
 ## BRAIN-008 — The market-cap universe provider is reachable: the "exhausted universe" is a protocol boundary, not an external one
 
 **Priority:** P0 — the campaign's stop condition, universe versioning and cohort semantics
-**Status:** `BRAINSTORMING_REQUIRED` (evidence recorded 2026-10-19T15:43Z)
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (decision record written 2026-10-19T15:4xZ)
 **Cause labels:** `IMPLEMENTATION_DEFECT` (terminal state asserted a provider status it never observed), `RESEARCH_DESIGN_RISK` (universe versioning, cohort composition and cross-cohort comparability are undecided)
 
 ### Evidence (observed, 2026-10-19T15:43:31Z)
-- The terminal artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json` was produced by the implementation. Its `provider_evidence.universe_snapshot_provider` records CoinGecko **HTTP 200** (67 ms) for the exact endpoint frozen in `research/universe_manifest.json` → `market_cap_source.endpoint`; `candle_data_providers` records `api.binance.com` **HTTP 451** and `data-api.binance.vision` **HTTP 200**.
-- The previous implementation hard-coded `{"status": 451, "reachable": false}` for `https://api.binance.com/api/v3/ping` in `continuous_universe_coordinator.py` and emitted it as "provider evidence" for a *universe* exhaustion, although the universe comes from CoinGecko and the candle path has a working official failover. The recorded status was never observed at write time and no timestamp was attached.
-- A fresh market-cap snapshot differs from the frozen one (frozen 2026-10-15T17:10:38Z): new constituents `zcash` (ZEC), `hyperliquid` (HYPE), `hedera-hashgraph` (HBAR); frozen constituents that fell out of the top 20: `polkadot` (DOT), `matic-network` (MATIC), `cosmos` (ATOM). The provider also lists at least 20 further constituents below the frozen depth (`research/campaign_cycles/terminal/exhausted_cohort_2.json` → `provider_evidence.universe_refresh.additional_candidate_symbols`).
-- The frozen universe holds 20 Binance-spot-verified constituents, 18 of which satisfy the ≥ 3-year history requirement; `COHORT_SIZE` is 20, so cohort index 2 is empty and the campaign cannot form a further cohort from the frozen universe.
-- The new constituents are **not** data-validated: no Binance spot verification, no candle fetch, no history check and no backtest were performed for them (`candidates_are_data_validated: false`).
+- The terminal artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json` was produced by the implementation. The `provider_evidence.universe_snapshot_provider` records CoinGecko **HTTP 200** (67 ms) for the exact endpoint frozen in `research/universe_manifest.json` → `market_cap_source.endpoint`. `candle_data_providers` records `api.binance.com` **HTTP 451** (114 ms) and `data-api.binance.vision` **HTTP 200** (662 ms). Each probe is one bounded read-only request with timestamp.
+- The previous implementation hard-coded `{"status": 451, "reachable": false}` for the universe provider evidence in `continuous_universe_coordinator.py`; the status was never observed at write time. The corrected code now probes the actual provider.
+- A fresh market-cap snapshot differs from the frozen one (frozen 2026-10-15T17:10:38Z): new constituents `zcash` (ZEC), `hyperliquid` (HYPE), `hedera-hashgraph` (HBAR); frozen constituents that fell out of the top 20: `polkadot` (DOT), `matic-network` (MATIC), `cosmos` (ATOM). At least 20 further constituents are listed below the frozen depth.
+- The frozen universe holds 20 Binance-spot-verified constituents, 18 of which satisfy the ≥ 3-year history requirement (`COHORT_SIZE` = 20); cohort index 2 is empty.
+- The new constituents are **not** data-validated: no Binance spot verification, no candle fetch, no history check, no backtest (`candidates_are_data_validated: false`). In particular, HYPE and XMR are likely to fail the frozen data requirements.
+- The terminal state is `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`; `BLOCKED_EXTERNAL` is reserved only for a provider that is actually unreachable.
 
-### Why this needs a design decision
-The campaign is not waiting for an external party; it is waiting for a **preregistered
-universe version** that says what to do with a changed market-cap top 20. Three
-questions are undecided and each is outcome-relevant:
-1. **Extend or replace?** Admitting ZEC/HYPE/HBAR while dropping DOT/ATOM (and re-adding XMR, which fails the history requirement) changes the evaluated universe. Extending keeps cycle-0 comparability but changes the cohort's composition; replacing breaks the cycle-0 link and the 14 v2 candidates' per-asset context.
-2. **Which version is preregistered?** The v1 universe and grid are frozen. Any change needs a separately versioned research specification that retains v1 and its evidence (README Section 2A F), including whether the 2,304-configuration grid is re-run for new assets only, and which confirmatory holdout window applies to the v2 candidates.
-3. **What is a "genuinely new constituent universe"?** The continuous-universe spec forbids a timestamp-only refresh, but it does not say how a genuine re-ranking (new ids, dropped ids) is to be treated: same cohort index, new cohort index, or a new universe version with a new snapshot identity.
+### 1. Authoritative universe-versioning rule
+**Principle:** The frozen universe (`research/universe_manifest.json`, protocol v1) is immutable. Any change to the evaluated universe (admitting new constituents, dropping frozen ones, or changing depth) requires a **separately preregistered universe version** (e.g. `universe_v2`) with its own snapshot identity, bound to the frozen specification and to the code/data hashes. The v1 artifacts (`universe_manifest.json`, `candidate_manifest.json` v1, all v1 shards/ledgers, the 54 exposed holdout records) remain immutable and historical.
 
-### Alternatives to compare (for the decision record)
-A. **Freeze and wait** — keep the v1 universe immutable, record the terminal state and stop until a human decides; the market-cap ranking may change again, so the decision is deferred, not made.
-B. **New versioned universe (v2 protocol)** — a separately preregistered specification that admits the new constituents, defines the data-requirement validation for them, and states the cross-cohort comparability rule; the v1 universe, v1 manifest and v1 holdout stay immutable and unused.
-C. **Supplementary cycle inside the v1 protocol** — keep protocol v1, run a further cohort from a fresh snapshot without changing the specification; cheapest, but it changes the evaluated universe without a preregistered version, which the README forbids.
+**Snapshot identity:** a universe version is identified by `(protocol_version, universe_version, specification_hash, market_cap_source_endpoint, market_cap_source_retrieval_timestamp_utc, code_hash, data_manifest_hash, candidate_manifest_manifest_hash)` recorded in any artifact that freezes candidates under it. For v2, `supersedes` references the v1 universe manifest identity.
 
-### Required acceptance evidence for the decision record
-- A named authoritative universe-versioning rule and the snapshot identity it binds to.
-- The rule for a changed market-cap ranking (extend / replace / new version) and the comparability statement for cycle 0's 497,664 units and the 14 v2 candidates.
-- The data-requirement validation plan for new constituents (26,280 closed hourly candles, ≥ 3 years, Binance spot verification) and the exclusion rule for constituents that fail it.
-- The confirmatory-holdout plan for the v2 candidates, which must remain `CANDIDATE_PENDING_HOLDOUT` until a fresh, unexposed confirmatory window is evaluated.
-- Falsifiers, rollback, and staged acceptance tests. **BRAIN-008 must not be implemented in the session that writes its decision record (README Section 2A C1).**
+### 2. Changed market-cap ranking: rule and comparability
+**Rule (adopted):** Treat a genuine re-ranking (new `coingecko_id`s present; frozen `coingecko_id`s missing from the candidate set for the same evaluation depth after applying `exclusion_rules`) as requiring a **new universe version (v2)**. Do **not** silently extend the v1 cohort or overwrite `universe_manifest.json`.
+
+**Comparability statement:**
+- Cycle 0’s 497,664 units (all validation-only, 0 holdout) are tied to v1 universe + v1 grid + v1 data; they are **not** comparable to results produced under v2 without a bridging analysis. The 14 v2 candidates in `research/candidate_manifest_v2.json` remain `CANDIDATE_PENDING_HOLDOUT` and must not be mixed into cycle-0 tallies.
+- The 14 v2 candidates are per-asset candidates for v2; their promotion to “selected” status under a preregistered v2 rule does not retroactively validate v1 candidates. No claim is made that the frozen v1 candidates are “rejected” or “confirmed” by this re-ranking.
+
+### 3. Data-requirement validation plan for new constituents
+For each new constituent (not in v1 eligible set), before admitting it to any v2 frozen universe or to candidate evaluation:
+- **Binance spot verification:** confirm the trading pair `<SYMBOL>USDT` exists on Binance spot and is tradeable at the time of snapshot (record verification timestamp, endpoint used). `api.binance.com` may return HTTP 451 in some environments; use the documented failover `data-api.binance.vision` and record both results if probed; do **not** blindly retry the primary host.
+- **Candle history:** fetch or verify ≥ 26,280 closed hourly candles (3 years) for the pair using the same candle path convention as the campaign (record which endpoint, count, first/last close time, coverage gaps). If coverage < required, **exclude** (do not interpolate).
+- **Data integrity:** the constituent’s candles must be hash-verifiable against a v2 `research/data_manifest_v2.json` (or the appropriate data manifest for v2). Survivorship, exchange delisting, and split adjustments follow the v1 protocol unless v2 preregisters a change.
+- **Exclusion rules:** apply `exclusion_rules` from the v2 universe manifest (stablecoins, wrapped/bridged, leveraged/synthetic, exchange tokens, liquidity rules) before evaluation; record `exclusion_reason` if excluded.
+- **Constituents that fail any requirement:** mark as excluded in the v2 universe manifest; do **not** promote them. ZEC/HYPE/HBAR and any others are **unvalidated** now — they must pass all checks before use.
+
+### 4. Confirmatory-holdout plan for v2 candidates
+- The 14 candidates in `research/candidate_manifest_v2.json` remain **`CANDIDATE_PENDING_HOLDOUT`**. The v1 holdout is `EXPOSED_OR_UNKNOWN` and is **never reused** as confirmation for v2.
+- A **fresh, unexposed confirmatory window** (not overlapping the v1 holdout window, and not using any data that informed the v2 candidate selection) must be evaluated before any claim of out-of-sample confirmation. The holdout period, the data cutoff (after candidate freeze time), the assets evaluated, and the exposure status must be recorded in a v2 holdout report.
+- No campaign/grid execution using v2 candidates for live/trusted confirmation is authorized in this session; promotion to “confirmed” requires a separate decision with evidence.
+
+### 5. Alternatives considered
+A. **Freeze and wait (defer)** — keep v1 immutable, record terminal state, stop. *Pros:* zero risk of comparability contamination, preserves v1 evidence. *Cons:* defers decision; rankings may change. **Selected as the default unless a preregistered v2 exists.**
+B. **New versioned universe (v2 protocol)** — separate preregistered spec for v2 (universe, selection rule pinned, grid unchanged or re-specified, holdout rules, data manifest). *Pros:* clean separation, allows admitting validated new constituents. *Cons:* requires preregistration, data validation work, new artifacts; cannot reuse v1 holdout. **Recommended if v2 is pursued.**
+C. **Supplementary cycle inside v1 protocol** — extend v1 without version bump. *Pros:* simplest. *Cons:* violates “preregistered universe version” and README Section 2A F (evidence retention/versioning); changes evaluated universe without protocol version change. **Rejected.**
+
+### 6. Recommendation
+**Adopt A (defer) as the immediate action.** Do not create v2 artifacts beyond what already exists (`candidate_manifest_v2.json` is a read-only analysis artifact produced under the conforming selector’s analysis path; it must not be treated as a frozen, preregistered v2 universe for execution). The campaign stops at `AWAITING_NEW_CANDIDATES` with the observed evidence. Any move to v2 requires:
+1. A preregistered v2 specification (universe, selection, data requirements, holdout) recorded in `configs/` or an equivalent immutable spec with hash.
+2. A v2 universe manifest built from a fresh snapshot with all new constituents validated per §3.
+3. Data manifest v2 and candle verification artifacts.
+4. Explicit comparability statement and v2 holdout plan per §4.
+5. No re-use of v1 holdout; no mixing of v2 results into cycle-0 tallies.
+
+Until (1)-(5) are satisfied, the correct state is terminal/awaiting a decision; execution is not authorized.
+
+### 7. Falsifiers
+- If we claim v2 is “active” without a preregistered v2 spec and validated constituents, the claim is false.
+- If we reuse v1 holdout for v2 candidates, that violates §4.
+- If we treat `candidate_manifest_v2.json` (analysis) as an execution manifest without `supersedes`, `universe_version`, `manifest_version` and validation evidence, that violates versioning.
+- If `BLOCKED_EXTERNAL` is asserted when the universe provider is reachable (CoinGecko HTTP 200), that’s the defect already fixed — the falsifier from BRAIN-007 §5 remains active.
+
+### 8. Rollback
+- No code change in this decision session; rollback is trivial (no new execution path). If any execution artifacts for v2 are created prematurely, delete them and revert any spec changes. Never delete v1 artifacts.
+- The coordinator’s terminal-state change (probe the provider, record evidence) is already committed and correct; reverting it would re-introduce the asserted-status defect.
+
+### 9. Staged acceptance tests
+1. `PYTHONPATH=src python3 -m pytest tests/ -q` → all pass, exit 0.
+2. The terminal artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json` records CoinGecko HTTP 200 and Binance failover HTTP 200, with timestamps; state is `AWAITING_NEW_CANDIDATES`.
+3. `python3 -c "
+import json
+d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'))
+assert d['state']=='AWAITING_NEW_CANDIDATES'
+assert d['blocking_dependency']=='UNIVERSE_VERSION_DECISION'
+assert d['provider_evidence']['universe_snapshot_provider']['http_status']==200
+print('ok')
+"` exits 0.
+4. BRAIN-008 record names: universe-versioning rule (§1), ranking rule + comparability (§2), validation plan (§3), holdout plan (§4), alternatives (§5), recommendation (§6), falsifiers (§7), rollback (§8), staged acceptance tests (§9).
+5. No `src/`, `configs/`, shard, ledger, manifest (v1/v2 analysis manifest except read-only), checkpoint-counter, or authorization change in this session.
+6. Exactly one prompt review (if any). Handoff updated, commit pushed, `git ls-remote origin main` == local HEAD verified.
+
+### 10. BRAIN-008 must not be implemented in the session that writes this decision record (README Section 2A C1)
+Writing the record is the deliverable. Implementation (creating a preregistered v2 spec, validating constituents, wiring execution) is a separate session.
 
