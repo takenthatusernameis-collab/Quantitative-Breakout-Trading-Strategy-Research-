@@ -174,6 +174,16 @@ def test_exhausted_universe_terminal_state(monkeypatch, tmp_path):
         saved["state"] = s
     monkeypatch.setattr(coc, "save_continuous_state", mock_save)
 
+    # The terminal-state path writes its report via the module-level
+    # _atomic_write helper. Monkeypatch it so the test never materializes a
+    # fixture artifact on the real repository path
+    # (research/campaign_cycles/terminal/); the test asserts the report
+    # contents in-memory, not a persisted file.
+    written = {}
+    def mock_atomic_write(path, content):
+        written[str(path)] = content
+    monkeypatch.setattr(coc, "_atomic_write", mock_atomic_write)
+
     coordinator = ContinuousCycleCoordinator()
     monkeypatch.setattr(coordinator, "_make_universe_snapshot",
                         lambda u: ("snap-123", u))
@@ -204,6 +214,15 @@ def test_exhausted_universe_terminal_state(monkeypatch, tmp_path):
 
     # run_campaign NOT called (no execution for exhausted universe)
     assert len(campaign_called) == 0
+
+    # The terminal report is captured by the monkeypatched writer; assert it
+    # was produced and that it targets the real repository terminal path, so
+    # the monkeypatch above is load-bearing (no fixture artifact on disk).
+    assert len(written) == 1
+    written_path = next(iter(written))
+    assert written_path.endswith("research/campaign_cycles/terminal/exhausted_cohort_1.json")
+    written_report = json.loads(written[written_path])
+    assert written_report["state"] == "BLOCKED_EXTERNAL"
 
     # 18 eligible assets < COHORT_SIZE 20
     assert 18 < COHORT_SIZE
