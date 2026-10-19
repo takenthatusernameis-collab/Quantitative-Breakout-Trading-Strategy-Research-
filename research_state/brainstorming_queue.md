@@ -842,11 +842,12 @@ repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and doc
   waits for a **preregistered universe version**, not for an external party. The decision
   record was written 2026-10-19T15:4xZ; the preregistered v2 specification
   (`configs/research_v2.json`, `specification_hash 49fb0814...`) was produced
-  2026-10-19T16:5xZ and satisfies §6 prerequisite 1. Prerequisites 2–5 (v2 universe
-  manifest, v2 data manifest, v2 holdout report, the no-reuse/no-mixing binding) remain
-  outstanding, so no v2 execution is authorized. The next bounded task is prerequisite 2:
-  take the v2 snapshot inside the pinned retrieval window and validate its constituents
-  per §3.
+  2026-10-19T16:5xZ and satisfies §6 prerequisite 1. Prerequisites 2 and 3 (v2 universe
+  manifest and v2 data manifest, built from the in-window snapshot with every constituent
+  validated per §3) were delivered 2026-10-19T19:0xZ — 18 constituents validated, HYPE
+  excluded for insufficient history, XMR excluded because its spot pair is unavailable.
+  Prerequisite 4 (v2 candidate manifest and holdout report) and the v2 holdout execution
+  remain outstanding, so no v2 execution is authorized.
 
 
 ---
@@ -854,7 +855,7 @@ repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and doc
 ## BRAIN-008 — The market-cap universe provider is reachable: the "exhausted universe" is a protocol boundary, not an external one
 
 **Priority:** P0 — the campaign's stop condition, universe versioning and cohort semantics
-**Status:** `IMPLEMENTATION_IN_PROGRESS` (decision record written 2026-10-19T15:4xZ; §6 prerequisite 1 — the preregistered v2 specification — delivered 2026-10-19T16:5xZ; prerequisites 2–5 outstanding, no execution authorized)
+**Status:** `IMPLEMENTATION_IN_PROGRESS` (decision record written 2026-10-19T15:4xZ; §6 prerequisite 1 — the preregistered v2 specification — delivered 2026-10-19T16:5xZ; prerequisites 2 and 3 — the v2 universe manifest and the v2 data manifest with §3 constituent validation — delivered 2026-10-19T19:0xZ; prerequisite 4 (v2 candidate manifest, confirmatory window and holdout report) outstanding, no execution authorized)
 **Cause labels:** `IMPLEMENTATION_DEFECT` (terminal state asserted a provider status it never observed), `RESEARCH_DESIGN_RISK` (universe versioning, cohort composition and cross-cohort comparability are undecided)
 
 ### Evidence (observed, 2026-10-19T15:43:31Z)
@@ -989,5 +990,74 @@ strategy is measured (README Section 2A F).
 constituent after §3 validation, the correct outcome is a documented `NO_NEW_ELIGIBLE_CONSTITUENT` with
 evidence, not a silent extension of v1. If the v1 holdout is ever reused as confirmation, or if v2 results
 are tallied with the 497,664 v1 cycle-0 units, this decision is void.
+
+### 12. Decision implemented — §6 prerequisites 2 and 3 delivered (2026-10-19T19:0xZ, separate session)
+
+**Delivered.** The v2 universe manifest and the v2 data manifest now exist, are hash-bound and are
+verified offline. No v2 execution, grid, backtest or candidate selection was performed, and no
+confirmatory-window candle was read.
+
+**The snapshot (P2 input).** `research/v2_evidence/raw_market_cap_response.json`, sha256
+`c4772c58d03c94df6ae98dc31bb3996de2c90c007a2ef7f72a0a92449fb1dbad` (78,557 bytes), retrieved
+2026-10-19T18:47:56Z from the frozen CoinGecko endpoint — inside the pinned window
+(2026-10-19T16:52:00Z → 2026-10-26T16:52:00Z), which opened when the specification was frozen. The
+earlier 15:43:31Z observation remains prior evidence only and is not the v2 universe. The v2 manifests
+record this retrieval, its raw hash and its timestamp; the previously recorded 16:52:00Z digest
+(`926fad78…`) was never backed by stored bytes and has been replaced.
+
+**Membership rule applied.** The evaluation depth is the top 20 assets by market capitalization *after*
+the `exclusion_rules` are applied, exactly as the campaign's own universe provider does. Twelve assets
+were removed by rule and recorded with their reason (`stablecoin_excluded` for USDT/USDC/USDS/USDE/DAI/USD1,
+`exchange_token_excluded` for FIGR_HELOC/WBT/LEO/RAIN/CC/GRAM). The resulting candidate set is identical
+to the 15:43:31Z candidate id list.
+
+**§3 validation results (one bounded request per host; both statuses recorded):**
+
+| outcome | assets | evidence |
+| --- | --- | --- |
+| validated | BTC ETH BNB XRP SOL TRX ZEC DOGE LINK ADA NEAR XLM BCH LTC UNI AVAX SUI HBAR (18) | Binance spot `TRADING` + 26,280 closed hourly candles, no gaps, 0 rejected rows, canonical CSV hashed `sha256-canonical-hourly-csv-v1` in `research/data/candles_v2/` |
+| excluded — `insufficient_hourly_history` | HYPE | Binance spot `TRADING`, but only 607 closed hourly candles; the 26,280 floor was not lowered and nothing was interpolated |
+| excluded — `binance_spot_unavailable` | XMR | the `<SYMBOL>USDT` pair is not tradeable on Binance spot at verification time |
+
+**ZEC and HBAR are now validated** (they were the unvalidated candidates named in §3); **HYPE is not**
+and stays excluded. This is the first evidence-based resolution of the ZEC/HYPE/HBAR question.
+
+**Artifacts.**
+- `research/universe_manifest_v2.json` — `manifest_hash 4e927e52…`; snapshot-identity tuple, per-candidate
+  outcome and exclusion reason, exclusion rules copied byte-equal from the v1 manifest, `supersedes`
+  pointing at the v1 universe and candidate manifests by sha256.
+- `research/data_manifest_v2.json` — `manifest_hash 9f64d8d1…`; per-asset provenance (endpoint used,
+  endpoint failures, request count, first/last candle timestamp, expected/observed counts, gaps, rejected
+  rows, content hash, dataset path), `content_hashes`, exclusion reasons, spot-verification evidence,
+  `holdout_exposed_count = 0`, `confirmatory_window_status = NOT_STARTED`.
+- `research/v2_evidence/` — the raw market-cap response, its observation, the per-pair spot-verification
+  evidence and the per-asset candle-verification evidence.
+- `scripts/v2_constituent_validation.py` — the bounded, re-runnable producer of the two manifests.
+- `scripts/verify_research_v2_manifests.py` — read-only offline verifier (exit 0/1, JSON report).
+- `tests/test_research_v2_manifests.py` — 13 deterministic tests (identity tuple, in-window snapshot,
+  self-hashes, dataset re-hashing, exclusion reasons, v1 immutability, no candidate manifest, no
+  confirmatory exposure).
+
+**Reproducibility.** The candle window is bound to the snapshot timestamp (the last fully closed hour at
+2026-10-19T18:47:56Z) rather than to the wall clock, so re-running the validation reproduces
+byte-identical datasets instead of silently sliding the window forward. Re-running does refresh the
+manifests' own validation timestamps; the producer refuses to rewrite a manifest that already records the
+same snapshot unless `--force` is given.
+
+**Still outstanding — no execution is authorized.**
+- P4: the v2 holdout *report*, which can only be produced after a v2 candidate manifest is frozen and the
+  confirmatory window is evaluated. The window needs ≥ 2,160 closed hourly candles *after* the candidate
+  freeze, so it cannot exist yet: the earliest possible start is the freeze date plus 90 days.
+- The v2 candidate manifest itself: selection needs a v2 grid run, which no recorded decision authorizes.
+  `research/candidate_manifest_v2.json` remains manifest_version 2 of the v1 campaign and is not a
+  v2-universe manifest.
+- The frozen specification still records P2/P3 as `OUTSTANDING`. It is immutable and hash-verified, so
+  that text is not rewritten here; flipping it requires a versioned amendment.
+
+**Falsifiers for this delivery.** If the stored snapshot hash does not match the digest recorded in the
+manifests, or if the retrieval timestamp falls outside the pinned window, the manifests are invalid and
+must be discarded. If any validated dataset fails to re-hash to its recorded content hash, the affected
+constituent is not validated. If the v1 artifacts no longer match the recorded `supersedes` digests, the
+v2 manifests are invalid.
 
 
