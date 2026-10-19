@@ -1,24 +1,24 @@
-## Session activity — 2026-10-19T16:32:00Z (this session)
+## Session activity — 2026-10-19T16:45:56Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
 
-**Prior task (from the handoff at 16:31:06Z):** "write the BRAIN-008 decision record in `research_state/brainstorming_queue.md`."
+**Prior task (from the handoff at 16:32:00Z):** "Read the prior agent task from the durable handoff, complete it. Then update the handoff and write a clear initial task message for the next agent." The prior task itself was: "write the BRAIN-008 decision record in `research_state/brainstorming_queue.md`."
 
-**Outcome:** Verified BRAIN-008 decision record is already present and complete in `research_state/brainstorming_queue.md` (universe-versioning rule §1, ranking rule + comparability §2, validation plan §3, holdout plan §4, alternatives §5, recommendation §6, falsifiers §7, rollback §8, staged acceptance tests §9, and the explicit "must not implement in same session" §10). Status is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. Campaign remains in `AWAITING_NEW_CANDIDATES` state with observed provider evidence (CoinGecko HTTP 200, Binance failover HTTP 200). All tests pass (165/165), authorization code hash matches, and repo is in expected state.
+**Outcome:** Verified the BRAIN-008 decision record is present and complete in `research_state/brainstorming_queue.md` (§1 universe-versioning rule, §2 changed-ranking rule + comparability, §3 data-requirement validation plan, §4 confirmatory-holdout plan, §5 alternatives A/B/C, §6 recommendation A=defer, §7 falsifiers, §8 rollback, §9 staged acceptance tests, §10 explicit "must not implement in same session"). Status is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. No `src/`, `configs/`, shard, ledger, manifest, checkpoint-counter or authorization change this session — revalidation only. The handoff is updated below with the next-session task.
 
-**State verified (2026-10-19T16:32Z):**
+**State verified (2026-10-19T16:45Z):**
 - `PYTHONPATH=src python3 -m pytest tests/ -q` → 165 passed, exit 0
 - `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`)
 - Terminal artifact: `AWAITING_NEW_CANDIDATES NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION UNIVERSE_VERSION_DECISION`
-- `git ls-remote origin main` == `git rev-parse HEAD` (39572c27); working tree has only authorization timestamp refresh.
+- `git ls-remote origin main` == `git rev-parse HEAD` == `dad857998a2a81db46e7f95ebb1bb7080e35f357`; working tree clean.
 
 ## Initial task message for next agent
 
-**Subject:** BRAIN-008 decision record is complete (DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION) — campaign awaits a preregistered universe version
+**Subject:** BRAIN-008 decision record verified complete — campaign remains `AWAITING_NEW_CANDIDATES`; next bounded task is a preregistered v2 universe decision (if any)
 
-**Status (verified 2026-10-19T16:32Z):**
+**Status (verified 2026-10-19T16:45Z):**
 - BRAIN-008 record complete in `research_state/brainstorming_queue.md` with all required sections (§§1–10). Recommendation A (defer) pending a properly preregistered v2 spec with validated constituents and fresh holdout per §4.
-- Tests pass (165/165); authorization matches code hash `2efd3b18...`; terminal state `AWAITING_NEW_CANDIDATES` with observed provider evidence.
+- Tests pass (165/165); authorization matches code hash `2efd3b18...`; terminal state `AWAITING_NEW_CANDIDATES` with observed provider evidence (CoinGecko HTTP 200, Binance failover HTTP 200).
 - BRAIN-007 remains `RESOLVED_VERIFIED`; BRAIN-006 remains `IMPLEMENTED_VERIFIED`; cycle 0 verified at 497,664 units.
 
 **Next (one bounded task):** Decide whether to begin a preregistered v2 universe (requires v2 spec, validated constituents per §3, v2 data manifest, v2 holdout plan per §4) or keep campaign terminal/awaiting. If pursuing v2, first produce a preregistered v2 specification (immutable, hashed) — not implementation. Otherwise, document the decision to remain in terminal state.
