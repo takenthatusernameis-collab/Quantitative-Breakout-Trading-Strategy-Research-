@@ -534,3 +534,54 @@ Verification this session: `git rev-parse HEAD` == `git ls-remote origin main` =
 **Rollback and review rule:** N/A (no prompt change). If a later session finds that a prompt-level clause would have prevented a wrong candidate promotion (e.g. requiring a spec-to-implementation field mapping for frozen rules), propose exactly one clause with the observed failing behavior and its regression case.
 
 **Verification this session:** `git rev-parse HEAD` == `git ls-remote origin main` == `63c780c9...`; `PYTHONPATH=src python3 -m pytest tests/ -q` → 88 passed, exit 0; `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664` → `"verified": true`, exit 0.
+
+## Session prompt review — 2026-10-19T13:5xZ (HEAD a968aa62, code hash d0dca29...)
+
+**Outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Triggering evidence:** the previous review (2026-10-19T13:2xZ) left a standing condition: "if a later session
+finds that a prompt-level clause would have prevented a wrong candidate promotion (e.g. requiring a
+spec-to-implementation field mapping for frozen rules), propose exactly one clause with the observed failing
+behavior and its regression case." This session re-derived the continuous cycle 0 candidates under the
+preregistered rule and compared the result with the frozen v1 manifest:
+`PYTHONPATH=src python3 scripts/select_candidates_cycle0.py research/campaign_cycles/0f52f6c9...` -> 497,664 /
+497,664 units (100% coverage), 0 holdout records read, 14 assets qualify, 1 `INSUFFICIENT_EVIDENCE`, 3
+`NO_CANDIDATE`, and **16 of the 18 frozen v1 candidates fail the preregistered gates**. The audit of the
+previous session's read-only script (`scripts/select_candidates_cycle0.py` at `a968aa62`) found that it
+implemented the gates with semantics that do not match the preregistered text: the per-fold trade floor was
+required in every fold instead of in at least three of the four folds, the positive-return gates were applied
+per fold instead of to the combined validation net return, trade counts were summed over the three cost
+scenarios (the same trades re-costed), the lexicographic `config_id` tiebreak was missing, and
+`INSUFFICIENT_EVIDENCE` was never distinguished from `NO_CANDIDATE`.
+
+**Cause classification:** `IMPLEMENTATION_DEFECT` and `TEST_GAP`, not `PROMPT_GAP`. The standing condition is
+answered in the negative: the required field mapping was already demanded by the task instruction
+("Implement the rule literally from `configs/research_v1.json` -> `selection` and record a spec-field -> code
+mapping"), README Section 9 already forbids substituting another rule and requires the gates to be reported
+separately, and README Sections 10/11 already require deterministic tests for the selection logic. The
+failure was non-compliance with existing instructions, not a missing instruction. A prompt clause would not
+have prevented `candidate_freeze.select_best_candidate` from ranking by profit factor; a unit test that
+asserts the selector's behaviour against the frozen thresholds would have. The corrective action is therefore
+in the BRAIN-006 design record and its implementation (per-gate unit tests, a regression test that the
+conforming rule does not reproduce the v1 manifest, and a recorded spec-field -> code mapping in the
+artifact), not in the prompt.
+
+**Revision summary:** none. No README Section 2A change; no prompt revision proposed; no same-session
+implementation of a freshly brainstormed root cause (the BRAIN-006 design record only; the `src/`
+implementation is a later session).
+
+**Expected effect:** none (no prompt change). Durable outputs: `scripts/select_candidates_cycle0.py`
+(conforming read-only re-derivation with the spec-field -> code mapping, the recomputed buy-and-hold
+baseline, the parameter-neighbourhood analysis and the interpretation-sensitivity variants),
+`tests/test_select_candidates_cycle0.py` (18 tests: metric conventions pinned against the campaign
+backtester, one per gate, the `NOT_EVALUABLE` paths, the tiebreak order, the holdout refusal, neighbour
+mechanics, end-to-end artifact reproducibility), the regenerated
+`research/campaign_cycles/0f52f6c9.../candidate_selection.json`, and the BRAIN-006 decision record in
+`research_state/brainstorming_queue.md`.
+
+**Rollback and review rule:** N/A (no prompt change). If a future session shows that a rule-implementation
+task can pass review while its gate semantics differ from the frozen text, propose exactly one clause that
+requires the recorded interpretation mapping and the sensitivity variants to be reviewed together with the
+implementation, and name the regression case that would have caught it.
+
+**Verification this session:** `git rev-parse HEAD` == `git ls-remote origin main` == `a968aa62d3f92fecb0b7babe5351fc0b9ee914f1` (session start); `PYTHONPATH=src python3 -m pytest tests/ -q` -> 106 passed, exit 0 (88 pre-existing + 18 new); the selection script is deterministic (two runs, identical artifact SHA-256) and reads zero holdout records; the per-asset gate values of the selected ADAUSDT candidate were cross-checked against an independent re-computation from the raw shards and match exactly.

@@ -489,6 +489,205 @@ C. **Reporting-only reconciliation** — keep the current execution behavior and
 
 ---
 
+## BRAIN-006 — Decision record (written 2026-10-19 UTC, code hash `d0dca29...`, HEAD `a968aa62`)
+
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `RESEARCH_DESIGN_RISK`
+**Authoritative rule:** the preregistered rule in `configs/research_v1.json` -> `selection`, with the three
+interpretations that the text leaves open pinned in section 2. The v1 profit-factor rule
+(`src/breakout_research/candidate_freeze.py:50-87`) is **not** authoritative and is retained only as a
+historical record of how the v1 manifest was produced.
+**Not implemented in this session** (README Section 2A C1): this record is the design; the `src/` implementation
+is a later session.
+
+### 1. Impact quantification (prerequisite evidence, completed this cycle)
+
+Read-only re-derivation of the per-asset candidate set for continuous cycle 0 under the preregistered rule:
+`scripts/select_candidates_cycle0.py` -> `research/campaign_cycles/0f52f6c9.../candidate_selection.json`
+(497,664 / 497,664 expected units = 100% coverage, 0 holdout records read, 0 duplicate units, byte-identical
+on re-run, artifact SHA-256 `0e4d43f8e23504ba25dc928b5a3197968ba6020e5226cf26c77d5ffeff45311d`).
+
+| asset | preregistered selection | status | frozen v1 candidate | frozen candidate qualifies | rank of frozen candidate |
+|---|---|---|---|---|---|
+| ADAUSDT | cfg_1513 | CANDIDATE_SELECTED | cfg_1513 | yes | 1 |
+| ATOMUSDT | cfg_0581 | CANDIDATE_SELECTED | cfg_0629 | yes | 2 |
+| AVAXUSDT | cfg_1561 | CANDIDATE_SELECTED | cfg_1012 | no | - |
+| BCHUSDT | - | NO_CANDIDATE | cfg_0553 | no | - |
+| BNBUSDT | cfg_0089 | CANDIDATE_SELECTED | cfg_1036 | no | - |
+| BTCUSDT | - | INSUFFICIENT_EVIDENCE | cfg_1009 | no | - |
+| DOGEUSDT | cfg_0040 | CANDIDATE_SELECTED | cfg_0664 | no | - |
+| DOTUSDT | cfg_0384 | CANDIDATE_SELECTED | cfg_0300 | no | - |
+| ETHUSDT | cfg_1525 | CANDIDATE_SELECTED | cfg_1128 | no | - |
+| LINKUSDT | - | NO_CANDIDATE | cfg_1105 | no | - |
+| LTCUSDT | cfg_0084 | CANDIDATE_SELECTED | cfg_1106 | no | - |
+| NEARUSDT | cfg_1584 | CANDIDATE_SELECTED | cfg_2040 | no | - |
+| SOLUSDT | cfg_0732 | CANDIDATE_SELECTED | cfg_0828 | no | - |
+| SUIUSDT | cfg_0507 | CANDIDATE_SELECTED | cfg_0602 | no | - |
+| TRXUSDT | - | NO_CANDIDATE | cfg_0098 | no | - |
+| UNIUSDT | cfg_0124 | CANDIDATE_SELECTED | cfg_0521 | no | - |
+| XLMUSDT | cfg_0124 | CANDIDATE_SELECTED | cfg_1108 | no | - |
+| XRPUSDT | cfg_1661 | CANDIDATE_SELECTED | cfg_2189 | no | - |
+
+- 14 assets qualify, 1 is `INSUFFICIENT_EVIDENCE` (BTCUSDT: exactly one configuration clears the economic
+  screen but fails the sample floor), 3 are `NO_CANDIDATE` (BCHUSDT, LINKUSDT, TRXUSDT).
+- **16 of 18 frozen v1 candidates fail the preregistered gates**; only ADAUSDT and ATOMUSDT survive, and
+  ADAUSDT's frozen candidate is also the preregistered winner. The v1 holdout conclusions
+  (`reports/final_research_report.json`: 9 `PROVISIONAL_HISTORICAL_SURVIVAL`, 7 `REJECTED_ON_HOLDOUT`,
+  2 `INSUFFICIENT_EVIDENCE`) therefore describe candidates that the preregistered rule would not have
+  promoted.
+- Binding gates (configurations failing each gate, summed over the 18 assets x 1,728 evaluated
+  configurations): `positive_folds_required` 39,478, `positive_net_return_2x_costs` 35,526,
+  `median_sharpe_gt_zero` 35,172, `positive_net_return_baseline` 33,550, `median_sharpe_gt_buyhold` 27,571,
+  `min_trades_total` 22,640, `min_folds_with_min_trades` / `min_trades_per_fold` 19,598 each. The deviation
+  is not a single missing gate: the profit-factor rule simply does not screen on returns, folds or Sharpe.
+- The `median_sharpe_gt_buyhold` gate **is** satisfiable from the repository: it was recomputed from the
+  frozen, hash-verified candle datasets (`research/data/candles/`, verified against
+  `research/data_manifest.json`) over the same fold windows. The ledger has no baseline field, but the
+  baseline is not unavailable - it was never computed and stored.
+
+### 2. Interpretations the preregistered text leaves open (pinned by this decision)
+
+These are readings of the existing preregistered text (README Section 9 and `configs/research_v1.json` ->
+`selection`); they are **not** methodology changes and they do not weaken any threshold.
+
+1. **Validation-fold metric** = the metric of a fold at baseline (1x) costs; cost scenarios are the same
+   trades re-costed and are never summed with the baseline. Alternative readings (median across cost
+   scenarios; pooled over the 12 fold x cost units) are evaluated as sensitivity variants.
+2. **Combined validation net return** = the mean of the four fold net returns. The sign of the mean and of
+   the sum is identical, so the gate is invariant to that choice; the compounded product of the fold returns
+   is evaluated as a sensitivity variant because it can differ in sign.
+3. **Per-fold trade floor** = 5 trades in at least 3 of the 4 folds (README Section 9: "at least 5 in at
+   least three of the four folds"), not 5 trades in every fold. The stricter reading is a sensitivity variant.
+   The gate is not evaluable for a configuration with no baseline-cost records, and a configuration without
+   2x-cost records cannot pass the 2x gate; such gates are reported `NOT_EVALUABLE` with the missing input.
+
+**Sensitivity (interpretation choice changes the selected configuration for a minority of assets):**
+`fold_median_across_costs` 13/18 agreements with the pinned reading, `pooled_fold_cost_units` 15/18,
+`strict_min_trades_in_every_fold` 17/18, `combined_net_return_compounded` 16/18. The interpretation is
+therefore outcome-relevant for up to 5 of 18 assets and must be pinned before any candidate is frozen -
+which is exactly what this decision does.
+
+### 3. Alternatives considered
+
+- **A. Re-freeze under the preregistered rule and version the manifest** - publish a new, separately
+  versioned candidate manifest for the continuous cycle; keep `research/candidate_manifest.json` (v1)
+  immutable; treat the v1 holdout conclusions as historical only. *Correctness:* the manifest stays a
+  content-addressed record of what was frozen and when. *Research validity:* no post-hoc rule choice, no
+  rewriting of history. *Cost:* one new artifact plus the selector implementation. *Failure mode:* two
+  manifests coexist and a reader may confuse them - mitigated by explicit `manifest_version` and
+  `supersedes` fields and a note in the holdout report.
+- **B. Reconcile in place** - supersede the v1 manifest with a supersession record and re-derive the affected
+  economic conclusions in place. *Correctness:* one manifest, but it destroys the evidence that the v1
+  candidates were frozen under a different rule, and the v1 holdout was already consumed, so "re-deriving the
+  conclusions" cannot be done on the same holdout. *Research validity:* highest risk of an implicit
+  re-use of the exposed holdout. *Verdict:* rejected - it cannot be executed without re-exposing the holdout.
+- **C. Amend the frozen specification** - record the profit-factor rule as the intended rule. *Verdict:*
+  rejected. The rule was chosen by the implementation, not by the protocol, and README Section 9 forbids
+  substituting a performance-maximizing rule after seeing results; amending the protocol to legitimise a
+  post-hoc rule is the same defect with a paper trail.
+- **D. (new) Keep the preregistered rule, keep the v1 manifest immutable, and treat the v1 holdout as
+  terminal** - adopt A, additionally record the v1 holdout exposure as `EXPOSED_OR_UNKNOWN` with no reuse,
+  and require a *new* confirmatory period before any claim. *Verdict:* this is A plus the explicit holdout
+  disposition, and it is the recommendation.
+
+### 4. Recommendation (decision)
+
+**Adopt A + D.** The preregistered rule is the only admissible rule for v1+ candidate promotion. The v1
+manifest stays immutable and is relabelled (in the new manifest and in the holdout report) as produced under
+a non-preregistered rule. A new, separately versioned candidate manifest is published for continuous cycle 0
+from the conforming selector. The v1 holdout (`EXPOSED_OR_UNKNOWN`) is never reused as confirmation for the
+new cycle; a fresh confirmatory period is required for any new claim.
+
+### 5. Buy-and-hold baseline data source (decision)
+
+Options: (B1) recompute from the frozen candles at selection time; (B2) add baseline fields to every result
+record (schema bump, full 497,664-unit re-run); (B3) compute the baseline once per campaign into a separate,
+hash-bound baseline artifact that the selector reads.
+
+**Decision: B3, computed with B1 semantics.** A new `research/baselines/<campaign_id>.json` artifact holds,
+per asset and per validation fold, the buy-and-hold metrics (daily Sharpe, net return, max drawdown,
+turnover, fee/slippage drag) at 1x/2x/3x costs, the data-manifest content hash it was computed from, and
+the fold window bounds. The selector consumes that artifact and fails closed when it is missing or when the
+data hash no longer matches. B2 is rejected for this cycle (a full re-run for a baseline that can be derived
+exactly from frozen, hash-verified candles is not justified); B2 remains the right long-term design if the
+baseline must be carried inside each unit, and that is a separate, versioned schema decision.
+The other README Section 7 baselines are accounted for as follows: `cash` is a constant-zero series
+(Sharpe undefined - never reported as informative), `buyhold_btc` is the same computation for BTCUSDT, and
+`fixed_breakout_baseline` is already a member of the 2,304-configuration grid (`cfg_0145`:
+classic_high_breakout / 24 / 0.0 / one_close / none / channel_24) so its validation results already exist in
+the ledger.
+
+### 6. Conforming selector (in `src/`) - design
+
+- New module `src/breakout_research/selection.py`: `evaluate_candidate(fold_units, spec, baselines) -> gate
+  table`, `select_candidates(records, spec, baselines) -> {asset: {status, config_id, gates, ranking}}`,
+  implementing exactly the pinned semantics of section 2, with the status taxonomy
+  (`CANDIDATE_SELECTED` / `CANDIDATE_SELECTED_WITH_UNEVALUABLE_GATES` / `INSUFFICIENT_EVIDENCE` /
+  `NO_CANDIDATE`) and the ranking key (median net daily Sharpe, then median net return, then max drawdown,
+  then turnover, then lexicographic config id).
+- New module `src/breakout_research/baselines.py`: `buyhold_baseline(candles, fold_windows, cost_scenarios)`
+  with the backtester's own cost, daily-return and Sharpe conventions (the same conventions the campaign
+  used), plus the data-manifest hash verification.
+- `src/breakout_research/candidate_freeze.py`: `select_best_candidate` is replaced by the conforming selector;
+  the profit-factor selector is kept only as `_legacy_profit_factor_selector` for provenance, and the freeze
+  path writes a new manifest with `rule: "preregistered_v1"`, `rule_spec_hash`, `supersedes`,
+  `code_hash`, `data_manifest_hash`, `manifest_hash` and the per-asset gate table.
+- **Code-hash coupling:** any `src/` change rotates `compute_code_hash()` and invalidates
+  `research_state/campaign_authorization.json`. The implementation session must therefore re-run the pilot
+  and re-authorize (`campaign_authorization.json` with a matching code hash) before any further campaign
+  execution. No campaign execution may be trusted under the old hash afterwards.
+- **Holdout discipline:** the selector consumes only `is_holdout == false` units and must raise on a holdout
+  record, exactly as the read-only script does.
+
+### 7. Staged implementation plan and acceptance tests (next session)
+
+1. `src/breakout_research/baselines.py` + `src/breakout_research/selection.py` with unit tests: one test per
+   gate (including the `NOT_EVALUABLE` paths), the tiebreak order, the metric conventions pinned against
+   `backtester._compute_metrics` / `_compute_daily_returns`, the holdout refusal, and a regression test
+   asserting that the conforming rule does **not** reproduce the v1 profit-factor manifest (the divergence
+   above is the expected result, not a bug).
+2. Baseline artifact for the continuous cycle (`research/baselines/<campaign_id>.json`) generated from the
+   frozen, hash-verified candles, with a determinism test (re-run -> byte-identical) and a hash-mismatch test.
+3. New versioned candidate manifest for continuous cycle 0 (max 1 candidate per asset, gate table included).
+   `research/candidate_manifest.json` (v1) is not modified.
+4. Pilot re-run and re-authorization with the new code hash; `campaign_authorization.json` re-derived and
+   `compute_code_hash()` compared against it.
+5. Holdout report updated to state that the v1 holdout is `EXPOSED_OR_UNKNOWN`, is not reused, and that the
+   new candidates are `CANDIDATE_PENDING_HOLDOUT` pending a new confirmatory period.
+6. `PYTHONPATH=src python3 -m pytest tests/ -q` green, exit 0; `git ls-remote origin main` == `git rev-parse HEAD`.
+
+**Multiple-testing caveat that must travel with every artifact:** 2,304 configurations per asset are tested
+per asset and are strongly correlated; the reported counts of qualifying configurations (up to 166 for one
+asset) are trial counts, not independent evidence. A Deflated Sharpe Ratio may be reported only with a
+documented formula and reference fixtures, and it supplements rather than replaces a fresh holdout.
+
+### 8. Falsifiers
+
+The recommendation is falsified if any of the following is shown: (a) the pinned interpretation of section 2
+contradicts an explicit statement elsewhere in `configs/research_v1.json` or README Section 9;
+(b) an independent re-implementation of the preregistered rule on the same 497,664 records produces a
+different per-asset selection (the selection is fully determined by the artifact above, so this would
+indicate a defect in this record or in the script); (c) the buy-and-hold recomputation from the frozen
+candles is shown not to be comparable with the campaign's cost and Sharpe conventions;
+(d) a conforming selector is shown to require data that the repository does not hold, other than the
+baseline artifact that this decision creates.
+
+### 9. Rollback
+
+The implementation is additive: two new modules, one new baseline artifact, one new versioned candidate
+manifest, and a pilot re-run. Rollback is `git revert` of the implementation commit plus re-issuing the
+authorization artifact for the previous code hash; the v1 manifest, the shards, the ledger and the exposed
+holdout records are never modified, so no evidence is lost by reverting.
+
+### 10. Out of scope of this decision
+
+BRAIN-007 (cycle linkage, checkpoint counter semantics, terminal state for an exhausted universe) remains
+`BRAINSTORMING_REQUIRED` and is not decided here. No economic conclusion is claimed or revised by this
+record: it is a method decision about how candidates may be promoted, and the exposed v1 holdout is not
+reused.
+
+---
+
 ## Current phase decision
 
 At initial triage, all five entries were `BRAINSTORMING_REQUIRED`. Revalidated against live source at HEAD `6804546` (code hash `382e314...`): all five BRAIN items are `RESOLVED_VERIFIED`; none is `BRAINSTORMING_REQUIRED`.
@@ -507,5 +706,24 @@ All 5 parallel strategy lanes `COMPLETE`. No root cause was implemented in the s
 - BRAIN-007 (P1) — `BRAINSTORMING_REQUIRED`. Continuous cycle 0 reproduced the v1 validation sweep metrically exactly (497,664/497,664 units, 0 differences) without linking to it; `research_state/checkpoint.json` counters (497,718) mix 54 exposed-holdout units into a validation completion count; and an exhausted universe advances the cohort counter instead of persisting a terminal `AWAITING_NEW_CANDIDATES`/`BLOCKED_EXTERNAL` state.
 
 Neither new item may be implemented in the session that writes its design decision (README Section 2A C1). The next bounded task is the prerequisite impact quantification for BRAIN-006 — re-derive candidates for continuous cycle 0 under the preregistered rule from the verified validation records and quantify the divergence from `research/candidate_manifest.json` — which is read-only, offline, and holdout-safe. Any later `src/` change rotates the code hash and requires pilot re-run plus re-authorization before further campaign execution.
+
+**Decision update 2026-10-19 UTC (code hash `d0dca29...`, HEAD `a968aa62`):** the BRAIN-006 impact
+quantification is complete and the BRAIN-006 decision record has been written (see "BRAIN-006 — Decision
+record" above).
+
+- BRAIN-006 (P0) — `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. The preregistered rule is authoritative
+  for v1+ candidate promotion; the profit-factor selector is demoted to a provenance record; a new versioned
+  candidate manifest is published from a conforming selector; the v1 manifest stays immutable and the v1
+  holdout (`EXPOSED_OR_UNKNOWN`) is never reused. Quantified divergence: **16 of 18 frozen v1 candidates fail
+  the preregistered gates**; 14 assets qualify, 1 is `INSUFFICIENT_EVIDENCE`, 3 are `NO_CANDIDATE`; only
+  ADAUSDT's frozen candidate is also the preregistered winner. The `median_sharpe_gt_buyhold` gate is
+  satisfiable from the frozen, hash-verified candle datasets — the baseline was never computed and stored,
+  not unavailable.
+- BRAIN-007 (P1) — still `BRAINSTORMING_REQUIRED`; the design decision for cycle linkage, checkpoint counter
+  semantics and the terminal state for an exhausted universe is still outstanding and is not decided here.
+
+The BRAIN-006 implementation (`src/breakout_research/selection.py`, `src/breakout_research/baselines.py`,
+the baseline artifact, the new versioned candidate manifest, pilot re-run and re-authorization) is the next
+bounded task and must be executed in a later session than this decision record.
 
 **Out of scope:** ordinary bounded retries for demonstrated transient network errors, routine lint/test failures with an evidence-backed local fix, and recovery bundles/patches needed to preserve interrupted work. Those remain in the normal measured correction loop and are not duplicate durable error records.

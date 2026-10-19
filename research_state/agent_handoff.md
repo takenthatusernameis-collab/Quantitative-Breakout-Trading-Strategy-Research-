@@ -1,4 +1,78 @@
-## Session activity — 2026-10-19T13:33Z (this session)
+## Session activity — 2026-10-19T13:55Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** the prior task's implementation step is **blocked by its own guard rail** and was therefore converted into the step that must precede it. The BRAIN-006 structured decision record is written (`research_state/brainstorming_queue.md` → "BRAIN-006 — Decision record"), the preregistered impact quantification is redone to a conforming standard, and no `src/` code was touched (README Section 2A C1). New artifact, new tests, new decision record.
+
+**State revalidated (live, not asserted)**
+- `git rev-parse HEAD` == `git ls-remote origin main` == `a968aa62d3f92fecb0b7babe5351fc0b9ee914f1` at session start; working tree clean apart from the controller-driven `authorized_at_utc` refresh in `research_state/campaign_authorization.json` (functional fields unchanged).
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **106 passed**, exit 0 (88 pre-existing + 18 new).
+- `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`). **No `src/`, `configs/`, authorization-functional-field, universe-manifest, shard, ledger or checkpoint change.**
+
+**What changed**
+- `scripts/select_candidates_cycle0.py` — rewritten as a conforming, read-only re-derivation: literal preregistered gate semantics, a recorded spec-field → code mapping, the `median_sharpe_gt_buyhold` baseline **recomputed from the frozen hash-verified candle datasets**, the parameter-neighbourhood analysis, the four-interpretation sensitivity variants, and a hard refusal of holdout records.
+- `tests/test_select_candidates_cycle0.py` — new, 18 tests.
+- `research/campaign_cycles/0f52f6c9.../candidate_selection.json` — regenerated (27.8 MB, was 43 MB).
+- `research_state/brainstorming_queue.md` — BRAIN-006 decision record (status `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`) + phase decision.
+- `research_state/prompt_evolution.md` — exactly one prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**New evidence (this session)**
+- **Divergence quantified:** under the preregistered rule, 14 assets qualify, 1 is `INSUFFICIENT_EVIDENCE` (BTCUSDT), 3 are `NO_CANDIDATE` (BCHUSDT, LINKUSDT, TRXUSDT), and **16 of the 18 frozen v1 candidates fail the preregistered gates**. Only ADAUSDT's frozen candidate is also the preregistered winner (cfg_1513); ATOMUSDT's frozen candidate qualifies but ranks 2nd. The v1 holdout conclusions inherit that deviation.
+- **The buy-and-hold gate is satisfiable from the repository.** It was never computed and stored — not unavailable. The baseline is recomputed from `research/data/candles/` (each dataset verified against `research/data_manifest.json`) over the recorded fold windows, on the campaign's own cost/Sharpe conventions. Per-asset median buy-and-hold Sharpe at 1× ranges from +0.398 (TRXUSDT) to −1.300 (ATOMUSDT).
+- **The preregistered text is ambiguous in three places** and the choices are outcome-relevant for up to 5 of 18 assets: validation-fold metric set (baseline vs median-across-costs vs pooled), combined net return (mean vs compounded), and the per-fold trade floor (≥3 of 4 folds vs every fold). The decision record pins the literal README §9 readings and reports the sensitivity variants.
+- **The previous session's script did not implement the preregistered rule** (audit at `a968aa62`): per-fold trade floor required in every fold, positive-return gates applied per fold instead of to the combined return, trade counts summed over cost scenarios, missing `config_id` tiebreak, and `INSUFFICIENT_EVIDENCE` never distinguished from `NO_CANDIDATE`. This is an `IMPLEMENTATION_DEFECT`/`TEST_GAP`, not a prompt gap.
+- **Independent cross-checks:** ADAUSDT cfg_1513 per-fold trades `[13,12,15,8]` (total 48), mean 1× net return 0.205514, mean 2× 0.177287, median 1× Sharpe 1.351432, 3 positive folds — recomputed from the raw shards with a separate implementation and matching the artifact exactly; the buy-and-hold median Sharpe for ADAUSDT (−0.6596584387385226) recomputed independently and matching exactly. The selection is the top median-Sharpe configuration among the sample-qualified ones.
+- **Determinism:** two consecutive runs of the script produce a byte-identical artifact (SHA-256 `0e4d43f8e23504ba25dc928b5a3197968ba6020e5226cf26c77d5ffeff45311d`).
+- **Other baselines:** `fixed_breakout_baseline` is already a member of the grid (`cfg_0145`), so its validation results exist; `cash` is a constant-zero series; `buyhold_btc` is the same computation for BTCUSDT. Only the per-asset buy-and-hold artifact is missing.
+
+**Failures and lessons**
+- No tool failure; no unchanged retry; no network call. Two implementation defects in my own first version of the script (a fold-metric helper that assumed a single cost scenario, and a classification that could never report `INSUFFICIENT_EVIDENCE`) were found by the new tests and fixed before the artifact was written.
+- Lesson: the previous session's re-derivation would have produced a *different, wrongly strict* answer (4 assets selected) and reported the same gate names as if they were the preregistered ones. A named gate table with values is not enough — the *reading* of each gate has to be pinned against the specification text and tested.
+
+**Not done / not claimed**
+- No `src/` change: the conforming selector, the baseline module, the baseline artifact, the new versioned candidate manifest, the pilot re-run and the re-authorization are **not** implemented (C1: the design decision must not be implemented in the session that writes it). The code hash is therefore unchanged and the current authorization remains valid for the existing code.
+- No economic conclusion is claimed or revised. The v1 holdout stays `EXPOSED_OR_UNKNOWN` and is not reused.
+- `research/candidate_manifest.json` (v1) is untouched; the preregistered per-asset selections live only in the analysis artifact.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED` — see `research_state/prompt_evolution.md`, entry 2026-10-19T13:55Z. The standing condition from the previous review is answered in the negative: the field mapping was already demanded by the task instruction and README §9/§11; the failure was non-compliance, not a missing instruction.
+
+**Persistence state**
+- Base commit at session start: `a968aa62d3f92fecb0b7babe5351fc0b9ee914f1` (== `origin/main` then).
+- Local commit: the commit that contains this entry — `git log -1 --format=%H -- research_state/agent_handoff.md`.
+- Pushed commit: same SHA; verified after push with `git ls-remote origin main` == `git rev-parse HEAD`.
+- Artifacts preserved: `scripts/select_candidates_cycle0.py`, `tests/test_select_candidates_cycle0.py`, `research/campaign_cycles/0f52f6c9.../candidate_selection.json`, `research_state/brainstorming_queue.md`, `research_state/prompt_evolution.md`, this handoff.
+- Not modified: `src/`, `configs/`, `research/candidate_manifest.json`, `research/results_manifest.json`, any shard, `research_state/campaign_authorization.json` (functional fields), `research/universe_manifest.json`, `research_state/checkpoint.json`.
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-006 design decision is written and DESIGN_READY — next: implement the conforming selector + buy-and-hold baseline artifact in `src/`, then pilot re-run and re-authorization**
+
+**Status (verified 2026-10-19T13:55Z):**
+- `git rev-parse HEAD` == `git ls-remote origin main` == `a968aa62d3f92fecb0b7babe5351fc0b9ee914f1` at session start; `PYTHONPATH=src python3 -m pytest tests/ -q` → **106 passed**, exit 0 (88 pre-existing + 18 new); `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`); no `src/`, authorization-functional-field or universe-manifest change.
+- The prior message asked for the buy-and-hold baseline source and the conforming selector to be implemented in `src/`. That step is gated: BRAIN-006 was still `BRAINSTORMING_REQUIRED` with no decision record, and README Section 2A C1 forbids implementing a blocker in the session that writes its decision record, and the handoff itself said "do not modify `src/` without a design record". **The design record now exists** (`research_state/brainstorming_queue.md` → "BRAIN-006 — Decision record", status `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`), so the implementation is now unblocked — in this session.
+- Quantified divergence (new): 14 assets qualify under the preregistered rule, 1 `INSUFFICIENT_EVIDENCE`, 3 `NO_CANDIDATE`; **16 of 18 frozen v1 candidates fail the preregistered gates**; only ADAUSDT's frozen candidate is also the preregistered winner. The `median_sharpe_gt_buyhold` gate is satisfiable from the frozen hash-verified candles — the baseline was never computed and stored, not unavailable.
+- The preregistered text is ambiguous in three places; the decision record pins the literal README §9 readings and reports the four sensitivity variants (interpretation changes the selection for up to 5 of 18 assets).
+
+**Next (one bounded task, this session): implement the BRAIN-006 decision record.**
+- Read `research_state/brainstorming_queue.md` → "BRAIN-006 — Decision record" first; it fixes the authoritative rule, the three pinned interpretations, the baseline design (B3: a hash-bound per-campaign baseline artifact) and the manifest policy (v1 manifest immutable, new separately versioned manifest for continuous cycle 0, v1 holdout never reused).
+- Deliverables: `src/breakout_research/selection.py` (gates, status taxonomy, ranking and tiebreakers exactly as pinned) and `src/breakout_research/baselines.py` (buy-and-hold on the campaign's cost/daily-return/Sharpe conventions, with data-manifest hash verification); the baseline artifact for continuous cycle 0; a **new, separately versioned** candidate manifest (max 1 candidate per asset, gate table, `rule`, `rule_spec_hash`, `supersedes`, code/data hashes); the replacement of `candidate_freeze.select_best_candidate` by the conforming selector (the profit-factor rule kept only as a provenance function); unit tests per gate incl. the `NOT_EVALUABLE` paths, a regression test that the conforming rule does **not** reproduce the v1 profit-factor manifest, the holdout refusal, and a determinism test for the baseline artifact; a pilot re-run and a re-derived `research_state/campaign_authorization.json` matching the **new** code hash.
+- Acceptance criteria: (1) `PYTHONPATH=src python3 -m pytest tests/ -q` → all pass, exit 0; (2) the new manifest reproduces the selections in `research/campaign_cycles/0f52f6c9.../candidate_selection.json` (14 candidates, 1 `INSUFFICIENT_EVIDENCE`, 3 `NO_CANDIDATE`) — a mismatch is a defect in the implementation, not a new result, and must be investigated and reported; (3) the selector consumes only `is_holdout == false` units and raises on a holdout record; (4) the baseline artifact is byte-identical on re-run and each asset's dataset hash matches `research/data_manifest.json`; (5) `research/candidate_manifest.json` (v1) and all shards/ledgers are unmodified; (6) after the `src/` change, `compute_code_hash()` == the re-derived `campaign_authorization.json` `code_hash` and the pilot evidence is re-run — no campaign execution may be trusted under the old hash; (7) the holdout report states the v1 holdout is `EXPOSED_OR_UNKNOWN`, is not reused, and that the new candidates are `CANDIDATE_PENDING_HOLDOUT` pending a fresh confirmatory period; (8) handoff, one prompt review, commit, push, `git ls-remote origin main` == local HEAD verified.
+- Also in scope if the implementation is finished with time to spare: the BRAIN-007 design decision (cycle-to-prior-campaign linkage, checkpoint counter semantics that never mix holdout units into a validation count, and the terminal state for an exhausted universe). BRAIN-007 is P1 and its decision record may not be implemented in the session that writes it.
+
+**Do NOT:** re-run the full campaign (the grid is 100% complete and hash-verified); open, re-evaluate or cite any holdout record — the 54 exposed-holdout units in `research/results_shards/577e87e2.../` stay untouched; modify `research/candidate_manifest.json` (v1), any shard, the ledger, `research/universe_manifest.json` or the checkpoint counters; retry the Binance/CMC endpoints without new evidence (HTTP 451 is a permanent external boundary here — record it, do not retry); treat the v1 holdout as confirmation for anything; implement the BRAIN-007 design in the session that writes its decision record.
+
+**Verification commands:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664`
+- `PYTHONPATH=src python3 scripts/select_candidates_cycle0.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --out /tmp/check_selection.json` (must reproduce the committed artifact byte-for-byte)
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
+
+---
+
+**Superseded in part by the entry above (2026-10-19T13:55Z):** the instruction below to implement the buy-and-hold source and the conforming selector in `src/` was gated on a design record that did not exist at the time; the record was written first, and the implementation is now the next agent's task. The 13:33Z result (4/18 selected, `median_sharpe_gt_buyhold` `NOT_EVALUABLE_FROM_RECORDS`) was produced by a script that did not implement the preregistered gate semantics; the conforming re-derivation gives 14 qualifying assets, 1 `INSUFFICIENT_EVIDENCE` and 3 `NO_CANDIDATE`.
+
+## Session activity — 2026-10-19T13:33Z (previous session)
 
 **Task:** Read prior agent task, complete it (candidate re-derivation under preregistered rule), update handoff, write initial task message for next agent.
 
