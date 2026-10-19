@@ -4,8 +4,8 @@
 
 **Scope:** this file is a design queue, not a second error log or executable automation. Run-level workflow errors remain recorded only in `research_state/workflow_run_diagnostics.jsonl`. This queue holds the *decision and intervention plan* for selected blockers. Keep the single-workflow design intact.
 
-**Initial review date:** 2026-10-16 UTC  
-**Repository branch:** `main`  
+**Initial review date:** 2026-10-16 UTC
+**Repository branch:** `main`
 **Evidence caveat:** the diagnostic JSONL ledger was empty at review time. Entries below are based on direct inspection of current tracked source/manifests and historical run evidence, not on a claim that the new automatic error recorder has already discovered or end-to-end verified them.
 
 ## Brainstorming entry and exit rules
@@ -40,9 +40,9 @@ Until that design note exists, **do not attempt another implementation of the sa
 
 ## BRAIN-001 — Real historical market data path is bypassed
 
-**Priority:** P0 — blocks any economic conclusion  
-**Status:** `IMPLEMENTATION_IN_PROGRESS` (source changes committed; acceptance tests and live-data evidence remain outstanding)  
-**Cause labels:** `IMPLEMENTATION_DEFECT`, `DATA_OR_EXTERNAL_SERVICE`, potentially `PLATFORM_LIMIT`  
+**Priority:** P0 — blocks any economic conclusion
+**Status:** `IMPLEMENTATION_IN_PROGRESS` (source changes committed; acceptance tests and live-data evidence remain outstanding)
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `DATA_OR_EXTERNAL_SERVICE`, potentially `PLATFORM_LIMIT`
 **Confidence:** direct source and manifest evidence confirmed; a working genuine-data path is not demonstrated.
 
 ### Evidence
@@ -54,8 +54,8 @@ Until that design note exists, **do not attempt another implementation of the sa
 This is not a prompt or logging problem: the current production loader chooses synthetic test data directly. A more forceful prompt cannot turn generated candles into observed market history. The data contract must make real provenance mandatory and define fail-closed behavior.
 
 ### Alternatives to compare
-A. Wire the existing paginated Binance `DataFetcher` into the loader, validate coverage/timestamps/gaps, and cache data with provenance and content hashes.  
-B. Introduce an explicit data-provider interface with a single campaign-safe historical provider; isolate synthetic generation so it is callable only by test fixtures.  
+A. Wire the existing paginated Binance `DataFetcher` into the loader, validate coverage/timestamps/gaps, and cache data with provenance and content hashes.
+B. Introduce an explicit data-provider interface with a single campaign-safe historical provider; isolate synthetic generation so it is callable only by test fixtures.
 C. If an external source cannot supply the frozen universe/history, stop and document the exact missing asset/history requirements rather than silently substituting another source or shorter history.
 
 ### Required acceptance evidence
@@ -154,9 +154,9 @@ Use stable, deterministic canonical serialization for hashes, not process-depend
 
 ## BRAIN-002 — Pilot gate self-authorizes without proving prerequisites
 
-**Priority:** P0 — blocks trustworthy campaign authorization  
-**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design decision recorded below; implementation remains deferred until prerequisites are satisfied)  
-**Cause labels:** `IMPLEMENTATION_DEFECT`, `TEST_GAP`, `RESEARCH_DESIGN_RISK`  
+**Priority:** P0 — blocks trustworthy campaign authorization
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design decision recorded below; implementation remains deferred until prerequisites are satisfied)
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `TEST_GAP`, `RESEARCH_DESIGN_RISK`
 **Confidence:** direct source evidence confirmed.
 
 ### Evidence
@@ -168,8 +168,8 @@ Use stable, deterministic canonical serialization for hashes, not process-depend
 The system currently lets the component under evaluation assert its own authorization. The gate needs an independent, deterministic definition of evidence and a clear fail-closed state model. Additional prompt instructions cannot establish missing test results.
 
 ### Alternatives to compare
-A. Create a deterministic gate validator that recomputes input/code/spec hashes and checks named test reports, real-data provenance, record counts, restore tests, and remote persistence.  
-B. Make the pilot emit evidence only; require a separate, non-self-authorizing validation command to produce a gate artifact consumed by campaign startup.  
+A. Create a deterministic gate validator that recomputes input/code/spec hashes and checks named test reports, real-data provenance, record counts, restore tests, and remote persistence.
+B. Make the pilot emit evidence only; require a separate, non-self-authorizing validation command to produce a gate artifact consumed by campaign startup.
 C. Combine the two designs: pilot emits raw evidence, validator produces a content-addressed authorization record, and campaign revalidates it immediately before execution.
 
 ### Required acceptance evidence
@@ -222,9 +222,9 @@ C. Combine the two designs: pilot emits raw evidence, validator produces a conte
 
 ## BRAIN-003 — Full-grid loop evaluates the final holdout before candidate freeze
 
-**Priority:** P0 — potentially invalidates final performance claims  
-**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design decision recorded below; implementation remains deferred until prerequisites are satisfied)  
-**Cause labels:** `RESEARCH_DESIGN_RISK`, `IMPLEMENTATION_DEFECT`, `TEST_GAP`  
+**Priority:** P0 — potentially invalidates final performance claims
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design decision recorded below; implementation remains deferred until prerequisites are satisfied)
+**Cause labels:** `RESEARCH_DESIGN_RISK`, `IMPLEMENTATION_DEFECT`, `TEST_GAP`
 **Confidence:** direct execution-loop evidence confirmed; downstream result usage and exact historical exposure must be audited.
 
 ### Evidence
@@ -235,8 +235,8 @@ C. Combine the two designs: pilot emits raw evidence, validator produces a conte
 This is an evaluation architecture problem. A clearer prompt cannot restore the untouched status of a holdout that was already evaluated or used. Simply adding an `if` statement may leave old exposed results and candidate selection paths contaminated.
 
 ### Alternatives to compare
-A. Separate development/validation and holdout into distinct executable phases; only a frozen candidate manifest can be evaluated by the holdout runner.  
-B. Use a separate holdout evaluator or job whose inputs are limited to hashed frozen candidates and whose results are inaccessible to the candidate-selection code until selection is locked.  
+A. Separate development/validation and holdout into distinct executable phases; only a frozen candidate manifest can be evaluated by the holdout runner.
+B. Use a separate holdout evaluator or job whose inputs are limited to hashed frozen candidates and whose results are inaccessible to the candidate-selection code until selection is locked.
 C. If the current holdout was inspected or used for selection, explicitly mark it consumed and define a new future confirmatory period before reporting an untouched holdout.
 
 ### Required acceptance evidence
@@ -291,9 +291,9 @@ C. If the current holdout was inspected or used for selection, explicitly mark i
 
 ## BRAIN-004 — Resume cursor is reset and checkpoint counts are not reconciled to results
 
-**Priority:** P0 — risks duplicate/lost research units on resume  
-**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design decision recorded below; implementation remains deferred until prerequisites are satisfied)  
-**Cause labels:** `IMPLEMENTATION_DEFECT`, `PERSISTENCE_FAILURE`, `TEST_GAP`  
+**Priority:** P0 — risks duplicate/lost research units on resume
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design decision recorded below; implementation remains deferred until prerequisites are satisfied)
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `PERSISTENCE_FAILURE`, `TEST_GAP`
 **Confidence:** direct source/state evidence confirmed; actual duplicate count is not yet reconstructed.
 
 ### Evidence
@@ -304,8 +304,8 @@ C. If the current holdout was inspected or used for selection, explicitly mark i
 Checkpointing and results have to share a deterministic identity/commit model. Incremental fixes to the loop are not sufficient without defining which durable record is authoritative and how crash boundaries are reconciled.
 
 ### Alternatives to compare
-A. Treat the append-only result ledger as the source of truth: enumerate deterministic experiment IDs and rebuild the next unit from verified IDs on resume.  
-B. Write bounded idempotent shards plus a manifest that records the committed shard hashes and next unit; advance checkpoint only after the shard is durably persisted and verified.  
+A. Treat the append-only result ledger as the source of truth: enumerate deterministic experiment IDs and rebuild the next unit from verified IDs on resume.
+B. Write bounded idempotent shards plus a manifest that records the committed shard hashes and next unit; advance checkpoint only after the shard is durably persisted and verified.
 C. Use a transaction-like batch protocol: write a temporary batch, validate IDs/count/hash, atomically promote it, then advance the checkpoint to that batch's verified boundary.
 
 ### Required acceptance evidence
@@ -358,9 +358,9 @@ C. Use a transaction-like batch protocol: write a temporary batch, validate IDs/
 
 ## BRAIN-005 — Result persistence can exceed Git hosting limits
 
-**Priority:** P1 — campaign completion/persistence risk  
-**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design decision recorded below; implementation remains deferred until prerequisites are satisfied)  
-**Cause labels:** `PLATFORM_LIMIT`, `PERSISTENCE_FAILURE`, `IMPLEMENTATION_DEFECT`  
+**Priority:** P1 — campaign completion/persistence risk
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design decision recorded below; implementation remains deferred until prerequisites are satisfied)
+**Cause labels:** `PLATFORM_LIMIT`, `PERSISTENCE_FAILURE`, `IMPLEMENTATION_DEFECT`
 **Confidence:** current repository size and historical rejection evidence confirmed; future full-campaign size needs a measured estimate.
 
 ### Evidence
@@ -372,8 +372,8 @@ C. Use a transaction-like batch protocol: write a temporary batch, validate IDs/
 The result volume is driven by the experiment grid. More prompt hardening cannot change the hosting limit, and retrying the same monolithic push cannot fix the underlying shape.
 
 ### Alternatives to compare
-A. Deterministic bounded JSONL shards, named by stable asset/config/fold/cost ranges, plus a compact manifest containing counts and SHA-256 hashes.  
-B. A SQLite or similarly structured local result store exported into bounded deterministic partitions at checkpoint boundaries, keeping the remote artifacts verifiable and reproducible.  
+A. Deterministic bounded JSONL shards, named by stable asset/config/fold/cost ranges, plus a compact manifest containing counts and SHA-256 hashes.
+B. A SQLite or similarly structured local result store exported into bounded deterministic partitions at checkpoint boundaries, keeping the remote artifacts verifiable and reproducible.
 C. External durable storage only if its required access, retention, and free/operational limits are explicitly verified; do not assume an unavailable service or temporary Actions artifact is permanent storage.
 
 ### Required acceptance evidence
@@ -430,9 +430,9 @@ C. External durable storage only if its required access, retention, and free/ope
 
 ## BRAIN-006 — Preregistered candidate-selection rule is not implemented by the only selector
 
-**Priority:** P0 — blocks any defensible candidate promotion  
-**Status:** `BRAINSTORMING_REQUIRED` (evidence recorded 2026-10-19 UTC; the required impact quantification is the next bounded task, and the structured design decision must be written in a later session)  
-**Cause labels:** `IMPLEMENTATION_DEFECT`, `RESEARCH_DESIGN_RISK`  
+**Priority:** P0 — blocks any defensible candidate promotion
+**Status:** `BRAINSTORMING_REQUIRED` (evidence recorded 2026-10-19 UTC; the required impact quantification is the next bounded task, and the structured design decision must be written in a later session)
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `RESEARCH_DESIGN_RISK`
 **Confidence:** confirmed by source inspection at code hash `d0dca29...`; the divergence from the frozen manifest is not yet quantified.
 
 ### Evidence
@@ -462,9 +462,9 @@ C. **Amend the frozen specification** — record that the profit-factor rule was
 
 ## BRAIN-007 — Cycle-level evidence is not linked to the identical prior campaign, and the checkpoint counter mixes validation with exposed-holdout units
 
-**Priority:** P1 — reporting/traceability risk for the continuous campaign  
-**Status:** `BRAINSTORMING_REQUIRED` (evidence recorded 2026-10-19 UTC)  
-**Cause labels:** `IMPLEMENTATION_DEFECT`, `RESEARCH_DESIGN_RISK`  
+**Priority:** P1 — reporting/traceability risk for the continuous campaign
+**Status:** `BRAINSTORMING_REQUIRED` (evidence recorded 2026-10-19 UTC)
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `RESEARCH_DESIGN_RISK`
 **Confidence:** confirmed at code hash `d0dca29...` by direct artifact comparison.
 
 ### Evidence
@@ -1194,3 +1194,59 @@ in it, the amendment is invalid. If a v2 shard, ledger, result manifest, result 
 appears, or a v2 result row is written, the amendment's nothing-runs state is violated. If the hashed
 source tree stops matching `canonical_source_digest`, the tree changed. If the v1 artifacts stop matching
 their recorded digests, the amendment is invalid.
+
+---
+
+## BRAIN-009 — Code-hash portability: ordered digest is checkout-dependent
+
+**Priority:** P0 — blocks honest verification of the hashed source set
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `PERMANENT_PLATFORM_LIMIT` (filesystem enumeration order)
+**Confidence:** direct evidence confirmed — permutation brute-force reproduced the authorized digest in 6 of 120 directory orderings; canonical digest reproduces portably.
+
+### Evidence
+- `compute_code_hash()` (`src/breakout_research/config.py:257-268`) hashes each directory's files in sorted order but visits directories in filesystem enumeration order.
+- The authorized digest `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (recorded in `research_state/campaign_authorization.json`) reproduces only under the traversal order `(indicators, utils, signals, data, backtest)` — 6 of 120 permutations of the five sub-directory blocks reproduce it.
+- A fresh checkout of the same git-clean tree enumerates the directories as `608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925`.
+- `src/` did not change: last `src/` commit `ea5da766` (15:46Z), before every v2 artifact was frozen; `git status` clean under `src/`.
+- The portable identity `canonical_source_digest = 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` (path- and content-sorted) is already recorded in `configs/research_v2_execution_amendment_1.json`.
+- Consequences: 6 tests and 2 verifiers report a false "source hash does not match the current source tree" message; `scripts/verify_research_v2_manifests.py` and `scripts/verify_research_v2_candidate_freeze.py` exit 1 in this checkout.
+
+### Factual correction
+1. The ordered digest is checkout-dependent: a live ordered-digest mismatch alone is **not** evidence of source drift.
+2. The portable identity of the hashed set is `canonical_source_digest` (`3e8e4169…`, path- and content-sorted), already recorded in the amendment.
+3. A red ordered-digest comparison is an environment fact, not a source-drift signal.
+
+### Tree-identity check from now on
+Compare against the canonical digest (portable) and cross-check the recorded digest against `research_state/campaign_authorization.json` `code_hash`, instead of comparing the recorded digest with the live ordered digest. Affected artifacts and their new assertions:
+- `scripts/verify_research_v2_manifests.py`, `tests/test_research_v2_manifests.py` — assert canonical digest matches `3e8e4169…`; treat ordered mismatch as environment fact.
+- `scripts/verify_research_v2_candidate_freeze.py`, `tests/test_research_v2_candidate_freeze.py` — same, against the recorded canonical digest.
+- `scripts/build_v2_candidate_freeze.py` — record canonical digest only; never recompute ordered digest as identity.
+- `tests/test_research_v2_spec.py` — canonical digest assertion replaces ordered-digest assertion.
+
+### What happens to the already-frozen v2 artifacts
+They record `code_hash 2efd3b18…` and stay immutable. **Recommendation: retain the historical digest as the authorized value of record**, with the canonical digest added by versioned amendment. Rotating `compute_code_hash()` and re-authorizing the v1 campaign (option c) would require changes to `research_state/campaign_authorization.json`, `research_state/checkpoint.json` and every v2 identity tuple, plus an amendment to each frozen artifact — disproportionate and unnecessary because the canonical digest already identifies the tree portably.
+
+### Interim rule until implemented
+`src/breakout_research/` must not be edited to "fix" the red tests; that would change the hashed set and invalidate the v1 campaign authorization. A red ordered-digest comparison is to be reported as an environment fact, not as source drift.
+
+### Designs
+A. **Retain authorized digest + canonical digest (recommended).** Keep `2efd3b18…` as authorized value of record; add canonical digest by versioned amendment; fix verifiers/tests to compare canonical.
+B. **Rotate `compute_code_hash()` to canonical ordering + re-authorize v1 campaign.** Changes hashed set semantics, requires re-authorization and amendments to all v2 identity tuples.
+C. **Drop code-hash binding entirely.** Removes the guarantee; unacceptable for research validity.
+
+### Falsifying evidence
+- If `canonical_source_digest` fails to reproduce across checkouts with differing directory enumeration order.
+- If a source-tree edit is detected by canonical digest but missed by ordered digest (or vice versa).
+
+### Rollback
+Revert the verifier/test changes; frozen artifacts untouched. No data or identity changes.
+
+### Staged acceptance tests (later implementation session)
+- `compute_code_hash()` ordered digest may differ by checkout; canonical digest stable.
+- All six previously red tests pass against canonical digest.
+- `scripts/verify_research_v2_spec.py`, `verify_research_v2_execution.py`, `verify_research_v2_execution_amendment_1.py` exit 0.
+- `configs/research_v2_execution_amendment_1.json` still hashes to `1149d9cb…`; `src/` untouched.
+
+### Do NOT (this session)
+Edit anything under `src/breakout_research/`; edit `research_state/campaign_authorization.json` or `research_state/checkpoint.json`; edit any frozen artifact; run any v2 grid/backtest/campaign/selection/pilot; read any confirmatory-window candle; re-run `scripts/v2_constituent_validation.py` or `scripts/build_v2_candidate_freeze.py`.

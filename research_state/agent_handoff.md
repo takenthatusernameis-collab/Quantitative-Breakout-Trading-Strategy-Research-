@@ -586,3 +586,31 @@ the suite cannot run at all and must be reported as `NOT_RUN`.
 **After this task (queued, not for this session):** the v2 selection-run decision and the v2 execution
 path outside the hashed set; then the versioned amendment that flips P2/P3 in `configs/research_v2.json`;
 the confirmatory window itself cannot be evaluated before `2027-01-17T22:00:00Z`.
+
+## Session activity — 2026-10-19T23:27:56Z (this session)
+
+**Task (from the durable handoff at 22:2xZ):** write the code-hash portability decision record (BRAIN-009) in `research_state/brainstorming_queue.md`.
+
+**Outcome:** **Delivered.** BRAIN-009 added to `research_state/brainstorming_queue.md` with revalidated evidence (permutation evidence, red-test/red-verifier list, canonical digest `3e8e4169…`), three materially different designs, one recommendation (retain authorized digest + canonical digest by versioned amendment), falsifiers, rollback and staged acceptance tests. Status set to `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. No implementation performed; `src/` untouched; no frozen artifact changed; no v2 result row exists.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** implement the BRAIN-009 decision — update the named verifiers and tests to compare against the canonical digest instead of the live ordered digest, and add the canonical digest to the frozen v2 artifacts by versioned amendment. Nothing runs in that session.
+
+**Subject:** BRAIN-009 decision record delivered; next bounded task is its deterministic implementation (design-to-code, no execution)
+
+**Status (verified 2026-10-19T23:27:56Z):**
+- `research_state/brainstorming_queue.md` now contains BRAIN-009 (`DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`).
+- Canonical digest `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` (path- and content-sorted) is the portable identity; authorized ordered digest `2efd3b18…` retained as value of record.
+- Code hash `2efd3b18…` unchanged; v1/v2 artifacts unchanged; no v2 result row.
+
+**One bounded task:** implement the BRAIN-009 decision in rules only:
+1. Update `scripts/verify_research_v2_manifests.py`, `scripts/verify_research_v2_candidate_freeze.py`, `scripts/build_v2_candidate_freeze.py`, `tests/test_research_v2_manifests.py`, `tests/test_research_v2_candidate_freeze.py`, `tests/test_research_v2_spec.py` to compare against the canonical digest and treat ordered-digest mismatch as an environment fact.
+2. Add the canonical digest to the frozen v2 artifacts by versioned amendment (not by editing them in place).
+3. Keep `src/breakout_research/` untouched; keep `research_state/campaign_authorization.json` and `research_state/checkpoint.json` untouched.
+
+**Do NOT:** edit anything under `src/breakout_research/`; edit `research_state/campaign_authorization.json` or `research_state/checkpoint.json`; edit any frozen artifact in place; run any v2 grid/backtest/campaign/selection/pilot; read any confirmatory-window candle; re-run `scripts/v2_constituent_validation.py` or `scripts/build_v2_candidate_freeze.py`.
+
+**Acceptance:** the six previously red tests now pass; `python3 scripts/verify_research_v2_spec.py`, `verify_research_v2_execution.py`, `verify_research_v2_execution_amendment_1.py` exit 0; `configs/research_v2_execution_amendment_1.json` still hashes to `1149d9cb…`; `src/` untouched; no new v2 result row, shard, ledger, result manifest or checkpoint.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_research_v2_manifests.py`; `python3 scripts/verify_research_v2_execution.py`; `python3 scripts/verify_research_v2_candidate_freeze.py`; `python3 scripts/verify_research_v2_execution_amendment_1.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
