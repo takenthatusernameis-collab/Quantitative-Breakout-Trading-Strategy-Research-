@@ -1,0 +1,15 @@
+{
+  "cohort_assets": [],
+  "cohort_index": 1,
+  "cycle_id": null,
+  "eligible_count": 18,
+  "provider_evidence": {
+    "note": "HTTP 451: permanent external boundary; new universe snapshot unavailable",
+    "provider": "https://api.binance.com/api/v3/ping",
+    "reachable": false,
+    "status": 451
+  },
+  "reason": "EXHAUSTED_UNIVERSE_NO_NEW_CANDIDATES",
+  "snapshot_id": "snap-123",
+  "state": "BLOCKED_EXTERNAL"
+}
