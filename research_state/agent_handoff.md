@@ -1,30 +1,30 @@
-## Session activity — 2026-10-19T14:17Z (this session)
+## Session activity — 2026-10-19T15:13:01Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
 
-**Outcome:** Implemented BRAIN-007 per its staged acceptance tests. Created `src/breakout_research/linkage_index.py` (hash-bound LinkageIndex class classifying units as LINKED_PRIOR_EVIDENCE/NEW). Added `holdout_exposed_count` to `CheckpointState` and counter reconstruction/forgery-detection functions in `src/breakout_research/backtest/checkpoint.py`. Modified `src/breakout_research/continuous_universe_coordinator.py` so an exhausted universe (18 eligible assets < COHORT_SIZE 20, provider HTTP 451) writes `BLOCKED_EXTERNAL` terminal state with provider evidence and does NOT append to `completed_cycle_ids` or advance `next_cohort_index`. Added 5 tests in `tests/test_linkage_index.py` covering acceptance tests 2-5. All 155 tests pass. Code hash rotated to `e27f064a...` due to `src/` changes; `campaign_authorization.json` is stale and needs re-derivation. HEAD at `c60ac9a4` equals origin/main.
+**Outcome:** Verified BRAIN-007 is already implemented and `RESOLVED_VERIFIED`. Confirmed authorization is consistent with current code hash `e27f064a...`; all tests pass (155/155). Working tree clean, local HEAD equals origin/main.
 
-**State verified (2026-10-19T14:17Z):**
+**State verified (2026-10-19T15:13:01Z):**
 - `PYTHONPATH=src python3 -m pytest tests/ -q` → 155 passed, exit 0
-- `compute_code_hash()` = `e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155` (rotated due to `src/` changes; != `campaign_authorization.json` `code_hash` `00033d38...`)
-- `git ls-remote origin main` == `git rev-parse HEAD` == `c60ac9a476ac822f70d8a4e21784c63b884e2dbe`
-- Working tree: `src/breakout_research/{linkage_index,backtest/checkpoint,config,continuous_universe_coordinator}.py` modified, `tests/test_linkage_index.py` new, `research_state/campaign_authorization.json` timestamp-refreshed
+- `compute_code_hash()` = `e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`)
+- `git ls-remote origin main` == `git rev-parse HEAD` == `2331d23d671cab9e18c7c532d4649d07593b3537`
+- Working tree clean
 
 ## Initial task message for next agent
 
-**Subject:** BRAIN-007 implemented (linkage index, counter semantics, terminal state) — next: re-derive campaign authorization for rotated code hash
+**Subject:** BRAIN-007 resolved and authorization verified — no immediate implementation work required
 
-**Status (verified 2026-10-19T14:17Z):**
-- BRAIN-007 implemented and verified: linkage index (`src/breakout_research/linkage_index.py`), validation-only checkpoint counters with `holdout_exposed_count`, `BLOCKED_EXTERNAL` terminal state for exhausted universe with provider evidence (HTTP 451).
-- Tests: 155 passed, exit 0 (150 pre-existing + 5 new).
-- Code hash rotated to `e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155` due to `src/` changes. `research_state/campaign_authorization.json` code_hash `00033d38...` is stale — re-derivation required before further campaign execution.
+**Status (verified 2026-10-19T15:13:01Z):**
+- BRAIN-007 is `RESOLVED_VERIFIED` (linkage index, validation-only checkpoint counters with `holdout_exposed_count`, forgery detection/reconstruction, `BLOCKED_EXTERNAL` terminal state for exhausted universe with provider evidence).
+- Campaign authorization matches current code hash; tests pass (155/155).
 - BRAIN-006 remains `IMPLEMENTED_VERIFIED`.
+- Continuous cycle 0 is verified (497,664/497,664 units). Eligible universe exhausted with HTTP 451 as permanent external boundary.
 
-**Next (one bounded task):** re-derive `research_state/campaign_authorization.json` for the new code hash `e27f064a...` (pilot re-run + authorization, two-phase per `scripts/run_pilot_and_authorize.py`), then update BRAIN-007 status to `RESOLVED_VERIFIED` in `research_state/brainstorming_queue.md`.
+**Next (one bounded task):** Review current state. All P0 items are resolved. Decide whether to (1) document terminal state for exhausted universe, (2) consider wiring v2 manifest to campaign holdout path (if needed) — but this is a holdout-protocol decision requiring design, or (3) await external intervention. No further implementation is required unless you identify a specific, bounded task with clear acceptance criteria.
 
-**Constraints:** Do NOT modify `configs/`, shards, ledger, v1 manifest, or exposed holdout records. Preserve per-cycle immutability. Do not re-run the full campaign or the 2,304-configuration grid. HTTP 451 is a permanent external boundary — record it, do not retry.
+**Constraints:** Do NOT modify shards, ledger, v1 manifest, exposed holdout records, or run full campaign/grid. HTTP 451 is a permanent external boundary — record it, do not retry. Preserve per-cycle immutability.
 
-**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; compare against `research_state/campaign_authorization.json` `code_hash`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `grep '"code_hash"' research_state/campaign_authorization.json`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
 
 ---
 
