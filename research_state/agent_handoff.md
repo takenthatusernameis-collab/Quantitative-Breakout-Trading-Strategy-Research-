@@ -1,4 +1,21 @@
-## Session activity — 2026-10-19T13:23Z (this session)
+## Session activity — 2026-10-19T13:33Z (this session)
+
+**Task:** Read prior agent task, complete it (candidate re-derivation under preregistered rule), update handoff, write initial task message for next agent.
+
+**Outcome:** Script `scripts/select_candidates_cycle0.py` implemented and run; artifact `research/campaign_cycles/.../candidate_selection.json` produced. 18 assets, 4 selected under fully-evaluable gates; `median_sharpe_gt_buyhold` marked NOT_EVALUABLE_FROM_RECORDS (missing buyhold baseline). Holdout records read: 0.
+
+## Initial task message for next agent
+
+**Subject:** Candidate re-derivation under preregistered rule complete (4/18 selected) — next: implement buy-and-hold baseline data source + conforming selector in src/
+
+**Status:** `scripts/select_candidates_cycle0.py` run; artifact written; 0 holdout records consumed. Tests unchanged (88 passed).
+
+**Next:** Implement buy-and-hold baseline Sharpe source and conforming selector in `src/` (rotates code hash → pilot re-run + re-authorization), then design decisions for BRAIN-006/007.
+
+**Do NOT:** modify src/ in this session's follow-up without design record; retry Binance.
+
+---
+
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update this handoff, and write the initial task message for the next agent.
 
