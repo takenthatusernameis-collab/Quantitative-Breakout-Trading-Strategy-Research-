@@ -1,8 +1,8 @@
 {
   "protocol_version": "v1",
   "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
-  "code_hash": "00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702",
-  "pilot_completed_at": "2026-10-19T14:07:40.292350+00:00",
+  "code_hash": "e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155",
+  "pilot_completed_at": "2026-10-19T14:49:26.808036+00:00",
   "assets_tested": 1,
   "configs_tested": 24,
   "total_results": 24,
@@ -10,7 +10,7 @@
   "campaign_authorized": false,
   "evidence": {
     "protocol_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
-    "code_hash": "00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702",
+    "code_hash": "e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155",
     "spec_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
     "universe_manifest_hash": "beff09c1dd53575790e22e4a740a763a7b4e7b28aaf5b4fd98fc42b7a02f2b2c",
     "data_manifest_hash": "d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c",
@@ -836,7 +836,7 @@
     },
     "checkpoint_state": {
       "protocol_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
-      "code_hash": "00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702"
+      "code_hash": "e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155"
     },
     "test_reports": [
       "tests/test_data_fetcher.py"
