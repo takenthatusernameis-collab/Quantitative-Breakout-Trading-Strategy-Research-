@@ -241,6 +241,8 @@ Before changing files, write a short plan: evidence for the defect, expected cor
 
 Use this bounded cycle: **observe → diagnose → plan → change → test → independently check where practical → persist → verify the remote state → update the handoff**. Run the narrowest relevant tests first, then broader regression/integration checks if the local change passes. Capture real commands and exit statuses. `NOT_RUN` is never `PASS`; a passing unit test does not establish end-to-end correctness.
 
+Every acceptance check must recompute its expected value from repository state or from the bytes on disk. A check that compares an artifact against a constant copied out of that same artifact is vacuous and must be replaced by a recomputation; a recorded cross-artifact digest must be recomputed from the file it names, and the artifact must state which digest it records (the referenced file's sha256 or the document's own self-hash).
+
 Before a deadline or resource cutoff, stop starting new work early enough to save completed results and diagnostics. Prefer atomic, idempotent, verifiable recovery. If persistence fails, say `PERSISTENCE_FAILURE`, preserve available local/recovery artifacts, and do not claim remote delivery. Verify the actual remote branch/commit SHA rather than relying only on a local commit, a worker exit code, or an Actions summary.
 
 ### F. Self-improve this prompt through evidence, not verbosity

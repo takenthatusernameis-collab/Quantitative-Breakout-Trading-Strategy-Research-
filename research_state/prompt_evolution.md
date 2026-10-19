@@ -805,3 +805,66 @@ execute a design step — it only removes the ambiguity that was observed.
 
 **Rollback instruction:** `git revert <commit of this entry>` removes the added README bullet; it removes
 no research artifact and leaves `configs/research_v2.json` and its verifier intact.
+
+## P7-2026-10-19-VERIFIER-INDEPENDENCE
+
+### Triggering evidence
+
+The v2 execution amendment drafted in the 22:00Z session recorded
+`configs/research_v2_execution_amendment_1.json` -> `amends.file_hash =
+aa902aa935cfb71cce72bd643bb9685333860ec5470b02b12282c0f1659d67e6` and its verifier checked that field
+against the same literal. Re-read from the bytes on disk in this session:
+
+- `sha256sum configs/research_v2_execution.json` = `dd45f840532318ceb80a203bace1fb2083e5a28260f8fd473de9d179a361934c`;
+- the protocol's own `specification_hash` = `aa902aa9e6ddfd7f0536765411e78d718f720b7a473a8f621bf64444355f2d38`.
+
+The recorded value matched neither, and the verifier exited 0 because it compared the artifact with a
+constant copied out of the artifact. The check was therefore vacuous: it could not fail for a wrong
+digest, and the digest it "verified" was wrong. The failure was silent (green verifier, green suite).
+
+### Cause classification
+
+`IMPLEMENTATION_DEFECT` for the fabricated field and the vacuous check; `PROMPT_GAP` for the absence of an
+explicit rule that acceptance checks recompute their expected values from repository state and that a
+recorded cross-artifact digest names the digest it is. The README already requires evidence-backed
+verification and independent checks, but it did not state the vacuous-check failure mode, which is why a
+green verifier was reported as proof.
+
+### Revision summary — minimal instruction change
+
+One paragraph added to README Section 2A E: every acceptance check must recompute its expected value from
+repository state or from the bytes on disk; a check that compares an artifact against a constant copied
+out of that same artifact is vacuous and must be replaced by a recomputation; a recorded cross-artifact
+digest must be recomputed from the file it names, and the artifact must state which digest it records
+(the referenced file's sha256 or the document's own self-hash). No other README text changed; the
+quantitative protocol, the universe, grid, costs, folds, selection rule, holdout rules and thresholds are
+untouched.
+
+### Expected effect
+
+A verifier can no longer be made green by copying its own subject's value into its expectation, and a
+recorded digest must resolve to a real file. This is a hypothesis, not a measured result.
+
+### Regression scenarios and status
+
+| Scenario | Required behavior | Status at revision |
+|---|---|---|
+| Artifact records a digest of another artifact | Verifier recomputes the digest from the file bytes and fails on a mismatch | Implemented this session: `scripts/verify_research_v2_execution_amendment_1.py` recomputes the protocol file sha256 and the protocol `specification_hash`; `tests/test_research_v2_execution_amendment_1.py::test_verifier_detects_an_edited_protocol` proves the mismatch is detected |
+| Verifier expectation copied from the artifact under test | Such a check is replaced by a recomputation | Implemented this session: the previous literal comparison is gone; the tamper test fails only because the artifact was edited |
+| Self-hash of a document | The document declares which keys are excluded from its own hash, and the verifier recomputes it | `test_manifest_hash_recomputes_from_the_document` (amendment), freeze and manifest tests unchanged |
+| Section 2A G battery | No safeguard removed or weakened | Cases 1-10 untouched: the added paragraph constrains how a check is derived, it authorizes no action and relaxes no holdout, data, persistence or truthfulness rule |
+| Same-session rule (Section 2A C1) | A design record is not implemented in the session that writes it | Unchanged: this session implements the already-delivered amendment task, and the code-hash portability decision it surfaces is left for a later session |
+
+**Known trade-offs:** one added paragraph in Section 2A E. It lengthens the prompt slightly and makes
+verifier authoring stricter; it does not add a research gate or a new authorization.
+
+**Reviewer/verifier status:** self-review in this session. Verified by
+`PYTHONPATH=src python3 -m pytest tests/ -q` (246 passed, 6 pre-existing failures unrelated to this
+revision, exit 1) and by `git diff README.md` (one added paragraph inside Section 2A E). Behavioral
+effectiveness beyond this session is `NOT_YET_VERIFIED`.
+
+**Resulting prompt blob/commit SHA:** the README blob SHA after this revision is recorded in
+`research_state/agent_handoff.md`; the commit that carries it is recorded in git history for this file.
+
+**Rollback instruction:** revert the commit that carries this entry and the added README paragraph; no
+research artifact is affected.

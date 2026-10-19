@@ -855,7 +855,7 @@ repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and doc
 ## BRAIN-008 — The market-cap universe provider is reachable: the "exhausted universe" is a protocol boundary, not an external one
 
 **Priority:** P0 — the campaign's stop condition, universe versioning and cohort semantics
-**Status:** `IMPLEMENTATION_IN_PROGRESS` (decision record written 2026-10-19T15:4xZ; §6 prerequisite 1 — the preregistered v2 specification — delivered 2026-10-19T16:5xZ; prerequisites 2 and 3 — the v2 universe manifest and the v2 data manifest with §3 constituent validation — delivered 2026-10-19T19:0xZ; prerequisite 4 (v2 candidate manifest, confirmatory window and holdout report) outstanding, no execution authorized)
+**Status:** `IMPLEMENTATION_IN_PROGRESS` (decision record written 2026-10-19T15:4xZ; §6 prerequisite 1 — the preregistered v2 specification — delivered 2026-10-19T16:5xZ; prerequisites 2 and 3 — the v2 universe manifest and the v2 data manifest with §3 constituent validation — delivered 2026-10-19T19:0xZ; the v2 candidate-set freeze delivered 2026-10-19T21:30Z (§13) and the versioned v2 execution amendment 1 delivered 2026-10-19T22:07Z (§14); the v2 selection run, the selected-configuration manifest, the confirmatory-window evaluation and the v2 holdout report remain outstanding, no execution authorized)
 **Cause labels:** `IMPLEMENTATION_DEFECT` (terminal state asserted a provider status it never observed), `RESEARCH_DESIGN_RISK` (universe versioning, cohort composition and cross-cohort comparability are undecided)
 
 ### Evidence (observed, 2026-10-19T15:43:31Z)
@@ -1132,3 +1132,65 @@ current source tree, the freeze is invalid. If the confirmatory window ever open
 if a v2 result row, shard, ledger or result manifest appears, the freeze has been violated. If the v1
 artifacts no longer match their recorded digests, the freeze is invalid.
 
+
+### 14. Decision implemented — versioned v2 execution amendment 1 delivered (2026-10-19T22:07Z, separate session)
+
+**Delivered.** `configs/research_v2_execution_amendment_1.json`, `manifest_hash`
+`1149d9cb3ee9ea35f16512502c43c4cf0ee13b0ae2fb91e2dc691663b99195db`, with a read-only offline verifier
+(`scripts/verify_research_v2_execution_amendment_1.py`, exit 0) and 32 deterministic tests
+(`tests/test_research_v2_execution_amendment_1.py`, all passing). No grid, backtest, campaign, selection
+or confirmatory-window read was performed; no v1 artifact was modified; `src/breakout_research/` was not
+touched; the market-cap snapshot was not re-retrieved.
+
+**What it records.** (1) The corrected code-hash constraint: the hashed set is
+`src/breakout_research/` and *every* path under it — including `src/breakout_research/v2/` — is inside
+it, so v2 execution code may not be written there without a recorded v1 re-authorization; the genuinely
+outside paths are named (`scripts/`, `src/v2_campaign/`). (2) The bounded parameters a future v2
+selection grid run over the 18 frozen constituents would have to satisfy: the scope bound to the v2
+universe, data and freeze hashes, the development-data boundary at the frozen confirmatory-window start
+`2026-10-19T22:00:00Z`, the v2 shard/ledger/results/checkpoint paths with the v1 paths forbidden, the
+unchanged v1 selection rule, concrete bounds (18 assets, 2,304 configurations per asset, 41,472 units,
+one attempt), the stopping conditions, the rollback rule and the falsifiers. (3) That it authorizes
+nothing: `authorized: false`, `no_execution: true` and all four `execution_authorization` flags `false`.
+
+**Correction C1 — the protocol's code-hash path rule.** `configs/research_v2_execution.json` offers
+`src/breakout_research/v2/` as v2 execution code that lives "outside the hashed set". It does not:
+`compute_code_hash()` walks every `.py` file under `src/breakout_research` recursively. The protocol is
+immutable and hash-bound, so its defective text is preserved as historical evidence; the correction is
+carried in the amendment and in the freeze's `code_hash_constraint` block.
+
+**Correction C2 — the code hash is not portable (new finding, evidenced).** `compute_code_hash()` hashes
+the files of each directory in sorted order but visits the directories in **filesystem enumeration
+order**, so the digest of an unchanged, git-clean tree depends on the machine. Evidence from this
+session: the authorized digest `2efd3b18…` is reproduced only under the traversal order
+(`indicators`, `utils`, `signals`, `data`, `backtest`) — verified by brute-forcing all 120 permutations
+of the five sub-directory blocks — while a fresh checkout of the same tree enumerates it as
+`608c7340…`. Consequences in this checkout: `scripts/verify_research_v2_manifests.py` and
+`scripts/verify_research_v2_candidate_freeze.py` exit 1, and six pre-existing tests fail, **all** with
+the message that the recorded code hash "does not match the current source tree". The source tree is
+unchanged (`git status` clean under `src/`; the last `src/` commit is `ea5da766`, 15:46Z, before every
+v2 artifact was frozen). The failure signal is therefore misleading: it looks like source drift and is
+not. The amendment records a portable identity for the hashed set —
+`canonical_source_digest` (`3e8e4169…`, path-and-content sorted) — and states that a mismatch of the
+live ordered digest alone is evidence of enumeration order, not of a modified tree. **The decision on how
+to correct this for the already-frozen v2 artifacts (and whether `compute_code_hash()` itself must be
+rotated, which would require a v1 re-authorization and amendments to the v2 identity tuples) is
+outstanding and must not be implemented in this session.**
+
+**A corrected digest in the delivered amendment.** The amendment drafted in the 22:00Z session recorded
+`amends.file_hash = aa902aa935cfb71cce72bd643bb9685333860ec5470b02b12282c0f1659d67e6` and its verifier
+compared that field against the same literal. Read from the bytes on disk,
+`sha256(configs/research_v2_execution.json) = dd45f840…` and the protocol's own `specification_hash =
+aa902aa9e6ddfd7f…`; the recorded value matched neither, and the check was vacuous because its expected
+value was copied out of the artifact under test. The finalized amendment records both digests under
+distinct names (`amends.file_sha256`, `amends.specification_hash`) and the verifier recomputes each from
+the repository. The interim artifact was never committed and is not referenced by any other artifact;
+the finalized `manifest_hash` above is the only hash of this amendment that is recorded.
+
+**Falsifiers for this delivery.** If the amendment's `manifest_hash` does not recompute, or if the
+verifier stops reporting the amended protocol's file digest or `specification_hash`, the amendment is
+invalid. If the authorized scope stops matching the frozen candidate set, or the excluded assets reappear
+in it, the amendment is invalid. If a v2 shard, ledger, result manifest, result stream or checkpoint
+appears, or a v2 result row is written, the amendment's nothing-runs state is violated. If the hashed
+source tree stops matching `canonical_source_digest`, the tree changed. If the v1 artifacts stop matching
+their recorded digests, the amendment is invalid.

@@ -1,12 +1,36 @@
 {
+  "artifact": "v2_execution_amendment",
+  "artifact_version": "v2-execution-amendment-1",
   "version": 1,
   "amendment_number": 1,
-  "description": "Versioned amendment to research_v2_execution.json correcting code-hash path rule and recording bounded authorization for v2 selection grid run over the frozen candidate set (design deliverable only).",
-  "supersedes": null,
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-19T22:07:09Z",
+  "amendment_status": "PREREGISTERED_AMENDMENT_DESIGN_ONLY",
+  "description": "Versioned amendment to configs/research_v2_execution.json. It corrects the code-hash constraint, records the portable identity of the hashed source tree, and records the bounded authorization parameters for a future v2 selection grid run over the frozen candidate set. Design deliverable only: nothing runs, no candle is read, no result exists.",
   "amends": {
     "file": "configs/research_v2_execution.json",
-    "file_hash": "aa902aa935cfb71cce72bd643bb9685333860ec5470b02b12282c0f1659d67e6",
-    "note": "The execution protocol itself is immutable and not edited; this amendment records corrections and bounds as separate, self-hashed design state."
+    "file_sha256": "dd45f840532318ceb80a203bace1fb2083e5a28260f8fd473de9d179a361934c",
+    "specification_hash": "aa902aa9e6ddfd7f0536765411e78d718f720b7a473a8f621bf64444355f2d38",
+    "note": "The execution protocol is immutable and was not edited. Its file digest and its own specification_hash are recorded here unchanged; the corrections and the bounds are carried as separate, self-hashed design state.",
+    "corrections": [
+      {
+        "id": "C1",
+        "topic": "code-hash path rule",
+        "defective_text_location": "code_hash_constraint.chosen_approach",
+        "defect": "The protocol offers 'src/breakout_research/v2/' as an example of v2 execution code that lives outside the hashed source set.",
+        "correction": "src/breakout_research/v2/ is inside the hashed set. compute_code_hash() walks every .py file under src/breakout_research recursively, so any file added, edited or removed there changes the code hash and invalidates the v1 campaign authorization.",
+        "status": "the defective text is preserved in the protocol artifact as historical evidence; the protocol file is not edited"
+      },
+      {
+        "id": "C2",
+        "topic": "portability of the code hash",
+        "defective_text_location": "code_hash_constraint.authorized_code_hash",
+        "defect": "compute_code_hash() hashes the files of each directory in sorted order but visits the directories in filesystem enumeration order, so the digest of an unchanged, git-clean tree depends on the machine's directory ordering. The authorized digest 2efd3b18... is reproduced only under the traversal order (indicators, utils, signals, data, backtest); a fresh checkout of the same tree enumerates it as 608c7340... . The code hash therefore does not identify the source tree portably.",
+        "correction": "The portable identity of the hashed source tree is canonical_source_digest below, which hashes the sorted relative path and the content digest of every .py file under the hashed set.",
+        "status": "recorded here; compute_code_hash() is not changed, because src/breakout_research/ is the hashed set and editing it would change the code hash and invalidate the v1 campaign authorization"
+      }
+    ]
   },
   "references": {
     "configs_research_v2": {
@@ -27,6 +51,12 @@
       "frozen_at_utc": "2026-10-19T21:30:17Z",
       "constituents_count": 18
     },
+    "v1_campaign_authorization": {
+      "file": "research_state/campaign_authorization.json",
+      "protocol_version": "v1",
+      "authorized": true,
+      "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
+    },
     "delivered_prerequisites": [
       "P2 (universe manifest v2)",
       "P3 (data manifest v2)",
@@ -35,23 +65,60 @@
     ]
   },
   "code_hash_constraint": {
-    "description": "Corrects the code-hash constraint stated in research_v2_execution.json: compute_code_hash() hashes every .py file under src/breakout_research recursively. Paths under src/breakout_research/ are inside the hashed set; any new v2 execution code placed under src/breakout_research would change the code hash and invalidate the v1 campaign authorization.",
-    "hashed_source_digest": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
-    "paths_correctly_classified_as_outside_hashed_set": [],
+    "description": "Corrects the code-hash constraint of configs/research_v2_execution.json and states the portable identity of the hashed source tree.",
+    "hashed_set_root": "src/breakout_research",
+    "hashed_set_rule": "compute_code_hash() (src/breakout_research/config.py) walks every .py file under src/breakout_research recursively. Any file added, edited or removed there changes the code hash and invalidates the v1 campaign authorization recorded in research_state/campaign_authorization.json.",
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "authorized_code_hash_source": "research_state/campaign_authorization.json (protocol_version v1, authorized true)",
+    "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "canonical_source_digest_algorithm": {
+      "name": "canonical_source_digest_v1",
+      "description": "sha256 over the concatenation, for every *.py file under src/breakout_research in ascending POSIX relative-path order, of the relative path, a newline, the sha256 hex digest of the file bytes, and a newline.",
+      "portable": true,
+      "purpose": "the portable identity of the hashed source tree; unlike compute_code_hash() it does not depend on the directory enumeration order of the checkout"
+    },
+    "paths_correctly_classified_as_outside_hashed_set": [
+      "scripts/",
+      "src/v2_campaign/"
+    ],
     "paths_not_permitted_inside_hashed_set": [
+      "src/breakout_research/",
       "src/breakout_research/v2/",
       "src/breakout_research/v2/**.py"
     ],
-    "chosen_approach": "Do not add v2 execution code under src/breakout_research/. If execution logic is required in future, it must live outside the hashed set (e.g. new top-level modules/scripts not under src/breakout_research/, or a separate entrypoint namespace explicitly confirmed outside the hashed tree). The v1 campaign authorization remains unchanged as long as no files under src/breakout_research are created or modified.",
-    "superseded_protocol_text_note": "The text in configs/research_v2_execution.json naming src/breakout_research/v2/ as 'outside the hashed set' is incorrect; that error is preserved as historical evidence in the protocol artifact (its hash remains aa902aa935cfb71cce72bd643bb9685333860ec5470b02b12282c0f1659d67e6)."
+    "chosen_approach": "Do not add v2 execution code under src/breakout_research/. If execution logic is required in future, it must live outside the hashed set (for example scripts/ or a separate top-level package such as src/v2_campaign/), or the v1 campaign authorization must be explicitly re-authorized and rotated by a recorded decision. The v1 campaign authorization stays valid as long as no file under src/breakout_research is created, edited or removed.",
+    "ordering_dependence_note": "The authorized code hash is not portable: compute_code_hash() visits directories in filesystem enumeration order. On a fresh checkout of the same, git-clean tree it yields a different digest even though no source file changed. Any comparison against the live code hash must therefore use canonical_source_digest, and a mismatch of the live code hash alone is evidence of enumeration order, not of a modified tree.",
+    "superseded_protocol_text_note": "The text in configs/research_v2_execution.json naming src/breakout_research/v2/ as 'outside the hashed set' is incorrect; that error is preserved as historical evidence in the protocol artifact, whose file digest and specification_hash are recorded unchanged above."
   },
   "v2_selection_authorization": {
     "authorized": false,
-    "purpose": "Design-only record of bounded authorization parameters for a future v2 selection grid run over the frozen candidate set. No grid, backtest, campaign, selection, or pilot is executed by this amendment.",
-    "campaign_id": "v2-selection-20261019-design",
+    "purpose": "Design-only record of the bounded authorization parameters for a future v2 selection grid run over the frozen candidate set. No grid, backtest, campaign, selection or pilot is executed by this amendment.",
+    "campaign_id": "v2-campaign",
+    "run_phase": "selection_grid",
+    "run_id": "v2-selection-20261019",
     "scope": {
       "constituents_count": 18,
       "constituents": [
+        "ADA",
+        "AVAX",
+        "BCH",
+        "BNB",
+        "BTC",
+        "DOGE",
+        "ETH",
+        "HBAR",
+        "LINK",
+        "LTC",
+        "NEAR",
+        "SOL",
+        "SUI",
+        "TRX",
+        "UNI",
+        "XLM",
+        "XRP",
+        "ZEC"
+      ],
+      "binance_pairs": [
         "ADAUSDT",
         "AVAXUSDT",
         "BCHUSDT",
@@ -74,62 +141,103 @@
       "bound_to_universe_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
       "bound_to_data_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
       "bound_to_freeze_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f",
-      "excluded_assets_stay_excluded": true
+      "candidate_manifest_path": "configs/research_v2_candidate_freeze.json",
+      "excluded_assets_stay_excluded": true,
+      "widening_by_reranking_forbidden": true,
+      "excluded_after_validation": {
+        "HYPEUSDT": "insufficient_hourly_history",
+        "XMRUSDT": "binance_spot_unavailable"
+      }
     },
     "data_boundary": {
       "development_data_only": true,
       "candles_before_utc": "2026-10-19T22:00:00Z",
+      "candles_before_utc_rule": "only candles that close at or before the confirmatory window start recorded by the candidate freeze may be read during the selection run; the boundary is that window start, 2026-10-19T22:00:00Z",
       "confirmatory_window_never_read_during_selection": true,
       "v1_holdout_never_reused": true,
-      "v1_cycle0_units_never_mixed": true
+      "v1_cycle0_units_never_mixed": true,
+      "v1_cycle0_units": 497664
     },
     "paths": {
       "shards_dir": "research/shards_v2",
       "ledger": "research/ledger_v2.json",
       "results_manifest": "research/results_manifest_v2.json",
-      "never_use_v1_paths": true
+      "results_stream": "research/results_v2.jsonl",
+      "checkpoint": "research_state/checkpoint_v2.json",
+      "never_use_v1_paths": true,
+      "v1_paths_forbidden": [
+        "research/results_shards/",
+        "research/results_manifest.json",
+        "research/results.jsonl",
+        "research_state/checkpoint.json",
+        "research/universe_manifest.json",
+        "research/data_manifest.json",
+        "research/candidate_manifest.json",
+        "research/candidate_manifest_v2.json",
+        "configs/research_v1.json"
+      ],
+      "path_note": "The protocol names the v2 shards, ledger and results manifest; the v2 result stream and the v2 checkpoint paths are added here so that a v2 result row and the v2 holdout_exposed_count counter have a home that is not a v1 file. Nothing is written to any of these paths by this amendment."
     },
     "selection_rule": {
       "unchanged_from_v1": true,
-      "reference": "configs/research_v1.json"
+      "reference": "configs/research_v1.json",
+      "block": "selection",
+      "max_candidates_per_asset": 1,
+      "grid_reference": "strategy_grid of configs/research_v1.json, inherited unchanged by configs/research_v2.json: 2,304 configurations per asset"
     },
     "bounds": {
-      "max_assets": null,
-      "max_configs_per_asset": null,
-      "attempts": null,
-      "resource_limits": "as recorded at execution time"
+      "max_assets": 18,
+      "max_configs_per_asset": 2304,
+      "max_total_config_units": 41472,
+      "attempts": 1,
+      "max_retries_on_technical_failure": 3,
+      "resource_limits": "Provider requests obey the unchanged v2 data block: max_retries 3, backoff_seconds 5, rate_limit_per_minute 1200, warmup_bars 720. A run that would exceed any of these bounds, or that would touch a path listed under paths.v1_paths_forbidden, aborts and rolls back."
     },
     "stopping_conditions": [
-      "Normal completion per bounded parameters",
-      "No candidate survives the unchanged v1 selection rule \u2192 report the outcome (do not hide it)",
-      "Any boundary violation \u2192 abort and rollback"
+      "Normal completion within the recorded bounds",
+      "No candidate survives the unchanged v1 selection rule -> report the outcome (do not hide it)",
+      "Any boundary violation -> abort and rollback"
     ],
-    "rollback_rule": "Do not write to v1 artifacts; remove any newly created v2 artifacts if execution is aborted; do not alter checkpoint.json or v1 campaign state.",
+    "rollback_rule": "Do not write to v1 artifacts; remove any newly created v2 artifacts if the execution is aborted; do not alter research_state/checkpoint.json or the v1 campaign state.",
     "falsifiers": [
-      "Any modification to src/breakout_research/ (would change code_hash)",
+      "Any modification to src/breakout_research/ (would change the code hash)",
       "Reading any candle in the v2 confirmatory window during selection",
-      "Writing into v1 shards/ledger/tallies",
-      "Reusing v1 holdout",
-      "Mixing v1 cycle-0 units with v2 results"
+      "Writing into v1 shards, ledger, tallies or result streams",
+      "Reusing the v1 holdout",
+      "Mixing v1 cycle-0 units with v2 results",
+      "Widening or narrowing the frozen candidate set"
     ],
     "no_execution": true
   },
+  "execution_authorization": {
+    "grid_run_authorized": false,
+    "candidate_selection_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "candle_fetch_authorized": false,
+    "statement": "This amendment authorizes nothing. It records the corrected code-hash rule and the bounded parameters a future v2 selection run would have to satisfy. A separate recorded decision is required before any v2 grid run, and the selected-configuration manifest must be committed and hash-bound before the first confirmatory-window candle is read."
+  },
   "verification": {
     "verifier_script": "scripts/verify_research_v2_execution_amendment_1.py",
-    "tests_module": "tests/test_research_v2_execution_amendment_1.py"
+    "tests_module": "tests/test_research_v2_execution_amendment_1.py",
+    "verify_command": "python3 scripts/verify_research_v2_execution_amendment_1.py"
   },
   "durability": {
     "commit": null,
     "pushed": false,
-    "note": "Becomes durable only when committed; artifact hash is canonical."
+    "note": "Becomes durable when the commit that carries this artifact exists. The artifact is not rewritten after that commit, because its manifest_hash must not change."
   },
-  "canonicalization": {
-    "note": "manifest_hash is computed over the canonical JSON body with manifest_hash field removed (following the pattern used by other v2 artifacts)."
+  "interim_record": {
+    "first_drafted_utc": "2026-10-19T22:00:09Z",
+    "interim_manifest_hash": "2859abac787017e72623e98c68b2fee66208adb6415ca35c680edaeaf04f960d",
+    "interim_note": "The interim artifact drafted in the 22:00Z session was never committed and is not referenced by any other artifact. This finalization corrects the amends digest, names the genuinely outside paths, replaces the null bounds with concrete bounds, records the portable source-tree digest and makes the nothing-runs state explicit. The manifest_hash of this document is the only hash of this amendment that is ever recorded."
   },
   "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
     "manifest_hash_excluded_keys": [
       "manifest_hash"
-    ]
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 artifacts."
   },
-  "manifest_hash": "2859abac787017e72623e98c68b2fee66208adb6415ca35c680edaeaf04f960d"
+  "manifest_hash": "1149d9cb3ee9ea35f16512502c43c4cf0ee13b0ae2fb91e2dc691663b99195db"
 }
