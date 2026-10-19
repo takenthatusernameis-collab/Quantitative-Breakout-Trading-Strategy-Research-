@@ -866,3 +866,50 @@ assert d['state']=='AWAITING_NEW_CANDIDATES' and d['blocking_dependency']=='UNIV
 print('ok')
 "`
 - `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
+
+---
+
+## Session activity — 2026-10-19T16:25:35Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at 16:09:07Z):** Review BRAIN-008 and determine next action. Given BRAIN-008 recommends deferring v2 execution until a preregistered v2 spec and validated constituents exist, determine the appropriate next bounded task.
+
+**Outcome:** Verified current state. BRAIN-008 decision record is already written as `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` in `research_state/brainstorming_queue.md` (recommendation: defer v2 execution until preregistered v2 spec and validated constituents exist; do not implement v2 execution now). All P0 items are resolved (BRAIN-001-006 resolved/verified, BRAIN-007 resolved). Terminal state is evidence-backed (market-cap provider HTTP 200, Binance failover HTTP 200, state `AWAITING_NEW_CANDIDATES` with blocking dependency `UNIVERSE_VERSION_DECISION`). Tests all pass; authorization matches code hash; record-level verification passes. No further bounded implementation is warranted at this time.
+
+**State verified (2026-10-19T16:25:35Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 165 passed, exit 0
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`)
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664` → verified true
+- Terminal artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json`: state `AWAITING_NEW_CANDIDATES`, blocking_dependency `UNIVERSE_VERSION_DECISION`, universe provider HTTP 200
+- `git ls-remote origin main` == `git rev-parse HEAD` == `4050355f09bb1a678cb181ca1a15388703022716`
+- Working tree clean (no functional changes)
+
+**Not done:** Creating a preregistered v2 spec and validating constituents for v2 is a substantial design+data task requiring BRAIN-008's staged acceptance criteria; this is not appropriate as an unplanned implementation in this session.
+
+## Initial task message for next agent
+
+**Subject:** All P0 items resolved; terminal state is evidence-backed (awaiting preregistered universe version). No immediate implementation work required.
+
+**Status (verified 2026-10-19T16:25:35Z):**
+- BRAIN-001-006: resolved/implemented as verified; BRAIN-007: `RESOLVED_VERIFIED`; BRAIN-008: `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (decision record written; defers v2 until preregistered v2 spec and validated constituents exist).
+- Campaign authorization matches current code hash (`2efd3b18...`); all tests pass (165/165).
+- Continuous cycle 0 verified (497,664/497,664 units). Terminal state is `AWAITING_NEW_CANDIDATES` / `UNIVERSE_VERSION_DECISION` (market-cap provider HTTP 200; Binance failover HTTP 200). CoinGecko reachable; no new constituents validated.
+- HEAD == origin/main; working tree clean.
+
+**Next (one bounded task):** Review current state and decide whether to (1) document anything further about terminal state (already documented in `reports/terminal_state_exhausted_universe.md`), (2) prepare prerequisites for a v2 spec (requires design + data validation plan per BRAIN-008 §3-6), or (3) conclude the session if no specific, bounded task with clear acceptance criteria exists. Do **not** implement v2 execution. If no further bounded task is clear, record that conclusion in the handoff.
+
+**Constraints:** Preserve per-cycle immutability. Do not modify `configs/`, shards, ledger, v1 manifest (`research/candidate_manifest.json`), exposed holdout records, or run campaign/grid. No re-use of v1 holdout. Do not treat `research/candidate_manifest_v2.json` (analysis artifact) as an execution manifest.
+
+**Verification commands:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `grep '"code_hash"' research_state/campaign_authorization.json`
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664`
+- `python3 -c "
+import json
+d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'))
+assert d['state']=='AWAITING_NEW_CANDIDATES' and d['blocking_dependency']=='UNIVERSE_VERSION_DECISION'
+print('ok')
+"`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
