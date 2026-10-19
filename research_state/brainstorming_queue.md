@@ -836,11 +836,17 @@ repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and doc
   and its own falsifier ("if the provider becomes reachable and yields a genuinely new
   universe, the terminal state must transition out of `BLOCKED_EXTERNAL`") is now satisfied
   by the implementation rather than contradicted by it.
-- BRAIN-008 (P0) — `BRAINSTORMING_REQUIRED`: the market-cap provider is reachable and a
+- BRAIN-008 (P0) — `IMPLEMENTATION_IN_PROGRESS`: the market-cap provider is reachable and a
   fresh snapshot yields constituents the frozen universe does not contain (ZEC, HYPE, HBAR)
   while three frozen constituents left the top 20 (DOT, MATIC, ATOM). The campaign now
-  waits for a **preregistered universe version**, not for an external party. The next
-  bounded task is BRAIN-008's decision record, not an implementation.
+  waits for a **preregistered universe version**, not for an external party. The decision
+  record was written 2026-10-19T15:4xZ; the preregistered v2 specification
+  (`configs/research_v2.json`, `specification_hash 49fb0814...`) was produced
+  2026-10-19T16:5xZ and satisfies §6 prerequisite 1. Prerequisites 2–5 (v2 universe
+  manifest, v2 data manifest, v2 holdout report, the no-reuse/no-mixing binding) remain
+  outstanding, so no v2 execution is authorized. The next bounded task is prerequisite 2:
+  take the v2 snapshot inside the pinned retrieval window and validate its constituents
+  per §3.
 
 
 ---
@@ -848,7 +854,7 @@ repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and doc
 ## BRAIN-008 — The market-cap universe provider is reachable: the "exhausted universe" is a protocol boundary, not an external one
 
 **Priority:** P0 — the campaign's stop condition, universe versioning and cohort semantics
-**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (decision record written 2026-10-19T15:4xZ)
+**Status:** `IMPLEMENTATION_IN_PROGRESS` (decision record written 2026-10-19T15:4xZ; §6 prerequisite 1 — the preregistered v2 specification — delivered 2026-10-19T16:5xZ; prerequisites 2–5 outstanding, no execution authorized)
 **Cause labels:** `IMPLEMENTATION_DEFECT` (terminal state asserted a provider status it never observed), `RESEARCH_DESIGN_RISK` (universe versioning, cohort composition and cross-cohort comparability are undecided)
 
 ### Evidence (observed, 2026-10-19T15:43:31Z)
@@ -923,7 +929,65 @@ print('ok')
 4. BRAIN-008 record names: universe-versioning rule (§1), ranking rule + comparability (§2), validation plan (§3), holdout plan (§4), alternatives (§5), recommendation (§6), falsifiers (§7), rollback (§8), staged acceptance tests (§9).
 5. No `src/`, `configs/`, shard, ledger, manifest (v1/v2 analysis manifest except read-only), checkpoint-counter, or authorization change in this session.
 6. Exactly one prompt review (if any). Handoff updated, commit pushed, `git ls-remote origin main` == local HEAD verified.
-
 ### 10. BRAIN-008 must not be implemented in the session that writes this decision record (README Section 2A C1)
+
 Writing the record is the deliverable. Implementation (creating a preregistered v2 spec, validating constituents, wiring execution) is a separate session.
+
+### 11. Decision taken and implementation progress — 2026-10-19T16:5xZ (separate session from the decision record)
+
+**Decision:** option **B** (new versioned universe, §5 B) is selected for the *rule-freezing* step only, with
+option **A** (defer) still governing everything that would require data or execution. Concretely: this
+session produced the preregistered v2 specification required by §6 prerequisite 1, and nothing else. The
+campaign's terminal state is unchanged, no v2 artifact was created beyond that specification, and no v2
+data was retrieved.
+
+**Why not A alone.** Four consecutive sessions (16:25Z, 16:31Z, 16:43Z, 16:45Z) revalidated the terminal
+state and deferred the same decision without producing a new durable artifact. README Section 2A C1 states
+that the brainstorming phase is "a time-bounded decision gate, not permission to park a blocker
+indefinitely". The blocker is not external — the market-cap provider answers HTTP 200 and the Binance
+market-data failover answers HTTP 200 (observed 2026-10-19T15:43:31Z) — so the only thing that can clear
+it is a preregistered universe version, and that artifact can be written without touching a single frozen
+v1 object.
+
+**Why the specification is written now and not later.** §4 requires the v2 confirmatory window to start
+*after* the v2 candidate freeze. Preregistration is only meaningful while the rules are still ahead of the
+data they will be applied to; deferring the freeze moves it closer to (or past) the window it governs. The
+specification therefore pins a fixed retrieval window (2026-10-19T16:52:00Z → 2026-10-26T16:52:00Z) in
+which the single v2 snapshot must be taken, so the membership cannot be chosen after the rules were
+written.
+
+**Delivered (prerequisite 1, `SATISFIED_BY_THIS_SPEC`):**
+- `configs/research_v2.json` — the preregistered v2 specification. `specification_hash`
+  `49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721` over the canonical content of the
+  document (key `specification_hash` removed), verifiable with
+  `python3 scripts/verify_research_v2_spec.py`. It implements §1 (versioning rule, snapshot-identity
+  tuple), §2 (comparability statement), §3 (data-requirement validation plan as rules) and §4
+  (confirmatory-holdout plan) as *rules*; it contains no asset membership, no data and no result.
+- `scripts/verify_research_v2_spec.py` — read-only, offline verifier (exit 0/1, JSON report).
+- `tests/test_research_v2_spec.py` — 14 deterministic tests: hash recomputation, tamper detection,
+  byte-equality of every inherited block against v1, the 2,304-combination grid, v1 artifact immutability,
+  absence of asset membership, the unvalidated candidates (ZEC/HYPE/HBAR) not being treated as eligible,
+  the v1-holdout-reuse prohibition, the status vocabulary, the comparability statement, the outstanding
+  prerequisites and the untouched v1 campaign authorization.
+
+**Methodology unchanged.** Every block v2 inherits from v1 — `strategy_grid`, `costs`, `execution`,
+`folds`, `selection`, `pilot`, `metrics`, `baselines`, `fixed_breakout_baseline`, `status`,
+`checkpointing` — is byte-equal to the v1 block, and the tests enforce that. The 2,304-configuration
+grid, the cost scenarios, the fold structure, the selection gates and the economic status vocabulary are
+unchanged, so v2 differs from v1 in *what is evaluated* and *how confirmation is obtained*, not in how a
+strategy is measured (README Section 2A F).
+
+**Still outstanding — no execution is authorized (§6 prerequisites 2–5):**
+- P2: `research/universe_manifest_v2.json`, built from one snapshot taken inside the pinned retrieval
+  window, with every new constituent validated per §3 (Binance spot verification, ≥ 26,280 closed hourly
+  candles, hash-verified data manifest, exclusion rules). ZEC/HYPE/HBAR remain **unvalidated**.
+- P3: `research/data_manifest_v2.json` and the candle verification artifacts.
+- P4: the v2 holdout *report*, which can only be produced after the confirmatory window is evaluated.
+- P5: enforced as binding rules by this specification and its tests.
+
+**Falsifiers for this decision.** If the v2 snapshot inside the pinned window yields no new eligible
+constituent after §3 validation, the correct outcome is a documented `NO_NEW_ELIGIBLE_CONSTITUENT` with
+evidence, not a silent extension of v1. If the v1 holdout is ever reused as confirmation, or if v2 results
+are tallied with the 497,664 v1 cycle-0 units, this decision is void.
+
 

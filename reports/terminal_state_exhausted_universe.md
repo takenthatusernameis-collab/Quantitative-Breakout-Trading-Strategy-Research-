@@ -73,6 +73,20 @@ decision and not an execution step.
 - **No campaign execution happened.** `next_cohort_index` stayed 2, `completed_cycle_ids`
   kept its two entries, and no shard, ledger, manifest or holdout record was touched.
 
+## Update — 2026-10-19T16:5xZ: the preregistered universe version now exists as a rule set
+
+The terminal state recorded above is unchanged — same artifact, same state, same evidence. What changed
+is that the **preregistered universe version** the state was waiting for now exists as a frozen rule
+set: `configs/research_v2.json` (BRAIN-008 §6 prerequisite 1), `specification_hash`
+`49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721`, verifiable with
+`python3 scripts/verify_research_v2_spec.py`.
+
+That file contains **rules only** — no asset membership, no data, no result. The v2 market-cap snapshot
+has not been retrieved, no v2 constituent has been validated, no v2 manifest exists, no v2 campaign or
+grid has run, and the v1 universe, shards, ledger and exposed holdout records are byte-unchanged. The
+v2 specification pins the snapshot retrieval window (2026-10-19T16:52:00Z → 2026-10-26T16:52:00Z) and
+the §3 constituent-validation rules; executing them is a separate, later session.
+
 ## Reproduce
 
 ```bash

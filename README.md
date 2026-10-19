@@ -288,6 +288,7 @@ Update `research_state/agent_handoff.md` with a compact, append-friendly report:
 - prompt review outcome (`PROMPT_GAP` with one proposed/validated change, or `NO_PROMPT_CHANGE_JUSTIFIED`);
 - unresolved blockers ranked by impact/dependencies, and one precise next action with acceptance criteria.
 - when a session implements a frozen rule (candidate selection, gating, accounting) or adds or changes a module under `src/`, a rule-field-to-code-to-test map: every preregistered field of that rule, the code location that implements it, and the test that exercises it, with `NOT_RUN` stated for any field that no test executes directly. A green test run that does not execute the changed code is not evidence for that change.
+- in the task message for the next session, keep a permitted design deliverable (for example "produce the preregistered specification") separate from the implementation steps that remain forbidden, and never list the same artifact in both; a next agent must be able to read which artifact it is asked to produce and which actions remain out of scope.
 
 Revalidate existing handoff entries on each new session and mark resolved/stale only with evidence. Keep the report compact; link to logs/artifacts instead of embedding huge output. If a write/push is blocked, preserve the report in available recovery artifacts and clearly state that the durable handoff could not be updated.
 

@@ -1,0 +1,427 @@
+{
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+  "created_utc": "2026-10-19T16:52:00Z",
+  "specification_status": "PREREGISTERED_SPECIFICATION_ONLY",
+  "specification_purpose": "Preregister the rules for a second, separately versioned market-cap universe and for a fresh confirmatory-holdout protocol. This file is a design artifact: it freezes rules before any v2 data is retrieved or any v2 result exists, and it authorizes nothing.",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-008",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-008 (DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION)",
+    "sections_implemented_here": [
+      "BRAIN-008 section 1: authoritative universe-versioning rule",
+      "BRAIN-008 section 2: changed market-cap ranking rule and comparability",
+      "BRAIN-008 section 3: data-requirement validation plan for new constituents",
+      "BRAIN-008 section 4: confirmatory-holdout plan"
+    ],
+    "sections_deliberately_not_implemented_here": [
+      "BRAIN-008 section 6 prerequisite 2: v2 universe manifest (requires a snapshot inside the preregistered retrieval window)",
+      "BRAIN-008 section 6 prerequisite 3: v2 data manifest and candle verification artifacts",
+      "BRAIN-008 section 6 prerequisite 4: execution of the confirmatory window (requires a frozen v2 candidate manifest)"
+    ]
+  },
+  "supersedes": {
+    "protocol_version": "v1",
+    "specification_path": "configs/research_v1.json",
+    "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+    "universe_manifest_path": "research/universe_manifest.json",
+    "universe_manifest_sha256": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd",
+    "candidate_manifest_path": "research/candidate_manifest.json",
+    "candidate_manifest_sha256": "87589f83f3bfe22517bb73257d285ec47d602c19a892f0971035e1523df4f1d6",
+    "candidate_manifest_v2_path": "research/candidate_manifest_v2.json",
+    "candidate_manifest_v2_sha256": "a68b061a8c314828bf60478ef8f826ee9d532c6e5ff1545c8afaa2c8e03dfa49",
+    "reason": "The frozen v1 universe is exhausted and a fresh market-cap snapshot contains constituents the v1 universe does not hold (BRAIN-008). v1 artifacts remain immutable and are retained as historical evidence.",
+    "v1_artifacts_are_immutable": true
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "excluded_keys": [
+      "specification_hash"
+    ],
+    "verify_command": "python3 scripts/verify_research_v2_spec.py",
+    "note": "The specification_hash binds every other field of this file, including created_utc. Recomputing it over the parsed document with the key removed is the only accepted verification."
+  },
+  "inheritance": {
+    "inherited_from": "configs/research_v1.json",
+    "inherited_unchanged_blocks": [
+      "strategy_grid",
+      "costs",
+      "execution",
+      "folds",
+      "selection",
+      "pilot",
+      "metrics",
+      "baselines",
+      "fixed_breakout_baseline",
+      "status",
+      "checkpointing"
+    ],
+    "changed_or_added_blocks": [
+      "universe",
+      "data",
+      "holdout",
+      "comparability",
+      "prerequisites",
+      "authorization"
+    ],
+    "statement": "v2 changes the evaluated universe and the confirmatory-holdout protocol only. The strategy family, the 2,304-configuration grid, cost assumptions, execution semantics, fold structure, selection rule, pilot gate, metrics, baselines and status vocabulary are inherited from v1 without modification, so that v2 differs from v1 in what is evaluated and how confirmation is obtained, not in how a strategy is measured."
+  },
+  "universe": {
+    "source": "coingecko",
+    "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1",
+    "eligible_quote": "USDT",
+    "exchange": "binance",
+    "market_type": "spot",
+    "top_n": 20,
+    "min_history_years": 3,
+    "min_candles": 26280,
+    "exclusions": [
+      "stablecoins",
+      "wrapped_tokens",
+      "bridged_tokens",
+      "leveraged_tokens",
+      "synthetic_tokens",
+      "derivative_tokens"
+    ],
+    "benchmark_asset": "BTCUSDT",
+    "survivorship_disclaimer": "Current-universe snapshot used; historical point-in-time ranks unavailable. Results have survivorship limitations.",
+    "snapshot_retrieval": {
+      "rule": "The v2 universe is exactly one timestamped market-cap snapshot retrieved inside the window below. The first successful retrieval inside the window is the v2 snapshot.",
+      "not_before_utc": "2026-10-19T16:52:00Z",
+      "deadline_utc": "2026-10-26T16:52:00Z",
+      "if_window_expires": "Record the provider failure evidence with endpoint, HTTP status, probe timestamp and command, and re-preregister a new window in a versioned amendment. Never reuse an expired window silently.",
+      "no_cherry_picking": "The window is fixed by this specification. The retrieval must not be delayed, repeated or re-timed to obtain a more convenient ranking, and the snapshot must not be selected after seeing any strategy result.",
+      "raw_response_required": true,
+      "raw_response_hash": "sha256 over the exact bytes of the provider response, stored beside the v2 universe manifest",
+      "not_a_v2_snapshot": "The market-cap snapshot retrieved at 2026-10-19T15:43:31Z and recorded in research/campaign_cycles/terminal/exhausted_cohort_2.json is prior evidence that a re-ranking occurred. It was observed before these rules were frozen, so it is not the v2 universe and must not be used as one."
+    },
+    "snapshot_identity": {
+      "fields": [
+        "protocol_version",
+        "universe_version",
+        "specification_hash",
+        "market_cap_source_endpoint",
+        "market_cap_source_retrieval_timestamp_utc",
+        "code_hash",
+        "data_manifest_hash",
+        "candidate_manifest_hash"
+      ],
+      "note": "BRAIN-008 section 1. Any artifact that freezes v2 candidates must record this tuple."
+    },
+    "eligibility_validation": {
+      "binance_spot_verification": {
+        "required": true,
+        "rule": "The trading pair <SYMBOL>USDT must exist on Binance spot and be tradeable at snapshot time.",
+        "endpoints": [
+          "https://api.binance.com/api/v3/exchangeInfo",
+          "https://data-api.binance.vision/api/v3/exchangeInfo"
+        ],
+        "failover_policy": "One bounded request to the primary host. If it fails (for example HTTP 451), use the documented failover host and record both statuses with timestamps. Do not blindly retry the primary host.",
+        "record": [
+          "verification_timestamp_utc",
+          "endpoint_used",
+          "http_status_of_each_probed_host",
+          "pair_symbol"
+        ]
+      },
+      "candle_history": {
+        "min_candles": 26280,
+        "interval": "1h",
+        "closed_candles_only": true,
+        "coverage_gaps_recorded": true,
+        "no_interpolation": true,
+        "rule": "A constituent with fewer than 26,280 validated closed hourly candles is excluded and recorded with an exclusion_reason. Missing history is never interpolated, back-filled or shortened."
+      },
+      "data_integrity": {
+        "data_manifest": "research/data_manifest_v2.json",
+        "hash_verified": true,
+        "provenance": "real provider candles only; synthetic fallback is forbidden in any campaign-path artifact",
+        "survivorship_and_adjustment_policy": "v1 policy, unchanged, unless a later preregistered version says otherwise"
+      },
+      "exclusion_rules": "The exclusion_rules block of the v2 universe manifest, copied unchanged from research/universe_manifest.json, is applied before evaluation. Every excluded candidate records an exclusion_reason.",
+      "failure_handling": "Exclude and record. Never promote, never substitute a different asset, and never lower the history requirement to admit a constituent."
+    }
+  },
+  "strategy_grid": {
+    "entry_rule": [
+      "classic_high_breakout",
+      "close_breakout"
+    ],
+    "entry_lookback": [
+      12,
+      24,
+      48,
+      72,
+      120,
+      168,
+      336,
+      720
+    ],
+    "buffer_atr_multiple": [
+      0.0,
+      0.1,
+      0.25
+    ],
+    "confirmation": [
+      "one_close",
+      "two_close"
+    ],
+    "trend_filter": [
+      "none",
+      "asset_ema_168",
+      "asset_ema_24_168",
+      "btc_ema_168"
+    ],
+    "exit": [
+      "channel_12",
+      "channel_24",
+      "channel_48",
+      "atr_trail_1.5",
+      "atr_trail_2.5",
+      "atr_trail_4.0"
+    ],
+    "total_combinations": 2304
+  },
+  "data": {
+    "interval": "1h",
+    "provider": "binance",
+    "endpoint": "https://api.binance.com/api/v3/klines",
+    "failover_endpoints": [
+      "https://data-api.binance.vision/api/v3/klines"
+    ],
+    "failover_policy": "One bounded request to the primary host. If it fails (for example HTTP 451), use the documented failover host and record both statuses with timestamps. The primary host is failed over, not blindly retried. max_retries applies to transient failures on the active endpoint only.",
+    "max_retries": 3,
+    "backoff_seconds": 5,
+    "rate_limit_per_minute": 1200,
+    "warmup_bars": 720,
+    "min_candles": 26280,
+    "closed_candles_only": true
+  },
+  "costs": {
+    "baseline": {
+      "taker_fee_bps": 10,
+      "slippage_bps": 5
+    },
+    "scenarios": [
+      1.0,
+      2.0,
+      3.0
+    ]
+  },
+  "execution": {
+    "mode": "long_only_cash",
+    "leverage": 1.0,
+    "max_positions_per_asset": 1,
+    "fractional_units": true,
+    "fill_at_next_open": true,
+    "adverse_fill_on_gap": true
+  },
+  "folds": {
+    "development_fraction": 0.8,
+    "holdout_fraction": 0.2,
+    "validation_windows": 4,
+    "window_fractions": [
+      0.4,
+      0.5,
+      0.6,
+      0.7
+    ],
+    "reset_state_between_folds": true
+  },
+  "selection": {
+    "max_candidates_per_asset": 1,
+    "min_trades_total": 30,
+    "min_trades_per_fold": 5,
+    "min_folds_with_min_trades": 3,
+    "positive_net_return_baseline": true,
+    "positive_net_return_2x_costs": true,
+    "positive_folds_required": 3,
+    "median_sharpe_gt_zero": true,
+    "median_sharpe_gt_buyhold": true,
+    "ranking_metric": "median_net_daily_sharpe",
+    "tiebreakers": [
+      "median_net_return",
+      "max_drawdown",
+      "turnover",
+      "config_id"
+    ],
+    "neighbor_analysis": true
+  },
+  "pilot": {
+    "max_configurations": 24,
+    "asset_selection": "highest_ranked_eligible",
+    "config_selection_rule": "cover_all_dimensions"
+  },
+  "metrics": {
+    "gross_total_return": true,
+    "net_total_return": true,
+    "annualized_return": true,
+    "daily_sharpe": true,
+    "max_drawdown": true,
+    "exposure": true,
+    "turnover": true,
+    "trade_count": true,
+    "win_rate": true,
+    "avg_win_loss": true,
+    "profit_factor": true,
+    "fee_slippage_drag": true
+  },
+  "baselines": [
+    "buyhold_asset",
+    "buyhold_btc",
+    "cash",
+    "fixed_breakout_baseline"
+  ],
+  "fixed_breakout_baseline": {
+    "entry_rule": "classic_high_breakout",
+    "entry_lookback": 24,
+    "buffer_atr_multiple": 0.0,
+    "confirmation": "one_close",
+    "trend_filter": "none",
+    "exit": "channel_24"
+  },
+  "status": {
+    "execution": [
+      "NOT_STARTED",
+      "PILOT_RUNNING",
+      "PILOT_PASS",
+      "CAMPAIGN_RUNNING",
+      "CAMPAIGN_PARTIAL",
+      "CAMPAIGN_COMPLETE",
+      "INVALIDATED",
+      "INFRASTRUCTURE_FAILURE",
+      "PERSISTENCE_FAILURE"
+    ],
+    "experiment": [
+      "COMPLETED",
+      "ZERO_TRADE_COMPLETED",
+      "EXCLUDED",
+      "INVALID_DATA",
+      "FAILED",
+      "NOT_RUN"
+    ],
+    "economic": [
+      "NO_CANDIDATE",
+      "INSUFFICIENT_EVIDENCE",
+      "CANDIDATE_PENDING_HOLDOUT",
+      "REJECTED_ON_HOLDOUT",
+      "PROVISIONAL_HISTORICAL_SURVIVAL",
+      "INCONCLUSIVE"
+    ]
+  },
+  "checkpointing": {
+    "batch_size": 50,
+    "atomic_writes": true,
+    "verify_on_resume": true,
+    "max_retries": 3
+  },
+  "holdout": {
+    "v1_holdout_status": "EXPOSED_OR_UNKNOWN",
+    "v1_holdout_reuse": "forbidden",
+    "v1_holdout_note": "The 54 exposed v1 holdout records are historical evidence of an already-consumed window. They are never reused as confirmation for v1 or v2 candidates.",
+    "v2_confirmatory_window": {
+      "rule": "A fresh, unexposed confirmatory window evaluated only after the v2 candidate manifest is frozen and hash-bound.",
+      "starts_after": "v2_candidate_freeze_timestamp_utc",
+      "min_hours": 2160,
+      "min_hours_rationale": "90 days of closed hourly candles; the v1 protocol used a 0.2 holdout fraction of a multi-year window, which is of the same order.",
+      "overlap_with_v1_holdout": "forbidden",
+      "data_used_for_candidate_selection": "excluded",
+      "single_use": true,
+      "access_counting": "Every read of a candle inside the confirmatory window increments holdout_exposed_count in the v2 checkpoint and is recorded in the v2 holdout report.",
+      "not_a_v1_holdout": "This is a new protocol object, not a re-opening of the v1 final holdout. It is never populated with data that predates the v2 candidate freeze."
+    },
+    "candidate_freeze_rule": "The v2 candidate manifest (at most one candidate per asset, selected under the unchanged v1 selection block) must be committed and hash-bound before the first confirmatory-window candle is read.",
+    "promotion_rule": {
+      "one_candidate_per_asset": true,
+      "no_ranking_on_holdout": true,
+      "no_retuning_on_holdout": true,
+      "criteria": [
+        "net_total_return > 0 at baseline costs (1x) over the confirmatory window",
+        "net_total_return > 0 at 2x costs over the confirmatory window",
+        "closed_trades >= 30 over the confirmatory window",
+        "the evaluated parameters are byte-identical to the frozen v2 candidate manifest entry"
+      ],
+      "status_vocabulary": [
+        "CANDIDATE_PENDING_HOLDOUT",
+        "PROVISIONAL_HISTORICAL_SURVIVAL",
+        "REJECTED_ON_HOLDOUT",
+        "INCONCLUSIVE"
+      ],
+      "status_semantics": "PROVISIONAL_HISTORICAL_SURVIVAL means the candidate survived the preregistered historical confirmatory tests; it does not establish future profitability.",
+      "reporting_obligation": "Every evaluated asset and candidate is reported, including zero-trade, excluded and failed outcomes. Negative and inconclusive results are never discarded."
+    },
+    "v2_holdout_report_required_fields": [
+      "universe_version",
+      "snapshot_id",
+      "candidate_manifest_path",
+      "candidate_manifest_hash",
+      "confirmatory_window_start_utc",
+      "confirmatory_window_end_utc",
+      "candles_evaluated",
+      "exposure_count",
+      "per_asset_outcomes",
+      "comparability_statement"
+    ]
+  },
+  "comparability": {
+    "v1_cycle0_units": 497664,
+    "statement": "v1 cycle-0 results (497,664 validation-only units, 0 holdout units) are bound to the v1 universe, the v1 grid and the v1 data manifest. They are not comparable to v2 results without a bridging analysis, and they are never restated, re-counted or extended by v2.",
+    "rules": [
+      "v2 results must not be appended to, tallied with, or substituted into v1 shards, ledgers, manifests or cycle-0 tallies",
+      "the re-ranking neither confirms nor rejects any v1 candidate",
+      "promotion of a v2 candidate does not retroactively validate or invalidate a v1 candidate",
+      "research/candidate_manifest_v2.json is manifest_version 2 of the v1 campaign, not a v2-universe manifest: its 14 candidates remain CANDIDATE_PENDING_HOLDOUT against the v1 universe and are not v2-universe candidates",
+      "a bridging analysis is required before any v1-versus-v2 quantitative comparison is reported"
+    ],
+    "bridging_analysis_required": true
+  },
+  "prerequisites": [
+    {
+      "id": "P1",
+      "requirement": "A preregistered v2 specification (universe, selection, data requirements, holdout) recorded in an immutable hashed spec",
+      "artifact": "configs/research_v2.json",
+      "status": "SATISFIED_BY_THIS_SPEC",
+      "evidence": "specification_hash over the canonical content of this file, verified by scripts/verify_research_v2_spec.py and tests/test_research_v2_spec.py"
+    },
+    {
+      "id": "P2",
+      "requirement": "A v2 universe manifest built from a fresh snapshot with every new constituent validated per BRAIN-008 section 3",
+      "artifact": "research/universe_manifest_v2.json",
+      "status": "OUTSTANDING"
+    },
+    {
+      "id": "P3",
+      "requirement": "A v2 data manifest and candle verification artifacts",
+      "artifact": "research/data_manifest_v2.json",
+      "status": "OUTSTANDING"
+    },
+    {
+      "id": "P4",
+      "requirement": "An explicit comparability statement and a v2 confirmatory-holdout plan",
+      "artifact": "the comparability and holdout blocks of this specification; the v2 holdout report is produced only after the confirmatory window is evaluated",
+      "status": "SATISFIED_BY_THIS_SPEC"
+    },
+    {
+      "id": "P5",
+      "requirement": "No reuse of the v1 holdout, and no mixing of v2 results into cycle-0 tallies",
+      "artifact": "binding rules in the holdout and comparability blocks of this specification, enforced by tests/test_research_v2_spec.py",
+      "status": "SATISFIED_BY_THIS_SPEC"
+    }
+  ],
+  "authorization": {
+    "execution_authorized": false,
+    "scope": "This specification freezes rules. It does not authorize a v2 snapshot retrieval, a v2 data fetch, a v2 manifest, a v2 campaign, a v2 grid run or any confirmatory-window evaluation.",
+    "not_authorized_by_this_specification_alone": [
+      "retrieving the v2 market-cap snapshot outside the preregistered retrieval window",
+      "fetching candles for any v2 constituent",
+      "writing research/universe_manifest_v2.json or research/data_manifest_v2.json",
+      "running any campaign, grid or backtest under v2",
+      "reading any candle inside a v2 confirmatory window",
+      "modifying configs/research_v1.json, research/universe_manifest.json, research/candidate_manifest.json, research/candidate_manifest_v2.json, the v1 shards, the v1 ledger or the exposed v1 holdout records"
+    ],
+    "next_session_authorization": "A later session may implement P2 and P3 only: take the market-cap snapshot inside the pinned retrieval window, validate every candidate per BRAIN-008 section 3, and write research/universe_manifest_v2.json and research/data_manifest_v2.json with the raw provider response and its hash. That session must not run a v2 campaign, a v2 grid or any confirmatory-window evaluation, and it must not touch the v1 artifacts listed above.",
+    "v1_campaign_authorization": "Unchanged. research_state/campaign_authorization.json remains bound to protocol v1 and the v1 specification hash. This specification does not rotate, extend, re-authorize or revoke it, and it does not change the code hash.",
+    "unblocking_condition": "P2 and P3 committed and hash-bound, and the v2 candidate manifest frozen and hash-bound, are required before any confirmatory-window evaluation. Each further step requires its own recorded decision and evidence."
+  }
+}

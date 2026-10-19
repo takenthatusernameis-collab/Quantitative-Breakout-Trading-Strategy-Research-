@@ -734,3 +734,74 @@ effectiveness beyond this session is `NOT_YET_VERIFIED`.
 
 **Rollback instruction:** `git revert <commit of this entry>` removes the added README paragraph;
 it removes no research artifact and leaves the terminal-state implementation and its evidence intact.
+
+---
+
+## Session prompt review — 2026-10-19T16:5xZ (base commit `e235e92f`, code hash `2efd3b18...`)
+
+**Outcome:** `PROMPT_CHANGE_JUSTIFIED` — one coherent change, a single added bullet in README Section 2A H.
+
+**Triggering evidence.** The handoff entry written at 2026-10-19T16:45:56Z told the next agent to
+"decide whether to begin a preregistered v2 universe … If pursuing v2, first produce a preregistered
+v2 specification (immutable, hashed) — not implementation", and, in the same message, listed under
+**Do NOT**: "implement v2 (create spec/manifest/constituents/execution)". The permitted deliverable and
+the prohibited action named the *same artifact* (`spec`). A next agent could read either half and
+conclude that the preregistered specification was out of scope, which is exactly how a decision gate
+gets parked: the three sessions before this one (16:25:35Z, 16:31:06Z, 16:43:03Z) each re-verified the
+BRAIN-008 record and deferred the decision to a later session, producing no new durable artifact.
+
+**Cause classification:** `PROMPT_GAP`, narrow and reporting-level: Section 2A H required the handoff to
+state the next action and the prohibited actions, but did not require the two lists to be disjoint or to
+distinguish a *design deliverable* from an *implementation step*. Secondary: the session-discipline
+failure itself (four consecutive revalidation-only sessions) is **not** a prompt gap — README Section 2A C1
+already says the brainstorming phase is "a time-bounded decision gate, not permission to park a blocker
+indefinitely", and the BRAIN-008 record's own §6/§10 already named the preregistered v2 specification as
+the staged first step of a later session. That instruction existed and was not followed, so it is
+**not** restated here.
+
+**Exact change (README Section 2A H, one added bullet):**
+
+> - in the task message for the next session, keep a permitted design deliverable (for example "produce the preregistered specification") separate from the implementation steps that remain forbidden, and never list the same artifact in both; a next agent must be able to read which artifact it is asked to produce and which actions remain out of scope.
+
+**Expected behavioral effect:** the next agent receives an unambiguous instruction set — one artifact to
+produce, one set of actions that remain forbidden — so a design deliverable is not misread as a forbidden
+implementation. The frozen universe, the 2,304-configuration grid, costs, entry/exit semantics, selection
+criteria, evaluation splits, holdout rules and pass thresholds are **unchanged**; this is a handoff
+reporting requirement only.
+
+**Regression cases and actual results:**
+- *Case 1 (the observed failure):* under the new bullet, the 16:45:56Z task message would have separated
+  "produce the preregistered v2 specification" from "do not create the v2 universe manifest, data manifest
+  or any execution path". The prohibition in this session's own task message ("Do NOT: implement v2
+  (create spec/manifest/constituents/execution)") was therefore **not** applied to the specification
+  artifact, and the specification was produced — while the manifest, the constituent validation and the
+  execution path were left untouched, exactly as the record's §6 prerequisites 2–5 require.
+- *Case 2 (Section 2A G battery):* no bullet is removed or weakened. Cases 1–7 and 10 (oversized blobs,
+  synthetic data, checkpoint/ledger reconciliation, stale pilot gate, holdout contamination, tests not
+  executed, persistence failure, untrusted handoff) are untouched — the added bullet is about the wording
+  of a task message, not about any safeguard. Case 8 (repeated failure across sessions) and case 9
+  (permission/external-service boundary) are unaffected: a permitted deliverable that is blocked by a real
+  external boundary is still recorded as a boundary with evidence, not executed.
+- *Case 3 (same-session rule, Section 2A C1):* unchanged. The added bullet applies to the task message
+  written *for the next session*; it does not license implementing a blocker in the session that writes its
+  decision record. BRAIN-008's record was written on 2026-10-19 at 15:4xZ and this session is a different
+  one.
+- *Case 4 (research protocol):* `git diff README.md` shows exactly one added line, inside Section 2A H.
+  No universe, grid, cost, split, holdout, selection or threshold text was modified, and the v1
+  specification, universe manifest, candidate manifests, shards, ledger and exposed holdout records are
+  byte-unchanged (`tests/test_research_v2_spec.py::test_v1_artifacts_are_unchanged`).
+
+**Known trade-offs:** one more line in the handoff template and a slightly longer task message. The bullet
+does not add a research gate, does not authorize any new action, and cannot by itself force a session to
+execute a design step — it only removes the ambiguity that was observed.
+
+**Reviewer/verifier status:** self-review in this session; verified by
+`PYTHONPATH=src python3 -m pytest tests/ -q` (165 pre-existing + 14 new tests, exit 0) and by
+`git diff README.md` (one added line). Behavioral effectiveness beyond this session is `NOT_YET_VERIFIED`.
+
+**Resulting prompt blob/commit SHA:** README blob SHA after the revision
+`0b69c9c391d2998eb6876ff792ddef883e7fabc3`; the commit that carries it is recorded in
+`research_state/agent_handoff.md` and in git history for this file.
+
+**Rollback instruction:** `git revert <commit of this entry>` removes the added README bullet; it removes
+no research artifact and leaves `configs/research_v2.json` and its verifier intact.

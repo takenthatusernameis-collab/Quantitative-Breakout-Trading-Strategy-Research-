@@ -1,3 +1,80 @@
+## Session activity — 2026-10-19T16:5xZ (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at 16:45:56Z):** "Decide whether to begin a preregistered v2 universe (requires v2 spec, validated constituents per §3, v2 data manifest, v2 holdout plan per §4) or keep campaign terminal/awaiting. If pursuing v2, first produce a preregistered v2 specification (immutable, hashed) — not implementation. Otherwise, document the decision to remain in terminal state."
+
+**Decision:** option **B**, restricted to rule-freezing. The preregistered v2 specification (BRAIN-008 §6 prerequisite 1) was produced and hash-verified. Nothing that needs data, a manifest or execution was started: no market-cap snapshot was retrieved, no candle was fetched, no v2 manifest was written, no campaign/grid was run, no holdout was touched, and the terminal state is unchanged.
+
+**Why not defer again:** four consecutive sessions (16:25:35Z, 16:31:06Z, 16:43:03Z, 16:45:56Z) re-verified the terminal state and deferred the same decision without producing a new durable artifact. README §2A C1 states that the brainstorming phase is "a time-bounded decision gate, not permission to park a blocker indefinitely". The blocker is not external — CoinGecko (the provider that supplies the universe) answers HTTP 200 and the documented Binance market-data failover answers HTTP 200, both observed 2026-10-19T15:43:31Z and recorded in the terminal artifact — so the only thing that can clear it is a preregistered universe version, and that artifact can be written without touching a single frozen v1 object. §4 of the BRAIN-008 record also requires the v2 confirmatory window to start *after* the v2 candidate freeze, so the rules must be frozen while they are still ahead of the data they govern; the spec therefore pins a fixed retrieval window (2026-10-19T16:52:00Z → 2026-10-26T16:52:00Z).
+
+**Outcome — files added / changed:**
+- `configs/research_v2.json` (**new**) — the preregistered v2 specification. `specification_hash` `49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721` over the canonical content of the document with the `specification_hash` key removed (sha256; `json.dumps(sort_keys=True, separators=(",",":"), ensure_ascii=False)` — the convention is stated inside the spec). It implements BRAIN-008 §1 (versioning rule, snapshot-identity tuple), §2 (comparability statement), §3 (data-requirement validation rules) and §4 (confirmatory-holdout plan) as *rules*; it contains no asset membership, no data and no result.
+- `scripts/verify_research_v2_spec.py` (**new**) — read-only, offline verifier: hash recomputation, v1 byte-equality of every inherited block, v1 artifact immutability, 2,304-combination grid, absence of asset membership, holdout rules, prerequisite and authorization states. JSON report, exit 0/1.
+- `tests/test_research_v2_spec.py` (**new**) — 15 deterministic tests (see map below).
+- `research_state/brainstorming_queue.md` — BRAIN-008 status `DESIGN_READY…` → `IMPLEMENTATION_IN_PROGRESS`; new §11 "Decision taken and implementation progress" (decision, evidence, delivered, outstanding, falsifiers); the phase-summary bullet updated.
+- `research_state/prompt_evolution.md` — this session's single prompt review (`PROMPT_CHANGE_JUSTIFIED`, one bullet).
+- `README.md` — one added bullet in §2A H (the prompt change); `git diff README.md` = 1 insertion.
+- `research_state/campaign_authorization.json` — controller-driven `authorized_at_utc` refresh only (`16:46:36Z` → `16:54:22Z`); every functional field is unchanged.
+
+**Not done, deliberately:** no snapshot retrieval, no candle fetch, no `research/universe_manifest_v2.json`, no `research/data_manifest_v2.json`, no v2 candidate manifest, no campaign/grid/backtest, no confirmatory-window read, no `src/` change, no v1 artifact change, no authorization change. ZEC/HYPE/HBAR remain **unvalidated**.
+
+**State verified (2026-10-19T16:5xZ):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **180 passed, exit 0** (165 pre-existing + 15 new)
+- `python3 scripts/verify_research_v2_spec.py` → `"ok": true`, `"failures": []`, exit 0
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`) — unchanged, because no `src/` file was touched
+- Terminal artifact unchanged: `AWAITING_NEW_CANDIDATES NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION UNIVERSE_VERSION_DECISION`
+- v1 immutability (asserted in the new test): sha256 of `configs/research_v1.json` `558d6099…`, `research/universe_manifest.json` `c8f367d2…`, `research/candidate_manifest.json` `87589f83…`, `research/candidate_manifest_v2.json` `a68b061a…` — all unchanged
+- `git ls-remote origin main` == `git rev-parse HEAD` == `e235e92f7517e66c0fd31226d2cf1c185e7cb55c` before this session's commit
+
+**Rule-field → code → test map (README §2A H).** The v2 specification is a design artifact, not an implemented rule, so every preregistered field is currently *documented but not executed*:
+
+| Preregistered field (v2 spec) | Location | Executing test | Status |
+|---|---|---|---|
+| `specification_hash` (self-verifying) | `configs/research_v2.json` → `hashing` | `test_specification_hash_recomputes_from_the_document`, `test_verifier_reports_no_failures` | PASS |
+| tamper detection of a frozen rule | `scripts/verify_research_v2_spec.py` → `compute_specification_hash` | `test_verifier_detects_a_tampered_rule` | PASS |
+| inherited blocks identical to v1 (grid/costs/execution/folds/selection/pilot/metrics/baselines/status/checkpointing) | `configs/research_v2.json` → `inheritance` | `test_inherited_blocks_are_identical_to_v1` | PASS |
+| 2,304-configuration grid | `configs/research_v2.json` → `strategy_grid` | `test_grid_still_enumerates_2304_combinations` | PASS |
+| v1 evidence immutable | `configs/research_v2.json` → `supersedes` | `test_v1_artifacts_are_unchanged`, `test_supersedes_points_at_the_v1_specification` | PASS |
+| §1 versioning rule / snapshot identity / retrieval window | `configs/research_v2.json` → `universe` | `test_specification_contains_no_asset_membership` (documented; not yet executed by any v2 run) | NOT_RUN (no v2 snapshot exists) |
+| §3 data-requirement validation plan | `configs/research_v2.json` → `universe.eligibility_validation` | — | NOT_RUN (no v2 constituent has been validated) |
+| §4 confirmatory-holdout plan | `configs/research_v2.json` → `holdout` | `test_confirmatory_window_forbids_v1_holdout_reuse`, `test_promotion_rule_uses_the_unchanged_status_vocabulary` | PASS (rules); execution NOT_RUN |
+| §2 comparability statement | `configs/research_v2.json` → `comparability` | `test_comparability_statement_separates_v1_from_v2` | PASS |
+| prerequisites / authorization | `configs/research_v2.json` → `prerequisites`, `authorization` | `test_execution_is_not_authorized_while_prerequisites_are_outstanding`, `test_next_session_scope_is_manifests_only_and_excludes_execution` | PASS |
+| v1 campaign authorization untouched | `research_state/campaign_authorization.json` | `test_v1_campaign_authorization_is_untouched` | PASS |
+
+**Prompt review (one, this session):** `PROMPT_CHANGE_JUSTIFIED` — one bullet added to README §2A H: a task message must keep a permitted design deliverable separate from the implementation steps that remain forbidden, and must never list the same artifact in both. Trigger: the 16:45:56Z handoff told the next agent to "produce a preregistered v2 specification" while its **Do NOT** list grouped "create spec/manifest/constituents/execution" as forbidden. Full record, regression cases and rollback in `research_state/prompt_evolution.md`. No research-protocol text was touched.
+
+**Unresolved blockers ranked:** (1) P2 — v2 universe manifest from a snapshot taken inside the pinned retrieval window, with every constituent validated per §3 (data + external dependency); (2) P3 — v2 data manifest and candle verification artifacts; (3) P4/P5 — v2 holdout report (only after the confirmatory window) and the standing no-reuse/no-mixing rules. None of them blocks another session's bounded work; (1) is the next task.
+
+## Initial task message for next agent
+
+**Subject:** Preregistered v2 specification is committed and hash-verified — next bounded task is P2 (v2 snapshot inside the pinned retrieval window + §3 constituent validation); no v2 execution authorized
+
+**Status (verified 2026-10-19T16:5xZ):**
+- `configs/research_v2.json` exists and is self-verifying: `specification_hash 49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721`; `python3 scripts/verify_research_v2_spec.py` → `"ok": true`, exit 0; 15 new tests in `tests/test_research_v2_spec.py`; full suite **180/180 passed, exit 0**.
+- BRAIN-008 is now `IMPLEMENTATION_IN_PROGRESS`: §6 prerequisite 1 (`SATISFIED_BY_THIS_SPEC`) is delivered; P2, P3 `OUTSTANDING`; P4/P5 specified and enforced by tests. Decision record unchanged (`research_state/brainstorming_queue.md` §8–§11).
+- The v2 spec changes **only** the evaluated universe and the confirmatory-holdout protocol: `strategy_grid`, `costs`, `execution`, `folds`, `selection`, `pilot`, `metrics`, `baselines`, `fixed_breakout_baseline`, `status`, `checkpointing` are byte-equal to v1, and the 2,304-combination grid is unchanged.
+- Campaign terminal state unchanged: `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`; code hash `2efd3b18…` unchanged; v1 authorization still valid; v1 artifacts byte-unchanged.
+
+**Next (one bounded task):** implement BRAIN-008 §6 prerequisites **P2 and P3 only** —
+1. Retrieve the v2 market-cap snapshot **inside the pinned window** (2026-10-19T16:52:00Z → 2026-10-26T16:52:00Z) with one bounded read-only request to the frozen endpoint `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1`; store the raw response, its sha256 and the retrieval timestamp. The 2026-10-19T15:43:31Z snapshot recorded in the terminal artifact is **not** usable as the v2 snapshot (it was observed before these rules were frozen) and the window must not be delayed or re-timed to obtain a more convenient ranking.
+2. Apply the v2 exclusion rules and validate every candidate per BRAIN-008 §3 — Binance spot `<SYMBOL>USDT` verification through the documented failover (`data-api.binance.vision`; one bounded request, record both hosts' statuses, no blind retry of the primary), ≥ 26,280 closed hourly candles with coverage gaps recorded, hash-verified against `research/data_manifest_v2.json`. Exclude and record a reason for every failure; never interpolate, never lower the history floor, never substitute an asset. ZEC/HYPE/HBAR are **unvalidated** and stay that way until they pass.
+3. Write `research/universe_manifest_v2.json` and `research/data_manifest_v2.json`, each recording the v2 snapshot-identity tuple (`protocol_version`, `universe_version`, `specification_hash`, `market_cap_source_endpoint`, `market_cap_source_retrieval_timestamp_utc`, `code_hash`, `data_manifest_hash`, `candidate_manifest_hash`), the raw-response hash, per-constituent validation results and exclusion reasons, and `supersedes` pointing at the v1 manifest identity.
+
+**Do NOT:** run a v2 campaign, grid or backtest; read any candle inside a v2 confirmatory window; reuse or re-evaluate the v1 holdout; modify `configs/research_v1.json`, `research/universe_manifest.json`, `research/candidate_manifest.json`, `research/candidate_manifest_v2.json`, the v1 shards, the v1 ledger or the 54 exposed v1 holdout records; modify `src/`; extend the frozen v1 universe; treat `research/candidate_manifest_v2.json` as a v2-universe manifest (it is manifest_version 2 of the v1 campaign); or treat ZEC/HYPE/HBAR as validated. If the market-cap provider is unreachable, record the boundary with endpoint, HTTP status, probe timestamp and command (one bounded probe, no retry loop) and stop.
+
+**Acceptance criteria:** `python3 scripts/verify_research_v2_spec.py` exits 0; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0 with the v1 artifact sha256 anchors unchanged; the v2 manifests exist, are hash-bound and record the snapshot identity tuple, the raw-response hash, every constituent's validation outcome and its exclusion reason; the v1 artifacts are byte-unchanged; no v2 result rows exist and no v1 tally was altered.
+
+**Verification commands:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `python3 scripts/verify_research_v2_spec.py`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `python3 -c "import json;d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'));print(d['state'],d['reason'],d['blocking_dependency'])"`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
+
+---
+
 ## Session activity — 2026-10-19T16:45:56Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
