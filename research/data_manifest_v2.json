@@ -267,31 +267,31 @@
   "universe_version": "v2",
   "validation_results": {
     "ADAUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
     },
     "BNBUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
     },
     "BTCUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
     },
     "DOGEUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
     },
     "ETHUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
@@ -299,11 +299,11 @@
     "FIGR_HELOCUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "validated": false
     },
     "HYPEUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
@@ -311,17 +311,17 @@
     "LEOUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "validated": false
     },
     "LINKUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
     },
     "NEARUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
@@ -329,17 +329,17 @@
     "RAINUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "validated": false
     },
     "SOLUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
     },
     "TRXUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
@@ -365,23 +365,23 @@
     "WBTUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "validated": false
     },
     "XMRUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "validated": false
     },
     "XRPUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false
     },
     "ZECUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
       "exclusion_reason": null,
       "validated": false

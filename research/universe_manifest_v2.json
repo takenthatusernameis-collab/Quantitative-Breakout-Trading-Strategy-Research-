@@ -11,7 +11,7 @@
   },
   "eligible_assets": [
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "bitcoin",
       "exclusion_reason": null,
       "market_cap_usd": 1646318511025,
@@ -20,7 +20,7 @@
       "symbol": "BTCUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "ethereum",
       "exclusion_reason": null,
       "market_cap_usd": 293235198630,
@@ -38,7 +38,7 @@
       "symbol": "USDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "binancecoin",
       "exclusion_reason": null,
       "market_cap_usd": 95499522854,
@@ -47,7 +47,7 @@
       "symbol": "BNBUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "ripple",
       "exclusion_reason": null,
       "market_cap_usd": 82135912987,
@@ -65,7 +65,7 @@
       "symbol": "USDCUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "solana",
       "exclusion_reason": null,
       "market_cap_usd": 61512232486,
@@ -74,7 +74,7 @@
       "symbol": "SOLUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "tron",
       "exclusion_reason": null,
       "market_cap_usd": 31440222219,
@@ -85,14 +85,14 @@
     {
       "binance_spot_verified": false,
       "coingecko_id": "figure-heloc",
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "market_cap_usd": 24979248960,
       "name": "Figure Heloc",
       "rank": 9,
       "symbol": "FIGR_HELOCUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "zcash",
       "exclusion_reason": null,
       "market_cap_usd": 19330861941,
@@ -101,7 +101,7 @@
       "symbol": "ZECUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "hyperliquid",
       "exclusion_reason": null,
       "market_cap_usd": 17439590455,
@@ -110,7 +110,7 @@
       "symbol": "HYPEUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "dogecoin",
       "exclusion_reason": null,
       "market_cap_usd": 12395450263,
@@ -121,7 +121,7 @@
     {
       "binance_spot_verified": false,
       "coingecko_id": "monero",
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "market_cap_usd": 11253060456,
       "name": "Monero",
       "rank": 13,
@@ -139,14 +139,14 @@
     {
       "binance_spot_verified": false,
       "coingecko_id": "whitebit",
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "market_cap_usd": 9502529463,
       "name": "WhiteBIT Coin",
       "rank": 15,
       "symbol": "WBTUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "chainlink",
       "exclusion_reason": null,
       "market_cap_usd": 9181579951,
@@ -157,14 +157,14 @@
     {
       "binance_spot_verified": false,
       "coingecko_id": "leo-token",
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "market_cap_usd": 8318575519,
       "name": "LEO Token",
       "rank": 17,
       "symbol": "LEOUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "cardano",
       "exclusion_reason": null,
       "market_cap_usd": 8179111031,
@@ -173,7 +173,7 @@
       "symbol": "ADAUSDT"
     },
     {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "coingecko_id": "near",
       "exclusion_reason": null,
       "market_cap_usd": 6486719521,
@@ -184,7 +184,7 @@
     {
       "binance_spot_verified": false,
       "coingecko_id": "rain",
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "market_cap_usd": 6395619099,
       "name": "Rain",
       "rank": 20,

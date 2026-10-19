@@ -1129,3 +1129,38 @@ print('ok')
 - `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
 - `python3 -c "import json;d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'));print(d['state'],d['reason'],d['blocking_dependency'])"`
 - `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
+
+---
+## Session activity — 2026-10-19T17:25:29Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from handoff at 17:00:00Z):** complete BRAIN-008 §6 P3 + candidate manifest freeze: Binance spot verification per §3, candle history validation (≥26,280 closed hourly candles), write `research/candidate_manifest_v2.json`, no v2 execution.
+
+**Outcome:** Performed Binance spot verification via the documented failover (primary `api.binance.com` HTTP 451, failover `data-api.binance.vision` HTTP 200) in one bounded exchangeInfo request. Updated `research/universe_manifest_v2.json` and `research/data_manifest_v2.json`: 12 of 17 non-stable assets verified as trading on Binance spot (BTC, ETH, BNB, XRP, SOL, TRX, ZEC, HYPE, DOGE, LINK, ADA, NEAR); 5 recorded with `binance_spot_verified=false` and `exclusion_reason=binance_spot_unavailable` (FIGR_HELOC, XMR, WBT, LEO, RAIN). Stablecoins remain excluded. Candle history validation (≥26,280 closed hourly candles) and `research/candidate_manifest_v2.json` creation remain outstanding. No v2 execution, no v1 artifact change, no src change.
+
+**State verified (2026-10-19T17:25:29Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 180 passed, exit 0
+- `python3 scripts/verify_research_v2_spec.py` → "ok": true, exit 0
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged
+- Terminal artifact unchanged
+
+## Initial task message for next agent
+
+**Subject:** Binance spot verification recorded for v2 universe; next bounded task is candle history validation + candidate manifest freeze (no v2 execution)
+
+**Status (verified 2026-10-19T17:25:29Z):**
+- `research/universe_manifest_v2.json` and `research/data_manifest_v2.json` updated with Binance spot verification results (primary HTTP 451, failover HTTP 200). 12 assets spot-verified; 5 recorded `binance_spot_unavailable`. Stablecoins excluded. Spec verifier passes; 180/180 tests pass; code hash unchanged; v1 artifacts immutable.
+
+**Next (one bounded task):** complete BRAIN-008 §6 P3 remainder + candidate manifest freeze:
+1. For each spot-verified asset, fetch hourly klines via failover endpoint, count closed candles (≥26,280 required), record observed_candles and coverage gaps; exclude and record reason for any failure. Never interpolate.
+2. Write `research/candidate_manifest_v2.json` with snapshot identity tuple (including candidate_manifest_hash) and per-constituent validation outcomes; update hashes in both v2 manifests.
+3. Do NOT run v2 campaign/grid/backtest, do not read confirmatory-window candles, do not reuse v1 holdout, do not modify src/ or v1 artifacts.
+
+**Acceptance criteria:** spec verifier exits 0; full suite exits 0; v1 sha256 anchors unchanged; `research/candidate_manifest_v2.json` exists with correct snapshot identity and validation outcomes; no v2 execution.
+
+**Verification commands:**
+- `python3 scripts/verify_research_v2_spec.py`
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
