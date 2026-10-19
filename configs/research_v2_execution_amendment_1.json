@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "amendment_number": 1,
+  "description": "Versioned amendment to research_v2_execution.json correcting code-hash path rule and recording bounded authorization for v2 selection grid run over the frozen candidate set (design deliverable only).",
+  "supersedes": null,
+  "amends": {
+    "file": "configs/research_v2_execution.json",
+    "file_hash": "aa902aa935cfb71cce72bd643bb9685333860ec5470b02b12282c0f1659d67e6",
+    "note": "The execution protocol itself is immutable and not edited; this amendment records corrections and bounds as separate, self-hashed design state."
+  },
+  "references": {
+    "configs_research_v2": {
+      "file": "configs/research_v2.json",
+      "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+    },
+    "universe_manifest_v2": {
+      "file": "research/universe_manifest_v2.json",
+      "manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88"
+    },
+    "data_manifest_v2": {
+      "file": "research/data_manifest_v2.json",
+      "manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e"
+    },
+    "candidate_freeze_v2": {
+      "file": "configs/research_v2_candidate_freeze.json",
+      "manifest_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f",
+      "frozen_at_utc": "2026-10-19T21:30:17Z",
+      "constituents_count": 18
+    },
+    "delivered_prerequisites": [
+      "P2 (universe manifest v2)",
+      "P3 (data manifest v2)",
+      "P4 (v2 execution protocol, design deliverable)",
+      "v2 candidate manifest freeze (design deliverable)"
+    ]
+  },
+  "code_hash_constraint": {
+    "description": "Corrects the code-hash constraint stated in research_v2_execution.json: compute_code_hash() hashes every .py file under src/breakout_research recursively. Paths under src/breakout_research/ are inside the hashed set; any new v2 execution code placed under src/breakout_research would change the code hash and invalidate the v1 campaign authorization.",
+    "hashed_source_digest": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "paths_correctly_classified_as_outside_hashed_set": [],
+    "paths_not_permitted_inside_hashed_set": [
+      "src/breakout_research/v2/",
+      "src/breakout_research/v2/**.py"
+    ],
+    "chosen_approach": "Do not add v2 execution code under src/breakout_research/. If execution logic is required in future, it must live outside the hashed set (e.g. new top-level modules/scripts not under src/breakout_research/, or a separate entrypoint namespace explicitly confirmed outside the hashed tree). The v1 campaign authorization remains unchanged as long as no files under src/breakout_research are created or modified.",
+    "superseded_protocol_text_note": "The text in configs/research_v2_execution.json naming src/breakout_research/v2/ as 'outside the hashed set' is incorrect; that error is preserved as historical evidence in the protocol artifact (its hash remains aa902aa935cfb71cce72bd643bb9685333860ec5470b02b12282c0f1659d67e6)."
+  },
+  "v2_selection_authorization": {
+    "authorized": false,
+    "purpose": "Design-only record of bounded authorization parameters for a future v2 selection grid run over the frozen candidate set. No grid, backtest, campaign, selection, or pilot is executed by this amendment.",
+    "campaign_id": "v2-selection-20261019-design",
+    "scope": {
+      "constituents_count": 18,
+      "constituents": [
+        "ADAUSDT","AVAXUSDT","BCHUSDT","BNBUSDT","BTCUSDT","DOGEUSDT","ETHUSDT","HBARUSDT","LINKUSDT","LTCUSDT","NEARUSDT","SOLUSDT","SUIUSDT","TRXUSDT","UNIUSDT","XLMUSDT","XRPUSDT","ZECUSDT"
+      ],
+      "bound_to_universe_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+      "bound_to_data_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+      "bound_to_freeze_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f",
+      "excluded_assets_stay_excluded": true
+    },
+    "data_boundary": {
+      "development_data_only": true,
+      "candles_before_utc": "2026-10-19T22:00:00Z",
+      "confirmatory_window_never_read_during_selection": true,
+      "v1_holdout_never_reused": true,
+      "v1_cycle0_units_never_mixed": true
+    },
+    "paths": {
+      "shards_dir": "research/shards_v2",
+      "ledger": "research/ledger_v2.json",
+      "results_manifest": "research/results_manifest_v2.json",
+      "never_use_v1_paths": true
+    },
+    "selection_rule": {
+      "unchanged_from_v1": true,
+      "reference": "configs/research_v1.json"
+    },
+    "bounds": {
+      "max_assets": null,
+      "max_configs_per_asset": null,
+      "attempts": null,
+      "resource_limits": "as recorded at execution time"
+    },
+    "stopping_conditions": [
+      "Normal completion per bounded parameters",
+      "No candidate survives the unchanged v1 selection rule → report the outcome (do not hide it)",
+      "Any boundary violation → abort and rollback"
+    ],
+    "rollback_rule": "Do not write to v1 artifacts; remove any newly created v2 artifacts if execution is aborted; do not alter checkpoint.json or v1 campaign state.",
+    "falsifiers": [
+      "Any modification to src/breakout_research/ (would change code_hash)",
+      "Reading any candle in the v2 confirmatory window during selection",
+      "Writing into v1 shards/ledger/tallies",
+      "Reusing v1 holdout",
+      "Mixing v1 cycle-0 units with v2 results"
+    ],
+    "no_execution": true
+  },
+  "verification": {
+    "verifier_script": "scripts/verify_research_v2_execution_amendment_1.py",
+    "tests_module": "tests/test_research_v2_execution_amendment_1.py"
+  },
+  "durability": {
+    "commit": null,
+    "pushed": false,
+    "note": "Becomes durable only when committed; artifact hash is canonical."
+  },
+  "canonicalization": {
+    "note": "manifest_hash is computed over the canonical JSON body with manifest_hash field removed (following the pattern used by other v2 artifacts)."
+  },
+  "manifest_hash": null
+}
