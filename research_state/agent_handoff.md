@@ -31,8 +31,9 @@
 - Lesson for the next session: “await a new universe snapshot” was repeated across many sessions while the eligible universe is exhausted and the provider is unreachable. Record it as an external boundary with evidence instead of an open wait.
 
 **Persistence state**
-- Local commit: see the commit recorded in git for this entry; verified with `git rev-parse HEAD`.
-- Pushed commit: same SHA; `git ls-remote origin main` == local HEAD (re-verified after push).
+- Base commit at session start: `63c780c9122dc3aed5e03fa41ecba586bbe7e2e1` (== `origin/main` then; working tree clean apart from the controller's `authorized_at_utc` refresh).
+- Local commit: the commit that contains this entry — obtain it with `git log -1 --format=%H -- research_state/agent_handoff.md` (a commit cannot contain its own SHA).
+- Pushed commit: same SHA; verified after push with `git ls-remote origin main` == `git rev-parse HEAD` (the pushed SHA is recorded in git history for this handoff file; re-verify with that command before trusting it).
 - Artifacts preserved: `scripts/verify_cycle_results.py`, `tests/test_verify_cycle_results.py`, `research_state/brainstorming_queue.md` (BRAIN-006, BRAIN-007, refreshed phase decision), `research_state/prompt_evolution.md`, this handoff.
 - Checkpoint reconciliation: `research_state/checkpoint.json` counters (497,718) are **not** the continuous cycle's unit count (497,664) and must not be described as reconciled; the checkpoint file was not modified.
 - Not modified: `src/`, `configs/`, `research/candidate_manifest.json`, `research/results_manifest.json`, any shard, `research_state/campaign_authorization.json` (functional fields), `research/universe_manifest.json`, `research_state/checkpoint.json`.
