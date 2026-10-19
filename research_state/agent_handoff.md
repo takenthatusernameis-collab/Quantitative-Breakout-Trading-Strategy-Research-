@@ -89,3 +89,24 @@ Acceptance criteria:
 3. BRAIN-003: frozen candidates and holdout set are disjoint; validation never writes holdout rows.
 4. `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed, exit 0.
 5. `git status --short` clean; `git ls-remote origin main` == local HEAD.
+
+## Session activity — 2026-10-19T02:52Z (this session)
+
+Task: BRAIN-001 real-market-data canary + BRAIN-002/003 gate validation.
+
+Outcome: VERIFIED. `authorize_campaign()` -> authorized: true, reasons: [] (independently reproducible). Tests test_pilot_authorization, test_data_fetcher, test_holdout_isolation, test_candidate_freeze all pass (37 passed). Full suite 80 passed. Git clean, HEAD == origin/main == 259fc998. No src/ or manifest modified.
+
+Initial task message for next agent
+
+Subject: Bounded campaign dry-run under current code (post-gate)
+
+Status: All gates green. Result store runnable (reconcile passes: 413,990 completed IDs / 414,037 records / 102 shards). Tests 80 passed. Git clean.
+
+Next: execute a single bounded campaign cycle (one asset × one config × one fold) under current code to validate end-to-end wiring, then stop. Do NOT run the full campaign. Verify holdout rows absent from store and checkpoint reconciles. Do NOT modify src/, authorization artifact, or universe manifest beyond the run's own outputs.
+
+Acceptance criteria:
+1. One bounded cycle completes without ResultStoreError.
+2. Holdout fold absent from store (is_holdout rows not written).
+3. `reconcile()` still passes; record count increases only by the bounded cycle.
+4. `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed.
+5. `git status --short` clean except run artifacts; HEAD == origin/main.
