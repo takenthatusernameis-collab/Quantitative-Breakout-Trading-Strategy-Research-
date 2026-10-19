@@ -61,14 +61,31 @@ No code or tracked data artifacts were modified in this session (the re-bind is 
 
 Do NOT re-run the campaign, do NOT modify `src/`, the authorization artifact, or the universe manifest until the reconcile binding is resolved and verified.
 
-## Session activity — 2026-10-19T02:38Z (this session)
+## Session activity — 2026-10-19T02:45Z (this session)
 
-Task: Resolve code/campaign-id binding so reconcile() passes under current code d0dca298.
+Task: Same-run recovery — prior worker session (session 100) ended because bounded remote checkpoint persistence failed. Preserve all local commits/work; diagnose the push/fetch/reconciliation failure; retry persistence of all local-ahead commits; do not claim persistence until remote SHA matches.
 
-Outcome: Complete. Transformed 414,037 records from legacy campaign 707f... to new campaign 577e... under current code hash; re-bound spec/data (unchanged) + code. Top-level manifest recreated; legacy manifest preserved as research/results_manifest.legacy_707f.json. reconcile() passes: 413,990 completed IDs. Old shard dir preserved. Tests 80 passed.
+Outcome: PERSISTENCE RECOVERED. `git push origin main` succeeded: `ecc4699d..3aee4b37 main -> main`. `git ls-remote origin main` = `3aee4b37...` == local HEAD == failed-session HEAD. Working tree clean. Root cause was NOT a code/data problem — it was a transient remote-side persistence failure in the controller's checkpoint pipeline (the local commit `3aee4b37` existed and was valid the whole time; the remote simply never received it). No history rewrite, no reset, no recovery bundle needed — all local-ahead commits preserved verbatim. Re-verified integrity after push:
+
+- `reconcile()` passes under current code: 413,990 completed experiment IDs, 414,037 raw records across 102 shards, 425,391,487 bytes. Manifest bound to campaign_id `577e87e2...`, spec `2d22e702`, code `d0dca298`, data `d8b0cb7e` — all match current source.
+- `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed, exit 0.
+- `git status --short` clean.
+- `compute_code_hash()` = `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234` (matches manifest + checkpoint).
+- Legacy artifacts intact: `research/results_manifest.legacy_707f.json` preserved; `research/results_shards/707f7a50...` (8,297 shards) and `fcf04f6e...` left as-is.
+
+Known data-quality note (non-blocking, pre-existing): 47 experiment IDs appear twice in the `577e87e2...` shard set, differing ONLY in `stored_utc` (same experiment content). This is an artifact of the earlier transform, not corruption. No records were modified or dropped.
 
 ## Initial task message for next agent
 
 Subject: BRAIN-001 real-market-data canary + BRAIN-002/003 gate validation
 
-Status: Result store runnable under current code. Next: verify real Binance hourly data path end-to-end (no synthetic), validate pilot authorization and frozen-candidate/holdout separation, then only then consider full campaign run. Do not re-run campaign until gates validated.
+Status: Persistence recovered — remote `origin/main` == local HEAD == `3aee4b37`. Result store runnable under current code (reconcile passes: 413,990 completed IDs / 414,037 records / 102 shards). Tests 80 passed. Git clean.
+
+Next: verify the real Binance hourly data path end-to-end (no synthetic), validate the BRAIN-002 pilot authorization gate and the BRAIN-003 frozen-candidate/holdout separation, and only then consider a full campaign run. Do NOT re-run the campaign until those gates are validated. Do NOT modify `src/`, the authorization artifact, or the universe manifest until gates pass.
+
+Acceptance criteria:
+1. Real-market-data canary: live Binance hourly fetch path (failover to data-api.binance.vision) verified in-container; no synthetic records in the campaign loader.
+2. BRAIN-002: `authorize_campaign()` -> authorized: true, zero reasons, independently reproducible.
+3. BRAIN-003: frozen candidates and holdout set are disjoint; validation never writes holdout rows.
+4. `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed, exit 0.
+5. `git status --short` clean; `git ls-remote origin main` == local HEAD.
