@@ -1,28 +1,30 @@
-## Session activity — 2026-10-19T18:16:26Z (this session)
+## Session activity — 2026-10-19T18:44:29Z (this session)
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
 
-**Prior task (from the handoff at 16:45:56Z):** "Decide whether to begin a preregistered v2 universe (requires v2 spec, validated constituents per §3, v2 data manifest, v2 holdout plan per §4) or keep campaign terminal/awaiting. If pursuing v2, first produce a preregistered v2 specification (immutable, hashed) — not implementation. Otherwise, document the decision to remain in terminal state."
+**Prior task (from the handoff at 18:16:26Z):** "Decide whether to begin a preregistered v2 universe (requires v2 spec, validated constituents per §3, v2 data manifest, v2 holdout plan per §4) or keep campaign terminal/awaiting. If pursuing v2, first produce a preregistered v2 specification (immutable, hashed) — not implementation. Otherwise, document the decision to remain in terminal state."
 
-**Outcome:** The prior task is already completed. The preregistered v2 specification (`configs/research_v2.json`) exists and is hash-verified (hash `49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721`). The verifier passes and all tests pass (180/180). This session verified state is clean and updated only the controller-driven `authorized_at_utc` timestamp in `research_state/campaign_authorization.json`.
+**Outcome:** The prior task is already completed and re-verified this session. The preregistered v2 specification (`configs/research_v2.json`) exists and is hash-verified (hash `49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721`). The verifier passes and all tests pass (180/180). This session re-verified state is clean and the only working-tree change is the controller-driven `authorized_at_utc` timestamp in `research_state/campaign_authorization.json`. No new work was performed: P2/P3 remain outstanding and no v2 execution has been authorized.
 
-**State verified (2026-10-19T17:38:07Z):**
+**State verified (2026-10-19T18:44:29Z):**
 - `PYTHONPATH=src python3 -m pytest tests/ -q` → 180 passed, exit 0
-- `python3 scripts/verify_research_v2_spec.py` → "ok": true, "failures": [], exit 0
+- `python3 scripts/verify_research_v2_spec.py` → "ok": true, "failures": [], exit 0; recomputed hash `49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721` matches stored `specification_hash`
 - `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` == `research_state/campaign_authorization.json` `code_hash` (authorized: true, reasons: [])
 - Terminal artifact unchanged: `AWAITING_NEW_CANDIDATES NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION UNIVERSE_VERSION_DECISION`
 - v1 artifacts byte-unchanged; working tree has only timestamp change to `research_state/campaign_authorization.json`
+- `git status --short` shows only `M research_state/campaign_authorization.json`; `git diff` confirms the change is solely `authorized_at_utc` (18:16:50 → 18:45:07)
 
-**Commit / persistence:** branch `main`, HEAD `35af05aab0738473bab653d247cda2947ec31ffa` == `origin/main`. The only working-tree change is controller-driven timestamp refresh in `research_state/campaign_authorization.json` (not a functional change).
+**Commit / persistence:** branch `main`, HEAD `2c38c36e`. The only working-tree change is controller-driven timestamp refresh in `research_state/campaign_authorization.json` (not a functional change). Not committed — awaiting explicit user request.
 
 ## Initial task message for next agent
 
 **Subject:** Preregistered v2 specification is committed and hash-verified — next bounded task is P2 (v2 snapshot inside pinned retrieval window + §3 constituent validation); no v2 execution authorized
 
-**Status (verified 2026-10-19T17:38:07Z):**
+**Status (verified 2026-10-19T18:44:29Z):**
 - `configs/research_v2.json` exists and is self-verifying: `specification_hash 49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721`; `python3 scripts/verify_research_v2_spec.py` → "ok": true, exit 0; 15 tests in `tests/test_research_v2_spec.py`; full suite 180/180 passed.
 - BRAIN-008 is `IMPLEMENTATION_IN_PROGRESS`: P1 and P4–P5 satisfied; P2, P3 outstanding.
 - v2 spec changes only universe and confirmatory-holdout protocol; strategy grid/costs/execution/folds/selection/pilot/metrics/baselines/status/checkpointing byte-equal to v1; 2,304-combination grid unchanged.
-- Campaign terminal state unchanged: `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`; code hash unchanged; v1 authorization untouched.
+- Campaign terminal state unchanged: `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`; code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged; v1 authorization untouched.
+- Working tree clean except controller-driven timestamp refresh in `research_state/campaign_authorization.json` (not a functional change).
 
 **Next (one bounded task):** implement BRAIN-008 §6 prerequisites **P2 and P3 only** —
 1. Retrieve the v2 market-cap snapshot **inside the pinned window** (2026-10-19T16:52:00Z → 2026-10-26T16:52:00Z) with one bounded read-only request to the frozen endpoint `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1`; store raw response, its sha256 and retrieval timestamp. The 2026-10-19T15:43:31Z snapshot is not usable as the v2 snapshot (observed before rules were frozen); do not delay/re-time window.
@@ -33,5 +35,5 @@
 
 **Acceptance criteria:** `python3 scripts/verify_research_v2_spec.py` exits 0; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0 with v1 artifact sha256 anchors unchanged; v2 manifests exist, hash-bound, record snapshot identity tuple, raw-response hash, every constituent's validation outcome and exclusion reason; v1 artifacts byte-unchanged; no v2 result rows exist and no v1 tally altered.
 
-**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v2_spec.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v2_spec.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat` (confirm only v2 manifest files added, no v1 or `src/` changes).
 
