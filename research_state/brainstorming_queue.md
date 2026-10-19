@@ -726,4 +726,28 @@ The BRAIN-006 implementation (`src/breakout_research/selection.py`, `src/breakou
 the baseline artifact, the new versioned candidate manifest, pilot re-run and re-authorization) is the next
 bounded task and must be executed in a later session than this decision record.
 
+**Implementation update 2026-10-19 UTC (code hash `00033d38...`, HEAD `0823b880`):** the BRAIN-006 decision
+record is now implemented and verified.
+
+- BRAIN-006 (P0) — `IMPLEMENTED_VERIFIED`. `src/breakout_research/selection.py` (gates, status taxonomy,
+  ranking/tiebreakers, holdout refusal, parameter-neighbourhood analysis) and
+  `src/breakout_research/baselines.py` (buy-and-hold on the campaign's own cost/daily-return/Sharpe
+  conventions with data-manifest hash verification) replace the non-conforming first implementation. The
+  buy-and-hold baseline artifact `research/baselines/577e87e2...json` is computed from the frozen,
+  hash-verified candles (497,664 records read, 0 holdout records, byte-identical on re-run). The new
+  versioned manifest `research/candidate_manifest_v2.json` (`rule: preregistered_v1`, `rule_spec_hash
+  b7848977...`, `supersedes` the v1 manifest) holds 14 candidates, 1 `INSUFFICIENT_EVIDENCE` and 3
+  `NO_CANDIDATE`, and reproduces the independent re-derivation
+  `research/campaign_cycles/0f52f6c9.../candidate_selection.json` with 0 mismatches over 18 assets. The
+  legacy profit-factor rule survives only as `candidate_freeze._legacy_profit_factor_selector` (provenance)
+  and still reproduces the v1 manifest from the same records.
+- The pilot was re-run under the new code hash and `research_state/campaign_authorization.json` was
+  re-derived for it; the v1 holdout stays `EXPOSED_OR_UNKNOWN`, is never reused, and the v2 candidates are
+  `CANDIDATE_PENDING_HOLDOUT` pending a fresh confirmatory period
+  (`reports/holdout_disposition_v2.md`).
+- `research/candidate_manifest.json` (v1), the shards, the ledger and the 54 exposed holdout records are
+  unmodified.
+- BRAIN-007 (P1) — still `BRAINSTORMING_REQUIRED`; the cycle linkage, checkpoint counter semantics and the
+  terminal state for an exhausted universe are not decided and were not implemented.
+
 **Out of scope:** ordinary bounded retries for demonstrated transient network errors, routine lint/test failures with an evidence-backed local fix, and recovery bundles/patches needed to preserve interrupted work. Those remain in the normal measured correction loop and are not duplicate durable error records.

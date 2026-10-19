@@ -1,4 +1,20 @@
 {
+  "holdout_disposition": {
+    "status": "EXPOSED_OR_UNKNOWN",
+    "v1_holdout_consumed": true,
+    "v1_holdout_reused": false,
+    "v1_candidate_manifest_path": "research/candidate_manifest.json",
+    "v1_candidate_manifest_hash": "9ea6b1c3439c6087650aca549373642e0afe8460e0eee76f520cc1ac2bd30597",
+    "v1_candidate_rule": "legacy_median_profit_factor (non-preregistered)",
+    "v1_candidates_failing_preregistered_gates": 16,
+    "v2_candidate_manifest_path": "research/candidate_manifest_v2.json",
+    "v2_candidate_manifest_hash": "f1547c78a7ad447e979b3ec018dc473fbd6019ee170ab87d51f7ee0dee6fb7a9",
+    "v2_candidate_rule": "preregistered_v1",
+    "v2_candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+    "note": "the v1 holdout was consumed once and is never reused; the v2 candidates need a fresh confirmatory period, which the v1 holdout window is not",
+    "disposition_report": "reports/holdout_disposition_v2.md",
+    "recorded_by": "BRAIN-006 implementation session (2026-10-19)"
+  },
   "schema_version": "holdout-evaluation-report-v1",
   "report_type": "holdout_evaluation",
   "generated_utc": "2026-10-17T03:51:32.480047+00:00",

@@ -1,3 +1,112 @@
+## Session activity — 2026-10-19T14:09Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** The BRAIN-006 implementation is complete and verified. The conforming selector and the buy-and-hold baseline are in `src/`, the per-campaign baseline artifact and a new versioned candidate manifest are published, the pilot was re-run and the campaign authorization was re-derived for the new code hash, and the holdout disposition is recorded. The v1 manifest, the shards, the ledger and the 54 exposed holdout records are unmodified.
+
+**Base commit:** `0823b88048d173247d6ad13f17ae07ff50b0e84a` (== `origin/main` at session start). Working tree clean apart from the controller-driven `authorized_at_utc` refresh.
+
+### Why this task
+The prior handoff message was one bounded task: "Generate `research/baselines/<campaign_id>.json` from frozen candles; publish new versioned candidate manifest; re-run pilot and re-derive `campaign_authorization.json` matching new code hash; update holdout report." The `src/` modules of BRAIN-006 existed but were **not** the conforming implementation (see "Failures and lessons"), so the whole chain — baseline artifact, manifest, pilot, authorization — had to be rebuilt on a conforming selector first.
+
+### State revalidated (live, not asserted)
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **150 passed**, exit 0 (106 pre-existing + 44 new).
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9... --expect-records 497664` → `"verified": true`, exit 0 (497,664 unique units, 0 holdout records, 0 duplicates).
+- `PYTHONPATH=src python3 scripts/select_candidates_cycle0.py research/campaign_cycles/0f52f6c9... --out /tmp/check_selection.json` → byte-identical to the committed artifact (SHA-256 `0e4d43f8e23504ba25dc928b5a3197968ba6020e5226cf26c77d5ffeff45311d`): the independent analysis path is unchanged and still reproducible.
+- New code hash `00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702` (was `d0dca29...`); `research_state/campaign_authorization.json` is re-derived for it (`authorized: true`, `reasons: []`) in the **follow-up commit of this session**, after the pilot evidence is verified on `origin/main` — the two-phase design of `scripts/run_pilot_and_authorize.py` (`--phase pilot` then `--phase authorize`), because `remote_persistence_verified` may not be asserted before the pilot artifacts are on the remote.
+
+### What changed
+- `src/breakout_research/selection.py` — rewritten: `aggregate_records` (holdout records **raise**, never filtered), `evaluate_candidate`/`_evaluate_fold_map` (all eight preregistered gates with `NOT_EVALUABLE` paths), `rank_key` (median net daily Sharpe → median net return → max drawdown → turnover → config id), `select_for_asset` (status taxonomy), `select_candidates`, `neighbor_index`/`neighbor_analysis` (the preregistered parameter-neighbourhood analysis), `iter_shard_records`.
+- `src/breakout_research/baselines.py` — rewritten: `buyhold_fold_metrics`/`buyhold_baseline` on the campaign's own conventions (the backtester's `_apply_costs` and `_compute_daily_returns`, 365-day Sharpe), `load_verified_candles` (data-manifest hash verification), `baseline_for_asset` (fail-closed selector view), `verify_baseline_artifact`.
+- `src/breakout_research/candidate_freeze.py` — `select_best_candidate` is now the conforming selector (spec + baselines mandatory); the legacy profit-factor rule survives only as `_legacy_profit_factor_selector` (provenance); `freeze_from_results` writes the versioned manifest (`rule`, `rule_spec_hash`, `supersedes`, `code_hash`, `data_manifest_hash`, per-asset gate table).
+- `src/breakout_research/pilot.py` — `PilotRunner` accepts isolated ledger/checkpoint/evidence/report paths and an explicit `remote_persistence_verified` flag (defaults unchanged) so a pilot re-run cannot overwrite the live ledger or the live checkpoint counters.
+- `scripts/build_baseline_artifact.py` (new) — `research/baselines/577e87e2...json`.
+- `scripts/publish_candidate_manifest.py` (new) — `research/candidate_manifest_v2.json`.
+- `scripts/run_pilot_and_authorize.py` (new) — two-phase pilot re-run + re-authorization.
+- `tests/test_selection.py`, `tests/test_baselines.py`, `tests/test_brain006_manifest.py` (new, 44 tests).
+- `reports/holdout_disposition_v2.md` (new) and a 16-line `holdout_disposition` block added to `reports/holdout_evaluation_report.json` (no computed value touched, no reformat).
+- `README.md` — one added bullet in Section 2A H (prompt review, see below). `research_state/prompt_evolution.md` — one review entry. `research_state/brainstorming_queue.md` — BRAIN-006 implementation update.
+
+### New evidence (this session)
+- **The published v2 manifest reproduces the independent re-derivation exactly**: 14 `CANDIDATE_SELECTED`, 1 `INSUFFICIENT_EVIDENCE` (BTCUSDT), 3 `NO_CANDIDATE` (BCHUSDT, LINKUSDT, TRXUSDT), **0 mismatches over 18 assets** on both status and selected configuration id. The v2 manifest is the production path; `candidate_selection.json` is the independent analysis path; they agree.
+- **Only 1 of the 14 preregistered candidates is a v1 frozen candidate** (ADAUSDT `cfg_1513`); the other 13 differ, and 4 of the 18 v1 candidates have no preregistered counterpart. `research/candidate_manifest.json` (v1) is byte-unchanged (`manifest_hash 9ea6b1c3...`).
+- **The buy-and-hold gate is computed from the frozen candles and is comparable with the campaign**: the new `src/` baseline reproduces the reference median Sharpe of all 18 assets to ≤ 1e-15 (e.g. ADAUSDT −0.6596584387385231 vs −0.6596584387385226) and every asset's dataset hash matches `research/data_manifest.json` (`hash_verified: true`).
+- **The baseline artifact is deterministic**: two consecutive builds are byte-identical (SHA-256 `1c87a6a759a8a8ec25520f5ba740750bcc274c5fc374771ba09a2fc3405c6ca2`); it holds no wall-clock timestamp by design.
+- **The legacy rule is reproducible and is kept as provenance**: `_legacy_profit_factor_selector` over the same 497,664 records reproduces the v1 manifest's 18 configuration ids exactly (new test).
+- **Pilot and authorization are re-bound to the new code hash**: the pilot re-ran 24 configurations on the top eligible asset against the hash-verified candle cache (no network, `research/results.jsonl` untouched), `research_state/pilot_evidence.json` is bound to `00033d38...`, the pilot's `remote_persistence_verified` is asserted only in the follow-up commit (after `git ls-remote origin main` matches the local HEAD), and `research_state/campaign_authorization.json` is re-derived from that evidence in the same follow-up commit. `research_state/checkpoint.json` had its **code hash and timestamp rotated with its counters preserved** (497,718 / 497,718) — the same rotation precedent as commit `2754f9ba`. The pilot's ledger and checkpoint were written to an isolated temporary directory, so the live result ledger and the live checkpoint counters were never overwritten.
+- **Holdout discipline verified**: 0 holdout records were read by the baseline build, the selector and the manifest publication; the 54 exposed holdout records in `research/results_shards/707f7a50.../` were not opened; the v1 holdout is recorded `EXPOSED_OR_UNKNOWN`, is not reused, and the v2 candidates are `CANDIDATE_PENDING_HOLDOUT` pending a fresh confirmatory period.
+
+### Rule-field → code → test map (required by the new README Section 2A H bullet)
+| preregistered field (`configs/research_v1.json` → `selection`) | implementation | direct test |
+|---|---|---|
+| `min_trades_total` | `selection.py::_evaluate_fold_map` | `tests/test_selection.py::test_min_trades_total_gate_*` |
+| `min_trades_per_fold` | `selection.py::_evaluate_fold_map` | `tests/test_selection.py::test_per_fold_trade_floor_*` |
+| `min_folds_with_min_trades` | `selection.py::_evaluate_fold_map` | `tests/test_selection.py::test_per_fold_trade_floor_*` |
+| `positive_net_return_baseline` | `selection.py::_evaluate_fold_map` | `tests/test_selection.py::test_positive_net_return_baseline_gate` |
+| `positive_net_return_2x_costs` | `selection.py::_evaluate_fold_map` | `tests/test_selection.py::test_positive_net_return_2x_costs_gate` |
+| `positive_folds_required` | `selection.py::_evaluate_fold_map` | `tests/test_selection.py::test_positive_folds_required_gate` |
+| `median_sharpe_gt_zero` | `selection.py::_evaluate_fold_map` | `tests/test_selection.py::test_median_sharpe_gt_zero_gate` |
+| `median_sharpe_gt_buyhold` | `selection.py::_evaluate_fold_map` + `baselines.py::buyhold_baseline` | `tests/test_selection.py::test_median_sharpe_gt_buyhold_gate_*`, `tests/test_baselines.py` |
+| `ranking_metric` / `tiebreakers` | `selection.py::rank_key` | `tests/test_selection.py::test_ranking_*` |
+| `max_candidates_per_asset` | `selection.py::select_for_asset` | `tests/test_selection.py::test_at_most_one_candidate_per_asset` |
+| `neighbor_analysis` | `selection.py::neighbor_index`/`neighbor_analysis` | `tests/test_brain006_manifest.py::test_published_manifest_records_the_holdout_disposition` (presence) — no dedicated neighbour-mechanics unit test yet, `NOT_RUN` |
+| holdout isolation | `selection.py::aggregate_records` | `tests/test_selection.py::test_holdout_record_is_refused_*` |
+| baseline source + hash verification | `baselines.py::load_verified_candles`/`verify_baseline_artifact` | `tests/test_baselines.py::test_load_verified_candles_refuses_a_tampered_dataset`, `::test_verify_baseline_artifact_fails_closed_on_a_data_hash_mismatch` |
+
+### Failures and lessons
+- **The previous session's `src/` implementation was not conforming and was untested.** At `0823b880` the new modules carried a dead `... if False else ...` branch in the `min_trades_per_fold` gate, an unreachable `INSUFFICIENT_EVIDENCE` branch, a ranking metric computed over all three cost scenarios instead of the median fold daily Sharpe at 1× costs, and a baseline key (`median_daily_sharpe_1x`) that no artifact provides. It was reported as "Tests green (106 passed)" although **no test imported those modules**. This session rewrote both modules and added 44 tests. **Lesson: a green test run is not evidence for code that the run does not import** — now written into README Section 2A H.
+- Two implementation defects of my own first version were caught before any artifact was written: a `NameError` from a half-renamed helper during the first manifest publication, and a test expectation that mis-stated the backtester's fee notional (the fee is charged on the slippage-adjusted notional). Both were fixed before the artifacts were produced; no artifact was regenerated from a defective implementation.
+- One wrong assumption cost a debugging cycle: the buy-and-hold fold windows are the **record** bounds (`start_time`, `end_time`), not the first/last candle timestamps inside the window that the analysis artifact reports — using the latter silently drops the first and last candle of every fold and shifts the Sharpe by ~0.01. The baseline builder reads the record bounds.
+- No tool failure, no unchanged retry, no network call (the pilot ran against the hash-verified local candle cache).
+
+### Not done / not claimed
+- **No economic conclusion is claimed or revised.** The v1 holdout stays `EXPOSED_OR_UNKNOWN` and is not reused; the 14 v2 candidates are `CANDIDATE_PENDING_HOLDOUT` and have never been evaluated on any holdout.
+- **BRAIN-007 is not decided and not implemented** (cycle-to-prior-campaign linkage, checkpoint counter semantics, terminal state for an exhausted universe). It stays `BRAINSTORMING_REQUIRED`.
+- The v2 manifest is **not** wired into the campaign's holdout path: `campaign.py` still loads `research/candidate_manifest.json` (v1). Repointing it is a holdout-protocol decision and is out of scope of the BRAIN-006 decision record.
+- `research_state/pilot_gate.json` was left untouched: it is a **legacy, non-authoritative** artifact (`campaign.py` reads only `campaign_authorization.json`) and its `code_hash` is now stale (`d0dca29...`). It is recorded here as stale, not as an authorization.
+- The 2,304-configuration grid was not re-run, the universe was not extended, and no new candles were fetched.
+
+### Prompt review
+`PROMPT_GAP` — one coherent change: a new bullet in README Section 2A H requiring a rule-field → code → test map in the handoff for any session that implements a frozen rule or changes a module under `src/`, with `NOT_RUN` stated for fields no test exercises. Rationale, regression cases and rollback: `research_state/prompt_evolution.md`, entry 2026-10-19T14:0xZ. No protocol, threshold, universe, grid, cost, split, holdout or authorization rule was changed.
+
+### Persistence state
+- Base commit at session start: `0823b88048d173247d6ad13f17ae07ff50b0e84a` (== `origin/main` then).
+- Local commit: the commit that contains this entry — obtain it with `git log -1 --format=%H -- research_state/agent_handoff.md` (a commit cannot contain its own SHA).
+- Pushed commit: the same SHA; verified after push with `git ls-remote origin main` == `git rev-parse HEAD`.
+- Follow-up commit of this session: the re-derivation of `research_state/campaign_authorization.json` and of the `remote_persistence_verified` flag in `research_state/pilot_evidence.json` (phase 2). It is pushed and verified in the same way.
+- Artifacts preserved: `src/breakout_research/{selection,baselines,candidate_freeze,pilot}.py`, `scripts/{build_baseline_artifact,publish_candidate_manifest,run_pilot_and_authorize}.py`, `tests/{test_selection,test_baselines,test_brain006_manifest}.py`, `research/baselines/577e87e2...json`, `research/candidate_manifest_v2.json`, `reports/holdout_disposition_v2.md`, `reports/holdout_evaluation_report.json` (additive), `research_state/{pilot_evidence,prompt_evolution,agent_handoff}.md|json`, `README.md`.
+- Checkpoint reconciliation: `research_state/checkpoint.json` `code_hash` rotated to `00033d38...`; counters untouched (`completed_records == last_verified_record == 497718`). The counters remain 497,664 validation units + 54 exposed-holdout units and are **not** reconciled with the continuous cycle.
+- Not modified: `research/candidate_manifest.json` (v1), any shard, `research/results.jsonl`, `research/results_manifest.json`, `research/universe_manifest.json`, `research/config_manifest.json`, `research/data_manifest.json`, `configs/`, the 54 exposed holdout records, `research_state/pilot_gate.json`.
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-006 implemented and verified (conforming selector, baseline artifact, v2 manifest, pilot + re-authorization) — next: BRAIN-007 design decision**
+
+**Status (verified 2026-10-19T14:09Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **150 passed**, exit 0 (106 pre-existing + 44 new). `compute_code_hash()` = `00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`).
+- BRAIN-006 is `IMPLEMENTED_VERIFIED`: the conforming selector and the buy-and-hold baseline are in `src/`, the baseline artifact `research/baselines/577e87e2...json` is published and byte-reproducible, the new versioned manifest `research/candidate_manifest_v2.json` is published and reproduces the independent re-derivation with **0 mismatches over 18 assets** (14 `CANDIDATE_SELECTED`, 1 `INSUFFICIENT_EVIDENCE`, 3 `NO_CANDIDATE`), the pilot was re-run and the authorization re-derived for the new code hash.
+- The v1 manifest, the shards, the ledger and the 54 exposed holdout records are unmodified; the v1 holdout stays `EXPOSED_OR_UNKNOWN` and is never reused; the 14 v2 candidates are `CANDIDATE_PENDING_HOLDOUT` pending a **fresh** confirmatory period.
+- `research_state/pilot_gate.json` is a **stale, non-authoritative** legacy artifact (old code hash `d0dca29...`); `campaign.py` reads only `campaign_authorization.json`.
+
+**Next (one bounded task, this session): write the BRAIN-007 design decision record.**
+- Read `research_state/brainstorming_queue.md` → "BRAIN-007 — Cycle-level evidence is not linked to the identical prior campaign, and the checkpoint counter mixes validation with exposed-holdout units" first; it holds the evidence (continuous cycle 0 reproduced the v1 validation sweep metrically exactly, 497,664/497,664 units, 0 differences, without linking to it; the checkpoint counters mix 54 exposed-holdout units into a validation count; cohort 1 terminated as `DUPLICATE_OR_NO_NEW_CANDIDATES` while the universe holds 18 assets against `COHORT_SIZE` 20; `https://api.binance.com/api/v3/ping` → HTTP 451 from this environment).
+- Deliverable: a `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` record in `research_state/brainstorming_queue.md` that (a) defines cycle identity and how a cycle links to verified prior evidence instead of presenting recomputed units as new trials, (b) defines checkpoint counter semantics that never mix holdout units into a validation completion count, and (c) defines the terminal state (`AWAITING_NEW_CANDIDATES` / `BLOCKED_EXTERNAL`) for an exhausted universe with the provider evidence, instead of appending empty cohorts to `completed_cycle_ids`. Compare at least the three alternatives already listed in the BRAIN-007 section (A ledger-level dedup, B immutable per-cycle ledgers + linkage index, C reporting-only reconciliation) and state the recommendation, its falsifiers, its rollback and its staged acceptance tests.
+- **BRAIN-007 may not be implemented in the session that writes its decision record** (README Section 2A C1). Writing the record is the deliverable; do not change `src/`, the coordinator, the checkpoint or the state machine in that session.
+- Acceptance criteria: (1) `PYTHONPATH=src python3 -m pytest tests/ -q` → all pass, exit 0; (2) the record names the authoritative cycle-identity rule, the counter semantics, the terminal state and the provider-boundary evidence, and states the v1 holdout disposition; (3) no `src/`, `configs/`, shard, ledger, manifest, checkpoint-counter or authorization change; (4) exactly one prompt review; (5) handoff updated, commit pushed, `git ls-remote origin main` == local HEAD verified.
+
+**Also in scope only if the record is finished with time to spare:** a dedicated unit test for the parameter-neighbour mechanics (the only rule field still marked `NOT_RUN` in this session's rule-field → code → test map) and, separately, a decision on whether the campaign's holdout path should ever be repointed from the v1 manifest to the v2 manifest — that repointing is a holdout-protocol decision and must not be made implicitly.
+
+**Do NOT:** re-run the campaign or the 2,304-configuration grid (it is complete and hash-verified); open, re-evaluate or cite any holdout record — the 54 exposed-holdout units in `research/results_shards/707e87e2.../` and `research/results_shards/707f7a50.../` stay untouched; modify `research/candidate_manifest.json` (v1), `research/candidate_manifest_v2.json`, any shard, the ledger, `research/universe_manifest.json`, `research/data_manifest.json`, `configs/`, the checkpoint counters or `research_state/pilot_gate.json`; retry the Binance/CMC endpoints without new evidence (HTTP 451 is a permanent external boundary here — record it, do not retry); treat the v1 holdout as confirmation for anything, or evaluate the v2 candidates on the v1 holdout window; implement BRAIN-007 in the session that writes its decision record.
+
+**Verification commands:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664`
+- `PYTHONPATH=src python3 scripts/select_candidates_cycle0.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --out /tmp/check_selection.json` (must stay byte-identical to the committed artifact, SHA-256 `0e4d43f8e23504ba25dc928b5a3197968ba6020e5226cf26c77d5ffeff45311d`)
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
+
+---
+
 ## Session activity — 2026-10-19T13:58Z (this session)
 
 **Task:** Read prior agent task from durable handoff, complete it, update handoff, write initial task message for next agent.

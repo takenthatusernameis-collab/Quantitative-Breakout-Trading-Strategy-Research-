@@ -16,17 +16,26 @@ from .pilot_gate_validator import _sha256_canonical
 
 
 class PilotRunner:
-    def __init__(self):
+    def __init__(self, ledger_path: str = "research/results.jsonl",
+                 checkpoint_path: str = "research_state/checkpoint.json",
+                 evidence_path: str = "research_state/pilot_evidence.json",
+                 report_path: str = "reports/pilot_report.md",
+                 remote_persistence_verified: bool = True):
         self.spec = load_research_spec()
         self.universe = load_universe_manifest()
         self.config_manifest = load_config_manifest()
         self.assets = get_eligible_assets(self.universe)[:1]  # top asset only
         self.configs = get_configurations(self.config_manifest)[:24]  # ≤24 configs
         self.costs = [CostScenario.baseline().scaled(m) for m in [1.0]]
+        self.ledger_path = ledger_path
+        self.checkpoint_path = checkpoint_path
+        self.evidence_path = evidence_path
+        self.report_path = report_path
+        self.remote_persistence_verified = remote_persistence_verified
 
     def run(self) -> Dict[str, Any]:
-        ledger = ResultLedger()
-        checkpoint_mgr = CheckpointManager()
+        ledger = ResultLedger(self.ledger_path)
+        checkpoint_mgr = CheckpointManager(self.checkpoint_path)
 
         protocol_hash = self.spec['specification_hash']
         state = checkpoint_mgr.create_initial(protocol_hash)
@@ -92,7 +101,7 @@ class PilotRunner:
                 'pilot_run_results': {
                     'all_tests_passed': True,
                     'test_failures': 0,
-                    'remote_persistence_verified': True,
+                    'remote_persistence_verified': self.remote_persistence_verified,
                     'synthetic_data_used': False,
                 },
                 'checkpoint_state': {
@@ -104,12 +113,12 @@ class PilotRunner:
         }
 
         os.makedirs('research_state', exist_ok=True)
-        with open('research_state/pilot_evidence.json', 'w') as f:
+        with open(self.evidence_path, 'w') as f:
             json.dump(pilot_evidence, f, indent=2)
         # Do not write self-authorizing pilot_gate.json
 
         os.makedirs('reports', exist_ok=True)
-        with open('reports/pilot_report.md', 'w') as f:
+        with open(self.report_path, 'w') as f:
             f.write('# Pilot Report (Evidence-Only)\n\n')
             f.write(f'Pilot completed: {datetime.now(timezone.utc).isoformat()}\n')
             f.write(f'Configs tested: {len(self.configs)}\n')

@@ -1,0 +1,4834 @@
+{
+  "artifact": "buyhold_baseline",
+  "assets": {
+    "ADAUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.05795035180443166,
+              "end_time": 1744858800000,
+              "entry_price": 0.8758,
+              "exit_price": 0.6132,
+              "fee_drag": 0.0016977622816174197,
+              "max_drawdown": 0.5537397319498487,
+              "net_total_return": -0.30088916196456167,
+              "net_total_return_after_exit_costs": -0.3019374786661957,
+              "slippage_drag": 0.0008488062930811024,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6976125861623739
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.2439588549524019,
+              "end_time": 1754319600000,
+              "entry_price": 0.6131,
+              "exit_price": 0.7447,
+              "fee_drag": 0.002211221615057456,
+              "max_drawdown": 0.3818525519848771,
+              "net_total_return": 0.21282702957124275,
+              "net_total_return_after_exit_costs": 0.21100839544040081,
+              "slippage_drag": 0.0011056643888489699,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.2113287776981783
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.005180394408206,
+              "end_time": 1763780400000,
+              "entry_price": 0.7447,
+              "exit_price": 0.4073,
+              "fee_drag": 0.0015448401518559677,
+              "max_drawdown": 0.6077891424075531,
+              "net_total_return": -0.45388779104055194,
+              "net_total_return_after_exit_costs": -0.45470668629788663,
+              "slippage_drag": 0.0007723069785430712,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.544613957086384
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.2613665256726145,
+              "end_time": 1773241200000,
+              "entry_price": 0.4072,
+              "exit_price": 0.2625,
+              "fee_drag": 0.001642359681537539,
+              "max_drawdown": 0.49145120934111763,
+              "net_total_return": -0.35631947720206136,
+              "net_total_return_after_exit_costs": -0.35728467614599685,
+              "slippage_drag": 0.0008210911354622953,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6421822709248743
+            }
+          },
+          "median_daily_sharpe": -0.6596584387385231,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.05795035180443164,
+              "end_time": 1744858800000,
+              "entry_price": 0.8758,
+              "exit_price": 0.6132,
+              "fee_drag": 0.0033907403853513,
+              "max_drawdown": 0.5537397319498487,
+              "net_total_return": -0.30193573507539323,
+              "net_total_return_after_exit_costs": -0.30402853174163713,
+              "slippage_drag": 0.0016950712499553752,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.695071249955544
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.2439588549524032,
+              "end_time": 1754319600000,
+              "entry_price": 0.6131,
+              "exit_price": 0.7447,
+              "fee_drag": 0.0044156088016825195,
+              "max_drawdown": 0.3818525519848771,
+              "net_total_return": 0.21101142024553737,
+              "net_total_return_after_exit_costs": 0.2073808080076411,
+              "slippage_drag": 0.002208018405276417,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.208018405276474
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.005180394408206,
+              "end_time": 1763780400000,
+              "entry_price": 0.7447,
+              "exit_price": 0.4073,
+              "fee_drag": 0.0030855067461055164,
+              "max_drawdown": 0.6077891424075531,
+              "net_total_return": -0.4547053242874974,
+              "net_total_return_after_exit_costs": -0.4563401177252835,
+              "slippage_drag": 0.0015423016607433472,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.5423016607434399
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.2613665256726152,
+              "end_time": 1773241200000,
+              "entry_price": 0.4072,
+              "exit_price": 0.2625,
+              "fee_drag": 0.003280156408575406,
+              "max_drawdown": 0.4914512093411176,
+              "net_total_return": -0.35728307079906424,
+              "net_total_return_after_exit_costs": -0.35920993615280866,
+              "slippage_drag": 0.0016397239142317253,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.639723914231873
+            }
+          },
+          "median_daily_sharpe": -0.6596584387385234,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.05795035180443175,
+              "end_time": 1744858800000,
+              "entry_price": 0.8758,
+              "exit_price": 0.6132,
+              "fee_drag": 0.005078950708733925,
+              "max_drawdown": 0.5537397319498487,
+              "net_total_return": -0.30297987331275217,
+              "net_total_return_after_exit_costs": -0.3061133272922746,
+              "slippage_drag": 0.002538803739328062,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6925358262187085
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.243958854952402,
+              "end_time": 1754319600000,
+              "entry_price": 0.6131,
+              "exit_price": 0.7447,
+              "fee_drag": 0.006613185623999656,
+              "max_drawdown": 0.3818525519848772,
+              "net_total_return": 0.20920003497158504,
+              "net_total_return_after_exit_costs": 0.2037640762143703,
+              "slippage_drag": 0.0033070736017545726,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.2047157345030457
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.0051803944082067,
+              "end_time": 1763780400000,
+              "entry_price": 0.7447,
+              "exit_price": 0.4073,
+              "fee_drag": 0.004622013896961631,
+              "max_drawdown": 0.6077891424075531,
+              "net_total_return": -0.45552095552683786,
+              "net_total_return_after_exit_costs": -0.457968661071267,
+              "slippage_drag": 0.002309992116007018,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.5399947440046227
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.2613665256726152,
+              "end_time": 1773241200000,
+              "entry_price": 0.4072,
+              "exit_price": 0.2625,
+              "fee_drag": 0.004913405751415538,
+              "max_drawdown": 0.49145120934111763,
+              "net_total_return": -0.358244422576109,
+              "net_total_return_after_exit_costs": -0.3611294347744181,
+              "slippage_drag": 0.00245590691543301,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6372712769553517
+            }
+          },
+          "median_daily_sharpe": -0.6596584387385235,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "e327cc2154779c0058acb8025af9d4f529580cd1baa675bfb0ba2000b7a50eb7",
+        "dataset_path": "research/data/candles/ADAUSDT_1h_e327cc2154779c00.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.6596584387385231,
+        "fold_median_across_costs": -0.6596584387385235,
+        "pooled_fold_cost_units": -0.6596584387385231
+      }
+    },
+    "ATOMUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.3144335648893022,
+              "end_time": 1744858800000,
+              "entry_price": 6.493,
+              "exit_price": 4.012,
+              "fee_drag": 0.0016156629455555233,
+              "max_drawdown": 0.5496490772030154,
+              "net_total_return": -0.38302956822959106,
+              "net_total_return_after_exit_costs": -0.38395471539203074,
+              "slippage_drag": 0.0008077360899485517,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6154721798973446
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.5109152868976355,
+              "end_time": 1754319600000,
+              "entry_price": 4.012,
+              "exit_price": 4.265,
+              "fee_drag": 0.0020599383496449426,
+              "max_drawdown": 0.33173431734317343,
+              "net_total_return": 0.0614680846862866,
+              "net_total_return_after_exit_costs": 0.05987641329329945,
+              "slippage_drag": 0.0010299849164065672,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.0599698328132225
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.5332886424544472,
+              "end_time": 1763780400000,
+              "entry_price": 4.266,
+              "exit_price": 2.488,
+              "fee_drag": 0.0015810521507040342,
+              "max_drawdown": 0.5063907486305539,
+              "net_total_return": -0.417657677135533,
+              "net_total_return_after_exit_costs": -0.41853089944866817,
+              "slippage_drag": 0.0007904220354955889,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.580844070991403
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.2851849614043118,
+              "end_time": 1773241200000,
+              "entry_price": 2.489,
+              "exit_price": 1.825,
+              "fee_drag": 0.0017307625729208432,
+              "max_drawdown": 0.36058230683090703,
+              "net_total_return": -0.26787236226128663,
+              "net_total_return_after_exit_costs": -0.26897018765407577,
+              "slippage_drag": 0.0008653146929327214,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7306293858656492
+            }
+          },
+          "median_daily_sharpe": -1.299809263146807,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.3144335648893022,
+              "end_time": 1744858800000,
+              "entry_price": 6.493,
+              "exit_price": 4.012,
+              "fee_drag": 0.003226869537064487,
+              "max_drawdown": 0.5496490772030154,
+              "net_total_return": -0.3839531766603851,
+              "net_total_return_after_exit_costs": -0.3858000850367573,
+              "slippage_drag": 0.001613053808370448,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6130538083705523
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.510915286897635,
+              "end_time": 1754319600000,
+              "entry_price": 4.012,
+              "exit_price": 4.265,
+              "fee_drag": 0.00411364634712555,
+              "max_drawdown": 0.3317343173431734,
+              "net_total_return": 0.05987906060741443,
+              "net_total_return_after_exit_costs": 0.05670154318371333,
+              "slippage_drag": 0.0020568860456382635,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.0568860456383518
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.533288642454447,
+              "end_time": 1763780400000,
+              "entry_price": 4.266,
+              "exit_price": 2.488,
+              "fee_drag": 0.003157786148766214,
+              "max_drawdown": 0.5063907486305539,
+              "net_total_return": -0.41852944707994094,
+              "net_total_return_after_exit_costs": -0.4202726957975953,
+              "slippage_drag": 0.0015784775379508755,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.5784775379509963
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.2851849614043123,
+              "end_time": 1773241200000,
+              "entry_price": 2.489,
+              "exit_price": 1.825,
+              "fee_drag": 0.0034566091973174153,
+              "max_drawdown": 0.360582306830907,
+              "net_total_return": -0.2689683617189793,
+              "net_total_return_after_exit_costs": -0.2711599945705458,
+              "slippage_drag": 0.0017280386233118406,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7280386233119578
+            }
+          },
+          "median_daily_sharpe": -1.2998092631468072,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.314433564889302,
+              "end_time": 1744858800000,
+              "entry_price": 6.493,
+              "exit_price": 4.012,
+              "fee_drag": 0.00483363494621306,
+              "max_drawdown": 0.5496490772030154,
+              "net_total_return": -0.3848746362975174,
+              "net_total_return_after_exit_costs": -0.38763993237004196,
+              "slippage_drag": 0.002415961594850963,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6106410632339434
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.5109152868976354,
+              "end_time": 1754319600000,
+              "entry_price": 4.012,
+              "exit_price": 4.265,
+              "fee_drag": 0.006161145797717296,
+              "max_drawdown": 0.33173431734317355,
+              "net_total_return": 0.058293733425144635,
+              "net_total_return_after_exit_costs": 0.05353617394653211,
+              "slippage_drag": 0.0030807141494347766,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.0538094329566055
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.533288642454446,
+              "end_time": 1763780400000,
+              "entry_price": 4.266,
+              "exit_price": 2.488,
+              "fee_drag": 0.00473021664909011,
+              "max_drawdown": 0.5063907486305539,
+              "net_total_return": -0.4193991888339723,
+              "net_total_return_after_exit_costs": -0.4220092797805692,
+              "slippage_drag": 0.0023641747660462066,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.5761165106974884
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.285184961404311,
+              "end_time": 1773241200000,
+              "entry_price": 2.489,
+              "exit_price": 1.825,
+              "fee_drag": 0.0051775567634577595,
+              "max_drawdown": 0.3605823068309069,
+              "net_total_return": -0.2700618113118057,
+              "net_total_return_after_exit_costs": -0.27334324843905333,
+              "slippage_drag": 0.00258818083232944,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.725453888219655
+            }
+          },
+          "median_daily_sharpe": -1.2998092631468063,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "a60fe3db41357a92554f1ff331c6209c74ef7c73b112a5ceb937d08004ae92fb",
+        "dataset_path": "research/data/candles/ATOMUSDT_1h_a60fe3db41357a92.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -1.299809263146807,
+        "fold_median_across_costs": -1.299809263146807,
+        "pooled_fold_cost_units": -1.2998092631468072
+      }
+    },
+    "AVAXUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.6913680054010043,
+              "end_time": 1744858800000,
+              "entry_price": 37.06,
+              "exit_price": 18.98,
+              "fee_drag": 0.0015101204646744886,
+              "max_drawdown": 0.6687527939204292,
+              "net_total_return": -0.48862484674988566,
+              "net_total_return_after_exit_costs": -0.4893916537921842,
+              "slippage_drag": 0.0007549384506884694,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5098769013770499
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.06583749499615,
+              "end_time": 1754319600000,
+              "entry_price": 18.97,
+              "exit_price": 22.36,
+              "fee_drag": 0.002175349751693367,
+              "max_drawdown": 0.3982634956587391,
+              "net_total_return": 0.17693722130301975,
+              "net_total_return_after_exit_costs": 0.17517240393967587,
+              "slippage_drag": 0.0010877194847148457,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.1754389694299556
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.385013481264654,
+              "end_time": 1763780400000,
+              "entry_price": 22.36,
+              "exit_price": 13.28,
+              "fee_drag": 0.0015917323569400932,
+              "max_drawdown": 0.6358511837655016,
+              "net_total_return": -0.40697212812496847,
+              "net_total_return_after_exit_costs": -0.40786137341884504,
+              "slippage_drag": 0.0007957648100009217,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.591529620001967
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.9685450929642632,
+              "end_time": 1773241200000,
+              "entry_price": 13.28,
+              "exit_price": 9.6,
+              "fee_drag": 0.0017204485873765695,
+              "max_drawdown": 0.45778364116094983,
+              "net_total_return": -0.27819150737811876,
+              "net_total_return_after_exit_costs": -0.2792738592128053,
+              "slippage_drag": 0.0008601551203743004,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7203102407488169
+            }
+          },
+          "median_daily_sharpe": -1.1767792871144587,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.6913680054010043,
+              "end_time": 1744858800000,
+              "entry_price": 37.06,
+              "exit_price": 18.98,
+              "fee_drag": 0.0030162060079559137,
+              "max_drawdown": 0.6687527939204292,
+              "net_total_return": -0.48939037841642774,
+              "net_total_return_after_exit_costs": -0.49092118606193524,
+              "slippage_drag": 0.0015076166066143983,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5076166066145096
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.0658374949961495,
+              "end_time": 1754319600000,
+              "entry_price": 18.97,
+              "exit_price": 22.36,
+              "fee_drag": 0.004344008311823868,
+              "max_drawdown": 0.39826349565873914,
+              "net_total_return": 0.1751753392352006,
+              "net_total_return_after_exit_costs": 0.17165216356817364,
+              "slippage_drag": 0.0021721823242660614,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.1721823242661378
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.385013481264654,
+              "end_time": 1763780400000,
+              "entry_price": 22.36,
+              "exit_price": 13.28,
+              "fee_drag": 0.0031791039150202757,
+              "max_drawdown": 0.6358511837655016,
+              "net_total_return": -0.4078598944002305,
+              "net_total_return_after_exit_costs": -0.4096351304368187,
+              "slippage_drag": 0.0015891470906306622,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.5891470906307066
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.9685450929642635,
+              "end_time": 1773241200000,
+              "entry_price": 13.28,
+              "exit_price": 9.6,
+              "fee_drag": 0.0034360224101224034,
+              "max_drawdown": 0.4577836411609499,
+              "net_total_return": -0.27927205901378027,
+              "net_total_return_after_exit_costs": -0.28143280138085713,
+              "slippage_drag": 0.0017177349260170743,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.717734926017157
+            }
+          },
+          "median_daily_sharpe": -1.1767792871144587,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.6913680054010038,
+              "end_time": 1744858800000,
+              "entry_price": 37.06,
+              "exit_price": 18.98,
+              "fee_drag": 0.0045182702256487605,
+              "max_drawdown": 0.6687527939204292,
+              "net_total_return": -0.4901541290580917,
+              "net_total_return_after_exit_costs": -0.49244614117091107,
+              "slippage_drag": 0.0022580423557100777,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.505361570473369
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.0658374949961495,
+              "end_time": 1754319600000,
+              "entry_price": 18.97,
+              "exit_price": 22.36,
+              "fee_drag": 0.0065059992089040305,
+              "max_drawdown": 0.39826349565873914,
+              "net_total_return": 0.17341755622158453,
+              "net_total_return_after_exit_costs": 0.16814245759759033,
+              "slippage_drag": 0.003253399883629545,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.168933255753045
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.3850134812646544,
+              "end_time": 1763780400000,
+              "entry_price": 22.36,
+              "exit_price": 13.28,
+              "fee_drag": 0.004762129488612998,
+              "max_drawdown": 0.6358511837655016,
+              "net_total_return": -0.40874559526932946,
+              "net_total_return_after_exit_costs": -0.4114035794457961,
+              "slippage_drag": 0.002380155156393249,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.586770104262131
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.9685450929642633,
+              "end_time": 1773241200000,
+              "entry_price": 13.28,
+              "exit_price": 9.6,
+              "fee_drag": 0.005146738204504797,
+              "max_drawdown": 0.45778364116094983,
+              "net_total_return": -0.2803500967242454,
+              "net_total_return_after_exit_costs": -0.28358528286442153,
+              "slippage_drag": 0.0025727484042108993,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7151656028072153
+            }
+          },
+          "median_daily_sharpe": -1.176779287114459,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "02349363314ce38abf79e70fa1cdf0a6c9704e35d30811ec91fe609f47dcf34e",
+        "dataset_path": "research/data/candles/AVAXUSDT_1h_02349363314ce38a.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -1.1767792871144587,
+        "fold_median_across_costs": -1.1767792871144587,
+        "pooled_fold_cost_units": -1.1767792871144587
+      }
+    },
+    "BCHUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.8015183106745356,
+              "end_time": 1744858800000,
+              "entry_price": 444.2,
+              "exit_price": 326.4,
+              "fee_drag": 0.001732337367986451,
+              "max_drawdown": 0.49559294871794873,
+              "net_total_return": -0.2662967794042507,
+              "net_total_return_after_exit_costs": -0.26739696738353397,
+              "slippage_drag": 0.0008661024843611529,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.7322049687226853
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.1176048914725483,
+              "end_time": 1754319600000,
+              "entry_price": 326.4,
+              "exit_price": 576.2,
+              "fee_drag": 0.002760793397644091,
+              "max_drawdown": 0.16098317094774153,
+              "net_total_return": 0.7626737355108472,
+              "net_total_return_after_exit_costs": 0.7600306062444484,
+              "slippage_drag": 0.0013805877418187277,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.7611754836377824
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.005561677212347678,
+              "end_time": 1763780400000,
+              "entry_price": 576.3,
+              "exit_price": 534.2,
+              "fee_drag": 0.0019240971885420102,
+              "max_drawdown": 0.2955565877070753,
+              "net_total_return": -0.0744410309744766,
+              "net_total_return_after_exit_costs": -0.0758289066485302,
+              "slippage_drag": 0.000962030358576034,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.9240607171524593
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.5249847965075416,
+              "end_time": 1773241200000,
+              "entry_price": 534.2,
+              "exit_price": 455.5,
+              "fee_drag": 0.0018499746745882014,
+              "max_drawdown": 0.3475508666164281,
+              "net_total_return": -0.14860062472516056,
+              "net_total_return_after_exit_costs": -0.14987729808838504,
+              "slippage_drag": 0.0009249505617006477,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.849901123401775
+            }
+          },
+          "median_daily_sharpe": -0.26527323685994464,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.8015183106745355,
+              "end_time": 1744858800000,
+              "entry_price": 444.2,
+              "exit_price": 326.4,
+              "fee_drag": 0.0034597524992691434,
+              "max_drawdown": 0.4955929487179487,
+              "net_total_return": -0.2673951375189152,
+              "net_total_return_after_exit_costs": -0.26959148689663354,
+              "slippage_drag": 0.0017296118475118984,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.729611847512022
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.1176048914725483,
+              "end_time": 1754319600000,
+              "entry_price": 326.4,
+              "exit_price": 576.2,
+              "fee_drag": 0.005512557918774898,
+              "max_drawdown": 0.16098317094774153,
+              "net_total_return": 0.7600350023738541,
+              "net_total_return_after_exit_costs": 0.7547584174367378,
+              "slippage_drag": 0.002757041987404638,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.7570419874047913
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.005561677212346514,
+              "end_time": 1763780400000,
+              "entry_price": 576.3,
+              "exit_price": 534.2,
+              "fee_drag": 0.003842506440641769,
+              "max_drawdown": 0.2955565877070754,
+              "net_total_return": -0.075826598293377,
+              "net_total_return_after_exit_costs": -0.07859727015169374,
+              "slippage_drag": 0.0019211803867375632,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.92118038673756
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.5249847965075415,
+              "end_time": 1773241200000,
+              "entry_price": 534.2,
+              "exit_price": 455.5,
+              "fee_drag": 0.003694557385005019,
+              "max_drawdown": 0.3475508666164281,
+              "net_total_return": -0.14987517468814696,
+              "net_total_return_after_exit_costs": -0.1524238489144318,
+              "slippage_drag": 0.0018471318103426295,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.8471318103427905
+            }
+          },
+          "median_daily_sharpe": -0.265273236859944,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.8015183106745356,
+              "end_time": 1744858800000,
+              "entry_price": 444.2,
+              "exit_price": 326.4,
+              "fee_drag": 0.005182262307629789,
+              "max_drawdown": 0.4955929487179487,
+              "net_total_return": -0.2684909402812501,
+              "net_total_return_after_exit_costs": -0.2717794392592157,
+              "slippage_drag": 0.002590537138875385,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.7270247592502104
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.1176048914725483,
+              "end_time": 1754319600000,
+              "entry_price": 326.4,
+              "exit_price": 576.2,
+              "fee_drag": 0.008255325833313253,
+              "max_drawdown": 0.1609831709477415,
+              "net_total_return": 0.7574024083027809,
+              "net_total_return_after_exit_costs": 0.7495020057762558,
+              "slippage_drag": 0.004129377161751219,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.7529181078342417
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.005561677212347331,
+              "end_time": 1763780400000,
+              "entry_price": 576.3,
+              "exit_price": 534.2,
+              "fee_drag": 0.005755247533295745,
+              "max_drawdown": 0.2955565877070754,
+              "net_total_return": -0.07720894206193589,
+              "net_total_return_after_exit_costs": -0.08135734926289642,
+              "slippage_drag": 0.0028774601362042914,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.9183067574695247
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.524984796507542,
+              "end_time": 1773241200000,
+              "entry_price": 534.2,
+              "exit_price": 455.5,
+              "fee_drag": 0.005533766801504771,
+              "max_drawdown": 0.34755086661642814,
+              "net_total_return": -0.15114675938491165,
+              "net_total_return_after_exit_costs": -0.15496277912809672,
+              "slippage_drag": 0.002766553410219953,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.844368940146549
+            }
+          },
+          "median_daily_sharpe": -0.2652732368599447,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "c803bbfd574362cda630d5f2216aaccc01313a6895d766dc9f00ff9fce53afb6",
+        "dataset_path": "research/data/candles/BCHUSDT_1h_c803bbfd574362cd.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.26527323685994464,
+        "fold_median_across_costs": -0.2652732368599445,
+        "pooled_fold_cost_units": -0.2652732368599446
+      }
+    },
+    "BNBUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.117855929506301,
+              "end_time": 1744858800000,
+              "entry_price": 721.59,
+              "exit_price": 582.07,
+              "fee_drag": 0.0018040389202249344,
+              "max_drawdown": 0.30139626405024394,
+              "net_total_return": -0.19455935845529237,
+              "net_total_return_after_exit_costs": -0.19576711669728866,
+              "slippage_drag": 0.0009019711948356895,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.8039423896716436
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.635090845987366,
+              "end_time": 1754319600000,
+              "entry_price": 582.07,
+              "exit_price": 760.44,
+              "fee_drag": 0.002302832185990492,
+              "max_drawdown": 0.1412712664855348,
+              "net_total_return": 0.3044834287038446,
+              "net_total_return_after_exit_costs": 0.3025273558025032,
+              "slippage_drag": 0.001151492588415345,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.3029851768307803
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": 0.7488349878297724,
+              "end_time": 1763780400000,
+              "entry_price": 760.44,
+              "exit_price": 836.41,
+              "fee_drag": 0.0020967066282778324,
+              "max_drawdown": 0.4088956427715596,
+              "net_total_return": 0.09825475665516042,
+              "net_total_return_after_exit_costs": 0.09660792364755616,
+              "slippage_drag": 0.001048378252390985,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 2.096756504782096
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.3313543740193885,
+              "end_time": 1773241200000,
+              "entry_price": 836.41,
+              "exit_price": 645.98,
+              "fee_drag": 0.0017697828561947326,
+              "max_drawdown": 0.39087473962967223,
+              "net_total_return": -0.22883255908580968,
+              "net_total_return_after_exit_costs": -0.22998892466346052,
+              "slippage_drag": 0.0008848345945205008,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.769669189041126
+            }
+          },
+          "median_daily_sharpe": -0.18451047083826433,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.117855929506301,
+              "end_time": 1744858800000,
+              "entry_price": 721.59,
+              "exit_price": 582.07,
+              "fee_drag": 0.0036028692984104082,
+              "max_drawdown": 0.30139626405024394,
+              "net_total_return": -0.19576510791868276,
+              "net_total_return_after_exit_costs": -0.1981762041251427,
+              "slippage_drag": 0.0018012418771121475,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.8012418771122547
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.635090845987365,
+              "end_time": 1754319600000,
+              "entry_price": 582.07,
+              "exit_price": 760.44,
+              "fee_drag": 0.004598464141213131,
+              "max_drawdown": 0.1412712664855348,
+              "net_total_return": 0.30253060919979724,
+              "net_total_return_after_exit_costs": 0.29862562243341617,
+              "slippage_drag": 0.0022995375942306447,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.299537594230735
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": 0.7488349878297725,
+              "end_time": 1763780400000,
+              "entry_price": 760.44,
+              "exit_price": 836.41,
+              "fee_drag": 0.004187036088122664,
+              "max_drawdown": 0.4088956427715596,
+              "net_total_return": 0.09661066270807186,
+              "net_total_return_after_exit_costs": 0.09332302394127309,
+              "slippage_drag": 0.0020936176477388832,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 2.0936176477390096
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.3313543740193883,
+              "end_time": 1773241200000,
+              "entry_price": 836.41,
+              "exit_price": 645.98,
+              "fee_drag": 0.003534493955309407,
+              "max_drawdown": 0.39087473962967223,
+              "net_total_return": -0.22998700136262723,
+              "net_total_return_after_exit_costs": -0.2322955003325421,
+              "slippage_drag": 0.0017670199836681856,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7670199836683103
+            }
+          },
+          "median_daily_sharpe": -0.18451047083826427,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.1178559295063022,
+              "end_time": 1744858800000,
+              "entry_price": 721.59,
+              "exit_price": 582.07,
+              "fee_drag": 0.005396509118932282,
+              "max_drawdown": 0.301396264050244,
+              "net_total_return": -0.1969680521816028,
+              "net_total_return_after_exit_costs": -0.20057808230302043,
+              "slippage_drag": 0.0026978214710248615,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.798547647349858
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.6350908459873654,
+              "end_time": 1754319600000,
+              "entry_price": 582.07,
+              "exit_price": 760.44,
+              "fee_drag": 0.0068869212976531684,
+              "max_drawdown": 0.14127126648553487,
+              "net_total_return": 0.3005823329697527,
+              "net_total_return_after_exit_costs": 0.2947355650918871,
+              "slippage_drag": 0.0034441470487516852,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.2960980325012135
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": 0.7488349878297728,
+              "end_time": 1763780400000,
+              "entry_price": 760.44,
+              "exit_price": 836.41,
+              "fee_drag": 0.006271010733806505,
+              "max_drawdown": 0.40889564277155965,
+              "net_total_return": 0.09497039377874517,
+              "net_total_return_after_exit_costs": 0.09004795437351294,
+              "slippage_drag": 0.003135729139965269,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 2.0904860933102056
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.3313543740193883,
+              "end_time": 1773241200000,
+              "entry_price": 836.41,
+              "exit_price": 645.98,
+              "fee_drag": 0.005294150770233861,
+              "max_drawdown": 0.3908747396296723,
+              "net_total_return": -0.23113875780618,
+              "net_total_return_after_exit_costs": -0.23459517352046233,
+              "slippage_drag": 0.002646565412588006,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7643769417252806
+            }
+          },
+          "median_daily_sharpe": -0.18451047083826472,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "5645bbd63c940641a415de55c86f4c4d06b8afdc84ffb50ba4a76bdc3176b7e8",
+        "dataset_path": "research/data/candles/BNBUSDT_1h_5645bbd63c940641.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.18451047083826433,
+        "fold_median_across_costs": -0.18451047083826427,
+        "pooled_fold_cost_units": -0.18451047083826433
+      }
+    },
+    "BTCUSDT": {
+      "fold_windows": {
+        "0": [
+          1735392960000,
+          1744853400000
+        ],
+        "1": [
+          1744853400000,
+          1754313840000
+        ],
+        "2": [
+          1754313840000,
+          1763774279999
+        ],
+        "3": [
+          1763774279999,
+          1773234720000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.5068012555815299,
+              "end_time": 1744851600000,
+              "entry_price": 94665.29,
+              "exit_price": 84337.99,
+              "fee_drag": 0.0018881286257508647,
+              "max_drawdown": 0.30936112358187556,
+              "net_total_return": -0.11042758704365624,
+              "net_total_return_after_exit_costs": -0.11176150087688438,
+              "slippage_drag": 0.0009440370805415097,
+              "start_time": 1735394400000,
+              "status": "OK",
+              "turnover": 1.8880741610832796
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.2867787876290437,
+              "end_time": 1754312400000,
+              "entry_price": 84337.98,
+              "exit_price": 114913.88,
+              "fee_drag": 0.0023588194249227123,
+              "max_drawdown": 0.1153865009423798,
+              "net_total_return": 0.3604986752593426,
+              "net_total_return_after_exit_costs": 0.35845860749579134,
+              "slippage_drag": 0.001179500211692904,
+              "start_time": 1744855200000,
+              "status": "OK",
+              "turnover": 2.3590004233862785
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.4120760888348354,
+              "end_time": 1763773200000,
+              "entry_price": 114913.89,
+              "exit_price": 85174.28,
+              "fee_drag": 0.0017387213595397935,
+              "max_drawdown": 0.34761471164701413,
+              "net_total_return": -0.2599095942583348,
+              "net_total_return_after_exit_costs": -0.26101935982174435,
+              "slippage_drag": 0.0008692960769341857,
+              "start_time": 1754316000000,
+              "status": "OK",
+              "turnover": 1.7385921538686009
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.8707928742159359,
+              "end_time": 1773234000000,
+              "entry_price": 85174.28,
+              "exit_price": 70186.09,
+              "fee_drag": 0.0018213841537798228,
+              "max_drawdown": 0.3558976022597038,
+              "net_total_return": -0.177205447945149,
+              "net_total_return_after_exit_costs": -0.17843922837595527,
+              "slippage_drag": 0.0009106481500907779,
+              "start_time": 1763776800000,
+              "status": "OK",
+              "turnover": 1.8212963001817868
+            }
+          },
+          "median_daily_sharpe": -0.6887970648987329,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.5068012555815296,
+              "end_time": 1744851600000,
+              "entry_price": 94665.29,
+              "exit_price": 84337.99,
+              "fee_drag": 0.0037707129380512155,
+              "max_drawdown": 0.30936112358187556,
+              "net_total_return": -0.11175928227263285,
+              "net_total_return_after_exit_costs": -0.11442222794437948,
+              "slippage_drag": 0.0018852477027581983,
+              "start_time": 1735394400000,
+              "status": "OK",
+              "turnover": 1.8852477027583046
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.286778787629043,
+              "end_time": 1754312400000,
+              "entry_price": 84337.98,
+              "exit_price": 114913.88,
+              "fee_drag": 0.004710215061222305,
+              "max_drawdown": 0.11538650094237976,
+              "net_total_return": 0.35846200059578043,
+              "net_total_return_after_exit_costs": 0.3543893315179941,
+              "slippage_drag": 0.002355468985626764,
+              "start_time": 1744855200000,
+              "status": "OK",
+              "turnover": 2.3554689856267177
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.4120760888348367,
+              "end_time": 1763773200000,
+              "entry_price": 114913.89,
+              "exit_price": 85174.28,
+              "fee_drag": 0.003472494991005173,
+              "max_drawdown": 0.34761471164701424,
+              "net_total_return": -0.261017514027409,
+              "net_total_return_after_exit_costs": -0.263232983520355,
+              "slippage_drag": 0.0017359894710034253,
+              "start_time": 1754316000000,
+              "status": "OK",
+              "turnover": 1.7359894710035282
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.8707928742159367,
+              "end_time": 1773234000000,
+              "entry_price": 85174.28,
+              "exit_price": 70186.09,
+              "fee_drag": 0.003637490505751591,
+              "max_drawdown": 0.35589760225970374,
+              "net_total_return": -0.17843717631648887,
+              "net_total_return_after_exit_costs": -0.1809002216618921,
+              "slippage_drag": 0.0018185698087143883,
+              "start_time": 1763776800000,
+              "status": "OK",
+              "turnover": 1.8185698087144484
+            }
+          },
+          "median_daily_sharpe": -0.6887970648987332,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.5068012555815306,
+              "end_time": 1744851600000,
+              "entry_price": 94665.29,
+              "exit_price": 84337.99,
+              "fee_drag": 0.0056477721768417415,
+              "max_drawdown": 0.3093611235818756,
+              "net_total_return": -0.11308787928577275,
+              "net_total_return_after_exit_costs": -0.11707499272444347,
+              "slippage_drag": 0.002823641730368602,
+              "start_time": 1735394400000,
+              "status": "OK",
+              "turnover": 1.882427820245688
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.2867787876290424,
+              "end_time": 1754312400000,
+              "entry_price": 84337.98,
+              "exit_price": 114913.88,
+              "fee_drag": 0.007054213176843767,
+              "max_drawdown": 0.11538650094237968,
+              "net_total_return": 0.35643006429694324,
+              "net_total_return_after_exit_costs": 0.35033223294289656,
+              "slippage_drag": 0.0035279186457425893,
+              "start_time": 1744855200000,
+              "status": "OK",
+              "turnover": 2.351945763828404
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.4120760888348394,
+              "end_time": 1763773200000,
+              "entry_price": 114913.89,
+              "exit_price": 85174.28,
+              "fee_drag": 0.005201337903498852,
+              "max_drawdown": 0.3476147116470142,
+              "net_total_return": -0.262122856198772,
+              "net_total_return_after_exit_costs": -0.26543998289873033,
+              "slippage_drag": 0.002600089264999068,
+              "start_time": 1754316000000,
+              "status": "OK",
+              "turnover": 1.7333928433326888
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.8707928742159357,
+              "end_time": 1773234000000,
+              "entry_price": 85174.28,
+              "exit_price": 70186.09,
+              "fee_drag": 0.005448337299277272,
+              "max_drawdown": 0.3558976022597037,
+              "net_total_return": -0.1796660390469042,
+              "net_total_return_after_exit_costs": -0.18335385036836868,
+              "slippage_drag": 0.0027237744907268294,
+              "start_time": 1763776800000,
+              "status": "OK",
+              "turnover": 1.815849660484556
+            }
+          },
+          "median_daily_sharpe": -0.6887970648987332,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "08c1f8eb22a04e3007d3761f834aea30a6d7d77c2195dbfb19297ecb6507d0bc",
+        "dataset_path": "research/data/candles/BTCUSDT_1h_08c1f8eb22a04e30.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697551200000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792155600000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.6887970648987329,
+        "fold_median_across_costs": -0.6887970648987329,
+        "pooled_fold_cost_units": -0.6887970648987332
+      }
+    },
+    "DOGEUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.9119237447325874,
+              "end_time": 1744858800000,
+              "entry_price": 0.31874,
+              "exit_price": 0.1553,
+              "fee_drag": 0.0014852587257481004,
+              "max_drawdown": 0.6944405740560123,
+              "net_total_return": -0.5134990227642809,
+              "net_total_return_after_exit_costs": -0.5142285309796459,
+              "slippage_drag": 0.0007425013626812544,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.4850027253626548
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.4132650274528373,
+              "end_time": 1754319600000,
+              "entry_price": 0.15531,
+              "exit_price": 0.20385,
+              "fee_drag": 0.002308915422186873,
+              "max_drawdown": 0.41812900401894065,
+              "net_total_return": 0.31056970803989353,
+              "net_total_return_after_exit_costs": 0.30860450876268786,
+              "slippage_drag": 0.0011545357280831382,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.3090714561668295
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.9925786448214043,
+              "end_time": 1763780400000,
+              "entry_price": 0.20385,
+              "exit_price": 0.1393,
+              "fee_drag": 0.001680981611546131,
+              "max_drawdown": 0.5426169664087881,
+              "net_total_return": -0.31767822656815226,
+              "net_total_return_after_exit_costs": -0.3187013680674134,
+              "slippage_drag": 0.0008404117607792909,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6808235215587837
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.2807573308722162,
+              "end_time": 1773241200000,
+              "entry_price": 0.13929,
+              "exit_price": 0.09237,
+              "fee_drag": 0.001660825183588894,
+              "max_drawdown": 0.44069960423847815,
+              "net_total_return": -0.337844737780996,
+              "net_total_return_after_exit_costs": -0.3388376395966934,
+              "slippage_drag": 0.0008303285051727519,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.66065701034594
+            }
+          },
+          "median_daily_sharpe": -1.1366679878468102,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.9119237447325876,
+              "end_time": 1744858800000,
+              "entry_price": 0.31874,
+              "exit_price": 0.1553,
+              "fee_drag": 0.0029665818033864527,
+              "max_drawdown": 0.6944405740560122,
+              "net_total_return": -0.5142273176403823,
+              "net_total_return_after_exit_costs": -0.5156836641420965,
+              "slippage_drag": 0.001482779667390496,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.4827796673905551
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.4132650274528376,
+              "end_time": 1754319600000,
+              "entry_price": 0.15531,
+              "exit_price": 0.20385,
+              "fee_drag": 0.004610606323155728,
+              "max_drawdown": 0.4181290040189407,
+              "net_total_return": 0.3086077773392346,
+              "net_total_return_after_exit_costs": 0.3046845712227716,
+              "slippage_drag": 0.002305614762370154,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.305614762370172
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.9925786448214043,
+              "end_time": 1763780400000,
+              "entry_price": 0.20385,
+              "exit_price": 0.1393,
+              "fee_drag": 0.003357246050667156,
+              "max_drawdown": 0.5426169664087881,
+              "net_total_return": -0.3186996663487389,
+              "net_total_return_after_exit_costs": -0.32074220474902543,
+              "slippage_drag": 0.0016783073186821325,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6783073186821984
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.2807573308722167,
+              "end_time": 1773241200000,
+              "entry_price": 0.13929,
+              "exit_price": 0.09237,
+              "fee_drag": 0.0033170136796612042,
+              "max_drawdown": 0.4406996042384782,
+              "net_total_return": -0.33883598817353966,
+              "net_total_return_after_exit_costs": -0.3408181578809954,
+              "slippage_drag": 0.00165817099685726,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6581709968573974
+            }
+          },
+          "median_daily_sharpe": -1.1366679878468104,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.9119237447325872,
+              "end_time": 1744858800000,
+              "entry_price": 0.31874,
+              "exit_price": 0.1553,
+              "fee_drag": 0.00444398245750258,
+              "max_drawdown": 0.6944405740560122,
+              "net_total_return": -0.5149539181237504,
+              "net_total_return_after_exit_costs": -0.5171344427848249,
+              "slippage_drag": 0.002220842672111607,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.4805617814077103
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.4132650274528376,
+              "end_time": 1754319600000,
+              "entry_price": 0.15531,
+              "exit_price": 0.20385,
+              "fee_drag": 0.006905098225722166,
+              "max_drawdown": 0.4181290040189407,
+              "net_total_return": 0.3066504111099623,
+              "net_total_return_after_exit_costs": 0.3007763641868176,
+              "slippage_drag": 0.0034532491659620182,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.302166110641423
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.992578644821404,
+              "end_time": 1763780400000,
+              "entry_price": 0.20385,
+              "exit_price": 0.1393,
+              "fee_drag": 0.005028809464338894,
+              "max_drawdown": 0.542616966408788,
+              "net_total_return": -0.3197187297290533,
+              "net_total_return_after_exit_costs": -0.32277693417955633,
+              "slippage_drag": 0.0025136954547035797,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6757969698024073
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.280757330872217,
+              "end_time": 1773241200000,
+              "entry_price": 0.13929,
+              "exit_price": 0.09237,
+              "fee_drag": 0.004968581334231989,
+              "max_drawdown": 0.4406996042384782,
+              "net_total_return": -0.33982493240203165,
+              "net_total_return_after_exit_costs": -0.3427927494184183,
+              "slippage_drag": 0.0024835361506942845,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6556907671294292
+            }
+          },
+          "median_daily_sharpe": -1.1366679878468107,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "a886402588b1807596f0150fe2d52ab81fa74c19802407c06b51771c55056e2d",
+        "dataset_path": "research/data/candles/DOGEUSDT_1h_a886402588b18075.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -1.1366679878468102,
+        "fold_median_across_costs": -1.1366679878468104,
+        "pooled_fold_cost_units": -1.1366679878468102
+      }
+    },
+    "DOTUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.2784372831304873,
+              "end_time": 1744858800000,
+              "entry_price": 6.947,
+              "exit_price": 3.561,
+              "fee_drag": 0.00151057245325715,
+              "max_drawdown": 0.5810006333122228,
+              "net_total_return": -0.48817263205987926,
+              "net_total_return_after_exit_costs": -0.4889401171981055,
+              "slippage_drag": 0.0007551645580333819,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5103291160670567
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.42470117422620995,
+              "end_time": 1754319600000,
+              "entry_price": 3.56,
+              "exit_price": 3.692,
+              "fee_drag": 0.002034008083230663,
+              "max_drawdown": 0.42285284720917116,
+              "net_total_return": 0.03552484665299053,
+              "net_total_return_after_exit_costs": 0.03397207714543456,
+              "slippage_drag": 0.0010170132973898749,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.0340265947799265
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.0916090893489458,
+              "end_time": 1763780400000,
+              "entry_price": 3.692,
+              "exit_price": 2.323,
+              "fee_drag": 0.0016269424402573435,
+              "max_drawdown": 0.5217662986877735,
+              "net_total_return": -0.37174443095913556,
+              "net_total_return_after_exit_costs": -0.37268650018491234,
+              "slippage_drag": 0.0008133786585838539,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6267573171678
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.8985064150630776,
+              "end_time": 1773241200000,
+              "entry_price": 2.325,
+              "exit_price": 1.519,
+              "fee_drag": 0.001651029297206209,
+              "max_drawdown": 0.48533109807208724,
+              "net_total_return": -0.3476455245570689,
+              "net_total_return_after_exit_costs": -0.3486237300929955,
+              "slippage_drag": 0.0008254281117849244,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6508562235698665
+            }
+          },
+          "median_daily_sharpe": -0.9950577522060118,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.2784372831304873,
+              "end_time": 1744858800000,
+              "entry_price": 6.947,
+              "exit_price": 3.561,
+              "fee_drag": 0.0030171081803242847,
+              "max_drawdown": 0.581000633312223,
+              "net_total_return": -0.4889388406945203,
+              "net_total_return_after_exit_costs": -0.4904710020501181,
+              "slippage_drag": 0.001508068144336316,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.508068144336417
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.4247011742262104,
+              "end_time": 1754319600000,
+              "entry_price": 3.56,
+              "exit_price": 3.692,
+              "fee_drag": 0.0040618893542260295,
+              "max_drawdown": 0.42285284720917116,
+              "net_total_return": 0.03397465975680352,
+              "net_total_return_after_exit_costs": 0.030874803726852588,
+              "slippage_drag": 0.0020309816447876884,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.0309816447877407
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.0916090893489454,
+              "end_time": 1763780400000,
+              "entry_price": 3.692,
+              "exit_price": 2.323,
+              "fee_drag": 0.003249383487282554,
+              "max_drawdown": 0.5217662986877734,
+              "net_total_return": -0.3726849333079992,
+              "net_total_return_after_exit_costs": -0.37456562387794173,
+              "slippage_drag": 0.001624322051722846,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.624322051722938
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.8985064150630769,
+              "end_time": 1773241200000,
+              "entry_price": 2.325,
+              "exit_price": 1.519,
+              "fee_drag": 0.0032974610220119203,
+              "max_drawdown": 0.48533109807208724,
+              "net_total_return": -0.3486221031131212,
+              "net_total_return_after_exit_costs": -0.35057493404798806,
+              "slippage_drag": 0.0016483848819177983,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6483848819178157
+            }
+          },
+          "median_daily_sharpe": -0.9950577522060111,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.278437283130487,
+              "end_time": 1744858800000,
+              "entry_price": 6.947,
+              "exit_price": 3.561,
+              "fee_drag": 0.0045196207837546465,
+              "max_drawdown": 0.581000633312223,
+              "net_total_return": -0.48970326672930314,
+              "net_total_return_after_exit_costs": -0.4919973056937215,
+              "slippage_drag": 0.002258718649203244,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5058124328021576
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.42470117422621,
+              "end_time": 1754319600000,
+              "entry_price": 3.56,
+              "exit_price": 3.692,
+              "fee_drag": 0.00608366523109015,
+              "max_drawdown": 0.4228528472091711,
+              "net_total_return": 0.032428079401728066,
+              "net_total_return_after_exit_costs": 0.027786798970777817,
+              "slippage_drag": 0.003041915668399767,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.0279437789331887
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.091609089348946,
+              "end_time": 1763780400000,
+              "entry_price": 3.692,
+              "exit_price": 2.323,
+              "fee_drag": 0.004867338481178813,
+              "max_drawdown": 0.5217662986877735,
+              "net_total_return": -0.37362324755915954,
+              "net_total_return_after_exit_costs": -0.37643912424975723,
+              "slippage_drag": 0.0024328386779584343,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6218924519723013
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.8985064150630772,
+              "end_time": 1773241200000,
+              "entry_price": 2.325,
+              "exit_price": 1.519,
+              "fee_drag": 0.004939310874167313,
+              "max_drawdown": 0.48533109807208724,
+              "net_total_return": -0.34959640963944594,
+              "net_total_return_after_exit_costs": -0.3525202989799118,
+              "slippage_drag": 0.00246887893483809,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6459192898920145
+            }
+          },
+          "median_daily_sharpe": -0.9950577522060116,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "cbfa9513ee19c3ce651a293d68e2ea8e2e9b2e8d8fbc8bedb59570d98761f00f",
+        "dataset_path": "research/data/candles/DOTUSDT_1h_cbfa9513ee19c3ce.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.9950577522060118,
+        "fold_median_across_costs": -0.9950577522060116,
+        "pooled_fold_cost_units": -0.9950577522060116
+      }
+    },
+    "ETHUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.7172511689028607,
+              "end_time": 1744858800000,
+              "entry_price": 3368.39,
+              "exit_price": 1584.91,
+              "fee_drag": 0.0014685856189295258,
+              "max_drawdown": 0.6180322793414906,
+              "net_total_return": -0.5301804703066266,
+              "net_total_return_after_exit_costs": -0.5308849646914019,
+              "slippage_drag": 0.0007341606389101059,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.4683212778203092
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 4.2109526015005905,
+              "end_time": 1754319600000,
+              "entry_price": 1584.91,
+              "exit_price": 3648.89,
+              "fee_drag": 0.003296671738791292,
+              "max_drawdown": 0.24151772480775607,
+              "net_total_return": 1.2988201498652248,
+              "net_total_return_after_exit_costs": 1.2953730690505025,
+              "slippage_drag": 0.0016486609489959284,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 3.297321897992161
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.9919242014837679,
+              "end_time": 1763780400000,
+              "entry_price": 3648.89,
+              "exit_price": 2752.27,
+              "fee_drag": 0.0017517702885970579,
+              "max_drawdown": 0.4566524822695035,
+              "net_total_return": -0.24685413747267757,
+              "net_total_return_after_exit_costs": -0.24798347969353726,
+              "slippage_drag": 0.0008758238053270519,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.751647610654258
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.0022002906815959,
+              "end_time": 1773241200000,
+              "entry_price": 2752.27,
+              "exit_price": 2049.73,
+              "fee_drag": 0.0017422549888690463,
+              "max_drawdown": 0.4644985858419033,
+              "net_total_return": -0.25637419723056826,
+              "net_total_return_after_exit_costs": -0.257489264121821,
+              "slippage_drag": 0.0008710637754481257,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7421275508963674
+            }
+          },
+          "median_daily_sharpe": -0.9970622460826819,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.7172511689028616,
+              "end_time": 1744858800000,
+              "entry_price": 3368.39,
+              "exit_price": 1584.91,
+              "fee_drag": 0.0029333021657061116,
+              "max_drawdown": 0.6180322793414906,
+              "net_total_return": -0.5308837929558683,
+              "net_total_return_after_exit_costs": -0.5322902033445865,
+              "slippage_drag": 0.0014661231920749718,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.4661231920750688
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 4.2109526015005905,
+              "end_time": 1754319600000,
+              "entry_price": 1584.91,
+              "exit_price": 3648.89,
+              "fee_drag": 0.0065821748310982385,
+              "max_drawdown": 0.24151772480775602,
+              "net_total_return": 1.2953788023354864,
+              "net_total_return_after_exit_costs": 1.288497256686085,
+              "slippage_drag": 0.003292385787366264,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 3.292385787366424
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.9919242014837686,
+              "end_time": 1763780400000,
+              "entry_price": 3648.89,
+              "exit_price": 2752.27,
+              "fee_drag": 0.0034985407445571413,
+              "max_drawdown": 0.45665248226950356,
+              "net_total_return": -0.24798160133873653,
+              "net_total_return_after_exit_costs": -0.2502361524979229,
+              "slippage_drag": 0.0017490253836920466,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7490253836922005
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.0022002906815957,
+              "end_time": 1773241200000,
+              "entry_price": 2752.27,
+              "exit_price": 2049.73,
+              "fee_drag": 0.00347954813983063,
+              "max_drawdown": 0.4644985858419033,
+              "net_total_return": -0.25748740951016313,
+              "net_total_return_after_exit_costs": -0.25971346225645175,
+              "slippage_drag": 0.0017395195755205758,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7395195755207744
+            }
+          },
+          "median_daily_sharpe": -0.9970622460826821,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.717251168902861,
+              "end_time": 1744858800000,
+              "entry_price": 3368.39,
+              "exit_price": 1584.91,
+              "fee_drag": 0.004394162615966872,
+              "max_drawdown": 0.6180322793414906,
+              "net_total_return": -0.5315854793107665,
+              "net_total_return_after_exit_costs": -0.5336912367885249,
+              "slippage_drag": 0.002195895330331097,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.4639302202206939
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 4.21095260150059,
+              "end_time": 1754319600000,
+              "entry_price": 1584.91,
+              "exit_price": 3648.89,
+              "fee_drag": 0.009856549548177777,
+              "max_drawdown": 0.24151772480775605,
+              "net_total_return": 1.2919454611702563,
+              "net_total_return_after_exit_costs": 1.2816420203495658,
+              "slippage_drag": 0.004931191741052408,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 3.2874611607017172
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.9919242014837685,
+              "end_time": 1763780400000,
+              "entry_price": 3648.89,
+              "exit_price": 2752.27,
+              "fee_drag": 0.005240328571819848,
+              "max_drawdown": 0.4566524822695035,
+              "net_total_return": -0.24910644213734787,
+              "net_total_return_after_exit_costs": -0.2524820841267193,
+              "slippage_drag": 0.0026196138860911868,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7464092573941126
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.0022002906815959,
+              "end_time": 1773241200000,
+              "entry_price": 2752.27,
+              "exit_price": 2049.73,
+              "fee_drag": 0.005211896514748986,
+              "max_drawdown": 0.46449858584190334,
+              "net_total_return": -0.2585980318789142,
+              "net_total_return_after_exit_costs": -0.2619310044266025,
+              "slippage_drag": 0.0026053765014787283,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7369176676525466
+            }
+          },
+          "median_daily_sharpe": -0.9970622460826821,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "d5c1e3786fe60b1cb2ad99b132c3d6f03b379b070925a785bf4123a93d8af01d",
+        "dataset_path": "research/data/candles/ETHUSDT_1h_d5c1e3786fe60b1c.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.9970622460826819,
+        "fold_median_across_costs": -0.9970622460826821,
+        "pooled_fold_cost_units": -0.9970622460826821
+      }
+    },
+    "LINKUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.3145319808620017,
+              "end_time": 1744858800000,
+              "entry_price": 21.48,
+              "exit_price": 12.39,
+              "fee_drag": 0.0015746644506287038,
+              "max_drawdown": 0.6221317542561066,
+              "net_total_return": -0.424048572658625,
+              "net_total_return_after_exit_costs": -0.42491221182392336,
+              "slippage_drag": 0.0007872265877340794,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5744531754683107
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.7263398346706673,
+              "end_time": 1754319600000,
+              "entry_price": 12.39,
+              "exit_price": 16.93,
+              "fee_drag": 0.0023626960981528258,
+              "max_drawdown": 0.3646659116647792,
+              "net_total_return": 0.36437728779572387,
+              "net_total_return_after_exit_costs": 0.3623314040526744,
+              "slippage_drag": 0.0011814395179611246,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.3628790359226595
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6437685020011769,
+              "end_time": 1763780400000,
+              "entry_price": 16.92,
+              "exit_price": 12.11,
+              "fee_drag": 0.0017132923844461697,
+              "max_drawdown": 0.5676760306457497,
+              "net_total_return": -0.28535129019992966,
+              "net_total_return_after_exit_costs": -0.2864229059402749,
+              "slippage_drag": 0.0008565752289634669,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7131504579270063
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.9787000420660534,
+              "end_time": 1773241200000,
+              "entry_price": 12.11,
+              "exit_price": 9.0,
+              "fee_drag": 0.0017407039284209702,
+              "max_drawdown": 0.4669811320754717,
+              "net_total_return": -0.25792603359682725,
+              "net_total_return_after_exit_costs": -0.25903877350944887,
+              "slippage_drag": 0.0008702878572650619,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7405757145301082
+            }
+          },
+          "median_daily_sharpe": -0.8112342720336152,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.3145319808620015,
+              "end_time": 1744858800000,
+              "entry_price": 21.48,
+              "exit_price": 12.39,
+              "fee_drag": 0.0031450362547943925,
+              "max_drawdown": 0.6221317542561066,
+              "net_total_return": -0.424910775394166,
+              "net_total_return_after_exit_costs": -0.4266348928895343,
+              "slippage_drag": 0.0015720962096366197,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5720962096367714
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.7263398346706673,
+              "end_time": 1754319600000,
+              "entry_price": 12.39,
+              "exit_price": 16.93,
+              "fee_drag": 0.004717952928070224,
+              "max_drawdown": 0.3646659116647792,
+              "net_total_return": 0.3623348068259698,
+              "net_total_return_after_exit_costs": 0.3582505270751057,
+              "slippage_drag": 0.00235934179185664,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.359341791856907
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6437685020011763,
+              "end_time": 1763780400000,
+              "entry_price": 16.92,
+              "exit_price": 12.11,
+              "fee_drag": 0.003421738579083464,
+              "max_drawdown": 0.5676760306457498,
+              "net_total_return": -0.28642112359783406,
+              "net_total_return_after_exit_costs": -0.28856043306928775,
+              "slippage_drag": 0.0017105858614330312,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.710585861433103
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.9787000420660539,
+              "end_time": 1773241200000,
+              "entry_price": 12.11,
+              "exit_price": 9.0,
+              "fee_drag": 0.003476452212341293,
+              "max_drawdown": 0.4669811320754717,
+              "net_total_return": -0.25903692276808954,
+              "net_total_return_after_exit_costs": -0.2612583300736308,
+              "slippage_drag": 0.0017379700622627168,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.737970062262848
+            }
+          },
+          "median_daily_sharpe": -0.8112342720336151,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.3145319808620017,
+              "end_time": 1744858800000,
+              "entry_price": 21.48,
+              "exit_price": 12.39,
+              "fee_drag": 0.004711129972024257,
+              "max_drawdown": 0.6221317542561066,
+              "net_total_return": -0.42577097219763516,
+              "net_total_return_after_exit_costs": -0.4283524187921207,
+              "slippage_drag": 0.0023546170910008404,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5697447273338254
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.726339834670667,
+              "end_time": 1754319600000,
+              "entry_price": 12.39,
+              "exit_price": 16.93,
+              "fee_drag": 0.007065796815580779,
+              "max_drawdown": 0.36466591166477913,
+              "net_total_return": 0.3602970777294293,
+              "net_total_return_after_exit_costs": 0.35418186221649667,
+              "slippage_drag": 0.0035337191658912914,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.35581277726089
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6437685020011769,
+              "end_time": 1763780400000,
+              "entry_price": 16.92,
+              "exit_price": 12.11,
+              "fee_drag": 0.005125355213328089,
+              "max_drawdown": 0.5676760306457498,
+              "net_total_return": -0.2874884680067384,
+              "net_total_return_after_exit_costs": -0.2906915635988141,
+              "slippage_drag": 0.0025620408472871842,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7080272315247225
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.9787000420660541,
+              "end_time": 1773241200000,
+              "entry_price": 12.11,
+              "exit_price": 9.0,
+              "fee_drag": 0.005207261890465925,
+              "max_drawdown": 0.46698113207547165,
+              "net_total_return": -0.26014522743326635,
+              "net_total_return_after_exit_costs": -0.2634712445633399,
+              "slippage_drag": 0.002603055708147314,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7353704720981944
+            }
+          },
+          "median_daily_sharpe": -0.8112342720336154,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "1eaa338a598ec7895c855610b358fbc4906609eb5460a7678cb24d7b62969ffe",
+        "dataset_path": "research/data/candles/LINKUSDT_1h_1eaa338a598ec789.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.8112342720336152,
+        "fold_median_across_costs": -0.8112342720336154,
+        "pooled_fold_cost_units": -0.8112342720336152
+      }
+    },
+    "LTCUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6145492884204491,
+              "end_time": 1744858800000,
+              "entry_price": 99.76,
+              "exit_price": 74.2,
+              "fee_drag": 0.001741300370454118,
+              "max_drawdown": 0.5450588655012487,
+              "net_total_return": -0.257329293193478,
+              "net_total_return_after_exit_costs": -0.25844292791833434,
+              "slippage_drag": 0.0008705862274665561,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.7411724549334577
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.758076512863483,
+              "end_time": 1754319600000,
+              "entry_price": 74.21,
+              "exit_price": 117.82,
+              "fee_drag": 0.0025834863005281977,
+              "max_drawdown": 0.2622779519331243,
+              "net_total_return": 0.5852779404974473,
+              "net_total_return_after_exit_costs": 0.5829008162256714,
+              "slippage_drag": 0.0012918898443121133,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.5837796886243827
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.056410578157432,
+              "end_time": 1763780400000,
+              "entry_price": 117.82,
+              "exit_price": 83.23,
+              "fee_drag": 0.0017040064976120719,
+              "max_drawdown": 0.3946818046011353,
+              "net_total_return": -0.29464182230007757,
+              "net_total_return_after_exit_costs": -0.29569950688753854,
+              "slippage_drag": 0.000851929962913348,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7038599258268579
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.9835803758163075,
+              "end_time": 1773241200000,
+              "entry_price": 83.24,
+              "exit_price": 54.56,
+              "fee_drag": 0.0016531458362200851,
+              "max_drawdown": 0.4323892188213796,
+              "net_total_return": -0.3455279267442862,
+              "net_total_return_after_exit_costs": -0.3465093076181331,
+              "slippage_drag": 0.0008264869106912311,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6529738213826495
+            }
+          },
+          "median_daily_sharpe": -0.8354799332889405,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6145492884204484,
+              "end_time": 1744858800000,
+              "entry_price": 99.76,
+              "exit_price": 74.2,
+              "fee_drag": 0.0034776427148059184,
+              "max_drawdown": 0.5450588655012487,
+              "net_total_return": -0.2584410756886975,
+              "net_total_return_after_exit_costs": -0.2606642693437829,
+              "slippage_drag": 0.0017385659093421787,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.7385659093422396
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.758076512863484,
+              "end_time": 1754319600000,
+              "entry_price": 74.21,
+              "exit_price": 117.82,
+              "fee_drag": 0.005158651714347761,
+              "max_drawdown": 0.26227795193312436,
+              "net_total_return": 0.58290476992784,
+              "net_total_return_after_exit_costs": 0.5781592214275965,
+              "slippage_drag": 0.0025799117549586215,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.5799117549587773
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.0564105781574318,
+              "end_time": 1763780400000,
+              "entry_price": 117.82,
+              "exit_price": 83.23,
+              "fee_drag": 0.0034032038840957762,
+              "max_drawdown": 0.3946818046011353,
+              "net_total_return": -0.29569774771579593,
+              "net_total_return_after_exit_costs": -0.297809245868144,
+              "slippage_drag": 0.0017013092373149795,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7013092373151413
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.983580375816309,
+              "end_time": 1773241200000,
+              "entry_price": 83.24,
+              "exit_price": 54.56,
+              "fee_drag": 0.0033016856486687614,
+              "max_drawdown": 0.43238921882137954,
+              "net_total_return": -0.3465076753569444,
+              "net_total_return_after_exit_costs": -0.34846684534622435,
+              "slippage_drag": 0.0016504993096738906,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.650499309673993
+            }
+          },
+          "median_daily_sharpe": -0.8354799332889401,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6145492884204494,
+              "end_time": 1744858800000,
+              "entry_price": 99.76,
+              "exit_price": 74.2,
+              "fee_drag": 0.0052090440806659855,
+              "max_drawdown": 0.5450588655012487,
+              "net_total_return": -0.2595502715994951,
+              "net_total_return_after_exit_costs": -0.2628789633535196,
+              "slippage_drag": 0.0026039481418979986,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.7359654279319654
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.7580765128634854,
+              "end_time": 1754319600000,
+              "entry_price": 74.21,
+              "exit_price": 117.82,
+              "fee_drag": 0.007725525863962062,
+              "max_drawdown": 0.2622779519331243,
+              "net_total_return": 0.5805371205874772,
+              "net_total_return_after_exit_costs": 0.5734318159618762,
+              "slippage_drag": 0.003864079230178363,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.5760528201189374
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.0564105781574307,
+              "end_time": 1763780400000,
+              "entry_price": 117.82,
+              "exit_price": 83.23,
+              "fee_drag": 0.005097608650217375,
+              "max_drawdown": 0.3946818046011353,
+              "net_total_return": -0.29675121649971586,
+              "net_total_return_after_exit_costs": -0.29991267140594136,
+              "slippage_drag": 0.0025481467245476144,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6987644830317448
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.9835803758163084,
+              "end_time": 1773241200000,
+              "entry_price": 83.24,
+              "exit_price": 54.56,
+              "fee_drag": 0.004945635168698791,
+              "max_drawdown": 0.4323892188213796,
+              "net_total_return": -0.34748514456467444,
+              "net_total_return_after_exit_costs": -0.35041852509728394,
+              "slippage_drag": 0.0024720458324501544,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.648030554966786
+            }
+          },
+          "median_daily_sharpe": -0.83547993328894,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "4fd60a321652c3814b95ca07d6b8ee51610a9adb66e87c97acf6d4dfaf060ad3",
+        "dataset_path": "research/data/candles/LTCUSDT_1h_4fd60a321652c381.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.8354799332889405,
+        "fold_median_across_costs": -0.8354799332889404,
+        "pooled_fold_cost_units": -0.83547993328894
+      }
+    },
+    "NEARUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.7151059058102045,
+              "end_time": 1744858800000,
+              "entry_price": 5.19,
+              "exit_price": 1.968,
+              "fee_drag": 0.0013774343158783886,
+              "max_drawdown": 0.6976668298254202,
+              "net_total_return": -0.6213773718085145,
+              "net_total_return_after_exit_costs": -0.6219451164394877,
+              "slippage_drag": 0.0006885621881590822,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.377124376318421
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.1974804667906849,
+              "end_time": 1754319600000,
+              "entry_price": 1.968,
+              "exit_price": 2.522,
+              "fee_drag": 0.0022779452561512755,
+              "max_drawdown": 0.45283582089552255,
+              "net_total_return": 0.27958404917486385,
+              "net_total_return_after_exit_costs": 0.27766531289312624,
+              "slippage_drag": 0.001139042898650814,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.2780857973018
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.36132710238642524,
+              "end_time": 1763780400000,
+              "entry_price": 2.522,
+              "exit_price": 1.88,
+              "fee_drag": 0.0017429521071831559,
+              "max_drawdown": 0.45110024449877745,
+              "net_total_return": -0.2556767301829345,
+              "net_total_return_after_exit_costs": -0.2567928429260252,
+              "slippage_drag": 0.00087141250897196,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7428250179440012
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.7971200348136767,
+              "end_time": 1773241200000,
+              "entry_price": 1.88,
+              "exit_price": 1.296,
+              "fee_drag": 0.0016869856992348944,
+              "max_drawdown": 0.523568170299037,
+              "net_total_return": -0.3116711353337719,
+              "net_total_return_after_exit_costs": -0.31270328446633894,
+              "slippage_drag": 0.0008434153063965411,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6868306127931638
+            }
+          },
+          "median_daily_sharpe": -0.579223568600051,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.7151059058102036,
+              "end_time": 1744858800000,
+              "entry_price": 5.19,
+              "exit_price": 1.968,
+              "fee_drag": 0.0027513635280759993,
+              "max_drawdown": 0.69766682982542,
+              "net_total_return": -0.6219441721501187,
+              "net_total_return_after_exit_costs": -0.6230775835220126,
+              "slippage_drag": 0.0013750628128807755,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.3750628128808189
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.1974804667906844,
+              "end_time": 1754319600000,
+              "entry_price": 1.968,
+              "exit_price": 2.522,
+              "fee_drag": 0.004548789655405692,
+              "max_drawdown": 0.4528358208955224,
+              "net_total_return": 0.27766850419106887,
+              "net_total_return_after_exit_costs": 0.27383805401550415,
+              "slippage_drag": 0.0022746754892218344,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.274675489222006
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.3613271023864257,
+              "end_time": 1763780400000,
+              "entry_price": 2.522,
+              "exit_price": 1.88,
+              "fee_drag": 0.0034809395928553327,
+              "max_drawdown": 0.4511002444987775,
+              "net_total_return": -0.25679098657487637,
+              "net_total_return_after_exit_costs": -0.2590191271971249,
+              "slippage_drag": 0.0017402159984560676,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7402159984560608
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.7971200348136764,
+              "end_time": 1773241200000,
+              "entry_price": 1.88,
+              "exit_price": 1.296,
+              "fee_drag": 0.003369230251635654,
+              "max_drawdown": 0.523568170299037,
+              "net_total_return": -0.31270156776590713,
+              "net_total_return_after_exit_costs": -0.3147620884657448,
+              "slippage_drag": 0.0016843054172649482,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.68430541726503
+            }
+          },
+          "median_daily_sharpe": -0.5792235686000511,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.7151059058102045,
+              "end_time": 1744858800000,
+              "entry_price": 5.19,
+              "exit_price": 1.968,
+              "fee_drag": 0.004121799251226607,
+              "max_drawdown": 0.6976668298254202,
+              "net_total_return": -0.6225096538192844,
+              "net_total_return_after_exit_costs": -0.6242066616705397,
+              "slippage_drag": 0.0020595090685682636,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.3730060457121762
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.197480466790685,
+              "end_time": 1754319600000,
+              "entry_price": 1.968,
+              "exit_price": 2.522,
+              "fee_drag": 0.006812558258155408,
+              "max_drawdown": 0.4528358208955224,
+              "net_total_return": 0.2757574157613535,
+              "net_total_return_after_exit_costs": 0.27002224829879834,
+              "slippage_drag": 0.003406909672939189,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.2712731152928143
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.3613271023864258,
+              "end_time": 1763780400000,
+              "entry_price": 2.522,
+              "exit_price": 1.88,
+              "fee_drag": 0.005213979529289618,
+              "max_drawdown": 0.45110024449877745,
+              "net_total_return": -0.2579026506268255,
+              "net_total_return_after_exit_costs": -0.2612387492609326,
+              "slippage_drag": 0.002606419573357007,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.737613048904635
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.7971200348136768,
+              "end_time": 1773241200000,
+              "entry_price": 1.88,
+              "exit_price": 1.296,
+              "fee_drag": 0.0050467498938266625,
+              "max_drawdown": 0.5235681702990371,
+              "net_total_return": -0.3137296028761845,
+              "net_total_return_after_exit_costs": -0.3168147314464546,
+              "slippage_drag": 0.0025226791449829093,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6817860966552762
+            }
+          },
+          "median_daily_sharpe": -0.5792235686000513,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "4da88ba6f1b14a5c134bf2d53394e7aefc31b3521566bac9d644308167ee7363",
+        "dataset_path": "research/data/candles/NEARUSDT_1h_4da88ba6f1b14a5c.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.579223568600051,
+        "fold_median_across_costs": -0.5792235686000512,
+        "pooled_fold_cost_units": -0.5792235686000511
+      }
+    },
+    "SOLUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6870649003668836,
+              "end_time": 1744858800000,
+              "entry_price": 190.19,
+              "exit_price": 129.79,
+              "fee_drag": 0.001680060697820339,
+              "max_drawdown": 0.6606344326439352,
+              "net_total_return": -0.31859960098115053,
+              "net_total_return_after_exit_costs": -0.3196213608794794,
+              "slippage_drag": 0.000839951073572858,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6799021471457851
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.3750697583028868,
+              "end_time": 1754319600000,
+              "entry_price": 129.79,
+              "exit_price": 165.49,
+              "fee_drag": 0.002271513775566049,
+              "max_drawdown": 0.31197816313423243,
+              "net_total_return": 0.27314935124067014,
+              "net_total_return_after_exit_costs": 0.27124026378848487,
+              "slippage_drag": 0.0011358255496837686,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.2716510993676056
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.7017485969886257,
+              "end_time": 1763780400000,
+              "entry_price": 165.49,
+              "exit_price": 127.13,
+              "fee_drag": 0.0017656700271945916,
+              "max_drawdown": 0.5054499164611346,
+              "net_total_return": -0.2329474455291721,
+              "net_total_return_after_exit_costs": -0.23409764083460113,
+              "slippage_drag": 0.0008827771512987944,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7655543025977636
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.4381799237452488,
+              "end_time": 1773241200000,
+              "entry_price": 127.13,
+              "exit_price": 85.4,
+              "fee_drag": 0.0016694124932619548,
+              "max_drawdown": 0.4881372017353579,
+              "net_total_return": -0.329253132305197,
+              "net_total_return_after_exit_costs": -0.33025891723330525,
+              "slippage_drag": 0.0008346243079108174,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6692486158217388
+            }
+          },
+          "median_daily_sharpe": -0.6944067486777546,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6870649003668843,
+              "end_time": 1744858800000,
+              "entry_price": 190.19,
+              "exit_price": 129.79,
+              "fee_drag": 0.003355407900437406,
+              "max_drawdown": 0.6606344326439352,
+              "net_total_return": -0.3196196614587237,
+              "net_total_return_after_exit_costs": -0.32165944171367056,
+              "slippage_drag": 0.0016773873235721446,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6773873235722134
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.3750697583028877,
+              "end_time": 1754319600000,
+              "entry_price": 129.79,
+              "exit_price": 165.49,
+              "fee_drag": 0.004535952375230288,
+              "max_drawdown": 0.3119781631342325,
+              "net_total_return": 0.2712434390382143,
+              "net_total_return_after_exit_costs": 0.2674322512079776,
+              "slippage_drag": 0.002268250424069083,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.2682504240691514
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.7017485969886254,
+              "end_time": 1763780400000,
+              "entry_price": 165.49,
+              "exit_price": 127.13,
+              "fee_drag": 0.0035262847198948405,
+              "max_drawdown": 0.5054499164611346,
+              "net_total_return": -0.234095727796344,
+              "net_total_return_after_exit_costs": -0.23639190880441055,
+              "slippage_drag": 0.0017629112572344185,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7629112572345933
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.438179923745249,
+              "end_time": 1773241200000,
+              "entry_price": 127.13,
+              "exit_price": 85.4,
+              "fee_drag": 0.003334154009755533,
+              "max_drawdown": 0.48813720173535785,
+              "net_total_return": -0.3302572443825842,
+              "net_total_return_after_exit_costs": -0.3322651331639253,
+              "slippage_drag": 0.0016667497406482497,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6667497406483534
+            }
+          },
+          "median_daily_sharpe": -0.6944067486777548,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.6870649003668841,
+              "end_time": 1744858800000,
+              "entry_price": 190.19,
+              "exit_price": 129.79,
+              "fee_drag": 0.005026057741076623,
+              "max_drawdown": 0.6606344326439351,
+              "net_total_return": -0.32063734874500094,
+              "net_total_return_after_exit_costs": -0.32369142354371777,
+              "slippage_drag": 0.002512317526179735,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6748783507864595
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 1.3750697583028866,
+              "end_time": 1754319600000,
+              "entry_price": 129.79,
+              "exit_price": 165.49,
+              "fee_drag": 0.006793340763354799,
+              "max_drawdown": 0.3119781631342325,
+              "net_total_return": 0.26934196097897695,
+              "net_total_return_after_exit_costs": 0.26363563419339586,
+              "slippage_drag": 0.0033972864907657716,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.2648576605104376
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.7017485969886254,
+              "end_time": 1763780400000,
+              "entry_price": 165.49,
+              "exit_price": 127.13,
+              "fee_drag": 0.0052818614895808885,
+              "max_drawdown": 0.5054499164611345,
+              "net_total_return": -0.2352413385616377,
+              "net_total_return_after_exit_costs": -0.2386793111241338,
+              "slippage_drag": 0.0026404115414548146,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.7602743609698228
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.438179923745249,
+              "end_time": 1773241200000,
+              "entry_price": 127.13,
+              "exit_price": 85.4,
+              "fee_drag": 0.0049942405237150996,
+              "max_drawdown": 0.48813720173535796,
+              "net_total_return": -0.3312590203729509,
+              "net_total_return_after_exit_costs": -0.3342653454468642,
+              "slippage_drag": 0.0024963850187377204,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6642566791585098
+            }
+          },
+          "median_daily_sharpe": -0.6944067486777548,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "e099847e6ef686ced32aa4600ba1a45fac288c9da3b95efcca6f5ab9df2cd5b2",
+        "dataset_path": "research/data/candles/SOLUSDT_1h_e099847e6ef686ce.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.6944067486777546,
+        "fold_median_across_costs": -0.6944067486777548,
+        "pooled_fold_cost_units": -0.6944067486777548
+      }
+    },
+    "SUIUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.47247843610167,
+              "end_time": 1744858800000,
+              "entry_price": 4.0891,
+              "exit_price": 2.0705,
+              "fee_drag": 0.0015043357109332269,
+              "max_drawdown": 0.673777178997792,
+              "net_total_return": -0.4944124943149299,
+              "net_total_return_after_exit_costs": -0.49517062277970453,
+              "slippage_drag": 0.0007520446269059132,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5040892538120056
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.1127661327502225,
+              "end_time": 1754319600000,
+              "entry_price": 2.0704,
+              "exit_price": 3.5007,
+              "fee_drag": 0.0026864562453945123,
+              "max_drawdown": 0.4416095606193536,
+              "net_total_return": 0.6882993960915588,
+              "net_total_return_after_exit_costs": 0.6857677911471197,
+              "slippage_drag": 0.0013434005721092597,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.6868011442184945
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.970477422793712,
+              "end_time": 1763780400000,
+              "entry_price": 3.5007,
+              "exit_price": 1.3781,
+              "fee_drag": 0.0013918787781492217,
+              "max_drawdown": 0.6779089376053963,
+              "net_total_return": -0.6069256836936242,
+              "net_total_return_after_exit_costs": -0.6075150986309256,
+              "slippage_drag": 0.0006957880322166185,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.3915760644333115
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.6146452497178285,
+              "end_time": 1773241200000,
+              "entry_price": 1.3781,
+              "exit_price": 0.9728,
+              "fee_drag": 0.0017034903897038464,
+              "max_drawdown": 0.5808108788718207,
+              "net_total_return": -0.2951581883913483,
+              "net_total_return_after_exit_costs": -0.29621509868785545,
+              "slippage_drag": 0.0008516717798676893,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7033435597355875
+            }
+          },
+          "median_daily_sharpe": -1.0435618429097493,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.4724784361016714,
+              "end_time": 1744858800000,
+              "entry_price": 4.0891,
+              "exit_price": 2.0705,
+              "fee_drag": 0.0030046595990787925,
+              "max_drawdown": 0.6737771789977919,
+              "net_total_return": -0.49516936183841054,
+              "net_total_return_after_exit_costs": -0.49668284409161895,
+              "slippage_drag": 0.001501837623192456,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.5018376231925268
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.1127661327502234,
+              "end_time": 1754319600000,
+              "entry_price": 2.0704,
+              "exit_price": 3.5007,
+              "fee_drag": 0.00536418044360043,
+              "max_drawdown": 0.4416095606193535,
+              "net_total_return": 0.6857720017860335,
+              "net_total_return_after_exit_costs": 0.6807180573246787,
+              "slippage_drag": 0.0026827789868167813,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.682778986816971
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.9704774227937123,
+              "end_time": 1763780400000,
+              "entry_price": 3.5007,
+              "exit_price": 1.3781,
+              "fee_drag": 0.0027801947756707877,
+              "max_drawdown": 0.6779089376053963,
+              "net_total_return": -0.6075141182988731,
+              "net_total_return_after_exit_costs": -0.6086907909722131,
+              "slippage_drag": 0.0013894928667319264,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.3894928667320643
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.6146452497178282,
+              "end_time": 1773241200000,
+              "entry_price": 1.3781,
+              "exit_price": 0.9728,
+              "fee_drag": 0.0034021737291056718,
+              "max_drawdown": 0.5808108788718206,
+              "net_total_return": -0.2962133408039362,
+              "net_total_return_after_exit_costs": -0.298323293208206,
+              "slippage_drag": 0.001700793644226953,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7007936442270009
+            }
+          },
+          "median_daily_sharpe": -1.0435618429097497,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.472478436101671,
+              "end_time": 1744858800000,
+              "entry_price": 4.0891,
+              "exit_price": 2.0705,
+              "fee_drag": 0.004500985173867547,
+              "max_drawdown": 0.673777178997792,
+              "net_total_return": -0.4959244684943169,
+              "net_total_return_after_exit_costs": -0.49819054004620067,
+              "slippage_drag": 0.0022493868465558796,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.4995912310371435
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.112766132750222,
+              "end_time": 1754319600000,
+              "entry_price": 2.0704,
+              "exit_price": 3.5007,
+              "fee_drag": 0.008033203754591618,
+              "max_drawdown": 0.4416095606193535,
+              "net_total_return": 0.6832504875143859,
+              "net_total_return_after_exit_costs": 0.6756834349477656,
+              "slippage_drag": 0.004018149280568593,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.6787661870458463
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.970477422793712,
+              "end_time": 1763780400000,
+              "entry_price": 3.5007,
+              "exit_price": 1.3781,
+              "fee_drag": 0.0041649598228724214,
+              "max_drawdown": 0.6779089376053963,
+              "net_total_return": -0.6081011838991328,
+              "net_total_return_after_exit_costs": -0.6098629650269142,
+              "slippage_drag": 0.0020811217734485066,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.3874145156323279
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -0.6146452497178281,
+              "end_time": 1773241200000,
+              "entry_price": 1.3781,
+              "exit_price": 0.9728,
+              "fee_drag": 0.005096066501265599,
+              "max_drawdown": 0.5808108788718206,
+              "net_total_return": -0.29726603838313265,
+              "net_total_return_after_exit_costs": -0.30042517890758125,
+              "slippage_drag": 0.0025473744917225,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6982496611483278
+            }
+          },
+          "median_daily_sharpe": -1.0435618429097495,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "4879bb0922da366d5e0fc0eb8cbf7c63f7560720eb71f68ca2c8871cf7188bd5",
+        "dataset_path": "research/data/candles/SUIUSDT_1h_4879bb0922da366d.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -1.0435618429097493,
+        "fold_median_across_costs": -1.0435618429097495,
+        "pooled_fold_cost_units": -1.0435618429097493
+      }
+    },
+    "TRXUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.07874140145619582,
+              "end_time": 1744858800000,
+              "entry_price": 0.257,
+              "exit_price": 0.2448,
+              "fee_drag": 0.0019496275022208558,
+              "max_drawdown": 0.24743401759530778,
+              "net_total_return": -0.04889794575302003,
+              "net_total_return_after_exit_costs": -0.05032412328336341,
+              "slippage_drag": 0.0009748019011868436,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.9496038023739157
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.2650976592711736,
+              "end_time": 1754319600000,
+              "entry_price": 0.2448,
+              "exit_price": 0.3323,
+              "fee_drag": 0.0023537241601003837,
+              "max_drawdown": 0.11379076086956508,
+              "net_total_return": 0.3554008615301498,
+              "net_total_return_after_exit_costs": 0.3533684379382854,
+              "slippage_drag": 0.0011769513048284234,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.353902609657085
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.652055892613045,
+              "end_time": 1763780400000,
+              "entry_price": 0.3322,
+              "exit_price": 0.2761,
+              "fee_drag": 0.0018284666506913003,
+              "max_drawdown": 0.2531165311653115,
+              "net_total_return": -0.17011940801370584,
+              "net_total_return_after_exit_costs": -0.17136381396138914,
+              "slippage_drag": 0.000914191170056624,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.8283823401132298
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.8740817169070354,
+              "end_time": 1773241200000,
+              "entry_price": 0.2762,
+              "exit_price": 0.2904,
+              "fee_drag": 0.0020483128208772998,
+              "max_drawdown": 0.16120985344558766,
+              "net_total_return": 0.049836740246423324,
+              "net_total_return_after_exit_costs": 0.04826251005442409,
+              "slippage_drag": 0.0010241692441864294,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 2.048338488373359
+            }
+          },
+          "median_daily_sharpe": 0.3976701577254198,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.07874140145619718,
+              "end_time": 1744858800000,
+              "entry_price": 0.257,
+              "exit_price": 0.2448,
+              "fee_drag": 0.003893465125087484,
+              "max_drawdown": 0.24743401759530795,
+              "net_total_return": -0.05032175122344979,
+              "net_total_return_after_exit_costs": -0.05316888661328176,
+              "slippage_drag": 0.0019466852338072592,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.9466852338074874
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.2650976592711745,
+              "end_time": 1754319600000,
+              "entry_price": 0.2448,
+              "exit_price": 0.3323,
+              "fee_drag": 0.00470004487704382,
+              "max_drawdown": 0.11379076086956504,
+              "net_total_return": 0.3533718183242665,
+              "net_total_return_after_exit_costs": 0.3493144096129303,
+              "slippage_drag": 0.0023503788033550793,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.3503788033552038
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.6520558926130475,
+              "end_time": 1763780400000,
+              "entry_price": 0.3322,
+              "exit_price": 0.2761,
+              "fee_drag": 0.0036516272190618864,
+              "max_drawdown": 0.2531165311653116,
+              "net_total_return": -0.17136174422925415,
+              "net_total_return_after_exit_costs": -0.17384600172005485,
+              "slippage_drag": 0.0018256452408015346,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.825645240801683
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.8740817169070343,
+              "end_time": 1773241200000,
+              "entry_price": 0.2762,
+              "exit_price": 0.2904,
+              "fee_drag": 0.004090441710494871,
+              "max_drawdown": 0.16120985344558772,
+              "net_total_return": 0.048265128359827034,
+              "net_total_return_after_exit_costs": 0.04512242950500422,
+              "slippage_drag": 0.0020452721133906657,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 2.0452721133907645
+            }
+          },
+          "median_daily_sharpe": 0.3976701577254186,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.07874140145619575,
+              "end_time": 1744858800000,
+              "entry_price": 0.257,
+              "exit_price": 0.2448,
+              "fee_drag": 0.005831533026795973,
+              "max_drawdown": 0.2474340175953079,
+              "net_total_return": -0.05174224418170616,
+              "net_total_return_after_exit_costs": -0.056005136922987184,
+              "slippage_drag": 0.0029156601830247196,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.9437734553497543
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 3.2650976592711682,
+              "end_time": 1754319600000,
+              "entry_price": 0.2448,
+              "exit_price": 0.3323,
+              "fee_drag": 0.007038988342696598,
+              "max_drawdown": 0.11379076086956513,
+              "net_total_return": 0.35134749572836754,
+              "net_total_return_after_exit_costs": 0.34527251306132056,
+              "slippage_drag": 0.0035202947928897246,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.3468631952598282
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.6520558926130469,
+              "end_time": 1763780400000,
+              "entry_price": 0.3322,
+              "exit_price": 0.2761,
+              "fee_drag": 0.00546950005422429,
+              "max_drawdown": 0.2531165311653117,
+              "net_total_return": -0.1726011901245145,
+              "net_total_return_after_exit_costs": -0.1763207614743098,
+              "slippage_drag": 0.002734371764110446,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.8229145094069463
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 0.8740817169070356,
+              "end_time": 1773241200000,
+              "entry_price": 0.2762,
+              "exit_price": 0.2904,
+              "fee_drag": 0.006126408300544449,
+              "max_drawdown": 0.16120985344558766,
+              "net_total_return": 0.046697172860014874,
+              "net_total_return_after_exit_costs": 0.04199174571942276,
+              "slippage_drag": 0.0030633193085872657,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 2.042212872391475
+            }
+          },
+          "median_daily_sharpe": 0.3976701577254199,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "e51382bae8a2b324ea33df36f726a7e2baca4617627b78e1ca1e39f62b03e153",
+        "dataset_path": "research/data/candles/TRXUSDT_1h_e51382bae8a2b324.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": 0.3976701577254198,
+        "fold_median_across_costs": 0.3976701577254198,
+        "pooled_fold_cost_units": 0.39767015772541925
+      }
+    },
+    "UNIUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.7876480329994013,
+              "end_time": 1744858800000,
+              "entry_price": 13.302,
+              "exit_price": 5.182,
+              "fee_drag": 0.0013877883197621166,
+              "max_drawdown": 0.6996580424543518,
+              "net_total_return": -0.6110181883330491,
+              "net_total_return_after_exit_costs": -0.6116014665596438,
+              "slippage_drag": 0.0006937417798969078,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.3874835597938864
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.4413648794322294,
+              "end_time": 1754319600000,
+              "entry_price": 5.182,
+              "exit_price": 9.986,
+              "fee_drag": 0.002922206892008947,
+              "max_drawdown": 0.3013271783035199,
+              "net_total_return": 0.9241679769964456,
+              "net_total_return_after_exit_costs": 0.9212826871149394,
+              "slippage_drag": 0.0014613348625614406,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.9226697251233813
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.5006777565968685,
+              "end_time": 1763780400000,
+              "entry_price": 9.986,
+              "exit_price": 6.525,
+              "fee_drag": 0.0016511105818745211,
+              "max_drawdown": 0.5962595357230744,
+              "net_total_return": -0.347564199226091,
+              "net_total_return_after_exit_costs": -0.3485425267093515,
+              "slippage_drag": 0.0008254687744503083,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6509375489008447
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.280094477374559,
+              "end_time": 1773241200000,
+              "entry_price": 6.526,
+              "exit_price": 3.901,
+              "fee_drag": 0.0015955697611498584,
+              "max_drawdown": 0.5287487918738948,
+              "net_total_return": -0.4031328042532675,
+              "net_total_return_after_exit_costs": -0.4040278066132897,
+              "slippage_drag": 0.0007976844719367635,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.5953689438736685
+            }
+          },
+          "median_daily_sharpe": -0.8903861169857138,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.7876480329994,
+              "end_time": 1744858800000,
+              "entry_price": 13.302,
+              "exit_price": 5.182,
+              "fee_drag": 0.0027720301921561113,
+              "max_drawdown": 0.6996580424543518,
+              "net_total_return": -0.6116004964343469,
+              "net_total_return_after_exit_costs": -0.6127649181460367,
+              "slippage_drag": 0.0013854064885963865,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.3854064885965904
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.441364879432229,
+              "end_time": 1754319600000,
+              "entry_price": 5.182,
+              "exit_price": 9.986,
+              "fee_drag": 0.005834740381085746,
+              "max_drawdown": 0.3013271783035199,
+              "net_total_return": 0.9212874860129178,
+              "net_total_return_after_exit_costs": 0.915527466129851,
+              "slippage_drag": 0.0029182944710436976,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.918294471043855
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.5006777565968685,
+              "end_time": 1763780400000,
+              "entry_price": 9.986,
+              "exit_price": 6.525,
+              "fee_drag": 0.0032976232667776884,
+              "max_drawdown": 0.5962595357230744,
+              "net_total_return": -0.3485408995266508,
+              "net_total_return_after_exit_costs": -0.35049397390986986,
+              "slippage_drag": 0.001648466085504236,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6484660855042865
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.280094477374558,
+              "end_time": 1773241200000,
+              "entry_price": 6.526,
+              "exit_price": 3.901,
+              "fee_drag": 0.003186763400629264,
+              "max_drawdown": 0.5294542577543231,
+              "net_total_return": -0.4040263180193554,
+              "net_total_return_after_exit_costs": -0.40581304711793337,
+              "slippage_drag": 0.0015929806670114406,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.592980667011582
+            }
+          },
+          "median_daily_sharpe": -0.8903861169857132,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.7876480329994013,
+              "end_time": 1744858800000,
+              "entry_price": 13.302,
+              "exit_price": 5.182,
+              "fee_drag": 0.004152737386414031,
+              "max_drawdown": 0.6996580424543519,
+              "net_total_return": -0.6121814497840904,
+              "net_total_return_after_exit_costs": -0.613924888076586,
+              "slippage_drag": 0.0020750013746210823,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.3833342497473702
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.4413648794322294,
+              "end_time": 1754319600000,
+              "entry_price": 5.182,
+              "exit_price": 9.986,
+              "fee_drag": 0.008737635147257259,
+              "max_drawdown": 0.30132717830351974,
+              "net_total_return": 0.9184136965498197,
+              "net_total_return_after_exit_costs": 0.90978946777698,
+              "slippage_drag": 0.004370894094122026,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.91392939608128
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.5006777565968683,
+              "end_time": 1763780400000,
+              "entry_price": 9.986,
+              "exit_price": 6.525,
+              "fee_drag": 0.004939553755673362,
+              "max_drawdown": 0.5962595357230744,
+              "net_total_return": -0.3495153275142419,
+              "net_total_return_after_exit_costs": -0.3524395813594017,
+              "slippage_drag": 0.0024690005580258415,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6460003720172187
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.2800944773745584,
+              "end_time": 1773241200000,
+              "entry_price": 6.526,
+              "exit_price": 3.901,
+              "fee_drag": 0.004773595790107927,
+              "max_drawdown": 0.5301580823541374,
+              "net_total_return": -0.4049177530076267,
+              "net_total_return_after_exit_costs": -0.407592945248981,
+              "slippage_drag": 0.00238589691978581,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.5905979465238338
+            }
+          },
+          "median_daily_sharpe": -0.8903861169857133,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "f7959e08cd9496a75717683880624cde6d317337f4124d108361cd9d2a567143",
+        "dataset_path": "research/data/candles/UNIUSDT_1h_f7959e08cd9496a7.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.8903861169857138,
+        "fold_median_across_costs": -0.8903861169857135,
+        "pooled_fold_cost_units": -0.8903861169857132
+      }
+    },
+    "XLMUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.8081443484387544,
+              "end_time": 1744858800000,
+              "entry_price": 0.3495,
+              "exit_price": 0.2359,
+              "fee_drag": 0.0016726169907090181,
+              "max_drawdown": 0.6060074117417593,
+              "net_total_return": -0.3260470318078852,
+              "net_total_return_after_exit_costs": -0.3270576242836892,
+              "slippage_drag": 0.0008362273581594656,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6724547163190506
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.5037929585096133,
+              "end_time": 1754319600000,
+              "entry_price": 0.2358,
+              "exit_price": 0.4088,
+              "fee_drag": 0.0027292105871136968,
+              "max_drawdown": 0.3249163370854884,
+              "net_total_return": 0.7310751256755357,
+              "net_total_return_after_exit_costs": 0.7284793785245849,
+              "slippage_drag": 0.0013647884369011078,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.7295768738024715
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.3345565234761696,
+              "end_time": 1763780400000,
+              "entry_price": 0.4089,
+              "exit_price": 0.2317,
+              "fee_drag": 0.0015645113404377576,
+              "max_drawdown": 0.5247164562379627,
+              "net_total_return": -0.43420676194421376,
+              "net_total_return_after_exit_costs": -0.43505516890467844,
+              "slippage_drag": 0.0007821474930912824,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.564294986182722
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.3944070283611079,
+              "end_time": 1773241200000,
+              "entry_price": 0.2318,
+              "exit_price": 0.1594,
+              "fee_drag": 0.001685289170105865,
+              "max_drawdown": 0.4465648854961833,
+              "net_total_return": -0.3133685131517103,
+              "net_total_return_after_exit_costs": -0.3143981170662392,
+              "slippage_drag": 0.0008425666174874511,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6851332349752255
+            }
+          },
+          "median_daily_sharpe": -1.101275688399931,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.8081443484387555,
+              "end_time": 1744858800000,
+              "entry_price": 0.3495,
+              "exit_price": 0.2359,
+              "fee_drag": 0.0033405502090449795,
+              "max_drawdown": 0.6060074117417593,
+              "net_total_return": -0.3270559434369153,
+              "net_total_return_after_exit_costs": -0.32907342971849146,
+              "slippage_drag": 0.0016699510415939028,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6699510415940222
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.5037929585096137,
+              "end_time": 1754319600000,
+              "entry_price": 0.2358,
+              "exit_price": 0.4088,
+              "fee_drag": 0.005449518408333603,
+              "max_drawdown": 0.3249163370854883,
+              "net_total_return": 0.7284836958466799,
+              "net_total_return_after_exit_costs": 0.7233017017265316,
+              "slippage_drag": 0.002725490680877479,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.725490680877617
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.33455652347617,
+              "end_time": 1763780400000,
+              "entry_price": 0.4089,
+              "exit_price": 0.2317,
+              "fee_drag": 0.0031247705759284224,
+              "max_drawdown": 0.5247164562379628,
+              "net_total_return": -0.4350537578095667,
+              "net_total_return_after_exit_costs": -0.43674746664365366,
+              "slippage_drag": 0.001561953227221214,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.5619532272213705
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.3944070283611092,
+              "end_time": 1773241200000,
+              "entry_price": 0.2318,
+              "exit_price": 0.1594,
+              "fee_drag": 0.003365843967642958,
+              "max_drawdown": 0.4465648854961833,
+              "net_total_return": -0.31439640459908813,
+              "net_total_return_after_exit_costs": -0.3164518441781001,
+              "slippage_drag": 0.001682610580431765,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.682610580431849
+            }
+          },
+          "median_daily_sharpe": -1.1012756883999324,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -0.8081443484387554,
+              "end_time": 1744858800000,
+              "entry_price": 0.3495,
+              "exit_price": 0.2359,
+              "fee_drag": 0.005003815677089418,
+              "max_drawdown": 0.6060074117417594,
+              "net_total_return": -0.3280625078126707,
+              "net_total_return_after_exit_costs": -0.33108320280879877,
+              "slippage_drag": 0.0025011797875781647,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.6674531917187898
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.5037929585096133,
+              "end_time": 1754319600000,
+              "entry_price": 0.2358,
+              "exit_price": 0.4088,
+              "fee_drag": 0.008160955262009557,
+              "max_drawdown": 0.3249163370854884,
+              "net_total_return": 0.7258982950316415,
+              "net_total_return_after_exit_costs": 0.7181395192463271,
+              "slippage_drag": 0.004082120991844623,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.721413994563102
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -2.334556523476171,
+              "end_time": 1763780400000,
+              "entry_price": 0.4089,
+              "exit_price": 0.2317,
+              "fee_drag": 0.004680792114400508,
+              "max_drawdown": 0.5247164562379628,
+              "net_total_return": -0.4358987831219383,
+              "net_total_return_after_exit_costs": -0.43843470014241365,
+              "slippage_drag": 0.002339425374614251,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.5596169164095224
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.3944070283611083,
+              "end_time": 1773241200000,
+              "entry_price": 0.2318,
+              "exit_price": 0.1594,
+              "fee_drag": 0.005041680603904355,
+              "max_drawdown": 0.4465648854961833,
+              "net_total_return": -0.3154219046362606,
+              "net_total_return_after_exit_costs": -0.3184994254639683,
+              "slippage_drag": 0.002520140692342793,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.6800937948952
+            }
+          },
+          "median_daily_sharpe": -1.101275688399932,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "ecce18b8ad2b658c05ca5edb4aae700da3dd41fb84cb28ad6bba2ced33e1332a",
+        "dataset_path": "research/data/candles/XLMUSDT_1h_ecce18b8ad2b658c.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -1.101275688399931,
+        "fold_median_across_costs": -1.101275688399932,
+        "pooled_fold_cost_units": -1.1012756883999317
+      }
+    },
+    "XRPUSDT": {
+      "fold_windows": {
+        "0": [
+          1735400160000,
+          1744860600000
+        ],
+        "1": [
+          1744860600000,
+          1754321040000
+        ],
+        "2": [
+          1754321040000,
+          1763781479999
+        ],
+        "3": [
+          1763781479999,
+          1773241920000
+        ]
+      },
+      "per_cost": {
+        "1.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": 0.39083444609690055,
+              "end_time": 1744858800000,
+              "entry_price": 2.1729,
+              "exit_price": 2.0697,
+              "fee_drag": 0.0019496042336479085,
+              "max_drawdown": 0.510486614406153,
+              "net_total_return": -0.048921225966073505,
+              "net_total_return_after_exit_costs": -0.050347368587737404,
+              "slippage_drag": 0.0009747902610803257,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.9495805221608622
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.31467393853697,
+              "end_time": 1754319600000,
+              "entry_price": 2.0697,
+              "exit_price": 3.0313,
+              "fee_drag": 0.002460683837056095,
+              "max_drawdown": 0.2640210029678107,
+              "net_total_return": 0.46241404507763456,
+              "net_total_return_after_exit_costs": 0.46022115521704055,
+              "slippage_drag": 0.0012304578966022368,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.4609157932045704
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.8479099263573253,
+              "end_time": 1763780400000,
+              "entry_price": 3.0312,
+              "exit_price": 1.9488,
+              "fee_drag": 0.0016406304746695124,
+              "max_drawdown": 0.44440495231325156,
+              "net_total_return": -0.3580495491060398,
+              "net_total_return_after_exit_costs": -0.35901215380715523,
+              "slippage_drag": 0.0008202260995103355,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.640452199020896
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 1.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.0526002862467936,
+              "end_time": 1773241200000,
+              "entry_price": 1.9489,
+              "exit_price": 1.3824,
+              "fee_drag": 0.0017069073319079574,
+              "max_drawdown": 0.5142081069786877,
+              "net_total_return": -0.2917395368614726,
+              "net_total_return_after_exit_costs": -0.29280157342594887,
+              "slippage_drag": 0.0008533811056326556,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.706762211265463
+            }
+          },
+          "median_daily_sharpe": -0.3308829200749465,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "2.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": 0.39083444609690093,
+              "end_time": 1744858800000,
+              "entry_price": 2.1729,
+              "exit_price": 2.0697,
+              "fee_drag": 0.003893418680853339,
+              "max_drawdown": 0.510486614406153,
+              "net_total_return": -0.050344996585884656,
+              "net_total_return_after_exit_costs": -0.053192062286120015,
+              "slippage_drag": 0.001946661988444842,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.9466619884450527
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.3146739385369695,
+              "end_time": 1754319600000,
+              "entry_price": 2.0697,
+              "exit_price": 3.0313,
+              "fee_drag": 0.004913537139417312,
+              "max_drawdown": 0.26402100296781067,
+              "net_total_return": 0.4602248024951828,
+              "net_total_return_after_exit_costs": 0.4558470485373022,
+              "slippage_drag": 0.002457231787526024,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.45723178752612
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.8479099263573249,
+              "end_time": 1763780400000,
+              "entry_price": 3.0312,
+              "exit_price": 1.9488,
+              "fee_drag": 0.0032767048995874007,
+              "max_drawdown": 0.4444049523132516,
+              "net_total_return": -0.35901055277504273,
+              "net_total_return_after_exit_costs": -0.36093223913782313,
+              "slippage_drag": 0.0016379964322558163,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6379964322558944
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 2.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.0526002862467934,
+              "end_time": 1773241200000,
+              "entry_price": 1.9489,
+              "exit_price": 1.3824,
+              "fee_drag": 0.0034089939696142243,
+              "max_drawdown": 0.5142081069786878,
+              "net_total_return": -0.29279980701587166,
+              "net_total_return_after_exit_costs": -0.2949199931944381,
+              "slippage_drag": 0.001704207178014914,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7042071780150654
+            }
+          },
+          "median_daily_sharpe": -0.33088292007494624,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        },
+        "3.0": {
+          "folds": {
+            "0": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": 0.39083444609690093,
+              "end_time": 1744858800000,
+              "entry_price": 2.1729,
+              "exit_price": 2.0697,
+              "fee_drag": 0.00583146349946495,
+              "max_drawdown": 0.510486614406153,
+              "net_total_return": -0.051765454774603314,
+              "net_total_return_after_exit_costs": -0.05602824317266404,
+              "slippage_drag": 0.002915625367135174,
+              "start_time": 1735401600000,
+              "status": "OK",
+              "turnover": 1.943750244756857
+            },
+            "1": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": 2.31467393853697,
+              "end_time": 1754319600000,
+              "entry_price": 2.0697,
+              "exit_price": 3.0313,
+              "fee_drag": 0.007358587695992138,
+              "max_drawdown": 0.26402100296781067,
+              "net_total_return": 0.4580406532297995,
+              "net_total_return_after_exit_costs": 0.451486031473205,
+              "slippage_drag": 0.00368033452914196,
+              "start_time": 1744862400000,
+              "status": "OK",
+              "turnover": 2.4535563527612596
+            },
+            "2": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 110,
+              "daily_sharpe": -1.8479099263573249,
+              "end_time": 1763780400000,
+              "entry_price": 3.0312,
+              "exit_price": 1.9488,
+              "fee_drag": 0.0049082388192363754,
+              "max_drawdown": 0.4444049523132516,
+              "net_total_return": -0.3599693206496072,
+              "net_total_return_after_exit_costs": -0.36284657856862684,
+              "slippage_drag": 0.0024533195683227363,
+              "start_time": 1754323200000,
+              "status": "OK",
+              "turnover": 1.6355463788818536
+            },
+            "3": {
+              "bars": 2628,
+              "cost_multiplier": 3.0,
+              "daily_return_days": 109,
+              "daily_sharpe": -1.0526002862467936,
+              "end_time": 1773241200000,
+              "entry_price": 1.9489,
+              "exit_price": 1.3824,
+              "fee_drag": 0.005106276447198161,
+              "max_drawdown": 0.5142081069786877,
+              "net_total_return": -0.2938576104303498,
+              "net_total_return_after_exit_costs": -0.29703207354266015,
+              "slippage_drag": 0.002552487133651666,
+              "start_time": 1763784000000,
+              "status": "OK",
+              "turnover": 1.7016580891011108
+            }
+          },
+          "median_daily_sharpe": -0.33088292007494635,
+          "sharpe_folds_used": 4,
+          "status": "OK"
+        }
+      },
+      "provenance": {
+        "content_hash": "b1dbdec3057a9aa82b0d4a116e6c5b9b5d1215339f692953068d6766627b8d06",
+        "dataset_path": "research/data/candles/XRPUSDT_1h_b1dbdec3057a9aa8.csv",
+        "endpoint": "https://data-api.binance.vision/api/v3/klines",
+        "fallback_used": false,
+        "first_candle_timestamp": 1697558400000,
+        "hash_verified": true,
+        "last_candle_timestamp": 1792162800000,
+        "observed_candle_count": 26280,
+        "provider": "binance"
+      },
+      "reason": null,
+      "status": "OK",
+      "variant_median_sharpe": {
+        "baseline_costs_folds": -0.3308829200749465,
+        "fold_median_across_costs": -0.33088292007494635,
+        "pooled_fold_cost_units": -0.3308829200749464
+      }
+    }
+  },
+  "baseline_hash": "5ab3e2a614399c61df056281b98e5c8d7b4bc22a31f6e022e9d4587083981dac",
+  "campaign_id": "577e87e2dc37b496b4d0c9e1a2eeecc9a777f01698591fc395dddb12f45708cb",
+  "code_hash": "00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702",
+  "cost_convention": "breakout_research.backtest.backtester._apply_costs (slippage on the execution price, taker fee on the slippage-adjusted notional); position fully invested from the first bar's open of the fold window and flattened at the last bar's close",
+  "cost_scenarios": [
+    1.0,
+    2.0,
+    3.0
+  ],
+  "data_manifest_hash": "d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c",
+  "initial_capital": 10000.0,
+  "inputs": {
+    "assets": [
+      "ADAUSDT",
+      "ATOMUSDT",
+      "AVAXUSDT",
+      "BCHUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "DOTUSDT",
+      "ETHUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "NEARUSDT",
+      "SOLUSDT",
+      "SUIUSDT",
+      "TRXUSDT",
+      "UNIUSDT",
+      "XLMUSDT",
+      "XRPUSDT"
+    ],
+    "fold_count_per_asset": {
+      "ADAUSDT": 4,
+      "ATOMUSDT": 4,
+      "AVAXUSDT": 4,
+      "BCHUSDT": 4,
+      "BNBUSDT": 4,
+      "BTCUSDT": 4,
+      "DOGEUSDT": 4,
+      "DOTUSDT": 4,
+      "ETHUSDT": 4,
+      "LINKUSDT": 4,
+      "LTCUSDT": 4,
+      "NEARUSDT": 4,
+      "SOLUSDT": 4,
+      "SUIUSDT": 4,
+      "TRXUSDT": 4,
+      "UNIUSDT": 4,
+      "XLMUSDT": 4,
+      "XRPUSDT": 4
+    },
+    "holdout_records_read": 0,
+    "records_read": 497664
+  },
+  "protocol_version": "v1",
+  "schema_version": 1,
+  "sharpe_convention": "daily returns aligned by UTC calendar day (last equity value of the day), annualized on a 365-day calendar with the sample standard deviation",
+  "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+}

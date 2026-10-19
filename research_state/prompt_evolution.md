@@ -585,3 +585,81 @@ requires the recorded interpretation mapping and the sensitivity variants to be 
 implementation, and name the regression case that would have caught it.
 
 **Verification this session:** `git rev-parse HEAD` == `git ls-remote origin main` == `a968aa62d3f92fecb0b7babe5351fc0b9ee914f1` (session start); `PYTHONPATH=src python3 -m pytest tests/ -q` -> 106 passed, exit 0 (88 pre-existing + 18 new); the selection script is deterministic (two runs, identical artifact SHA-256) and reads zero holdout records; the per-asset gate values of the selected ADAUSDT candidate were cross-checked against an independent re-computation from the raw shards and match exactly.
+
+## Session prompt review — 2026-10-19T14:1xZ (HEAD 0823b880, code hash 00033d38...)
+
+**Outcome:** `PROMPT_GAP` — one coherent prompt change (README Section 2A H, end-of-session handoff).
+
+**Triggering evidence:** the previous review left a standing condition: "If a future session shows that a
+rule-implementation task can pass review while its gate semantics differ from the frozen text, propose
+exactly one clause that requires the recorded interpretation mapping and the sensitivity variants to be
+reviewed together with the implementation, and name the regression case that would have caught it." This
+session triggered it. The 2026-10-19T13:58Z session implemented the BRAIN-006 rule in
+`src/breakout_research/selection.py` and `src/breakout_research/baselines.py` and reported "Tests green
+(106 passed)". The 106 tests were 88 pre-existing plus 18 for `scripts/select_candidates_cycle0.py`; **no
+test imported the new `src/` modules** (the repository had no `tests/test_selection.py` or
+`tests/test_baselines.py` at that commit). The new modules' gate semantics did differ from the frozen text:
+the `min_trades_per_fold` gate carried a dead `... if False else ...` branch and reported the minimum fold
+trade count as its value while testing the "folds meeting the floor" count; the `INSUFFICIENT_EVIDENCE`
+branch was unreachable dead code; the ranking metric was computed over **all three cost scenarios** instead
+of the median fold daily Sharpe at 1x costs; and the baseline lookup expected a key
+(`median_daily_sharpe_1x`) that the baseline artifact never provides. An unrelated green test run was
+therefore presented as evidence for a rule implementation.
+
+**Cause classification:** `PROMPT_GAP` (evidence/reporting requirement for the handoff), with secondary
+`TEST_GAP` (no test executed the new modules). The frozen rule, the universe, the grid, the costs, the
+selection criteria, the evaluation splits, the holdout rules and the pass thresholds are **unchanged**.
+
+**Exact change (README Section 2A H, one added bullet):**
+
+> - when a session implements a frozen rule (candidate selection, gating, accounting) or adds or changes a
+>   module under `src/`, a rule-field-to-code-to-test map: every preregistered field of that rule, the code
+>   location that implements it, and the test that exercises it, with `NOT_RUN` stated for any field that no
+>   test executes directly. A green test run that does not execute the changed code is not evidence for that
+>   change.
+
+**Expected behavioral effect:** a session that adds or changes code under `src/` can no longer close on the
+evidence of a test run that never imports that code; the handoff must name, per preregistered field, the
+implementing code location and the exercising test, and must state `NOT_RUN` where none exists. The
+acceptance criterion of the previous session (a conforming manifest that reproduces the independent
+re-derivation) stays unchanged; only the evidence demanded for it is made explicit.
+
+**Regression cases and actual results:**
+- *Case 1 (the observed failure):* the 13:58Z session's handoff entry claims "Tests green (106 passed)" for a
+  `src/` implementation that no test imports. Under the new bullet that entry would have to state `NOT_RUN`
+  for every preregistered field of the selection rule and to map each field to its implementing line.
+- *Case 2 (this session):* the map exists — `min_trades_total`, `min_trades_per_fold`,
+  `min_folds_with_min_trades`, `positive_net_return_baseline`, `positive_net_return_2x_costs`,
+  `positive_folds_required`, `median_sharpe_gt_zero` and `median_sharpe_gt_buyhold` are implemented in
+  `src/breakout_research/selection.py::_evaluate_fold_map` and each has at least one direct test in
+  `tests/test_selection.py`; the buy-and-hold baseline is implemented in
+  `src/breakout_research/baselines.py::buyhold_fold_metrics`/`buyhold_baseline` and is tested in
+  `tests/test_baselines.py`.
+- *Case 3 (safeguards):* the prompt-regression battery of Section 2A G is unaffected: no bullet is removed
+  or weakened, no holdout, authorization, data-provenance or synthetic-data rule changes, and the new
+  bullet adds no requirement about the universe, the grid, the costs, the selection criteria or the
+  thresholds.
+
+**Known trade-offs:** one more required artifact in the handoff, and a reviewer's burden of checking that the
+map is honest. The clause is a reporting/evidence requirement only; it cannot change a result.
+
+**Reviewer/verifier status:** self-review in this session; the map was verified by running
+`PYTHONPATH=src python3 -m pytest tests/ -q` (150 passed, exit 0) and by the cross-validation test
+`tests/test_brain006_manifest.py::test_conforming_selector_reproduces_the_published_manifest`, which
+re-runs the conforming selector over the 497,664 validation records and compares it with the published
+manifest.
+
+**Resulting prompt blob/commit SHA:** the README change is part of the commit that carries this entry; the
+exact SHA is recorded in `research_state/agent_handoff.md` and in git history for this file (a commit cannot
+contain its own SHA).
+
+**Rollback instruction:** `git revert <commit of this entry>` restores README Section 2A H to its previous
+bullet list; the clause is a handoff-reporting requirement and reverting it removes no research artifact.
+
+**Verification this session:** `PYTHONPATH=src python3 -m pytest tests/ -q` -> 150 passed, exit 0 (106
+pre-existing + 44 new); `compute_code_hash()` = `00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702`;
+the published v2 manifest reproduces the independent re-derivation
+`research/campaign_cycles/0f52f6c9.../candidate_selection.json` exactly (14 `CANDIDATE_SELECTED`,
+1 `INSUFFICIENT_EVIDENCE`, 3 `NO_CANDIDATE`, 0 mismatches over 18 assets); the baseline artifact is
+byte-identical on re-run and every asset's dataset hash matches `research/data_manifest.json`; 0 holdout
+records were read by the baseline build, the selector and the manifest publication.

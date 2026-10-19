@@ -1,13 +1,15 @@
 {
   "schema_version": 1,
-  "authorized_at_utc": "2026-10-19T13:54:14.167380+00:00",
-  "authorized": true,
+  "authorized_at_utc": "2026-10-19T14:10:28.282858+00:00",
+  "authorized": false,
   "protocol_version": "v1",
   "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
-  "code_hash": "d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234",
+  "code_hash": "00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702",
   "pilot_evidence_path": "research_state/pilot_evidence.json",
   "validator_version": "brain-002-v1",
-  "evidence_digest": "c0a128aca0bd616c5cb8687b9f6b87cf2d82691294109ff679eef730092ffe45",
-  "reasons": [],
+  "evidence_digest": "861acb7db77e2a51ed0f019c712e6d575cc1d502ebf490e6090e06d2e44c7425",
+  "reasons": [
+    "pilot_run_results.remote_persistence_verified is false"
+  ],
   "legacy_pilot_gate_present": true
 }
