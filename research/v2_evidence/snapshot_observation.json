@@ -1,0 +1,12 @@
+{
+  "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1",
+  "provider": "coingecko",
+  "probed_at_utc": "2026-10-19T18:47:56.613603+00:00",
+  "retrieval_timestamp_utc": "2026-10-19T18:47:56Z",
+  "finished_at_utc": "2026-10-19T18:47:56.710177+00:00",
+  "http_status": 200,
+  "reachable": true,
+  "raw_response_bytes": 78557,
+  "raw_response_hash": "c4772c58d03c94df6ae98dc31bb3996de2c90c007a2ef7f72a0a92449fb1dbad",
+  "elapsed_ms": 96
+}
