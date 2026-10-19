@@ -831,7 +831,7 @@
     "pilot_run_results": {
       "all_tests_passed": true,
       "test_failures": 0,
-      "remote_persistence_verified": false,
+      "remote_persistence_verified": true,
       "synthetic_data_used": false
     },
     "checkpoint_state": {
