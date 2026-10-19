@@ -517,3 +517,60 @@ The 67 entries in this range were the same verification loop: read the prior han
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; compare against `research_state/campaign_authorization.json` `code_hash`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
 
 ---
+
+## Session activity — 2026-10-19T15:27Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from handoff at 2026-10-19T15:06Z):** Update BRAIN-007 status to `RESOLVED_VERIFIED` in `research_state/brainstorming_queue.md` (if not already). Confirm the handoff reflects the current state; no further implementation required. No other changes.
+
+**Outcome:** Prior task already satisfied. Verified BRAIN-007 is already marked `RESOLVED_VERIFIED` in `research_state/brainstorming_queue.md` (line 759). State revalidated: working tree clean, `git ls-remote origin main` == `git rev-parse HEAD` == `822f6824`, `PYTHONPATH=src python3 -m pytest tests/ -q` → 155 passed (exit 0), `compute_code_hash()` == `research_state/campaign_authorization.json` code_hash (`e27f064a...` matches). No changes made.
+
+**State verified (2026-10-19T15:27Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 155 passed, exit 0
+- `compute_code_hash()` = `e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155`
+- `research_state/campaign_authorization.json` code_hash matches; authorized true
+- `git ls-remote origin main` == `git rev-parse HEAD` == `822f6824b741fbb23c56b0e6d29c2e3da82f5b81`
+- `git status --short` → clean
+- BRAIN-007: `RESOLVED_VERIFIED`; BRAIN-006: `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-007 already RESOLVED_VERIFIED — next: implement BRAIN-006 (conforming selector + buy-and-hold baseline) per design record
+
+**Status (verified 2026-10-19T15:27Z):**
+- BRAIN-007 is `RESOLVED_VERIFIED` (linkage index, validation-only checkpoint counters with `holdout_exposed_count`, counter reconstruction/forgery detection, `BLOCKED_EXTERNAL` terminal state for exhausted universe with provider evidence HTTP 451).
+- BRAIN-006 is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (design decision written; impact quantification complete: 14 assets qualify, 1 INSUFFICIENT_EVIDENCE, 3 NO_CANDIDATE under preregistered rule; 16 of 18 frozen v1 candidates fail preregistered gates).
+- Tests: 155 passed, exit 0. Code hash `e27f064a...` matches authorization. HEAD == origin/main (`822f6824`). Working tree clean.
+
+**Next (one bounded task):** Implement BRAIN-006 per the design record in `research_state/brainstorming_queue.md` ("BRAIN-006 — Decision record").
+
+**Deliverables:**
+- `src/breakout_research/selection.py` — gates, status taxonomy, ranking/tiebreakers exactly as pinned (uses pinned interpretations of section 2).
+- `src/breakout_research/baselines.py` — buy-and-hold baseline on campaign cost/daily-return/Sharpe conventions with data-manifest hash verification.
+- Baseline artifact for continuous cycle 0 (`research/baselines/<campaign_id>.json`) from frozen hash-verified candles; byte-identical on re-run.
+- New, separately versioned candidate manifest for continuous cycle 0 (max 1 candidate per asset, gate table, `rule: "preregistered_v1"`, `rule_spec_hash`, `supersedes`, code/data hashes). **Do NOT** modify `research/candidate_manifest.json` (v1).
+- Replace `candidate_freeze.select_best_candidate` by conforming selector; keep profit-factor selector only as `_legacy_profit_factor_selector` for provenance.
+- Unit tests: per-gate including `NOT_EVALUABLE` paths, tiebreak order, conventions pinned against backtester, holdout refusal, regression test asserting conforming rule does not reproduce v1 profit-factor manifest, determinism test for baseline artifact.
+- Pilot re-run and re-authorization: run `scripts/run_pilot_and_authorize.py` (both phases) so `research_state/campaign_authorization.json` matches new `compute_code_hash()` after `src/` changes.
+- Holdout report updated: v1 holdout is `EXPOSED_OR_UNKNOWN`, never reused; new candidates are `CANDIDATE_PENDING_HOLDOUT` pending fresh confirmatory period.
+
+**Acceptance criteria:**
+1. `PYTHONPATH=src python3 -m pytest tests/ -q` → all pass, exit 0.
+2. New manifest reproduces the selections in `research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d/candidate_selection.json` (14 candidates, 1 INSUFFICIENT_EVIDENCE, 3 NO_CANDIDATE). Any mismatch = implementation defect to investigate and report.
+3. Selector consumes only `is_holdout == false` units and raises on holdout record.
+4. Baseline artifact byte-identical on re-run; each asset dataset hash matches `research/data_manifest.json`.
+5. `research/candidate_manifest.json` (v1) and all shards/ledgers/universe-manifest/exposed holdouts unchanged.
+6. After `src/` changes, `compute_code_hash()` == re-derived `campaign_authorization.json` code_hash; pilot evidence re-run; no campaign execution trusted under old hash.
+7. Holdout report states v1 holdout is `EXPOSED_OR_UNKNOWN`, not reused; new candidates `CANDIDATE_PENDING_HOLDOUT`.
+8. Handoff updated, prompt review (exactly one if any change justified; see `research_state/prompt_evolution.md`), commit, push, `git ls-remote origin main` == local HEAD verified.
+
+**Constraints:** Do NOT modify shards, ledger, v1 manifest, exposed holdout records, or run full campaign/grid. HTTP 451 is permanent external boundary — record it, do not retry. Preserve per-cycle immutability. BRAIN-006 must not be implemented in the session that wrote its design record (it is now the implementation session). Do not implement BRAIN-007 in this session (already RESOLVED_VERIFIED).
+
+**Verification commands:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664`
+- `PYTHONPATH=src python3 scripts/select_candidates_cycle0.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --out /tmp/check_selection.json`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `grep '"code_hash"' research_state/campaign_authorization.json`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
