@@ -151,11 +151,8 @@ def test_detect_forged_counters():
         assert detect_forged_counters(valid_checkpoint, reconstructed) == []
 
 
-def test_exhausted_universe_terminal_state(monkeypatch, tmp_path):
-    """Acceptance test 4: exhausted universe yields BLOCKED_EXTERNAL, does not
-    append to completed_cycle_ids or advance next_cohort_index."""
-    from breakout_research import continuous_universe_coordinator as coc
-
+def _terminal_state_harness(monkeypatch, coc, provider_observation, markets):
+    """Wire the terminal-state path with fakes; no network and no disk writes."""
     state = ContinuousState(next_cohort_index=1)
     state.completed_cycle_ids = ["existing-cycle-id"]
 
@@ -184,6 +181,16 @@ def test_exhausted_universe_terminal_state(monkeypatch, tmp_path):
         written[str(path)] = content
     monkeypatch.setattr(coc, "_atomic_write", mock_atomic_write)
 
+    monkeypatch.setattr(
+        coc, "fetch_market_cap_markets",
+        lambda universe, timeout_s=None, session=None: (provider_observation, markets))
+    monkeypatch.setattr(
+        coc, "probe_http_endpoint",
+        lambda url, timeout_s=None, session=None: {
+            "endpoint": url, "probed_at_utc": "2026-10-19T00:00:00+00:00",
+            "http_status": 200, "reachable": True, "error": None, "elapsed_ms": 1,
+        })
+
     coordinator = ContinuousCycleCoordinator()
     monkeypatch.setattr(coordinator, "_make_universe_snapshot",
                         lambda u: ("snap-123", u))
@@ -195,14 +202,34 @@ def test_exhausted_universe_terminal_state(monkeypatch, tmp_path):
     monkeypatch.setattr(coc, "run_campaign", mock_run_campaign)
 
     report = coordinator.run_cycle()
+    return report, state, saved, written, campaign_called
 
-    # Terminal state, not COMPLETE or DUPLICATE_OR_NO_NEW_CANDIDATES
+
+def test_exhausted_universe_with_unreachable_provider_is_blocked_external(monkeypatch):
+    """Acceptance test 4: an unreachable provider yields BLOCKED_EXTERNAL and does
+    not append to completed_cycle_ids or advance next_cohort_index."""
+    from breakout_research import continuous_universe_coordinator as coc
+
+    observation = {
+        "provider": "coingecko",
+        "endpoint": "https://api.coingecko.com/api/v3/coins/markets?per_page=100&page=1",
+        "probed_at_utc": "2026-10-19T00:00:00+00:00",
+        "http_status": 503,
+        "reachable": False,
+        "error": "HTTP 503",
+        "elapsed_ms": 12,
+    }
+    report, state, saved, written, campaign_called = _terminal_state_harness(
+        monkeypatch, coc, observation, [])
+
     assert report["state"] == "BLOCKED_EXTERNAL"
-    assert report["reason"] == "EXHAUSTED_UNIVERSE_NO_NEW_CANDIDATES"
+    assert report["reason"] == "UNIVERSE_PROVIDER_UNREACHABLE"
+    assert report["blocking_dependency"] == "PROVIDER_RESTORATION"
     assert report["eligible_count"] == 18
     assert report["cohort_assets"] == []
-    assert report["provider_evidence"]["status"] == 451
-    assert report["provider_evidence"]["reachable"] is False
+    # The provider status is observed, not asserted by a constant.
+    assert report["provider_evidence"]["universe_snapshot_provider"]["http_status"] == 503
+    assert report["provider_evidence"]["universe_snapshot_provider"]["reachable"] is False
 
     # next_cohort_index NOT advanced
     assert state.next_cohort_index == 1
@@ -215,9 +242,6 @@ def test_exhausted_universe_terminal_state(monkeypatch, tmp_path):
     # run_campaign NOT called (no execution for exhausted universe)
     assert len(campaign_called) == 0
 
-    # The terminal report is captured by the monkeypatched writer; assert it
-    # was produced and that it targets the real repository terminal path, so
-    # the monkeypatch above is load-bearing (no fixture artifact on disk).
     assert len(written) == 1
     written_path = next(iter(written))
     assert written_path.endswith("research/campaign_cycles/terminal/exhausted_cohort_1.json")
@@ -226,3 +250,38 @@ def test_exhausted_universe_terminal_state(monkeypatch, tmp_path):
 
     # 18 eligible assets < COHORT_SIZE 20
     assert 18 < COHORT_SIZE
+
+
+def test_exhausted_universe_with_reachable_provider_is_awaiting_new_candidates(monkeypatch):
+    """A reachable provider is not an external boundary: the terminal state is
+    AWAITING_NEW_CANDIDATES and the observed constituents are recorded."""
+    from breakout_research import continuous_universe_coordinator as coc
+
+    observation = {
+        "provider": "coingecko",
+        "endpoint": "https://api.coingecko.com/api/v3/coins/markets?per_page=100&page=1",
+        "probed_at_utc": "2026-10-19T00:00:00+00:00",
+        "http_status": 200,
+        "reachable": True,
+        "error": None,
+        "elapsed_ms": 68,
+    }
+    markets = [
+        {"id": "bitcoin", "symbol": "btc", "market_cap": 3},
+        {"id": "zcash", "symbol": "zec", "market_cap": 2},
+    ]
+    report, state, saved, written, campaign_called = _terminal_state_harness(
+        monkeypatch, coc, observation, markets)
+
+    assert report["state"] == "AWAITING_NEW_CANDIDATES"
+    assert report["reason"] == "NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION"
+    assert report["blocking_dependency"] == "UNIVERSE_VERSION_DECISION"
+    assert report["provider_evidence"]["universe_snapshot_provider"]["http_status"] == 200
+    refresh = report["provider_evidence"]["universe_refresh"]
+    assert refresh["has_new_candidates"] is True
+    assert "zcash" in refresh["new_candidate_ids"]
+
+    # The frozen universe is never extended by the terminal path.
+    assert state.next_cohort_index == 1
+    assert state.completed_cycle_ids == ["existing-cycle-id"]
+    assert len(campaign_called) == 0

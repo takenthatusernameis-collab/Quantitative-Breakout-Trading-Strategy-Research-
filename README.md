@@ -219,6 +219,8 @@ Use one primary cause label, with secondary labels when needed:
 
 Do not label infrastructure or data failure as an economic strategy failure. Do not label an implementation defect as a prompt defect merely because an agent was involved. When the cause is `UNKNOWN`, run the smallest diagnostic that can discriminate among plausible causes before making a broad change.
 
+**External boundaries must be observed at record time and recorded durably.** A blocker may be classified as `DATA_OR_EXTERNAL_SERVICE` or `PERMISSION_BLOCKER`, and a campaign may enter a `BLOCKED_EXTERNAL` state, only when a bounded live probe of the endpoint that actually supplies the blocked resource was performed at record time and the artifact records that endpoint, the observed HTTP status (or transport error), the probe timestamp and the exact command. A status copied from an earlier session, hard-coded in source, or taken from a different provider than the one that supplies the blocked resource is `UNVERIFIED`: label it as such and do not let it justify a terminal state. The artifact that records such a boundary must be committed to the repository, so the claim stays auditable after the working tree is reset.
+
 ### C1. Brainstorming phase for blockers unlikely to yield to incremental agent fixes
 
 Use `research_state/brainstorming_queue.md` as the durable design queue. It is **not** a second error log: completed workflow-run diagnostics remain in `research_state/workflow_run_diagnostics.jsonl`; the queue records design decisions and intervention plans.

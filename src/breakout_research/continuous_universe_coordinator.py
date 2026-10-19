@@ -32,10 +32,22 @@ from .config import (
     get_configurations,
     get_eligible_assets as base_get_eligible,
 )
-from .data.fetcher import load_or_fetch_asset_data, DataUnavailableError
+from .data.fetcher import (
+    load_or_fetch_asset_data,
+    DataUnavailableError,
+    BINANCE_KLINES_ENDPOINT,
+    BINANCE_MARKET_DATA_KLINES_ENDPOINT,
+)
 from .campaign import CampaignRunner, run_campaign
 from .backtest.shards import compute_experiment_id, ResultStore, iter_campaign_records
 from .pilot_gate_validator import load_authorization, authorize_campaign
+from .universe_provider import (
+    DEFAULT_TIMEOUT_S,
+    compare_with_frozen_universe,
+    fetch_market_cap_markets,
+    ping_url_for,
+    probe_http_endpoint,
+)
 
 SPEC_PATH = "configs/research_v1.json"
 CONFIG_MANIFEST_PATH = "research/config_manifest.json"
@@ -82,6 +94,75 @@ class ContinuousCycleCoordinator:
         end = start + COHORT_SIZE
         return eligible[start:end]
 
+    def _collect_universe_provider_evidence(self, universe: Dict[str, Any],
+                                             timeout_s: float = DEFAULT_TIMEOUT_S,
+                                             session: Any = None) -> Dict[str, Any]:
+        """Record live provider evidence for the terminal state.
+
+        The evidence is observed, never asserted: the market-cap provider that
+        produced the frozen universe is probed once (no retry) and compared
+        with the frozen candidate list, and the official Binance market-data
+        endpoints are probed once each so that the artifact shows which
+        provider actually limits the campaign.
+        """
+        try:
+            observation, markets = fetch_market_cap_markets(
+                universe, timeout_s=timeout_s, session=session)
+        except Exception as exc:  # a probe must never crash the coordinator
+            observation = {
+                "provider": (universe.get("market_cap_source") or {}).get("provider", "unknown"),
+                "endpoint": (universe.get("market_cap_source") or {}).get("endpoint", ""),
+                "probed_at_utc": datetime.now(timezone.utc).isoformat(),
+                "http_status": None,
+                "reachable": False,
+                "error": f"{type(exc).__name__}: {exc}",
+                "elapsed_ms": None,
+            }
+            markets = []
+
+        refresh: Optional[Dict[str, Any]] = None
+        if observation.get("reachable"):
+            refresh = compare_with_frozen_universe(universe, markets, additional_depth=20)
+
+        candle_providers = []
+        for klines_url in (BINANCE_KLINES_ENDPOINT, BINANCE_MARKET_DATA_KLINES_ENDPOINT):
+            candle_observation = probe_http_endpoint(
+                ping_url_for(klines_url), timeout_s=timeout_s, session=session)
+            candle_observation["role"] = "candle_data_provider"
+            candle_observation["klines_endpoint"] = klines_url
+            candle_providers.append(candle_observation)
+
+        return {
+            "probe_policy": "one bounded read-only request per endpoint, no retries",
+            "universe_snapshot_provider": observation,
+            "universe_refresh": refresh,
+            "candle_data_providers": candle_providers,
+        }
+
+    def _classify_exhausted_universe(self, provider_evidence: Dict[str, Any]) -> Tuple[str, str, str]:
+        """Map the observed provider evidence onto a terminal state.
+
+        `BLOCKED_EXTERNAL` is reserved for an unreachable provider (README
+        Section 0, shared-gate rule). A reachable provider that offers no new
+        constituent is `AWAITING_NEW_CANDIDATES`; a reachable provider that
+        offers new constituents is also `AWAITING_NEW_CANDIDATES`, because
+        admitting them requires a new preregistered universe version, which is
+        a design decision and not an execution step.
+        """
+        provider = provider_evidence.get("universe_snapshot_provider") or {}
+        refresh = provider_evidence.get("universe_refresh")
+        if not provider.get("reachable"):
+            return ("BLOCKED_EXTERNAL",
+                    "UNIVERSE_PROVIDER_UNREACHABLE",
+                    "PROVIDER_RESTORATION")
+        if refresh and refresh.get("has_new_candidates"):
+            return ("AWAITING_NEW_CANDIDATES",
+                    "NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION",
+                    "UNIVERSE_VERSION_DECISION")
+        return ("AWAITING_NEW_CANDIDATES",
+                "EXHAUSTED_UNIVERSE_NO_NEW_CANDIDATES",
+                "NEW_MARKET_CAP_SNAPSHOT")
+
     def run_cycle(self, holdout_enabled: bool = False,
                   max_assets: Optional[int] = None,
                   max_configs: Optional[int] = None,
@@ -93,12 +174,9 @@ class ContinuousCycleCoordinator:
         cohort = self._get_cohort(universe, state.next_cohort_index)
         if len(cohort) == 0:
             eligible = self._get_eligible_assets(universe)
-            provider_evidence = {
-                "provider": "https://api.binance.com/api/v3/ping",
-                "status": 451,
-                "reachable": False,
-                "note": "HTTP 451: permanent external boundary; new universe snapshot unavailable",
-            }
+            provider_evidence = self._collect_universe_provider_evidence(universe)
+            terminal_state, reason, blocking_dependency = self._classify_exhausted_universe(
+                provider_evidence)
             Path(CAMPAIGN_CYCLES_ROOT).mkdir(parents=True, exist_ok=True)
             terminal_dir = Path(CAMPAIGN_CYCLES_ROOT) / "terminal"
             terminal_dir.mkdir(parents=True, exist_ok=True)
@@ -106,11 +184,13 @@ class ContinuousCycleCoordinator:
                 "cycle_id": None,
                 "snapshot_id": snapshot_id,
                 "cohort_index": state.next_cohort_index,
-                "state": "BLOCKED_EXTERNAL",
-                "reason": "EXHAUSTED_UNIVERSE_NO_NEW_CANDIDATES",
+                "state": terminal_state,
+                "reason": reason,
+                "blocking_dependency": blocking_dependency,
                 "eligible_count": len(eligible),
                 "cohort_assets": [],
                 "provider_evidence": provider_evidence,
+                "recorded_utc": datetime.now(timezone.utc).isoformat(),
             }
             terminal_path = terminal_dir / f"exhausted_cohort_{state.next_cohort_index}.json"
             _atomic_write(terminal_path, json.dumps(report, indent=2, sort_keys=True) + "\n")

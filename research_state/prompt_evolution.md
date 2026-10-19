@@ -663,3 +663,74 @@ the published v2 manifest reproduces the independent re-derivation
 1 `INSUFFICIENT_EVIDENCE`, 3 `NO_CANDIDATE`, 0 mismatches over 18 assets); the baseline artifact is
 byte-identical on re-run and every asset's dataset hash matches `research/data_manifest.json`; 0 holdout
 records were read by the baseline build, the selector and the manifest publication.
+
+---
+
+## Session prompt review — 2026-10-19T15:4xZ (base commit 6018ede3, code hash e27f064a before this session's change)
+
+**Triggering evidence.** The terminal state for the exhausted universe was implemented with a
+hard-coded provider status: `continuous_universe_coordinator.py` wrote
+`{"provider": "https://api.binance.com/api/v3/ping", "status": 451, "reachable": false, ...}` into
+the terminal artifact without ever contacting a provider. Two observable defects followed. (1) The
+provider that actually supplies the universe is CoinGecko (`research/universe_manifest.json` →
+`market_cap_source.provider = "coingecko"`), and a bounded live probe of the exact frozen endpoint
+returned **HTTP 200** at 2026-10-19T15:43:31Z, while the Binance market-data failover
+`data-api.binance.vision` also returned **HTTP 200** — so the recorded "permanent external boundary"
+was false for the resource that was actually blocked. (2) The artifact that recorded the boundary
+(`research/campaign_cycles/terminal/exhausted_cohort_1.json`) was deleted from the repository in
+commit `822f6824` and never regenerated, while four consecutive handoff entries (14:49Z, 15:06Z,
+15:27Z, 15:32Z) reported it as present — the claim outlived its evidence. Both defects were
+invisible to a green test run, because the test asserted the constant it was given.
+
+**Cause classification:** `PROMPT_GAP` (the protocol required "provider evidence" for a terminal
+state but never required that such evidence be *observed at write time*, named to the provider that
+supplies the blocked resource, and committed). Secondary: `IMPLEMENTATION_DEFECT` (hard-coded status
+in the coordinator) and `TEST_GAP` (the acceptance test asserted the constant, so it could not
+detect the defect).
+
+**Exact change (README Section 2A C, one added paragraph):**
+
+> **External boundaries must be observed at record time and recorded durably.** A blocker may be classified as `DATA_OR_EXTERNAL_SERVICE` or `PERMISSION_BLOCKER`, and a campaign may enter a `BLOCKED_EXTERNAL` state, only when a bounded live probe of the endpoint that actually supplies the blocked resource was performed at record time and the artifact records that endpoint, the observed HTTP status (or transport error), the probe timestamp and the exact command. A status copied from an earlier session, hard-coded in source, or taken from a different provider than the one that supplies the blocked resource is `UNVERIFIED`: label it as such and do not let it justify a terminal state. The artifact that records such a boundary must be committed to the repository, so the claim stays auditable after the working tree is reset.
+
+**Expected behavioral effect:** a session may no longer justify a terminal state with a remembered
+or hard-coded provider status, and the evidence must survive in the repository. The frozen
+universe, the 2,304-configuration grid, costs, entry/exit semantics, selection criteria, evaluation
+splits, holdout rules and thresholds are **unchanged**; this is an evidence and reporting
+requirement only.
+
+**Regression cases and actual results:**
+- *Case 1 (the observed failure):* the pre-change coordinator would emit `BLOCKED_EXTERNAL` with
+  `provider_evidence.status == 451` regardless of what any provider answers. Under the new
+  paragraph that status is not admissible evidence, and the state may not be entered.
+- *Case 2 (this session):* the coordinator now performs one bounded read-only request per endpoint
+  and records the observation. The regenerated artifact
+  `research/campaign_cycles/terminal/exhausted_cohort_2.json` shows CoinGecko HTTP 200 (67 ms),
+  `api.binance.com` HTTP 451 (114 ms), `data-api.binance.vision` HTTP 200 (662 ms), with per-endpoint
+  timestamps; the state is `AWAITING_NEW_CANDIDATES`, and the new constituents (ZEC, HYPE, HBAR) are
+  recorded as **not** data-validated.
+- *Case 3 (battery of Section 2A G):* no bullet is removed or weakened. Case 8 (repeated failure
+  across sessions) and case 9 (permission or external-service boundary) are reinforced: the new
+  paragraph requires a *single* bounded probe for the record, not a retry loop, and it forbids
+  misstating success. Cases 1–7 and 10 (synthetic data, checkpoint/ledger reconciliation, stale
+  pilot gate, holdout contamination, tests not executed, persistence failure, untrusted handoff) are
+  unaffected — none of them is an external-boundary classification.
+- *Case 4 (research protocol):* no universe, grid, cost, selection, split, holdout or threshold
+  change; `configs/research_v1.json`, `research/universe_manifest.json`, `research/candidate_manifest.json`
+  (v1), `research/candidate_manifest_v2.json` and every shard are byte-unchanged in this session.
+
+**Known trade-offs:** one extra bounded provider request per terminal-state run, and a reviewer
+burden to check that a recorded boundary matches the provider that supplies the blocked resource.
+The paragraph never authorizes a retry loop, a credential, or a protocol change.
+
+**Reviewer/verifier status:** self-review in this session; verified by
+`PYTHONPATH=src python3 -m pytest tests/ -q` (165 passed, exit 0) including
+`tests/test_universe_provider.py` (10 tests) and the rewritten acceptance test 4 in
+`tests/test_linkage_index.py`, and by the live regeneration of the terminal artifact. Behavioral
+effectiveness beyond this session is `NOT_YET_VERIFIED`.
+
+**Resulting prompt blob/commit SHA:** README blob SHA after the revision
+`ac2dbcd4ccf6331bd13936d140bd1b1a9f7d9f65`; the commit that carries it is recorded in
+`research_state/agent_handoff.md` and in git history for this file.
+
+**Rollback instruction:** `git revert <commit of this entry>` removes the added README paragraph;
+it removes no research artifact and leaves the terminal-state implementation and its evidence intact.

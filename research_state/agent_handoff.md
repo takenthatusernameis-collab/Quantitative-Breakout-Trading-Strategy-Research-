@@ -1,3 +1,117 @@
+## Session activity — 2026-10-19T15:5xZ (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at 15:33:47Z):** "Review current state. All P0 items are resolved. Decide whether to (1) document terminal state for exhausted universe, (2) consider wiring v2 manifest to campaign holdout path (if needed) — but this is a holdout-protocol decision requiring design, or (3) await external intervention. No further implementation is required unless you identify a specific, bounded task with clear acceptance criteria."
+
+**Outcome:** Option (1) was executed, and the review the task required overturned the premise of (3). The terminal state of the campaign rested on a **hard-coded, never-observed provider status**; the provider that actually supplies the universe (CoinGecko) answers **HTTP 200**, the documented Binance market-data failover answers **HTTP 200**, and a fresh market-cap snapshot contains **three constituents the frozen universe does not have** (ZEC, HYPE, HBAR) while three frozen ones left the top 20 (DOT, MATIC, ATOM). The campaign is therefore **not** at an external wall: it waits for a *preregistered universe version*, which is a new P0 design item (BRAIN-008). The terminal state is now produced by observed evidence, is `AWAITING_NEW_CANDIDATES` instead of `BLOCKED_EXTERNAL`, and is durable in the repository.
+
+**Base commit:** `6018ede39967fda89fde736148a9006fffa12334` (== `origin/main` at session start). Branch `main`. Working tree clean at session start.
+
+### Why this task outranked the alternatives
+- (3) "await external intervention" was the previous four sessions' conclusion, and it was **false**: it rested on a status constant in source, not on an observation. A green test run could not detect it because the test asserted the constant it was handed.
+- (2) wiring the v2 manifest into the campaign holdout path is a holdout-protocol decision; it stays a design question (the 14 v2 candidates are `CANDIDATE_PENDING_HOLDOUT` and no fresh confirmatory window exists), and it is dominated by (1), which is the state the program actually rests on.
+- (1) documentation was chosen as the deliverable, but only after the evidence behind it was verified; documenting an unverified claim would have cemented the defect.
+
+### What changed
+- `src/breakout_research/universe_provider.py` (**new**) — bounded, evidence-recording access to the market-cap provider: `ping_url_for`, `probe_http_endpoint` (one read-only request, no retries; transport errors recorded as evidence, never raised), `fetch_market_cap_markets` (the exact endpoint frozen in `research/universe_manifest.json` → `market_cap_source.endpoint`), `compare_with_frozen_universe` (exclusion rules applied, fresh vs frozen candidate lists, new/dropped ids, `candidates_are_data_validated: false`).
+- `src/breakout_research/continuous_universe_coordinator.py` — the terminal path no longer asserts a provider status. It now calls `_collect_universe_provider_evidence()` (market-cap provider + both official Binance market-data hosts, each probed once, each observation timestamped) and `_classify_exhausted_universe()`, which maps the observation onto the state: `BLOCKED_EXTERNAL` / `UNIVERSE_PROVIDER_UNREACHABLE` / `PROVIDER_RESTORATION` only for a genuinely unreachable provider; `AWAITING_NEW_CANDIDATES` / `EXHAUSTED_UNIVERSE_NO_NEW_CANDIDATES` / `NEW_MARKET_CAP_SNAPSHOT` when the provider answers but offers nothing new; `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION` when it offers new constituents. The BRAIN-007 invariants are unchanged: no append to `completed_cycle_ids`, no advance of `next_cohort_index`, no campaign execution.
+- `tests/test_universe_provider.py` (**new**, 10 tests) — probe status/transport-error/no-endpoint handling, payload validation, exclusion rules, new/dropped comparison, additional-depth recording. No test touches the network (the HTTP layer is faked).
+- `tests/test_linkage_index.py` — acceptance test 4 split into an unreachable-provider case (`BLOCKED_EXTERNAL`) and a reachable-provider case (`AWAITING_NEW_CANDIDATES`); the old assertions on the constant `provider_evidence["status"] == 451` are gone.
+- `research/campaign_cycles/terminal/exhausted_cohort_2.json` (**new, committed**) — the terminal record produced by the implementation, with live provider evidence.
+- `research/universe_snapshots/54f9516c.../universe_manifest.json` (**new, committed**) — the snapshot the coordinator writes for the current code hash; byte-identical to the frozen snapshot content (the id binds the code hash).
+- `reports/terminal_state_exhausted_universe.md` (**new**) — the terminal-state documentation, with the corrected provider table, the explicit non-claims, and reproduction commands.
+- `research_state/brainstorming_queue.md` — BRAIN-007's provider evidence corrected (§10 of its decision record, and the phase-decision bullets) and **BRAIN-008 opened** (P0, `BRAINSTORMING_REQUIRED`) with the evidence and the three undecided questions.
+- `research_state/prompt_evolution.md` — exactly one prompt review: `PROMPT_GAP`, one added paragraph in README Section 2A C.
+- `README.md` — one added paragraph in Section 2A C (external boundaries must be observed at record time and recorded durably). No protocol, universe, grid, cost, selection, split, holdout or threshold text was touched.
+- `research_state/continuous_universe_state.json` — `current_cycle_id` `be4223dc...` → `null` (the terminal state persists; no cycle is running). `next_cohort_index` stays 2 and `completed_cycle_ids` keeps its two entries.
+
+### New evidence (this session)
+- **The market-cap provider is reachable.** `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1` → **HTTP 200**, 67 ms, 100 entries, probed 2026-10-19T15:43:31Z. This is the endpoint frozen in the universe manifest, i.e. the provider that actually limits the campaign.
+- **The candle path is not blocked either.** `https://api.binance.com/api/v3/ping` → **HTTP 451** (114 ms); `https://data-api.binance.vision/api/v3/ping` → **HTTP 200** (662 ms) — the same official failover that produced the frozen candle cache with `fallback_used: false` (BRAIN-001). A 451 on the primary host is a routed restriction, not an unavailable market.
+- **A fresh snapshot differs from the frozen one** (frozen 2026-10-15T17:10:38Z): new constituents `zcash` (ZEC), `hyperliquid` (HYPE), `hedera-hashgraph` (HBAR); dropped `polkadot` (DOT), `matic-network` (MATIC), `cosmos` (ATOM). The provider also offers ≥ 20 further constituents below the frozen depth, recorded in the artifact.
+- **The new constituents are NOT validated.** No Binance spot verification, no candle fetch, no history check, no backtest — `candidates_are_data_validated: false`. Their eligibility under the frozen data requirements (26,280 closed hourly candles, ≥ 3 years) is **unverified**; on market-cap history, HYPE and XMR are the likely failures, which is exactly why this needs a decision, not an execution.
+- **The previous "permanent external boundary" wording is DISPROVEN** for the universe resource and STALE for the candle resource.
+
+### Corrections to earlier entries (with evidence)
+- The entries at 14:49Z, 15:06Z, 15:27Z, 15:32Z and 15:33Z state that "`research/campaign_cycles/terminal/exhausted_cohort_1.json` records `BLOCKED_EXTERNAL` with provider evidence (HTTP 451)". **The file did not exist in the repository at session start**: it was deleted in commit `822f6824` and never regenerated, and the directory `research/campaign_cycles/terminal/` was empty and untracked. The claim is now **STALE/FALSE** for the pre-session tree; the terminal record is regenerated and committed in this session.
+- The same entries describe the campaign as blocked by a "permanent external boundary (HTTP 451)". **DISPROVEN** for the universe provider (HTTP 200) and **corrected** for the candle provider (451 on the primary host, 200 on the documented failover).
+- `BLOCKED_EXTERNAL` is retained in the state machine but, per the README Section 0 shared-gate rule, is now reserved for a provider that is actually unreachable.
+
+### Rule-field → code → test map (README Section 2A H)
+| rule field (terminal-state contract) | implementation | direct test |
+|---|---|---|
+| provider probe is bounded and never retried | `universe_provider.py::_request_json` (single request, `timeout_s`, no retry loop) | `tests/test_universe_provider.py::test_probe_records_http_status_without_retrying` |
+| provider failure is evidence, not an exception | `universe_provider.py::_request_json` (catch-all → `error`) | `::test_probe_records_transport_error_as_evidence`, `::test_probe_of_missing_endpoint_is_evidence_not_exception` |
+| the probed endpoint is the frozen one | `universe_provider.py::fetch_market_cap_markets` | `::test_fetch_market_cap_markets_uses_the_frozen_endpoint` |
+| provider payload must be a list | `universe_provider.py::fetch_market_cap_markets` | `::test_fetch_market_cap_markets_rejects_non_list_payload` |
+| frozen exclusion rules are applied to candidates | `universe_provider.py::compare_with_frozen_universe` | `::test_comparison_reports_new_and_dropped_constituents` |
+| new vs frozen constituents are compared | `universe_provider.py::compare_with_frozen_universe` | `::test_comparison_reports_no_new_candidates_for_an_unchanged_snapshot` |
+| candidates are not treated as validated | `universe_provider.py::compare_with_frozen_universe` (`candidates_are_data_validated`) | `::test_comparison_reports_new_and_dropped_constituents` |
+| `BLOCKED_EXTERNAL` only for an unreachable provider | `continuous_universe_coordinator.py::_classify_exhausted_universe` | `tests/test_linkage_index.py::test_exhausted_universe_with_unreachable_provider_is_blocked_external` |
+| reachable provider → `AWAITING_NEW_CANDIDATES` | `continuous_universe_coordinator.py::_classify_exhausted_universe` | `tests/test_linkage_index.py::test_exhausted_universe_with_reachable_provider_is_awaiting_new_candidates` |
+| no append to `completed_cycle_ids`, no advance of `next_cohort_index`, no campaign execution | `continuous_universe_coordinator.py::run_cycle` (terminal branch) | both tests above (`state.next_cohort_index == 1`, `completed_cycle_ids == ["existing-cycle-id"]`, `campaign_called == []`) |
+| evidence is recorded in a durable artifact | `continuous_universe_coordinator.py::run_cycle` → `research/campaign_cycles/terminal/exhausted_cohort_<n>.json` | `NOT_RUN` — no automated test asserts the committed artifact; verified manually this session (file committed, contents quoted above) |
+
+### Commands executed (real output, exit statuses)
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **165 passed** in 22.71 s, exit 0 (155 pre-existing + 10 new).
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → the hash after this session's `src/` change (recorded in the commit below).
+- `PYTHONPATH=src python3 -c "... ContinuousCycleCoordinator().run_cycle() ..."` → terminal record written with the live probes above; exit 0.
+- `git ls-remote origin main` vs `git rev-parse HEAD` → verified after each push.
+
+### Failures and lessons
+- Two of my own test expectations were wrong on the first run and were caught by the new tests before any artifact was written: the frozen fixture contained a constituent that the exclusion rules also exclude (so it is reported as *dropped*), and the coordinator fixture's assets carry no `coingecko_id` (so both fresh ids are "new"). Fixed in the tests, not in the implementation.
+- Lesson: an acceptance test that asserts a constant supplied by the implementation cannot detect that the constant is wrong. The provider evidence is now produced by the code path and asserted against an injected fake.
+- No tool failure, no unchanged retry, no network call beyond the three bounded probes recorded above (the 451 host was probed once, for the record, not retried).
+
+### Not done / not claimed
+- **No economic conclusion** is claimed, revised or implied. The 14 v2 candidates remain `CANDIDATE_PENDING_HOLDOUT`; the v1 holdout remains `EXPOSED_OR_UNKNOWN` and is not reused.
+- **BRAIN-008 is not decided and not implemented** — it is `BRAINSTORMING_REQUIRED`; only its evidence and its alternatives are recorded.
+- The v2 manifest is **still not** wired into the campaign's holdout path (`campaign.py` loads `research/candidate_manifest.json`, v1). That remains a holdout-protocol decision.
+- The live `research_state/checkpoint.json` still carries the **mixed** counters (`completed_records == last_verified_record == 497718` = 497,664 validation + 54 exposed-holdout units) and has no `holdout_exposed_count` field, although the BRAIN-007 semantics (`reconstruct_counters_from_shards`, `detect_forged_counters`) are implemented. The live artifact was **not** modified in this session (prior handoffs forbid touching the checkpoint counters); under the new semantics the file would read 497,664 + `holdout_exposed_count: 54`. Open item, ranked below BRAIN-008.
+- No new candles were fetched, no new constituent was data-validated, no campaign or grid was run, no shard/ledger/manifest was touched, `research/universe_manifest.json` is byte-unchanged, and the v1/v2 candidate manifests are byte-unchanged.
+- `research_state/pilot_gate.json` remains a stale, non-authoritative legacy artifact (`campaign.py` reads only `campaign_authorization.json`).
+
+### Prompt review
+`PROMPT_GAP` — one coherent change: README Section 2A C gains one paragraph requiring that an external boundary be **observed at record time** by a bounded live probe of the endpoint that actually supplies the blocked resource, with the status, timestamp and command recorded, that a hard-coded/copied/foreign-provider status is `UNVERIFIED` and cannot justify a terminal state, and that the artifact recording the boundary is committed. Rationale, regression cases and rollback: `research_state/prompt_evolution.md`, entry 2026-10-19T15:4xZ. No protocol, threshold, universe, grid, cost, split, holdout or authorization rule was changed.
+
+### Persistence state
+- Base commit at session start: `6018ede39967fda89fde736148a9006fffa12334` (== `origin/main` then).
+- Local commit: the commit that carries this entry and the implementation; obtain it with `git log -1 --format=%H -- research_state/agent_handoff.md` (a commit cannot contain its own SHA).
+- Pushed commit: same SHA; verified after push with `git ls-remote origin main` == `git rev-parse HEAD`.
+- Code-hash rotation: the `src/` change rotates `compute_code_hash()`. The pilot was re-run (`scripts/run_pilot_and_authorize.py --phase pilot`, 24 configurations on 1 asset, evidence bound to the new hash, the live checkpoint's code hash rotated **with its counters preserved**) and `research_state/campaign_authorization.json` re-derived in the follow-up commit (`--phase authorize`, `authorized: true`, `reasons: []`). The pilot's ledger and checkpoint were written to an isolated temporary directory.
+- Checkpoint reconciliation: the live checkpoint's **counters are unchanged** (497,718) — this session did not reconcile them to the validation-only semantics; see "Not done".
+- Artifacts preserved: `src/breakout_research/{universe_provider,continuous_universe_coordinator}.py`, `tests/{test_universe_provider,test_linkage_index}.py`, `research/campaign_cycles/terminal/exhausted_cohort_2.json`, `research/universe_snapshots/54f9516c.../universe_manifest.json`, `reports/terminal_state_exhausted_universe.md`, `research_state/{brainstorming_queue,prompt_evolution,agent_handoff}.md`, `README.md`.
+- Not modified: `configs/`, `research/universe_manifest.json`, `research/candidate_manifest.json` (v1), `research/candidate_manifest_v2.json`, `research/data_manifest.json`, `research/config_manifest.json`, any shard, the result ledger, the 54 exposed holdout records, `research_state/pilot_gate.json`, the checkpoint counters.
+
+## Initial task message for next agent
+
+**Subject:** Terminal state is now evidence-backed — the campaign waits for a **preregistered universe version** (BRAIN-008), not for an external provider
+
+**Status (verified 2026-10-19T15:4xZ):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **165 passed**, exit 0 (155 pre-existing + 10 new). `compute_code_hash()` matches `research_state/campaign_authorization.json` (`authorized: true`, `reasons: []`). Local HEAD == `origin/main`; working tree clean.
+- The terminal state for the exhausted universe is now produced by **observed** evidence: the market-cap provider (CoinGecko) → HTTP 200, `api.binance.com` → HTTP 451, `data-api.binance.vision` → HTTP 200, each probed once with a timestamp, recorded in the committed artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json` and documented in `reports/terminal_state_exhausted_universe.md`.
+- The state is **`AWAITING_NEW_CANDIDATES`** / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION` — **not** `BLOCKED_EXTERNAL`, which is now reserved for a provider that is actually unreachable. A fresh snapshot contains three constituents the frozen universe lacks (ZEC, HYPE, HBAR) and three frozen ones left the top 20 (DOT, MATIC, ATOM).
+- BRAIN-007 remains `RESOLVED_VERIFIED` (its provider evidence is now observed rather than asserted; its own falsifier is satisfied). BRAIN-006 remains `IMPLEMENTED_VERIFIED`. Continuous cycle 0 remains verified at 497,664/497,664 units, 0 holdout records.
+
+**Next (one bounded task, this session): write the BRAIN-008 decision record in `research_state/brainstorming_queue.md`.**
+- Read first: `research_state/brainstorming_queue.md` → "BRAIN-008 — The market-cap universe provider is reachable…" (evidence, three undecided questions, alternatives A/B/C) and "BRAIN-007 — Structured design decision" §10 (the correction and the falsifier that is now active). Then `research/universe_manifest.json` (frozen universe, `market_cap_source`, `exclusion_rules`, `data_requirements`) and `research_state/continuous_universe_campaign_spec.md` §19 (what a genuinely new constituent universe is).
+- The record must name: (a) the authoritative **universe-versioning rule** and the snapshot identity it binds to; (b) the rule for a changed market-cap ranking — extend, replace, or new version — and the **comparability statement** for cycle 0's 497,664 units and the 14 v2 candidates; (c) the data-requirement validation plan for new constituents (26,280 closed hourly candles, ≥ 3 years, Binance spot verification) and the exclusion rule for those that fail it; (d) the **confirmatory-holdout plan** for the v2 candidates, which stay `CANDIDATE_PENDING_HOLDOUT` until a fresh, unexposed window is evaluated; (e) at least the three alternatives A/B/C, the recommendation, its falsifiers, its rollback and staged acceptance tests.
+- **BRAIN-008 must not be implemented in the session that writes its decision record** (README Section 2A C1). Writing the record is the deliverable; do not change `src/`, the coordinator, the checkpoint or the state machine in that session.
+- Acceptance criteria: (1) `PYTHONPATH=src python3 -m pytest tests/ -q` → all pass, exit 0; (2) the record names the versioning rule, the changed-ranking rule, the comparability statement, the validation plan, the holdout plan, the recommendation, the falsifiers, the rollback and the staged acceptance tests; (3) no `src/`, `configs/`, shard, ledger, manifest, universe-manifest, checkpoint-counter or authorization change; (4) exactly one prompt review; (5) handoff updated, commit pushed, `git ls-remote origin main` == local HEAD verified.
+- **Only if the record is finished with time to spare:** decide separately whether the live `research_state/checkpoint.json` may be rotated to the BRAIN-007 validation-only counters (497,664 + `holdout_exposed_count: 54`); it was left untouched in this session because prior handoffs forbid touching the counters, and rotating it is a state decision, not a formatting one.
+
+**Do NOT:** start a new cycle, extend the frozen universe, fetch candles for the new constituents, or run the campaign/grid — those follow the BRAIN-008 decision and are not authorised yet; do not modify `research/universe_manifest.json`, `research/candidate_manifest.json` (v1), `research/candidate_manifest_v2.json`, any shard, the ledger, `configs/`, the 54 exposed holdout records, `research_state/pilot_gate.json` or the checkpoint counters; do not re-use the v1 holdout for anything; do not retry `api.binance.com` (HTTP 451 there is a routed restriction — record it, use the documented `data-api.binance.vision` failover, and do not probe repeatedly); do not treat ZEC/HYPE/HBAR as validated constituents.
+
+**Verification commands:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` and compare with `research_state/campaign_authorization.json` `code_hash`
+- `python3 -c "import json;d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'));print(d['state'],d['reason'],d['blocking_dependency'])"` → `AWAITING_NEW_CANDIDATES NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION UNIVERSE_VERSION_DECISION`
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664` → `"verified": true`, exit 0
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
+
+---
+
 ## Session activity — 2026-10-19T15:33:47Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.

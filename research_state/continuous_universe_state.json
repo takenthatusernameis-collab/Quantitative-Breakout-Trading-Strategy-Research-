@@ -43,11 +43,11 @@
       }
     ]
   },
-  "current_cycle_id": "be4223dcef25aaa0043a466fcd9044b4e6a7387eff7efd487561b9c1f873c1ae",
+  "current_cycle_id": null,
   "current_snapshot": {
     "snapshot_id": "e004c6ff0c18a2db6948453bc1488138808563ddfa7138185d693c5bc741106a"
   },
   "next_cohort_index": 2,
   "schema_version": 1,
-  "updated_utc": "2026-10-18T20:33:00.446956+00:00"
+  "updated_utc": "2026-10-19T15:43:32.399960+00:00"
 }

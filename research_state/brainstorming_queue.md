@@ -540,6 +540,22 @@ A genuinely new universe requires a fresh market-cap snapshot and new candles; t
 
 ### 9. BRAIN-007 must not be implemented in the session that writes this record (README Section 2A C1). Writing the record is the deliverable.
 
+### 10. Correction of the provider evidence (recorded 2026-10-19T15:43Z, terminal artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json`)
+
+The revalidated fact in §1 and the external dependency in §8 are **superseded by observed
+evidence**. The market-cap provider that produced the frozen universe (CoinGecko, recorded
+in `research/universe_manifest.json` → `market_cap_source`) answers **HTTP 200** from this
+environment; the Binance spot REST host answers HTTP 451 while the official market-data
+failover host `data-api.binance.vision` answers HTTP 200. The universe exhaustion is
+therefore **not** an external boundary, and §5's falsifier ("if the provider becomes
+reachable and yields a genuinely new universe, the terminal state must transition out of
+`BLOCKED_EXTERNAL`") is now active: the implementation has been corrected to probe the
+provider instead of asserting a status, and the terminal state is
+`AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION`. The
+falsifier itself stands and is not weakened; only the recorded provider evidence was
+wrong. See BRAIN-008 for the decision that the corrected evidence now requires.
+
+
 ---
 
 ## BRAIN-006 — Decision record (written 2026-10-19 UTC, code hash `d0dca29...`, HEAD `a968aa62`)
@@ -756,7 +772,7 @@ All 5 parallel strategy lanes `COMPLETE`. No root cause was implemented in the s
 **Revalidation 2026-10-19 UTC (code hash `d0dca29...`, HEAD `63c780c9...`):** BRAIN-001..005 remain `RESOLVED_VERIFIED` — real-data provenance, independent authorization, holdout isolation, manifest-derived resume, and bounded durable shards are all still satisfied in the live tree. Two new items were opened from record-level evidence that the earlier verification loop never produced:
 
 - BRAIN-006 (P0) — `BRAINSTORMING_REQUIRED`. The preregistered selection rule in `configs/research_v1.json` → `selection` is not implemented anywhere; the only selector ranks by median profit_factor and applies none of the preregistered gates, and no buy-and-hold baseline metric exists to support the `median_sharpe_gt_buyhold` gate. The 18 frozen candidates and the v1 holdout conclusions inherit that deviation.
-- BRAIN-007 (P1) — `RESOLVED_VERIFIED`. Implemented linkage index (`src/breakout_research/linkage_index.py`), validation-only checkpoint counters with `holdout_exposed_count` and counter reconstruction/forgery detection in `src/breakout_research/backtest/checkpoint.py`, and `BLOCKED_EXTERNAL` terminal state for exhausted universe with provider evidence; does not append to `completed_cycle_ids` or advance `next_cohort_index`.
+- BRAIN-007 (P1) — `RESOLVED_VERIFIED`. Implemented linkage index (`src/breakout_research/linkage_index.py`), validation-only checkpoint counters with `holdout_exposed_count` and counter reconstruction/forgery detection in `src/breakout_research/backtest/checkpoint.py`, and a terminal state for the exhausted universe that does not append to `completed_cycle_ids` or advance `next_cohort_index`. **Corrected 2026-10-19T15:43Z:** the terminal state no longer asserts a hard-coded Binance HTTP 451 as "provider evidence"; it records observed provider evidence, and it is now `AWAITING_NEW_CANDIDATES` (the market-cap provider is reachable — see BRAIN-008).
 
 Neither new item may be implemented in the session that writes its design decision (README Section 2A C1). The next bounded task is the prerequisite impact quantification for BRAIN-006 — re-derive candidates for continuous cycle 0 under the preregistered rule from the verified validation records and quantify the divergence from `research/candidate_manifest.json` — which is read-only, offline, and holdout-safe. Any later `src/` change rotates the code hash and requires pilot re-run plus re-authorization before further campaign execution.
 
@@ -804,3 +820,61 @@ record is now implemented and verified.
   terminal state for an exhausted universe are not decided and were not implemented.
 
 **Out of scope:** ordinary bounded retries for demonstrated transient network errors, routine lint/test failures with an evidence-backed local fix, and recovery bundles/patches needed to preserve interrupted work. Those remain in the normal measured correction loop and are not duplicate durable error records.
+
+**Terminal-state correction update 2026-10-19 UTC (evidence recorded 15:43Z):** the terminal
+state for the exhausted universe was found to rest on an *asserted* provider status
+(a hard-coded Binance HTTP 451 in `continuous_universe_coordinator.py`) for a universe that
+is produced by CoinGecko, whose endpoint answers HTTP 200 from this environment, and while
+the documented Binance market-data failover answers HTTP 200. The implementation now probes
+the provider once per endpoint, records the observed status with a timestamp, and maps the
+observation onto the terminal state: `BLOCKED_EXTERNAL` only for a genuinely unreachable
+provider, `AWAITING_NEW_CANDIDATES` otherwise. The terminal record is durable in the
+repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and documented in
+`reports/terminal_state_exhausted_universe.md`.
+
+- BRAIN-007 (P1) — remains `RESOLVED_VERIFIED`; its provider-evidence defect is corrected
+  and its own falsifier ("if the provider becomes reachable and yields a genuinely new
+  universe, the terminal state must transition out of `BLOCKED_EXTERNAL`") is now satisfied
+  by the implementation rather than contradicted by it.
+- BRAIN-008 (P0) — `BRAINSTORMING_REQUIRED`: the market-cap provider is reachable and a
+  fresh snapshot yields constituents the frozen universe does not contain (ZEC, HYPE, HBAR)
+  while three frozen constituents left the top 20 (DOT, MATIC, ATOM). The campaign now
+  waits for a **preregistered universe version**, not for an external party. The next
+  bounded task is BRAIN-008's decision record, not an implementation.
+
+
+---
+
+## BRAIN-008 — The market-cap universe provider is reachable: the "exhausted universe" is a protocol boundary, not an external one
+
+**Priority:** P0 — the campaign's stop condition, universe versioning and cohort semantics
+**Status:** `BRAINSTORMING_REQUIRED` (evidence recorded 2026-10-19T15:43Z)
+**Cause labels:** `IMPLEMENTATION_DEFECT` (terminal state asserted a provider status it never observed), `RESEARCH_DESIGN_RISK` (universe versioning, cohort composition and cross-cohort comparability are undecided)
+
+### Evidence (observed, 2026-10-19T15:43:31Z)
+- The terminal artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json` was produced by the implementation. Its `provider_evidence.universe_snapshot_provider` records CoinGecko **HTTP 200** (67 ms) for the exact endpoint frozen in `research/universe_manifest.json` → `market_cap_source.endpoint`; `candle_data_providers` records `api.binance.com` **HTTP 451** and `data-api.binance.vision` **HTTP 200**.
+- The previous implementation hard-coded `{"status": 451, "reachable": false}` for `https://api.binance.com/api/v3/ping` in `continuous_universe_coordinator.py` and emitted it as "provider evidence" for a *universe* exhaustion, although the universe comes from CoinGecko and the candle path has a working official failover. The recorded status was never observed at write time and no timestamp was attached.
+- A fresh market-cap snapshot differs from the frozen one (frozen 2026-10-15T17:10:38Z): new constituents `zcash` (ZEC), `hyperliquid` (HYPE), `hedera-hashgraph` (HBAR); frozen constituents that fell out of the top 20: `polkadot` (DOT), `matic-network` (MATIC), `cosmos` (ATOM). The provider also lists at least 20 further constituents below the frozen depth (`research/campaign_cycles/terminal/exhausted_cohort_2.json` → `provider_evidence.universe_refresh.additional_candidate_symbols`).
+- The frozen universe holds 20 Binance-spot-verified constituents, 18 of which satisfy the ≥ 3-year history requirement; `COHORT_SIZE` is 20, so cohort index 2 is empty and the campaign cannot form a further cohort from the frozen universe.
+- The new constituents are **not** data-validated: no Binance spot verification, no candle fetch, no history check and no backtest were performed for them (`candidates_are_data_validated: false`).
+
+### Why this needs a design decision
+The campaign is not waiting for an external party; it is waiting for a **preregistered
+universe version** that says what to do with a changed market-cap top 20. Three
+questions are undecided and each is outcome-relevant:
+1. **Extend or replace?** Admitting ZEC/HYPE/HBAR while dropping DOT/ATOM (and re-adding XMR, which fails the history requirement) changes the evaluated universe. Extending keeps cycle-0 comparability but changes the cohort's composition; replacing breaks the cycle-0 link and the 14 v2 candidates' per-asset context.
+2. **Which version is preregistered?** The v1 universe and grid are frozen. Any change needs a separately versioned research specification that retains v1 and its evidence (README Section 2A F), including whether the 2,304-configuration grid is re-run for new assets only, and which confirmatory holdout window applies to the v2 candidates.
+3. **What is a "genuinely new constituent universe"?** The continuous-universe spec forbids a timestamp-only refresh, but it does not say how a genuine re-ranking (new ids, dropped ids) is to be treated: same cohort index, new cohort index, or a new universe version with a new snapshot identity.
+
+### Alternatives to compare (for the decision record)
+A. **Freeze and wait** — keep the v1 universe immutable, record the terminal state and stop until a human decides; the market-cap ranking may change again, so the decision is deferred, not made.
+B. **New versioned universe (v2 protocol)** — a separately preregistered specification that admits the new constituents, defines the data-requirement validation for them, and states the cross-cohort comparability rule; the v1 universe, v1 manifest and v1 holdout stay immutable and unused.
+C. **Supplementary cycle inside the v1 protocol** — keep protocol v1, run a further cohort from a fresh snapshot without changing the specification; cheapest, but it changes the evaluated universe without a preregistered version, which the README forbids.
+
+### Required acceptance evidence for the decision record
+- A named authoritative universe-versioning rule and the snapshot identity it binds to.
+- The rule for a changed market-cap ranking (extend / replace / new version) and the comparability statement for cycle 0's 497,664 units and the 14 v2 candidates.
+- The data-requirement validation plan for new constituents (26,280 closed hourly candles, ≥ 3 years, Binance spot verification) and the exclusion rule for constituents that fail it.
+- The confirmatory-holdout plan for the v2 candidates, which must remain `CANDIDATE_PENDING_HOLDOUT` until a fresh, unexposed confirmatory window is evaluated.
+- Falsifiers, rollback, and staged acceptance tests. **BRAIN-008 must not be implemented in the session that writes its decision record (README Section 2A C1).**
+
