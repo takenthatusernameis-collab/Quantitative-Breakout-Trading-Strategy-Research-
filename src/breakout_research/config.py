@@ -214,6 +214,7 @@ class CheckpointState:
     last_verified_record: int
     next_unit: Dict[str, Any]
     timestamp_utc: str
+    holdout_exposed_count: int = 0
     pilot_completed: bool = False
     pilot_passed: bool = False
 
@@ -227,6 +228,7 @@ class CheckpointState:
             'current_cost_index': self.current_cost_index,
             'completed_records': self.completed_records,
             'last_verified_record': self.last_verified_record,
+            'holdout_exposed_count': self.holdout_exposed_count,
             'next_unit': self.next_unit,
             'timestamp_utc': self.timestamp_utc,
             'pilot_completed': self.pilot_completed,
@@ -244,6 +246,7 @@ class CheckpointState:
             current_cost_index=d['current_cost_index'],
             completed_records=d['completed_records'],
             last_verified_record=d['last_verified_record'],
+            holdout_exposed_count=d.get('holdout_exposed_count', 0),
             next_unit=d['next_unit'],
             timestamp_utc=d['timestamp_utc'],
             pilot_completed=d.get('pilot_completed', False),

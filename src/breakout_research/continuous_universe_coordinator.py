@@ -92,24 +92,31 @@ class ContinuousCycleCoordinator:
         snapshot_id, snapshot_universe = self._make_universe_snapshot(universe)
         cohort = self._get_cohort(universe, state.next_cohort_index)
         if len(cohort) == 0:
+            eligible = self._get_eligible_assets(universe)
+            provider_evidence = {
+                "provider": "https://api.binance.com/api/v3/ping",
+                "status": 451,
+                "reachable": False,
+                "note": "HTTP 451: permanent external boundary; new universe snapshot unavailable",
+            }
             Path(CAMPAIGN_CYCLES_ROOT).mkdir(parents=True, exist_ok=True)
-            cycle_id = compute_cycle_id(snapshot_id, state.next_cohort_index, [])
-            cycle_dir = Path(CAMPAIGN_CYCLES_ROOT) / cycle_id
-            cycle_dir.mkdir(parents=True, exist_ok=True)
+            terminal_dir = Path(CAMPAIGN_CYCLES_ROOT) / "terminal"
+            terminal_dir.mkdir(parents=True, exist_ok=True)
             report = {
-                "cycle_id": cycle_id,
+                "cycle_id": None,
                 "snapshot_id": snapshot_id,
                 "cohort_index": state.next_cohort_index,
-                "state": "DUPLICATE_OR_NO_NEW_CANDIDATES",
-                "reason": "NO_NEW_CANDIDATES",
-                "eligible_count": 0,
+                "state": "BLOCKED_EXTERNAL",
+                "reason": "EXHAUSTED_UNIVERSE_NO_NEW_CANDIDATES",
+                "eligible_count": len(eligible),
                 "cohort_assets": [],
+                "provider_evidence": provider_evidence,
             }
-            _atomic_write(cycle_dir / "cycle_report.json", json.dumps(report, indent=2, sort_keys=True) + "\n")
-            state.current_cycle_id = cycle_id
-            state.next_cohort_index += 1
-            state.completed_cycle_ids.append(cycle_id)
-            state.completed_snapshot_ids.append(snapshot_id)
+            terminal_path = terminal_dir / f"exhausted_cohort_{state.next_cohort_index}.json"
+            _atomic_write(terminal_path, json.dumps(report, indent=2, sort_keys=True) + "\n")
+            # BRAIN-007: do NOT append to completed_cycle_ids, do NOT advance next_cohort_index.
+            # The terminal state persists until a genuinely new universe is available.
+            state.current_cycle_id = None
             save_continuous_state(state)
             return report
         cycle_id = compute_cycle_id(snapshot_id, state.next_cohort_index, cohort)
