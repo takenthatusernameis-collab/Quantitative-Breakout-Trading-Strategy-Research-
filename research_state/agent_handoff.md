@@ -779,3 +779,42 @@ The 67 entries in this range were the same verification loop: read the prior han
 - `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
 - `grep '"code_hash"' research_state/campaign_authorization.json`
 - `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
+
+---
+
+## Session activity — 2026-10-19T16:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it (implement BRAIN-006: conforming selector + buy-and-hold baseline), update the handoff, write the initial task message for the next agent.
+
+**Outcome:** BRAIN-006 implementation completed. Created `src/breakout_research/selection.py` (preregistered rule gates, status taxonomy, ranking/tiebreakers, holdout refusal) and `src/breakout_research/baselines.py` (buy-and-hold baseline with data-manifest hash verification). `candidate_freeze.select_best_candidate` now uses the conforming selector; legacy profit-factor selector retained as `_legacy_profit_factor_selector`. Baseline artifact `research/baselines/577e87e2dc37b496b4d0c9e1a2eeecc9a777f01698591fc395dddb12f45708cb.json` exists and is verified (committed baseline test passes). `research/candidate_manifest_v2.json` created with `rule: preregistered_v1`, 14 candidates, 1 `INSUFFICIENT_EVIDENCE`, 3 `NO_CANDIDATE` matching `research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d/candidate_selection.json`. `reports/holdout_disposition_v2.md` written stating v1 holdout is `EXPOSED_OR_UNKNOWN` and never reused; v2 candidates are `CANDIDATE_PENDING_HOLDOUT`. Re-ran pilot (24 configs on 1 asset) and re-authorized; `research_state/campaign_authorization.json` code_hash matches `compute_code_hash()` (`2efd3b18...`).
+
+**State verified (2026-10-19T16:00Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 165 passed, exit 0
+- `PYTHONPATH=src python3 -m pytest tests/test_selection.py tests/test_baselines.py -q` → 38 passed
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`
+- `research_state/campaign_authorization.json` code_hash matches; authorized true
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664` → verified true
+- Selection check matches expected (14/1/3). v2 manifest matches selection for selected assets.
+- `git ls-remote origin main` == `git rev-parse HEAD` == `f90f2346f2d540b339ca1b7aa5ca727def1e43fd`
+- Working tree clean of functional source changes (only state files from pilot/authorize updated)
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-006 implemented and verified (conforming selector + buy-and-hold baseline) — next: review BRAIN-008 and determine next action
+
+**Status (verified 2026-10-19T16:00Z):**
+- BRAIN-006 (P0): `IMPLEMENTED_VERIFIED`. `src/breakout_research/selection.py` and `src/breakout_research/baselines.py` in place with full test coverage (38/38 selection+baselines pass). Legacy profit-factor selector retained as provenance. `research/candidate_manifest_v2.json` (rule `preregistered_v1`) matches re-derived selection (14 selected, 1 INSUFFICIENT_EVIDENCE, 3 NO_CANDIDATE). Baseline artifact verified. Holdout report `reports/holdout_disposition_v2.md` states v1 holdout `EXPOSED_OR_UNKNOWN` not reused; v2 candidates `CANDIDATE_PENDING_HOLDOUT`. Pilot re-run and authorization re-derived; code hash `2efd3b18...` matches authorization.
+- BRAIN-007 (P1): `RESOLVED_VERIFIED` (linkage index, validation-only counters with `holdout_exposed_count`, counter reconstruction/forgery detection, terminal state with observed provider evidence).
+- All tests: 165 passed, exit 0. HEAD == origin/main (`f90f2346`). Working tree has updated state files from pilot/authorize only.
+
+**Next (one bounded task):** Review BRAIN-008 ("The market-cap universe provider is reachable: the \"exhausted universe\" is a protocol boundary, not an external one"). The market-cap provider (CoinGecko) returned HTTP 200 from the environment; Binance failover has HTTP 200 for data-api.binance.vision even though api.binance.com returned HTTP 451. A fresh snapshot yields new constituents (ZEC, HYPE, HBAR) while some frozen constituents dropped from top 20. Decide whether to proceed with BRAIN-008's decision record (design only, no implementation in same session), or document terminal state as appropriate. No campaign/grid re-execution; no modification of shards/ledger/v1 manifest/exposed holdouts.
+
+**Constraints:** Preserve per-cycle immutability. Do not modify `configs/`, shards, ledger, v1 manifest (`research/candidate_manifest.json`), or exposed holdout records. Do not re-run full campaign/grid. HTTP 451 on some endpoints is recorded as observed evidence, not a reason to retry blindly.
+
+**Verification commands:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+- `grep '"code_hash"' research_state/campaign_authorization.json`
+- `python3 scripts/verify_cycle_results.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --expect-records 497664`
+- `PYTHONPATH=src python3 scripts/select_candidates_cycle0.py research/campaign_cycles/0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d --out /tmp/check_selection.json`
+- `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`
