@@ -1061,3 +1061,74 @@ constituent is not validated. If the v1 artifacts no longer match the recorded `
 v2 manifests are invalid.
 
 
+### 13. Decision implemented — v2 candidate set frozen (2026-10-19T21:30:17Z, separate session)
+
+**Delivered.** The v2 candidate set is frozen, hash-bound and verified offline. No grid, backtest,
+selection or confirmatory-window read was performed, and no v1 artifact was modified.
+
+**The freeze.** `configs/research_v2_candidate_freeze.json`, `manifest_hash`
+`5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f`, frozen at
+**2026-10-19T21:30:17Z**. It records:
+
+- **the candidate set** — exactly the 18 validated constituents of universe version v2 (ADA AVAX BCH BNB
+  BTC DOGE ETH HBAR LINK LTC NEAR SOL SUI TRX UNI XLM XRP ZEC), bound to `research/universe_manifest_v2.json`
+  `4e927e52…` and `research/data_manifest_v2.json` `9f64d8d1…`. Membership is not re-derived, re-ranked or
+  widened; HYPEUSDT (`insufficient_hourly_history`) and XMRUSDT (`binance_spot_unavailable`) stay excluded
+  with their reasons, and the 12 rule-excluded assets are listed with theirs.
+- **the snapshot-identity tuple** (§1) — `protocol_version v2`, `universe_version v2`, `specification_hash
+  49fb0814…`, the frozen CoinGecko endpoint, the in-window retrieval `2026-10-19T18:47:56Z`, `code_hash
+  2efd3b18…`, `data_manifest_hash 9f64d8d1…` and `candidate_manifest_hash` = this artifact's own
+  `manifest_hash`. The tuple's last field is the artifact's own hash: the digest is computed with
+  `manifest_hash` and `snapshot_identity.candidate_manifest_hash` removed, so the tuple can name the
+  candidate-manifest hash without hashing itself into a cycle (the convention already used by
+  `research/data_manifest_v2.json`).
+- **the data boundary** — the confirmatory window opens at the first UTC hour boundary strictly after the
+  freeze, `2026-10-19T22:00:00Z`, needs ≥ 2,160 closed hourly candles (90 days), so the earliest possible
+  window end is `2027-01-17T22:00:00Z`. The window is single-use, never overlaps the v1 holdout, is never
+  read during candidate selection, and every read increments `holdout_exposed_count`.
+- **the supersession** — `research/candidate_manifest.json` (sha256 `87589f83…`, `manifest_hash
+  9ea6b1c3…`, freeze commit `3e937dd3…`) is superseded for evaluation purposes and remains immutable
+  historical evidence. `research/candidate_manifest_v2.json` is recorded explicitly as *not* a v2-universe
+  candidate manifest: it is manifest_version 2 of the v1 campaign, its candidates remain
+  `CANDIDATE_PENDING_HOLDOUT` against the v1 universe, and it is not superseded by this freeze.
+
+**What this freeze does not do.** It freezes the candidate *set*, not a selected configuration. The
+per-asset selected-configuration manifest (≤ 1 candidate per asset, under the unchanged v1 selection block)
+is still `OUTSTANDING`: producing it requires a v2 grid run, which no recorded decision authorizes. The
+freeze therefore authorizes nothing — `grid_run_authorized`, `candidate_selection_authorized`,
+`confirmatory_evaluation_authorized` and `candle_fetch_authorized` are all `false` — and the
+confirmatory-window evaluation additionally requires the selected-configuration manifest to be committed
+and hash-bound first.
+
+**A confirmed defect in the delivered execution protocol.** `configs/research_v2_execution.json` names
+`src/breakout_research/v2/` as an example of v2 execution code that lives "outside the hashed set". That
+path is **inside** it: `compute_code_hash()` (`src/breakout_research/config.py:257`) walks every `.py` file
+under `src/breakout_research` recursively, so any file added there changes the code hash and invalidates
+the v1 campaign authorization. The execution protocol is immutable and hash-bound, so it was not edited;
+the correction is carried in the freeze's `code_hash_constraint` block (which names only genuinely
+outside paths: `scripts/`, `src/v2_campaign/`) and must be formalized by a versioned amendment before any
+v2 execution code is written. Until then, the v1 campaign authorization stays bound to `code_hash
+2efd3b18…`.
+
+**Artifacts.**
+- `configs/research_v2_candidate_freeze.json` — the frozen candidate set and data boundary.
+- `scripts/build_v2_candidate_freeze.py` — the deterministic producer (the freeze instant is pinned; it
+  refuses to overwrite an existing artifact without `--force`).
+- `scripts/verify_research_v2_candidate_freeze.py` — read-only offline verifier (exit 0/1, JSON report).
+- `tests/test_research_v2_candidate_freeze.py` — 27 deterministic tests, including seven tamper tests that
+  prove the verifier is not vacuous (a widened candidate set, a window that starts before the freeze, a
+  self-authorizing freeze, a widened universe manifest, a v2 execution artifact, a v2 result row, a
+  confirmatory exposure and a missing v1 artifact are each detected).
+
+**Still outstanding — no execution is authorized.** The v2 grid run and the selected-configuration
+manifest; the v2 confirmatory-window evaluation; the v2 holdout report; the versioned amendment that
+formalizes the code-hash path rule and records the bounded authorization for a selection run. The v2
+specification is immutable and still records P2/P3 as `OUTSTANDING`; flipping that requires a versioned
+amendment.
+
+**Falsifiers for this delivery.** If the frozen set stops matching the validated constituents of the v2
+universe manifest, or the recorded identity tuple stops matching the specification, the manifests or the
+current source tree, the freeze is invalid. If the confirmatory window ever opens before the freeze, or
+if a v2 result row, shard, ledger or result manifest appears, the freeze has been violated. If the v1
+artifacts no longer match their recorded digests, the freeze is invalid.
+

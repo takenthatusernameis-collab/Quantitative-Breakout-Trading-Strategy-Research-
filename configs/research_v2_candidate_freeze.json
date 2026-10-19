@@ -1,0 +1,231 @@
+{
+  "artifact": "v2_candidate_freeze",
+  "artifact_version": "v2-candidate-freeze-1",
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-19T21:30:17Z",
+  "candidate_freeze_timestamp_utc": "2026-10-19T21:30:17Z",
+  "freeze_status": "CANDIDATE_SET_FROZEN_NO_EXECUTION",
+  "specification_purpose": "Freeze the v2 candidate set (asset membership) and the development / confirmatory data boundary before any v2 grid run, candidate selection or confirmatory-window evaluation happens. This artifact records what is frozen; it authorizes nothing, runs nothing and reads no candle.",
+  "scope": {
+    "what_is_frozen": [
+      "the v2 candidate set: exactly the validated constituents of universe version v2",
+      "the development / confirmatory data boundary and the window rules",
+      "the snapshot identity tuple of universe version v2"
+    ],
+    "what_is_not_frozen": [
+      "the per-asset selected configuration of any candidate; that selection is outstanding",
+      "any v2 result, metric, status or economic conclusion"
+    ],
+    "candidate_manifest_version": 1,
+    "note": "This artifact is the v2 candidate manifest at version 1: it freezes the candidate set. The selected-configuration manifest that the confirmatory window rules require is a later, separate artifact and must be committed and hash-bound before the first confirmatory-window candle is read."
+  },
+  "design_basis": {
+    "brainstorming_item": "BRAIN-008",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-008 sections 1, 3, 4 and 6",
+    "prerequisites_delivered_before_this_freeze": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "prerequisite_note": "P1 configs/research_v2.json, P2 research/universe_manifest_v2.json, P3 research/data_manifest_v2.json and P4 configs/research_v2_execution.json are delivered and hash-verified. configs/research_v2.json is immutable and still records P2 and P3 as OUTSTANDING; flipping that text requires a versioned amendment, not an edit.",
+    "sections_implemented_here": [
+      "BRAIN-008 section 1: the v2 candidate set is frozen under the v2 snapshot identity",
+      "BRAIN-008 section 3: membership is exactly the validated constituents and excluded assets stay excluded",
+      "BRAIN-008 section 4: the confirmatory window opens after the freeze, is single-use and is never read during selection"
+    ],
+    "sections_deliberately_not_implemented_here": [
+      "the v2 grid run and the per-asset configuration selection (no recorded decision authorizes a run)",
+      "the v2 confirmatory-window evaluation and the v2 holdout report"
+    ]
+  },
+  "frozen_candidate_set": {
+    "count": 18,
+    "constituents": [
+      "ADA",
+      "AVAX",
+      "BCH",
+      "BNB",
+      "BTC",
+      "DOGE",
+      "ETH",
+      "HBAR",
+      "LINK",
+      "LTC",
+      "NEAR",
+      "SOL",
+      "SUI",
+      "TRX",
+      "UNI",
+      "XLM",
+      "XRP",
+      "ZEC"
+    ],
+    "binance_pairs": [
+      "ADAUSDT",
+      "AVAXUSDT",
+      "BCHUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "ETHUSDT",
+      "HBARUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "NEARUSDT",
+      "SOLUSDT",
+      "SUIUSDT",
+      "TRXUSDT",
+      "UNIUSDT",
+      "XLMUSDT",
+      "XRPUSDT",
+      "ZECUSDT"
+    ],
+    "membership_rule": "Exactly the constituents marked validated in research/universe_manifest_v2.json (validated == true, exclusion_reason == null). Membership is not re-derived, re-ranked, widened or narrowed by this artifact.",
+    "universe_manifest_path": "research/universe_manifest_v2.json",
+    "universe_manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+    "data_manifest_path": "research/data_manifest_v2.json",
+    "data_manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+    "benchmark_asset": "BTCUSDT",
+    "widening_by_reranking_forbidden": true,
+    "excluded_assets_stay_excluded": true,
+    "excluded_after_validation": {
+      "HYPEUSDT": "insufficient_hourly_history",
+      "XMRUSDT": "binance_spot_unavailable"
+    },
+    "excluded_by_rule": {
+      "USDT": "stablecoin_excluded",
+      "USDC": "stablecoin_excluded",
+      "FIGR_HELOC": "exchange_token_excluded",
+      "USDS": "stablecoin_excluded",
+      "WBT": "exchange_token_excluded",
+      "LEO": "exchange_token_excluded",
+      "RAIN": "exchange_token_excluded",
+      "USDE": "stablecoin_excluded",
+      "DAI": "stablecoin_excluded",
+      "CC": "exchange_token_excluded",
+      "USD1": "stablecoin_excluded",
+      "GRAM": "exchange_token_excluded"
+    },
+    "exclusion_note": "HYPEUSDT and XMRUSDT failed the BRAIN-008 section 3 validation and are not v2 candidates. Twelve further assets were removed by the exclusion rules before validation. Every exclusion carries a reason; nothing was promoted, substituted or admitted by lowering a threshold."
+  },
+  "snapshot_identity": {
+    "protocol_version": "v2",
+    "universe_version": "v2",
+    "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+    "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1",
+    "market_cap_source_retrieval_timestamp_utc": "2026-10-19T18:47:56Z",
+    "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "data_manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+    "candidate_manifest_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f"
+  },
+  "snapshot_identity_note": "BRAIN-008 section 1 identity tuple. research/universe_manifest_v2.json records candidate_manifest_hash = null because no v2 candidate manifest existed when it was frozen; this artifact is that manifest, so the tuple's candidate_manifest_hash is the manifest_hash of this document.",
+  "data_boundary": {
+    "development_data_rule": "Candles that close at or before confirmatory_window_start_utc are development data and may inform selection. No candle inside the confirmatory window may be read during selection.",
+    "development_data_materialized_through_open_timestamp_ms": 1792429200000,
+    "development_data_materialized_note": "The v2 datasets end at the last fully closed hour at the snapshot retrieval timestamp. The candles between that instant and the window start are development data as well; they are not confirmatory data and reading them creates no confirmatory exposure.",
+    "confirmatory_window_start_utc": "2026-10-19T22:00:00Z",
+    "confirmatory_window_start_rule": "the first UTC hour boundary strictly after candidate_freeze_timestamp_utc",
+    "min_confirmatory_window_hours": 2160,
+    "min_confirmatory_window_rationale": "90 days of closed hourly candles after the freeze",
+    "earliest_possible_confirmatory_window_end_utc": "2027-01-17T22:00:00Z",
+    "window_overlap_with_v1_holdout": "forbidden",
+    "v1_holdout_reuse": "forbidden",
+    "v1_holdout_status": "EXPOSED_OR_UNKNOWN",
+    "single_use": true,
+    "no_ranking_or_retuning_on_holdout": true,
+    "data_used_for_candidate_selection": "excluded",
+    "access_counting": "Every read of a candle inside the confirmatory window increments holdout_exposed_count in the v2 checkpoint and is recorded in the v2 holdout report.",
+    "evaluation_only_after": "the selected-configuration v2 candidate manifest is committed and hash-bound"
+  },
+  "selection_remainder": {
+    "status": "OUTSTANDING",
+    "requirement": "The per-asset selected-configuration manifest (at most one candidate per asset, selected under the unchanged v1 selection block) does not exist. It may be produced only by a v2 grid run that a separate recorded decision authorizes.",
+    "rule_binding": "the selection block of configs/research_v1.json, inherited byte-equal by configs/research_v2.json",
+    "max_candidates_per_asset": 1,
+    "may_not_change_the_frozen_candidate_set": true,
+    "must_be_hash_bound_before_first_confirmatory_read": true,
+    "grid_run_authorized": false
+  },
+  "execution_authorization": {
+    "grid_run_authorized": false,
+    "candidate_selection_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "candle_fetch_authorized": false,
+    "statement": "This artifact authorizes nothing. It records what is frozen and what is still outstanding. A later session may produce the bounded authorization design that configs/research_v2_execution.json requires; no run is authorized by this file."
+  },
+  "code_hash_constraint": {
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "hashed_set_root": "src/breakout_research",
+    "hashed_set_rule": "compute_code_hash() hashes every .py file under src/breakout_research, recursively. Any file added or edited under that root changes the code hash and invalidates the v1 campaign authorization in research_state/campaign_authorization.json.",
+    "v2_execution_code_must_live_outside_the_hashed_set": true,
+    "outside_hashed_set_examples": [
+      "scripts/",
+      "src/v2_campaign/"
+    ],
+    "inside_hashed_set_examples": [
+      "src/breakout_research/",
+      "src/breakout_research/v2/"
+    ],
+    "alternative": "an explicit recorded v1 re-authorization that rotates research_state/campaign_authorization.json",
+    "known_defect_in_related_artifact": "configs/research_v2_execution.json names 'src/breakout_research/v2/' as an example of code outside the hashed set; that path is inside it. The execution protocol is immutable and hash-bound, so the correction is carried here and must be formalized by a versioned amendment before any v2 execution code is written."
+  },
+  "supersedes": {
+    "protocol_version": "v1",
+    "candidate_manifest_path": "research/candidate_manifest.json",
+    "candidate_manifest_sha256": "87589f83f3bfe22517bb73257d285ec47d602c19a892f0971035e1523df4f1d6",
+    "candidate_manifest_hash": "9ea6b1c3439c6087650aca549373642e0afe8460e0eee76f520cc1ac2bd30597",
+    "candidate_manifest_freeze_commit": "3e937dd3422fe2711a182de5d2ba564cad48a8fe",
+    "reason": "The v1 candidate set was frozen against the v1 universe and the v1 snapshot. The v2 candidate set is frozen against the v2 universe manifest and the v2 snapshot identity. The v1 candidate manifest is superseded for evaluation purposes and remains immutable historical evidence.",
+    "v1_artifacts_are_immutable": true,
+    "not_a_v2_universe_candidate_manifest": {
+      "path": "research/candidate_manifest_v2.json",
+      "sha256": "a68b061a8c314828bf60478ef8f826ee9d532c6e5ff1545c8afaa2c8e03dfa49",
+      "manifest_version": 2,
+      "note": "research/candidate_manifest_v2.json is manifest_version 2 of the v1 campaign. Its candidates remain CANDIDATE_PENDING_HOLDOUT against the v1 universe. It is not superseded by this freeze, it is not a v2-universe candidate manifest, and its candidates are not v2 candidates."
+    }
+  },
+  "related_artifacts": {
+    "v2_specification": {
+      "path": "configs/research_v2.json",
+      "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+    },
+    "v2_execution_protocol": {
+      "path": "configs/research_v2_execution.json",
+      "specification_hash": "aa902aa9e6ddfd7f0536765411e78d718f720b7a473a8f621bf64444355f2d38"
+    },
+    "v2_universe_manifest": {
+      "path": "research/universe_manifest_v2.json",
+      "manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88"
+    },
+    "v2_data_manifest": {
+      "path": "research/data_manifest_v2.json",
+      "manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e"
+    },
+    "v2_raw_snapshot": {
+      "path": "research/v2_evidence/raw_market_cap_response.json",
+      "sha256": "c4772c58d03c94df6ae98dc31bb3996de2c90c007a2ef7f72a0a92449fb1dbad"
+    }
+  },
+  "durability": {
+    "rule": "The freeze takes effect at candidate_freeze_timestamp_utc and becomes durable when this artifact is committed. No confirmatory-window candle may be read before the commit that carries this artifact exists.",
+    "freeze_commit": null,
+    "freeze_commit_status": "PENDING_COMMIT",
+    "note": "The commit hash is recorded by the committing session. This artifact is not rewritten after that commit, because its manifest_hash must not change."
+  },
+  "producer": {
+    "path": "scripts/build_v2_candidate_freeze.py",
+    "verify_command": "python3 scripts/verify_research_v2_candidate_freeze.py"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash",
+      "snapshot_identity.candidate_manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash and snapshot_identity.candidate_manifest_hash removed, so that the snapshot-identity tuple can name the candidate-manifest hash of this very artifact without hashing itself into a cycle. The two fields hold the same value by construction."
+  },
+  "manifest_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f"
+}
