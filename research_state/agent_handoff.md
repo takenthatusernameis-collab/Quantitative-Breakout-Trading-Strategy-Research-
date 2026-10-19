@@ -60,3 +60,15 @@ No code or tracked data artifacts were modified in this session (the re-bind is 
 3. (P0) BRAIN-002/003 gates: independent pilot authorization and frozen-candidate/holdout separation must be validated before any full campaign run.
 
 Do NOT re-run the campaign, do NOT modify `src/`, the authorization artifact, or the universe manifest until the reconcile binding is resolved and verified.
+
+## Session activity — 2026-10-19T02:38Z (this session)
+
+Task: Resolve code/campaign-id binding so reconcile() passes under current code d0dca298.
+
+Outcome: Complete. Transformed 414,037 records from legacy campaign 707f... to new campaign 577e... under current code hash; re-bound spec/data (unchanged) + code. Top-level manifest recreated; legacy manifest preserved as research/results_manifest.legacy_707f.json. reconcile() passes: 413,990 completed IDs. Old shard dir preserved. Tests 80 passed.
+
+## Initial task message for next agent
+
+Subject: BRAIN-001 real-market-data canary + BRAIN-002/003 gate validation
+
+Status: Result store runnable under current code. Next: verify real Binance hourly data path end-to-end (no synthetic), validate pilot authorization and frozen-candidate/holdout separation, then only then consider full campaign run. Do not re-run campaign until gates validated.
