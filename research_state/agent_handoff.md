@@ -130,3 +130,46 @@ Acceptance criteria:
 2. `reconcile()` passes after each batch; record count increases only by executed units.
 3. `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed.
 4. Commit/push state updates; `git ls-remote origin main` == local HEAD; working tree clean.
+
+## Session activity — 2026-10-19T03:07Z (this session)
+
+Task: Continue bounded validation batches across remaining genuine assets (the prior agent's initial task message).
+
+Outcome: COMPLETED for three remaining near-complete assets. Ran bounded batches (holdout off, one asset per batch via `assets_override`, since `max_assets` alone slices `assets[:1]` = BTCUSDT only and cannot reach these assets):
+- UNIUSDT: +5 executed (413,990 -> 413,995)
+- LTCUSDT: +54 executed (413,995 -> 414,049)
+- AVAXUSDT: +725 executed (414,049 -> 414,774)
+All batches completed without `ResultStoreError`; no new holdout rows (holdout count unchanged at 54 pre-existing legacy rows). `reconcile()` passes under current code `d0dca298`: 414,774 completed IDs / 414,821 raw records / 120 shards / 426,040,554 bytes. Manifest bound to campaign_id `577e87e2...`, spec `2d22e702`, code `d0dca298`, data `d8b0cb7e` — matches current source.
+- `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed, exit 0.
+- Committed `8a09e398` and pushed: `origin/main` == local HEAD == `8a09e398`. Working tree clean.
+- No `src/`, authorization-artifact, or universe-manifest changes (diffs limited to run artifacts: manifest shard entries, checkpoint counters 414774, timestamps).
+
+Remaining genuine assets with incomplete validation units: SUIUSDT, DOTUSDT, ATOMUSDT (~27,648 validation units each; essentially unstarted). Full eligible-universe total = 497,664 units (18 assets x 2304 configs x 4 folds x 3 costs); 414,774 verified; ~82,890 remaining. Each full-asset batch takes ~1 hour with cached Binance data, so one asset per session.
+
+## Initial task message for next agent
+
+**Subject: Continue bounded validation batches across SUIUSDT, DOTUSDT, ATOMUSDT**
+
+**Status:** Gates green; result store runnable (`reconcile` passes: 414,774 completed IDs / 414,821 records / 120 shards). Tests 80 passed. Git clean, HEAD = origin/main = `8a09e398`. UNIUSDT, LTCUSDT, AVAXUSDT batches committed and pushed.
+
+**Next:** Continue bounded validation campaign batches across the remaining genuine assets — SUIUSDT, DOTUSDT, ATOMUSDT — one asset per batch (holdout off), using `assets_override=[<asset>]`. Commit/push state updates after each batch and verify remote SHA matches local HEAD. Do NOT run the full campaign in one session (each full asset is ~27,648 units / ~1 hour with cached data). Do NOT modify `src/`, the authorization artifact, or the universe manifest.
+
+**Acceptance criteria:**
+1. Each batch completes without `ResultStoreError`; no new holdout rows written (holdout off).
+2. `reconcile()` passes after each batch; completed-ID count increases only by executed units (pre-existing 47 duplicate IDs / 54 pre-existing holdout rows are legacy evidence, not regressions).
+3. `PYTHONPATH=src python3 -m pytest tests/ -q` -> 80 passed, exit 0.
+4. Commit/push state updates; `git ls-remote origin main` == local HEAD; working tree clean. No `src/`, authorization-artifact, or universe-manifest changes.
+
+**Verification commands to re-check integrity:**
+- `git rev-parse HEAD` and `git ls-remote origin main` -> expect `8a09e3984d56bbd766fb4c436c26958f1c3b240a`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` -> expect `d0dca298869fadfe3ee80b54010f8cb0d19216cf2f7b708ead197164fc509234`
+- `PYTHONPATH=src python3 -m pytest tests/ -q` -> expect 80 passed
+- `sha256sum research/universe_snapshots/*/universe_manifest.json | sort` -> all five expect `baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3`
+- `python3 -c "import json; c=json.load(open('research_state/continuous_universe_state.json')); print(c['next_cohort_index'], len(c['completed_cycle_ids']), len(c['completed_snapshot_ids']))"` -> expect `2 2 2`
+
+**Unresolved blockers (ranked):**
+1. (P0) ~82,890 validation units remain across SUIUSDT, DOTUSDT, ATOMUSDT — run bounded batches one asset per session; do not attempt the full campaign in one session.
+2. (P0, external) BRAIN-001 real-market-data local execution not yet verified in this container (no live Binance canary beyond cached data); do not conflate cache-backed validation with economic success.
+3. (P0) BRAIN-002/003 gates: independent pilot authorization and frozen-candidate/holdout separation must be validated before any full campaign run; 54 pre-existing holdout rows are legacy evidence to leave untouched.
+
+Do NOT re-run the campaign in full, do NOT modify `src/`, the authorization artifact, or the universe manifest until the remaining bounded batches are resolved and verified.
