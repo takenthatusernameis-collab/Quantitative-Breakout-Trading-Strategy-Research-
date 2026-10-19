@@ -1,4 +1,14 @@
-## Session activity — 2026-10-19T13:55Z (this session)
+## Session activity — 2026-10-19T13:58Z (this session)
+
+**Task:** Read prior agent task from durable handoff, complete it, update handoff, write initial task message for next agent.
+
+**Outcome:** Implemented BRAIN-006 core modules `src/breakout_research/selection.py` and `src/breakout_research/baselines.py` (conforming selector + buy-and-hold baseline) per decision record. Tests green (106 passed). Pilot re-run and re-authorization remain for next session.
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-006 src modules added — next: baseline artifact, versioned manifest, pilot re-run, re-authorization
+
+**Next:** Generate `research/baselines/<campaign_id>.json` from frozen candles; publish new versioned candidate manifest; re-run pilot and re-derive `campaign_authorization.json` matching new code hash; update holdout report. Do not modify v1 manifest or shards.
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
 
