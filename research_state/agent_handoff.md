@@ -488,3 +488,32 @@ The 67 entries in this range were the same verification loop: read the prior han
 **Constraints:** Do NOT modify shards, ledger, v1 manifest, exposed holdout records, or run full campaign/grid. HTTP 451 is a permanent external boundary — record it, do not retry. Preserve per-cycle immutability.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `grep '"code_hash"' research_state/campaign_authorization.json`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+## Session activity — 2026-10-19T15:06Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Re-ran pilot (phase 1) and re-derived authorization (phase 2) for code hash `e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155`. Pilot re-ran 24 configurations on 1 asset; total results 24. Authorization re-derived with `authorized: true`, `reasons: []`. HEAD at `feb53275` equals origin/main. Campaign authorization and pilot evidence are consistent with code hash.
+
+**State verified (2026-10-19T15:06Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 155 passed, exit 0
+- `compute_code_hash()` = `e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155`
+- `research_state/campaign_authorization.json` code_hash matches; authorized true
+- `git ls-remote origin main` == `git rev-parse HEAD` == `feb53275e8ef7609e3b8f65f82ae6bf30b16393e`
+- Working tree clean
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-007 implemented (linkage index, counter semantics, terminal state) — next: re-derive campaign authorization for rotated code hash
+
+**Status (verified 2026-10-19T15:06Z):**
+- BRAIN-007 implemented and verified: linkage index (`src/breakout_research/linkage_index.py`), validation-only checkpoint counters with `holdout_exposed_count`, `BLOCKED_EXTERNAL` terminal state for exhausted universe with provider evidence (HTTP 451).
+- Tests: 155 passed, exit 0. Code hash `e27f064a...` matches `research_state/campaign_authorization.json` (`authorized: true`).
+- BRAIN-006 remains `IMPLEMENTED_VERIFIED`.
+
+**Next (one bounded task):** Update BRAIN-007 status to `RESOLVED_VERIFIED` in `research_state/brainstorming_queue.md` (if not already). Confirm the handoff reflects the current state; no further implementation required. No other changes.
+
+**Constraints:** Do NOT modify `configs/`, shards, ledger, v1 manifest, or exposed holdout records. Preserve per-cycle immutability. Do not re-run the full campaign or the 2,304-configuration grid. HTTP 451 is a permanent external boundary — record it, do not retry.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; compare against `research_state/campaign_authorization.json` `code_hash`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+
+---
