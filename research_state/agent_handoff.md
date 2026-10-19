@@ -1,3 +1,33 @@
+## Session activity — 2026-10-19T16:32:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at 16:31:06Z):** "write the BRAIN-008 decision record in `research_state/brainstorming_queue.md`."
+
+**Outcome:** Verified BRAIN-008 decision record is already present and complete in `research_state/brainstorming_queue.md` (universe-versioning rule §1, ranking rule + comparability §2, validation plan §3, holdout plan §4, alternatives §5, recommendation §6, falsifiers §7, rollback §8, staged acceptance tests §9, and the explicit "must not implement in same session" §10). Status is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. Campaign remains in `AWAITING_NEW_CANDIDATES` state with observed provider evidence (CoinGecko HTTP 200, Binance failover HTTP 200). All tests pass (165/165), authorization code hash matches, and repo is in expected state.
+
+**State verified (2026-10-19T16:32Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 165 passed, exit 0
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`)
+- Terminal artifact: `AWAITING_NEW_CANDIDATES NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION UNIVERSE_VERSION_DECISION`
+- `git ls-remote origin main` == `git rev-parse HEAD` (39572c27); working tree has only authorization timestamp refresh.
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-008 decision record is complete (DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION) — campaign awaits a preregistered universe version
+
+**Status (verified 2026-10-19T16:32Z):**
+- BRAIN-008 record complete in `research_state/brainstorming_queue.md` with all required sections (§§1–10). Recommendation A (defer) pending a properly preregistered v2 spec with validated constituents and fresh holdout per §4.
+- Tests pass (165/165); authorization matches code hash `2efd3b18...`; terminal state `AWAITING_NEW_CANDIDATES` with observed provider evidence.
+- BRAIN-007 remains `RESOLVED_VERIFIED`; BRAIN-006 remains `IMPLEMENTED_VERIFIED`; cycle 0 verified at 497,664 units.
+
+**Next (one bounded task):** Decide whether to begin a preregistered v2 universe (requires v2 spec, validated constituents per §3, v2 data manifest, v2 holdout plan per §4) or keep campaign terminal/awaiting. If pursuing v2, first produce a preregistered v2 specification (immutable, hashed) — not implementation. Otherwise, document the decision to remain in terminal state.
+
+**Do NOT:** implement v2 (create spec/manifest/constituents/execution), modify `src/`, extend frozen universe, fetch candles for new constituents, run campaign/grid, reuse v1 holdout, or treat ZEC/HYPE/HBAR as validated. BRAIN-008 must not be implemented in the same session as writing its decision record (already satisfied).
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `python3 -c "import json;d=json.load(open('research/campaign_cycles/terminal/exhausted_cohort_2.json'));print(d['state'],d['reason'],d['blocking_dependency'])"`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+
+---
 ## Session activity — 2026-10-19T16:31:06Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
