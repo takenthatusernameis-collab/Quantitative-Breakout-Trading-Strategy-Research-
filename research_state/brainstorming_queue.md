@@ -428,6 +428,67 @@ C. External durable storage only if its required access, retention, and free/ope
 
 ---
 
+## BRAIN-006 — Preregistered candidate-selection rule is not implemented by the only selector
+
+**Priority:** P0 — blocks any defensible candidate promotion  
+**Status:** `BRAINSTORMING_REQUIRED` (evidence recorded 2026-10-19 UTC; the required impact quantification is the next bounded task, and the structured design decision must be written in a later session)  
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `RESEARCH_DESIGN_RISK`  
+**Confidence:** confirmed by source inspection at code hash `d0dca29...`; the divergence from the frozen manifest is not yet quantified.
+
+### Evidence
+- `configs/research_v1.json` → `selection` freezes: `ranking_metric: median_net_daily_sharpe`; tiebreakers `median_net_return`, `max_drawdown`, `turnover`, `config_id`; `min_trades_total: 30`; `min_trades_per_fold: 5`; `min_folds_with_min_trades: 3`; `positive_net_return_baseline: true`; `positive_net_return_2x_costs: true`; `positive_folds_required: 3`; `median_sharpe_gt_zero: true`; `median_sharpe_gt_buyhold: true`; `max_candidates_per_asset: 1`; `neighbor_analysis: true`.
+- `src/breakout_research/candidate_freeze.py:55-87` (`select_best_candidate`) is the only selection implementation in the repository. It ranks by **median profit_factor** with a median-max-drawdown tiebreak and applies **none** of the preregistered gates (no minimum trade counts, no positive net-return requirement at 1×/2× costs, no positive-fold count, no Sharpe tests, no buy-and-hold comparison).
+- `src/breakout_research/campaign.py` contains no selection logic at all (no `selection`/`min_trades`/`median_net_daily_sharpe` matches), so `select_best_candidate` is the effective selector.
+- `grep -rn "buyhold" src/breakout_research --include=*.py` → no matches. No buy-and-hold baseline metric is computed or stored, and the result records contain no baseline field, so the `median_sharpe_gt_buyhold` gate has no data source in the current ledger.
+- `research/candidate_manifest.json` is `frozen: true` with 18 candidates (one per asset), `freeze_commit 3e937dd3...`, `code_hash 382e3141...`, `spec_hash 2d22e702...`, `data_manifest_hash d8b0cb7e...`, `manifest_hash 9ea6b1c3...`. It was produced by the helper above, therefore under a rule that is not the preregistered one.
+- `reports/final_research_report.json` (holdout exposure `EXPOSED_OR_UNKNOWN`) reports 9 `PROVISIONAL_HISTORICAL_SURVIVAL`, 7 `REJECTED_ON_HOLDOUT`, 2 `INSUFFICIENT_EVIDENCE` conclusions, all derived from those 18 promoted candidates.
+- `reports/v1_cycle_summary.md:29-32` documents the freeze as "18 candidates (max 1 per asset)" without recording that the selection rule differed from `configs/research_v1.json`.
+
+### Why this needs a design decision
+Two questions cannot be settled by a local patch: (a) which rule is authoritative for a candidate already frozen and already used for an exposed holdout, and (b) how a conforming selector reconciles an immutable historical manifest, a new cycle, and the code-hash-bound authorization artifact. Any change under `src/breakout_research/` rotates `compute_code_hash()` and therefore invalidates `research_state/campaign_authorization.json` until the pilot is re-run and re-authorized; that coupling is part of the design surface.
+
+### Alternatives to compare
+A. **Re-freeze under the preregistered rule and version the manifest** — publish a new, separately versioned candidate manifest for the continuous cycle, leave the v1 manifest immutable, and treat v1 holdout conclusions as historical-only.
+B. **Reconcile in place** — treat the preregistered rule as the only admissible rule, supersede the v1 manifest with an explicit supersession record, and re-derive the affected per-asset economic conclusions.
+C. **Amend the frozen specification** — record that the profit-factor rule was the intended rule, with an explicit, separately versioned protocol amendment; only permissible if the deviation is judged to have been intended rather than a defect, and it must not be used to make the original conclusions look stronger.
+
+### Required acceptance evidence
+- Quantified divergence: per asset, the candidate selected under the preregistered rule versus the frozen manifest entry, and which preregistered gates are unsatisfiable from the existing ledger (notably the buy-and-hold baseline comparison).
+- A decision record naming the authoritative rule, the manifest versioning policy, and the treatment of the already-exposed holdout.
+- If `src/` changes: updated unit tests for every preregistered gate, a re-run pilot, a re-derived `campaign_authorization.json` with a matching code hash, and a verified remote SHA.
+- An explicit statement that the v1 holdout (`EXPOSED_OR_UNKNOWN`) is never reused as confirmation for a new cycle.
+
+---
+
+## BRAIN-007 — Cycle-level evidence is not linked to the identical prior campaign, and the checkpoint counter mixes validation with exposed-holdout units
+
+**Priority:** P1 — reporting/traceability risk for the continuous campaign  
+**Status:** `BRAINSTORMING_REQUIRED` (evidence recorded 2026-10-19 UTC)  
+**Cause labels:** `IMPLEMENTATION_DEFECT`, `RESEARCH_DESIGN_RISK`  
+**Confidence:** confirmed at code hash `d0dca29...` by direct artifact comparison.
+
+### Evidence
+- Continuous cycle 0 (`research/campaign_cycles/0f52f6c9.../`) stores 9,972 shards / 497,664 records with campaign id `577e87e2...` and code hash `d0dca29...`. The v1 validation sweep (`research/results_shards/fcf04f6e.../`) stores the same unit set. A unit-by-unit metric comparison (excluding `stored_utc`, `experiment_id`, `schema_version`) shows **497,664 units in both, 0 units only in either set, and 0 units with differing metrics** — the continuous cycle re-ran an already-completed grid and reproduced it exactly.
+- `research/campaign_cycles/0f52f6c9.../cycle_report.json` presents these as a new cycle (`state: COMPLETE`) and does not link to the identical prior campaign `fcf04f6e...`, although `research_state/continuous_universe_campaign_spec.md` §5 requires linking to verified prior evidence instead of presenting recomputed units as new trials.
+- `research_state/checkpoint.json` reports `completed_records == last_verified_record == 497718`. 497,718 = 497,664 validation units + 54 holdout units (`fold_index 4`, `is_holdout: true`, one frozen candidate per asset × 3 cost scenarios) that exist only in the legacy top-level shard set `research/results_shards/577e87e2.../`. The continuous cycle contains **zero** holdout records. Earlier handoff entries described these counters as "reconciled" with the continuous cycle, which the artifacts do not support.
+- The legacy top-level shard set holds 497,765 raw lines for 497,718 unique units: 47 units are written twice, with identical content except `stored_utc` (same `experiment_id`), i.e. benign duplicate writes rather than conflicting content. The continuous cycle set has 0 duplicates.
+- `research_state/continuous_universe_state.json` records `next_cohort_index: 2` while the eligible universe holds 18 assets and `COHORT_SIZE` is 20, so every further cohort is empty; cohort 1 already terminated as `DUPLICATE_OR_NO_NEW_CANDIDATES` (`research/campaign_cycles/be4223dc.../cycle_report.json`).
+
+### Why this needs a design decision
+Cycle identity, deduplication against identical prior evidence, checkpoint counter semantics, and the terminal `AWAITING_NEW_CANDIDATES`/`BLOCKED_EXTERNAL` state must be specified once, coherently, before more cycles run. Today the coordinator can record an empty cohort as a completed cycle and advance the counter, and no artifact distinguishes "new trial" from "recomputed identical unit".
+
+### Alternatives to compare
+A. **Ledger-level dedup** — make the coordinator detect identical (code, spec, data, unit) work, link it to the existing verified evidence, and emit a cycle report that distinguishes linked units from newly executed units.
+B. **Immutable per-cycle ledgers plus a separate linkage index** — keep each cycle's own shards immutable and add a cycle-to-campaign link table, leaving shard identity untouched.
+C. **Reporting-only reconciliation** — keep the current execution behavior and add a verifier that emits the expected-vs-verified and linked-vs-new reconciliation in each cycle report, without changing the coordinator.
+
+### Required acceptance evidence
+- A definition of checkpoint counter semantics that never mixes holdout units into a validation completion count.
+- A terminal state for an exhausted universe that records `AWAITING_NEW_CANDIDATES`/`BLOCKED_EXTERNAL` with the provider evidence, instead of appending empty cycles to `completed_cycle_ids`.
+- Evidence that the external universe provider is currently unreachable from the research runner (`https://api.binance.com/api/v3/ping` → HTTP 451 in this environment, also present in `research_state/workflow_run_diagnostics.jsonl`), so a new snapshot is an external boundary, not an idle wait.
+
+---
+
 ## Current phase decision
 
 At initial triage, all five entries were `BRAINSTORMING_REQUIRED`. Revalidated against live source at HEAD `6804546` (code hash `382e314...`): all five BRAIN items are `RESOLVED_VERIFIED`; none is `BRAINSTORMING_REQUIRED`.
@@ -439,5 +500,12 @@ At initial triage, all five entries were `BRAINSTORMING_REQUIRED`. Revalidated a
 - BRAIN-005 — bounded durable results: `RESOLVED_VERIFIED`. Immutable ≤4 MiB JSONL shards via `ShardWriter`/`MAX_SHARD_BYTES`; `results_manifest.json` bound to campaign_id; legacy `research/results.jsonl` (51,688,138 bytes) preserved, never appended; oversized-row fail-closed tested.
 
 All 5 parallel strategy lanes `COMPLETE`. No root cause was implemented in the same session as its design record. Do not launch or trust the full campaign while applicable P0 research-validity blockers remain open — all P0 blockers are now resolved; full-grid validation execution is the next bounded task (max_assets=1 per batch, checkpoint per 50 records, holdout off).
+
+**Revalidation 2026-10-19 UTC (code hash `d0dca29...`, HEAD `63c780c9...`):** BRAIN-001..005 remain `RESOLVED_VERIFIED` — real-data provenance, independent authorization, holdout isolation, manifest-derived resume, and bounded durable shards are all still satisfied in the live tree. Two new items were opened from record-level evidence that the earlier verification loop never produced:
+
+- BRAIN-006 (P0) — `BRAINSTORMING_REQUIRED`. The preregistered selection rule in `configs/research_v1.json` → `selection` is not implemented anywhere; the only selector ranks by median profit_factor and applies none of the preregistered gates, and no buy-and-hold baseline metric exists to support the `median_sharpe_gt_buyhold` gate. The 18 frozen candidates and the v1 holdout conclusions inherit that deviation.
+- BRAIN-007 (P1) — `BRAINSTORMING_REQUIRED`. Continuous cycle 0 reproduced the v1 validation sweep metrically exactly (497,664/497,664 units, 0 differences) without linking to it; `research_state/checkpoint.json` counters (497,718) mix 54 exposed-holdout units into a validation completion count; and an exhausted universe advances the cohort counter instead of persisting a terminal `AWAITING_NEW_CANDIDATES`/`BLOCKED_EXTERNAL` state.
+
+Neither new item may be implemented in the session that writes its design decision (README Section 2A C1). The next bounded task is the prerequisite impact quantification for BRAIN-006 — re-derive candidates for continuous cycle 0 under the preregistered rule from the verified validation records and quantify the divergence from `research/candidate_manifest.json` — which is read-only, offline, and holdout-safe. Any later `src/` change rotates the code hash and requires pilot re-run plus re-authorization before further campaign execution.
 
 **Out of scope:** ordinary bounded retries for demonstrated transient network errors, routine lint/test failures with an evidence-backed local fix, and recovery bundles/patches needed to preserve interrupted work. Those remain in the normal measured correction loop and are not duplicate durable error records.
