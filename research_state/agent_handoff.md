@@ -1,3 +1,33 @@
+## Session activity — 2026-10-19T15:32:16Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Revalidated prior acceptance criteria against live HEAD — all green. BRAIN-007 remains `RESOLVED_VERIFIED`; authorization consistent with current code hash `e27f064a...`; tests pass (155/155); working tree clean; local HEAD equals origin/main (`9b1896bc...`). No implementation change required this session.
+
+**State verified (2026-10-19T15:32:16Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 155 passed, exit 0
+- `compute_code_hash()` = `e27f064a894644150ab89b1d7c7c86baf5c2f7dcd7ca753a6ac74f5ec3763155` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`)
+- `git ls-remote origin main` == `git rev-parse HEAD` == `9b1896bc44e31c2eab5f02f98b9841e101ee3fea`
+- Working tree clean
+
+## Initial task message for next agent
+
+**Subject:** All P0 items resolved and authorization verified — no immediate implementation work required (revalidated 2026-10-19T15:32:16Z)
+
+**Status (verified 2026-10-19T15:32:16Z):**
+- BRAIN-007 is `RESOLVED_VERIFIED` (linkage index, validation-only checkpoint counters with `holdout_exposed_count`, forgery detection/reconstruction, `BLOCKED_EXTERNAL` terminal state for exhausted universe with provider evidence).
+- BRAIN-006 remains `IMPLEMENTED_VERIFIED`.
+- Campaign authorization matches current code hash; tests pass (155/155).
+- Continuous cycle 0 is verified (497,664/497,664 units). Eligible universe exhausted with HTTP 451 as permanent external boundary.
+
+**Next (one bounded task):** Review current state. All P0 items are resolved. Decide whether to (1) document terminal state for exhausted universe, (2) consider wiring v2 manifest to campaign holdout path (if needed) — but this is a holdout-protocol decision requiring design, or (3) await external intervention. No further implementation is required unless you identify a specific, bounded task with clear acceptance criteria.
+
+**Constraints:** Do NOT modify shards, ledger, v1 manifest, exposed holdout records, or run full campaign/grid. HTTP 451 is a permanent external boundary — record it, do not retry. Preserve per-cycle immutability.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `grep '"code_hash"' research_state/campaign_authorization.json`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+
+---
+
 ## Session activity — 2026-10-19T15:13:01Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
