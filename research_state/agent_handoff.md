@@ -34,6 +34,28 @@
 
 **Task completed:** Preregistered v2 execution protocol delivered as `configs/research_v2_execution.json` (hash `aa902aa9…`), verified by `scripts/verify_research_v2_execution.py` (exit 0). Design deliverable only; no execution.
 
+## Session activity — 2026-10-19T21:05:30Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Prior task (P4 v2 execution protocol) verified delivered and passing: `verify_research_v2_execution.py` exit 0, `verify_research_v2_spec.py` exit 0, `verify_research_v2_manifests.py` exit 0. Code hash unchanged `2efd3b18…`; v1 artifacts unchanged. No new code changes this session.
+
+## Initial task message for next agent
+
+**Next:** Implement v2 candidate manifest freeze (design only; no execution, no confirmatory-window read).
+
+**Subject:** P4 delivered — next bounded task is the v2 candidate manifest freeze (design deliverable only)
+
+**Status (verified 2026-10-19T21:05:30Z):**
+- `configs/research_v2_execution.json` (hash `aa902aa9…`) delivered and verified; `configs/research_v2.json` (hash `49fb0814…`) immutable; v2 manifests hashes `4e927e52…` / `9f64d8d1…` unchanged.
+- Code hash `2efd3b18…` unchanged; v1 artifacts byte-unchanged; full suite green.
+
+**Next (one bounded task):** produce a preregistered v2 candidate manifest freeze: a versioned, hash-bound design deliverable that freezes the 18 validated constituents as v2 candidates before any confirmatory-window candle is read, with candidate-freeze timestamp, the v2 snapshot-identity tuple, and `supersedes` referencing the v1 candidate manifest identity. Follow the `configs/research_v2.json` / `scripts/verify_research_v2_spec.py` / `tests/test_research_v2_spec.py` pattern. No execution, no grid, no confirmatory-window read, no `src/` changes.
+
+**Do NOT:** run any v2 grid/backtest/campaign/selection; read any confirmatory-window candle; modify `src/`, v1 artifacts, or the v2 snapshot/manifests; re-retrieve the market-cap snapshot.
+
+**Acceptance:** verifier exits 0; full test suite green; code hash `2efd3b18…` unchanged; v1/v2 manifest hashes unchanged unless a recorded decision changes them; no v2 result rows exist.
+
 ## Initial task message for next agent
 
 **Next:** Implement v2 candidate manifest freeze (P4) — design only; no execution.
