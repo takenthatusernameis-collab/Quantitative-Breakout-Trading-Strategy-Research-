@@ -24,12 +24,11 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import shutil
 from pathlib import Path
 from typing import Any, Callable, Dict, List
 
 import pytest
-
-from breakout_research.config import compute_code_hash
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FREEZE_PATH = REPO_ROOT / "configs" / "research_v2_candidate_freeze.json"
@@ -38,6 +37,10 @@ DATA_V2_PATH = REPO_ROOT / "research" / "data_manifest_v2.json"
 PROTOCOL_V2_PATH = REPO_ROOT / "configs" / "research_v2_execution.json"
 V1_CANDIDATE_PATH = REPO_ROOT / "research" / "candidate_manifest.json"
 V1_CANDIDATE_V2_PATH = REPO_ROOT / "research" / "candidate_manifest_v2.json"
+CODE_HASH_AMENDMENT_PATH = REPO_ROOT / "configs" / "research_v2_code_hash_amendment_1.json"
+AUTHORIZATION_PATH = REPO_ROOT / "research_state" / "campaign_authorization.json"
+
+HASHED_SET_ROOT = "src/breakout_research"
 
 V1_ARTIFACT_SHA256 = {
     "configs/research_v1.json": "558d60990af9310d5cedbc41a58dbf29eb4dc869f8e45dc1cb2baf644480490d",
@@ -70,8 +73,10 @@ def _mirror_repo(tmp_path: Path) -> Path:
 
     Directories are recreated and files are symlinked, so a test may add,
     replace or remove files in the mirror without ever writing to the real
-    working tree. The v1 shard and cycle directories are not mirrored: the
-    verifier never reads them and they hold tens of thousands of files.
+    working tree. The hashed source tree is copied for real, so a test may
+    modify it without touching the working tree. The v1 shard and cycle
+    directories are not mirrored: the verifier never reads them and they hold
+    tens of thousands of files.
     """
     root = tmp_path / "repo"
     skip = {".git", ".pytest_cache", "__pycache__"}
@@ -82,7 +87,12 @@ def _mirror_repo(tmp_path: Path) -> Path:
             dirs[:] = ["v2_evidence"]
         (root / relative).mkdir(parents=True, exist_ok=True)
         for name in files:
-            (root / relative / name).symlink_to(Path(current) / name)
+            source = Path(current) / name
+            target = root / relative / name
+            if relative == Path(HASHED_SET_ROOT):
+                shutil.copyfile(source, target)
+            else:
+                target.symlink_to(source)
     return root
 
 
@@ -258,25 +268,47 @@ def test_v1_artifacts_are_unchanged():
 
 
 def test_v1_campaign_authorization_is_untouched():
-    authorization = _load(REPO_ROOT / "research_state" / "campaign_authorization.json")
+    authorization = _load(AUTHORIZATION_PATH)
     freeze = _load(FREEZE_PATH)
+    amendment = _load(CODE_HASH_AMENDMENT_PATH)
     assert authorization["protocol_version"] == "v1"
     assert authorization["authorized"] is True
-    assert authorization["code_hash"] == compute_code_hash()
-    assert freeze["snapshot_identity"]["code_hash"] == compute_code_hash()
-    assert freeze["code_hash_constraint"]["authorized_code_hash"] == compute_code_hash()
+    assert freeze["snapshot_identity"]["code_hash"] == authorization["code_hash"]
+    assert freeze["code_hash_constraint"]["authorized_code_hash"] == authorization["code_hash"]
+    assert amendment["code_hash_constraint"]["authorized_code_hash"] == authorization["code_hash"]
 
 
 def test_code_hash_constraint_names_only_genuinely_outside_paths():
     freeze = _load(FREEZE_PATH)
     constraint = freeze["code_hash_constraint"]
-    assert constraint["hashed_set_root"] == "src/breakout_research"
+    assert constraint["hashed_set_root"] == HASHED_SET_ROOT
     assert constraint["v2_execution_code_must_live_outside_the_hashed_set"] is True
     for relative in constraint["inside_hashed_set_examples"]:
         assert verifier.path_is_inside_hashed_set(relative), relative
     for relative in constraint["outside_hashed_set_examples"]:
         assert not verifier.path_is_inside_hashed_set(relative), relative
-    assert verifier.hashed_source_digest(REPO_ROOT) == compute_code_hash()
+
+
+def test_the_hashed_source_set_is_identified_by_the_canonical_digest():
+    """BRAIN-009: the tree identity is the portable canonical digest."""
+    amendment = _load(CODE_HASH_AMENDMENT_PATH)
+    recorded = amendment["code_hash_constraint"]["canonical_source_digest"]
+    assert verifier.canonical_source_digest(REPO_ROOT) == recorded
+    report = verifier.verify(REPO_ROOT)
+    assert report["canonical_source_digest"] == recorded
+    assert report["failures"] == []
+
+
+def test_the_freeze_is_reproducible_from_the_producer_on_any_checkout():
+    """The producer must not depend on the directory enumeration order.
+
+    The frozen artifact records the authorized value of record, not the
+    checkout-dependent ordered digest, so the producer reproduces the same
+    bytes on a machine whose directory order differs.
+    """
+    built = producer.build(REPO_ROOT)
+    assert built["snapshot_identity"]["code_hash"] == _load(AUTHORIZATION_PATH)["code_hash"]
+    assert built == _load(FREEZE_PATH)
 
 
 def test_no_v2_execution_artifacts_or_result_rows_exist():
@@ -369,3 +401,14 @@ def test_freeze_does_not_touch_the_v1_source_tree():
     """The freeze is a design artifact: no module under src/ changed."""
     freeze = _load(FREEZE_PATH)
     assert freeze["snapshot_identity"]["code_hash"] == "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
+
+
+def test_verifier_detects_a_modified_hashed_source_tree(tmp_path):
+    """The canonical tree-identity check is not vacuous: drift is detected."""
+    root = _mirror_repo(tmp_path)
+    target = root / HASHED_SET_ROOT / "config.py"
+    original = target.read_text(encoding="utf-8")
+    target.unlink()
+    target.write_text(original + "\n# tampered\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("does not match the recorded canonical digest" in failure for failure in failures)

@@ -20,11 +20,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
+import shutil
 from pathlib import Path
 
 import pytest
-
-from breakout_research.config import compute_code_hash
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SPEC_V2 = REPO_ROOT / "configs" / "research_v2.json"
@@ -32,6 +32,10 @@ UNIVERSE_V2 = REPO_ROOT / "research" / "universe_manifest_v2.json"
 DATA_V2 = REPO_ROOT / "research" / "data_manifest_v2.json"
 SNAPSHOT_RAW = REPO_ROOT / "research" / "v2_evidence" / "raw_market_cap_response.json"
 SNAPSHOT_OBSERVATION = REPO_ROOT / "research" / "v2_evidence" / "snapshot_observation.json"
+CODE_HASH_AMENDMENT = REPO_ROOT / "configs" / "research_v2_code_hash_amendment_1.json"
+AUTHORIZATION = REPO_ROOT / "research_state" / "campaign_authorization.json"
+
+HASHED_SET_ROOT = "src/breakout_research"
 
 V1_ARTIFACT_SHA256 = {
     "research/universe_manifest.json": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd",
@@ -58,6 +62,33 @@ def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _mirror_repo(tmp_path: Path) -> Path:
+    """A temporary tree of symlinks to the parts of the repository the verifier reads.
+
+    The hashed source tree is copied for real, so a test may modify it without
+    ever writing to the working tree. The large result directories are skipped:
+    the verifier never reads them.
+    """
+    root = tmp_path / "repo"
+    skip_dirs = {".git", "__pycache__", ".pytest_cache"}
+    skip_relative = {Path("research/results_shards"), Path("research/campaign_cycles")}
+    for current, dirs, files in os.walk(REPO_ROOT):
+        dirs[:] = [name for name in dirs if name not in skip_dirs]
+        relative = Path(current).relative_to(REPO_ROOT)
+        if relative in skip_relative:
+            dirs[:] = []
+            continue
+        (root / relative).mkdir(parents=True, exist_ok=True)
+        for name in files:
+            source = Path(current) / name
+            target = root / relative / name
+            if relative == Path(HASHED_SET_ROOT):
+                shutil.copyfile(source, target)
+            else:
+                target.symlink_to(source)
+    return root
+
+
 def test_verifier_reports_no_failures():
     report = verifier.verify(REPO_ROOT)
     assert report["failures"] == []
@@ -79,15 +110,36 @@ def test_snapshot_identity_is_complete_and_consistent():
     spec = _load(SPEC_V2)
     universe = _load(UNIVERSE_V2)
     data = _load(DATA_V2)
+    authorization = _load(AUTHORIZATION)
     identity = universe["snapshot_identity"]
     assert set(identity) == set(verifier.SNAPSHOT_IDENTITY_FIELDS)
     assert identity["protocol_version"] == spec["protocol_version"] == "v2"
     assert identity["universe_version"] == spec["universe_version"] == "v2"
     assert identity["specification_hash"] == spec["specification_hash"]
     assert identity["market_cap_source_endpoint"] == spec["universe"]["endpoint"]
-    assert identity["code_hash"] == compute_code_hash()
+    assert identity["code_hash"] == authorization["code_hash"]
     assert identity["data_manifest_hash"] == data["manifest_hash"]
     assert data["snapshot_identity"] == identity
+
+
+def test_the_hashed_source_set_is_identified_by_the_canonical_digest():
+    """BRAIN-009: the tree identity is the portable canonical digest.
+
+    The ordered digest that ``compute_code_hash()`` returns depends on the
+    directory enumeration order of the checkout, so it is cross-checked against
+    the authorized value of record and never used as a drift signal.
+    """
+    amendment = _load(CODE_HASH_AMENDMENT)
+    authorization = _load(AUTHORIZATION)
+    recorded = amendment["code_hash_constraint"]["canonical_source_digest"]
+    assert verifier.canonical_source_digest(REPO_ROOT) == recorded
+    assert authorization["code_hash"] == amendment["code_hash_constraint"]["authorized_code_hash"]
+    report = verifier.verify(REPO_ROOT)
+    assert report["canonical_source_digest"] == recorded
+    assert report["ordered_code_hash_matches_authorized"] is (
+        report["live_ordered_code_hash"] == authorization["code_hash"]
+    )
+    assert report["failures"] == []
 
 
 def test_snapshot_is_the_in_window_retrieval_and_hashes_to_the_recorded_digest():
@@ -219,3 +271,17 @@ def test_no_v2_results_are_present():
         campaigns = [path.name for path in shards_root.iterdir() if path.is_dir()]
         assert campaigns, "the v1 result shards must still be present"
         assert not any("v2" in name.lower() for name in campaigns), campaigns
+
+
+def test_verifier_detects_a_modified_hashed_source_tree(tmp_path):
+    """The canonical tree-identity check is not vacuous: drift is detected."""
+    root = _mirror_repo(tmp_path)
+    target = root / HASHED_SET_ROOT / "config.py"
+    original = target.read_text(encoding="utf-8")
+    target.unlink()
+    target.write_text(original + "\n# tampered\n", encoding="utf-8")
+    report = verifier.verify(root)
+    assert any(
+        "does not match the recorded canonical digest" in failure
+        for failure in report["failures"]
+    )

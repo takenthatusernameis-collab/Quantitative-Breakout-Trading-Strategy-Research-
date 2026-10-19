@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -54,6 +55,9 @@ MIN_CONFIRMATORY_WINDOW_HOURS = 2160
 
 #: The source tree that ``compute_code_hash()`` hashes, recursively.
 HASHED_SET_ROOT = "src/breakout_research"
+
+#: The code-hash amendment that records the portable identity of the hashed set.
+CODE_HASH_AMENDMENT_RELATIVE = "configs/research_v2_code_hash_amendment_1.json"
 
 
 def canonical(obj: Any) -> str:
@@ -98,6 +102,41 @@ def next_hour_boundary(value: datetime) -> datetime:
     return floored + timedelta(hours=1)
 
 
+def canonical_source_digest(
+    repo_root: Path = REPO_ROOT, hashed_set_root: str = HASHED_SET_ROOT
+) -> str:
+    """The portable identity of the hashed source tree.
+
+    Every ``*.py`` file under the hashed set contributes its POSIX relative path
+    and the sha256 hex digest of its bytes, in ascending path order. Unlike
+    ``compute_code_hash()`` this does not depend on the directory enumeration
+    order of the checkout, so it is reproducible on any machine.
+    """
+    base = repo_root / hashed_set_root
+    digest = hashlib.sha256()
+    for relative in sorted(path.relative_to(base).as_posix() for path in base.rglob("*.py")):
+        digest.update(relative.encode("utf-8") + b"\n")
+        digest.update(sha256_bytes((base / relative).read_bytes()).encode("ascii") + b"\n")
+    return digest.hexdigest()
+
+
+def live_ordered_code_hash(repo_root: Path = REPO_ROOT) -> Optional[str]:
+    """Reproduce ``compute_code_hash()`` exactly, for the informational report.
+
+    The result depends on the filesystem enumeration order of the checkout and
+    is therefore not a portable identity of the tree.
+    """
+    src_dir = repo_root / HASHED_SET_ROOT
+    if not src_dir.exists():
+        return None
+    digest = hashlib.sha256()
+    for root, _dirs, files in os.walk(src_dir):
+        for name in sorted(files):
+            if name.endswith(".py"):
+                digest.update((Path(root) / name).read_bytes())
+    return digest.hexdigest()
+
+
 def _load(path: Path) -> Dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -110,11 +149,24 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     data = _load(repo_root / "research" / "data_manifest_v2.json")
     v1_candidates = _load(repo_root / "research" / "candidate_manifest.json")
     authorization = _load(repo_root / "research_state" / "campaign_authorization.json")
+    code_hash_amendment = _load(repo_root / CODE_HASH_AMENDMENT_RELATIVE)
 
-    from breakout_research.config import compute_code_hash  # noqa: WPS433
-
-    code_hash = compute_code_hash()
-
+    # BRAIN-009: the identity of the hashed source set is the portable
+    # canonical digest, and the code hash of record is the authorized value
+    # carried by the v1 campaign authorization. The checkout-dependent ordered
+    # digest is never recomputed as an identity, so this artifact is
+    # reproducible on any machine.
+    code_hash = authorization["code_hash"]
+    recorded_canonical = (code_hash_amendment.get("code_hash_constraint") or {}).get(
+        "canonical_source_digest"
+    )
+    live_canonical = canonical_source_digest(repo_root)
+    if recorded_canonical != live_canonical:
+        raise SystemExit(
+            "the hashed source tree does not match the recorded canonical digest: "
+            f"recorded {recorded_canonical}, recomputed {live_canonical}; "
+            "refusing to freeze a candidate set against a modified source tree"
+        )
     validated_pairs: List[str] = []
     excluded_after_validation: Dict[str, str] = {}
     for entry in universe.get("eligible_assets") or []:

@@ -24,11 +24,12 @@ from pathlib import Path
 
 import pytest
 
-from breakout_research.config import compute_code_hash, load_research_spec
+from breakout_research.config import load_research_spec
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SPEC_V1 = REPO_ROOT / "configs" / "research_v1.json"
 SPEC_V2 = REPO_ROOT / "configs" / "research_v2.json"
+CODE_HASH_AMENDMENT = REPO_ROOT / "configs" / "research_v2_code_hash_amendment_1.json"
 
 INHERITED_BLOCKS = (
     "strategy_grid",
@@ -195,8 +196,30 @@ def test_v1_campaign_authorization_is_untouched():
     v1 = _load(SPEC_V1)
     assert authorization["protocol_version"] == "v1"
     assert authorization["specification_hash"] == v1["specification_hash"]
-    assert authorization["code_hash"] == compute_code_hash()
     assert authorization["authorized"] is True
+
+
+def test_the_v1_campaign_authorization_is_bound_to_the_canonical_tree_identity():
+    """BRAIN-009: the tree identity is the portable canonical digest.
+
+    The authorized code hash is the value of record; the identity of the hashed
+    source set is checked against the canonical digest, because the ordered
+    digest that ``compute_code_hash()`` returns depends on the directory
+    enumeration order of the checkout.
+    """
+    import importlib.util
+
+    authorization = _load(REPO_ROOT / "research_state" / "campaign_authorization.json")
+    amendment = _load(CODE_HASH_AMENDMENT)
+    spec = importlib.util.spec_from_file_location(
+        "verify_research_v2_code_hash_amendment_1",
+        REPO_ROOT / "scripts" / "verify_research_v2_code_hash_amendment_1.py",
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    recorded = amendment["code_hash_constraint"]["canonical_source_digest"]
+    assert module.canonical_source_digest(REPO_ROOT) == recorded
+    assert authorization["code_hash"] == amendment["code_hash_constraint"]["authorized_code_hash"]
 
 
 def test_v1_spec_loader_still_reads_the_v1_specification():

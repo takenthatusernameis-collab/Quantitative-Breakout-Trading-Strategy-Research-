@@ -1,0 +1,181 @@
+{
+  "artifact": "v2_code_hash_amendment",
+  "artifact_version": "v2-code-hash-amendment-1",
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-19T23:31:00Z",
+  "amendment_status": "PREREGISTERED_CODE_HASH_AMENDMENT_DESIGN_ONLY",
+  "specification_purpose": "Make the code-hash binding of the hashed source set portable. It adds the canonical source digest to the frozen v2 artifacts by reference, retains the historical ordered digest as the authorized value of record, and fixes the tree-identity check that the verifiers and tests must perform. This artifact edits no frozen artifact, authorizes nothing, runs nothing and reads no candle.",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-009",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-009",
+    "chosen_design": "A",
+    "chosen_design_summary": "Retain the authorized ordered digest as the value of record and add the portable canonical digest by versioned amendment. The alternatives -- rotating compute_code_hash() and re-authorizing the v1 campaign, or dropping the code-hash binding -- were rejected: the first is disproportionate because the canonical digest already identifies the tree portably, the second removes the guarantee the campaign depends on.",
+    "supersedes_none": "No artifact is superseded by this amendment. The frozen v2 artifacts are extended by reference and stay byte-identical."
+  },
+  "code_hash_constraint": {
+    "hashed_set_root": "src/breakout_research",
+    "hashed_set_rule": "compute_code_hash() (src/breakout_research/config.py) walks every .py file under src/breakout_research recursively. Any file added, edited or removed there changes the code hash and invalidates the v1 campaign authorization recorded in research_state/campaign_authorization.json.",
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "authorized_code_hash_source": "research_state/campaign_authorization.json (protocol_version v1, authorized true)",
+    "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
+    "authorized_code_hash_note": "The ordered digest stays the authorized value of record. It is not rotated, because rotating it would require changes to research_state/campaign_authorization.json, research_state/checkpoint.json and every v2 identity tuple, and would invalidate the v1 campaign authorization for no gain: the canonical digest already identifies the tree portably.",
+    "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "canonical_source_digest_algorithm": {
+      "name": "canonical_source_digest_v1",
+      "description": "sha256 over the concatenation, for every *.py file under src/breakout_research in ascending POSIX relative-path order, of the relative path, a newline, the sha256 hex digest of the file bytes, and a newline.",
+      "portable": true,
+      "purpose": "the portable identity of the hashed source tree; unlike compute_code_hash() it does not depend on the directory enumeration order of the checkout"
+    },
+    "ordered_code_hash_is_portable": false,
+    "ordered_digest_defect": "compute_code_hash() sorts the files inside each directory but visits the directories in filesystem enumeration order. The authorized digest is reproduced only under the traversal order (indicators, utils, signals, data, backtest); a checkout that enumerates the same git-clean tree in a different order yields a different digest.",
+    "live_ordered_code_hash_is_informational_only": true,
+    "ordered_digest_mismatch_meaning": "A mismatch between the live ordered digest and the authorized value of record is an environment fact about the checkout's directory order, not evidence of source drift. It must be reported, never silently absorbed and never 'fixed' by editing the hashed set.",
+    "tree_identity_rule": "The identity of the hashed source set is checked by recomputing the canonical source digest from the tree and comparing it with the canonical digest recorded in this amendment. The recorded ordered digest is cross-checked against research_state/campaign_authorization.json code_hash. The live ordered digest is reported but never compared as a drift signal.",
+    "v2_execution_code_must_live_outside_the_hashed_set": true,
+    "paths_correctly_classified_as_outside_hashed_set": [
+      "scripts/",
+      "src/v2_campaign/"
+    ],
+    "paths_not_permitted_inside_hashed_set": [
+      "src/breakout_research/",
+      "src/breakout_research/v2/",
+      "src/breakout_research/v2/**.py"
+    ]
+  },
+  "amends": [
+    {
+      "path": "research/universe_manifest_v2.json",
+      "file_sha256": "68c973a0a07bd6808a18433a1cce5351d56f03800653d5c64f401d72c0769f42",
+      "code_hash_field": "snapshot_identity.code_hash",
+      "recorded_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "canonical_source_digest_added_by_this_amendment": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "artifact_edited": false,
+      "identity_field": "manifest_hash",
+      "identity_value": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88"
+    },
+    {
+      "path": "research/data_manifest_v2.json",
+      "file_sha256": "0240be6f0f1e8c53b60cff0e9a1e3ccad8879e9282b1d0ff4f118b0168227eb8",
+      "code_hash_field": "snapshot_identity.code_hash",
+      "recorded_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "canonical_source_digest_added_by_this_amendment": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "artifact_edited": false,
+      "identity_field": "manifest_hash",
+      "identity_value": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e"
+    },
+    {
+      "path": "configs/research_v2_candidate_freeze.json",
+      "file_sha256": "90db47d9b625dcc98f6f22e4862ea8c6205e958f63dff15dcef473c79e20b030",
+      "code_hash_field": "snapshot_identity.code_hash",
+      "recorded_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "canonical_source_digest_added_by_this_amendment": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "artifact_edited": false,
+      "identity_field": "manifest_hash",
+      "identity_value": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f"
+    },
+    {
+      "path": "configs/research_v2_execution.json",
+      "file_sha256": "dd45f840532318ceb80a203bace1fb2083e5a28260f8fd473de9d179a361934c",
+      "code_hash_field": "code_hash_constraint.authorized_code_hash",
+      "recorded_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "canonical_source_digest_added_by_this_amendment": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "artifact_edited": false,
+      "identity_field": "specification_hash",
+      "identity_value": "aa902aa9e6ddfd7f0536765411e78d718f720b7a473a8f621bf64444355f2d38"
+    },
+    {
+      "path": "configs/research_v2_execution_amendment_1.json",
+      "file_sha256": "99fd873c4dfd3513449566f00a2635ee5e582add20ee225961a269240c6bb95d",
+      "code_hash_field": "code_hash_constraint.authorized_code_hash",
+      "recorded_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "canonical_source_digest_added_by_this_amendment": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "artifact_edited": false,
+      "identity_field": "manifest_hash",
+      "identity_value": "1149d9cb3ee9ea35f16512502c43c4cf0ee13b0ae2fb91e2dc691663b99195db"
+    }
+  ],
+  "amends_note": "Each entry names a frozen v2 artifact, the code-hash field it records and the canonical source digest this amendment adds to it by reference. No entry is written back into the artifact: every file named above stays byte-identical, and the file_sha256 in each entry is the digest that proves it.",
+  "affected_verifiers": [
+    {
+      "path": "scripts/verify_research_v2_manifests.py",
+      "new_assertion": "recompute the canonical source digest from the tree and compare it with the canonical digest recorded here; cross-check the manifest's snapshot_identity.code_hash against research_state/campaign_authorization.json code_hash; report a live ordered-digest mismatch as an environment fact instead of a failure"
+    },
+    {
+      "path": "scripts/verify_research_v2_candidate_freeze.py",
+      "new_assertion": "recompute the canonical source digest from the tree and compare it with the canonical digest recorded here; cross-check the freeze's snapshot_identity.code_hash against research_state/campaign_authorization.json code_hash; report a live ordered-digest mismatch as an environment fact instead of a failure"
+    },
+    {
+      "path": "scripts/build_v2_candidate_freeze.py",
+      "new_assertion": "derive the frozen identity's code_hash from the authorized value of record instead of recomputing the checkout-dependent ordered digest, so that the artifact it produces is portable; it must never recompute the ordered digest as an identity"
+    },
+    {
+      "path": "scripts/verify_research_v2_code_hash_amendment_1.py",
+      "new_assertion": "verify this amendment: recompute its manifest hash, recompute the canonical digest from the tree, recompute the file digest of every amended artifact, and confirm the value of record is the authorized one"
+    }
+  ],
+  "affected_tests": [
+    {
+      "path": "tests/test_research_v2_manifests.py",
+      "new_assertion": "the snapshot identity's code_hash is the authorized value of record and the tree's canonical digest matches the recorded canonical digest"
+    },
+    {
+      "path": "tests/test_research_v2_candidate_freeze.py",
+      "new_assertion": "the freeze's code hash is the authorized value of record and the tree's canonical digest matches the recorded canonical digest"
+    },
+    {
+      "path": "tests/test_research_v2_spec.py",
+      "new_assertion": "the v1 campaign authorization carries the authorized value of record and the tree's canonical digest matches the recorded canonical digest"
+    },
+    {
+      "path": "tests/test_research_v2_code_hash_amendment_1.py",
+      "new_assertion": "this amendment is self-hashing, amends exactly the frozen artifacts it names, and the tree-identity check survives a perturbed directory enumeration order while the ordered digest does not"
+    }
+  ],
+  "interim_rule": {
+    "rule": "src/breakout_research/ must not be edited to make a red ordered-digest comparison green: that would change the hashed set, change the code hash and invalidate the v1 campaign authorization and every v2 identity tuple.",
+    "reporting_rule": "A red ordered-digest comparison is reported as an environment fact about the checkout's directory enumeration order, with the evidence of the order that was observed -- not as source drift."
+  },
+  "residual_limitations": [
+    {
+      "id": "RL1",
+      "location": "src/breakout_research/campaign.py (_verify_pilot_gate) and src/breakout_research/pilot_gate_validator.py",
+      "limitation": "the v1 campaign runtime gate compares the live ordered code hash with research_state/campaign_authorization.json code_hash. It is inside the hashed set and this amendment deliberately does not change it.",
+      "consequence": "the v1 campaign can only start on a checkout whose directory enumeration order reproduces the authorized ordered digest. On any other checkout the campaign refuses to start. That is a false drift signal and must be reported as an environment fact; correcting it would require rotating compute_code_hash() and re-authorizing the v1 campaign, which this amendment does not do."
+    }
+  ],
+  "execution_authorization": {
+    "grid_run_authorized": false,
+    "candidate_selection_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "candle_fetch_authorized": false,
+    "source_tree_change_authorized": false,
+    "v1_reauthorization_authorized": false,
+    "statement": "This artifact authorizes nothing. It records a corrected tree-identity rule and extends the frozen v2 artifacts by reference. It does not change the hashed set, does not re-authorize the v1 campaign and does not permit any v2 run."
+  },
+  "related_artifacts": {
+    "v1_campaign_authorization": {
+      "path": "research_state/campaign_authorization.json",
+      "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "note": "The functional field of the authorization is recorded, not the digest of its bytes: the controller refreshes the authorized_at_utc timestamp, so the file digest changes without the authorization changing. The verifier recomputes the code hash from the file and compares it with the value recorded here."
+    },
+    "v2_execution_amendment_1": {
+      "path": "configs/research_v2_execution_amendment_1.json",
+      "manifest_hash": "1149d9cb3ee9ea35f16512502c43c4cf0ee13b0ae2fb91e2dc691663b99195db",
+      "note": "this amendment restates the tree-identity rule of the code_hash_constraint block of execution amendment 1; the two must record the same canonical digest, which the verifier checks"
+    }
+  },
+  "producer": {
+    "path": "scripts/build_v2_code_hash_amendment_1.py",
+    "verify_command": "python3 scripts/verify_research_v2_code_hash_amendment_1.py"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 artifacts."
+  },
+  "manifest_hash": "4409b6af54acb2982e1f286f9c6ebd1ce1b7628a90c476dede6da3c04d8762c1"
+}

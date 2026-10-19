@@ -1200,13 +1200,13 @@ their recorded digests, the amendment is invalid.
 ## BRAIN-009 — Code-hash portability: ordered digest is checkout-dependent
 
 **Priority:** P0 — blocks honest verification of the hashed source set
-**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
+**Status:** `IMPLEMENTED_AND_VERIFIED` (decision implemented 2026-10-19T23:5xZ; see "Implementation record" below)
 **Cause labels:** `IMPLEMENTATION_DEFECT`, `PERMANENT_PLATFORM_LIMIT` (filesystem enumeration order)
-**Confidence:** direct evidence confirmed — permutation brute-force reproduced the authorized digest in 6 of 120 directory orderings; canonical digest reproduces portably.
+**Confidence:** direct evidence confirmed — a permutation brute-force over the 120 directory orderings of the five sub-directory blocks reproduces the authorized digest under exactly one of them, `(indicators, utils, signals, data, backtest)`; the canonical digest reproduces under all of them. (The 22:07Z session recorded "6 of 120"; that figure came from a less faithful replica and is corrected here — see the implementation record.)
 
 ### Evidence
 - `compute_code_hash()` (`src/breakout_research/config.py:257-268`) hashes each directory's files in sorted order but visits directories in filesystem enumeration order.
-- The authorized digest `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (recorded in `research_state/campaign_authorization.json`) reproduces only under the traversal order `(indicators, utils, signals, data, backtest)` — 6 of 120 permutations of the five sub-directory blocks reproduce it.
+- The authorized digest `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (recorded in `research_state/campaign_authorization.json`) reproduces only under the traversal order `(indicators, utils, signals, data, backtest)` — **1 of the 120** permutations of the five sub-directory blocks reproduces it (corrected 2026-10-19T23:5xZ; the 22:07Z session recorded 6 of 120 from a replica that did not reproduce the live digest under the actual filesystem order, so its count was not evidence). The replica used for the correction reproduces `compute_code_hash()` exactly under the checkout's real enumeration order, which was checked before the brute force.
 - A fresh checkout of the same git-clean tree enumerates the directories as `608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925`.
 - `src/` did not change: last `src/` commit `ea5da766` (15:46Z), before every v2 artifact was frozen; `git status` clean under `src/`.
 - The portable identity `canonical_source_digest = 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` (path- and content-sorted) is already recorded in `configs/research_v2_execution_amendment_1.json`.
@@ -1250,3 +1250,50 @@ Revert the verifier/test changes; frozen artifacts untouched. No data or identit
 
 ### Do NOT (this session)
 Edit anything under `src/breakout_research/`; edit `research_state/campaign_authorization.json` or `research_state/checkpoint.json`; edit any frozen artifact; run any v2 grid/backtest/campaign/selection/pilot; read any confirmatory-window candle; re-run `scripts/v2_constituent_validation.py` or `scripts/build_v2_candidate_freeze.py`.
+
+---
+
+## BRAIN-009 implementation record — 2026-10-19T23:5xZ
+
+**Task:** implement the BRAIN-009 decision in rules only (design-to-code, no execution).
+
+**Outcome:** implemented and verified. The tree-identity check is now the portable canonical digest;
+the ordered digest is reported as an environment fact. The canonical digest was added to the frozen v2
+artifacts **by versioned amendment**, not by editing them.
+
+**Delivered**
+- `configs/research_v2_code_hash_amendment_1.json` — the versioned, self-hashed amendment
+  (`manifest_hash 4409b6af54acb2982e1f286f9c6ebd1ce1b7628a90c476dede6da3c04d8762c1`). It retains the
+  authorized ordered digest `2efd3b18…` as the value of record, records the canonical digest
+  `3e8e4169…` and its algorithm, names the five frozen artifacts it extends with their file digests
+  and their identity hashes, states the tree-identity rule, the interim rule and the residual
+  limitation, and authorizes nothing.
+- `scripts/build_v2_code_hash_amendment_1.py` — deterministic producer; the artifact is byte-stable
+  against the controller's periodic refresh of `research_state/campaign_authorization.json`.
+- `scripts/verify_research_v2_code_hash_amendment_1.py` — read-only offline verifier (15 rule
+  groups), including a check that each named affected verifier really computes the recorded canonical
+  digest.
+- `tests/test_research_v2_code_hash_amendment_1.py` — 26 deterministic tests, 8 of them tamper
+  tests, including the enumeration-order perturbation test.
+- `scripts/verify_research_v2_manifests.py`, `scripts/verify_research_v2_candidate_freeze.py`,
+  `scripts/build_v2_candidate_freeze.py` — now compare the canonical digest and cross-check the
+  recorded code hash against the v1 campaign authorization; the live ordered digest is reported, never
+  compared as a drift signal.
+- `tests/test_research_v2_manifests.py`, `tests/test_research_v2_candidate_freeze.py`,
+  `tests/test_research_v2_spec.py` — the ordered-digest assertions are replaced by canonical-digest
+  assertions; three new tamper tests prove the tree-identity check detects a modified source tree.
+
+**Correction to this record:** the permutation count is **1 of 120**, not 6 (see the evidence bullet
+above). The corrected count strengthens the finding: the authorized digest is effectively a
+fingerprint of one specific directory layout.
+
+**Residual limitation (recorded, not fixed):** `src/breakout_research/campaign.py`
+(`_verify_pilot_gate`) and `src/breakout_research/pilot_gate_validator.py` compare the live ordered
+code hash with the authorized one. They are inside the hashed set and are deliberately unchanged, so
+the v1 campaign can only start on a checkout whose enumeration order reproduces the authorized digest.
+Correcting that would require rotating `compute_code_hash()` and re-authorizing the v1 campaign,
+which this decision explicitly rejects; the limitation is recorded as `RL1` in the amendment.
+
+**Verification:** `PYTHONPATH=src python3 -m pytest tests/ -q` → 284 passed, exit 0 (252 pre-existing
++ 32 new); all six v2 verifiers exit 0; `src/breakout_research/` untouched; every frozen artifact
+byte-identical; no v2 result row, shard, ledger, result manifest or checkpoint exists.

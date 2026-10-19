@@ -614,3 +614,288 @@ the confirmatory window itself cannot be evaluated before `2027-01-17T22:00:00Z`
 **Acceptance:** the six previously red tests now pass; `python3 scripts/verify_research_v2_spec.py`, `verify_research_v2_execution.py`, `verify_research_v2_execution_amendment_1.py` exit 0; `configs/research_v2_execution_amendment_1.json` still hashes to `1149d9cb…`; `src/` untouched; no new v2 result row, shard, ledger, result manifest or checkpoint.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_research_v2_manifests.py`; `python3 scripts/verify_research_v2_execution.py`; `python3 scripts/verify_research_v2_candidate_freeze.py`; `python3 scripts/verify_research_v2_execution_amendment_1.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
+
+## Session activity — 2026-10-19T23:37:19Z (this session)
+
+**Task (from the durable handoff at 23:27:56Z):** implement the BRAIN-009 decision — update the named
+verifiers and tests to compare against the canonical digest instead of the live ordered digest, and add
+the canonical digest to the frozen v2 artifacts by versioned amendment. Nothing runs in that session.
+
+**Outcome:** **Delivered and verified.** The tree-identity check is now the portable canonical digest
+`3e8e4169…`; the checkout-dependent ordered digest is reported as an environment fact and is never
+compared as a drift signal. The canonical digest was added to the five frozen v2 artifacts **by
+versioned amendment**, not by editing them: `configs/research_v2_code_hash_amendment_1.json`
+(`manifest_hash 4409b6af54acb2982e1f286f9c6ebd1ce1b7628a90c476dede6da3c04d8762c1`), with a deterministic
+producer, a read-only offline verifier (15 rule groups) and 26 deterministic tests. **No grid, backtest,
+campaign, selection, pilot or confirmatory-window read happened**, no v1 artifact changed,
+`src/breakout_research/` was not touched, and the market-cap snapshot was not re-retrieved.
+
+**Files added**
+- `configs/research_v2_code_hash_amendment_1.json` — the versioned amendment (hash above)
+- `scripts/build_v2_code_hash_amendment_1.py` — deterministic producer (creation instant pinned; refuses
+  to overwrite without `--force`)
+- `scripts/verify_research_v2_code_hash_amendment_1.py` — read-only offline verifier (exit 0/1, JSON report)
+- `tests/test_research_v2_code_hash_amendment_1.py` — 26 tests, 8 of them tamper tests
+
+**Files modified**
+- `scripts/verify_research_v2_manifests.py` — ordered-digest comparison replaced by the canonical check
+- `scripts/verify_research_v2_candidate_freeze.py` — same; `hashed_source_digest` replaced by
+  `canonical_source_digest` + `live_ordered_code_hash`
+- `scripts/build_v2_candidate_freeze.py` — the frozen identity's `code_hash` now comes from the
+  authorized value of record, not from the live ordered digest; refuses to build against a drifted tree
+- `tests/test_research_v2_manifests.py`, `tests/test_research_v2_candidate_freeze.py`,
+  `tests/test_research_v2_spec.py` — ordered-digest assertions replaced by canonical-digest assertions;
+  three new tamper tests
+- `research_state/brainstorming_queue.md` — BRAIN-009 status → `IMPLEMENTED_AND_VERIFIED`, an
+  implementation record, and a correction of the permutation count (below)
+- `research_state/prompt_evolution.md` — new entry `P8-2026-10-19-ENVIRONMENT-DEPENDENT-ACCEPTANCE`
+- `README.md` — **one added paragraph** in Section 2A E (the prompt revision, see the prompt review)
+- `research_state/campaign_authorization.json` — **controller-driven only** (`authorized_at_utc` refresh);
+  `authorized`, `code_hash` and every functional field unchanged
+
+**State verified (2026-10-19T23:37:19Z)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **284 passed**, exit 0 (252 pre-existing + 32 new:
+  26 in the new module, 2 in the manifests tests, 3 in the freeze tests, 1 in the spec tests)
+- all six v2 verifiers exit 0: `verify_research_v2_spec.py`, `verify_research_v2_manifests.py`,
+  `verify_research_v2_execution.py`, `verify_research_v2_candidate_freeze.py`,
+  `verify_research_v2_execution_amendment_1.py`, `verify_research_v2_code_hash_amendment_1.py`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` →
+  `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` — **unchanged**, equal to
+  `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`)
+- v1 artifacts byte-unchanged (sha256): `configs/research_v1.json` `558d6099…`,
+  `research/universe_manifest.json` `c8f367d2…`, `research/data_manifest.json` `cf39de42…`,
+  `research/candidate_manifest.json` `87589f83…`, `research/candidate_manifest_v2.json` `a68b061a…`
+- v2 artifacts unchanged: `research/universe_manifest_v2.json` `4e927e52…`, `research/data_manifest_v2.json`
+  `9f64d8d1…`, `configs/research_v2.json` `49fb0814…`, `configs/research_v2_execution.json` `aa902aa9…`,
+  `configs/research_v2_candidate_freeze.json` `5a56b3d8…`, `configs/research_v2_execution_amendment_1.json`
+  `1149d9cb…`, snapshot `c4772c58…`
+- `src/breakout_research/` untouched (`git status --short src/` empty; last `src/` commit still `ea5da766`)
+- no v2 execution artifact exists (`research/shards_v2`, `research/ledger_v2.json`,
+  `research/results_manifest_v2.json`, `research/results_v2.jsonl`, `research_state/checkpoint_v2.json`),
+  no `v2-campaign` row in `research/results.jsonl`, `holdout_exposed_count = 0`,
+  `confirmatory_window_status = NOT_STARTED`
+- campaign terminal state unchanged: `AWAITING_NEW_CANDIDATES` /
+  `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`
+- README blob after the prompt revision `3c584bec644088c3d99ed0ccac03b5771b687665` (previous
+  `1a9939f2f413300b335dce27a013516a137f26a2`)
+
+**CONFIRMED findings**
+1. **The defect is real and the fix is effective, but the previous acceptance criterion was
+   unfalsifiable in this checkout.** The 22:07Z handoff recorded 246 passed / 6 failed with the
+   "source hash does not match the current source tree" message; **in this checkout the whole suite
+   was already green (252 passed, exit 0) and both verifiers exited 0 before any change**, because
+   this checkout enumerates `src/breakout_research` as `(indicators, utils, signals, data, backtest)` —
+   the very order that reproduces the authorized digest. The acceptance criterion "the six previously
+   red tests now pass" would therefore have been satisfied by an unmodified tree. The replacement
+   criterion is checkout-independent: `test_the_tree_identity_check_survives_a_perturbed_enumeration_order`
+   reverses the `os.walk` order, shows the ordered digest changes while the canonical digest and every
+   verifier result do not, and `test_an_ordered_digest_mismatch_is_not_a_verifier_failure` shows the
+   manifests and freeze verifiers stay green under the perturbation.
+2. **The permutation count in BRAIN-009 was wrong and is corrected here: 1 of 120, not 6.** An exact
+   replica of `compute_code_hash()` — checked to reproduce the live digest under the checkout's real
+   enumeration order before the brute force — reproduces the authorized digest under exactly one of
+   the 120 permutations of the five sub-directory blocks, `(indicators, utils, signals, data, backtest)`.
+   The 22:07Z session's "6 of 120" came from a replica that did not reproduce the live digest under
+   the actual order, so its count was not evidence. The correction strengthens the finding: the
+   authorized digest is effectively a fingerprint of one specific directory layout. The canonical
+   digest reproduces under all orderings.
+3. **The v1 campaign runtime gate still compares the live ordered digest** —
+   `src/breakout_research/campaign.py:189` (`_verify_pilot_gate`) and
+   `src/breakout_research/pilot_gate_validator.py:93` compare `auth['code_hash']` with the live
+   `compute_code_hash()`. They are inside the hashed set and are deliberately unchanged, so on a
+   checkout whose enumeration order differs the v1 campaign refuses to start with a false
+   "code has changed since authorization" message. This is recorded as residual limitation `RL1` in
+   the new amendment; correcting it would require rotating `compute_code_hash()` and re-authorizing
+   the v1 campaign, which BRAIN-009 explicitly rejects. Nothing runs today (the v1 campaign is in a
+   terminal state), so the limitation is not urgent, but it must be decided before any v1 resume.
+
+**Rule → code → test map** (this session added no module under `src/`; the rules are implemented in
+`scripts/`, so `compute_code_hash()` is unchanged)
+
+| Frozen rule | Implementation | Test |
+| --- | --- | --- |
+| the identity of the hashed set is the portable canonical digest | `scripts/verify_research_v2_code_hash_amendment_1.py:canonical_source_digest`, `scripts/verify_research_v2_manifests.py:canonical_source_digest`, `scripts/verify_research_v2_candidate_freeze.py:canonical_source_digest`, `scripts/build_v2_candidate_freeze.py:canonical_source_digest` | `tests/test_research_v2_code_hash_amendment_1.py::test_canonical_source_digest_recomputes_from_the_tree`, `::test_affected_verifiers_compute_the_canonical_digest` |
+| the recorded code hash is cross-checked against the v1 campaign authorization | `scripts/verify_research_v2_code_hash_amendment_1.py` §4, `scripts/verify_research_v2_manifests.py` §2b, `scripts/verify_research_v2_candidate_freeze.py` §2b | `::test_authorized_code_hash_is_the_value_of_record`, `tests/test_research_v2_manifests.py::test_snapshot_identity_is_complete_and_consistent`, `tests/test_research_v2_candidate_freeze.py::test_v1_campaign_authorization_is_untouched`, `tests/test_research_v2_spec.py::test_the_v1_campaign_authorization_is_bound_to_the_canonical_tree_identity` |
+| an ordered-digest mismatch is an environment fact, never drift | `scripts/verify_research_v2_manifests.py` §2b, `scripts/verify_research_v2_candidate_freeze.py` §2b | `::test_the_tree_identity_check_survives_a_perturbed_enumeration_order`, `::test_an_ordered_digest_mismatch_is_not_a_verifier_failure` |
+| the authorized digest is retained as the value of record, not rotated | `scripts/build_v2_code_hash_amendment_1.py:build` (`code_hash_constraint`) | `::test_authorized_code_hash_is_the_value_of_record` |
+| the canonical digest is added by versioned amendment, and no frozen artifact is edited | `scripts/build_v2_code_hash_amendment_1.py:build` (`amends`), `configs/research_v2_code_hash_amendment_1.json` | `::test_every_amended_artifact_is_byte_identical_and_records_the_value_of_record`, `::test_the_amendment_names_exactly_the_frozen_code_hash_artifacts`, `::test_verifier_detects_an_edited_amended_artifact` |
+| the producer never recomputes the ordered digest as an identity | `scripts/build_v2_candidate_freeze.py:build` | `tests/test_research_v2_candidate_freeze.py::test_the_freeze_is_reproducible_from_the_producer_on_any_checkout`, `::test_freeze_is_reproducible_from_the_producer` |
+| the amendment authorizes nothing | `scripts/verify_research_v2_code_hash_amendment_1.py` §8 | `::test_the_amendment_authorizes_nothing`, `::test_verifier_detects_a_self_authorizing_amendment` |
+| the residual limitation of the v1 runtime gate is recorded, not silently dropped | `scripts/build_v2_code_hash_amendment_1.py:build` (`residual_limitations`) | `::test_the_residual_limitation_is_recorded` |
+| real source drift is still detected | the canonical-digest comparison in the three verifiers | `::test_verifier_detects_a_modified_hashed_source_tree`, `tests/test_research_v2_manifests.py::test_verifier_detects_a_modified_hashed_source_tree`, `tests/test_research_v2_candidate_freeze.py::test_verifier_detects_a_modified_hashed_source_tree` |
+| the amendment is self-hashing and reproducible | `scripts/verify_research_v2_code_hash_amendment_1.py:compute_manifest_hash` | `::test_manifest_hash_recomputes_from_the_document`, `::test_amendment_is_reproducible_from_the_producer` |
+
+**UNVERIFIED / STALE**
+- STALE (marked in this file): the 19:07Z task message (v2 execution protocol — delivered 20:40Z), the
+  21:05Z task message (v2 candidate freeze — delivered 21:38Z), the 21:38Z task message (v2 execution
+  amendment — delivered by the 22:00Z/22:07Z sessions) and the 23:27Z task message (BRAIN-009 decision
+  record — implemented by this session).
+- The 22:07Z handoff's "6 of 120 permutations" is **DISPROVEN** (finding 2 above).
+- The 22:07Z handoff's "6 red tests / 2 red verifiers" is **environment-specific**: it does not
+  reproduce in this checkout (finding 1 above). It is not evidence that the defect was absent.
+- `configs/research_v2.json` still records P2/P3 as `OUTSTANDING` although both are delivered; the file
+  is immutable and hash-verified, so the correction is a versioned amendment, not an edit.
+- The v2 selection run is still unauthorized: the amendment records the bounded parameters, not a
+  decision to run.
+
+**Unsuccessful attempts (and the condition that would justify a retry)**
+- The first build of the new amendment recorded
+  `related_artifacts.v1_campaign_authorization.file_sha256`. The controller refreshes
+  `authorized_at_utc` in that file every cycle, so the file digest changed and
+  `test_amendment_is_reproducible_from_the_producer` failed (the producer output no longer matched
+  the artifact). Fixed by recording the functional `code_hash` instead of the file digest; the
+  artifact was then verified byte-stable across a simulated refresh. **Do not re-add a file digest of
+  a controller-managed file to a hash-bound artifact.**
+- The first tamper test read a file after unlinking it (`FileNotFoundError`). Fixed by reading before
+  unlinking. Implementation-side; no retry of the unchanged action is warranted.
+- The 22:07Z permutation count (6 of 120) came from a replica that did not reproduce the live digest
+  under the checkout's real enumeration order. A replica must be validated against the live digest
+  before its permutation count is quoted as evidence.
+
+**Prompt review:** `PROMPT_GAP` → **one** bounded change, applied and logged. The failure mode is new
+and is not covered by P7: the acceptance criterion of the BRAIN-009 task ("the six previously red
+tests now pass") depended on an environment-specific value — the checkout's directory enumeration
+order — and was therefore already satisfied before the change, so it could not distinguish "fixed"
+from "not fixed". One paragraph was added to README Section 2A E: an acceptance check whose outcome
+depends on an environment-specific value must be paired with a check that perturbs that value; a check
+that already passes before the change proves nothing about the change, so the pre-change result must
+be recorded and the claimed result must hold under the perturbed environment too. Logged as
+`P8-2026-10-19-ENVIRONMENT-DEPENDENT-ACCEPTANCE` in `research_state/prompt_evolution.md` with its
+regression cases; README blob after the revision `3c584bec644088c3d99ed0ccac03b5771b687665`. No
+research-protocol text (universe, grid, costs, folds, selection, holdout, thresholds) was touched.
+
+**Checkpoint / persistence status**
+- Local commit: **not created by the agent** (no explicit user request). The working tree carries the
+  new amendment, its producer and verifier, the new test module, the changes to the three verifiers /
+  one producer / three test modules, the README paragraph, the prompt-evolution entry, the
+  brainstorming-queue record and this report.
+- Remote persistence: `git rev-parse HEAD` == `git ls-remote origin main` == `5f7145629ef872813ec4a3236a6d496492ee6454`
+  at the end of this session — i.e. **the new artifacts are not yet committed or pushed**. A
+  follow-up commit/push (or the session checkpoint) is required.
+- Artifact/recovery: every new artifact is reproducible from the repository — the producer rebuilds
+  the amendment deterministically, and the verifiers recompute every expectation from the repository.
+- Checkpoint reconciliation: not applicable — no run, no result row, no shard, no ledger was produced;
+  `research_state/checkpoint.json` and the v1 campaign state are untouched.
+
+**Unresolved blockers (ranked)**
+1. **The v2 execution path does not exist.** The v2 selection grid needs code that runs outside the
+   hashed set, against the frozen candidate set and the unchanged v1 selection rule, writing only to
+   the v2 paths. This is the next bounded task.
+2. **The v2 selection run is unauthorized** — the amendment records the bounded parameters, not a
+   decision to run; the selected-configuration manifest stays `OUTSTANDING`. Not urgent: the
+   confirmatory window cannot end before 2027-01-17T22:00:00Z.
+3. **Residual limitation `RL1`** — the v1 campaign runtime gate compares the live ordered digest, so
+   a v1 resume is only possible on a checkout with the authorized enumeration order. Undecided by
+   design; BRAIN-009 rejects the rotation. Nothing runs today.
+4. **`configs/research_v2.json` still records P2/P3 as `OUTSTANDING`** although both are delivered; the
+   file is immutable and hash-verified, so the correction is a versioned amendment, not an edit.
+5. The confirmatory window cannot exist before `2027-01-17T22:00:00Z` — no action possible or needed.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** implement the **v2 selection execution path outside the hashed set** and
+deliver the versioned artifact that authorizes exactly one bounded v2 selection run over the frozen
+candidate set. Nothing runs in that session.
+
+**Subject:** BRAIN-009 is implemented and verified — the code-hash binding is portable; the next
+bounded task is the v2 selection execution path outside the hashed set (code only, no run)
+
+**Status (verified 2026-10-19T23:37:19Z):**
+- Delivered and verified: `configs/research_v2.json` `49fb0814…` (P1),
+  `research/universe_manifest_v2.json` `4e927e52…` (P2), `research/data_manifest_v2.json` `9f64d8d1…`
+  (P3), `configs/research_v2_execution.json` `aa902aa9…` (P4),
+  `configs/research_v2_candidate_freeze.json` `5a56b3d8…` (frozen candidate set),
+  `configs/research_v2_execution_amendment_1.json` `1149d9cb…` (bounded, unauthorized v2 selection
+  parameters) and now `configs/research_v2_code_hash_amendment_1.json` `4409b6af…` (portable tree
+  identity). Each has a read-only offline verifier; all six verifiers exit 0 and the full suite is
+  284/284 green.
+- Frozen candidate set: **18 validated constituents** (ADA AVAX BCH BNB BTC DOGE ETH HBAR LINK LTC
+  NEAR SOL SUI TRX UNI XLM XRP ZEC), frozen at 2026-10-19T21:30:17Z. HYPEUSDT
+  (`insufficient_hourly_history`) and XMRUSDT (`binance_spot_unavailable`) stay excluded with reasons.
+- Confirmatory window: opens `2026-10-19T22:00:00Z`, needs ≥ 2,160 closed hourly candles, single-use,
+  never reused from v1, never read during selection — earliest possible end `2027-01-17T22:00:00Z`.
+- The tree-identity check is now the portable canonical digest `3e8e4169…`; the ordered digest
+  `2efd3b18…` is retained as the authorized value of record and is only reported, never compared as a
+  drift signal. The code hash is unchanged and `src/breakout_research/` is untouched.
+- Nothing has run: no v2 shard, ledger, result manifest, result stream or checkpoint exists, no v2
+  result row exists, `holdout_exposed_count = 0`, `confirmatory_window_status = NOT_STARTED`; v1
+  artifacts are byte-unchanged.
+
+**One bounded task:** deliver the v2 selection execution path and the authorization for it, in that
+order, **without running it**.
+
+1. **The execution path, outside the hashed set.** Add a new top-level package that lives **outside**
+   `src/breakout_research/` — for example `src/v2_campaign/` — and that **imports** the v1 engine
+   (indicators, signals, backtest, shard writer) without adding, editing or removing any file under
+   `src/breakout_research/`. Importing does not change the code hash; adding or editing a file there
+   does, and would invalidate the v1 campaign authorization. The path must:
+   - read the candidate set from `configs/research_v2_candidate_freeze.json` (the 18 frozen
+     constituents) and the datasets from `research/data_manifest_v2.json`; it may not re-rank, widen or
+     narrow the set;
+   - read **development data only** — candles that close at or before `2026-10-19T22:00:00Z` — and
+     must never read a candle inside the confirmatory window;
+   - apply the **unchanged v1 selection rule** (`configs/research_v1.json` → `selection`, inherited
+     byte-equal by `configs/research_v2.json`); it may not introduce, tighten or loosen any selection
+     criterion;
+   - write only to the v2 paths of the execution protocol (`research/shards_v2/`,
+     `research/ledger_v2.json`, `research/results_manifest_v2.json`, `research/results_v2.jsonl`,
+     `research_state/checkpoint_v2.json`) and never to the v1 shards, ledger, tallies or
+     `research/results.jsonl`;
+   - honour the bounds already recorded in `configs/research_v2_execution_amendment_1.json`
+     (18 assets, 2,304 configurations per asset, 41,472 total units, 1 attempt) and its stopping
+     conditions, including "no candidate survives the unchanged v1 selection rule → report it, do not
+     hide it".
+   Exercise it in tests against a **synthetic fixture in a temporary directory** — never against the
+   real universe, the real datasets or the repository's own v2 paths.
+2. **The authorization, as a versioned hash-bound design artifact** (e.g.
+   `configs/research_v2_selection_authorization_1.json`) with a read-only offline verifier and
+   deterministic tests, following the `configs/research_v2_candidate_freeze.json` /
+   `scripts/verify_research_v2_candidate_freeze.py` / `tests/test_research_v2_candidate_freeze.py`
+   pattern. It names the execution path, the campaign id, the v2 paths, the data boundary, the
+   unchanged selection rule, the bounds, the stopping conditions, the rollback rule and the falsifiers,
+   and it authorizes **at most one** bounded run. It must record the code identity of the new path
+   under the **canonical** digest rule established by BRAIN-009.
+3. **Do not run the selection grid.** The artifact authorizes a run; a later session performs it.
+
+**Do NOT:** write, edit or delete any file under `src/breakout_research/` (it is the hashed set; the
+v1 campaign authorization depends on `code_hash 2efd3b18…`); edit `research_state/campaign_authorization.json`
+or `research_state/checkpoint.json`; edit any frozen artifact in place (`configs/research_v1.json`,
+`configs/research_v2.json`, `configs/research_v2_execution.json`,
+`configs/research_v2_candidate_freeze.json`, `configs/research_v2_execution_amendment_1.json`,
+`configs/research_v2_code_hash_amendment_1.json`, `research/universe_manifest.json`,
+`research/data_manifest.json`, `research/candidate_manifest.json`, `research/candidate_manifest_v2.json`,
+`research/universe_manifest_v2.json`, `research/data_manifest_v2.json`); run any v2 grid, backtest,
+campaign, selection or pilot; read any candle inside the v2 confirmatory window (it does not exist
+yet); write any file under `research/shards_v2/`, `research/ledger_v2.json`,
+`research/results_manifest_v2.json`, `research/results_v2.jsonl` or `research_state/checkpoint_v2.json`;
+re-retrieve or re-time the market-cap snapshot; re-run `scripts/v2_constituent_validation.py`,
+`scripts/build_v2_candidate_freeze.py` or `scripts/build_v2_code_hash_amendment_1.py` (they would
+rewrite their artifacts and change their hashes); or "fix" a red ordered-digest comparison by editing
+`src/breakout_research/`.
+
+**Acceptance criteria:** all six existing v2 verifiers still exit 0; the new authorization verifier
+exits 0; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; `compute_code_hash()` is still
+`2efd3b18…`; the v1 and v2 artifact hashes listed above are unchanged; the new package is outside the
+hashed set and the hashed set is byte-unchanged; the new authorization is self-hashing and every rule
+above is enforced by at least one test; **no v2 result row, shard, ledger, result manifest or
+checkpoint exists**, and no confirmatory-window candle was read.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v2_spec.py`;
+`python3 scripts/verify_research_v2_manifests.py`; `python3 scripts/verify_research_v2_execution.py`;
+`python3 scripts/verify_research_v2_candidate_freeze.py`;
+`python3 scripts/verify_research_v2_execution_amendment_1.py`;
+`python3 scripts/verify_research_v2_code_hash_amendment_1.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm only the new package, the new authorization and its
+verifier/tests, and `research_state/` are added — no `src/breakout_research/`, no frozen artifact, no
+manifest change).
+
+**Environment note:** the container has no `pytest` and no `numpy` by default. Install them before
+running the suite (`python3 -m pip install pytest numpy requests` → pytest 9.1.1, numpy 2.5.4), otherwise
+the suite cannot run at all and must be reported as `NOT_RUN`.
+
+**Queued after this task (not for that session):** the versioned amendment that reconciles
+`configs/research_v2.json` (P2/P3 still read `OUTSTANDING` although both are delivered) with the
+delivered prerequisite list, and a recorded decision on residual limitation `RL1` (the v1 campaign
+runtime gate compares the live ordered digest). The confirmatory window itself cannot be evaluated
+before `2027-01-17T22:00:00Z`.

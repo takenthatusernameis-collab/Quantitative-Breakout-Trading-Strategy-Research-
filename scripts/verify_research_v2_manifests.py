@@ -14,6 +14,11 @@ against the rules frozen in ``configs/research_v2.json``:
 * the market-cap snapshot is the one retrieved inside the pinned window and its
   stored bytes hash to the recorded digest;
 * every manifest self-hash recomputes over the documented canonicalization;
+* the identity of the hashed source set is checked against the portable
+  canonical source digest, and the recorded code hash is cross-checked
+  against the v1 campaign authorization: a live ordered-digest mismatch is an
+  environment fact about the directory enumeration order of the checkout, not
+  evidence of source drift (BRAIN-009);
 * every candidate is either validated (Binance spot + a complete, gap-free,
   hash-verified hourly dataset of at least 26,280 candles) or excluded with a
   reason, and no candidate is silently dropped;
@@ -31,6 +36,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -47,6 +53,11 @@ DATA_V2_PATH = REPO_ROOT / "research" / "data_manifest_v2.json"
 SNAPSHOT_RAW_PATH = REPO_ROOT / "research" / "v2_evidence" / "raw_market_cap_response.json"
 SNAPSHOT_OBSERVATION_PATH = REPO_ROOT / "research" / "v2_evidence" / "snapshot_observation.json"
 CANDLE_DIR_V2 = REPO_ROOT / "research" / "data" / "candles_v2"
+CODE_HASH_AMENDMENT_PATH = REPO_ROOT / "configs" / "research_v2_code_hash_amendment_1.json"
+AUTHORIZATION_PATH = REPO_ROOT / "research_state" / "campaign_authorization.json"
+
+#: The source tree that ``compute_code_hash()`` hashes, recursively.
+HASHED_SET_ROOT = "src/breakout_research"
 
 SNAPSHOT_IDENTITY_FIELDS = (
     "protocol_version",
@@ -97,6 +108,41 @@ def parse_iso_utc(value: str) -> datetime:
     return datetime.fromisoformat(text).astimezone(timezone.utc)
 
 
+def canonical_source_digest(
+    repo_root: Path = REPO_ROOT, hashed_set_root: str = HASHED_SET_ROOT
+) -> str:
+    """The portable identity of the hashed source tree.
+
+    Every ``*.py`` file under the hashed set contributes its POSIX relative path
+    and the sha256 hex digest of its bytes, in ascending path order. Unlike
+    ``compute_code_hash()`` this does not depend on the directory enumeration
+    order of the checkout, so it is reproducible on any machine.
+    """
+    base = repo_root / hashed_set_root
+    digest = hashlib.sha256()
+    for relative in sorted(path.relative_to(base).as_posix() for path in base.rglob("*.py")):
+        digest.update(relative.encode("utf-8") + b"\n")
+        digest.update(sha256_bytes((base / relative).read_bytes()).encode("ascii") + b"\n")
+    return digest.hexdigest()
+
+
+def live_ordered_code_hash(repo_root: Path = REPO_ROOT) -> Optional[str]:
+    """Reproduce ``compute_code_hash()`` exactly, for the informational report.
+
+    The result depends on the filesystem enumeration order of the checkout and
+    is therefore not a portable identity of the tree.
+    """
+    src_dir = repo_root / HASHED_SET_ROOT
+    if not src_dir.exists():
+        return None
+    digest = hashlib.sha256()
+    for root, _dirs, files in os.walk(src_dir):
+        for name in sorted(files):
+            if name.endswith(".py"):
+                digest.update((Path(root) / name).read_bytes())
+    return digest.hexdigest()
+
+
 def dataset_content_hash(path: Path) -> Tuple[str, int, Optional[int], Optional[int]]:
     """Re-hash a canonical hourly CSV and report its coverage."""
     content = path.read_text(encoding="utf-8")
@@ -114,11 +160,18 @@ def dataset_content_hash(path: Path) -> Tuple[str, int, Optional[int], Optional[
 
 def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     failures: List[str] = []
+    environment_facts: List[str] = []
     spec_path = repo_root / "configs" / "research_v2.json"
     universe_path = repo_root / "research" / "universe_manifest_v2.json"
     data_path = repo_root / "research" / "data_manifest_v2.json"
 
-    for path in (spec_path, universe_path, data_path):
+    for path in (
+        spec_path,
+        universe_path,
+        data_path,
+        repo_root / "configs" / "research_v2_code_hash_amendment_1.json",
+        repo_root / "research_state" / "campaign_authorization.json",
+    ):
         if not path.exists():
             return {
                 "ok": False,
@@ -130,6 +183,12 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     data = json.loads(data_path.read_text(encoding="utf-8"))
     v1_universe = json.loads((repo_root / "research" / "universe_manifest.json").read_text(encoding="utf-8"))
     v1_data = json.loads((repo_root / "research" / "data_manifest.json").read_text(encoding="utf-8"))
+    code_hash_amendment = json.loads(
+        (repo_root / "configs" / "research_v2_code_hash_amendment_1.json").read_text(encoding="utf-8")
+    )
+    authorization = json.loads(
+        (repo_root / "research_state" / "campaign_authorization.json").read_text(encoding="utf-8")
+    )
 
     universe_spec = spec["universe"]
     min_candles = int(universe_spec["min_candles"])
@@ -164,14 +223,29 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     if universe_identity.get("candidate_manifest_hash") is not None:
         failures.append("a v2 candidate manifest hash is recorded, but no v2 candidate manifest exists")
 
-    try:
-        from breakout_research.config import compute_code_hash  # noqa: WPS433
-        expected_code_hash = compute_code_hash()
-    except Exception as exc:  # pragma: no cover - the source tree is always importable here
-        failures.append(f"cannot compute the code hash: {exc}")
-        expected_code_hash = None
-    if expected_code_hash and universe_identity.get("code_hash") != expected_code_hash:
-        failures.append("snapshot identity code_hash does not match the current source tree")
+    # 2b. Tree identity (BRAIN-009). The portable canonical source digest is the
+    # identity of the hashed set; the recorded code hash is cross-checked against
+    # the v1 campaign authorization. The live ordered digest is checkout-dependent
+    # and is reported as an environment fact, never compared as a drift signal.
+    recorded_canonical = (code_hash_amendment.get("code_hash_constraint") or {}).get(
+        "canonical_source_digest"
+    )
+    live_canonical = canonical_source_digest(repo_root)
+    if recorded_canonical != live_canonical:
+        failures.append(
+            "the hashed source tree does not match the recorded canonical digest: "
+            f"recorded {recorded_canonical}, recomputed {live_canonical}"
+        )
+    authorized_code_hash = authorization.get("code_hash")
+    if universe_identity.get("code_hash") != authorized_code_hash:
+        failures.append("snapshot identity code_hash is not the authorized v1 code hash")
+    live_ordered = live_ordered_code_hash(repo_root)
+    if live_ordered != authorized_code_hash:
+        environment_facts.append(
+            f"the live ordered code hash {live_ordered} differs from the authorized value of "
+            f"record {authorized_code_hash}; this is an environment fact about the directory "
+            "enumeration order of this checkout, not evidence of source drift"
+        )
 
     if universe_identity.get("data_manifest_hash") != data.get("manifest_hash"):
         failures.append("universe snapshot_identity.data_manifest_hash does not match the data manifest")
@@ -317,6 +391,10 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "excluded_assets": sorted(
             str(entry.get("symbol")) for entry in eligible if entry.get("exclusion_reason")
         ),
+        "canonical_source_digest": live_canonical,
+        "live_ordered_code_hash": live_ordered,
+        "ordered_code_hash_matches_authorized": live_ordered == authorized_code_hash,
+        "environment_facts": environment_facts,
         "failures": failures,
     }
 

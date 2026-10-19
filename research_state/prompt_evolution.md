@@ -868,3 +868,77 @@ effectiveness beyond this session is `NOT_YET_VERIFIED`.
 
 **Rollback instruction:** revert the commit that carries this entry and the added README paragraph; no
 research artifact is affected.
+
+## P8-2026-10-19-ENVIRONMENT-DEPENDENT-ACCEPTANCE
+
+### Triggering evidence
+
+The BRAIN-009 task message accepted the code-hash portability fix with the criterion "the six
+previously red tests now pass". Revalidated in this session, those six tests were **already green
+before any change was made**: this checkout enumerates `src/breakout_research` in the order
+`(indicators, utils, signals, data, backtest)`, which is exactly the order that reproduces the
+authorized ordered digest `2efd3b18…`. The 22:07Z session had observed the opposite order in its
+checkout (`608c7340…`).
+
+- `PYTHONPATH=src python3 -m pytest tests/ -q` before any change → **252 passed, exit 0** (no
+  failure), against the 246 passed / 6 failed recorded in the 22:07Z handoff.
+- `python3 scripts/verify_research_v2_manifests.py` and
+  `python3 scripts/verify_research_v2_candidate_freeze.py` both exited 0 before any change, against
+  the exit 1 recorded in the 22:07Z handoff.
+- A brute-force replica of `compute_code_hash()` over the 120 permutations of the five sub-directory
+  blocks reproduces the authorized digest under exactly one of them,
+  `(indicators, utils, signals, data, backtest)`; the canonical digest
+  `3e8e4169…` reproduces under all of them.
+
+The acceptance criterion was therefore satisfied by the checkout, not by the fix. It could not
+distinguish "fixed" from "not fixed", so it would have passed on an unmodified tree.
+
+### Cause classification
+
+`PROMPT_GAP` for the absence of an explicit rule that an acceptance check whose outcome depends on an
+environment-specific value must be paired with a perturbation of that value. This is distinct from
+P7 (`VERIFIER-INDEPENDENCE`), which requires the *expected value* to be recomputed from repository
+state; here the *environment in which the check runs* is what makes the check unfalsifiable. The
+handoff that carried the criterion was written by an agent, not by the README, but the README is the
+durable prompt and it did not name this failure mode.
+
+### Revision summary — minimal instruction change
+
+One paragraph added to README Section 2A E: an acceptance check whose outcome depends on an
+environment-specific value -- filesystem or directory enumeration order, locale, timezone, clock,
+hash randomization -- must be paired with a check that perturbs that value, so that the check can
+still fail for a defect that is present; a check that already passes before the change proves
+nothing about the change, so the pre-change result must be recorded and the claimed result must hold
+under the perturbed environment too. No other README text changed; the quantitative protocol, the
+universe, grid, costs, folds, selection rule, holdout rules and thresholds are untouched.
+
+### Expected effect
+
+A green check that was green before the change can no longer be reported as evidence for the change;
+the fix must be demonstrated under the environment in which the defect actually manifests. This is a
+hypothesis, not a measured result.
+
+### Regression scenarios and status
+
+| Scenario | Required behavior | Status at revision |
+|---|---|---|
+| Acceptance check depends on the checkout's directory order | Paired with a perturbation of that order | Implemented this session: `tests/test_research_v2_code_hash_amendment_1.py::test_the_tree_identity_check_survives_a_perturbed_enumeration_order` reverses the `os.walk` order and asserts the ordered digest changes while the canonical digest and every verifier result do not |
+| Pre-change state of the check | Recorded | Implemented this session: the pre-change run (252 passed, exit 0) and the pre-change verifier exits (0) are recorded in this entry and in `research_state/agent_handoff.md` |
+| Vacuous-check rule (P7) | Unchanged | Still enforced; the canonical digest is recomputed from the tree, and the amendment verifier fails when a named affected verifier stops computing it (`::test_verifier_detects_an_affected_verifier_without_a_canonical_digest`) |
+| Section 2A G battery | No safeguard removed or weakened | Cases 1-10 untouched: the added paragraph constrains how a check is evidenced; it authorizes no action and relaxes no holdout, data, persistence or truthfulness rule |
+| Same-session rule (Section 2A C1) | A design record is not implemented in the session that writes it | Unchanged: BRAIN-009's decision record was written in the 23:27Z session; this session implements it |
+
+**Known trade-offs:** one added paragraph in Section 2A E. It makes an acceptance criterion slightly
+more demanding to state and to run; it does not add a research gate or a new authorization.
+
+**Reviewer/verifier status:** self-review in this session. Verified by
+`PYTHONPATH=src python3 -m pytest tests/ -q` (284 passed, exit 0) and by `git diff README.md` (one
+added paragraph inside Section 2A E). Behavioral effectiveness beyond this session is
+`NOT_YET_VERIFIED`.
+
+**Resulting prompt blob/commit SHA:** the README blob SHA after this revision is
+`3c584bec644088c3d99ed0ccac03b5771b687665` (previous: `1a9939f2f413300b335dce27a013516a137f26a2`);
+the commit that carries it is recorded in git history for this file.
+
+**Rollback instruction:** revert the commit that carries this entry and the added README paragraph; no
+research artifact is affected.
