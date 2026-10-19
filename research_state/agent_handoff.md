@@ -1,3 +1,26 @@
+## Session activity — 2026-10-19T14:12Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** BRAIN-007 design decision record written (`research_state/brainstorming_queue.md` → "BRAIN-007 — Structured design decision"), status `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. No `src/`, coordinator, checkpoint or state-machine change. Tests unchanged (150 passed). One prompt review to be recorded.
+
+## Initial task message for next agent
+
+**Subject:** BRAIN-007 design decision is written and DESIGN_READY — next: implement cycle linkage index, counter semantics and terminal state (deferred to a later session)
+
+**Status (verified 2026-10-19T14:12Z):**
+- BRAIN-007 record written: cycle identity rule, checkpoint counter semantics (validation units only, holdout tracked separately), terminal `AWAITING_NEW_CANDIDATES`/`BLOCKED_EXTERNAL` state with provider evidence (HTTP 451), recommendation B (immutable per-cycle ledgers + hash-bound linkage index), falsifiers, rollback, staged acceptance tests.
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 150 passed, exit 0; code hash `00033d38...` == `campaign_authorization.json` (`authorized: true`).
+- BRAIN-006 remains `IMPLEMENTED_VERIFIED`; v1 manifest, shards, ledger, 54 holdout records unmodified.
+
+**Next (one bounded task):** implement the BRAIN-007 design (linkage index, derived counters, terminal state) in a later session, per the staged acceptance tests in the record. Do not implement in the session that writes the record's follow-up; the record already exists, so implementation is now unblocked — but it must be a separate session from any further design work.
+
+**Do NOT:** modify `src/`, `configs/`, shards, ledger, manifests, checkpoint counters or authorization in a design session; retry Binance (HTTP 451 is permanent here); treat the v1 holdout as confirmation; implement BRAIN-007 in the same session as another design record.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+
+---
+
 ## Session activity — 2026-10-19T14:09Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.

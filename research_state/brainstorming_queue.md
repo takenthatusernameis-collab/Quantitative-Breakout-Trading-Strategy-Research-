@@ -489,6 +489,59 @@ C. **Reporting-only reconciliation** — keep the current execution behavior and
 
 ---
 
+## BRAIN-007 — Structured design decision (written 2026-10-19 UTC, code hash `00033d38...`, HEAD `c581d155`)
+
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. Design only; no `src/`, coordinator, checkpoint or state-machine change in this session (README Section 2A C1).
+
+### 1. Revalidated facts
+- Continuous cycle 0 reproduces the v1 validation sweep metrically exactly: 497,664 units in both, 0 unique to either, 0 differing metrics (excluding `stored_utc`, `experiment_id`, `schema_version`).
+- `cycle_report.json` for `0f52f6c9...` presents the re-run as a new `COMPLETE` cycle and does not link to the identical prior campaign `fcf04f6e...`, although spec §5 requires linking to verified prior evidence.
+- `checkpoint.json` counters (497,718) = 497,664 validation + 54 exposed-holdout units that exist only in the legacy top-level shard set `577e87e2.../`; the continuous cycle holds 0 holdout records.
+- Eligible universe holds 18 assets vs `COHORT_SIZE` 20; cohort 1 terminated `DUPLICATE_OR_NO_NEW_CANDIDATES`; `next_cohort_index` is 2; all five universe snapshots are byte-identical.
+- `https://api.binance.com/api/v3/ping` → HTTP 451 from this environment (also in `research_state/workflow_run_diagnostics.jsonl`): permanent external boundary here.
+
+### 2. Causal model
+Cycle identity is currently implicit: a cycle is whatever the coordinator writes, and its report presents recomputed identical units as a new trial. Checkpoint counters are a single integer that conflates validation units with exposed-holdout units, so `completed_records` cannot be read as "validation complete." The terminal condition for an exhausted universe is unhandled: the coordinator appends an empty cohort to `completed_cycle_ids` and advances `next_cohort_index`, so "no new candidates" is indistinguishable from "more work pending." No artifact distinguishes a linked/recomputed unit from a genuinely new trial, and no artifact records the provider boundary as a terminal state.
+
+### 3. Alternatives compared
+| Design | Description | Advantages | Material risks/costs |
+|---|---|---|---|
+| **A. Ledger-level dedup** | Coordinator detects identical (code, spec, data, unit) work, links to existing verified evidence, and emits a cycle report distinguishing linked vs newly executed units. | Smallest conceptual change; reuses the existing ledger; makes "new trial" explicit. | Dedup key must be frozen and versioned; risks over-claiming linkage if key is too loose; still needs a separate counter fix. |
+| **B. Immutable per-cycle ledgers + linkage index (recommended)** | Keep each cycle's shards immutable; add a separate cycle-to-campaign linkage index keyed by (code_hash, spec_hash, data_manifest_hash, universe hash, unit id). Checkpoint counters derived from the verified unit set, never mixing holdout. | Preserves per-cycle auditability; clean separation of execution vs linkage; supports a terminal state without mutating shards. | More artifacts and migration logic; linkage index must itself be hash-bound and verified. |
+| **C. Reporting-only reconciliation** | Keep execution behavior unchanged; add a verifier that emits expected-vs-verified and linked-vs-new reconciliation in each cycle report. | Cheapest; no coordinator change. | Does not fix the counter semantics or the empty-cohort terminal state; reports become the only signal, which can be ignored. |
+
+### 4. Recommendation
+Select **B**: immutable per-cycle ledgers plus a hash-bound linkage index, with checkpoint counters derived from the verified validation unit set only, and a terminal `AWAITING_NEW_CANDIDATES`/`BLOCKED_EXTERNAL` state recorded (with provider evidence) instead of appending empty cohorts.
+
+Cycle identity rule: a cycle is identified by `(code_hash, spec_hash, data_manifest_hash, universe_hash)`; a unit is *new* only if its `(cycle identity, asset, config_id, fold_index, cost_scenario)` is not already present in a verified prior cycle's linked set. Identical units are recorded as `LINKED_PRIOR_EVIDENCE`, never as new trials, and the cycle report must state linked vs new counts.
+
+Counter semantics: `completed_records`/`last_verified_record` count **validation units only** (`is_holdout == false`); holdout units are tracked in a separate `holdout_exposed_count` field and never enter the validation count. `last_verified_record` is derived from the verified shard manifest, never asserted.
+
+Terminal state: when the eligible universe has fewer assets than `COHORT_SIZE` and no new candidates remain, the coordinator writes `state: AWAITING_NEW_CANDIDATES` (or `BLOCKED_EXTERNAL` when the provider is unreachable), records the provider evidence (HTTP 451), and does **not** append the cycle to `completed_cycle_ids` or advance `next_cohort_index`.
+
+### 5. Falsifiers
+- If the linkage key is shown to collide across distinct campaigns, B's index is unsound and A's looser dedup is worse; revise the key.
+- If per-cycle immutability prevents any useful linkage (e.g., no prior verified cycle exists), B degrades to C; acceptable, since C is the floor.
+- If the provider becomes reachable and yields a genuinely new universe, the terminal state must transition out of `BLOCKED_EXTERNAL` automatically on the next run; otherwise the state machine is wrong.
+
+### 6. Rollback
+Revert only the linkage-index and counter changes; preserve all per-cycle shards and the original checkpoint for diagnosis. Never silently reset counters to zero; on any mismatch, reconstruct from the verified shard manifest and emit an integrity report. Rolling back to "present recomputed units as new trials" is not acceptable.
+
+### 7. Staged acceptance tests
+1. `PYTHONPATH=src python3 -m pytest tests/ -q` → all pass, exit 0.
+2. A unit test proves the linkage index classifies an identical re-run as `LINKED_PRIOR_EVIDENCE` (0 new units) for cycle 0.
+3. A test proves holdout units never increment the validation counter.
+4. A test proves an exhausted universe (18 assets < `COHORT_SIZE` 20, provider HTTP 451) yields `AWAITING_NEW_CANDIDATES`/`BLOCKED_EXTERNAL` and does not append to `completed_cycle_ids` or advance `next_cohort_index`.
+5. A test proves a forged `completed_records`/`last_verified_record` is detected and reconstructed from the shard manifest.
+6. No `src/`, `configs/`, shard, ledger, manifest, checkpoint-counter or authorization change in the decision-record session; exactly one prompt review; handoff updated, commit pushed, `git ls-remote origin main` == local HEAD verified.
+
+### 8. External dependency
+A genuinely new universe requires a fresh market-cap snapshot and new candles; the universe provider is unreachable from this environment (HTTP 451). This is an external boundary, not an idle wait — record it, do not retry it.
+
+### 9. BRAIN-007 must not be implemented in the session that writes this record (README Section 2A C1). Writing the record is the deliverable.
+
+---
+
 ## BRAIN-006 — Decision record (written 2026-10-19 UTC, code hash `d0dca29...`, HEAD `a968aa62`)
 
 **Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
