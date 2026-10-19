@@ -27,6 +27,8 @@
 - v1 immutability (asserted in the new test): sha256 of `configs/research_v1.json` `558d6099…`, `research/universe_manifest.json` `c8f367d2…`, `research/candidate_manifest.json` `87589f83…`, `research/candidate_manifest_v2.json` `a68b061a…` — all unchanged
 - `git ls-remote origin main` == `git rev-parse HEAD` == `e235e92f7517e66c0fd31226d2cf1c185e7cb55c` before this session's commit
 
+**Commit / persistence:** branch `main`; base commit `e235e92f7517e66c0fd31226d2cf1c185e7cb55c`; content commit `b3464921078cdc5f92b371b528db6732e0e7292e` pushed to `origin/main` with `git ls-remote origin main` == local HEAD verified after the push; the follow-up commit that records this line is in git history for `research_state/agent_handoff.md`. No recovery bundle was needed and no checkpoint counter moved.
+
 **Rule-field → code → test map (README §2A H).** The v2 specification is a design artifact, not an implemented rule, so every preregistered field is currently *documented but not executed*:
 
 | Preregistered field (v2 spec) | Location | Executing test | Status |
