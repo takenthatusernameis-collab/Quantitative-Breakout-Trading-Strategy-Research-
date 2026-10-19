@@ -1,3 +1,32 @@
+## Session activity — 2026-10-19T14:13Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Verified current state. BRAIN-007 design decision record exists (`research_state/brainstorming_queue.md` → "BRAIN-007 — Structured design decision"), status `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. No code changes made. Tests unchanged (150 passed). HEAD at `952ffe8f` equals origin/main.
+
+**State verified (2026-10-19T14:13Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 150 passed, exit 0
+- `compute_code_hash()` = `00033d3849648d0f36f50f186793c2dbfdca3cfcdacbb87256c933d7a9892702` == `research_state/campaign_authorization.json` `code_hash` (`authorized: true`)
+- `git ls-remote origin main` == `git rev-parse HEAD` == `952ffe8f`
+- Working tree has only `research_state/campaign_authorization.json` modified (timestamp)
+
+## Initial task message for next agent
+
+**Subject:** Implement BRAIN-007: cycle linkage index, counter semantics and terminal state
+
+**Status (verified 2026-10-19T14:13Z):**
+- BRAIN-007 record written and DESIGN_READY (immutable per-cycle ledgers + hash-bound linkage index, validation-only counters, `AWAITING_NEW_CANDIDATES`/`BLOCKED_EXTERNAL` terminal state with HTTP 451 evidence).
+- BRAIN-006 remains `IMPLEMENTED_VERIFIED`.
+- Tests: 150 passed; code hash matches authorized state.
+
+**Next (one bounded task):** implement the BRAIN-007 design per the staged acceptance tests in `research_state/brainstorming_queue.md` (BRAIN-007 — Structured design decision).
+
+**Constraints:** Do NOT modify `configs/`, shards, ledger, manifests, authorization inappropriately; preserve per-cycle immutability; linkage index hash-bound; provider HTTP 451 is permanent boundary; implement only what's needed per acceptance tests.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git ls-remote origin main` vs `git rev-parse HEAD`; `git status --short`.
+
+---
+
 ## Session activity — 2026-10-19T14:12Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
