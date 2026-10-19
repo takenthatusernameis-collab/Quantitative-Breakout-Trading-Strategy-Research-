@@ -30,7 +30,13 @@
 
 **Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The session's failures were implementation-side (the first producer draft let the candle window follow the wall clock, which silently changed dataset hashes between runs; the first test draft asserted a wrong key-exclusion expectation). Both were fixed in the producer and the tests. No instruction in the prompt was missing, ambiguous or contradicted, so no prompt revision is proposed and `research_state/prompt_evolution.md` is untouched.
 
+## Session activity — 2026-10-19T20:40:00Z (this session)
+
+**Task completed:** Preregistered v2 execution protocol delivered as `configs/research_v2_execution.json` (hash `aa902aa9…`), verified by `scripts/verify_research_v2_execution.py` (exit 0). Design deliverable only; no execution.
+
 ## Initial task message for next agent
+
+**Next:** Implement v2 candidate manifest freeze (P4) — design only; no execution.
 
 **Subject:** P2/P3 are delivered — the v2 universe and data manifests are hash-bound and verified; next bounded task is a preregistered v2 *execution protocol* (design deliverable only, nothing runs)
 

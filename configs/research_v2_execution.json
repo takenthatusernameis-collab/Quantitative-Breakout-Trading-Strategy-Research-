@@ -1,0 +1,92 @@
+{
+  "protocol_version": "v2-execution",
+  "universe_version": "v2",
+  "specification_hash": "aa902aa9e6ddfd7f0536765411e78d718f720b7a473a8f621bf64444355f2d38",
+  "created_utc": "2026-10-19T20:40:00Z",
+  "specification_status": "PREREGISTERED_EXECUTION_PROTOCOL_ONLY",
+  "specification_purpose": "Preregister how a future v2 grid run will be authorized and bounded. Design deliverable only; nothing runs.",
+  "evaluation_scope": {
+    "constituents": [
+      "BTC",
+      "ETH",
+      "BNB",
+      "XRP",
+      "SOL",
+      "TRX",
+      "ZEC",
+      "DOGE",
+      "LINK",
+      "ADA",
+      "NEAR",
+      "XLM",
+      "BCH",
+      "LTC",
+      "UNI",
+      "AVAX",
+      "SUI",
+      "HBAR"
+    ],
+    "count": 18,
+    "universe_manifest_path": "research/universe_manifest_v2.json",
+    "universe_manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+    "data_manifest_path": "research/data_manifest_v2.json",
+    "data_manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+    "widening_by_reranking_forbidden": true,
+    "excluded_assets_stay_excluded": true
+  },
+  "selection_data_boundary": {
+    "development_data_only": true,
+    "v2_confirmatory_window_read_during_selection_forbidden": true,
+    "v1_holdout_reuse_forbidden": true,
+    "v1_cycle0_units_mixed_forbidden": true,
+    "v1_cycle0_units": 497664
+  },
+  "v2_result_layout": {
+    "campaign_id": "v2-campaign",
+    "shard_directory": "research/shards_v2",
+    "ledger_path": "research/ledger_v2.json",
+    "results_manifest_path": "research/results_manifest_v2.json",
+    "writes_into_v1_forbidden": true,
+    "checkpoint_counter_rules": [
+      "holdout_exposed_count increments on every confirmatory-window candle read"
+    ]
+  },
+  "code_hash_constraint": {
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "v1_paths_hardcode_v1_spec": [
+      "src/breakout_research/campaign.py",
+      "src/breakout_research/pilot.py"
+    ],
+    "edit_under_src_forbidden_without_reauthorization": true,
+    "chosen_approach": "new code outside the hashed set (e.g. src/breakout_research/v2/), leaving compute_code_hash() unchanged; explicit v1 re-authorization only if v1 path is touched"
+  },
+  "candidate_freeze_and_confirmatory_window": {
+    "candidate_manifest_committed_and_hash_bound_before_first_confirmatory_candle": true,
+    "min_confirmatory_window_hours": 2160,
+    "min_confirmatory_window_rationale": "90 days of closed hourly candles after freeze",
+    "window_overlap_with_v1_holdout_forbidden": true,
+    "single_use": true,
+    "no_ranking_or_retuning_on_holdout": true
+  },
+  "stopping_conditions_rollback_falsifiers": {
+    "no_candidate_survives_unchanged_v1_selection_rule_must_be_reported": true,
+    "rollback_requires_recorded_decision": true,
+    "falsifiers": [
+      "candidate count zero",
+      "holdout exposure mismatch"
+    ]
+  },
+  "supersedes": {
+    "protocol_version": "v2",
+    "specification_path": "configs/research_v2.json",
+    "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "excluded_keys": [
+      "specification_hash"
+    ],
+    "verify_command": "python3 scripts/verify_research_v2_execution.py"
+  }
+}
