@@ -38,8 +38,8 @@
 
 **Persistence state**
 - Base commit at session start: `a968aa62d3f92fecb0b7babe5351fc0b9ee914f1` (== `origin/main` then).
-- Local commit: the commit that contains this entry — `git log -1 --format=%H -- research_state/agent_handoff.md`.
-- Pushed commit: same SHA; verified after push with `git ls-remote origin main` == `git rev-parse HEAD`.
+- Local commit: `ef5a86ad34c5d8c61591e424208b7ff3869443da` ("research: BRAIN-006 design decision + conforming preregistered candidate re-derivation"); the handoff lines themselves live in that commit.
+- Pushed commit: same SHA `ef5a86ad34c5d8c61591e424208b7ff3869443da`; verified after push with `git ls-remote origin main` == `git rev-parse HEAD`.
 - Artifacts preserved: `scripts/select_candidates_cycle0.py`, `tests/test_select_candidates_cycle0.py`, `research/campaign_cycles/0f52f6c9.../candidate_selection.json`, `research_state/brainstorming_queue.md`, `research_state/prompt_evolution.md`, this handoff.
 - Not modified: `src/`, `configs/`, `research/candidate_manifest.json`, `research/results_manifest.json`, any shard, `research_state/campaign_authorization.json` (functional fields), `research/universe_manifest.json`, `research_state/checkpoint.json`.
 
