@@ -52,7 +52,24 @@
     "scope": {
       "constituents_count": 18,
       "constituents": [
-        "ADAUSDT","AVAXUSDT","BCHUSDT","BNBUSDT","BTCUSDT","DOGEUSDT","ETHUSDT","HBARUSDT","LINKUSDT","LTCUSDT","NEARUSDT","SOLUSDT","SUIUSDT","TRXUSDT","UNIUSDT","XLMUSDT","XRPUSDT","ZECUSDT"
+        "ADAUSDT",
+        "AVAXUSDT",
+        "BCHUSDT",
+        "BNBUSDT",
+        "BTCUSDT",
+        "DOGEUSDT",
+        "ETHUSDT",
+        "HBARUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "NEARUSDT",
+        "SOLUSDT",
+        "SUIUSDT",
+        "TRXUSDT",
+        "UNIUSDT",
+        "XLMUSDT",
+        "XRPUSDT",
+        "ZECUSDT"
       ],
       "bound_to_universe_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
       "bound_to_data_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
@@ -84,8 +101,8 @@
     },
     "stopping_conditions": [
       "Normal completion per bounded parameters",
-      "No candidate survives the unchanged v1 selection rule → report the outcome (do not hide it)",
-      "Any boundary violation → abort and rollback"
+      "No candidate survives the unchanged v1 selection rule \u2192 report the outcome (do not hide it)",
+      "Any boundary violation \u2192 abort and rollback"
     ],
     "rollback_rule": "Do not write to v1 artifacts; remove any newly created v2 artifacts if execution is aborted; do not alter checkpoint.json or v1 campaign state.",
     "falsifiers": [
@@ -109,5 +126,10 @@
   "canonicalization": {
     "note": "manifest_hash is computed over the canonical JSON body with manifest_hash field removed (following the pattern used by other v2 artifacts)."
   },
-  "manifest_hash": null
+  "hashing": {
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  },
+  "manifest_hash": "2859abac787017e72623e98c68b2fee66208adb6415ca35c680edaeaf04f960d"
 }

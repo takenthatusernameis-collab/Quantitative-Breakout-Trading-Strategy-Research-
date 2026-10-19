@@ -292,3 +292,13 @@ enforced by at least one test; no v2 result row, shard, ledger or result manifes
 `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
 `git status --short`; `git diff --stat` (confirm only the new amendment files and `research_state/` are
 added — no `src/`, no `configs/research_v1.json`, no `configs/research_v2.json`, no manifest changes).
+
+## Session activity — 2026-10-19T22:00:09Z (this session)
+
+**Task:** Complete the prior amendment task: hash-bound `configs/research_v2_execution_amendment_1.json` and add offline verifier.
+
+**Outcome:** manifest_hash set to `2859abac787017e72623e98c68b2fee66208adb6415ca35c680edaeaf04f960d`; verifier `scripts/verify_research_v2_execution_amendment_1.py` exits 0.
+
+## Initial task message for next agent
+
+**Next:** Add deterministic tests for the amendment verifier and run full suite; then proceed to next bounded design task.
