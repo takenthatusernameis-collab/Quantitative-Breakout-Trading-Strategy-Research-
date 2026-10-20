@@ -40,8 +40,10 @@ EXECUTION_PATH_ROOT = "src/v3_confirmatory"
 
 #: The versioned amendment that may rotate the execution-path digest after the
 #: authorization was frozen. It is the only artifact that may carry a digest
-#: other than the one the authorization records.
-CODE_HASH_AMENDMENT_RELATIVE = "configs/research_v2_code_hash_amendment_1.json"
+#: other than the one the authorization records. It does not exist yet: the
+#: v3 confirmatory path is delivered in the same session that freezes the
+#: authorization that binds it, so no rotation is needed.
+CODE_HASH_AMENDMENT_RELATIVE = "configs/research_v3_confirmatory_code_hash_amendment_1.json"
 
 _ALGORITHM_DESCRIPTION = (
     "sha256 over the concatenation, for every *.py file under the root in "

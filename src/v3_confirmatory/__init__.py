@@ -21,6 +21,16 @@ from .artifacts import (
     build_results_manifest,
     render_report_markdown,
 )
+from .benchmark import (
+    ALIGNMENT_REFERENCE,
+    ALIGNMENT_RULE,
+    BENCHMARK_SYMBOL,
+    FAIL_CLOSED_REASONS,
+    alignment_report,
+    assert_window_alignment,
+    assert_window_benchmark_is_not_the_development_series,
+    benchmark_required_for,
+)
 from .data import (
     build_window_manifest,
     inside_window,
@@ -32,6 +42,7 @@ from .data import (
 from .errors import (
     AttemptBudgetError,
     AuthorizationError,
+    BenchmarkAlignmentError,
     BoundsError,
     ConfirmatoryError,
     DataVerificationError,
@@ -56,9 +67,7 @@ from .identity import (
 )
 from .report import (
     asset_outcome,
-    baseline_comparison,
     build_report,
-    criteria_agreement,
     report_outcome,
     specification_verdict,
 )
@@ -83,13 +92,18 @@ from .window import (
 )
 
 __all__ = [
+    "ALIGNMENT_REFERENCE",
+    "ALIGNMENT_RULE",
     "AttemptBudgetError",
     "AuthorizationError",
+    "BENCHMARK_SYMBOL",
+    "BenchmarkAlignmentError",
     "BoundsError",
     "ConfirmatoryError",
     "DEFAULT_PATHS",
     "DataVerificationError",
     "EVALUATION_WINDOW_RULE",
+    "FAIL_CLOSED_REASONS",
     "FORBIDDEN_OUTPUT_PATHS",
     "MIN_WINDOW_HOURS",
     "Plan",
@@ -97,8 +111,11 @@ __all__ = [
     "WindowExposureError",
     "WindowNotReadyError",
     "Workspace",
+    "alignment_report",
+    "assert_window_alignment",
+    "assert_window_benchmark_is_not_the_development_series",
     "asset_outcome",
-    "baseline_comparison",
+    "benchmark_required_for",
     "build_checkpoint",
     "build_ledger",
     "build_plan",
@@ -109,7 +126,6 @@ __all__ = [
     "canonical_source_digest",
     "code_hash_amendment_path",
     "code_identity_document",
-    "criteria_agreement",
     "default_workspace",
     "empty_state",
     "evaluation_scope",

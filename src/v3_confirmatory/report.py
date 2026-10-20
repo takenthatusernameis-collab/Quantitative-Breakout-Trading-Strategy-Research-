@@ -131,7 +131,6 @@ def asset_outcome(
         "net_total_return_3x": metrics.get("net_total_return_3x"),
         "closed_trades": metrics.get("closed_trades"),
         "baseline_net_return": baseline_net_return,
-        "criteria_agreement": "NOT_COMPARABLE",
     }
 
 
@@ -165,6 +164,9 @@ def build_report(
     assets_without_candidate: Sequence[str],
     comparability_statement: str,
     created_utc: str,
+    decision_rule: Optional[Dict[str, Any]] = None,
+    deviation_disclosure: Optional[Dict[str, Any]] = None,
+    benchmark: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Build the v3 holdout report.
 
@@ -172,6 +174,10 @@ def build_report(
     lists **every** asset of the frozen scope: the evaluated ones with their
     verdict, and the assets without a candidate as ``NO_CANDIDATE_NOT_EVALUATED``.
     A null result is reported as such and never hidden.
+
+    The report names the **single** confirmatory decision criterion that was
+    applied and carries the v1/v2 BTC-alignment deviation disclosure forward;
+    it states no second criterion of its own.
     """
     survivors = sorted(
         asset
@@ -201,7 +207,11 @@ def build_report(
         "assets_without_candidate_status": "NO_CANDIDATE_NOT_EVALUATED",
         "assets_without_candidate_reported": True,
         "v1_holdout_never_reused": True,
+        "v2_confirmatory_window_never_read": True,
         "null_result_reported": True,
+        "decision_rule": dict(decision_rule or {}),
+        "deviation_disclosure": dict(deviation_disclosure or {}),
+        "benchmark": dict(benchmark or {}),
     }
     missing = [field for field in REQUIRED_REPORT_FIELDS if field not in report]
     if missing:
@@ -220,11 +230,10 @@ def assets_with_status(report: Dict[str, Any], status: str) -> List[str]:
     return sorted(asset for asset, entry in outcomes.items() if entry.get("status") == status)
 
 
-#: Aliases kept for API compatibility with the v2 report module.
-baseline_comparison = None
-criteria_agreement = None
-
-
+#: The v3 line states **one** confirmatory criterion, so the v2 module's
+#: ``baseline_comparison`` and ``criteria_agreement`` helpers are deliberately
+#: absent here: a second criterion surface is exactly what the v2 line had to
+#: amend, and the v3 protocol forbids a competing criterion.
 __all__ = [
     "MIN_CLOSED_TRADES",
     "REQUIRED_REPORT_FIELDS",
@@ -234,9 +243,7 @@ __all__ = [
     "STATUS_SURVIVAL",
     "asset_outcome",
     "assets_with_status",
-    "baseline_comparison",
     "build_report",
-    "criteria_agreement",
     "missing_report_fields",
     "report_outcome",
     "specification_verdict",

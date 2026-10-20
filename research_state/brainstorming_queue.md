@@ -3376,7 +3376,77 @@ this is a projection rebuild from the authoritative shards, not a re-run.**
 
 **Still outstanding on the v3 line (queued, not for this session):** the v3 confirmatory
 execution path (`src/v3_confirmatory/`, outside the hashed set) and the v3 confirmatory
-authorization; then the versioned amendment that reconciles `configs/research_v2.json` (P2/P3
-still read `OUTSTANDING` although both are delivered) and the final report once the confirmatory
-windows close. The v3 confirmatory evaluation itself cannot be performed before
-`2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not before `2027-01-17T22:00:00Z`.
+authorization — **delivered in the 2026-10-20T21:29Z session, see the implementation record below** —
+then the v3 confirmatory runbook (the preregistered operator procedure of the single authorized run)
+and the final report once the confirmatory windows close. The v3 confirmatory evaluation itself
+cannot be performed before `2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not before
+`2027-01-17T22:00:00Z`. The stale `OUTSTANDING` wording of `configs/research_v2.json` (P2/P3) is
+already reconciled by reference in `configs/research_v2_spec_amendment_1.json` and
+`configs/research_v2_prerequisite_reconciliation_amendment_1.json`; that item is closed.
+
+---
+
+## BRAIN-012 implementation record — the v3 confirmatory execution path and its authorization (2026-10-20T21:29Z, separate session)
+
+**Marked:** `IMPLEMENTED_AND_VERIFIED` — the v3 confirmatory evaluation now has an executable,
+authorized path; the evaluation itself remains time-blocked until `2027-01-18T13:00:00Z`.
+
+**Why this step, and why it was not optional.** The v3 line had a preregistered protocol and a
+published selection outcome, but **no code that could perform the evaluation and no artifact that
+authorized it**. A preregistration that cannot be executed is a promise, not a control: the
+single-use window cannot be re-graded once it is burned, so the path, the benchmark handling, the
+exposure accounting and the authorization had to be fixed *before* the window opens, not improvised
+after. The v2 line paid for this twice — a half-built runner (BRAIN-011) and two frozen artifacts
+that stated different confirmatory decision criteria.
+
+**Delivered and verified (all digests recomputed from the files on disk):**
+
+- `src/v3_confirmatory/` (canonical digest `747c2387ff85b73240d89f744a70e69f25c3af2e723a6d6191fda80e80c94aba`)
+  — the execution path, outside the hashed set and outside the v3 selection path:
+  - `benchmark.py` (new) — the **window-benchmark rule** of the protocol, implemented inside the
+    confirmatory path rather than imported from `src/v3_campaign`: both series are sliced to the
+    same window, identical timestamps are required (so the frozen engine's index pairing *is* the
+    UTC-candle-close alignment), nothing is forward-filled, and a missing, short or misaligned
+    benchmark **fails closed** before the engine is called. The published development benchmark
+    (`50d357b0…`) may not be substituted — refused by content hash and by a series that starts
+    before the window.
+  - `runner.py` — v3 paths only; the v1 paths, the v2 *selection* paths, the v2 *confirmatory* paths
+    and the v3 *selection* paths are forbidden; the window benchmark is always inside the data
+    scope; the readiness test runs before any payload read; every window read is counted in
+    `holdout_exposed_count`; an abort before the first payload read rolls back and leaves the count
+    at 0, an abort after a read is recorded as `EXPOSED_ABORTED` and keeps the exposure; a resumed
+    run reuses the persisted, hash-verified dataset instead of reading the window twice.
+  - `report.py` / `artifacts.py` / `data.py` / `errors.py` / `identity.py` — the v2 second-criterion
+    surfaces (`criteria_agreement`, `baseline_comparison`) are removed: the v3 line states **one**
+    criterion (`configs/research_v3.json#holdout.promotion_rule`), so the report, the ledger and the
+    result rows carry none.
+- `configs/research_v3_confirmatory_authorization_1.json` (`manifest_hash
+  0383eee19cdc835ab8cba94b479d6b232281e95a62ee9ed4d15febb14e90fb54`) — the versioned artifact that
+  authorizes **at most one** logical run and **nothing** before the window exists. Its `supersedes`
+  block records the replacement of the unverified v2-adapted interim draft of the 20:30Z session
+  (`5d378589…`).
+- `scripts/build_v3_confirmatory_authorization_1.py` — the deterministic producer (every field
+  re-derived from the hash-bound artifacts, the freeze instant pinned, refuses to overwrite without
+  `--force`).
+- `scripts/verify_v3_confirmatory_path.py` — the read-only offline verifier (15 rule groups, exit
+  0/1, JSON report). It proves the single-criterion property with an **AST scan** of the path, so a
+  second criterion cannot hide in a function body.
+- `tests/test_v3_confirmatory_path.py` — 72 deterministic tests (16 tamper controls), exercised
+  against **synthetic** candles in a temporary mirror of the repository: no provider request, no real
+  candle, and no confirmatory artifact written inside the repository.
+
+**State verified (2026-10-20T22:0xZ):** full suite **909/909 green** (837 pre-existing + 72 new);
+`scripts/verify_v3_confirmatory_path.py` → `"ok": true, "failures": []`; every other
+`scripts/verify_*.py` exits 0; `compute_code_hash()` is `2efd3b18…` (the authorized value of
+record); the canonical digests of the hashed set (`3e8e4169…`), the v2 selection path
+(`c69cc021…`), the v2 confirmatory path (`277a4bbe…`) and the v3 selection path (`29cd064e…`) are
+unchanged; no file under `src/breakout_research/`, `src/v2_campaign/`, `src/v2_confirmatory/` or
+`src/v3_campaign/` was touched; no frozen v1/v2/v3 artifact changed; the v3 confirmatory window is
+`NOT_STARTED` with `holdout_exposed_count = 0`; no v3 confirmatory output path exists; no
+confirmatory-window candle was read.
+
+**Operational consequence recorded for the next session:** the authorization binds the **live**
+execution-path digest, so any edit under `src/v3_confirmatory/` invalidates it until
+`python3 scripts/build_v3_confirmatory_authorization_1.py --force` is re-run. A deliberate digest
+rotation must go through the versioned amendment
+(`configs/research_v3_confirmatory_code_hash_amendment_1.json`, which does not exist yet).

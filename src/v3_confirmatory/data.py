@@ -219,14 +219,16 @@ def build_window_manifest(
     data_manifest_path: str = DATA_MANIFEST_RELATIVE,
     candidate_manifest_hash: str,
     created_utc: str,
+    benchmark: Optional[Dict[str, Any]] = None,
     universe_version: str = "v3",
 ) -> Dict[str, Any]:
     """Build the window-manifest document.
 
     The document records the window bounds, the retrieval timestamp, the
     per-asset dataset hashes, the closed-candle counts, the coverage gaps, the
-    exposure events and the readiness record, and it references the frozen v3
-    data manifest by hash. It never edits that manifest.
+    exposure events, the readiness record and the window-benchmark record, and
+    it references the frozen v3 data manifest by hash. It never edits that
+    manifest.
     """
     document: Dict[str, Any] = {
         "artifact": "v3_confirmatory_window_manifest",
@@ -241,12 +243,15 @@ def build_window_manifest(
             "minimum_closed_hourly_candles": int(minimum_closed_hourly_candles),
             "single_use": True,
             "must_not_overlap_v1_holdout": True,
+            "must_not_overlap_v2_confirmatory_window": True,
             "never_reused_from_v1": True,
+            "never_reused_from_v2": True,
         },
         "retrieval_timestamp_utc": retrieval_timestamp_utc,
         "retrieval_happens_once": True,
         "readiness": copy.deepcopy(readiness_record),
         "assets": copy.deepcopy(datasets),
+        "benchmark": copy.deepcopy(benchmark or {}),
         "exposure": copy.deepcopy(exposure_state),
         "holdout_exposed_count": int((exposure_state or {}).get("holdout_exposed_count") or 0),
         "data_manifest": {

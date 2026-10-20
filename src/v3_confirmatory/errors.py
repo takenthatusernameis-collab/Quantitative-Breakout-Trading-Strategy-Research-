@@ -41,9 +41,19 @@ class DataVerificationError(ConfirmatoryError):
     """The window data does not verify against what was recorded."""
 
 
+class BenchmarkAlignmentError(ConfirmatoryError):
+    """The window benchmark series is missing, short or not index-aligned.
+
+    The v3 confirmatory protocol fails closed on exactly these three
+    conditions: a missing benchmark, a benchmark shorter than the evaluated
+    window and a benchmark that is not index-aligned with the asset series.
+    """
+
+
 __all__ = [
     "AttemptBudgetError",
     "AuthorizationError",
+    "BenchmarkAlignmentError",
     "BoundsError",
     "ConfirmatoryError",
     "DataVerificationError",

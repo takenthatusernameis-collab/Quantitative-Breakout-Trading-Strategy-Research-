@@ -114,7 +114,6 @@ def build_result_rows(
                 "net_total_return_3x": outcome.get("net_total_return_3x"),
                 "closed_trades": outcome.get("closed_trades"),
                 "baseline_net_return": outcome.get("baseline_net_return"),
-                "criteria_agreement": outcome.get("criteria_agreement"),
                 "dataset_content_hash": dataset.get("content_hash"),
                 "dataset_hash_algorithm": dataset.get("hash_algorithm"),
                 "observed_candle_count": dataset.get("observed_candle_count"),
@@ -188,6 +187,8 @@ def build_ledger(
     counts: Dict[str, Any],
     data_boundary: Dict[str, Any],
     evaluation_rule: Dict[str, Any],
+    decision_rule: Optional[Dict[str, Any]] = None,
+    benchmark: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """The confirmatory run's ledger."""
     document: Dict[str, Any] = {
@@ -208,6 +209,8 @@ def build_ledger(
         "window": dict(window),
         "scope": dict(scope),
         "evaluation_rule": dict(evaluation_rule),
+        "decision_rule": dict(decision_rule or {}),
+        "benchmark": dict(benchmark or {}),
         "selection": {
             "assets_evaluated": sorted(per_asset_outcomes),
             "assets_evaluated_count": len(per_asset_outcomes),
@@ -218,7 +221,6 @@ def build_ledger(
                 asset: {
                     "config_id": entry.get("config_id"),
                     "status": entry.get("status"),
-                    "criteria_agreement": entry.get("criteria_agreement"),
                     "closed_trades": entry.get("closed_trades"),
                     "net_total_return_1x": entry.get("net_total_return_1x"),
                     "net_total_return_2x": entry.get("net_total_return_2x"),
@@ -314,14 +316,14 @@ def render_report_markdown(report: Dict[str, Any]) -> str:
     lines.append("## Per-asset outcomes")
     lines.append("")
     lines.append(
-        "| Asset | Config | Status | Net 1x | Net 2x | Net 3x | Trades | Baseline net | Criteria agreement |"
+        "| Asset | Config | Status | Net 1x | Net 2x | Net 3x | Trades | Baseline net |"
     )
-    lines.append("| --- | --- | --- | --- | --- | --- | --- | --- | --- |")
+    lines.append("| --- | --- | --- | --- | --- | --- | --- | --- |")
     for asset in sorted(outcomes):
         entry = outcomes[asset]
         lines.append(
             "| {asset} | {config} | {status} | {net1} | {net2} | {net3} | {trades} | "
-            "{baseline} | {agreement} |".format(
+            "{baseline} |".format(
                 asset=asset,
                 config=entry.get("config_id"),
                 status=entry.get("status"),
@@ -330,7 +332,6 @@ def render_report_markdown(report: Dict[str, Any]) -> str:
                 net3=_format_percent(entry.get("net_total_return_3x")),
                 trades=entry.get("closed_trades"),
                 baseline=_format_percent(entry.get("baseline_net_return")),
-                agreement=entry.get("criteria_agreement"),
             )
         )
     lines.append("")
