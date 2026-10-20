@@ -5834,3 +5834,21 @@ test.
 final report once the confirmatory windows close. The v3 confirmatory evaluation itself cannot be
 performed before `2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not before
 `2027-01-17T22:00:00Z`.
+
+## Session activity — 2026-10-20T20:15:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it (deliver the v3 confirmatory-evaluation execution path and authorization), update the handoff, write the initial task message for the next agent.
+
+**Outcome:** The prior task is a large design-to-code deliverable (a new `src/v3_confirmatory/` package, a versioned authorization, a read-only offline verifier and deterministic tests) that was not completed in this session. No code or artifacts were added or modified; the tree is clean and verified green. The bounded task remains exactly as specified in the previous "Initial task message for next agent" and is restated below.
+
+**State verified (2026-10-20T20:15:00Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 837 passed, exit 0
+- all `scripts/verify_*.py` and `scripts/report_*.py` exit 0
+- `compute_code_hash()` = `2efd3b18…` (authorized value of record); canonical digests unchanged (`3e8e4169…` hashed set, `c69cc021…` v2 selection path, `277a4bbe…` v2 confirmatory path, `29cd064e…` v3 path)
+- no `src/v3_confirmatory/` package exists; no v3 confirmatory authorization exists; no v3 confirmatory output path exists; v3 confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`
+
+## Initial task message for next agent
+
+**Next (one bounded task):** deliver the **v3 confirmatory-evaluation execution path (outside the hashed set) and the versioned artifact that authorizes exactly one bounded confirmatory evaluation run** over the four published v3 candidates. Design deliverables only: nothing is evaluated, no candle inside the confirmatory window is read (it cannot exist before `2027-01-18T13:00:00Z`). Follow the task specification in the previous "Initial task message for next agent" (2026-10-20T20:05:00Z session): add `src/v3_confirmatory/`, add `configs/research_v3_confirmatory_authorization_1.json`, add a read-only offline verifier and deterministic tests, with the benchmark (window series) handled fail-closed. Do not edit `src/breakout_research/`, `src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/`; do not edit any frozen artifact; do not read any confirmatory-window candle.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v3_confirmatory_protocol.py`; `python3 scripts/verify_v3_selected_configurations_manifest.py`; `python3 scripts/verify_v3_execution_amendment_2.py`; `python3 scripts/verify_v3_selection_run.py`; `python3 scripts/verify_v3_selection_authorization_1.py`; `python3 scripts/verify_research_v3_spec.py`; `python3 scripts/verify_research_v3_manifests.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_v3_data_manifest_amendment_1.py`; `python3 scripts/verify_v3_candidate_freeze_amendment_2.py`; `python3 scripts/verify_v3_execution_amendment_1.py`; `python3 scripts/report_v3_benchmark_dependency.py`; `python3 scripts/verify_v2_confirmatory_protocol.py`; `python3 scripts/verify_v2_confirmatory_path.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
