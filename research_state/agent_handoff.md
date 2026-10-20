@@ -6696,3 +6696,35 @@ versioned `configs/research_v4.json` and, only if the design says so, one bounde
 retrieval inside its pinned window); the v3 confirmatory evaluation and the final report, which may
 not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start
 before `2027-01-17T22:00:00Z`.
+
+## Session activity — 2026-10-20T23:15:00Z (this session)
+
+**Task:** produce the **v4 preregistration design record** — the decision record for the next expansion version, written into `research_state/brainstorming_queue.md`. Design deliverable only: no provider contact, no candle read, no code, no artifact written under `configs/`, `research/`, `reports/`, or `src/`, no implementation in the same session.
+
+**Outcome:** **Delivered.** Added `BRAIN-013 — v4 preregistration design record (2026-10-20T23:15:00Z)` to `research_state/brainstorming_queue.md` with:
+- Revalidated evidence against live artifacts (v3 exhaustion: 20 eligible/79 excluded, min cap `HTXUSDT 1,468,004,153 USD` rank 65; cohort 3 complete/corrected; windows/time-gates; hashes/digests; full test status)
+- Six points addressed, each with ≥2 materially different designs, one recommendation per point
+- Recommendations: (1) new v4 version with one new pinned-window retrieval (exhaustion + identity to v1/v2/v3), floor strictly below v3 floor via recompute rule; (2) development cutoff at v3 window open `2026-10-20T13:00:00Z` (accept shortened dev window for new listings); (3) strict phase gates vs v2/v3 confirmatory windows (never re-run/re-tune, never read for selection); (4) full isolated v4 namespace with supersedes from v3 manifest identities, holdout counter starts at 0; (5) explicit `AWAITING_NEW_CANDIDATES` with full evidence bundle and bounded cadence; (6) falsifiers, rollback, staged acceptance tests
+- Status: `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
+
+**Files changed:**
+- `research_state/brainstorming_queue.md` — added BRAIN-013
+- `research_state/agent_handoff.md` — this report and updated task message below
+
+**Constraints respected:** no files under `configs/`, `research/`, `reports/`, `src/` created/edited; `research_state/continuous_universe_state.json` unchanged; no frozen artifact touched; no confirmatory-window candle read; `holdout_exposed_count` remains 0; `compute_code_hash()` unchanged.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** implement the v4 preregistration per BRAIN-013 — create versioned `configs/research_v4.json` and, only if the design says so, perform one bounded market-cap retrieval inside its pinned window. Follow all constraints from BRAIN-013. Nothing else runs in that session.
+
+**Subject:** BRAIN-013 design record delivered (v4 preregistration); next is deterministic implementation per recommendations
+
+**Status (verified 2026-10-20T23:15:00Z):**
+- BRAIN-013 added to `research_state/brainstorming_queue.md` with all 6 points, designs, recommendations, falsifiers/rollback/tests.
+- v3 exhausted (20 eligible/79 excluded), cohort 4 cannot come from frozen v3 snapshot; identity rule must extend to v1/v2/v3; floor strictly below v3 floor.
+- v3 window open `2026-10-20T13:00:00Z` (cannot end before `2027-01-18T13:00:00Z`), v2 cannot end before `2027-01-17T22:00:00Z`; both unexposed.
+- All tests/verifiers passing; `compute_code_hash()=2efd3b18…`; canonical digests unchanged; no artifacts under `configs/`, `research/`, `reports/`, `src/` changed.
+
+**Do NOT:** read v2/v3 confirmatory windows; re-run evaluations/grids/backtests; edit frozen artifacts or hashed set; change grid/costs/folds/thresholds/selection rule/single confirmatory criterion; declare campaign complete due to empty snapshot.
+
+**Acceptance:** implementation follows BRAIN-013 exactly, respects cutoff and isolation, full verification passes, no forbidden changes.

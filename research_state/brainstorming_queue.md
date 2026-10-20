@@ -3679,3 +3679,127 @@ preregister the next expansion version (v4) as a **design record** in this queue
 constituents come from, the data boundary relative to the open v3 confirmatory window, the v4
 namespace and identity chain, the floor rule and the `AWAITING_NEW_CANDIDATES` cadence. Design only:
 no provider contact, no candle read, no artifact written, no implementation in the same session.
+
+
+## BRAIN-013 — v4 preregistration design record (2026-10-20T23:15:00Z)
+
+**Status:** DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION
+**Type:** design-only (no implementation in this session)
+**Routing:** per BRAIN-012 recommendation 9 / D-9 ("completion or exhaustion of one frozen version routes to preregistration of the next version"); v3 cohort 3 complete and corrected; v3 eligible pool exhausted.
+
+### Evidence revalidated (from live artifacts, recomputed)
+- **State:** `research_state/continuous_universe_state.json` — cohort index 3 complete, `current_cycle_id=v3-selection-20261020` (`research/v3_selected_configurations_manifest.json#run_identity.run_id`), `next_cohort_index=4`, snapshot `54f9516c…` (recomputable via `compute_snapshot_id` over stored snapshot manifest + `configs/research_v1.json#specification_hash` + `research_state/campaign_authorization.json#code_hash`), v3 split 4 in / 2 out (`v3_candidates=4`), blocking dependency `CONFIRMATORY_WINDOW (earliest end 2027-01-18T13:00:00Z)`.
+- **v3 universe exhaustion:** `research/universe_manifest_v3.json` — 20 `eligible_assets` (6 validated + 14 excluded), 79 `excluded_assets`. **Exhausted.** Cohort 4 cannot be drawn from frozen v3 snapshot. Min cap over v3 eligible: `HTXUSDT` (1,468,004,153 USD, rank 65).
+- **v2 history:** preserved, agrees with manifest (`v2-selection-20261019`, `v2_candidates=14`, v2 snapshot `c4772c58…`).
+- **Windows:** v3 opened `2026-10-20T13:00:00Z`, cannot end before `2027-01-18T13:00:00Z`; v2 cannot end before `2027-01-17T22:00:00Z`. Both `holdout_exposed_count=0`, `confirmatory_window_status=NOT_STARTED`. No v3 confirmatory output path exists.
+- **Hashes/digests:** `compute_code_hash()=2efd3b18…` (value of record), canonical digests unchanged (`3e8e4169…` hashed set, `c69cc021…` v2 selection, `277a4bbe…` v2 confirmatory, `29cd064e…` v3 selection, `747c2387…` v3 confirmatory). All verifiers pass.
+- **Tests:** full suite green (966/966 at handoff), `tests/test_continuous_universe_state.py` added and passing (17 tests, 7 tamper controls).
+
+### 1) Where cohort 4's constituents come from (design decision)
+
+**Design A (recommended): New v4 version with one new pinned-window market-cap retrieval.**
+- Freeze a new pinned window for market-cap retrieval (separate from v2/v3). Document retrieval timestamp, endpoint, raw response bytes + sha256, and the snapshot-identity tuple.
+- Apply v1 exclusion rules unchanged; apply prior-universe asset identity rule extended to **v1, v2, and v3** (no repeat of any constituent from v1/v2/v3).
+- Compute floor strictly below v3 floor using the **same recompute rule** the v3 specification states for the v2 floor. Given v3 min eligible cap is `HTXUSDT 1,468,004,153 USD` (rank 65), v4 floor must be strictly below that value with explicit recomputation (not arbitrary), documented in `configs/research_v4.json`.
+- From eligible pool after exclusions + identity filter, form cohort per same rules as v3; if none qualify → `AWAITING_NEW_CANDIDATES` per §5.
+- Pros: respects exhaustion (cannot reuse frozen v3 snapshot to get "new" cohort 4 legitimately), clean identity chain, auditable. Cons: requires one bounded retrieval in a new pinned window.
+
+**Design B: Reuse v3 snapshot only if exhausted yields no new names — but only as fallback with explicit constraints.**
+- Only consider reuse if a fresh bounded probe of the same pinned window cannot produce any new assets after applying exclusions + identity filter to v1/v2/v3.
+- If reused, must record `snapshot_reuse: true`, `reuse_justification`, and still enforce identity rule to v1/v2/v3 (v3 snapshot alone cannot create non-repeating assets except by exclusion; but identity filter blocks repeats). Also cannot "re-draw" cohort from exhausted v3 eligible set without changing the snapshot.
+- Pros: avoids extra retrieval if truly impossible. Cons: logically impossible to get new constituents from exhausted v3 eligible set while enforcing no repeats of v1/v2/v3 constituents that came from v3; would almost certainly produce empty result; harder to justify as "new cohort".
+
+**Design C: Wait for next natural opportunity / combine with other sources — rejected as violating constraints.**
+- Not allowed per instructions (no provider contact/retrieval outside bounded pinned window; must follow spec rules). Rejected.
+
+**Recommendation (1):** Choose **Design A**. Exhaustion + identity rule to v1/v2/v3 means cohort 4 cannot come from the frozen v3 snapshot. One new pinned-window retrieval is required. Fix v4 floor strictly below v3 floor with explicit recompute rule; extend identity rule to v1,v2,v3. Record all in `configs/research_v4.json` with full snapshot-identity tuple.
+
+### 2) Data boundary relative to open v3 confirmatory window
+
+**Design A (recommended): Bound v4 development data at `2026-10-20T13:00:00Z` (v3 window open time).**
+- Treat any development data read at or after `2026-10-20T13:00:00Z` as inside v3 confirmatory window.
+- For v4, restrict development/candidate selection data to timestamps < `2026-10-20T13:00:00Z` (or strictly before window open).
+- Cost: newly listed assets after window open cannot be considered for v4 development data in the same way; may shorten effective development window for new listings.
+- Must ensure v4 never reads v2 or v3 confirmatory windows; holdout counters start at 0 and are counted on every confirmatory read.
+
+**Design B: Wait for v3 confirmatory window to close (`2027-01-18T13:00:00Z`) before any v4 development work.**
+- Safest for isolation (no risk of window bleed).
+- Cost: delays v4 preregistration/implementation until ~Jan 2027; v2 also pending until 2027-01-17T22:00:00Z.
+- Campaign is not time-blocked on design work, but data gathering for v4 would be blocked.
+
+**Design C: Time-split with explicit audit — complex, error-prone.** Rejected.
+
+**Recommendation (2):** Choose **Design A** with explicit boundary `development_data_cutoff_utc = "2026-10-20T13:00:00Z"`. Document the cost (shortened development window for assets listed after cutoff) and enforce via code rules/checks. Do **not** wait for window close just for design — design is allowed now; retrieval/implementation timing must respect boundary. v4 confirmatory evaluation itself cannot run until its own window conditions met, and never reuses v2/v3 windows.
+
+### 3) Sequencing vs two pending confirmatory evaluations
+
+**Design A (recommended): Strict separation with phase gates.**
+- **Before either gate clears:** only design (this record), documentation, adding tests/checks for v4 plumbing that don't read windows or run evaluations. No v2/v3 confirmatory reads, no re-runs, no tuning.
+- **v2 gate clears at 2027-01-17T22:00:00Z:** v2 confirmatory evaluation may run if authorized (separate from v4). Must remain isolated from v4.
+- **v3 gate clears at 2027-01-18T13:00:00Z:** v3 confirmatory evaluation/final report may run if authorized. Must remain isolated from v4.
+- **After gates:** v4 implementation may proceed only per its own preregistered protocol with its own windows; confirmatory evaluations never re-run/re-tuned on.
+- Enforce: `holdout_exposed_count` incremented only on actual confirmatory window reads; two windows never read for selection; no mixing of results across versions.
+
+**Design B: Do v4 work in parallel regardless — violates isolation.** Rejected.
+
+**Design C: Run v4 selection before gates — forbidden (would require development data that may bleed into v3 window).** Rejected.
+
+**Recommendation (3):** Choose **Design A**. Phase gates explicit: design now allowed; v4 retrieval/implementation allowed only if it respects cutoff (Design A §2) or waits per Design B; confirmatory evaluations are version-isolated and time-gated, never re-run or re-tuned.
+
+### 4) v4 namespace and identity chain
+
+**Design A (recommended): Full v4 namespace mirroring v2/v3 pattern.**
+- Spec: `configs/research_v4.json` (immutable, hash-bound like v2/v3)
+- Universe: `research/universe_manifest_v4.json` (supersedes v3 universe manifest identity `e53db5ed…`)
+- Data: `research/data_manifest_v4.json` (supersedes v3 data manifest identity `6793d86c…` base / effective `88e90960…` as recorded)
+- Candidate freeze: `configs/research_v4_candidate_freeze.json`
+- Execution/confirmatory: follow v3 pattern (`configs/research_v4_execution*.json`, `research_v4_confirmatory_*`, `src/v4_confirmatory/` only if outside hashed set or via amendment per code-hash rules)
+- Results: `research/shards_v4/`, `research/ledger_v4.json`, `research/results_manifest_v4.json`, `research/results_v4.jsonl`, `research_state/checkpoint_v4.json` (separate from v1/v2/v3)
+- Code identity: `compute_code_hash()` must remain unchanged unless deliberate rotation via versioned amendment; hashed set `src/breakout_research/` untouched; canonical digest `3e8e4169…` used for portability checks.
+- Holdout: `holdout_exposed_count` starts at 0, counted on every confirmatory read; never reused across versions.
+- Identity chain: extend prior-universe rule to v1,v2,v3; snapshot-identity tuple recorded in all freezing artifacts.
+
+**Design B: Share namespaces across versions — violates isolation.** Rejected.
+
+**Recommendation (4):** Choose **Design A** with full isolation and supersedes chain from v3 manifest identities.
+
+### 5) Null-result path
+
+**Design A (recommended): Explicit AWAITING_NEW_CANDIDATES with full evidence.**
+- If after applying all rules (exclusions, identity to v1/v2/v3, floor rule, development cutoff) no eligible assets remain: record state `AWAITING_NEW_CANDIDATES` with `reason`, `observed_endpoint`, `http_status`, `probe_timestamp_utc`, exact command used, `ranking_depth`, `exclusion_reasons_summary` (counts by reason), `assets_evaluated`, `assets_excluded_by_identity` (count), `assets_excluded_by_rules` (counts).
+- Never declare campaign complete due to empty snapshot. Schedule next pass at bounded cadence (e.g., follow pinned-window schedule or explicit retry policy) per protocol.
+- Must be hash-bound in manifest/state with evidence.
+
+**Design B: Treat empty as failure/retry indefinitely without bounds — poor practice.** Rejected.
+
+**Design C: Lower floor to get assets — violates "strictly below v3 floor" and recompute rule.** Rejected.
+
+**Recommendation (5):** Choose **Design A** with full evidence bundle and bounded cadence; campaign completion requires passing through proper gates, not empty result.
+
+### 6) Falsifying evidence, rollback, staged acceptance tests
+
+**Falsifying evidence (design must be rejected if):**
+- Claims cohort 4 possible from exhausted v3 eligible set while enforcing no repeats of v1/v2/v3 → contradicts exhaustion + identity rule.
+- Proposes reading v2 or v3 confirmatory windows for selection → forbidden.
+- Allows development data >= v3 window open time without explicit boundary/cost → violates isolation.
+- Reuses v1/v2/v3 namespaces/shards/ledgers → violates isolation.
+- Edits frozen artifacts or hashed set in same session → violates constraints.
+- Suggests changing grid/costs/folds/thresholds/selection rule/single confirmatory criterion → out of scope.
+
+**Rollback plan:**
+- If design proves infeasible, do not implement; record decision in handoff/brainstorming with reasons.
+- No artifacts created in this session, so rollback is trivial (no changes to commit).
+
+**Staged acceptance tests (for implementation session, not this one):**
+1. **Design validation:** evidence recomputed from live artifacts, all 6 points addressed with >=2 designs each, recommendation per point, falsifiers/rollback/tests present.
+2. **Handoff updated:** `research_state/agent_handoff.md` records decision and next bounded task.
+3. **Tests pass:** `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0, no new failures.
+4. **Verifiers pass:** all `scripts/verify_*.py` exit 0.
+5. **Hashes unchanged:** `compute_code_hash()=2efd3b18…`, canonical digests unchanged.
+6. **State unchanged:** `research_state/continuous_universe_state.json` unchanged.
+7. **No forbidden changes:** no files under `configs/`, `research/`, `reports/`, `src/` added/changed; no confirmatory-window candle read; `holdout_exposed_count` remains 0.
+
+### Overall recommendation
+Implement **Design A** across all points: new v4 pinned-window retrieval (A1), development cutoff at v3 window open `2026-10-20T13:00:00Z` (A2), strict phase gates vs v2/v3 confirmatory windows (A3), full isolated v4 namespace with supersedes from v3 (A4), explicit AWAITING_NEW_CANDIDATES path with evidence (A5). Enforce identity to v1,v2,v3; floor strictly below v3 floor via recompute rule; never mix versions/windows; never re-run/re-tune confirmatory evaluations.
+
+**Next bounded task (queued):** v4 preregistration implementation — versioned `configs/research_v4.json` and, only if design says so, one bounded market-cap retrieval inside its pinned window; respect cutoff and all constraints.
