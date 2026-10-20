@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "id": "research_v2_code_hash_portability",
+  "created_at_utc": "2026-10-19T22:15:00Z",
+  "author": "agent-session",
+  "decision": {
+    "title": "Code hash portability decision",
+    "rationale": "compute_code_hash() enumerates directories in filesystem order, so the same source tree produces different digests on different checkouts; the authorized v1 code_hash must remain 2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2. Do not edit src/breakout_research/ (that changes the hashed set and invalidates v1 authorization). Verification must use an order-independent canonical digest.",
+    "chosen_approach": "keep_authorized_digest_use_canonical_verification",
+    "alternatives_considered": [
+      "rotate_compute_code_hash_and_reauthorize_v1",
+      "keep_authorized_digest_use_canonical_verification"
+    ],
+    "forbidden": [
+      "edit_src_to_make_enumeration_match",
+      "rewrite_v1_artifacts_to_new_digest"
+    ]
+  },
+  "digests": {
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "canonical_source_digest_description": "sha256 of all .py files under src/breakout_research/ in path-sorted order of relative paths (order-independent)"
+  },
+  "constraints": {
+    "src_must_not_be_modified": true,
+    "v1_campaign_authorization_must_remain_untouched": true,
+    "v2_identity_tuples_must_remain_unchanged": true
+  },
+  "supersedes": null,
+  "manifest_hash": "56b73cfa38c5452a7ebff7f017c2a55166e9483cfa6b0ea6ea43ef0db5936b6b"
+}
