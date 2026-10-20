@@ -1,3 +1,46 @@
+## Session activity — 2026-10-20T22:55:00Z (this session)
+
+**Task:** Campaign-level close-out of the v3 continuous-universe cycle — state bookkeeping only, per the
+delivered handoff. No evaluation, no grid, no backtest, no selection re-run, no candle read, no
+provider contact, no edit under any `src/` path.
+
+**Outcome:** **The v3 cohort is recorded as complete.** `research_state/continuous_universe_state.json`
+now carries cohort index 3 (the 6 validated constituents `SHIBUSDT`, `QNTUSDT`, `AAVEUSDT`,
+`WLDUSDT`, `PEPEUSDT`, `ICPUSDT`), `current_cycle_id = v3-selection-20261020`,
+`next_cohort_index = 4`, the v3 snapshot id `54f9516cb74101c5c70a0e828d97633306ec816d0397a9fbd5bc263f6491d467`,
+the v3 selection outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE` with the 4/2 candidate split
+(with candidate: `ICPUSDT`, `PEPEUSDT`, `SHIBUSDT`, `WLDUSDT`; without: `AAVEUSDT`, `QNTUSDT`), and the
+blocking dependency moved to the v3 confirmatory window's earliest end `2027-01-18T13:00:00Z`. The v2
+history (cohort index 2, `current_cycle_id = v2-selection-run-2026-10-20`, `next_cohort_index = 3`,
+the v2 snapshot, the v2 selection outcome and the 14/4 split) is preserved byte-for-byte, and
+`schema_version` stays 1. `research_state/brainstorming_queue.md` records the close-out and the next
+bounded task.
+
+**Numbers re-derived (not copied by hand):** validated count 6 = `universe_manifest_v3.json#
+validation_summary.validated_count`, confirmed by filtering `eligible_assets` on `validated == true`;
+snapshot id = sha256 of `research/universe_snapshots/<id>/universe_manifest.json`
+(`baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3`); cycle id and 4/2 split =
+`research/v3_selected_configurations_manifest.json#run_identity.run_id`,
+`#outcome`, `#assets_with_candidate`, `#assets_without_candidate`; blocking end =
+`configs/research_v3_confirmatory_protocol.json#window_definition.earliest_possible_end_utc`
+(`2027-01-18T13:00:00Z`), which is later than the v2 window's `2027-01-17T22:00:00Z`.
+
+**State verified (2026-10-20T22:55Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **949 passed**, exit 0
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (unchanged)
+- canonical digests unchanged: `3e8e4169…` (hashed set), `c69cc021…` (v2 selection),
+  `277a4bbe…` (v2 confirmatory), `29cd064e…` (v3 selection), `747c2387…` (v3 confirmatory path)
+- every `scripts/verify_*.py` exits 0
+- `git diff --stat` shows only `research_state/` changed; no `src/`, no frozen artifact, no manifest
+  change; no v3 confirmatory output path exists; `holdout_exposed_count` stays 0; no
+  confirmatory-window candle was read.
+
+**Next bounded task (not for this session):** the v3 confirmatory evaluation itself and the final
+report, neither of which may start before the v3 confirmatory window can end
+(`2027-01-18T13:00:00Z`); and the v2 confirmatory evaluation, which may not start before
+`2027-01-17T22:00:00Z`. The next continuous-universe cohort (index 4) is queued behind the same
+confirmatory gate and is discovery-only until that gate clears.
+
 ## Session activity — 2026-10-19T19:07:13Z (this session)
 **Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
 
@@ -6249,8 +6292,9 @@ backtest, no selection re-run, no candle read, no provider contact.** Read
 keep the file's existing shape and version (`schema_version`) intact, and derive every number from
 the hash-bound artifacts rather than copying a value by hand.
 
-**Subject:** the v3 confirmatory line is complete and verified (path, authorization, runbook); the
-next bounded task is the campaign-level close-out of the v3 cycle (state bookkeeping only)
+**Subject:** the v3 cycle campaign-level close-out is **complete and verified** (state bookkeeping
+only); the next bounded task is the v3 confirmatory evaluation itself, which is time-blocked until
+`2027-01-18T13:00:00Z` (see "Queued after this task").
 
 **Status (verified 2026-10-20T22:55Z):**
 - `src/v3_confirmatory/` (canonical digest `747c2387…`),
@@ -6266,6 +6310,13 @@ next bounded task is the campaign-level close-out of the v3 cycle (state bookkee
 - The v3 confirmatory window is `NOT_STARTED` with `holdout_exposed_count = 0`; no v3 confirmatory
   output path exists; the v2 and v3 confirmatory evaluations remain time-blocked (earliest ends
   `2027-01-17T22:00:00Z` and `2027-01-18T13:00:00Z`).
+- **Campaign close-out done:** `research_state/continuous_universe_state.json` records the completed
+  v3 cohort (cohort index 3, the 6 validated constituents `SHIBUSDT`, `QNTUSDT`, `AAVEUSDT`,
+  `WLDUSDT`, `PEPEUSDT`, `ICPUSDT`, `current_cycle_id = v3-selection-20261020`,
+  `next_cohort_index = 4`, the v3 selection outcome and the 4/2 candidate split, the blocking
+  dependency with the v3 confirmatory window's earliest end `2027-01-18T13:00:00Z`) while keeping
+  the v2 history intact and `schema_version` unchanged; `research_state/brainstorming_queue.md` and
+  `research_state/agent_handoff.md` record the close-out and the next bounded task.
 
 **Do NOT:** write/edit/delete under `src/breakout_research/`, `src/v2_campaign/`,
 `src/v2_confirmatory/`, `src/v3_campaign/` or `src/v3_confirmatory/` (the v3 confirmatory path is
@@ -6315,4 +6366,6 @@ final report, neither of which may start before the v3 confirmatory window can e
 (`2027-01-18T13:00:00Z`), and the v2 confirmatory evaluation, which may not start before
 `2027-01-17T22:00:00Z`. The stale `OUTSTANDING` wording of `configs/research_v2.json` (P2/P3) is
 already reconciled by reference in `configs/research_v2_spec_amendment_1.json` and
-`configs/research_v2_prerequisite_reconciliation_amendment_1.json` — that item is closed.
+`configs/research_v2_prerequisite_reconciliation_amendment_1.json` — that item is closed. The next
+continuous-universe cohort (index 4) is queued behind the same confirmatory gate and is
+discovery-only until that gate clears.

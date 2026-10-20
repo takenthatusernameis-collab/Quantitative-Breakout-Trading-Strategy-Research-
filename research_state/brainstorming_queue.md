@@ -3555,3 +3555,46 @@ path digest, and the delivered authorization binds the same digest. Any edit und
 `python3 scripts/build_v3_confirmatory_runbook_1.py --force` are re-run. A deliberate digest
 rotation must go through the versioned amendment
 (`configs/research_v3_confirmatory_code_hash_amendment_1.json`, which does not exist yet).
+
+---
+
+## v3 cycle campaign-level close-out — 2026-10-20T22:55Z
+
+**Task:** bookkeeping-only close-out of the v3 continuous-universe cohort. No evaluation, no grid,
+no backtest, no selection re-run, no candle read, no provider contact. Every number below is
+derived from the hash-bound artifacts and is re-derivable by a reader.
+
+**V3 cohort (index 3) — the 6 validated constituents:**
+- `SHIBUSDT`, `QNTUSDT`, `AAVEUSDT`, `WLDUSDT`, `PEPEUSDT`, `ICPUSDT`
+  (from `research/universe_manifest_v3.json#validation_summary.validated_count = 6`, re-derived from
+  `eligible_assets` filtered on `validated == true`).
+
+**V3 snapshot:** `54f9516cb74101c5c70a0e828d97633306ec816d0397a9fbd5bc263f6491d467`
+(`research/universe_snapshots/<id>/universe_manifest.json`, sha256 `baadddfcbdc04aba3374e2008aee1718a0c0cc3e1915b6e1ad4e7e23d7233ad3`).
+
+**V3 selection cycle:** `v3-selection-20261020`
+(`research/v3_selected_configurations_manifest.json`, `manifest_hash 3d24a278…`,
+`run_identity.run_id = v3-selection-20261020`, `outcome = CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`).
+- 6 candidates (the validated cohort), 4 with a selected configuration
+  (`ICPUSDT`, `PEPEUSDT`, `SHIBUSDT`, `WLDUSDT`), 2 without (`AAVEUSDT`, `QNTUSDT`).
+
+**Blocking dependency moved forward:** the v3 confirmatory window
+(`configs/research_v3_confirmatory_protocol.json#window_definition.earliest_possible_end_utc`) is
+`2027-01-18T13:00:00Z`, which is later than the v2 confirmatory window's earliest end
+(`2027-01-17T22:00:00Z`), so the campaign-level blocker is now the v3 window.
+
+**State written:** `research_state/continuous_universe_state.json` — cohort index 3 recorded as
+completed, `current_cycle_id = v3-selection-20261020`, `next_cohort_index = 4`, the v3 snapshot id,
+the v3 selection outcome, the 4/2 candidate split, the v3 blocking dependency, and the v2 history
+preserved unchanged (`schema_version` still 1).
+
+**Verification:** full suite exits 0; every `scripts/verify_*.py` exits 0;
+`compute_code_hash()` is still `2efd3b18…`; the canonical digests are still `3e8e4169…` (hashed
+set), `c69cc021…` (v2 selection), `277a4bbe…` (v2 confirmatory), `29cd064e…` (v3 selection) and
+`747c2387…` (v3 confirmatory path); `git diff --stat` shows only `research_state/` changed.
+
+**Next bounded task (not for this session):** the v3 confirmatory evaluation itself and the final
+report, neither of which may start before the v3 confirmatory window can end
+(`2027-01-18T13:00:00Z`); and the v2 confirmatory evaluation, which may not start before
+`2027-01-17T22:00:00Z`. The next continuous-universe cohort (index 4) is queued behind the same
+confirmatory gate and is discovery-only until that gate clears.
