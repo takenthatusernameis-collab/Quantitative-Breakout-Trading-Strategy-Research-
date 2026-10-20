@@ -10,13 +10,22 @@ scope and the scope may not be widened, narrowed or re-ranked.
 The scope is derived from artifacts that are already hash-bound, so building
 it is deterministic and re-running the builder reproduces the same scope. It
 never reads a candle and never runs an evaluation.
+
+The three modules that were committed without a decision record
+(``errors.py``, ``identity.py``, ``scope.py``) were validated against the
+frozen manifest by the implementation session of BRAIN-011: ``errors.py`` and
+``identity.py`` are kept byte-for-byte, and this module is corrected in exactly
+one place -- the window-manifest path, which moves from ``configs/`` to
+``research/`` because **data** artifacts live under ``research/`` in this
+repository (decision D-2) -- and extended with the scope-equality check the
+decision record requires.
 """
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from .errors import ScopeError
 
@@ -24,7 +33,11 @@ from .errors import ScopeError
 SELECTED_CONFIGURATIONS_MANIFEST_RELATIVE = "research/v2_selected_configurations_manifest.json"
 
 #: The confirmatory-window data manifest the scope is bound to.
-CONFIRMATORY_WINDOW_MANIFEST_RELATIVE = "configs/research_v2_confirmatory_window_manifest.json"
+#:
+#: BRAIN-011 decision D-2: the window manifest is a *data* artifact and lives
+#: under ``research/``, next to ``research/data_manifest_v2.json``; the frozen
+#: v2 data manifest is not edited, the new manifest extends it by reference.
+CONFIRMATORY_WINDOW_MANIFEST_RELATIVE = "research/v2_confirmatory_window_manifest.json"
 
 
 def _load(path: Path) -> Dict[str, Any]:
@@ -121,9 +134,42 @@ def assert_scope_unchanged(scope: Dict[str, Any], manifest: Dict[str, Any]) -> N
             )
 
 
+def assert_scope_matches(
+    scope: Dict[str, Any],
+    expected_assets: Iterable[str],
+    expected_config_ids: Dict[str, str],
+) -> None:
+    """Refuse a scope that is not exactly the expected one.
+
+    The scope may not be widened, narrowed or re-ranked: the recorded asset
+    set must equal the expected set, and every asset must carry the expected
+    configuration id.
+    """
+    expected = sorted(str(asset) for asset in expected_assets)
+    recorded = sorted(scope["in_scope_assets"])
+    if recorded != expected:
+        added = sorted(set(recorded) - set(expected))
+        missing = sorted(set(expected) - set(recorded))
+        raise ScopeError(
+            "the evaluation scope is not the frozen scope: "
+            f"expected {expected}, recorded {recorded}"
+            + (f", widened by {added}" if added else "")
+            + (f", narrowed by {missing}" if missing else "")
+        )
+    for asset in expected:
+        recorded_id = scope["in_scope"][asset]["config_id"]
+        expected_id = expected_config_ids.get(asset)
+        if recorded_id != expected_id:
+            raise ScopeError(
+                f"{asset} carries configuration {recorded_id} instead of the frozen "
+                f"{expected_id}; the scope may not be re-ranked"
+            )
+
+
 __all__ = [
     "CONFIRMATORY_WINDOW_MANIFEST_RELATIVE",
     "SELECTED_CONFIGURATIONS_MANIFEST_RELATIVE",
+    "assert_scope_matches",
     "assert_scope_unchanged",
     "evaluation_scope",
     "selected_configurations",

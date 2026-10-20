@@ -1,0 +1,135 @@
+{
+  "artifact": "v2_confirmatory_protocol_amendment",
+  "artifact_version": "v2-confirmatory-protocol-amendment-1",
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-20T11:00:00Z",
+  "amendment_status": "PREREGISTERED_AMENDMENT_BEFORE_ANY_WINDOW_READ",
+  "specification_purpose": "Reconcile the confirmatory decision criterion of two frozen artifacts before the first confirmatory-window candle is read, and record the verdict rules, the disclosure of a disagreement and the commit-before-read rule. This amendment authorizes no evaluation and no candle read.",
+  "amends": {
+    "protocol_path": "configs/research_v2_confirmatory_protocol.json",
+    "protocol_manifest_hash": "bba9539442c92e7e7f51f72ab51e9f9e82bb4c354639be79b7db0baf4b043be3",
+    "specification_path": "configs/research_v2.json",
+    "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+    "reason": "The frozen v2 specification's promotion rule and the frozen confirmatory protocol's buy-and-hold pass/failure criterion disagree on what passing the confirmatory window means, and both artifacts are immutable and hash-bound. A single-use window cannot be re-graded after it has been burned, so the criterion is fixed by this versioned amendment, before any read.",
+    "edits_no_frozen_artifact": true,
+    "frozen_artifacts_remain_byte_identical": true
+  },
+  "criterion_precedence": {
+    "authoritative_source": "configs/research_v2.json#holdout.promotion_rule",
+    "authoritative_status_vocabulary": [
+      "CANDIDATE_PENDING_HOLDOUT",
+      "PROVISIONAL_HISTORICAL_SURVIVAL",
+      "REJECTED_ON_HOLDOUT",
+      "INCONCLUSIVE"
+    ],
+    "authoritative_criteria": [
+      "net_total_return > 0 at baseline costs (1x) over the confirmatory window",
+      "net_total_return > 0 at 2x costs over the confirmatory window",
+      "closed_trades >= 30 over the confirmatory window",
+      "the evaluated parameters are byte-identical to the frozen v2 candidate manifest entry"
+    ],
+    "secondary_source": "configs/research_v2_confirmatory_protocol.json#reporting_and_falsifiers",
+    "secondary_field": "baseline_comparison",
+    "secondary_never_assigns_the_status": true,
+    "secondary_costs_no_additional_exposure": true,
+    "reason": "The promotion rule is part of the hash-bound preregistration, and BRAIN-006 established that the preregistered rule governs candidate promotion. The protocol's criterion is computed from the same single evaluation and is reported beside the status, so the disagreement is disclosed rather than silently resolved."
+  },
+  "verdicts": {
+    "survival_status": "PROVISIONAL_HISTORICAL_SURVIVAL",
+    "survival_rule": "every criterion of the preregistered promotion rule holds",
+    "rejected_status": "REJECTED_ON_HOLDOUT",
+    "rejected_rule": "the evaluation is conclusive and at least one criterion of the promotion rule fails",
+    "inconclusive_status": "INCONCLUSIVE",
+    "inconclusive_rules": [
+      "the window data is insufficient to evaluate the configuration",
+      "the configuration produced zero closed trades on the window"
+    ],
+    "zero_trade_status": "INCONCLUSIVE",
+    "zero_trade_rule": "a configuration with zero closed trades is INCONCLUSIVE and never REJECTED_ON_HOLDOUT: a never-traded strategy is not reported as a failure, because the data cannot support that claim",
+    "low_trade_count_status": "REJECTED_ON_HOLDOUT",
+    "low_trade_count_rule": "a configuration with 1 to 29 closed trades fails the closed_trades >= 30 criterion and is REJECTED_ON_HOLDOUT",
+    "status_vocabulary_is_not_extended": true
+  },
+  "disclosure": {
+    "criteria_agreement_field": "criteria_agreement",
+    "criteria_agreement_values": [
+      "AGREE",
+      "DISAGREE",
+      "NOT_COMPARABLE"
+    ],
+    "disagreement_is_reported": true,
+    "disagreement_is_stated_in_the_summary": true,
+    "criteria_agreement_is_a_field_not_a_status": true,
+    "null_result_is_reported": true,
+    "no_asset_is_dropped_from_the_report": true
+  },
+  "baseline_comparison": {
+    "outcome_values": [
+      "PASS",
+      "FAIL",
+      "INCONCLUSIVE"
+    ],
+    "pass_rule": "the net result at baseline costs exceeds the corresponding buy-and-hold baseline's net result",
+    "failure_rule": "the net result at baseline costs is below the corresponding buy-and-hold baseline's net result",
+    "inconclusive_rule": "the net result or the baseline is not computable",
+    "tie_rule": "an exact tie is not an excess and is therefore reported as FAIL with tie = true",
+    "agreement_rule": "PROVISIONAL_HISTORICAL_SURVIVAL with PASS and REJECTED_ON_HOLDOUT with FAIL agree; every other pairing of a conclusive status with a conclusive baseline outcome disagrees"
+  },
+  "commit_before_first_read": {
+    "rule": "This amendment must be committed before the first confirmatory-window candle is read. A rule chosen after the window has been exposed is forbidden.",
+    "amendment_commit": null,
+    "amendment_commit_status": "PENDING_COMMIT",
+    "note": "The commit hash is recorded by the committing session. This artifact is not rewritten after that commit, because its manifest_hash must not change."
+  },
+  "scope_of_this_amendment": {
+    "in_scope_assets": 14,
+    "out_of_scope_assets_without_candidate": [
+      "BCHUSDT",
+      "BTCUSDT",
+      "LINKUSDT",
+      "TRXUSDT"
+    ],
+    "the_scope_is_unchanged_by_this_amendment": true
+  },
+  "related_artifacts": {
+    "confirmatory_protocol": {
+      "path": "configs/research_v2_confirmatory_protocol.json",
+      "manifest_hash": "bba9539442c92e7e7f51f72ab51e9f9e82bb4c354639be79b7db0baf4b043be3"
+    },
+    "v2_specification": {
+      "path": "configs/research_v2.json",
+      "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+    },
+    "v1_specification": {
+      "path": "configs/research_v1.json",
+      "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+    },
+    "selected_configurations_manifest": {
+      "path": "research/v2_selected_configurations_manifest.json",
+      "manifest_hash": "7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862"
+    },
+    "selection_authorization_1": {
+      "path": "configs/research_v2_selection_authorization_1.json",
+      "manifest_hash": "76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918"
+    }
+  },
+  "durability": {
+    "rule": "The amendment takes effect when this artifact is committed. No confirmatory-window candle may be read before the commit that carries it exists.",
+    "amendment_commit": null,
+    "amendment_commit_status": "PENDING_COMMIT"
+  },
+  "producer": {
+    "path": "scripts/build_v2_confirmatory_protocol_amendment_1.py",
+    "verify_command": "python3 scripts/verify_v2_confirmatory_path.py"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
+  },
+  "manifest_hash": "2701c63456e080b1a8a0cbcd478d1bf4dc04d35212f4f270ea88d7460f56f377"
+}

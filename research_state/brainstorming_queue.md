@@ -2294,7 +2294,127 @@ with the reason, and the skeleton's current bytes remain in git history (`72a7eb
 
 ### 10. Implementation note
 
-To be written by the implementation session: what it implemented, the files it added or changed, the
-verified commands and exit statuses, the rule → code → test map with the columns of section 8
-filled in, the choice made about the committed skeleton, and any deviation from this record with
-its reason.
+**Written 2026-10-20 (implementation session, separate from the session that wrote this record).**
+
+**1. What was implemented.** The confirmatory evaluation path is now a complete, authorized, verified and
+tested executable path. Nothing ran: the window cannot exist before `2027-01-17T22:00:00Z`, no candle was
+read, no provider was contacted, no evaluation was executed, and no confirmatory artifact exists in the
+repository.
+
+**2. Files added.**
+- `src/v2_confirmatory/__init__.py` — the package init (the directory is now a regular package; the
+  `__init__` of the 10:30Z checkpoint session was kept and extended with the public API).
+- `src/v2_confirmatory/data.py` — the data path: kline parsing, the window filter (only candles that close
+  inside the window), the gap detection, the canonical hourly CSV rendering/parsing of the frozen
+  `sha256-canonical-hourly-csv-v1` scheme, and the window-manifest builder (D-2).
+- `src/v2_confirmatory/window.py` — the metadata-only readiness probe and its verdict (D-3).
+- `src/v2_confirmatory/exposure.py` — the single-use exposure accounting (D-4).
+- `src/v2_confirmatory/report.py` — the verdict rules of D-5 and the holdout report (D-11).
+- `src/v2_confirmatory/artifacts.py` — the builders of the authorized output layout: the result rows, the
+  results manifest, the ledger, the checkpoint and the markdown report (D-6/D-11). Every builder is pure.
+- `src/v2_confirmatory/runner.py` — the bounded run: the plan, the preconditions, the evaluation and the
+  persistence of the whole layout (D-7/D-8/D-9).
+- `configs/research_v2_confirmatory_protocol_amendment_1.json` — the criterion reconciliation
+  (`manifest_hash 2701c63456e080b1a8a0cbcd478d1bf4dc04d35212f4f270ea88d7460f56f377`), built by
+  `scripts/build_v2_confirmatory_protocol_amendment_1.py`.
+- `configs/research_v2_confirmatory_authorization_1.json` — the authorization of at most one logical run
+  (`manifest_hash f411aba94231e36a4dd711376df8a182a979f20d0a248076db0d5eacfaeef943`), built by
+  `scripts/build_v2_confirmatory_authorization_1.py`.
+- `scripts/verify_v2_confirmatory_path.py` — the read-only offline verifier (D-10).
+- `tests/test_v2_confirmatory_path.py` — 48 deterministic, offline tests.
+
+**3. Files changed.**
+- `src/v2_confirmatory/scope.py` — the window-manifest path corrected from `configs/` to `research/`
+  (D-2) and the scope-equality check added. Nothing else changed.
+- `src/v2_confirmatory/__init__.py` — the public API of the package.
+- `research_state/brainstorming_queue.md` — this note.
+
+**4. The committed skeleton.** `errors.py` and `identity.py` are kept **byte-for-byte** (they were correct
+and are bound by the artifacts that record the canonical digests). `scope.py` is kept with exactly one
+correction — the window-manifest path (D-2) — plus the scope-equality check the record requires; the
+skeleton's bytes remain in git history at `72a7eb4e` either way.
+
+**5. Verified commands and exit statuses (2026-10-20).**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **483 passed**, exit 0 (435 pre-existing + 48 new in
+  `tests/test_v2_confirmatory_path.py`).
+- `python3 scripts/verify_v2_confirmatory_path.py` → `"ok": true, "failures": []`, exit 0.
+- All 18 repository verifiers exit 0 (`verify_cycle_results.py` is a per-cycle tool that takes a directory
+  argument and is not a repository-wide verifier).
+- The hashed set's canonical digest is still `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`;
+  the confirmatory execution path's canonical digest is `fd748860acec6bd5c583bfdc1dc5421409b2e1eecabcc0e00996597d13bfaf10`;
+  the composite run identity is `fcf8ba956d2def013af3af157c63ec08c95e851e42037a80c3f67d32c2e7f0e8`.
+  `compute_code_hash()` returns `608c7340…` — an environment fact of this checkout, never an identity; the
+  authorized value of record `2efd3b18…` is untouched.
+- The v1 artifact sha256 anchors are unchanged (`configs/research_v1.json 558d6099…`,
+  `research/universe_manifest.json c8f367d2…`, `research/data_manifest.json cf39de42…`,
+  `research/candidate_manifest.json 87589f83…`, `research/candidate_manifest_v2.json a68b061a…`) and the v2
+  artifact hashes are unchanged (`4e927e52…`, `9f64d8d1…`, `49fb0814…`, `5a56b3d8…`, `aa902aa9…`,
+  `bba95394…`, `7acc7fe0…`, `76be0d3b…`).
+- **No confirmatory artifact exists**: no window manifest, no shard, no ledger, no results manifest, no
+  result row, no confirmatory checkpoint and no report. `research/data_manifest_v2.json` still records
+  `confirmatory_window_status = NOT_STARTED` and `holdout_exposed_count = 0`.
+
+**6. The rule → code → test map (section 8, filled in).**
+
+| Rule | Implementation | Test |
+| --- | --- | --- |
+| the path is a package that runs nothing on import | `src/v2_confirmatory/__init__.py` | `test_the_confirmatory_path_is_a_real_package`, `test_importing_the_confirmatory_path_runs_nothing` |
+| the run identity is the portable composite digest | `src/v2_confirmatory/identity.py` (committed, unchanged) | `test_the_hashed_set_digest_is_unchanged_and_order_independent`, `test_the_execution_path_digest_binds_this_package` |
+| the scope is the frozen 14/4 set | `src/v2_confirmatory/scope.py` | `test_the_scope_is_the_frozen_fourteen_and_four`, `test_a_widened_narrowed_or_reranked_scope_is_refused` |
+| the window data is recorded in a new hash-bound manifest | `src/v2_confirmatory/data.py` | `test_the_window_dataset_is_hash_verified_and_gaps_are_recorded`, `test_the_run_counts_every_read_in_the_exposure_counter` |
+| readiness without a payload read | `src/v2_confirmatory/window.py` | `test_the_readiness_test_refuses_before_the_window_end`, `test_the_readiness_test_passes_at_the_window_end_and_reads_no_candle`, `test_the_readiness_probe_uses_only_metadata_endpoints`, `test_the_readiness_probe_does_not_read_a_candle` |
+| single-use exposure accounting | `src/v2_confirmatory/exposure.py` | `test_the_exposure_counter_increments_once_per_event`, `test_a_continuation_of_the_same_event_does_not_increment`, `test_a_read_under_different_bounds_is_refused`, `test_a_read_outside_the_scope_is_refused`, `test_the_exposure_counter_never_decreases` |
+| the specification's criterion governs, the protocol's is reported | `src/v2_confirmatory/report.py` | `test_the_specification_criterion_governs_and_the_baseline_is_reported`, `test_a_disagreement_is_marked_and_the_status_vocabulary_is_not_extended`, `test_the_zero_trade_case_is_inconclusive_and_not_a_failure`, `test_a_low_trade_count_is_rejected_on_the_holdout` |
+| the run is bounded and authorized | `src/v2_confirmatory/runner.py` + `configs/research_v2_confirmatory_authorization_1.json` | `test_the_authorization_validates_against_the_delivered_tree`, `test_the_authorization_is_refused_when_its_code_identity_is_stale`, `test_the_authorization_is_refused_when_the_scope_is_widened`, `test_the_authorization_is_refused_when_it_is_edited`, `test_the_authorization_is_refused_when_a_path_points_at_a_v1_artifact`, `test_the_preconditions_refuse_an_uncommitted_run`, `test_the_preconditions_refuse_a_missing_readiness_record`, `test_the_preconditions_refuse_a_window_that_is_already_exposed`, `test_the_preconditions_refuse_a_changed_v1_artifact` |
+| the output layout touches no v1 and no v2-selection path | `src/v2_confirmatory/runner.py` (`FORBIDDEN_OUTPUT_PATHS`) + `src/v2_confirmatory/artifacts.py` | `test_the_run_writes_only_the_confirmatory_paths`, `test_the_run_never_writes_the_repository_paths`, `test_the_verifier_detects_a_forbidden_v1_path` |
+| the criterion conflict is reconciled by a versioned amendment | `configs/research_v2_confirmatory_protocol_amendment_1.json` | `test_the_amendment_records_the_precedence_and_edits_no_frozen_artifact`, `test_the_verifier_detects_a_flipped_criterion_precedence` |
+| the whole path is independently verified | `scripts/verify_v2_confirmatory_path.py` | `test_the_verifier_passes_on_the_delivered_tree` + the six tamper tests of D-10 (widened scope, edited authorization, mismatched code identity, reset exposure counter, forbidden v1 path, flipped precedence) |
+| the run's own accounting survives an abort and a resume | `src/v2_confirmatory/runner.py` | `test_an_abort_before_the_first_payload_read_rolls_back`, `test_an_abort_after_a_payload_read_keeps_the_exposure`, `test_a_resumed_run_does_not_read_the_window_a_second_time` |
+| the suite creates no confirmatory artifact | — | `test_the_run_never_writes_the_repository_paths`, `test_the_verifier_detects_a_window_that_was_never_read` |
+
+**7. Deviations and clarifications, with their reasons.**
+1. **The evaluated window's length is fixed at 2,160 hours.** The record fixes a *minimum* number of closed
+   candles and an *earliest possible* end, but does not say what happens when the run happens later and more
+   candles exist. Leaving that open would give the run a discretionary choice of window length, which is a
+   hidden degree of freedom on a single-use window. The authorization therefore records an
+   `evaluation_window_rule`: the evaluated window is exactly the first 2,160 closed hourly candles at or after
+   the window start, i.e. it ends at the earliest instant the frozen boundary allows. The rule is recorded in
+   the authorization, in the ledger, in the report and in the window manifest.
+2. **The output layout is produced by the code, not only declared.** The authorization of D-6 lists eight
+   paths; the runner now writes all of them (window manifest, per-asset result shard, result stream, ledger,
+   results manifest, checkpoint, report JSON, report markdown) and the verifier checks that none of them
+   exists today.
+3. **The retrieved window datasets are persisted, so a resume never reads the window twice.** D-4(e) permits
+   only a resume of the same run over the already-retrieved, hash-verified datasets; that requires the
+   datasets to be stored. Each asset's window dataset is persisted in the canonical hourly CSV of the frozen
+   hash scheme next to a record that binds it to `(run_id, asset, window bounds)` and to its content hash; a
+   resumed run reloads and re-verifies it instead of reading the window again.
+4. **The immutable anchors are recorded in the authorization.** Precondition (f) ("the v1 artifacts and the
+   v2 selection outputs are byte-unchanged") needs a fixed reference; the authorization records the sha256 of
+   the five v1 evidence files and of the six v2 selection outputs, and the runner and the verifier both check
+   them.
+5. **The benchmark asset.** None of the 14 selected configurations uses the `btc_ema_168` trend filter, so the
+   data scope is exactly the 14 in-scope assets and `BTCUSDT` is **not** read. The runner still implements the
+   general rule (the benchmark joins the data scope when a selected configuration needs it, and is then
+   counted as an exposed asset like every other); the authorization records it as `scope.data_scope_rule`.
+6. **The readiness probe's endpoints.** D-3 names `/api/v3/time` and `/api/v3/exchangeInfo`; the
+   implementation uses exactly those two, on the primary host with the documented failover host, and records
+   both statuses with their timestamps. The probe was never executed — the tests inject the clock and the
+   probe, and no request leaves the machine.
+7. **The tests run the path end-to-end in a synthetic mirror, not in the repository.** Acceptance test 8
+   requires that the suite creates no confirmatory artifact and that the window stays `NOT_STARTED` with
+   `holdout_exposed_count = 0`. The end-to-end test therefore runs in a temporary directory that holds
+   byte-identical copies of the hash-bound artifacts and of the two source trees and **synthetic** candles
+   served through an injected retrieval callable, so the real window is never touched and the repository
+   never receives a confirmatory artifact. This follows the precedent of
+   `tests/test_v2_campaign_execution_path.py`, which runs the v2 selection path against a synthetic fixture
+   repository.
+8. **The only unrelated working-tree change** is the controller-driven refresh of `authorized_at_utc` in
+   `research_state/campaign_authorization.json`, which the repository's own test suite rewrites; its
+   `code_hash`, `specification_hash` and `authorized` fields are unchanged.
+
+**8. What remains outstanding.** The run itself: it may not start before the window exists
+(`2027-01-17T22:00:00Z` at the earliest), and it then consumes the single use of the window. The
+authorization's `durability.authorization_commit` and the protocol's `durability.protocol_commit` are
+`PENDING_COMMIT`: the commit that carries them must exist before the first candle is read, and the commit
+hashes are recorded by the committing session.
