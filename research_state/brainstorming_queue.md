@@ -849,6 +849,21 @@ repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and doc
   Prerequisite 4 (v2 candidate manifest and holdout report) and the v2 holdout execution
   remain outstanding, so no v2 execution is authorized.
 
+**Decision update 2026-10-20 UTC (HEAD `f0313469`, canonical source digest `3e8e4169…`):** the
+residual limitation `RL1` of BRAIN-009 is decided by a new item, **BRAIN-010** (see "BRAIN-010" below).
+
+- BRAIN-010 (P1) — `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. The v1 campaign runtime gate is
+  **not** modified: `src/breakout_research/campaign.py` stays byte-identical, the hashed set stays
+  `3e8e4169…`, the authorized ordered digest `2efd3b18…` stays the value of record and every frozen
+  v1/v2 artifact stays byte-identical. The gate's comparison is **reinterpreted** — it is a statement
+  about *checkout compatibility*, never about source drift — and a v1 resume is supported only on a
+  **gate-compatible** checkout, which is constructible and verified (a byte-identical copy of
+  `src/breakout_research` on tmpfs with the five block directories created in the reverse authorized
+  order reproduces `2efd3b18…` exactly). The pre-flight that enforces this lives **outside** the
+  hashed set and is **not implemented in the session that wrote this record**. The recorded RL1
+  location is corrected to `src/breakout_research/campaign.py` (lines 171 and 189);
+  `pilot_gate_validator.py` is environment independent. The immutable artifact
+  `configs/research_v2_code_hash_amendment_1.json` is not edited.
 
 ---
 
@@ -1546,3 +1561,277 @@ ran; no candle inside the confirmatory window was read; the market-cap snapshot 
 authorized one. It is inside the hashed set and BRAIN-009 rejects the rotation, so it stays recorded
 as a limitation: a v1 resume is only possible on a checkout whose enumeration order reproduces the
 authorized digest. Nothing runs today — the v1 campaign is in a terminal state.
+
+---
+
+## BRAIN-010 — Residual limitation RL1: the v1 campaign runtime gate treats a checkout's directory order as source drift
+
+**Priority:** P1 — blocks a v1 campaign resume on a checkout whose directory order differs; no live
+campaign is behind it (the v1 campaign is terminal).
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
+(design, prerequisites, staged steps, tests and rollback are explicit below; **not implemented in the
+session that wrote this record**, README Section 2A C1)
+**Cause labels:** `IMPLEMENTATION_DEFECT` (the comparison encodes an environment fact as a code
+identity), `PERMANENT_PLATFORM_LIMIT` (filesystem directory enumeration order)
+**Confidence:** direct evidence confirmed in this session — the permutation brute force, the
+gate-comparison reproduction and the gate-compatible-checkout construction were re-executed against the
+live tree at HEAD `f0313469` (2026-10-20).
+
+### Evidence (revalidated 2026-10-20, branch `main`, HEAD `f0313469`, working tree clean)
+
+**1. The defect.** `compute_code_hash()` (`src/breakout_research/config.py:257-268`) hashes the `.py`
+files of each directory in sorted order but visits the directories in **filesystem enumeration order**:
+
+```python
+for root, dirs, files in os.walk(src_dir):
+    for f in sorted(files):
+        if f.endswith('.py'):
+            ...
+            hasher.update(fp.read())
+```
+
+The digest of a git-clean tree therefore depends on the machine's directory order.
+
+**2. The permutation evidence (re-executed this session, independent of `tests/code_identity_helpers.py`).**
+The hashed set `src/breakout_research` has five directory blocks that contain `.py` files
+(`backtest`, `data`, `indicators`, `signals`, `utils`); `__pycache__` holds no `.py` file and is not a
+block. Over the 120 permutations of those five blocks:
+
+- all **120** orders yield **120 distinct** ordered digests (no collision);
+- exactly **one** of them — `(indicators, utils, signals, data, backtest)` — reproduces the authorized
+  digest `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`;
+- the **canonical** digest `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`
+  (path- and content-sorted) is **identical under all 120 orders**.
+
+**3. This checkout.** Live enumeration order `(indicators, backtest, utils, signals, data)` → live
+ordered digest `608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925`; canonical digest
+`3e8e4169…` — **equal to the recorded canonical digest**; the authorized digest **is** one of the 120
+digests this tree produces. The tree has therefore **not** drifted; only the checkout's order differs.
+
+**4. The three recorded digests and the two checkout-dependent comparisons.**
+
+| Record | Field | Value |
+| --- | --- | --- |
+| `research_state/campaign_authorization.json` | `code_hash` | `2efd3b18…` (`authorized: true`, `reasons: []`) |
+| `research_state/checkpoint.json` | `code_hash` | `2efd3b18…` |
+| `research_state/pilot_evidence.json` | `code_hash`, `evidence.code_hash`, `evidence.checkpoint_state.code_hash` | `2efd3b18…` |
+
+Reproduced read-only this session (no campaign run, no artifact written):
+
+| Site | Comparison | Result on this checkout | Message the user sees |
+| --- | --- | --- | --- |
+| `src/breakout_research/campaign.py:189` (`_verify_pilot_gate`) | `auth.get('code_hash') != code_hash` | `True` | `RuntimeError: Code hash mismatch. Code has changed since authorization.` |
+| `src/breakout_research/campaign.py:171` (`_verify_stale_checkpoint`) | `stored_code != code_hash` | `True` | `RuntimeError: Checkpoint code hash mismatch: stored 2efd3b18… != current 608c7340…; code changed since checkpoint, refusing to resume` |
+| `src/breakout_research/pilot_gate_validator.py:93` (`_validate_evidence`) | `evidence.get('code_hash') != code_hash`, where `code_hash = pilot.get('code_hash')` | `False` | — (both sides come from `research_state/pilot_evidence.json`) |
+
+**Correction to the recorded RL1 location.** `configs/research_v2_code_hash_amendment_1.json`
+(`residual_limitations[0]`) names `campaign.py (_verify_pilot_gate)` **and**
+`pilot_gate_validator.py` as the location of RL1. Only `campaign.py` contains a checkout-dependent
+comparison; the `pilot_gate_validator.py` comparison is file-internal and therefore environment
+independent. The RL1 location is **`src/breakout_research/campaign.py` only** (two sites, lines 171
+and 189). The consequence is unchanged; the attribution was one file too wide. The artifact itself is
+immutable and hash-bound, so the correction is recorded here and, if ever formalized, by a versioned
+amendment — never by editing the frozen artifact.
+
+**5. The misleading message is reachable from the documented v1 entry point.**
+`scripts/resume_cycle_cohort0.py` calls `run_campaign(...)`, whose `run()` (`campaign.py:295-303`)
+executes `_verify_stale_checkpoint` and then `_verify_pilot_gate` with the live ordered digest. The
+message "Code has changed since authorization" is therefore the **first** thing a user sees on a
+foreign-order checkout, although the source is provably unchanged.
+
+**6. The v1 campaign is terminal, so the limitation has no live campaign behind it.**
+`research/campaign_cycles/terminal/exhausted_cohort_2.json`: `state = AWAITING_NEW_CANDIDATES`,
+`reason = NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION`,
+`blocking_dependency = UNIVERSE_VERSION_DECISION` (recorded 2026-10-19T15:43:32Z).
+
+**7. The blast radius of changing the hashed set is an already-verified v2 run.**
+`compute_code_hash()` hashes every `.py` file under `src/breakout_research` recursively, so **any**
+edit there changes the canonical digest `3e8e4169…`. That digest is recorded in the five artifacts
+named in `configs/research_v2_code_hash_amendment_1.json` → `amends`
+(`research/universe_manifest_v2.json`, `research/data_manifest_v2.json`,
+`configs/research_v2_candidate_freeze.json`, `configs/research_v2_execution.json`,
+`configs/research_v2_execution_amendment_1.json`) and it is the tree-identity component of the
+**executed** v2 run: `configs/research_v2_selection_authorization_1.json`,
+`research/ledger_v2.json`, `research/results_manifest_v2.json`,
+`research/v2_selected_configurations_manifest.json` and
+`configs/research_v2_confirmatory_protocol.json` all bind the canonical digests `3e8e4169…` (hashed
+set) and `c69cc021…` (execution path). `scripts/verify_v2_selection_run.py` re-verifies the 497,664
+records of that run against those identities. Editing the hashed set would therefore invalidate the
+identity of a completed, hash-verified run and force an amendment chain over it — exactly the
+disproportionate cost BRAIN-009 rejected.
+
+**8. Re-authorizing the v1 campaign on this checkout would also break a v2 check.**
+`scripts/verify_research_v2_code_hash_amendment_1.py:231` asserts
+`authorized_code_hash == research_state/campaign_authorization.json.code_hash`. Re-running the pilot
+on a foreign-order checkout writes that checkout's ordered digest into the pilot evidence and hence
+into the authorization artifact (the artifact's `code_hash` is copied from the pilot evidence,
+`pilot_gate_validator.py:190`), which turns that v2 verifier red and forces another amendment chain.
+`src/breakout_research/pilot.py:85,94,109` writes `compute_code_hash()` into **new** pilot evidence,
+so every new pilot run re-binds the authorization to whatever order its machine happens to have.
+
+**9. A gate-compatible checkout is constructible and verified.** A byte-identical copy of
+`src/breakout_research` placed on an insertion-ordered filesystem (tmpfs) with the five block
+directories created in the order `(backtest, data, signals, utils, indicators)` enumerates as
+`(indicators, utils, signals, data, backtest)` and its ordered digest is exactly
+`2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` — reproduced in this session, not
+asserted. On a name-hashed filesystem (this container's workspace: `stat -f %T` → `ext2/ext3`) the
+enumeration order ignores creation order (creating the blocks in two different orders produced the
+identical enumeration), so the order is **not** controllable there.
+
+**10. Frozen constraints that bound the decision.**
+`research_state/continuous_universe_campaign_spec.md:34`: *"Existing authorization must fail closed
+when any bound input changes; do not self-authorize or carry a stale approval forward."* The code
+hash is a bound input, so **no** design may let a changed tree pass the gate; only the *ordering*
+dimension may be relaxed, never the *content* dimension. README Section 2A E additionally forbids
+repairing a red check by editing the frozen artifact.
+
+### 1. Causal model
+
+- **Observed facts.** The ordered digest is checkout-dependent (120 orders → 120 digests; the
+  authorized digest is one specific order). The canonical digest is order-independent. The v1 gate
+  compares the ordered digest against three recorded values and therefore fails on any checkout whose
+  order differs. The tree in this checkout is provably unchanged.
+- **Inferred root cause.** `compute_code_hash()` was written as a *content* identity (hash the source
+  files) but implemented as a *content + directory-order* identity. The gate compares it against a
+  value of record captured on one machine, so the comparison conflates "the code changed" with "the
+  checkout's directory order changed". The defect is in the **encoding of identity**, not in the
+  intent of the gate: the gate's intent ("the code that will run is the code that was authorized") is
+  correct and must be preserved.
+- **Unknown / not decided here.** Whether a v1 resume will ever be needed. The v1 campaign is
+  terminal and blocked on `UNIVERSE_VERSION_DECISION`; the v2 path supersedes it for all new work.
+- **Downstream risks.** (a) A future agent "repairs" the red comparison by editing
+  `src/breakout_research/` → the hashed set changes → the v1 authorization and the executed v2 run's
+  identity are invalidated (see evidence 7). (b) A future agent re-authorizes the v1 campaign on a
+  foreign-order checkout → the authorized value of record becomes checkout-specific and a v2 verifier
+  goes red (evidence 8). (c) A user reads "Code has changed since authorization" as true → the
+  campaign is wrongly believed to be invalidated, or wrongly believed to be safe to "re-fix".
+
+### 2. Designs compared
+
+| # | Design | Correctness / research validity | Persistence & blast radius | Cost | Rollback | Verdict |
+| --- | --- | --- | --- | --- | --- | --- |
+| A | **Keep the gate byte-exact; reinterpret it; add a pre-flight compatibility check outside the hashed set** | Preserves the gate's intent exactly. Drift is decided by the canonical digest (BRAIN-009), compatibility by the ordered digest. No frozen artifact changes | New files **outside** `src/breakout_research/` (like `src/v2_campaign/`), so the canonical digest `3e8e4169…`, the ordered digest `2efd3b18…` and every v2 artifact stay byte-identical | One read-only script + one test module | Delete the new files; nothing else changed | **Recommended** |
+| B | **Variant-tolerant gate inside the hashed set** (`campaign.py:171,189` accept any of the tree's 120 order variants) | Semantically the ideal fix — it relaxes only the ordering dimension and still fails closed on a content change (spec line 34) | **Prohibitive.** Any edit changes the canonical digest → the identity of the *executed* 497,664-record v2 run no longer matches the tree → `scripts/verify_v2_selection_run.py` fails → the five `amends` artifacts plus the v2 run identity artifacts must all be re-hashed → a new pilot run is needed to re-authorize → a second v1 campaign identity is created | High (multi-artifact amendment chain over a verified run + a live pilot run) | Not cleanly reversible: the artifacts' recorded hashes would have moved | Rejected (the cost of the BRAIN-009-rejected rotation) |
+| C | **Re-authorize the v1 campaign on the current checkout** (re-run the pilot so the authorization carries this checkout's ordered digest) | Leaves the tree untouched, but the gate would then compare an *ordered* digest against an *ordered* digest — the identity stays checkout-dependent, and the value of record silently becomes an artifact of the machine that ran the pilot | Changes `research_state/campaign_authorization.json.code_hash` → `scripts/verify_research_v2_code_hash_amendment_1.py:231` goes red → a further v2 amendment chain; also re-binds `research_state/checkpoint.json` semantics | Medium + a live provider run (the pilot reads real market data; `api.binance.com` answers HTTP 451 from this container, `data-api.binance.vision` is reachable) | Revert the artifact, but the pilot run happened | Rejected (institutionalizes the non-portability it is meant to remove) |
+| D | **Gate-compatible checkout** (place the tree on an insertion-ordered filesystem with the blocks created in the reverse authorized order) | Perfect while it holds: the gate runs exactly as preregistered and the tree is byte-identical (verified, evidence 9) | No artifact, no code, no identity changes at all | Low, but the checkout must be re-prepared per machine | Nothing to roll back | **Accepted as the operational fallback under Design A** |
+| E | **Re-implement the v1 resume path outside the hashed set** (a `src/v1_campaign/` twin, as done for v2) | The v1 record set would split: the 497,765 existing v1 records are bound to `code_hash d0dca298…` (`research/results_manifest.json`) and to three campaign identities (`577e87e2…`, `707f7a50…`, `fcf04f6e…`), while new records would carry a new identity | Splits the v1 evidence chain; the v1 shards are shared and the manifest binds one campaign id | High | Not cleanly reversible | Rejected (splits the v1 record set; the v1 campaign is terminal, so the path is not needed) |
+
+### 3. Recommendation — the decision (rules only)
+
+**Adopt Design A, with Design D as its operational fallback. Reject B, C and E.**
+
+1. **The v1 gate is not modified.** `src/breakout_research/campaign.py` stays byte-identical. The
+   hashed set stays canonical `3e8e4169…`; the authorized ordered digest `2efd3b18…` stays the
+   authorized value of record; every frozen v1 and v2 artifact stays byte-identical.
+2. **The gate's comparison is reinterpreted, not changed.** `auth['code_hash'] != live_ordered_digest`
+   means *"the code that would run is not the code that was authorized **under this checkout's
+   directory order**"*. It is a statement about **checkout compatibility**, never about source drift.
+   Source drift is decided **only** by the canonical digest (BRAIN-009 rule).
+3. **A v1 resume is supported only on a gate-compatible checkout**, i.e. one whose live ordered digest
+   equals `2efd3b18…`. Such a checkout is constructible (evidence 9) and is **verified** by digest,
+   never by assumption: copy the tree to an insertion-ordered filesystem and create the five block
+   directories in the order `(backtest, data, signals, utils, indicators)`.
+4. **A v1 resume is started only through a pre-flight check outside the hashed set.** The pre-flight
+   (a) proves the tree has not drifted — the canonical digest equals the recorded `3e8e4169…` and the
+   authorized digest is one of the 120 digests the current tree produces; (b) reports
+   `gate_compatible` with the live digest, the live enumeration order and the authorized order; and
+   (c) **refuses** to start a v1 run on an incompatible checkout with an explicit
+   *environment fact, not source drift* message. The misleading `RuntimeError("Code has changed since
+   authorization.")` must not be the first thing a user sees.
+5. **`research_state/campaign_authorization.json` and `research_state/checkpoint.json` are not
+   re-issued.** They keep `2efd3b18…`. Re-authorization on a checkout that is not gate-compatible is
+   **forbidden without a versioned amendment**, because it would replace the authorized value of
+   record with a checkout-specific digest and break the v2 cross-check at
+   `scripts/verify_research_v2_code_hash_amendment_1.py:231`.
+6. **The frozen v2 artifacts stay immutable.** The canonical digest remains the tree identity; the
+   ordered digest remains informational and is never an identity. The executed v2 run keeps the
+   identity it was verified with.
+7. **The interim rule (unchanged from BRAIN-009 and re-affirmed here).** `src/breakout_research/`
+   must not be edited to make a red ordered-digest comparison green. A red ordered-digest comparison
+   is reported as an **environment fact** about the checkout's directory enumeration order, with the
+   canonical digest as the drift verdict.
+8. **The RL1 location is corrected** to `src/breakout_research/campaign.py` (lines 171 and 189);
+   `pilot_gate_validator.py` is environment independent (evidence 4). The correction is recorded here;
+   the immutable artifact `configs/research_v2_code_hash_amendment_1.json` is not edited.
+
+### 4. Falsifying evidence (what would overturn this decision)
+
+- The pre-flight cannot distinguish "foreign enumeration order" from "source drift" on a real
+  checkout — i.e. a modified tree in a foreign-order checkout is **not** detected (canonical digest
+  mismatch) or is falsely reported as a drift.
+- The canonical digest is **not** stable across two checkouts of the same commit (it would reopen
+  BRAIN-009).
+- The 120-variant enumeration is wrong for some checkout: the live ordered digest is **not** among
+  the 120 digests the tree produces (the replica is not faithful to `compute_code_hash()` for a tree
+  with nested `.py` subdirectories, which the current tree does not have).
+- A gate-compatible checkout cannot be constructed on any filesystem available to the operator, i.e.
+  evidence 9 does not reproduce → Design D is not a usable fallback and the decision must be
+  re-opened for Design B.
+- The v1 campaign turns out to be **non-terminal** (a resume is required) **and** the terminal state
+  is wrong — then the cost of Design A (a refused resume) must be re-priced.
+- A frozen artifact turns out to depend on the *live* ordered digest in a way this record does not
+  account for (a repository-wide sweep says otherwise) — the sweep below must be repeated at
+  implementation time.
+
+### 5. Rollback
+
+- Design A adds only new files outside the hashed set (`scripts/…`, `tests/…`) and edits only
+  `research_state/`. Rollback = delete those files and revert this record's status line. No artifact,
+  no identity, no result, no shard and no ledger changes → **nothing to migrate**.
+- The frozen v2 artifacts are not edited by this decision, so no rollback of them is needed.
+- If the pre-flight is later judged insufficient, Design B can still be taken — but only together with
+  the amendment chain over the five `amends` artifacts and the v2 run identity, and only after a new
+  brainstorming record re-prices it.
+
+### 6. Staged acceptance tests (a later implementation session — NOT this one)
+
+| # | Stage | Acceptance test | Falsifies |
+| --- | --- | --- | --- |
+| 1 | Pre-flight script | `python3 scripts/verify_v1_gate_compatibility.py` exits 0 and its JSON report contains the recomputed canonical digest `3e8e4169…`, the live ordered digest, the live enumeration order, the authorized order and `authorized_digest_in_variants = true` | the report compares a recorded constant with itself (README 2A E) |
+| 2 | Pre-flight script | the same script on a **copy** of the tree with one `.py` file changed exits non-zero and names the canonical digest mismatch — real drift is still detected | drift detection |
+| 3 | Pre-flight script | the same script under a **perturbed enumeration order** (reversed `os.walk` over a copy) still exits 0 and still reports `authorized_digest_in_variants = true` — a false drift signal is not produced | the false-drift claim |
+| 4 | Pre-flight script | `--require-gate-compatible` exits 1 on this checkout (live `608c7340…` ≠ authorized `2efd3b18…`) and prints the environment-fact message, not a drift message | the refusal behavior |
+| 5 | Pre-flight script | on a tmpfs copy created in the reverse authorized order, the live ordered digest equals `2efd3b18…` and the script reports `gate_compatible = true` — the fallback is real, not aspirational | evidence 9 |
+| 6 | Tests | `tests/test_v1_gate_compatibility.py` proves each of stages 1–5 deterministically, using the replica in `tests/code_identity_helpers.py` and a **synthetic** tree in a temporary directory; the repository's own v1/v2 paths are never written | test gap |
+| 7 | Repository sweep | a repository-wide search shows **no** new site that compares the live ordered digest with a recorded digest and treats a mismatch as drift, and the existing sites (`tests/test_v2_campaign_execution_path.py`, `tests/test_research_v2_selection_authorization_1.py`) still assert the canonical rule | README 2A E (superseded-rule sweep) |
+| 8 | Non-regression | `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; all eleven v2 verifiers exit 0; `scripts/verify_v2_selection_run.py` exits 0; `compute_code_hash()` and both canonical digests are unchanged; every v1 and v2 artifact sha256 anchor is unchanged; no v2 result row, shard, ledger, result manifest or checkpoint changes; the confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0` | any side effect |
+
+### 7. Prerequisites for the implementation session
+
+- `pytest` and `numpy` must be installed in the container (`python3 -m pip install pytest numpy requests`)
+  or the suite cannot run and must be reported `NOT_RUN`.
+- The implementation must live **outside** `src/breakout_research/` (rule 1) — `scripts/` and `tests/`
+  only. Any `src/breakout_research/` edit invalidates this decision.
+- The implementation must not edit `research_state/campaign_authorization.json`,
+  `research_state/checkpoint.json`, `research_state/pilot_evidence.json` or any frozen artifact
+  (rule 5).
+
+### 8. Planned rule → code → test map (for the implementation session)
+
+| Rule (this record) | Planned code | Planned test |
+| --- | --- | --- |
+| the tree identity is the canonical digest, not the ordered digest | `scripts/verify_v1_gate_compatibility.py` (canonical digest) | stage 1 / stage 3 |
+| a red ordered-digest comparison is an environment fact, not drift | same (report fields `gate_compatible`, `drift_detected`) | stage 3 / stage 4 |
+| the authorized digest must still be one of the tree's 120 digests | same (variant enumeration) | stage 1, stage 6 |
+| a v1 resume runs only on a gate-compatible checkout | same (`--require-gate-compatible`) | stage 4 / stage 5 |
+| the gate-compatibility fallback is constructible and verified | same (report of live order vs authorized order) | stage 5 |
+| the hashed set and every frozen artifact stay byte-identical | the implementation touches no `src/` file and no frozen artifact | stage 8 |
+
+### 9. Do NOT (this session and the implementation session)
+
+Do not edit anything under `src/breakout_research/` (it is the hashed set; the v1 campaign
+authorization and the executed v2 run's identity depend on it); do not edit
+`research_state/campaign_authorization.json`, `research_state/checkpoint.json` or
+`research_state/pilot_evidence.json`; do not edit any frozen artifact (including
+`configs/research_v2_code_hash_amendment_1.json`, whose RL1 location this record corrects); do not
+run any v1 or v2 grid, backtest, campaign, selection or pilot; do not read any candle inside the v2
+confirmatory window; do not write any v2 path; do not contact any provider or fetch candles; do not
+re-run a producer script that would rewrite an existing artifact.
+
+### 10. Implementation note
+
+**This record is the deliverable.** The pre-flight script, its verifier and its tests are **not**
+implemented in the session that wrote this record (README Section 2A C1). The implementation session
+must verify the staged acceptance tests above, must repeat the repository-wide sweep for the
+superseded rule (stage 7), and must record its own implementation note here and in
+`research_state/agent_handoff.md`.

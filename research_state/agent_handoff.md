@@ -2016,3 +2016,238 @@ The record must decide, in rules only:
 **Environment note:** the container has no `pytest` and no `numpy` by default. Install them before running the suite (`python3 -m pip install pytest numpy requests` → pytest 9.1.1, numpy 2.5.4), otherwise the suite cannot run at all and must be reported as `NOT_RUN`.
 
 **Queued after this task (not for that session):** a recorded decision on RL1's implementation (if any), and, only after the confirmatory window exists (not before `2027-01-17T22:00:00Z`) and this protocol is committed and hash-bound, the separately authorized confirmatory evaluation.
+
+## Session activity — 2026-10-20T08:21:52Z (this session)
+
+**Task (from the durable handoff at 08:xxZ):** produce the **residual limitation `RL1` decision record** — a
+design artifact that decides how the v1 campaign runtime gate handles the checkout-dependent ordered
+digest (`compute_code_hash()`) versus the authorized value of record (`2efd3b18…`), given that
+BRAIN-009 rejects rotating `compute_code_hash()` and the v1 campaign is terminal. Write it into
+`research_state/brainstorming_queue.md` as a new item (e.g. `BRAIN-010`) following the BRAIN-009
+structure. **Do not implement it in the same session** (README Section 2A C1); no code change under
+`src/breakout_research/`, no run, no candle read.
+
+**Outcome:** **Delivered.** `research_state/brainstorming_queue.md` now carries **BRAIN-010** — a
+complete, evidence-backed decision record with revalidated evidence (including the permutation proof
+and a newly *constructed* gate-compatible checkout), five materially different designs, one
+recommendation, the consequences for the v1 authorization/checkpoint and for the frozen v2
+artifacts, falsifiers, rollback, prerequisites, a planned rule → code → test map and eight staged
+acceptance tests. **The decision: the v1 gate is not modified.** The hashed set stays canonical
+`3e8e4169…`, the authorized ordered digest `2efd3b18…` stays the value of record, every frozen v1/v2
+artifact stays byte-identical, and the gate's comparison is **reinterpreted** — it is a statement about
+*checkout compatibility*, never about source drift. A v1 resume is supported only on a
+**gate-compatible** checkout, and the pre-flight that enforces this lives outside the hashed set.
+**Nothing was implemented**, no artifact was edited, no run happened, and no candle was read.
+
+**Files modified**
+- `research_state/brainstorming_queue.md` — new **BRAIN-010** record + a status bullet in the
+  "Current phase decision" section
+- `research_state/agent_handoff.md` — this report
+- `research_state/campaign_authorization.json` — **controller-driven only** (`authorized_at_utc`
+  08:12:21Z → 08:16:39Z); `authorized`, `code_hash` and every functional field unchanged
+
+**State verified (2026-10-20T08:21Z)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **379 passed**, exit 0 (pre-existing; this session
+  added no test)
+- all **eleven** v2 verifiers exit 0: `verify_research_v2_spec.py`, `verify_research_v2_manifests.py`,
+  `verify_research_v2_execution.py`, `verify_research_v2_candidate_freeze.py`,
+  `verify_research_v2_execution_amendment_1.py`, `verify_research_v2_code_hash_amendment_1.py`,
+  `verify_research_v2_selection_authorization_1.py`, `verify_v2_selected_configurations_manifest.py`,
+  `verify_v2_prerequisite_reconciliation_amendment_1.py`,
+  `verify_research_v2_execution_amendment_2.py`, `verify_v2_confirmatory_protocol.py`
+- `PYTHONPATH=src python3 scripts/verify_v2_selection_run.py` → `"ok": true, "failures": []`, exit 0
+  (497,664 records re-verified)
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+  → `608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925` in this checkout — an
+  environment fact (BRAIN-009), not drift; the authorized value of record stays `2efd3b18…`
+- canonical digests unchanged: hashed set `3e8e4169…`, execution path `c69cc021…`
+- v1 artifacts byte-unchanged; v2 artifacts byte-unchanged; `src/breakout_research/` and
+  `src/v2_campaign/` untouched
+- the confirmatory window was never read: `confirmatory_window_status = NOT_STARTED`,
+  `holdout_exposed_count = 0`; no v2 result row, shard, ledger, result manifest or checkpoint changed
+- `git status --short` → only `research_state/brainstorming_queue.md` (this session's record) and the
+  controller-driven `research_state/campaign_authorization.json` timestamp
+
+**Evidence re-executed this session (not copied from a prior report)**
+- **Permutation brute force** (independent re-implementation, not `tests/code_identity_helpers.py`):
+  the five blocks (`backtest`, `data`, `indicators`, `signals`, `utils`) have 120 orders → **120
+  distinct** digests; **exactly one** — `(indicators, utils, signals, data, backtest)` — reproduces
+  `2efd3b18…`; the canonical digest `3e8e4169…` is identical under all 120.
+- **Live checkout**: enumeration order `(indicators, backtest, utils, signals, data)` → live digest
+  `608c7340…`; canonical digest **equals** the recorded `3e8e4169…`; the authorized digest **is** one
+  of the 120 → the tree has not drifted.
+- **Gate comparison reproduced read-only** (no campaign run, no artifact written): both
+  checkout-dependent sites are in `src/breakout_research/campaign.py` — line 189 (`_verify_pilot_gate`
+  → "Code has changed since authorization.") and line 171 (`_verify_stale_checkpoint` → "refusing to
+  resume"). `src/breakout_research/pilot_gate_validator.py:93` compares the pilot evidence with
+  itself → environment independent.
+- **Gate-compatible checkout constructed and verified**: a byte-identical copy of
+  `src/breakout_research` on tmpfs with the five block directories created in the reverse authorized
+  order `(backtest, data, signals, utils, indicators)` enumerates as `(indicators, utils, signals,
+  data, backtest)` and its ordered digest is **exactly** `2efd3b18…`. On this container's
+  name-hashed filesystem (`stat -f %T` → `ext2/ext3`) the enumeration order ignores creation order,
+  so the order is not controllable there.
+
+**CONFIRMED findings**
+1. **The RL1 location recorded in the frozen artifact is one file too wide.**
+   `configs/research_v2_code_hash_amendment_1.json` → `residual_limitations[0]` names
+   `campaign.py (_verify_pilot_gate)` **and** `pilot_gate_validator.py`. Only `campaign.py` contains a
+   checkout-dependent comparison. The consequence is unchanged; the artifact is immutable and was
+   **not** edited — the correction is recorded in BRAIN-010.
+2. **Changing the hashed set would invalidate the identity of an already-executed, verified run.**
+   The canonical digest `3e8e4169…` is recorded in the five `amends` artifacts of
+   `configs/research_v2_code_hash_amendment_1.json` **and** is the tree-identity component of the
+   executed v2 run (`configs/research_v2_selection_authorization_1.json`,
+   `research/ledger_v2.json`, `research/results_manifest_v2.json`,
+   `research/v2_selected_configurations_manifest.json`,
+   `configs/research_v2_confirmatory_protocol.json`); `scripts/verify_v2_selection_run.py`
+   re-verifies its 497,664 records against those identities. Any `src/breakout_research/` edit would
+   force an amendment chain over a completed run — the disproportionate cost BRAIN-009 rejected.
+3. **Re-authorizing the v1 campaign on a foreign-order checkout would also break a v2 check.**
+   `scripts/verify_research_v2_code_hash_amendment_1.py:231` asserts
+   `authorized_code_hash == research_state/campaign_authorization.json.code_hash`; the artifact's
+   `code_hash` is copied from the pilot evidence (`pilot_gate_validator.py:190`), and
+   `src/breakout_research/pilot.py:85,94,109` writes `compute_code_hash()` into **new** pilot
+   evidence. Re-authorizing would replace the value of record with a checkout-specific digest and
+   turn that v2 verifier red.
+4. The v1 campaign is terminal (`research/campaign_cycles/terminal/exhausted_cohort_2.json`:
+   `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` /
+   `UNIVERSE_VERSION_DECISION`), so the limitation has no live campaign behind it. Its record set
+   already spans three campaign identities (`577e87e2…` bound to `code_hash d0dca298…`, `707f7a50…`,
+   `fcf04f6e…`) — precedent that a code change starts a new identity rather than continuing one.
+
+**UNVERIFIED / STALE**
+- The pre-flight script, its verifier and its tests are **not implemented** (README Section 2A C1) —
+  the next bounded task. The staged acceptance tests in BRAIN-010 §6 are the specification for it.
+- `configs/research_v2.json` still records P2/P3 as `OUTSTANDING` although both are delivered; the
+  file is immutable and hash-verified, so the correction is a versioned amendment
+  (`configs/research_v2_prerequisite_reconciliation_amendment_1.json`), not an edit.
+- The confirmatory window cannot exist before `2027-01-17T22:00:00Z` — no action possible or needed.
+- STALE (marked in this file): the 08:xxZ task message (RL1 decision record — delivered by this
+  session).
+
+**Unsuccessful attempts (and the condition that would justify a retry)**
+- The first enumeration-order probe on this container's workspace was inconclusive for the *recipe*
+  (two different creation orders produced the same enumeration) — this was the finding that the
+  workspace filesystem is name-hashed, and it is recorded as such rather than retried. The recipe was
+  then established on tmpfs, where the ordering is insertion-dependent and the authorized digest was
+  reproduced exactly. No retry of the unchanged action is warranted.
+- No other attempt failed this session.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The session's task was a design record and the
+existing instructions already cover it: README 2A A/B (read and revalidate the queue and the prior
+report rather than trusting it), 2A C1 (a decision record is the deliverable and must not be
+implemented in the same session), 2A E (every acceptance check recomputes its expectation from
+repository state — the frozen-artifact cross-check at
+`scripts/verify_research_v2_code_hash_amendment_1.py:231` was re-verified, not assumed) and 2A H
+(handoff with statuses). The only correction found is an artifact claim (the RL1 location), which the
+existing "immutable artifacts are corrected by versioned amendment, never by editing" rule already
+governs. No prompt revision is proposed and `research_state/prompt_evolution.md` is untouched.
+
+**Checkpoint / persistence status**
+- Local commit: **not created by the agent** (no explicit user request). The working tree carries the
+  BRAIN-010 record and this report.
+- Remote persistence: `git rev-parse HEAD` == `git ls-remote origin main` == `f0313469…` at the end of
+  this session — i.e. **the record is not yet committed or pushed**; a commit/push (or the session
+  checkpoint) is required before it is durable.
+- Artifact/recovery: the record is a narrative design artifact; every number in it is recomputable
+  from the repository (the permutation brute force, the canonical digest, the gate comparison, the
+  tmpfs construction).
+- Checkpoint reconciliation: not applicable — no run, no result row, no shard, no ledger was
+  produced; `research_state/checkpoint.json` and `research_state/checkpoint_v2.json` are untouched.
+
+**Unresolved blockers (ranked)**
+1. **BRAIN-010 is not implemented.** The pre-flight that turns the gate's misleading message into an
+   environment fact does not exist yet; a v1 resume on a foreign-order checkout would still fail
+   with "Code has changed since authorization". This is the next bounded task.
+2. **The confirmatory window cannot exist before `2027-01-17T22:00:00Z`** — it opens
+   `2026-10-19T22:00:00Z` and needs ≥ 2,160 closed hourly candles (~90 days). Nothing can be
+   evaluated before then.
+3. **`configs/research_v2.json` still records P2/P3 as `OUTSTANDING`** although both are delivered;
+   the file is immutable and hash-verified, so the correction is a versioned amendment, not an edit.
+4. `research/results_v2.jsonl` is not committed by design (`RL2`); it is regenerated on demand from
+   the verified shards by `scripts/regenerate_v2_result_stream.py`.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** implement the **BRAIN-010 pre-flight** — the checkout-compatibility
+checker that decides whether a v1 campaign resume may be started, and that reports a foreign
+directory order as an *environment fact* instead of as source drift. Code only, outside the hashed set.
+
+**Subject:** the RL1 decision record (BRAIN-010) is written and verified; the next bounded task is
+its implementation — the v1 gate-compatibility pre-flight (no `src/` change, no run)
+
+**Status (verified 2026-10-20T08:21Z)**
+- `research_state/brainstorming_queue.md` → **BRAIN-010** decides: the v1 campaign runtime gate is
+  **not modified** (`src/breakout_research/campaign.py` stays byte-identical); the gate's comparison is
+  reinterpreted as *checkout compatibility*, never source drift; a v1 resume is supported only on a
+  **gate-compatible** checkout; the pre-flight lives outside the hashed set; the authorized ordered
+  digest `2efd3b18…` and the canonical digest `3e8e4169…` both stay as recorded; no frozen artifact
+  changes.
+- Delivered and hash-verified earlier: `configs/research_v2.json` `49fb0814…` (P1),
+  `research/universe_manifest_v2.json` `4e927e52…` (P2), `research/data_manifest_v2.json`
+  `9f64d8d1…` (P3), `configs/research_v2_execution.json` `aa902aa9…` (P4),
+  `configs/research_v2_candidate_freeze.json` `5a56b3d8…`, `configs/research_v2_execution_amendment_1.json`
+  `1149d9cb…`, `configs/research_v2_code_hash_amendment_1.json` `4409b6af…`,
+  `configs/research_v2_selection_authorization_1.json` `76be0d3b…`,
+  `configs/research_v2_execution_amendment_2.json` `6c89cafe…`,
+  `configs/research_v2_prerequisite_reconciliation_amendment_1.json` `0fd0712c…`,
+  `research/v2_selected_configurations_manifest.json` `7acc7fe0…`,
+  `configs/research_v2_confirmatory_protocol.json` `bba95394…`. Eleven verifiers exit 0; the full
+  suite is **379/379 green**; `scripts/verify_v2_selection_run.py` re-verifies the 497,664 records of
+  the executed v2 run.
+- The v2 selection run is done: 14 candidates selected, 4 assets reported without a candidate, the
+  confirmatory window **never read** (`NOT_STARTED`, `holdout_exposed_count = 0`), earliest possible
+  end `2027-01-17T22:00:00Z`.
+
+**One bounded task:** implement the pre-flight specified by BRAIN-010 §6/§8, as
+`scripts/verify_v1_gate_compatibility.py` (read-only, offline, JSON report, exit 0/1) plus
+`tests/test_v1_gate_compatibility.py` (deterministic tests against synthetic fixtures in a temporary
+directory — never write the repository's v1/v2 paths). It must:
+1. recompute the **canonical digest** of `src/breakout_research` and compare it with the recorded
+   `3e8e4169…` → this is the **drift verdict**;
+2. enumerate the tree's 120 block-order variants and assert the authorized digest `2efd3b18…` is one
+   of them → the tree has not drifted from the authorized state;
+3. report the live ordered digest, the live enumeration order and the authorized order, and a
+   `gate_compatible` boolean (`live ordered digest == authorized digest`);
+4. with `--require-gate-compatible`, exit non-zero on an incompatible checkout and print an
+   **environment-fact** message (never "code has changed since authorization");
+5. classify a **real** source edit as drift (a modified `.py` file changes the canonical digest and
+   makes the authorized digest unreproducible) — the check must still fail for a defect that is
+   present, and the enumeration-order perturbation must **not** produce a false drift signal.
+
+**Do NOT:** edit anything under `src/breakout_research/` or `src/v2_campaign/` (the hashed set and
+the v2 execution path; `compute_code_hash()` and both canonical digests must stay unchanged); edit
+`research_state/campaign_authorization.json`, `research_state/checkpoint.json` or
+`research_state/pilot_evidence.json`; edit any frozen artifact (including
+`configs/research_v2_code_hash_amendment_1.json`, whose RL1 location BRAIN-010 corrects); run any v1
+or v2 grid, backtest, campaign, selection or pilot; read any candle inside the v2 confirmatory
+window; write any v2 path; contact any provider or fetch candles; re-run a producer script that
+would rewrite an existing artifact.
+
+**Acceptance criteria:** the eight staged acceptance tests of BRAIN-010 §6 pass (stages 1–8, including
+the repository-wide sweep for the superseded rule); `PYTHONPATH=src python3 -m pytest tests/ -q`
+exits 0 with no new failures; all eleven v2 verifiers exit 0 and `scripts/verify_v2_selection_run.py`
+exits 0; `compute_code_hash()` is still `608c7340…` in this checkout and the canonical digests are
+still `3e8e4169…` / `c69cc021…`; the v1 and v2 artifact sha256 anchors are unchanged; no v2 result
+row, shard, ledger, result manifest or checkpoint changes; the confirmatory window stays
+`NOT_STARTED` with `holdout_exposed_count = 0`; the BRAIN-010 record gains an implementation note and
+`research_state/agent_handoff.md` is updated.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
+`python3 scripts/verify_v1_gate_compatibility.py`; `python3 scripts/verify_v1_gate_compatibility.py --require-gate-compatible`
+(exit 1 expected in this checkout); the eleven v2 verifiers; `PYTHONPATH=src python3 scripts/verify_v2_selection_run.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+(expect `608c7340…` in this checkout — an environment fact, not a defect); `git status --short`;
+`git diff --stat` (confirm only the new pre-flight/test files and `research_state/` — no `src/`, no
+frozen artifact, no manifest change).
+
+**Environment note:** the container has no `pytest` and no `numpy` by default. Install them before
+running the suite (`python3 -m pip install pytest numpy requests` → pytest 9.1.1, numpy 2.5.4),
+otherwise the suite cannot run at all and must be reported as `NOT_RUN`.
+
+**Queued after this task (not for that session):** the versioned amendment that formalizes the RL1
+location correction in the immutable `configs/research_v2_code_hash_amendment_1.json` (only if it is
+judged worth an artifact change rather than a queue note); and, only after the confirmatory window
+exists (not before `2027-01-17T22:00:00Z`) and the confirmatory protocol is committed and
+hash-bound, the separately authorized confirmatory evaluation.
