@@ -1,0 +1,374 @@
+{
+  "artifact": "v2_code_hash_amendment",
+  "artifact_version": "v2-code-hash-amendment-2",
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-20T09:05:00Z",
+  "amendment_status": "PREREGISTERED_CODE_HASH_AMENDMENT_2_DESIGN_ONLY",
+  "specification_purpose": "Correct the recorded location of residual limitation RL1 in configs/research_v2_code_hash_amendment_1.json. The frozen artifact is not edited: the corrected location is recorded here by reference. The limitation, its consequence, the behaviour of the v1 campaign runtime gate and every recorded identity stay exactly as they are. This artifact authorizes nothing, runs nothing and reads no candle.",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-010",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-010",
+    "chosen_design": "A",
+    "chosen_design_summary": "The v1 campaign runtime gate is not modified; the gate's comparison is reinterpreted as a statement about checkout compatibility, never about source drift, and a pre-flight outside the hashed set decides whether a v1 resume may be started. This amendment carries the location correction that the decision record required.",
+    "correction_mechanism": "VERSIONED_AMENDMENT",
+    "alternatives_considered": [
+      {
+        "option": "VERSIONED_AMENDMENT",
+        "verdict": "CHOSEN",
+        "reason": "The corrected location is a machine-readable field of a frozen artifact. An amendment records it where every consumer of the artifact can find it, and the verifier can enforce it: the site set is recomputed from the source tree, so the amendment cannot omit a site -- the very defect of the original record -- nor invent one."
+      },
+      {
+        "option": "NON_EDITING_NOTE_IN_THE_BRAINSTORMING_QUEUE",
+        "verdict": "REJECTED",
+        "reason": "A note cannot correct the field itself: every consumer of the frozen artifact would keep reading the defective location, and nothing would be recomputable. The correction would remain an assertion."
+      },
+      {
+        "option": "EDIT_THE_FROZEN_ARTIFACT_IN_PLACE",
+        "verdict": "FORBIDDEN",
+        "reason": "Immutable artifacts are corrected by versioned amendment, never by editing. Editing would change the manifest_hash 4409b6af... that the v2 identity chain records, and would therefore invalidate the identity of the executed v2 run."
+      }
+    ]
+  },
+  "correction": {
+    "target_artifact": "configs/research_v2_code_hash_amendment_1.json",
+    "target_manifest_hash": "4409b6af54acb2982e1f286f9c6ebd1ce1b7628a90c476dede6da3c04d8762c1",
+    "target_file_sha256": "e5db0d2ed6281b8ff90d566f3f554307dfcb0d470479443380fa330ed07c73b8",
+    "target_field": "residual_limitations[RL1].location",
+    "recorded_location": "src/breakout_research/campaign.py (_verify_pilot_gate) and src/breakout_research/pilot_gate_validator.py",
+    "corrected_location": "src/breakout_research/backtest/shards.py (line 480) and src/breakout_research/campaign.py (lines 171 and 189)",
+    "recorded_location_defect": "The recorded location names one file too wide -- src/breakout_research/pilot_gate_validator.py compares the pilot evidence with itself and is environment independent -- and one file too narrow: src/breakout_research/backtest/shards.py compares the live ordered code hash with the code hash recorded in the results manifest and was not named at all.",
+    "behaviour_change": false,
+    "limitation_text_changed": false,
+    "consequence_text_changed": false,
+    "target_artifact_edited": false,
+    "correction_scope": "The location only. RL1 itself, its consequence, the gate's behaviour, the authorized value of record, the canonical digest and every v1 and v2 artifact stay exactly as they are.",
+    "decision_record_correction": {
+      "source": "BRAIN-010, evidence 4 and section 3 rule 8",
+      "recorded_correction": "The RL1 location is corrected to src/breakout_research/campaign.py (lines 171 and 189); pilot_gate_validator.py is environment independent.",
+      "is_complete": false,
+      "omission": "src/breakout_research/backtest/shards.py (line 480) compares the live ordered code hash with the code hash recorded in the results manifest and was not named. It is a live-vs-recorded site, so it belongs to RL1: on a checkout whose directory enumeration order differs, the result-store reconciliation refuses to resume with 'Result manifest bound to different spec/code/data versions'.",
+      "second_omission": "pilot_gate_validator.py:139 (checkpoint_state.get(\"code_hash\") != code_hash) was not enumerated either. It is recorded-vs-recorded, so excluding it from RL1's location is correct; the enumeration was simply incomplete.",
+      "evidence": "The mechanical scan of the hashed set finds five code-hash comparison sites: three live-vs-recorded and two recorded-vs-recorded. This amendment records all five, with the evidence for each."
+    }
+  },
+  "code_hash_comparison_sites": {
+    "hashed_set_root": "src/breakout_research",
+    "scan_rule": {
+      "site_definition": "A comparison expression in a *.py file under src/breakout_research whose source segment mentions the token code_hash.",
+      "scan_method": "python ast: every ast.Compare node of the parsed module",
+      "classification_rule": "LIVE_VS_RECORDED when one operand's value chain reaches a compute_code_hash() call inside the hashed set without crossing a persisted-artifact read, and the other operand's value chain reaches a persisted-artifact read; RECORDED_VS_RECORDED otherwise.",
+      "persisted_read_markers": [
+        "_read_json_file(",
+        "load_authorization(",
+        "_read_json(",
+        "_read_manifest("
+      ],
+      "live_digest_marker": "compute_code_hash(",
+      "evidence_rule": "Each site records the source steps that carry the live digest and the recorded value to the comparison. Every step is re-resolved against the current source, so a source edit invalidates the amendment."
+    },
+    "total_sites": 5,
+    "live_vs_recorded_site_count": 3,
+    "recorded_vs_recorded_site_count": 2,
+    "corrected_location_files": [
+      "src/breakout_research/backtest/shards.py",
+      "src/breakout_research/campaign.py"
+    ],
+    "excluded_location_files": [
+      "src/breakout_research/pilot_gate_validator.py"
+    ],
+    "sites": [
+      {
+        "path": "src/breakout_research/backtest/shards.py",
+        "line": 480,
+        "symbol": "ResultStore.reconcile",
+        "comparison": "manifest.get(\"code_hash\") != self.code_hash",
+        "classification": "LIVE_VS_RECORDED",
+        "live_digest_chain": [
+          {
+            "path": "src/breakout_research/campaign.py",
+            "anchor": "code_hash = compute_code_hash()",
+            "span": 1,
+            "line": 295,
+            "text": "        code_hash = compute_code_hash()"
+          },
+          {
+            "path": "src/breakout_research/campaign.py",
+            "anchor": "store = ResultStore(",
+            "span": 5,
+            "line": 319,
+            "text": "        store = ResultStore(\n            campaign_id=campaign_id,\n            spec_hash=protocol_hash,\n            code_hash=code_hash,\n            data_manifest_hash=data_manifest_hash,"
+          },
+          {
+            "path": "src/breakout_research/backtest/shards.py",
+            "anchor": "self.code_hash = code_hash",
+            "span": 1,
+            "line": 349,
+            "text": "        self.code_hash = code_hash"
+          }
+        ],
+        "recorded_value_chains": [
+          [
+            {
+              "path": "src/breakout_research/backtest/shards.py",
+              "anchor": "manifest = self._read_manifest()",
+              "span": 1,
+              "line": 477,
+              "text": "        manifest = self._read_manifest()"
+            }
+          ]
+        ],
+        "recorded_artifact": {
+          "kind": "default_argument",
+          "name": "manifest_path",
+          "resolved_via": "direct_value",
+          "path": "src/breakout_research/backtest/shards.py",
+          "line": 344,
+          "text": "        manifest_path: str = \"research/results_manifest.json\",",
+          "value": "research/results_manifest.json"
+        },
+        "effect": "The result-store reconciliation refuses to resume on a checkout whose directory enumeration order does not reproduce the ordered digest the results manifest was written with, with the message 'Result manifest bound to different spec/code/data versions'."
+      },
+      {
+        "path": "src/breakout_research/campaign.py",
+        "line": 171,
+        "symbol": "CampaignRunner._verify_stale_checkpoint",
+        "comparison": "stored_code != code_hash",
+        "classification": "LIVE_VS_RECORDED",
+        "live_digest_chain": [
+          {
+            "path": "src/breakout_research/campaign.py",
+            "anchor": "code_hash = compute_code_hash()",
+            "span": 1,
+            "line": 295,
+            "text": "        code_hash = compute_code_hash()"
+          },
+          {
+            "path": "src/breakout_research/campaign.py",
+            "anchor": "self._verify_stale_checkpoint(protocol_hash, code_hash)",
+            "span": 1,
+            "line": 298,
+            "text": "        self._verify_stale_checkpoint(protocol_hash, code_hash)"
+          }
+        ],
+        "recorded_value_chains": [
+          [
+            {
+              "path": "src/breakout_research/campaign.py",
+              "anchor": "stored = _read_json_file(CHECKPOINT_PATH)",
+              "span": 1,
+              "line": 161,
+              "text": "            stored = _read_json_file(CHECKPOINT_PATH)"
+            },
+            {
+              "path": "src/breakout_research/campaign.py",
+              "anchor": "stored_code = stored.get(\"code_hash\")",
+              "span": 1,
+              "line": 165,
+              "text": "        stored_code = stored.get(\"code_hash\")"
+            }
+          ]
+        ],
+        "recorded_artifact": {
+          "kind": "constant",
+          "name": "CHECKPOINT_PATH",
+          "resolved_via": "constant",
+          "path": "src/breakout_research/campaign.py",
+          "line": 35,
+          "text": "CHECKPOINT_PATH = \"research_state/checkpoint.json\"",
+          "value": "research_state/checkpoint.json"
+        },
+        "effect": "A resumed v1 campaign refuses to start on a checkout whose directory enumeration order does not reproduce the authorized ordered digest, with the message 'code changed since checkpoint, refusing to resume'."
+      },
+      {
+        "path": "src/breakout_research/campaign.py",
+        "line": 189,
+        "symbol": "CampaignRunner._verify_pilot_gate",
+        "comparison": "auth.get('code_hash') != code_hash",
+        "classification": "LIVE_VS_RECORDED",
+        "live_digest_chain": [
+          {
+            "path": "src/breakout_research/campaign.py",
+            "anchor": "code_hash = compute_code_hash()",
+            "span": 1,
+            "line": 295,
+            "text": "        code_hash = compute_code_hash()"
+          },
+          {
+            "path": "src/breakout_research/campaign.py",
+            "anchor": "self._verify_pilot_gate(protocol_hash, code_hash)",
+            "span": 1,
+            "line": 303,
+            "text": "        self._verify_pilot_gate(protocol_hash, code_hash)"
+          }
+        ],
+        "recorded_value_chains": [
+          [
+            {
+              "path": "src/breakout_research/campaign.py",
+              "anchor": "auth = load_authorization(VALIDATOR_ARTIFACT_PATH)",
+              "span": 1,
+              "line": 181,
+              "text": "            auth = load_authorization(VALIDATOR_ARTIFACT_PATH)"
+            }
+          ]
+        ],
+        "recorded_artifact": {
+          "kind": "constant",
+          "name": "VALIDATOR_ARTIFACT_PATH",
+          "resolved_via": "constant",
+          "path": "src/breakout_research/campaign.py",
+          "line": 33,
+          "text": "VALIDATOR_ARTIFACT_PATH = \"research_state/campaign_authorization.json\"",
+          "value": "research_state/campaign_authorization.json"
+        },
+        "effect": "The v1 campaign pilot gate refuses to start on a checkout whose directory enumeration order does not reproduce the authorized ordered digest, with the message 'Code has changed since authorization.'"
+      },
+      {
+        "path": "src/breakout_research/pilot_gate_validator.py",
+        "line": 93,
+        "symbol": "_validate_evidence",
+        "comparison": "evidence.get(\"code_hash\") != code_hash",
+        "classification": "RECORDED_VS_RECORDED",
+        "live_digest_chain": [],
+        "recorded_value_chains": [
+          [
+            {
+              "path": "src/breakout_research/pilot_gate_validator.py",
+              "anchor": "pilot = _read_json(pilot_evidence_path)",
+              "span": 1,
+              "line": 151,
+              "text": "        pilot = _read_json(pilot_evidence_path)"
+            },
+            {
+              "path": "src/breakout_research/pilot_gate_validator.py",
+              "anchor": "code_hash = pilot.get(\"code_hash\")",
+              "span": 1,
+              "line": 175,
+              "text": "    code_hash = pilot.get(\"code_hash\")"
+            }
+          ]
+        ],
+        "recorded_artifact": {
+          "kind": "default_argument",
+          "name": "pilot_evidence_path",
+          "resolved_via": "constant",
+          "path": "src/breakout_research/pilot_gate_validator.py",
+          "line": 37,
+          "text": "PILOT_EVIDENCE_PATH = \"research_state/pilot_evidence.json\"",
+          "value": "research_state/pilot_evidence.json"
+        },
+        "effect": "The comparison is between the pilot evidence's own code hash and the code hash of the same pilot evidence; it is independent of the checkout's directory enumeration order and is not a residual limitation."
+      },
+      {
+        "path": "src/breakout_research/pilot_gate_validator.py",
+        "line": 139,
+        "symbol": "_validate_evidence",
+        "comparison": "checkpoint_state.get(\"code_hash\") != code_hash",
+        "classification": "RECORDED_VS_RECORDED",
+        "live_digest_chain": [],
+        "recorded_value_chains": [
+          [
+            {
+              "path": "src/breakout_research/pilot_gate_validator.py",
+              "anchor": "pilot = _read_json(pilot_evidence_path)",
+              "span": 1,
+              "line": 151,
+              "text": "        pilot = _read_json(pilot_evidence_path)"
+            },
+            {
+              "path": "src/breakout_research/pilot_gate_validator.py",
+              "anchor": "code_hash = pilot.get(\"code_hash\")",
+              "span": 1,
+              "line": 175,
+              "text": "    code_hash = pilot.get(\"code_hash\")"
+            }
+          ],
+          [
+            {
+              "path": "src/breakout_research/pilot_gate_validator.py",
+              "anchor": "pilot = _read_json(pilot_evidence_path)",
+              "span": 1,
+              "line": 151,
+              "text": "        pilot = _read_json(pilot_evidence_path)"
+            },
+            {
+              "path": "src/breakout_research/pilot_gate_validator.py",
+              "anchor": "checkpoint_state = evidence.get(\"checkpoint_state\", {})",
+              "span": 1,
+              "line": 133,
+              "text": "    checkpoint_state = evidence.get(\"checkpoint_state\", {})"
+            }
+          ]
+        ],
+        "recorded_artifact": {
+          "kind": "default_argument",
+          "name": "pilot_evidence_path",
+          "resolved_via": "constant",
+          "path": "src/breakout_research/pilot_gate_validator.py",
+          "line": 37,
+          "text": "PILOT_EVIDENCE_PATH = \"research_state/pilot_evidence.json\"",
+          "value": "research_state/pilot_evidence.json"
+        },
+        "effect": "Both sides are read from the persisted pilot evidence -- the checkpoint state snapshot and the evidence's code hash -- so the comparison is independent of the checkout's directory enumeration order and is not a residual limitation."
+      }
+    ]
+  },
+  "code_hash_constraint": {
+    "hashed_set_root": "src/breakout_research",
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "authorized_code_hash_source": "research_state/campaign_authorization.json (protocol_version v1, authorized true)",
+    "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
+    "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "canonical_source_digest_algorithm": {
+      "name": "canonical_source_digest_v1",
+      "description": "sha256 over the concatenation, for every *.py file under src/breakout_research in ascending POSIX relative-path order, of the relative path, a newline, the sha256 hex digest of the file bytes, and a newline.",
+      "portable": true
+    },
+    "hashed_set_unchanged": "No file under src/breakout_research is added, edited or removed by this amendment. The canonical digest above is the identity of the tree and is unchanged; the live ordered digest is an environment fact about the checkout's directory enumeration order and is never a drift signal.",
+    "gate_behaviour_unchanged": "The v1 campaign runtime gate is not modified. BRAIN-010 keeps it byte-exact and reinterprets its comparison as checkout compatibility; a red comparison is reported as an environment fact, never repaired by editing the hashed set."
+  },
+  "preflight": {
+    "path": "scripts/verify_v1_gate_compatibility.py",
+    "required_capability": "The pre-flight must compute the canonical source digest of the hashed set, report the live ordered digest and the checkout's enumeration order, and refuse a v1 resume on an incompatible checkout with an environment-fact message rather than a drift message.",
+    "decision": "BRAIN-010 requires a v1 resume to be started only through a pre-flight outside the hashed set that proves the tree has not drifted (the canonical digest), reports the live ordered digest and the enumeration order, and refuses to start on an incompatible checkout with an environment-fact message.",
+    "covers_the_corrected_location": "The pre-flight compares the live ordered digest with the authorized value of record, so it covers every site the correction names -- the pilot gate, the stale-checkpoint check and the result-store reconciliation.",
+    "implementation_status": "IMPLEMENTED",
+    "note": "The pre-flight's bytes are not pinned here: it is an operational script, not a frozen artifact, and a later edit to it does not invalidate this correction. The verifier checks that it exists and implements the capability recorded above."
+  },
+  "execution_authorization": {
+    "grid_run_authorized": false,
+    "candidate_selection_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "candle_fetch_authorized": false,
+    "source_tree_change_authorized": false,
+    "v1_reauthorization_authorized": false,
+    "v1_resume_authorized": false,
+    "statement": "This artifact authorizes nothing. It corrects one recorded location, adds no behaviour and changes no identity. It does not change the hashed set, does not re-authorize the v1 campaign and does not permit any v1 or v2 run."
+  },
+  "related_artifacts": {
+    "v1_campaign_authorization": {
+      "path": "research_state/campaign_authorization.json",
+      "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "note": "The functional field of the authorization is recorded, not the digest of its bytes: the controller refreshes the authorized_at_utc timestamp, so the file digest changes without the authorization changing."
+    },
+    "v2_code_hash_amendment_1": {
+      "path": "configs/research_v2_code_hash_amendment_1.json",
+      "manifest_hash": "4409b6af54acb2982e1f286f9c6ebd1ce1b7628a90c476dede6da3c04d8762c1",
+      "note": "This amendment corrects one field of that artifact and leaves the file byte-identical; its manifest_hash stays the recorded value."
+    }
+  },
+  "producer": {
+    "path": "scripts/build_v2_code_hash_amendment_2.py",
+    "verify_command": "python3 scripts/verify_research_v2_code_hash_amendment_2.py"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 artifacts."
+  },
+  "manifest_hash": "3ed6334ed4c36b5c06cbefc5f168e92904c101e87432d3365a43b5ea60e769f3"
+}

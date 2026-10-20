@@ -89,7 +89,9 @@ def _mirror_repo(tmp_path: Path) -> Path:
                 continue
             source = Path(current) / name
             target = root / relative / name
-            if relative == Path(HASHED_SET_ROOT):
+            if relative == Path(HASHED_SET_ROOT) or Path(HASHED_SET_ROOT) in relative.parents:
+                # The hashed set is copied for real, recursively: a symlink would
+                # let a test write through it into the working tree.
                 shutil.copyfile(source, target)
             else:
                 target.symlink_to(source)

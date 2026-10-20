@@ -81,6 +81,7 @@ def _mirror_repo(tmp_path: Path) -> Path:
         Path("research/campaign_cycles"),
         Path("research/shards_v2"),
     }
+    hashed = Path(HASHED_SET_ROOT)
     for current, dirs, files in os.walk(REPO_ROOT):
         dirs[:] = [name for name in dirs if name not in skip_dirs]
         relative = Path(current).relative_to(REPO_ROOT)
@@ -91,7 +92,9 @@ def _mirror_repo(tmp_path: Path) -> Path:
         for name in files:
             source = Path(current) / name
             target = root / relative / name
-            if relative == Path(HASHED_SET_ROOT):
+            if relative == hashed or hashed in relative.parents:
+                # The hashed set is copied for real, recursively: a symlink would
+                # let a test write through it into the working tree.
                 shutil.copyfile(source, target)
             else:
                 target.symlink_to(source)

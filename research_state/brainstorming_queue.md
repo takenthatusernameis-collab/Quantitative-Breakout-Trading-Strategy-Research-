@@ -852,7 +852,7 @@ repository (`research/campaign_cycles/terminal/exhausted_cohort_2.json`) and doc
 **Decision update 2026-10-20 UTC (HEAD `f0313469`, canonical source digest `3e8e4169…`):** the
 residual limitation `RL1` of BRAIN-009 is decided by a new item, **BRAIN-010** (see "BRAIN-010" below).
 
-- BRAIN-010 (P1) — `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. The v1 campaign runtime gate is
+- BRAIN-010 (P1) — `IMPLEMENTED_AND_VERIFIED`. The v1 campaign runtime gate is
   **not** modified: `src/breakout_research/campaign.py` stays byte-identical, the hashed set stays
   `3e8e4169…`, the authorized ordered digest `2efd3b18…` stays the value of record and every frozen
   v1/v2 artifact stays byte-identical. The gate's comparison is **reinterpreted** — it is a statement
@@ -860,10 +860,13 @@ residual limitation `RL1` of BRAIN-009 is decided by a new item, **BRAIN-010** (
   **gate-compatible** checkout, which is constructible and verified (a byte-identical copy of
   `src/breakout_research` on tmpfs with the five block directories created in the reverse authorized
   order reproduces `2efd3b18…` exactly). The pre-flight that enforces this lives **outside** the
-  hashed set and is **not implemented in the session that wrote this record**. The recorded RL1
-  location is corrected to `src/breakout_research/campaign.py` (lines 171 and 189);
-  `pilot_gate_validator.py` is environment independent. The immutable artifact
-  `configs/research_v2_code_hash_amendment_1.json` is not edited.
+  hashed set and is **implemented** (`scripts/verify_v1_gate_compatibility.py`, 2026-10-20T08:30Z).
+  The recorded RL1 location is corrected by the versioned amendment
+  `configs/research_v2_code_hash_amendment_2.json` (`manifest_hash 3ed6334e…`, 2026-10-20T09:0xZ);
+  the immutable artifact `configs/research_v2_code_hash_amendment_1.json` is **not** edited. The
+  correction this record states — "campaign.py (lines 171 and 189) only" — was found to be
+  **incomplete**: `src/breakout_research/backtest/shards.py` (line 480) is a third live-vs-recorded
+  site. See "BRAIN-010 implementation note" at the end of this file.
 
 ---
 
@@ -1754,6 +1757,16 @@ repairing a red check by editing the frozen artifact.
    `pilot_gate_validator.py` is environment independent (evidence 4). The correction is recorded here;
    the immutable artifact `configs/research_v2_code_hash_amendment_1.json` is not edited.
 
+   > **Corrected by the implementation (2026-10-20T09:0xZ).** Rule 8's location list is
+   > **incomplete**: `src/breakout_research/backtest/shards.py` (line 480) is a third
+   > live-vs-recorded site — the result-store reconciliation compares the live ordered
+   > code hash with the code hash recorded in `research/results_manifest.json` — and it was
+   > not enumerated in evidence 4. The authoritative correction is the versioned amendment
+   > `configs/research_v2_code_hash_amendment_2.json`, which records **all five** code-hash
+   > comparison sites of the hashed set (three live-vs-recorded, two recorded-vs-recorded)
+   > and lets the verifier recompute that set from the source tree. See the implementation
+   > note at the end of this file.
+
 ### 4. Falsifying evidence (what would overturn this decision)
 
 - The pre-flight cannot distinguish "foreign enumeration order" from "source drift" on a real
@@ -1835,3 +1848,71 @@ implemented in the session that wrote this record (README Section 2A C1). The im
 must verify the staged acceptance tests above, must repeat the repository-wide sweep for the
 superseded rule (stage 7), and must record its own implementation note here and in
 `research_state/agent_handoff.md`.
+## BRAIN-010 implementation note — the RL1 location correction (2026-10-20T09:0xZ)
+
+**Task.** Decide and record the correction of the RL1 location that this record required
+(section 3, rule 8), in the immutable `configs/research_v2_code_hash_amendment_1.json`,
+without editing that artifact.
+
+**Decision — a versioned amendment, not a prose note.** The correction is carried by
+`configs/research_v2_code_hash_amendment_2.json` (`manifest_hash 3ed6334e...`, produced by
+`scripts/build_v2_code_hash_amendment_2.py`, verified by
+`scripts/verify_research_v2_code_hash_amendment_2.py`). The alternatives were compared and
+recorded in the artifact itself: a note in this queue was rejected because it cannot correct
+the field that every consumer of the frozen artifact reads, and editing the frozen artifact is
+forbidden because it would change the recorded `manifest_hash 4409b6af...` that the v2 identity
+chain depends on.
+
+**The correction is enforceable, which is why an artifact is worth it.** A *code-hash comparison
+site* is a comparison in the hashed source set whose source segment mentions `code_hash`. The
+set of such sites is recomputed mechanically from the tree with the Python AST, so the amendment
+can neither omit a site nor invent one — which is exactly the defect of the original record.
+Each site is classified `LIVE_VS_RECORDED` (the live, checkout-dependent ordered digest compared
+with a recorded digest) or `RECORDED_VS_RECORDED` (both sides recorded: environment independent),
+and every classification carries the source steps that are the evidence for it. The verifier
+re-resolves every step against the current source, so a source edit invalidates the amendment.
+
+**The corrected set — five sites, three of them live-vs-recorded.**
+
+| Site | Comparison | Classification | Recorded value compared with the live digest |
+| --- | --- | --- | --- |
+| `src/breakout_research/campaign.py:171` (`_verify_stale_checkpoint`) | `stored_code != code_hash` | `LIVE_VS_RECORDED` | `research_state/checkpoint.json` |
+| `src/breakout_research/campaign.py:189` (`_verify_pilot_gate`) | `auth.get('code_hash') != code_hash` | `LIVE_VS_RECORDED` | `research_state/campaign_authorization.json` |
+| `src/breakout_research/backtest/shards.py:480` (`ResultStore.reconcile`) | `manifest.get("code_hash") != self.code_hash` | `LIVE_VS_RECORDED` | `research/results_manifest.json` |
+| `src/breakout_research/pilot_gate_validator.py:93` (`_validate_evidence`) | `evidence.get("code_hash") != code_hash` | `RECORDED_VS_RECORDED` | — (both sides from `research_state/pilot_evidence.json`) |
+| `src/breakout_research/pilot_gate_validator.py:139` (`_validate_evidence`) | `checkpoint_state.get("code_hash") != code_hash` | `RECORDED_VS_RECORDED` | — (both sides from `research_state/pilot_evidence.json`) |
+
+**Corrected RL1 location:** `src/breakout_research/backtest/shards.py` (line 480) and
+`src/breakout_research/campaign.py` (lines 171 and 189). **Excluded:**
+`src/breakout_research/pilot_gate_validator.py` (lines 93 and 139).
+
+**1. This record's own correction was incomplete.** Evidence 4 enumerated three sites and
+concluded that "only `campaign.py` contains a checkout-dependent comparison". That is wrong for
+`backtest/shards.py:480`: `ResultStore` receives the live ordered digest
+(`campaign.py:295` -> `campaign.py:319-323` -> `shards.py:349`) and compares it with the
+`code_hash` recorded in the results manifest (`shards.py:477`, `shards.py:480`). On a
+foreign-order checkout the v1 resume therefore also fails there, with the message *"Result
+manifest bound to different spec/code/data versions"* — a third misleading message next to the
+two this record already named. The consequence of RL1 is unchanged; the attribution was wrong in
+both directions: one file too wide and one file too narrow. The pre-flight covers all three
+sites, because it compares the live ordered digest with the authorized value of record.
+
+**2. The immutable artifact was not edited.** `configs/research_v2_code_hash_amendment_1.json`
+is byte-identical (`sha256 e5db0d2e...`, `manifest_hash 4409b6af...`) and still records the
+original, over-wide location; the verifier proves both.
+
+**3. Swept sites.** The repository-wide sweep for the superseded rule (stage 7 of section 6) was
+repeated: the corrected location is now stated by exactly one artifact, the new amendment. The
+five test modules that mirror the repository into a temporary directory were corrected in the
+same session, because their mirror helper symlinked the **sub**directories of the hashed set and
+a test that wrote to `src/breakout_research/backtest/shards.py` through that symlink modified the
+real hashed set during this session's first test run. The mirror now copies the hashed set (and
+the v2 execution path) recursively, so the working tree can no longer be written through a
+symlink. That was an `IMPLEMENTATION_DEFECT` in the test helpers, not a research defect, and it
+was repaired before the end of the session; the canonical digest `3e8e4169...` was verified
+unchanged afterwards.
+
+**4. Nothing else changed.** The gate stays byte-exact; the authorized value of record stays
+`2efd3b18...`; the canonical digest stays `3e8e4169...`; no v1 or v2 artifact was edited; no
+run happened; no candle was read; the confirmatory window stays `NOT_STARTED` with
+`holdout_exposed_count = 0`.
