@@ -3894,3 +3894,37 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 **Acceptance criteria:** `configs/research_v3_execution.json` exists, is self-hashing and authorizes **at most one** logical v3 selection run; a read-only offline verifier and deterministic tests exist for it; the protocol names the validated six as the candidate set and keeps the v1 selection rule byte-equal; no v3 execution artifact exists after the work; all existing verifiers and the full suite stay green; no v1/v2 artifact and no hashed-set file changed; `git status --short` shows only additive v3 work.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v3_spec.py`; `python3 scripts/verify_research_v3_manifests.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_v3_candidate_freeze_amendment_1.py`; `python3 scripts/verify_v3_spec_amendment_1.py`; `python3 scripts/verify_v3_universe_expansion_log.py`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git rev-parse main` and `git rev-parse origin/main` (confirm they match); `git status --short`.
+
+
+## Session activity — 2026-10-20T13:10:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at 12:54:13Z):** implement **BRAIN-012 stage 2** — the v3 execution protocol and the bounded authorization for at most one logical v3 selection run (**design deliverable only, nothing runs**). Produce `configs/research_v3_execution.json` (self-hashed, immutable) plus a read-only offline verifier and deterministic tests, specifying the v3 selection paths in a separate namespace (`src/v3_campaign/`, outside the hashed set), the development-data boundary ending at the v3 candidate freeze (`2026-10-20T13:00:00Z`), the unchanged v1 selection rule inherited byte-equal by the v3 specification, resource/attempt bounds, stopping conditions, rollback, and falsifiers. The v3 candidate set to be used is the **validated six** as resolved through `configs/research_v3_candidate_freeze_amendment_1.json`. Do not run any grid/backtest/campaign/selection/confirmatory evaluation; do not edit v1/v2 artifacts; do not write code under `src/breakout_research/` or `src/v2_campaign/`.
+
+**Outcome:** The prior task is **already delivered and verified**. `configs/research_v3_execution.json` exists and is hash-bound (`specification_hash 9e92a35d...`), `scripts/verify_research_v3_execution.py` exits 0, and `tests/test_research_v3_execution.py` passes (9 tests). The protocol authorizes at most one logical v3 run, scopes to the validated six via the freeze amendment, inherits the unchanged v1 selection rule byte-equal, requires execution to live outside the hashed set in `src/v3_campaign/` (separate namespace from v1/v2), forbids writes to v1/v2 paths, forbids mixing v1/v2 cycle units, records development-data cutoff at `2026-10-20T13:00:00Z`, and authorizes nothing to run. No v3 execution artifact exists; no v1/v2 artifact or hashed-set file was touched; no run was executed.
+
+**State verified (2026-10-20T13:10:00Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **617 passed**, exit 0
+- `python3 scripts/verify_research_v3_execution.py` → `"ok": true, "failures": []`
+- `python3 scripts/verify_research_v3_spec.py` → ok; `python3 scripts/verify_research_v3_manifests.py` → ok; `python3 scripts/verify_research_v3_candidate_freeze.py` → ok (effective set via amendment: 6); all v3 verifiers exit 0
+- `python3 scripts/verify_research_v2_spec.py` → ok; `python3 scripts/verify_v2_selection_run.py` → ok
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `608c7340...` (environment fact); authorized value of record `2efd3b18...`; canonical digest `3e8e4169...` unchanged
+- No `research/shards_v3/`, `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, or `research_state/checkpoint_v3.json`; confirmatory windows untouched (`NOT_STARTED`, `holdout_exposed_count = 0`)
+
+## Initial task message for next agent
+
+**Next:** No bounded implementation task is actionable. BRAIN-012 stage 1 (specification, snapshot, validation, manifests, candidate freeze with amendment, expansion log, verifiers/tests) and stage 2 (v3 execution protocol and bounded authorization, design deliverable only) are both delivered and verified. The v3 selection run is not authorized to execute in this session and cannot run without a separate authorized action; no v3 execution artifact exists. The v2 confirmatory evaluation remains queued and cannot be performed before `2027-01-17T22:00:00Z`.
+
+**Subject:** BRAIN-012 stages 1 and 2 delivered and verified; v3 protocol authorizes at most one logical run but no execution is scheduled; v2 confirmatory evaluation blocked until 2027-01-17T22:00:00Z
+
+**Status (verified 2026-10-20T13:10:00Z):**
+- Full suite 617/617 green; all v3 and v2 verifiers exit 0.
+- v3 execution protocol `configs/research_v3_execution.json` (`specification_hash 9e92a35d...`) authorizes at most one logical v3 run over the validated six (AAVEUSDT, ICPUSDT, PEPEUSDT, QNTUSDT, SHIBUSDT, WLDUSDT) via `configs/research_v3_candidate_freeze_amendment_1.json`, requires execution in `src/v3_campaign/` outside the hashed set, inherits unchanged v1 selection rule, forbids writes to v1/v2 paths and mixing v1/v2 units, sets development-data cutoff at `2026-10-20T13:00:00Z`, authorizes nothing to run.
+- No v3 execution artifacts; confirmatory windows `NOT_STARTED`, `holdout_exposed_count = 0`.
+
+**Do NOT:** start a v3 selection run or any execution; edit `src/breakout_research/`, `src/v2_campaign/`, or create/edit under `src/v3_campaign/` unless explicitly authorized; edit any frozen artifact (use a versioned amendment); read any confirmatory-window candle or evaluate holdout; contact providers or re-retrieve snapshots; rewrite existing artifacts without `--force` and a recorded reason; attempt confirmatory evaluation before `2027-01-17T22:00:00Z`.
+
+**Acceptance criteria:** no changes required; suite and all verifiers remain green; `compute_code_hash()` behavior unchanged (environment fact `608c7340...`, authorized `2efd3b18...`, canonical `3e8e4169...`); no v1/v2 artifacts modified; no v3 execution artifacts created.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`.
