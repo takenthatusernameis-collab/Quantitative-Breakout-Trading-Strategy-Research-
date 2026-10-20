@@ -3821,3 +3821,24 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 **Acceptance criteria:** new v3 execution protocol and verifier/tests exist, all existing verifiers still pass, suite green, no v3 execution artifacts, no v1/v2 edits.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v3_spec.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`.
+
+## Session activity — 2026-10-20T12:25:16Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** The prior task (deliver the v2 confirmatory-evaluation execution path outside the hashed set and the versioned authorization for one bounded confirmatory run) is already delivered and verified: `src/v2_confirmatory/` exists, `configs/research_v2_confirmatory_authorization_1.json` is hash-bound, all verifiers exit 0, full suite 545/545 green, `compute_code_hash()` still `2efd3b18…`, canonical digests unchanged, v1/v2 artifacts byte-unchanged, confirmatory window still `NOT_STARTED`, `holdout_exposed_count = 0`. No new changes were made.
+
+## Initial task message for next agent
+
+**Next:** No bounded implementation task is actionable. The v2 confirmatory evaluation cannot be performed before `2027-01-17T22:00:00Z` (the window needs ≥ 2,160 closed hourly candles). The confirmatory-execution path and its authorization are delivered and verified. The only queued work is the separately authorized confirmatory evaluation itself, gated on the window existing.
+
+**Subject:** All v2 prerequisites, the selection run, the selected-configuration manifest, the confirmatory protocol and the confirmatory execution path/authorization are delivered and verified; the confirmatory evaluation is queued, not actionable before 2027-01-17T22:00:00Z
+
+**Status (verified 2026-10-20T12:25:16Z):**
+- Full suite 545/545 green; all v2 verifiers exit 0; `compute_code_hash()` = `2efd3b18…` (authorized value of record); canonical digests unchanged (`3e8e4169…` hashed set, `c69cc021…` v2 selection execution path); v1/v2 artifacts byte-unchanged; confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`.
+
+**Do NOT:** start a second v2 selection run; edit `src/breakout_research/` or `src/v2_campaign/` or `src/v2_confirmatory/`; edit any frozen artifact; read any confirmatory-window candle or evaluate the holdout-position fold; contact any provider or fetch candles; rewrite existing artifacts without `--force` and a recorded reason; attempt confirmatory evaluation before `2027-01-17T22:00:00Z`.
+
+**Acceptance criteria:** no changes required; suite and verifiers remain green; `compute_code_hash()` `2efd3b18…`; v1 artifacts unchanged; `confirmatory_window_status` `NOT_STARTED`, `holdout_exposed_count` 0.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git rev-parse main` and `git rev-parse origin/main` (confirm they match).
