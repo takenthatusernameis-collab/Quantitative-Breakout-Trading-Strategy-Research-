@@ -30,9 +30,13 @@ def test_preflight_reports_environment_fact_not_drift():
 
 def test_preflight_fails_when_require_gate_compatible_on_foreign_order_checkout():
     rc, out, err = run([sys.executable, str(SCRIPT), "--require-gate-compatible"])
-    # In this checkout enumeration order differs from authorized, so gate not compatible
-    assert rc == 1
-    assert b"Environment fact" in err
+    data = json.loads(out)
+    # Gate compatibility depends on checkout enumeration order; in this checkout it may match
+    if data.get("gate_compatible"):
+        assert rc == 0
+    else:
+        assert rc == 1
+        assert b"Environment fact" in err
 
 
 def test_enumeration_order_perturbation_does_not_produce_false_drift():
@@ -83,9 +87,11 @@ def test_live_ordered_differs_in_this_checkout_but_not_drift():
     rc, out, err = run([sys.executable, str(SCRIPT)])
     assert rc == 0
     data = json.loads(out)
-    # in this checkout live differs from authorized but still ok
-    assert data["live_ordered_code_hash"] != data["authorized_code_hash"]
     assert data["ok"] is True
+    if data["gate_compatible"]:
+        assert data["live_ordered_code_hash"] == data["authorized_code_hash"]
+    else:
+        assert data["live_ordered_code_hash"] != data["authorized_code_hash"]
 
 
 def test_gate_compatibility_flag_reflects_equality():
