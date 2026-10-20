@@ -1,0 +1,244 @@
+{
+  "artifact": "v3_confirmatory_authorization",
+  "artifact_version": "v3-confirmatory-authorization-1",
+  "protocol_version": "v3",
+  "universe_version": "v3",
+  "created_utc": "2026-10-20T20:30:00Z",
+  "authorization_status": "AUTHORIZED_FOR_AT_MOST_ONE_LOGICAL_RUN",
+  "specification_purpose": "Authorize at most one logical confirmatory evaluation of the 14 selected configurations on the v2 confirmatory window, and record the scope, the window, the data boundary, the output layout, the code identity, the attempt budget, the preconditions, the stopping conditions, the falsifiers and the rollback. No evaluation may run before the window exists.",
+  "authorized_run": {
+    "authorized": true,
+    "max_runs": 1,
+    "run_id": "v2-confirmatory-20260117",
+    "campaign_id": "v2-confirmatory-campaign",
+    "run_phase": "confirmatory_window_evaluation",
+    "scope": {
+      "assets": [
+        "ICPUSDT",
+        "PEPEUSDT",
+        "SHIBUSDT",
+        "WLDUSDT"
+      ],
+      "config_ids": {
+        "ICPUSDT": "cfg_0444",
+        "PEPEUSDT": "cfg_1804",
+        "SHIBUSDT": "cfg_0544",
+        "WLDUSDT": "cfg_1380"
+      },
+      "count": 4,
+      "out_of_scope_assets_without_candidate": [
+        "AAVEUSDT",
+        "QNTUSDT"
+      ],
+      "bound_to_selected_configurations_hash": "3d24a278f13f8c6878905d45be25d0c0cbd84c0c1138d44c0db41b8d56fb5b53",
+      "bound_to_selection_authorization_hash": "76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918",
+      "bound_to_data_manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+      "scope_may_not_be_widened_narrowed_or_reranked": true,
+      "out_of_scope_assets_are_reported_not_dropped": true,
+      "data_scope_rule": "the data scope is the 14 in-scope assets; the benchmark asset is added to the data scope only when a selected configuration's trend filter needs it, and the benchmark is then counted as an exposed asset like every other"
+    },
+    "code_identity": {
+      "algorithm": "canonical_source_digest_v1",
+      "portable": true,
+      "hashed_set_root": "src/breakout_research",
+      "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "execution_path_root": "src/v3_confirmatory",
+      "execution_path_digest": "2c80fb5a0cb1430f7194cbfe92c6af5c63d0f13fef5f65c3e178883e525a5b90",
+      "run_code_identity": "0f01fb4af6e1cff92a8dd7bbcf580b90c301718c64a01a67a25896a5d3a72186",
+      "authorized_ordered_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "note": "The identity of a confirmatory run is the composite of the canonical digest of the hashed v1 engine and the canonical digest of the confirmatory execution path. The checkout-dependent ordered digest compute_code_hash() is an environment fact and is never used as an identity."
+    },
+    "window": {
+      "window_start_utc": "2026-10-19T22:00:00Z",
+      "minimum_closed_hourly_candles": 2160,
+      "earliest_possible_end_utc": "2027-01-17T22:00:00Z",
+      "evaluation_window_rule": "The evaluated window is exactly the first minimum_closed_hourly_candles closed hourly candles at or after the window start, so it ends at the earliest instant the frozen boundary allows. The evaluated window's length does not depend on when the run happens, and the window may not be extended, shortened or re-based at run time.",
+      "single_use": true,
+      "must_not_overlap_v1_holdout": true,
+      "never_reused_from_v1": true,
+      "never_used_for_selection_ranking_or_retuning": true
+    },
+    "data_boundary": {
+      "readiness_test": "a bounded metadata-only probe of the provider's server time and the spot exchange status of the in-scope pairs; it fetches no candle and does not increment holdout_exposed_count",
+      "retrieval_happens_once_after_the_readiness_test_passes": true,
+      "every_read_counted_in_holdout_exposed_count": true,
+      "exposure_counter_is_monotonic": true,
+      "exposure_event_identity": "(run_id, asset, window bounds)",
+      "a_continuation_of_the_same_event_does_not_increment_the_counter": true,
+      "a_read_under_different_bounds_or_outside_the_scope_is_refused": true,
+      "window_manifest_path": "research/v2_confirmatory_window_manifest.json",
+      "window_manifest_records": [
+        "window bounds",
+        "retrieval timestamp",
+        "per-asset dataset hashes",
+        "closed-candle count per asset",
+        "coverage gaps",
+        "exposure events",
+        "the readiness record"
+      ],
+      "v2_data_manifest_is_extended_by_reference_and_never_edited": true,
+      "v1_holdout_never_reused": true
+    },
+    "paths": {
+      "shards_dir": "research/shards_v2_confirmatory",
+      "ledger": "research/ledger_v2_confirmatory.json",
+      "results_manifest": "research/results_manifest_v2_confirmatory.json",
+      "results_stream": "research/results_v2_confirmatory.jsonl",
+      "checkpoint": "research_state/checkpoint_v2_confirmatory.json",
+      "window_manifest": "research/v2_confirmatory_window_manifest.json",
+      "report": "reports/confirmatory_evaluation_v2.json",
+      "report_markdown": "reports/confirmatory_report_v2.md"
+    },
+    "forbidden_paths": [
+      "research/results_shards/",
+      "research/results_manifest.json",
+      "research/results.jsonl",
+      "research_state/checkpoint.json",
+      "research/universe_manifest.json",
+      "research/data_manifest.json",
+      "research/candidate_manifest.json",
+      "research/candidate_manifest_v2.json",
+      "configs/research_v1.json",
+      "research/shards_v2/",
+      "research/ledger_v2.json",
+      "research/results_manifest_v2.json",
+      "research/results_v2.jsonl",
+      "research_state/checkpoint_v2.json"
+    ],
+    "immutable_artifact_anchors": {
+      "v1_evidence": {
+        "configs/research_v1.json": "558d60990af9310d5cedbc41a58dbf29eb4dc869f8e45dc1cb2baf644480490d",
+        "research/universe_manifest.json": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd",
+        "research/data_manifest.json": "cf39de420cfc7328bd4a244c7f485e4b81c01dae108f17f2719d6ca6e7310580",
+        "research/candidate_manifest.json": "87589f83f3bfe22517bb73257d285ec47d602c19a892f0971035e1523df4f1d6",
+        "research/candidate_manifest_v2.json": "a68b061a8c314828bf60478ef8f826ee9d532c6e5ff1545c8afaa2c8e03dfa49"
+      },
+      "v2_selection_outputs": {
+        "research/universe_manifest_v2.json": "68c973a0a07bd6808a18433a1cce5351d56f03800653d5c64f401d72c0769f42",
+        "research/data_manifest_v2.json": "0240be6f0f1e8c53b60cff0e9a1e3ccad8879e9282b1d0ff4f118b0168227eb8",
+        "research/ledger_v2.json": "fb9f4cdf44397ddbd66c78218fe31e151017ffa72cf3280737ef4e106ce0526f",
+        "research/results_manifest_v2.json": "99c57a3dcbe23b1e29b9bf6c2cb226022ed6d831243b1814291e1eb51dbf3a1d",
+        "research/v2_selected_configurations_manifest.json": "529ef0d532a0024db139107312303761ab0b27fb8e7d024eaba6a67916d7f258",
+        "research_state/checkpoint_v2.json": "b11075d0ff1fc37351c6175e1d1a6974139e0cc24b42382938bce7e6ee469b25"
+      }
+    },
+    "v1_paths_forbidden": true,
+    "v2_selection_paths_forbidden": true,
+    "v2_selection_results_are_never_tallied_with": true,
+    "bounds": {
+      "max_assets": 14,
+      "max_configurations": 14,
+      "max_cost_scenarios": 3,
+      "attempts": 1,
+      "max_retries_on_technical_failure": 3,
+      "retries_before_the_first_payload_read": 3
+    },
+    "evaluation_rule": {
+      "unchanged_v1_evaluation_metric": true,
+      "unchanged_cost_scenarios": true,
+      "cost_scenarios": [
+        1.0,
+        2.0,
+        3.0
+      ],
+      "no_retuning_reranking_or_grid_extension_on_window": true,
+      "evaluated_parameters_are_byte_identical_to_the_frozen_manifest_entry": true,
+      "selection_rule_reference": "configs/research_v1.json#selection"
+    },
+    "criterion_precedence": {
+      "authoritative_source": "configs/research_v2.json#holdout.promotion_rule",
+      "secondary_source": "configs/research_v2_confirmatory_protocol.json#reporting_and_falsifiers",
+      "secondary_field": "baseline_comparison",
+      "amendment_path": "configs/research_v2_confirmatory_protocol_amendment_1.json",
+      "amendment_manifest_hash": "2701c63456e080b1a8a0cbcd478d1bf4dc04d35212f4f270ea88d7460f56f377"
+    },
+    "protocol": {
+      "path": "configs/research_v2_confirmatory_protocol.json",
+      "manifest_hash": "bba9539442c92e7e7f51f72ab51e9f9e82bb4c354639be79b7db0baf4b043be3"
+    },
+    "amendment": {
+      "path": "configs/research_v2_confirmatory_protocol_amendment_1.json",
+      "manifest_hash": "2701c63456e080b1a8a0cbcd478d1bf4dc04d35212f4f270ea88d7460f56f377"
+    },
+    "preconditions": [
+      "the authorization, the confirmatory protocol and the protocol amendment are committed",
+      "the metadata-only readiness test has passed and its record is in the window manifest",
+      "holdout_exposed_count is 0, or the run is a resume of the same exposure event",
+      "the live code identity equals the recorded code identity",
+      "the evaluation scope equals the frozen selected-configurations manifest",
+      "the v1 artifacts and the v2 selection outputs are byte-unchanged"
+    ],
+    "stopping_conditions": [
+      "the run stops when every in-scope asset has been evaluated",
+      "the run stops at the first boundary violation, rolls back and releases the attempt",
+      "the run stops when the window is spent: a second read of the window is refused",
+      "an inconclusive outcome is reported, never hidden",
+      "if no configuration survives the preregistered promotion rule, that null result is reported"
+    ],
+    "falsifiers": [
+      "the evaluated parameters differ from the frozen candidate manifest entry",
+      "the grid is extended, re-ranked or re-tuned on the window",
+      "a candle inside the window is read more than once",
+      "holdout_exposed_count is incremented outside a confirmatory read",
+      "the exposure counter is reset",
+      "the v1 holdout is re-opened or the v2 selection outputs are tallied with",
+      "an asset of the frozen scope is omitted from the report"
+    ],
+    "rollback": {
+      "before_the_first_payload_read": "an abort rolls back every artifact the run created and leaves holdout_exposed_count = 0, so the attempt is released",
+      "after_a_payload_read": "an abort leaves the exposure in place: the run is recorded as EXPOSED_ABORTED, the window is spent, and the report must state that the window was consumed without a completed evaluation",
+      "resume": "an interrupted run is resumed from the verified shards and the already retrieved, hash-verified datasets; the number of resumes is bounded by max_retries_on_technical_failure"
+    }
+  },
+  "authorizes_evaluation_before_the_window_exists": false,
+  "authorizes_a_candle_read_before_the_window_exists": false,
+  "related_artifacts": {
+    "confirmatory_protocol": {
+      "path": "configs/research_v2_confirmatory_protocol.json",
+      "manifest_hash": "bba9539442c92e7e7f51f72ab51e9f9e82bb4c354639be79b7db0baf4b043be3"
+    },
+    "confirmatory_protocol_amendment_1": {
+      "path": "configs/research_v2_confirmatory_protocol_amendment_1.json",
+      "manifest_hash": "2701c63456e080b1a8a0cbcd478d1bf4dc04d35212f4f270ea88d7460f56f377"
+    },
+    "selected_configurations_manifest": {
+      "path": "research/v2_selected_configurations_manifest.json",
+      "manifest_hash": "7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862"
+    },
+    "selection_authorization_1": {
+      "path": "configs/research_v2_selection_authorization_1.json",
+      "manifest_hash": "76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918"
+    },
+    "v2_candidate_freeze": {
+      "path": "configs/research_v2_candidate_freeze.json",
+      "manifest_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f"
+    },
+    "v2_specification": {
+      "path": "configs/research_v2.json",
+      "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+    },
+    "v2_data_manifest": {
+      "path": "research/data_manifest_v2.json",
+      "manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e"
+    }
+  },
+  "durability": {
+    "rule": "The authorization takes effect when this artifact is committed. No confirmatory-window candle may be read and no evaluation may run before the commit that carries this artifact exists.",
+    "authorization_commit": null,
+    "authorization_commit_status": "PENDING_COMMIT",
+    "note": "The commit hash is recorded by the committing session. This artifact is not rewritten after that commit, because its manifest_hash must not change."
+  },
+  "producer": {
+    "path": "scripts/build_v2_confirmatory_authorization_1.py",
+    "verify_command": "python3 scripts/verify_v2_confirmatory_path.py"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
+  },
+  "manifest_hash": "5d378589ee0f38a026dbb178901ace36b28bc840818b8603c2d7a6d860befde9"
+}
