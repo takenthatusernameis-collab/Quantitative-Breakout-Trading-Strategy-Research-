@@ -1916,3 +1916,385 @@ unchanged afterwards.
 `2efd3b18...`; the canonical digest stays `3e8e4169...`; no v1 or v2 artifact was edited; no
 run happened; no candle was read; the confirmatory window stays `NOT_STARTED` with
 `holdout_exposed_count = 0`.
+
+## BRAIN-011 — The v2 confirmatory evaluation has no executable, authorized path: the protocol preregisters the evaluation, the code that would perform it is half-built and untested, and two frozen artifacts state different confirmatory decision criteria
+
+**Priority:** P1 — the confirmatory evaluation is the last research step of the campaign. It cannot
+run before `2027-01-17T22:00:00Z`, so the path that will perform it must exist, be authorized and be
+independently verified well before that date; every day it is deferred shortens the runway.
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
+(design, prerequisites, staged steps, tests and rollback are explicit below; **not implemented in the
+session that wrote this record**, README Section 2A C1)
+**Cause labels:** `IMPLEMENTATION_DEFECT` (the committed path is half-built: no package init, no
+runner, no data path, no authorization, no verifier, no tests), `RESEARCH_DESIGN_RISK` (two frozen
+artifacts state different confirmatory decision criteria — see evidence 5), `UNKNOWN` (whether the
+three committed modules are correct: they have never been executed by any test)
+**Confidence:** the evidence below was re-executed read-only in this session against the live tree at
+HEAD `72a7eb4e` (2026-10-20T10:0xZ, working tree clean, 435/435 tests green, all 18 v2 verifiers
+exit 0).
+
+### Evidence (revalidated 2026-10-20, branch `main`, HEAD `72a7eb4e`, working tree clean)
+
+**1. The confirmatory execution path is half-built and used by nothing.** `src/v2_confirmatory/`
+contains exactly three modules — `errors.py` (53 lines), `identity.py` (128 lines), `scope.py`
+(130 lines) — committed by the controller checkpoint `72a7eb4e`. There is **no `__init__.py`**
+(the directory is importable only as a PEP 420 namespace package), **no** data loader, **no**
+readiness test, **no** runner, **no** authorization artifact, **no** verifier and **no** test
+module. A repository-wide search for `v2_confirmatory` finds no import of the package anywhere in
+`src/`, `tests/` or `scripts/`: the three modules have never been executed. The commit that carried
+them was a controller checkpoint, not a decision record, so no rule, acceptance test or rollback
+exists for them.
+
+**2. The protocol preregisters the evaluation and authorizes nothing.**
+`configs/research_v2_confirmatory_protocol.json` (`manifest_hash bba95394...`, created
+2026-10-20T08:00:00Z) fixes the window (opens `2026-10-19T22:00:00Z`, ≥ 2,160 closed hourly
+candles, single-use, never reused from v1), the data path ("retrieval happens once after the
+readiness test passes"; "every read counted in `holdout_exposed_count`"), the evaluation rule (the
+unchanged v1 metric and cost scenarios, no retuning/ranking/grid extension on the window), the
+reporting/falsifiers and the authorization boundary, and it states verbatim: *"This protocol
+authorizes nothing."* It does **not** specify the executable path, the output layout, the attempt
+budget, the exposure-accounting mechanism, the readiness test, or the preconditions that would let a
+run start.
+
+**3. The window cannot exist yet, so the work available now is the path itself.** The window needs
+≥ 2,160 closed hourly candles after it opens at `2026-10-19T22:00:00Z`; the earliest possible end is
+`2027-01-17T22:00:00Z`. `research/data_manifest_v2.json` still records
+`confirmatory_window_status = NOT_STARTED` and `holdout_exposed_count = 0`. Therefore the only
+remaining preparatory work in the whole v2 chain is building, authorizing and verifying the path.
+
+**4. The engine that will compute the result may not be edited.** `compute_code_hash()` walks every
+`*.py` file under `src/breakout_research` recursively, and that tree's canonical digest
+`3e8e4169...` is bound by five frozen artifacts (`research/universe_manifest_v2.json`,
+`research/data_manifest_v2.json`, `configs/research_v2_candidate_freeze.json`,
+`configs/research_v2_execution.json`, `configs/research_v2_execution_amendment_1.json`) and by the
+identity of the **executed** 497,664-record v2 selection run
+(`configs/research_v2_selection_authorization_1.json`, `research/ledger_v2.json`,
+`research/results_manifest_v2.json`, `research/v2_selected_configurations_manifest.json`,
+`configs/research_v2_confirmatory_protocol.json`). The confirmatory path must therefore live
+**outside** the hashed set and *import* the v1 engine unchanged — exactly as `src/v2_campaign/`
+does. The three committed modules already follow this rule: `identity.py` implements the portable
+`canonical_source_digest_v1` identity of BRAIN-009 and the composite
+`run_code_identity = digest(hashed set) ⊕ digest(execution path)`, and `scope.py` builds the scope
+from `research/v2_selected_configurations_manifest.json` (whose per-asset entries do carry the
+`selected` / `config_id` fields the module reads — the skeleton agrees with the manifest).
+
+**5. The material finding — two frozen artifacts state different confirmatory decision criteria.**
+The frozen v2 specification and the confirmatory protocol do not agree on what "passing" the
+confirmatory window means:
+
+| Source | Criterion for the confirmatory outcome |
+| --- | --- |
+| `configs/research_v2.json` → `holdout.promotion_rule.criteria` (hash-bound, immutable) | `net_total_return > 0` at 1x costs; `net_total_return > 0` at 2x costs; `closed_trades >= 30`; the evaluated parameters are byte-identical to the frozen v2 candidate manifest entry. Status vocabulary: `CANDIDATE_PENDING_HOLDOUT`, `PROVISIONAL_HISTORICAL_SURVIVAL`, `REJECTED_ON_HOLDOUT`, `INCONCLUSIVE` |
+| `configs/research_v2_confirmatory_protocol.json` → `reporting_and_falsifiers` (hash-bound, immutable) | **pass**: the net result at baseline costs *exceeds the buy-and-hold baseline's* net result; **failure**: it is below it; **inconclusive**: insufficient data in the window, or a zero-trade outcome |
+
+These can disagree, and the disagreement is not cosmetic. A configuration with `net_total_return =
++5%` and 40 trades is `PROVISIONAL_HISTORICAL_SURVIVAL` under the specification and a **failure**
+under the protocol, because the protocol compares against buy-and-hold (which the specification's
+promotion rule never mentions). The specification's status vocabulary also contains `INCONCLUSIVE`
+without defining it, while the protocol defines `INCONCLUSIVE` to include a zero-trade outcome — a
+case the specification's `closed_trades >= 30` criterion would otherwise turn into
+`REJECTED_ON_HOLDOUT`, i.e. a failure claim about a strategy that was never observed to trade. The
+specification's own `reporting_obligation` lists "zero-trade" as a reported outcome *distinct from*
+"failed", which supports the protocol's reading.
+
+**This conflict must be reconciled before the first window candle is read, not after.** A
+single-use window cannot be "re-graded" once the data has been burned: whichever rule is applied
+first is the one that will have been applied to the exposed data, and a rule chosen after seeing
+the window is a research-validity violation of exactly the kind this campaign has been built to
+avoid. The reconciliation is a *versioned amendment*, because both files are immutable and
+hash-bound and neither may be edited.
+
+**6. The specification already fixes the reporting obligation and the counting rule.**
+`configs/research_v2.json` → `holdout.v2_confirmatory_window.access_counting`: *"Every read of a
+candle inside the confirmatory window increments `holdout_exposed_count` in the v2 checkpoint and is
+recorded in the v2 holdout report."* `holdout.v2_holdout_report_required_fields` fixes ten
+mandatory report fields (`universe_version`, `snapshot_id`, `candidate_manifest_path`,
+`candidate_manifest_hash`, `confirmatory_window_start_utc`, `confirmatory_window_end_utc`,
+`candles_evaluated`, `exposure_count`, `per_asset_outcomes`, `comparability_statement`). The
+selection run's checkpoint is `research_state/checkpoint_v2.json`; the confirmatory run needs its
+own, and the path names already used elsewhere in the repository are
+`research_state/checkpoint_v2_confirmatory.json`, `research/shards_v2_confirmatory/`,
+`research/ledger_v2_confirmatory.json`, `research/results_manifest_v2_confirmatory.json` and
+`research/results_v2_confirmatory.jsonl` (named in
+`scripts/verify_research_v2_spec_amendment_1.py:55-59` and
+`tests/test_research_v2_spec_amendment_1.py:63-67`).
+
+**7. The preceding step is complete and frozen.** The v2 selection run is `COMPLETED`
+(`research/ledger_v2.json`, 497,664 execution units = 18 assets × 2,304 configurations × 4
+validation folds × 3 cost scenarios, `holdout_exposed_count = 0`, `v1_artifacts_touched = []`), and
+`research/v2_selected_configurations_manifest.json` (`manifest_hash 7acc7fe0...`) freezes the
+result: **14 selected configurations** (ADA AVAX BNB DOGE ETH HBAR LTC NEAR SOL SUI UNI XLM XRP ZEC)
+and **4 assets without a candidate** (BCH BTC LINK TRX), each `CANDIDATE_PENDING_HOLDOUT`. The
+confirmatory evaluation's scope is therefore already determined; nothing about it needs to be
+decided, only implemented.
+
+### 1. Causal model
+
+- **Observed facts.** The evaluation is preregistered but not executable (evidence 1–2); the
+  execution path exists only as three untested modules (evidence 1); the window cannot exist before
+  2027-01-17 (evidence 3); the engine is frozen (evidence 4); two frozen artifacts disagree on the
+  decision criterion (evidence 5); the reporting obligation and the counting rule are already fixed
+  (evidence 6); the scope is frozen (evidence 7).
+- **Root cause.** The campaign advanced from *preregistration* to *execution* one artifact at a
+  time, and the confirmatory step stopped at the preregistration: the protocol was written (08:00Z)
+  but the executable path was never designed, so a half-built module set was committed by a
+  controller checkpoint without a decision record, and the criterion conflict between the
+  specification and the protocol was never reconciled — both because neither has a consumer yet.
+- **Why it is not a prompt defect.** README Section 2A A/C/D already require reconstructing the
+  state from the artifacts, classifying the blocker and choosing one bounded task. The gap was
+  between two artifacts that both had to be read together (the specification's `holdout` block and
+  the protocol's `reporting_and_falsifiers` block) — a research-design conflict, not a missing
+  instruction.
+
+### 2. Designs compared
+
+| | **A. Implement the path now, from the protocol alone** | **B. Reconcile the criteria first, then implement the path (chosen)** | **C. Defer everything to 2027-01-17** |
+| --- | --- | --- | --- |
+| Rule set used for the outcome | whichever the implementer reads first — the conflict surfaces *after* the window is burned | the specification's preregistered rule is authoritative; the protocol's buy-and-hold comparison is computed and reported alongside it, and every disagreement is reported | the same conflict, discovered in January, with the window already exposed |
+| Exposure risk | the window is single-use; a mis-specified criterion cannot be undone | none: no read happens | none before the window exists |
+| Research validity | violated: the outcome rule is chosen after the data | preserved: the rule is fixed before the read and the disagreement is disclosed | violated in January |
+| Cost | lowest now | one extra versioned amendment artifact now | highest later, under time pressure, with an untested path |
+| Failure mode | an evaluation is run and graded against an ambiguous rule | the amendment is forgotten and the implementation session re-derives the rule | the January session improvises the path, the criterion and the layout at once |
+| Verdict | rejected | **chosen** | rejected |
+
+### 3. The decision (rules only)
+
+**D-1 — Scope.** The evaluation scope is exactly the 14 selected configurations of
+`research/v2_selected_configurations_manifest.json` (`manifest_hash 7acc7fe0...`), bound to the
+selection authorization (`76be0d3b...`), the v2 specification (`49fb0814...`), the v2 data manifest
+(`9f64d8d1...`) and the v2 candidate freeze (`5a56b3d8...`). The scope may not be widened, narrowed
+or re-ranked. The 4 assets without a candidate (BCH BTC LINK TRX) are **reported as "no candidate —
+not evaluated"**, never silently dropped. The frozen parameters of each selected configuration are
+evaluated byte-identically; no re-tuning, no re-ranking and no grid extension on the window.
+
+**D-2 — Window data artifact and its path.** The retrieved window data is recorded in a new
+self-hashed artifact **`research/v2_confirmatory_window_manifest.json`**, which records the window
+bounds, the retrieval timestamp, the per-asset dataset hashes, the closed-candle count per asset,
+the coverage gaps, the exposure events and the readiness record, and which references the v2 data
+manifest by hash. *Correction to the committed skeleton:* `src/v2_confirmatory/scope.py` currently
+looks for `configs/research_v2_confirmatory_window_manifest.json`; the path is corrected to
+`research/…` because **data** artifacts live under `research/` in this repository (next to
+`research/data_manifest_v2.json`), while `configs/` holds preregistered configuration and protocol
+artifacts. The frozen `research/data_manifest_v2.json` is **not** edited; the new manifest extends
+it by reference, exactly as the candidate freeze extends the universe manifest.
+
+**D-3 — Readiness test without a payload read.** Readiness is decided by a **bounded metadata-only
+probe** that fetches **no candle payload**: the provider's server time (`/api/v3/time`) and the spot
+exchange status of the 14 pairs (`/api/v3/exchangeInfo`), on the primary host and, if it fails, the
+documented failover host (`data-api.binance.vision`) under the frozen failover policy
+(`configs/research_v2.json` → `data.failover_policy`: one bounded request to the primary host, the
+failover host is used and **both statuses with timestamps are recorded**). Readiness passes iff the
+observed provider server time is at or after `2027-01-17T22:00:00Z` (i.e. ≥ 2,160 closed hourly
+candles have closed since the window opened) **and** all 14 pairs are `TRADING` on the spot venue.
+The probe is **not** a window read and does **not** increment `holdout_exposed_count`; it is
+recorded in the window manifest with endpoint, observed HTTP status (or transport error), timestamp
+and the exact command. The metadata endpoints used by the probe are recorded by the amendment of
+D-5, because the frozen specification's `data` block names only the klines endpoint.
+*Rejected alternative:* counting the window's closed candles by fetching them — that **is** a candle
+read and would consume the window's single use before the authorized retrieval.
+
+**D-4 — Single-use exposure accounting.** `holdout_exposed_count` lives in the confirmatory
+checkpoint `research_state/checkpoint_v2_confirmatory.json` (as the specification's
+`access_counting` requires) and is mirrored into the window manifest and the report. Rules:
+(a) the counter increments **once per exposure event**, where an exposure event is identified by
+`(run_id, asset, window bounds)`; (b) a **retry** of the same asset under the same run and the same
+bounds is a *continuation* of that event — it does not increment the counter again, and it is
+recorded with its own timestamp and outcome; (c) a retrieval of an asset already exposed under
+**different** bounds, or of an asset outside the frozen scope, is **refused**; (d) the counter never
+decreases — a reset attempt fails closed; (e) once the counter is > 0 the window is spent: the only
+permitted continuation is a **resume of the same authorized run** over the same scope using the
+already-retrieved, hash-verified datasets, never a fresh evaluation with a different rule set.
+
+**D-5 — Criterion precedence and the protocol amendment (the reconciliation of evidence 5).**
+`configs/research_v2_confirmatory_protocol_amendment_1.json` (versioned, self-hashed, immutable)
+records, and does not edit either frozen artifact:
+1. **Precedence.** The frozen specification's `holdout.promotion_rule` is **authoritative** for the
+   confirmatory status, because it is part of the hash-bound preregistration and BRAIN-006 already
+   established that the preregistered rule governs candidate promotion. The protocol's
+   buy-and-hold pass/failure criterion is **also computed and reported**, as a secondary field
+   (`baseline_comparison`), because it costs no additional exposure: both are derived from the same
+   single window evaluation. It never assigns the status.
+2. **Verdicts.** `PROVISIONAL_HISTORICAL_SURVIVAL` iff all four specification criteria hold;
+   `REJECTED_ON_HOLDOUT` iff the evaluation is conclusive and at least one criterion fails;
+   `INCONCLUSIVE` iff the window data is insufficient (coverage gaps that prevent an evaluation) or
+   the configuration produced **zero** closed trades on the window — a never-traded strategy is not
+   reported as a failure, because the data cannot support that claim, and the specification's
+   `reporting_obligation` lists "zero-trade" as an outcome distinct from "failed". A configuration
+   with 1–29 closed trades fails the `closed_trades >= 30` criterion and is
+   `REJECTED_ON_HOLDOUT`.
+3. **Disagreement is disclosed.** Where the specification's verdict and the protocol's
+   buy-and-hold criterion disagree, the report carries both, marks the asset
+   `criteria_agreement = DISAGREE`, and states the disagreement in the summary. The specification's
+   status vocabulary is not extended: `criteria_agreement` is a report **field**, not a status.
+4. **No silent re-grading.** The amendment is committed **before** the first window candle is read.
+   A rule chosen after the window is exposed is forbidden, and the amendment's own commit is
+   recorded in its `durability` block (as the protocol's `durability` block does).
+
+**D-6 — Output layout.** New confirmatory paths only; the v1 paths and the v2 *selection* paths are
+forbidden:
+`research/shards_v2_confirmatory/`, `research/results_manifest_v2_confirmatory.json`,
+`research/results_v2_confirmatory.jsonl`, `research/ledger_v2_confirmatory.json`,
+`research_state/checkpoint_v2_confirmatory.json`, `research/v2_confirmatory_window_manifest.json`,
+`reports/confirmatory_evaluation_v2.json`, `reports/confirmatory_report_v2.md`. The v2 selection
+outputs (`research/shards_v2/`, `research/ledger_v2.json`, `research/results_manifest_v2.json`) are
+never read as tallies and never mixed; the 497,664 selection units are not extended by confirmatory
+results.
+
+**D-7 — Authorization.** A new versioned artifact
+`configs/research_v2_confirmatory_authorization_1.json` (self-hashed, immutable) authorizes **at
+most one logical confirmatory run** and records: the scope (D-1), the window, the data boundary
+(one retrieval, after the readiness test), the output paths (D-6), the code identity (D-9), the
+attempt budget (D-8), the preconditions below, the stopping conditions, the falsifiers and the
+rollback. It references the protocol (`bba95394...`) and the amendment of D-5 by hash.
+**Preconditions — all must hold, or the runner refuses to start:**
+(a) the authorization, the protocol and the amendment are committed (a commit that carries them
+exists); (b) the readiness probe of D-3 has passed and its record is in the window manifest;
+(c) `holdout_exposed_count == 0`, or the run is a resume of the same exposure event (D-4);
+(d) the live code identity equals the recorded identity (D-9);
+(e) the scope equals the frozen selected-configurations manifest (D-1);
+(f) the v1 artifacts and the v2 selection outputs are byte-unchanged.
+
+**D-8 — Attempt budget, resume and rollback.** One logical run; `max_attempts = 1` for the
+evaluation. Technical retries *before* the first payload read are allowed up to
+`max_retries_on_technical_failure = 3`, matching the frozen `data.max_retries`; after the first
+payload read only a **resume** of the same run is permitted (D-4b). An abort before any payload read
+rolls back every artifact the run created and leaves `holdout_exposed_count = 0`. An abort **after**
+a payload read leaves the exposure in place: the run is recorded as `EXPOSED_ABORTED`, the window
+is spent, and the report must state that the window was consumed without a completed evaluation.
+
+**D-9 — Code identity.** The identity of a confirmatory run is the composite canonical digest of the
+hashed set (`src/breakout_research`, canonical digest `3e8e4169...`, unchanged) and the
+confirmatory execution path (`src/v2_confirmatory`) under BRAIN-009's
+`canonical_source_digest_v1`, exactly as `src/v2_campaign/identity.py` and the selection
+authorization's `code_identity` block define it. The checkout-dependent ordered digest
+`compute_code_hash()` is reported as an environment fact and is never used as an identity; the
+authorized value of record `2efd3b18...` and `research_state/campaign_authorization.json` stay
+untouched. The hashed set is **not** edited — the path imports the v1 engine unchanged.
+
+**D-10 — Verification.** A read-only offline verifier `scripts/verify_v2_confirmatory_path.py`
+(exit 0/1, JSON report) checks: the execution path's module set and canonical digest; the scope (14
+in, 4 out) against the frozen manifest hash; the authorization's preconditions and code identity;
+the window manifest's absence (before the window exists) and, when present, its hash binding,
+coverage and exposure count; that `holdout_exposed_count` has never been reset; that no v1 path and
+no v2-selection path was written by the confirmatory path; that `research_state/campaign_authorization.json`
+and the hashed set are untouched; and that the criterion precedence of D-5 is recorded. A
+deterministic offline test module `tests/test_v2_confirmatory_path.py` covers the rules and the
+tamper cases.
+
+**D-11 — Reporting.** The confirmatory report (`reports/confirmatory_evaluation_v2.json` +
+`reports/confirmatory_report_v2.md`) contains the ten fields the specification requires
+(`holdout.v2_holdout_report_required_fields`) and, per in-scope asset: the selected `config_id`,
+the net result on the window at 1x/2x/3x costs, the closed-trade count, the buy-and-hold baseline
+net result, the specification's status, the `baseline_comparison` outcome, `criteria_agreement`, and
+the verdict criteria evaluated one by one. The 4 assets without a candidate are listed as "no
+candidate — not evaluated". If **no** asset survives the confirmatory rule, that outcome is reported
+as such; a null result is never hidden, and no asset is dropped from the report.
+
+### 4. Falsifying evidence (what would overturn this decision)
+
+- If the implementation requires an edit under `src/breakout_research/` — D-9 is wrong and the
+  confirmatory path cannot be built without rotating the hashed set; the design must be redone.
+- If the readiness test provably cannot be performed without fetching a candle payload — D-3 is
+  wrong and the single-use accounting must be redesigned **before** any read.
+- If the frozen specification is found to be superseded by a later preregistration that states the
+  criterion unambiguously — D-5's precedence is wrong and the amendment must record the newer
+  source.
+- If the window manifest cannot be hash-verified against the v2 data-manifest scheme — D-2's data
+  path must be re-preregistered before any read.
+- If the exposure counter cannot be made monotonic across a resume — D-4 is insufficient and the
+  single-use rule cannot be enforced.
+
+### 5. Rollback
+
+The implementation is **additive**: new files under `src/v2_confirmatory/`, `scripts/`, `tests/`,
+`configs/` and `research/`. Deleting them restores the pre-implementation state. No frozen artifact
+is edited, so no hash chain breaks and no re-authorization is needed. The three committed skeleton
+modules are either completed or replaced; whichever happens is recorded in the implementation note
+with the reason, and the skeleton's current bytes remain in git history (`72a7eb4e`) either way.
+
+### 6. Staged acceptance tests (a later implementation session — NOT this one)
+
+1. `src/v2_confirmatory/` is a real package: `PYTHONPATH=src python3 -c "import v2_confirmatory"`
+   succeeds, `__init__.py` exists, and no module runs anything on import.
+2. The canonical digest of the hashed set still equals `3e8e4169...`, and it is **order-independent**
+   (a perturbed enumeration order produces the same digest) — the BRAIN-009 rule is enforced, not
+   assumed.
+3. The scope built from the frozen manifest is exactly 14 in scope and 4 out of scope, bound to
+   `7acc7fe0...`; a widened, narrowed or re-ranked scope raises `ScopeError`.
+4. The readiness function raises `WindowNotReadyError` for a stubbed clock before
+   `2027-01-17T22:00:00Z` and passes at or after it, **with the provider probe injected** — the test
+   performs **no** network call.
+5. The authorization validator refuses to authorize when: the exposure count is ≠ 0, the code
+   identity does not match the live tree, the scope does not match the manifest, the authorization or
+   the amendment is not committed, or the window manifest is absent when the run is requested.
+6. The exposure counter increments exactly once per exposure event, does not increment on a
+   continuation of the same event, and never decreases — each branch is exercised.
+7. The criterion reconciliation is implemented: the specification's status is assigned, the
+   buy-and-hold comparison is reported alongside, a disagreement is marked `DISAGREE`, and the
+   zero-trade case is `INCONCLUSIVE` rather than `REJECTED_ON_HOLDOUT`.
+8. The test suite creates **no** confirmatory artifact: no shard, ledger, results manifest, result
+   row, window manifest or checkpoint is produced by any test, and the confirmatory window remains
+   `NOT_STARTED` with `holdout_exposed_count = 0`.
+9. `scripts/verify_v2_confirmatory_path.py` exits 0 on the delivered tree, and its tamper tests
+   detect: a widened scope, an edited authorization, a mismatched code identity, a reset exposure
+   counter, a forbidden v1 path in the output layout, and a flipped criterion precedence.
+10. The full suite stays green, the v1 artifact sha256 anchors are unchanged
+    (`configs/research_v1.json 558d6099...`, `research/universe_manifest.json c8f367d2...`,
+    `research/data_manifest.json cf39de42...`, `research/candidate_manifest.json 87589f83...`,
+    `research/candidate_manifest_v2.json a68b061a...`), the v2 artifact hashes are unchanged
+    (`4e927e52...`, `9f64d8d1...`, `49fb0814...`, `5a56b3d8...`, `aa902aa9...`, `bba95394...`), and
+    the hashed set's canonical digest is unchanged.
+
+### 7. Prerequisites for the implementation session
+
+- `research/v2_selected_configurations_manifest.json` (`7acc7fe0...`),
+  `configs/research_v2_confirmatory_protocol.json` (`bba95394...`), `configs/research_v2.json`
+  (`49fb0814...`), `research/data_manifest_v2.json` (`9f64d8d1...`) — all present and verified.
+- The v1 engine `src/breakout_research` — read-only for this work; the path imports it.
+- The committed skeleton `src/v2_confirmatory/{errors,identity,scope}.py` — to be validated against
+  the manifest and either completed or replaced, with the choice recorded.
+- `pytest` and `numpy` installed in the environment (they are absent from a fresh container —
+  install them before claiming a test result).
+- The producer/verifier/test pattern of `configs/research_v2.json` →
+  `scripts/verify_research_v2_spec.py` → `tests/test_research_v2_spec.py`.
+
+### 8. Planned rule → code → test map (for the implementation session)
+
+| Rule | Planned implementation | Planned test |
+| --- | --- | --- |
+| the path is a package that runs nothing on import | `src/v2_confirmatory/__init__.py` | import + no-side-effect test |
+| the run identity is the portable composite digest | `src/v2_confirmatory/identity.py` (committed) | order-independence + equality with `3e8e4169...` |
+| the scope is the frozen 14/4 set | `src/v2_confirmatory/scope.py` (committed) | scope equality + tamper (widened scope) |
+| the window data is recorded in a new hash-bound manifest | `src/v2_confirmatory/data.py` + `research/v2_confirmatory_window_manifest.json` | schema + hash-binding test |
+| readiness without a payload read | `src/v2_confirmatory/window.py` | stubbed-clock test, no network |
+| single-use exposure accounting | `src/v2_confirmatory/exposure.py` | increment / continuation / monotonicity tests |
+| the specification's criterion governs, the protocol's is reported | `src/v2_confirmatory/report.py` | verdict, `DISAGREE` and zero-trade tests |
+| the run is bounded and authorized | `src/v2_confirmatory/runner.py` + `configs/research_v2_confirmatory_authorization_1.json` | precondition-refusal tests |
+| the output layout touches no v1 and no v2-selection path | `src/v2_confirmatory/scope.py` | forbidden-path tests |
+| the criterion conflict is reconciled by a versioned amendment | `configs/research_v2_confirmatory_protocol_amendment_1.json` | amendment self-hash + precedence test |
+| the whole path is independently verified | `scripts/verify_v2_confirmatory_path.py` | verifier tamper tests |
+
+### 9. Do NOT (this session and the implementation session)
+
+- **This session:** do not implement the path, do not write the package's missing modules, do not
+  write the authorization or the amendment, do not probe the provider, do not read a candle inside
+  the confirmatory window, do not run any evaluation.
+- **The implementation session:** do not edit anything under `src/breakout_research/` (the hashed
+  set); do not edit any frozen artifact (`configs/research_v1.json`, `configs/research_v2.json`,
+  `configs/research_v2_execution.json`, `configs/research_v2_execution_amendment_1.json`,
+  `configs/research_v2_candidate_freeze.json`, `configs/research_v2_confirmatory_protocol.json`,
+  `research/universe_manifest.json`, `research/data_manifest.json`,
+  `research/candidate_manifest.json`, `research/candidate_manifest_v2.json`,
+  `research/universe_manifest_v2.json`, `research/data_manifest_v2.json`,
+  `research/v2_selected_configurations_manifest.json`, `research/ledger_v2.json`,
+  `research/results_manifest_v2.json`); do not read a candle inside the confirmatory window; do not
+  contact the provider; do not run the evaluation; do not write any v1 or v2-selection path; do not
+  re-run a producer script that would rewrite an existing artifact without `--force` and a recorded
+  reason; do not re-retrieve the market-cap snapshot.
+
+### 10. Implementation note
+
+To be written by the implementation session: what it implemented, the files it added or changed, the
+verified commands and exit statuses, the rule → code → test map with the columns of section 8
+filled in, the choice made about the committed skeleton, and any deviation from this record with
+its reason.
