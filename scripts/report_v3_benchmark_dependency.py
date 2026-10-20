@@ -401,6 +401,16 @@ def build_report(repo_root: Path) -> Dict[str, Any]:
 
     if state["index_aligned_benchmark_available"]:
         status = "BENCHMARK_DATASET_AVAILABLE"
+        if state["v3_selection_authorization_present"]:
+            authorization_note = (
+                "No v3 run has been performed; the versioned v3 selection authorization "
+                "exists and permits exactly one bounded selection run over the frozen "
+                "candidate set."
+            )
+        else:
+            authorization_note = (
+                "No v3 run has been performed and no v3 selection authorization exists."
+            )
         summary = (
             "The v3 universe declares {symbol} as the benchmark constituent and a "
             "hash-verified, index-aligned dataset for it is published by a versioned "
@@ -409,12 +419,13 @@ def build_report(repo_root: Path) -> Dict[str, Any]:
             "the BTC series, and the v3 execution path slices the asset series and the "
             "benchmark series to the same fold window, so the frozen engine's index "
             "pairing is the UTC-candle-close alignment the frozen methodology requires. "
-            "No v3 run has been performed and no v3 selection authorization exists."
+            "{authorization_note}"
         ).format(
             symbol=state["benchmark_symbol"],
             share=(grid["btc_filter_share"] or 0.0),
             count=grid["btc_filter_configurations"],
             total=grid["total_configurations"],
+            authorization_note=authorization_note,
         )
     elif state["v3_selection_authorization_present"]:
         status = "BLOCKED_MISSING_BENCHMARK_DATASET_AUTHORIZATION_EXISTS"

@@ -64,7 +64,8 @@ V3_EXECUTION_PATHS = (
     "research/v3_selected_configurations_manifest.json",
 )
 
-#: the v3 selection authorization, which does not exist yet
+#: the v3 selection authorization: a separate, versioned artifact. It does
+#: not exist while no v3 run is authorized.
 V3_AUTHORIZATION_RELATIVE = "configs/research_v3_selection_authorization_1.json"
 
 
@@ -292,6 +293,77 @@ def raw_response_record(repo_root: Path) -> Dict[str, Any]:
     }
 
 
+def selection_authorization_failures(repo_root: Path) -> List[str]:
+    """The failures of the v3 selection authorization, when it exists.
+
+    The cascade authorizes nothing by itself: the selection authorization is a
+    separate, versioned artifact. The rule that replaced the former "no v3
+    selection authorization exists" check is **state-adaptive** and is never
+    weaker than the state it replaces:
+
+    * while the authorization does not exist, no v3 run is authorized and there
+      is nothing to check -- the cascade is then the last word;
+    * once it exists, it must be the hash-bound artifact that permits exactly
+      one bounded selection run over the frozen candidate set, with the
+      published benchmark dataset, the effective data-manifest identity and the
+      deviation disclosure bound into it. A broken authorization is a failure
+      of the cascade, because then the cascade would not be the last word but
+      a contradiction.
+    """
+    root = Path(repo_root)
+    path = root / V3_AUTHORIZATION_RELATIVE
+    if not path.exists():
+        return []
+
+    failures: List[str] = []
+    document = read_json(path)
+    excluded = tuple((document.get("hashing") or {}).get("manifest_hash_excluded_keys") or ())
+    if not excluded:
+        failures.append("the v3 selection authorization does not declare its excluded keys")
+    elif compute_manifest_hash(document, excluded) != document.get("manifest_hash"):
+        failures.append("the v3 selection authorization does not recompute its manifest hash")
+
+    run = document.get("authorized_run") or {}
+    if run.get("authorized") is not True:
+        failures.append("the v3 selection authorization does not authorize a run")
+    if run.get("max_runs") != 1:
+        failures.append("the v3 selection authorization does not bound the run to one attempt")
+
+    freeze_amendment_2 = read_json(root / FREEZE_AMENDMENT_2_RELATIVE)
+    frozen_pairs = list(
+        (freeze_amendment_2.get("frozen_candidate_set") or {}).get("binance_pairs") or []
+    )
+    recorded_pairs = list((run.get("scope") or {}).get("binance_pairs") or [])
+    if recorded_pairs != frozen_pairs:
+        failures.append("the v3 selection authorization does not name the frozen candidate set")
+
+    data_amendment = read_json(root / DATA_AMENDMENT_1_RELATIVE)
+    entry = (data_amendment.get("benchmark_asset") or {}).get("entry") or {}
+    benchmark = run.get("benchmark") or {}
+    if benchmark.get("content_hash") != entry.get("content_hash"):
+        failures.append(
+            "the v3 selection authorization does not bind the published benchmark dataset"
+        )
+    if benchmark.get("btc_configurations_dropped") is not False:
+        failures.append(
+            "the v3 selection authorization does not forbid dropping the BTC configurations"
+        )
+    effective = (data_amendment.get("effective_data_manifest") or {}).get(
+        "effective_data_manifest_hash"
+    )
+    recorded_effective = (run.get("effective_data_manifest") or {}).get(
+        "effective_data_manifest_hash"
+    )
+    if recorded_effective != effective:
+        failures.append(
+            "the v3 selection authorization does not bind the effective data-manifest identity"
+        )
+    disclosure = run.get("deviation_disclosure") or {}
+    if not disclosure.get("evidence_path") or not disclosure.get("records_with_btc_filter"):
+        failures.append("the v3 selection authorization does not bind the deviation disclosure")
+    return failures
+
+
 __all__ = [
     "BENCHMARK_SYMBOL",
     "DATA_AMENDMENT_1_RELATIVE",
@@ -319,6 +391,7 @@ __all__ = [
     "effective_data_manifest",
     "effective_data_manifest_hash",
     "read_json",
+    "selection_authorization_failures",
     "sha256_bytes",
     "sha256_file",
     "v1_anchor_digests",

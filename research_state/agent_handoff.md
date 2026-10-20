@@ -4753,3 +4753,353 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
 `git status --short`; `git diff --stat` (confirm only new v3 files and `research_state/` — no
 `src/breakout_research/`, no `src/v2_campaign/`, no frozen artifact).
+
+## Session activity — 2026-10-20T16:30:00Z (this session)
+
+**Task (from the durable handoff at 16:02:00Z):** "build the **v3 selection authorization 1**
+(`configs/research_v3_selection_authorization_1.json`) — the versioned, hash-bound artifact that
+authorizes exactly one bounded v3 selection grid run over the frozen candidate set, with the
+benchmark rule and the deviation disclosure bound into it." Four bounded items: (1) a deterministic
+producer that recomputes every fact it records and refuses to overwrite an existing artifact
+without `--force`; (2) the artifact; (3) a read-only offline verifier; (4) deterministic tests.
+The acceptance criteria added that the full suite and **every existing verifier** must still exit
+0, and that no v3 execution artifact may exist.
+
+**Outcome: items 1–4 are delivered and verified. No v3 grid, backtest, campaign or selection was
+run**, no v3 execution artifact exists, no confirmatory-window candle was read, no provider was
+contacted and no frozen artifact was edited.
+
+### 1. The artifact
+
+`configs/research_v3_selection_authorization_1.json`, manifest hash
+`fd91cc4dc907780fc66ffd9c020e53f3c224a5ae8bb688e30cd7bfec04762dcd` (file sha256
+`bc4e6ed5c3239d7a6baf0c6cf1c99a294e456c098a18572de27710201d24956a`) — the versioned, hash-bound
+artifact that authorizes **exactly one** bounded v3 selection grid run over the frozen candidate
+set `["SHIBUSDT","QNTUSDT","AAVEUSDT","WLDUSDT","PEPEUSDT","ICPUSDT"]`, run id
+`v3-selection-20261020`, campaign `v3-campaign`, phase `selection_grid`.
+
+Every fact it records is **recomputed from the repository**, never copied out of the artifact it
+describes:
+
+| field | recomputed from | value |
+| --- | --- | --- |
+| `authorized_run.scope.binance_pairs` | the freeze chain (freeze → freeze amendment 1 → freeze amendment 2) and the v3 universe manifest | the 6 frozen pairs, in the frozen order |
+| `authorized_run.bounds` | the frozen candidate count × the inherited grid | `max_assets` 6, `max_configs_per_asset` 2,304, `max_total_config_units` 13,824, `planned_execution_units` 165,888 (× 4 validation folds × 3 cost scenarios), `attempts` 1, `max_retries_on_technical_failure` 3 |
+| `authorized_run.data_boundary.candles_before_utc` | the confirmatory-window start of the freeze (cross-checked against freeze amendment 2 and the execution protocol's cutoff) | `2026-10-20T13:00:00Z` |
+| `authorized_run.selection_rule.selection_block_sha256` | the unchanged v1 `selection` block | sha256 of the canonical block, `max_candidates_per_asset` 1 |
+| `authorized_run.code_identity` | the source tree, under the canonical digest rule of BRAIN-009 | hashed set `3e8e4169…`, v3 path `29cd064e…`, composite `adbb9b76…`, authorized value of record `2efd3b18…` |
+| `authorized_run.benchmark` | the effective data manifest and the dataset file | `research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv`, content hash `50d357b0…` **recomputed from the file**, the alignment rule, the methodology rule, the fail-closed list, `btc_configurations_dropped: false` |
+| `authorized_run.effective_data_manifest` | the base manifest plus the published benchmark entry | `88e90960…` |
+| `authorized_run.deviation_disclosure` | `research/v3_evidence/v1_v2_btc_alignment_deviation.json` | 124,416 of 497,664 v2 records, all four validation folds |
+
+The artifact also states what it does **not** authorize: no confirmatory evaluation, no candle
+fetch, no source-tree change, no edit of a frozen artifact, no second v3 selection run
+(`not_authorized.*` all `false`).
+
+### 2. The producer, the verifier and the tests
+
+- `scripts/build_v3_selection_authorization_1.py` — a deterministic producer. It resolves the scope
+  through the **execution path's own** resolvers (`v3_campaign.scope.frozen_scope`,
+  `v3_campaign.scope.selection_rule`, `v3_campaign.identity.code_identity_document`,
+  `v3_campaign.data.resolve_effective_data_manifest`, `v3_campaign.runner.DEFAULT_PATHS`), so the
+  artifact cannot disagree with the path that will consume it; it recomputes the benchmark content
+  hash from the dataset file; and it refuses to overwrite an existing artifact without `--force`.
+- `scripts/verify_v3_selection_authorization_1.py` — a read-only, offline verifier with thirteen
+  checks (self-hash, scope, bounds, data boundary, the unchanged v1 rule, the code identity, the
+  output paths, the execution path, the one-run rule, the benchmark rule and the effective
+  identity, the deviation disclosure, the path's acceptance of the authorization, and the executed
+  state). It resolves a run plan through `build_plan` — which validates and describes, but does not
+  execute — and never reads a candle.
+- `tests/test_v3_selection_authorization_1.py` — 37 deterministic tests, including 16 mirror/tamper
+  controls that prove the verifier is not vacuous.
+
+### 3. The state-dependent rules this session replaced (not deleted) — the important part
+
+The three cascade verifiers carried the rule **"a v3 selection authorization exists"**. That rule
+was true while no authorization existed and is false by design once one does, so keeping it would
+have forbidden the deliverable. Following the v2 precedent (the v2 selection authorization's
+"rule 12 replaced, not deleted"), the rule was **replaced** by a stronger, state-adaptive one in
+`scripts/v3_benchmark_amendment_common.py` → `selection_authorization_failures`:
+
+* while the authorization does not exist, no v3 run is authorized and there is nothing to check —
+  the cascade is then the last word;
+* once it exists, it must be the hash-bound artifact that permits exactly one bounded selection
+  run over the frozen candidate set, with the published benchmark dataset, the effective
+  data-manifest identity and the deviation disclosure bound into it. A broken authorization is a
+  failure of the cascade, because then the cascade would not be the last word but a contradiction.
+
+The same replacement was applied in `scripts/verify_v3_{data_manifest_amendment_1,
+candidate_freeze_amendment_2,execution_amendment_1}.py`, in the three corresponding test
+assertions and in `scripts/report_v3_benchmark_dependency.py` (the summary is now state-aware and
+no longer claims that "no v3 selection authorization exists").
+
+**Two further state-dependent assertions had to be replaced:**
+
+- `tests/test_v3_benchmark_amendments.py::test_cascade_authorizes_nothing` asserted that the
+  authorization file does not exist. It now asserts that the cascade's own
+  `execution_authorization` fields authorize nothing and that the state-adaptive rule holds.
+- `tests/test_v3_campaign_benchmark_rule.py::test_run_is_refused_without_the_authorization`
+  asserted the same absence **and then called `run_selection(workspace)`** — with the
+  authorization present, that call would have started the real grid. The test now exercises the
+  refusal against a workspace whose authorization file is absent
+  (`dataclasses.replace(default_workspace(REPO_ROOT), authorization=…absent.json)`), so the
+  refusal is still a test and **the suite never starts a run**.
+
+### 4. State verified (2026-10-20T16:30:00Z)
+
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **741 passed**, exit 0 (698 pre-existing + 43 new:
+  37 in the new module + 6 parametrized cascade tests)
+- every `scripts/verify_*.py` exits 0 (`scripts/verify_cycle_results.py` requires a `cycle_dir`
+  argument and is not a repository-wide gate); `scripts/verify_v3_selection_authorization_1.py` →
+  `{"ok": true, "failures": []}`
+- `scripts/report_v3_benchmark_dependency.py` → `status: BENCHMARK_DATASET_AVAILABLE`,
+  `blocking: false`
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` ==
+  the authorized value of record; the canonical digests are unchanged: hashed set `3e8e4169…`,
+  v2 selection path `c69cc021…`, v2 confirmatory path `277a4bbe…`, v3 path `29cd064e…`
+  (`src/v3_campaign/` was **not** touched by this session)
+- no v3 execution artifact exists: `research/shards_v3/`, `research/ledger_v3.json`,
+  `research/results_manifest_v3.json`, `research/results_v3.jsonl`,
+  `research_state/checkpoint_v3.json` are all absent; the v2 and the v3 confirmatory windows stay
+  `NOT_STARTED` with `holdout_exposed_count = 0`
+
+**Rule → code → test map**
+
+| Rule | Implementation | Test |
+| --- | --- | --- |
+| one bounded selection run over the frozen candidate set | `scripts/build_v3_selection_authorization_1.py` → `build` | `tests/test_v3_selection_authorization_1.py::test_the_authorized_scope_is_the_frozen_candidate_set`, `::test_the_frozen_candidate_set_is_the_validated_v3_universe` |
+| the builder recomputes every fact and refuses to overwrite | `scripts/build_v3_selection_authorization_1.py` → `build`, `main` | `::test_the_authorization_is_reproduced_byte_for_byte_by_its_producer`, `::test_the_producer_refuses_to_overwrite_the_artifact` |
+| the artifact is self-hashing | `scripts/verify_v3_selection_authorization_1.py` → check 1 | `::test_the_authorization_is_self_hashing` |
+| the bounds are the frozen scope's and the inherited grid's | `scripts/build_v3_selection_authorization_1.py` → `build` (bounds) | `::test_the_bounds_are_the_bounds_of_the_frozen_scope_and_the_grid` |
+| the data boundary is the confirmatory-window start | `scripts/build_v3_selection_authorization_1.py` → `build` (boundary) | `::test_the_data_boundary_is_the_confirmatory_window_start` |
+| the selection rule is the unchanged v1 rule | `v3_campaign.scope.selection_rule` | `::test_the_selection_rule_is_the_unchanged_v1_rule` |
+| the code identity is the portable canonical digest | `v3_campaign.identity.code_identity_document` | `::test_the_code_identity_recomputes_from_the_source_tree`, `::test_the_hashed_source_set_is_byte_unchanged` |
+| the benchmark rule is bound and no configuration is dropped | `scripts/build_v3_selection_authorization_1.py` → `build` (benchmark) | `::test_the_benchmark_rule_is_bound`, `::test_verifier_detects_dropped_btc_configurations`, `::test_verifier_detects_a_dropped_alignment_rule` |
+| the effective data-manifest identity is bound | `v3_campaign.data.resolve_effective_data_manifest` | `::test_the_effective_data_manifest_identity_recomputes_and_is_bound` |
+| the deviation disclosure names the evidence and its counts | `scripts/build_v3_selection_authorization_1.py` → `build` (disclosure) | `::test_the_deviation_disclosure_names_the_evidence_and_its_counts` |
+| the artifact authorizes one run and nothing else | `not_authorized` block | `::test_the_authorization_authorizes_one_run_and_nothing_else` |
+| the output paths are the v3 paths | `v3_campaign.runner.DEFAULT_PATHS` | `::test_the_output_paths_are_the_v3_paths_and_not_v1_or_v2_paths` |
+| the execution path accepts the authorization and executes nothing | `v3_campaign.runner.build_plan` | `::test_the_execution_path_accepts_the_authorization_without_executing_it` |
+| the cascade's rule on the selection authorization is state-adaptive and stronger | `scripts/v3_benchmark_amendment_common.py` → `selection_authorization_failures` | `tests/test_v3_benchmark_amendments.py::test_cascade_authorizes_nothing`, `tests/test_v3_selection_authorization_1.py::test_the_cascade_verifiers_detect_a_broken_selection_authorization`, `::test_the_cascade_verifiers_accept_the_repository` |
+| a run without the authorization is refused and creates nothing | `v3_campaign.runner.build_plan` | `tests/test_v3_campaign_benchmark_rule.py::test_run_is_refused_without_the_authorization` |
+| the verifier is not vacuous | `scripts/verify_v3_selection_authorization_1.py` | the 16 tamper controls of `tests/test_v3_selection_authorization_1.py` |
+
+**Findings, classified**
+- `CONFIRMED` — the v3 selection authorization exists, is hash-bound, is self-verifying and binds
+  the frozen candidate set, the unchanged v1 selection rule, the benchmark rule, the effective
+  data-manifest identity and the deviation disclosure; the v3 execution path accepts it and
+  resolves a plan from it.
+- `CONFIRMED` — the v3 line is unblocked up to the run itself. The benchmark dataset, the
+  amendment cascade, the execution path and the authorization are delivered and verified.
+- `DISPROVEN` — the 16:02:00Z entry's blocker 1 ("the v3 selection authorization does not exist")
+  is closed by this session.
+- `STALE` — the cascade's "a v3 selection authorization exists" rules were true only while no
+  authorization existed; they were replaced by a stronger state-adaptive rule (see section 3). The
+  frozen amendment artifacts were **not** edited: they still record
+  `selection_authorization_present: false`, which is the statement "this amendment is not itself
+  a selection authorization" — the form `src/v3_campaign/scope.py:verify_execution_amendment`
+  requires.
+- `STALE` — `configs/research_v2.json` (P2/P3) and `configs/research_v2_candidate_freeze.json`
+  (`selection_remainder`) still say `OUTSTANDING`; they are frozen and are reconciled by versioned
+  amendments, not by edits. The v2-specification amendment remains queued and is cosmetic.
+- `UNVERIFIED_CLAIM` — the v3 selection run itself has not been performed and its outcome is
+  unknown; the run is now authorized but not executed.
+
+**Unsuccessful attempts and their retry conditions**
+- The first builder run aborted with "the v3 execution amendment records no benchmark alignment
+  rule": the amendment's field is `benchmark_rule.alignment`, not `benchmark_rule.alignment_rule`.
+  The check was corrected to require that the amendment's rule *starts with* the exact string the
+  execution path requires of the authorization.
+- The first build of the artifact (manifest hash `3f852131…`) was written **before** the
+  methodology fields were added; the artifact was rebuilt with `--force` (a recorded reason: the
+  artifact had not been committed and existed only from this session) and now carries manifest
+  hash `fd91cc4d…`. The committed artifact is the latter; the earlier bytes exist only in this
+  session's history.
+- The first run of the new test module failed one test: the paths block also holds the boolean
+  flags `never_use_v1_paths` / `never_use_v2_paths`, and the test iterated over every value as if
+  it were a path. The test was fixed; no artifact changed.
+- The first full-suite run failed two tests for the same reason (the artifact on disk predated the
+  methodology fields). The artifact was rebuilt and the suite is green.
+- No unchanged action was retried after a deterministic failure.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The task message was complete and unambiguous
+about the artifact's shape, its bindings and its acceptance criteria. The two things it did not
+enumerate — the cascade verifiers' "a v3 selection authorization exists" rules and the
+`run_selection` call inside `tests/test_v3_campaign_benchmark_rule.py` — are consequences of the
+deliverable itself, not ambiguities in the prompt; they were resolved the way the v2 precedent
+resolved the same situation (state-adaptive rule, replaced not deleted; the refusal re-exercised
+against an absent authorization). `research_state/prompt_evolution.md` is untouched.
+
+**Commit / persistence:** branch `main`; HEAD `e1c227b0` (`chore(kilo): checkpoint agent session`).
+**The agent did not create a commit** (no explicit user request to commit); the working tree
+carries the authorization artifact, the builder, the verifier, the new test module, the
+state-adaptive replacement in the three cascade verifiers and in the shared common module, the
+state-aware benchmark-dependency report, the three updated test modules and this handoff section.
+The harness checkpoint is responsible for the commit. The only unrelated working-tree change is
+the controller-driven `authorized_at_utc` refresh in `research_state/campaign_authorization.json`
+(restored with `git checkout --` after the test run).
+
+**Artifact / recovery:** every artifact of this session is reconstructible from the repository;
+the builder rebuilds the authorization byte for byte (`--force` required) and the verifier
+recomputes every fact it asserts.
+
+**Checkpoint reconciliation:** not applicable — no run, no shard, no result row and no ledger were
+produced by this session.
+
+**Unresolved blockers (ranked)**
+1. **The v3 selection run has not been performed.** `configs/research_v3_selection_authorization_1.json`
+   authorizes exactly one bounded run (165,888 execution units, 6 assets × 2,304 configurations ×
+   4 validation folds × 3 cost scenarios) and `src/v3_campaign/runner.py:run_selection` will now
+   start, because the authorization exists. **This is the next bounded task.**
+2. **No record-level verifier for the v3 run** — the v3 counterpart of
+   `scripts/verify_v2_selection_run.py` does not exist; it must be written against the produced
+   shards, not against a copy of them.
+3. **The v3 selected-configurations manifest and the v3 confirmatory path do not exist.** The v2
+   line has `research/v2_selected_configurations_manifest.json`,
+   `configs/research_v2_confirmatory_authorization_1.json`,
+   `configs/research_v2_confirmatory_protocol.json` and `src/v2_confirmatory/`; the v3 line has
+   none of them. They are only meaningful after the v3 selection run.
+4. **The v2 confirmatory evaluation is time-blocked** until `2027-01-17T22:00:00Z` — a time
+   constraint, not a defect. Its path, protocol, amendments and authorization are delivered and
+   verified.
+5. **The stale `OUTSTANDING` wording** in `configs/research_v2.json` (P2/P3) and in
+   `configs/research_v2_candidate_freeze.json` (`selection_remainder`) is reconciled by a versioned
+   amendment for the v2 specification, which is queued behind (1) and is cosmetic.
+6. **The v1/v2 BTC-alignment deviation is a disclosure obligation** for the final report — now
+   quantified exactly (124,416 of 497,664 records, all four validation folds) and carried by
+   `configs/research_v3_execution_amendment_1.json` → `deviation_disclosure` and by the
+   authorization's `deviation_disclosure`; it is not repairable without invalidating the v1
+   authorization.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** **perform the bounded v3 selection grid run** that
+`configs/research_v3_selection_authorization_1.json` authorizes — the single authorized attempt —
+and deliver its record-level verification. **The run is the deliverable of this session**; it is
+the only step that is now authorized and outstanding.
+
+**Subject:** the v3 benchmark dataset, the amendment cascade, the v3 execution path and the v3
+selection authorization 1 are delivered and verified; the authorized selection grid run has not
+been performed.
+
+**Status (verified 2026-10-20T16:30:00Z):**
+- Full suite **741/741 green** (698 pre-existing + 43 added by this session); every
+  `scripts/verify_*.py` exits 0 (`scripts/verify_cycle_results.py` requires a `cycle_dir` argument
+  and is not a repository-wide gate); `scripts/report_v3_benchmark_dependency.py` →
+  `status: BENCHMARK_DATASET_AVAILABLE`, `blocking: false`.
+- The authorization exists and is hash-bound: manifest hash
+  `fd91cc4dc907780fc66ffd9c020e53f3c224a5ae8bb688e30cd7bfec04762dcd`, run id
+  `v3-selection-20261020`, campaign `v3-campaign`, phase `selection_grid`, `max_runs: 1`,
+  `attempts: 1`, scope `["SHIBUSDT","QNTUSDT","AAVEUSDT","WLDUSDT","PEPEUSDT","ICPUSDT"]`,
+  `max_assets` 6, `max_configs_per_asset` 2,304, `max_total_config_units` 13,824,
+  `planned_execution_units` 165,888, `max_retries_on_technical_failure` 3.
+- The execution path accepts it: `v3_campaign.runner.build_plan` resolves a plan with
+  `config_units = 13,824`, the data boundary `2026-10-20T13:00:00Z` and the authorization's
+  manifest hash — **without executing anything**. `src/v3_campaign/` was not touched, so the
+  identities are unchanged: `compute_code_hash()` `2efd3b18…`, hashed set `3e8e4169…`, v3 path
+  `29cd064e…`, composite `adbb9b76…`.
+- The benchmark rule is built in and bound: the dataset
+  `research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv` (content hash `50d357b0…`,
+  26,280 candles, `2023-10-21T11:00:00Z` … `2026-10-20T10:00:00Z`) is index-aligned with the six
+  validated v3 assets, the asset series and the benchmark series are sliced to the same fold
+  window before the frozen engine is called, the run fails closed on a missing, short or misaligned
+  benchmark, and the 576 `btc_ema_168` configurations per asset are never dropped.
+- **The v2 line is closed up to its time block** (delivered, frozen, independently re-derived on
+  2026-10-20T15:45Z — do not redo it); its remaining step is the time-blocked confirmatory
+  evaluation, earliest end `2027-01-17T22:00:00Z`.
+- **Corrected fact to carry forward:** the completed v1/v2 runs evaluated the BTC trend filter
+  against a BTC EMA from a different period on **124,416 of 497,664** v2 records — **every**
+  validation fold (the first fold already starts at 40% of the span), not 93,312 records on folds
+  1–3. Evidence `research/v3_evidence/v1_v2_btc_alignment_deviation.json`; disclosure:
+  `configs/research_v3_execution_amendment_1.json` → `deviation_disclosure` and the
+  authorization's `deviation_disclosure`.
+
+**The run's own contract — the path already implements it**
+(`src/v3_campaign/runner.py`: `build_plan`, `claim_attempt`, `run_selection`; `src/v3_campaign/scope.py`:
+`validate_authorization`):
+
+- The run writes **only** `research/shards_v3/`, `research/ledger_v3.json`,
+  `research/results_manifest_v3.json`, `research/results_v3.jsonl` and
+  `research_state/checkpoint_v3.json`. Any v1 or v2 path is refused by
+  `assert_no_forbidden_output`.
+- The run reads **development data only**: candles that close at or before
+  `2026-10-20T13:00:00Z`. A dataset that reaches into the confirmatory window is refused before it
+  is read, and `holdout_exposed_count` stays 0. The holdout-position fold is never evaluated.
+- The run makes **no provider request**: it reads the immutable local datasets that the effective
+  data manifest binds.
+- The single attempt is claimed in the ledger before the first result is written
+  (`claim_attempt`); an interrupted run is **resumed** from the verified shards, a completed run is
+  never re-run, and a boundary abort rolls back every artifact the run created.
+- The v2 run of 497,664 execution units took **4 h 24 min** (2026-10-20T02:02Z → 06:26Z), so the
+  v3 run of 165,888 units is budgeted at **≈ 1.5 h** against the protocol's `max_wall_time_hours:
+  6`.
+
+**One bounded task (in this order):**
+1. **Rehearse first, and rehearse cheaply.** Reproduce the v2 rehearsal pattern
+   (`scripts/v2_selection_rehearsal.py`): exercise the v3 path on a scratch workspace (never on
+   the repository's own output paths) to prove that the run starts, that the benchmark is applied
+   and index-aligned, that the shards and the checkpoint are written, that the ledger records the
+   attempt, and that an abort rolls back. The rehearsal must consume nothing: no v3 output path
+   may exist afterwards.
+2. **Perform the run** through `src/v3_campaign/runner.py:run_selection` with the default
+   workspace (`v3_campaign.runner.default_workspace(REPO_ROOT)`), in the background with a
+   progress log, and let it resume if it is interrupted. The run is authorized exactly once; do
+   not start a second run, and do not edit the authorization to allow one.
+3. **Verify the produced record set** with a new read-only offline verifier
+   `scripts/verify_v3_selection_run.py` — the v3 counterpart of
+   `scripts/verify_v2_selection_run.py`: it re-derives the expected experiment ids and fold
+   windows from the frozen rule, checks the shards against the results manifest and the ledger,
+   checks that the counts add up and stay inside the authorized bounds, checks that no
+   confirmatory exposure is recorded, that the BTC-filter units bind the benchmark content hash,
+   and that the selection outcome covers the six assets and reports the assets without a
+   candidate. It must be read-only and must not re-run anything.
+4. **Write deterministic tests** (`tests/test_v3_selection_run.py`) for the verifier, including
+   tamper controls against the produced shards/ledger, and add them to the suite.
+
+**Do NOT:** run anything before the rehearsal; create or read any confirmatory-window candle (the
+v3 window opens `2026-10-20T13:00:00Z` and is single-use, minimum 2,160 h, earliest end
+`2027-01-18T13:00:00Z`; the v2 confirmatory window is time-blocked until `2027-01-17T22:00:00Z`);
+write any file under `src/breakout_research/` or `src/v2_campaign/`; edit
+`src/v3_campaign/` (its canonical digest `29cd064e…` is bound by the authorization — touching it
+invalidates the authorization and would require a new versioned artifact); edit
+`configs/research_v3_selection_authorization_1.json` in place (amend it instead, with a new
+version, if the run must be re-authorized); edit `research/data_manifest_v3.json`,
+`research/universe_manifest_v3.json`, `configs/research_v3_candidate_freeze.json`,
+`configs/research_v3_candidate_freeze_amendment_1.json`,
+`configs/research_v3_candidate_freeze_amendment_2.json`,
+`configs/research_v3_data_manifest_amendment_1.json`, `configs/research_v3_execution.json`,
+`configs/research_v3_execution_amendment_1.json` or `configs/research_v3.json` in place; contact
+any provider (the run makes no provider request); re-retrieve or re-time the market-cap snapshot
+or the benchmark dataset; reuse the v1 holdout or the v2 confirmatory window; write into any v1
+or v2 output path; start a second v3 selection run; reproduce or "re-verify" the v2
+selected-configurations manifest.
+
+**Acceptance criteria:** the authorized v3 selection run is performed exactly once and is
+resumable; the five v3 output paths exist and only those; `research/ledger_v3.json` records the
+authorized run, is bound to the authorization's manifest hash and reports the selection outcome
+for all six assets, including the assets without a candidate; the counts add up and stay inside
+the authorized bounds (13,824 config units, 165,888 execution units);
+`holdout_exposed_count = 0` in the ledger and in the checkpoint; no confirmatory-window candle was
+read; the new record-level verifier exits 0 on the clean tree and fails on a tampered tree;
+deterministic tests exist for it; the full suite exits 0 and all existing verifiers still exit 0;
+`compute_code_hash()` and the canonical digests (`3e8e4169…`, `c69cc021…`, `277a4bbe…`,
+`29cd064e…`) are unchanged; no v1 or v2 artifact changed; the v2 and v3 confirmatory windows stay
+`NOT_STARTED` with `holdout_exposed_count = 0`; and the handoff records the run's outcome, the
+per-asset selection result and the deviation disclosure that still applies to the completed v1/v2
+runs.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
+`python3 scripts/verify_v3_selection_run.py`; `python3 scripts/verify_v3_selection_authorization_1.py`;
+`python3 scripts/verify_v3_data_manifest_amendment_1.py`;
+`python3 scripts/verify_v3_candidate_freeze_amendment_2.py`;
+`python3 scripts/verify_v3_execution_amendment_1.py`;
+`python3 scripts/report_v3_benchmark_dependency.py`;
+`python3 scripts/verify_research_v3_spec.py`; `python3 scripts/verify_research_v3_manifests.py`;
+`python3 scripts/verify_research_v3_candidate_freeze.py`;
+`python3 scripts/verify_research_v3_execution.py`;
+`python3 scripts/verify_v2_selected_configurations_manifest.py`;
+`python3 scripts/verify_v2_selection_run.py`; `python3 scripts/verify_research_v2_spec.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm only the new v3 output paths, the new verifier and
+its tests, and `research_state/` — no `src/breakout_research/`, no `src/v2_campaign/`, no
+`src/v3_campaign/`, no frozen artifact).

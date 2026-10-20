@@ -62,6 +62,11 @@ def _load_module(name: str, path: Path):
     return module
 
 
+common = _load_module(
+    "v3_benchmark_amendment_common", REPO_ROOT / "scripts" / "v3_benchmark_amendment_common.py"
+)
+
+
 def _load(path: Path):
     if not path.exists():
         pytest.skip(f"{path.name} is not present in this checkout")
@@ -193,9 +198,13 @@ def test_cascade_authorizes_nothing():
         assert authorization["execution_authorized"] is False
         assert authorization["grid_run_authorized"] is False
         assert authorization["selection_authorization_present"] is False
-    assert not AUTHORIZATION.exists(), (
-        "the v3 selection authorization must not exist: no v3 run is authorized"
-    )
+    # The cascade is not the selection authorization: the selection
+    # authorization is a separate, versioned artifact. While it does not exist
+    # no v3 run is authorized; once it exists it must be the hash-bound
+    # artifact that permits exactly one bounded selection run over the frozen
+    # candidate set. The state-adaptive rule replaced -- and is stronger than
+    # -- the former "the authorization must not exist" check.
+    assert common.selection_authorization_failures(REPO_ROOT) == []
 
 
 def test_v1_anchors_are_untouched():

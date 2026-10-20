@@ -368,7 +368,16 @@ def test_the_completed_v2_run_evaluated_the_btc_filter_on_every_validation_fold(
 def test_the_report_agrees_with_the_ledger_derived_exposure():
     state = report.v3_state_report(REPO_ROOT)
     assert state["v3_execution_artifacts_present"] == []
-    assert state["v3_selection_authorization_present"] is False
+    # The report reports the state of the repository, not a remembered state:
+    # the versioned selection authorization exists from the session that
+    # delivered it, and the report says so.
+    assert state["v3_selection_authorization_present"] == (
+        (REPO_ROOT / V3_AUTHORIZATION).exists()
+    )
+    if state["v3_selection_authorization_present"]:
+        authorization = load_json(V3_AUTHORIZATION)
+        assert authorization["authorized_run"]["max_runs"] == 1
+        assert authorization["authorized_run"]["authorized"] is True
     assert state["development_data_cutoff_utc"] == "2026-10-20T13:00:00Z"
 
 

@@ -6,6 +6,16 @@ identity of the v3 evaluation scope. The verifier recomputes the effective
 identity independently, checks that the execution protocol is byte-unchanged,
 checks that the evaluation scope and the benchmark rule are consistent with the
 published benchmark entry, and checks that the amendment authorizes nothing.
+
+The rule that checks the selection authorization is state-adaptive and is never
+weaker than the state it replaces. The cascade authorizes nothing by itself and
+the selection authorization is a separate, versioned artifact: while it does
+not exist, no v3 run is authorized; once it exists, it must be the hash-bound
+artifact that permits exactly one bounded selection run over the frozen
+candidate set, with the published benchmark dataset, the effective
+data-manifest identity and the deviation disclosure bound into it. The former
+"a v3 selection authorization exists" check was replaced -- not deleted -- by
+that stronger check.
 """
 
 from __future__ import annotations
@@ -19,6 +29,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from v3_benchmark_amendment_common import selection_authorization_failures  # noqa: E402
 
 AMENDMENT_RELATIVE = "configs/research_v3_execution_amendment_1.json"
 DATA_AMENDMENT_RELATIVE = "configs/research_v3_data_manifest_amendment_1.json"
@@ -220,8 +233,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         failures.append("execution_authorization.execution_authorized is not false")
     if authorization.get("grid_run_authorized") is not False:
         failures.append("execution_authorization.grid_run_authorized is not false")
-    if (root / AUTHORIZATION_RELATIVE).exists():
-        failures.append("a v3 selection authorization exists")
+    failures.extend(selection_authorization_failures(root))
 
     # 10. nothing has run under v3 and the confirmatory window is untouched
     for relative in V3_EXECUTION_PATHS:

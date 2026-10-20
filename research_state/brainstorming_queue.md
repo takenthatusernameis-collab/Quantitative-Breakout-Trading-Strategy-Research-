@@ -3114,3 +3114,83 @@ sentences of the decision record above are corrected in place.
    `NOT_STARTED` with `holdout_exposed_count = 0`.
 
 **Marked:** `IMPLEMENTED_STAGE_1_COMPLETE_AUTHORIZATION_OUTSTANDING`.
+
+---
+
+## BRAIN-013 implementation record — the v3 selection authorization 1 (2026-10-20T16:30Z, separate session)
+
+**Session:** one bounded implementation session, 2026-10-20T16:3xZ, in a separate session from the
+decision record above. **Outcome:** the recommendation's item 4 is delivered; item 5 (the final
+report) remains outstanding. **No v3 grid, backtest, campaign or selection was run**, no
+confirmatory-window candle was read, no provider was contacted, and no v1, v2 or frozen v3 artifact
+was edited.
+
+### 1. The artifact
+
+`configs/research_v3_selection_authorization_1.json`, manifest hash
+`fd91cc4dc907780fc66ffd9c020e53f3c224a5ae8bb688e30cd7bfec04762dcd` — the versioned, hash-bound
+artifact that authorizes **exactly one** bounded v3 selection grid run over the frozen candidate
+set `["SHIBUSDT","QNTUSDT","AAVEUSDT","WLDUSDT","PEPEUSDT","ICPUSDT"]`.
+
+Every fact it records is recomputed from the repository, never copied out of the artifact it
+describes:
+
+| field | recomputed from |
+| --- | --- |
+| `authorized_run.scope.binance_pairs` | the freeze chain (freeze → freeze amendment 1 → freeze amendment 2) and the v3 universe manifest |
+| `authorized_run.bounds` | the frozen candidate count (6) × the inherited grid (2,304) = 13,824 config units; 165,888 execution units (× 4 validation folds × 3 cost scenarios) |
+| `authorized_run.data_boundary.candles_before_utc` | the confirmatory-window start of the freeze, `2026-10-20T13:00:00Z` |
+| `authorized_run.selection_rule.selection_block_sha256` | the unchanged v1 `selection` block |
+| `authorized_run.code_identity` | the source tree, under the canonical digest rule of BRAIN-009 (hashed set `3e8e4169…`, v3 path `29cd064e…`, composite `adbb9b76…`) |
+| `authorized_run.benchmark` | the effective data manifest — dataset path, content hash recomputed from the dataset file, the alignment rule and the fail-closed list |
+| `authorized_run.effective_data_manifest` | the base manifest plus the published benchmark entry (`88e90960…`) |
+| `authorized_run.deviation_disclosure` | `research/v3_evidence/v1_v2_btc_alignment_deviation.json` (124,416 of 497,664 v2 records, all four validation folds) |
+
+The artifact also states what it does **not** authorize: no confirmatory evaluation, no candle
+fetch, no source-tree change, no edit of a frozen artifact, no second v3 selection run.
+
+### 2. The producer, the verifier and the tests
+
+- `scripts/build_v3_selection_authorization_1.py` — a deterministic producer that recomputes every
+  fact it records and refuses to overwrite an existing artifact without `--force`. It rebuilds the
+  artifact byte for byte.
+- `scripts/verify_v3_selection_authorization_1.py` — a read-only, offline verifier with thirteen
+  checks: the self-hash, the scope, the bounds, the data boundary, the unchanged v1 selection
+  rule, the code identity, the output paths, the execution path, the one-run rule, the benchmark
+  rule and the effective identity, the deviation disclosure, the execution path's acceptance of
+  the authorization (a plan is resolved, nothing is executed) and the executed state.
+- `tests/test_v3_selection_authorization_1.py` — 37 deterministic tests, including 16 mirror/tamper
+  controls that prove the verifier is not vacuous.
+
+### 3. The state-dependent rules that this session replaced (not deleted)
+
+The cascade verifiers carried the rule "a v3 selection authorization exists" — true while no
+authorization existed, false by design once one does. Following the v2 precedent (rule 12 replaced,
+not deleted), the rule was **replaced** by a stronger, state-adaptive one: while the authorization
+does not exist, no v3 run is authorized; once it exists, it must be the hash-bound artifact that
+permits exactly one bounded selection run over the frozen candidate set, with the published
+benchmark dataset, the effective data-manifest identity and the deviation disclosure bound into
+it. The shared helper is `scripts/v3_benchmark_amendment_common.py` →
+`selection_authorization_failures`.
+
+The same replacement was applied in `tests/test_v3_benchmark_amendments.py`,
+`tests/test_v3_benchmark_dependency.py` and `tests/test_v3_campaign_benchmark_rule.py` — the last
+one now exercises the refusal against a workspace whose authorization file is absent, so the
+refusal is still a test and no run is ever started by the suite.
+
+### 4. State verified (2026-10-20T16:30Z)
+
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **741 passed**, exit 0 (698 pre-existing + 43 new)
+- every `scripts/verify_*.py` exits 0 (`scripts/verify_cycle_results.py` requires a `cycle_dir`
+  argument and is not a repository-wide gate)
+- `scripts/report_v3_benchmark_dependency.py` → `status: BENCHMARK_DATASET_AVAILABLE`,
+  `blocking: false`
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`; the
+  canonical digests are unchanged (hashed set `3e8e4169…`, v2 selection path `c69cc021…`, v2
+  confirmatory path `277a4bbe…`, v3 path `29cd064e…`)
+- no v3 execution artifact exists (`research/shards_v3/`, `research/ledger_v3.json`,
+  `research/results_manifest_v3.json`, `research/results_v3.jsonl`,
+  `research_state/checkpoint_v3.json` are all absent); the v2 and the v3 confirmatory windows stay
+  `NOT_STARTED` with `holdout_exposed_count = 0`
+
+**Marked:** `IMPLEMENTED_STAGE_1_AND_AUTHORIZATION_COMPLETE_RUN_OUTSTANDING`.

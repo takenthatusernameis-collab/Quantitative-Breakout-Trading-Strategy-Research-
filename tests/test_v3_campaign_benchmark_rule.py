@@ -14,12 +14,14 @@ and to implement the benchmark rule of ``docs/research_protocol.md:101``
 * the grid is never reduced: the 576 ``btc_ema_168`` configurations per asset
   are evaluated like every other configuration, and the unit data hash of such
   a unit binds the benchmark dataset;
-* the run is refused without the versioned authorization, and it creates no
-  v3 execution artifact;
+* the run is refused without the versioned authorization -- the refusal is
+  exercised against a workspace whose authorization file is absent -- and it
+  creates no v3 execution artifact;
 * no confirmatory-window candle is read by the data loader.
 """
 from __future__ import annotations
 
+import dataclasses
 import inspect
 import json
 from pathlib import Path
@@ -267,10 +269,17 @@ def test_selection_rule_is_the_unchanged_v1_rule(spec_v1):
 
 
 def test_run_is_refused_without_the_authorization():
-    assert not AUTHORIZATION.exists(), (
-        "the v3 selection authorization must not exist: no v3 run is authorized"
+    """A run without the authorization is refused before it starts.
+
+    The versioned v3 selection authorization exists since the session that
+    delivered it, so the refusal is exercised against a workspace whose
+    authorization file is absent: the run must be refused there, and a refused
+    run must not create a v3 execution artifact.
+    """
+    workspace = dataclasses.replace(
+        default_workspace(REPO_ROOT),
+        authorization=REPO_ROOT / "configs" / "research_v3_selection_authorization_absent.json",
     )
-    workspace = default_workspace(REPO_ROOT)
     with pytest.raises(ScopeError):
         run_selection(workspace)
     for path in V3_EXECUTION_PATHS:
@@ -328,6 +337,7 @@ def test_workspace_paths_are_the_v3_paths():
     assert workspace.results_stream.name == "results_v3.jsonl"
     assert workspace.checkpoint.name == "checkpoint_v3.json"
     assert workspace.authorization.name == "research_v3_selection_authorization_1.json"
+    assert workspace.authorization == AUTHORIZATION
 
 
 def test_slice_window_uses_the_engine_predicate():
