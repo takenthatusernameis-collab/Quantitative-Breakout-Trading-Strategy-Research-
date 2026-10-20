@@ -5894,3 +5894,15 @@ performed before `2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not 
 **Acceptance criteria:** BRAIN-012 decision record exists in `research_state/brainstorming_queue.md` with revalidated evidence, at least two materially different designs, one recommendation, falsifiers, rollback and staged acceptance tests; `research_state/agent_handoff.md` updated with the decision and next bounded task; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0 with no new failures; all verifiers exit 0; `compute_code_hash()` behavior unchanged; v1/v2 artifact anchors unchanged; no confirmatory-window candle read; no v3 execution.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v2_selection_run.py`; `python3 scripts/verify_v2_confirmatory_path.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat` (confirm only `research_state/` changed — no `src/`, no frozen artifact).
+
+## Session activity — 2026-10-20T21:00:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** The prior task (campaign-level close-out of the v2 cycle) is already completed and verified; BRAIN-012 is also already delivered (2026-10-20T11:40Z). The remaining actionable work is the unfinished v3 confirmatory execution path (started 2026-10-20T20:30Z): `src/v3_confirmatory/runner.py` is not yet v3-correct (still references v2 paths/identities and lacks the v3 benchmark-window rule), and `scripts/verify_v3_confirmatory_path.py` plus `tests/test_v3_confirmatory_path.py` do not yet exist. No code or artifacts were added this session; the tree is unchanged from the verified state (759+ passed at last run; all v3 and v2 verifiers exit 0; `compute_code_hash()` value of record `2efd3b18…`; canonical digests unchanged; confirmatory windows `NOT_STARTED`, `holdout_exposed_count = 0`).
+
+## Initial task message for next agent
+
+**Next (one bounded task):** finish the v3 confirmatory execution path — make `src/v3_confirmatory/runner.py` v3-correct (v3 paths, v3 benchmark window rule, fail-closed on missing/misaligned benchmark, no v1/v2 path writes), add `scripts/verify_v3_confirmatory_path.py` and `tests/test_v3_confirmatory_path.py` (following the v2 pattern), and ensure the package imports and the suite stays green. Design deliverables only: nothing evaluated, no candle read.
+
+**Do NOT:** edit `src/breakout_research/`, `src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/`; edit any frozen artifact; read any confirmatory-window candle; contact any provider; run any evaluation.
