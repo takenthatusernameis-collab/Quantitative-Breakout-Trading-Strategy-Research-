@@ -5202,3 +5202,18 @@ its tests, and `research_state/` — no `src/breakout_research/`, no `src/v2_cam
 **Acceptance criteria:** `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; `python3 scripts/verify_v3_selection_run.py` exits 0; `compute_code_hash()` is unchanged; `holdout_exposed_count = 0` in ledger and checkpoint; no v1 or v2 artifact changed.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v3_selection_run.py`; `python3 scripts/verify_v3_selection_authorization_1.py`; `python3 scripts/report_v3_benchmark_dependency.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
+## Session activity — 2026-10-20T19:00:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Prior task verified complete. Full suite 759 passed, exit 0; `verify_v3_selection_run.py` exits 0; `compute_code_hash()` = `2efd3b18…` (authorized value of record); canonical digests unchanged (`3e8e4169…` hashed set, `c69cc021…` v2 selection path, `277a4bbe…` v2 confirmatory path, `29cd064e…` v3 path); v1/v2/v3 artifacts byte-unchanged; no v3 confirmatory artifact exists; confirmatory windows `NOT_STARTED`, `holdout_exposed_count = 0`. No new code or artifacts produced; no run started or resumed.
+
+## Initial task message for next agent
+
+**Next:** No bounded implementation task is actionable. The v3 selection run is complete and verified (6 assets, 4 candidates, 2 without candidate: AAVEUSDT `NO_CANDIDATE`, QNTUSDT `INSUFFICIENT_EVIDENCE`; 13,824 config units, 165,888 execution units, 0 holdout exposure). The v2 confirmatory evaluation is time-blocked until `2027-01-17T22:00:00Z`; the v3 confirmatory window is single-use and cannot be read before `2027-01-18T13:00:00Z`. Maintain the green tree: re-run `PYTHONPATH=src python3 -m pytest tests/ -q` and `python3 scripts/verify_v3_selection_run.py` after any change, and confirm `compute_code_hash()` remains `2efd3b18…`.
+
+**Do NOT:** modify `src/breakout_research/`, `src/v2_campaign/`, or `src/v3_campaign/`; edit any frozen artifact in place; start a second v3 selection run; read any confirmatory-window candle; reuse the v1 holdout or v2 confirmatory window; write into any v1 or v2 output path; rewrite existing artifacts without `--force` and a recorded reason.
+
+**Acceptance criteria:** `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; `python3 scripts/verify_v3_selection_run.py` exits 0; `compute_code_hash()` unchanged; `holdout_exposed_count = 0` in ledger and checkpoint; no v1/v2/v3 artifact changed.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v3_selection_run.py`; `python3 scripts/verify_v3_selection_authorization_1.py`; `python3 scripts/report_v3_benchmark_dependency.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
