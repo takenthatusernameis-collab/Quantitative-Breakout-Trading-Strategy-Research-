@@ -1,0 +1,49 @@
+{
+  "artifact": "v2_confirmatory_protocol",
+  "artifact_version": "v2-confirmatory-protocol-1",
+  "protocol_version": "v2",
+  "created_utc": "2026-10-20T08:00:00Z",
+  "protocol_status": "PREREGISTERED_NO_EVALUATION",
+  "specification_purpose": "Preregister the v2 confirmatory-evaluation protocol: the 14 selected configurations, the window definition and readiness test, the data path, the evaluation rule, the reporting and falsifiers, and the authorization boundary. This artifact authorizes no evaluation and no candle read before the window exists.",
+  "evaluation_scope": {
+    "selected_configurations_manifest": "research/v2_selected_configurations_manifest.json",
+    "selected_configurations_manifest_hash": "7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862",
+    "selection_authorization_manifest_hash": "76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918",
+    "v2_specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d2f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+    "v2_data_manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+    "in_scope_assets": 14,
+    "out_of_scope_assets_without_candidate": ["BCHUSDT", "BTCUSDT", "LINKUSDT", "TRXUSDT"],
+    "scope_may_not_be_widened_narrowed_or_reranked": true
+  },
+  "window_definition": {
+    "window_opens_utc": "2026-10-19T22:00:00Z",
+    "minimum_closed_hourly_candles": 2160,
+    "earliest_possible_end_utc": "2027-01-17T22:00:00Z",
+    "single_use": true,
+    "must_not_overlap_v1_holdout": true,
+    "never_reused_from_v1": true
+  },
+  "data_path": {
+    "retrieval_happens_once_after_readiness_test_passes": true,
+    "every_read_counted_in_holdout_exposed_count": true,
+    "hashed_and_verified_against_v2_data_manifest_scheme": true
+  },
+  "evaluation_rule": {
+    "unchanged_v1_evaluation_metric": true,
+    "unchanged_cost_scenarios": true,
+    "no_retuning_reranking_or_grid_extension_on_window": true
+  },
+  "reporting_and_falsifiers": {
+    "pass_failure_inconclusive_defined": true,
+    "null_result_reported": true,
+    "v1_holdout_never_reopened": true
+  },
+  "authorization_boundary": {
+    "authorizes_evaluation": false,
+    "authorizes_candle_read_before_window_exists": false,
+    "code_identity_rule": "canonical_digest",
+    "v1_paths_forbidden": true,
+    "new_v2_paths_require_new_versioned_amendment": true
+  },
+  "manifest_hash": null
+}

@@ -1911,3 +1911,13 @@ v1 campaign runtime gate compares the live ordered digest; the v1 campaign is te
 possible only on a checkout with the authorized enumeration order); and, only after the confirmatory
 window exists and this protocol is committed and hash-bound, the separately authorized confirmatory
 evaluation — which cannot happen before `2027-01-17T22:00:00Z`.
+
+## Session activity — 2026-10-20T08:00:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff (preregistered v2 confirmatory-evaluation protocol) and complete it.
+
+**Outcome:** Partial. Created `configs/research_v2_confirmatory_protocol.json` (valid JSON, self-hashing placeholder `manifest_hash: null`) capturing the six required rule groups (evaluation scope, window definition, data path, evaluation rule, reporting/falsifiers, authorization boundary) as a design deliverable. The producer, verifier, tests and self-hash finalization remain outstanding; this is a skeleton requiring a full session to complete per the established pattern.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** finalize the preregistered v2 confirmatory-evaluation protocol — compute and record `manifest_hash`, add deterministic producer, read-only verifier and tests following the candidate-freeze pattern, enforce every rule with tamper tests. Design only; no evaluation, no candle read.
