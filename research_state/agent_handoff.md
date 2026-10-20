@@ -3928,3 +3928,26 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 **Acceptance criteria:** no changes required; suite and all verifiers remain green; `compute_code_hash()` behavior unchanged (environment fact `608c7340...`, authorized `2efd3b18...`, canonical `3e8e4169...`); no v1/v2 artifacts modified; no v3 execution artifacts created.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`.
+
+## Session activity — 2026-10-20T13:27:36Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Prior task (no bounded implementation task actionable; BRAIN-012 stages 1 and 2 delivered and verified) is complete and re-verified in this checkout. Full suite **617 passed**, exit 0. All v3 and v2 verifiers exit 0. `compute_code_hash()` = `608c7340...` (environment fact); authorized value of record `2efd3b18...`; canonical digest `3e8e4169...` unchanged. v1/v2/v3 artifacts byte-unchanged; no v3 execution artifacts; confirmatory windows `NOT_STARTED`, `holdout_exposed_count = 0`. `git rev-parse HEAD` == `git ls-remote origin main` == `fe45603b...`. No new code or artifacts were produced; no run was started.
+
+## Initial task message for next agent
+
+**Next:** No bounded implementation task is actionable. BRAIN-012 stage 1 (specification, snapshot, validation, manifests, candidate freeze with amendment, expansion log, verifiers/tests) and stage 2 (v3 execution protocol and bounded authorization, design deliverable only) are both delivered and verified. The v3 selection run is not authorized to execute in this session and cannot run without a separate authorized action; no v3 execution artifact exists. The v2 confirmatory evaluation remains queued and cannot be performed before `2027-01-17T22:00:00Z`.
+
+**Subject:** BRAIN-012 stages 1 and 2 delivered and verified; v3 protocol authorizes at most one logical run but no execution is scheduled; v2 confirmatory evaluation blocked until 2027-01-17T22:00:00Z
+
+**Status (verified 2026-10-20T13:27:36Z):**
+- Full suite 617/617 green; all v3 and v2 verifiers exit 0.
+- v3 execution protocol `configs/research_v3_execution.json` (`specification_hash 9e92a35d...`) authorizes at most one logical v3 run over the validated six (AAVEUSDT, ICPUSDT, PEPEUSDT, QNTUSDT, SHIBUSDT, WLDUSDT) via `configs/research_v3_candidate_freeze_amendment_1.json`, requires execution in `src/v3_campaign/` outside the hashed set, inherits unchanged v1 selection rule, forbids writes to v1/v2 paths and mixing v1/v2 units, sets development-data cutoff at `2026-10-20T13:00:00Z`, authorizes nothing to run.
+- No v3 execution artifacts; confirmatory windows `NOT_STARTED`, `holdout_exposed_count = 0`.
+
+**Do NOT:** start a v3 selection run or any execution; edit `src/breakout_research/`, `src/v2_campaign/`, or create/edit under `src/v3_campaign/` unless explicitly authorized; edit any frozen artifact (use a versioned amendment); read any confirmatory-window candle or evaluate holdout; contact providers or re-retrieve snapshots; rewrite existing artifacts without `--force` and a recorded reason; attempt confirmatory evaluation before `2027-01-17T22:00:00Z`.
+
+**Acceptance criteria:** no changes required; suite and all verifiers remain green; `compute_code_hash()` behavior unchanged (environment fact `608c7340...`, authorized `2efd3b18...`, canonical `3e8e4169...`); no v1/v2/v3 artifacts modified; no v3 execution artifacts created.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`.
