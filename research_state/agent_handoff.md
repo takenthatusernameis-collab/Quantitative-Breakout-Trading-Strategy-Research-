@@ -4115,3 +4115,41 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 **Acceptance criteria:** the v3 benchmark dataset exists, is hash-verified and **index-aligned** with the six validated v3 assets (identical first and last candle timestamps and candle count, recomputed from the manifest, not copied); the amendment cascade is hash-bound, self-verifying and leaves every previously delivered artifact byte-unchanged; `src/v3_campaign/` exists outside the hashed set and refuses to run without an aligned benchmark; a read-only verifier and deterministic tests exist for every new artifact and rule; the full suite exits 0 and all existing verifiers still exit 0; `compute_code_hash()` and the canonical digests are unchanged; **no v3 execution artifact exists** (`research/shards_v3/`, `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json` absent), no v3 selection authorization exists yet, and the v2 confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/report_v3_benchmark_dependency.py` (its `status` must move off `BLOCKED_MISSING_BENCHMARK_DATASET` only when the dataset is genuinely index-aligned); `python3 scripts/verify_research_v3_spec.py`; `python3 scripts/verify_research_v3_manifests.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_v3_candidate_freeze_amendment_1.py`; `python3 scripts/verify_v3_spec_amendment_1.py`; `python3 scripts/verify_v3_universe_expansion_log.py`; `python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat` (confirm only new v3 files and `research_state/` — no `src/breakout_research/`, no `src/v2_campaign/`, no frozen artifact).
+
+
+## Session activity — 2026-10-20T14:56:00Z (this session)
+
+**Task (from the durable handoff at 23:37:19Z):** perform the single authorized v2 selection run over the 18 frozen constituents and deliver its selection outcome. The execution path and the authorization exist; the run does not.
+
+**Outcome:** **Delivered and verified.** The run was already completed by a prior session (started 2026-10-20T02:02:04Z, completed 2026-10-20T06:26:28Z, 0 resumes, 497664 execution units). Selection outcome verified: `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE` over 18 assets. 14 assets have candidates (ADAUSDT cfg_0073, AVAXUSDT cfg_0246, BNBUSDT cfg_0089, DOGEUSDT cfg_0736, ETHUSDT cfg_0699, HBARUSDT cfg_0408, LTCUSDT cfg_0231, NEARUSDT cfg_0037, SOLUSDT cfg_0187, SUIUSDT cfg_0559, UNIUSDT cfg_0774, XLMUSDT cfg_0468, XRPUSDT cfg_0403, ZECUSDT cfg_0744); 4 assets have no candidate (BCHUSDT, BTCUSDT, LINKUSDT, TRXUSDT). All results reported in `research/ledger_v2.json`, shards in `research/shards_v2/v2-campaign/` (9971 shards), manifest in `research/results_manifest_v2.json`. No confirmatory-window read, no v1 artifact changed, `src/breakout_research/` untouched.
+
+**State verified (2026-10-20T14:56:00Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **635 passed**, exit 0
+- All seven v2 verifiers exit 0 (spec, manifests, execution, candidate_freeze, execution_amendment_1, code_hash_amendment_1, selection_authorization_1)
+- `PYTHONPATH=src python3 scripts/verify_v2_selection_run.py` → `"ok": true`, outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`
+- `compute_code_hash()` = `2efd3b18…` unchanged; canonical digests unchanged
+- No v1 artifacts modified; no v2 result row in `research/results.jsonl`; `holdout_exposed_count = 0`, `confirmatory_window_status = NOT_STARTED`
+
+**Unresolved:** selection outcome is delivered but **no selected-configuration manifest exists yet** (it is `OUTSTANDING` per amendment). The v2 specification still records P2/P3 as `OUTSTANDING` (needs versioned amendment). The confirmatory window cannot be evaluated before `2027-01-17T22:00:00Z`. RL1 (v1 runtime gate ordered digest) and RL2 (result volume delivery) remain recorded.
+
+
+## Initial task message for next agent
+
+**Next (one bounded task):** produce the **v2 selected-configuration manifest** for the assets that have candidates (14 assets from the completed run), freeze it before any confirmatory-window read, and record it as a hash-bound artifact with a verifier and tests. Nothing runs in that session.
+
+**Subject:** v2 selection run completed with 14 candidates; next bounded task is the v2 selected-configuration manifest (design deliverable only)
+
+**Status (verified 2026-10-20T14:56:00Z):**
+- Completed run: `research/ledger_v2.json` shows `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE` over 18 assets, 497664 execution units, no resumes, `holdout_exposed_count = 0`. Candidates: ADA cfg_0073, AVAX cfg_0246, BNB cfg_0089, DOGE cfg_0736, ETH cfg_0699, HBAR cfg_0408, LTC cfg_0231, NEAR cfg_0037, SOL cfg_0187, SUI cfg_0559, UNI cfg_0774, XLM cfg_0468, XRP cfg_0403, ZEC cfg_0744. No candidates for BCHUSDT, BTCUSDT, LINKUSDT, TRXUSDT.
+- All prerequisites delivered and verified (P1-P4, candidate freeze, amendments 1, code-hash amendment 1, selection authorization 1). Code hash unchanged; v1 artifacts byte-unchanged.
+- Confirmatory window opens 2026-10-19T22:00:00Z, needs ≥ 2160 candles, earliest end 2027-01-17T22:00:00Z.
+
+**One bounded task:** produce `configs/research_v2_selected_config_manifest_1.json` (versioned, hash-bound) with a read-only offline verifier and deterministic tests following existing patterns. It must:
+1. Freeze exactly the 14 assets with candidates from the completed run, bound to `research/ledger_v2.json` (or the run's artifacts), with their selected `config_id`s and the selection outcome.
+2. Record snapshot identity (v2), the candidate freeze hash, the selection ledger hash, and `supersedes` nothing or reference v1 as appropriate (no v2 confirmatory read).
+3. State that this manifest is required before the confirmatory window can be read; it authorizes nothing to run now.
+4. Keep `src/breakout_research/` untouched; do not modify frozen artifacts.
+
+**Do NOT:** run any grid/backtest/campaign/selection, read confirmatory-window candles, modify `src/`, edit frozen configs/manifests, or re-run the selection.
+
+**Acceptance:** new verifier exits 0, full suite green, code hash unchanged, no v2 execution artifacts added except the manifest/verifier/tests.
