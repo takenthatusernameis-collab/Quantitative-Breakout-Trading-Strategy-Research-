@@ -5144,4 +5144,35 @@ its tests, and `research_state/` — no `src/breakout_research/`, no `src/v2_cam
 - `holdout_exposed_count = 0` in ledger and checkpoint; no confirmatory-window candle read
 - `confirmatory_window_start_utc = 2026-10-20T13:00:00Z`, still `NOT_STARTED` for v3; v2 still time-blocked until `2027-01-17T22:00:00Z`
 
-**Artifacts produced:** `research/shards_v3/v3-campaign/` (3,323 shard files), `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json`. The result stream was reconstructed from shards (projection matches; sha256 `63860a7143b79ebc73edbbadfae14629b902862ab51cfbffffdced29ddf466d6`). All record `experiment_id`s verified, counts match planned bounds. `scripts/verify_v3_selection_run.py` → `"ok": true, "failures": []`. `compute_code_hash()` remains `2efd3b18…`; canonical digests unchanged (`3e8e4169…`, `c69cc021…`, `277a4bbe…`, `29cd064e…`). v1/v2 artifacts unchanged; no `src/breakout_research/`, `src/v2_campaign/`, or `src/v3_campaign/` files modified.
+**Artifacts produced:** `research/shards_v3/v3-campaign/` (3,323 shard files), `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json`. The result stream was reconstructed from shards (projection matches; sha256 `63860a7143b79ebc73edbbadfae14629b902862ab51cfbffffdced29ddf466d6`). All record `experiment_id`s verified, counts match planned bounds. `scripts/verify_v3_selection_run.py` → `"ok": true, "failures": []`. `compute_code_hash()` remains `2efd3b18…`; canonical digests unchanged (`3e8e4169…`, `c69cc021…`, `277a4bbe…`, `29cd064e…`). v1/v2 artifacts unchanged; no `src/breakout_research/`, `src/v2_campaign/`, or `src/v3_campaign/` files modified. Stray `research/shards_v3/v3-campaign/shard_002223.jsonl.tmp` removed (orphaned from an interrupted atomic write; the real shard exists).
+
+
+## Session activity — 2026-10-20T18:19:39Z (this session)
+
+**Task:** Fix the 4 test failures exposed by the now-completed v3 selection run, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** All 4 test failures fixed; full suite green (759 passed, 0 failed); verifier still `ok: true`.
+
+1. `tests/test_v3_benchmark_dependency.py::test_no_v3_execution_artifact_exists` — replaced the v2-style "nothing exists" assertion with state-adaptive logic: before the run, assert no artifacts exist; after the run (ledger exists), assert the ledger reports COMPLETED with run_id/campaign_id matching the authorization, holdout_exposed_count == 0, counts inside bounds, and the selection covers all six assets.
+2. `tests/test_v3_benchmark_dependency.py::test_the_report_agrees_with_the_ledger_derived_exposure` — state-adaptive: before the run assert `v3_execution_artifacts_present == []`; after the run assert the report lists existing artifacts that all exist on disk.
+3. `tests/test_v3_selection_run.py::test_the_selection_outcome_covers_the_six_assets` — sorting bug: `sorted(a) + sorted(b)` → `sorted(a + b)`.
+4. `tests/test_v3_selection_run.py::test_the_selection_rule_is_the_unchanged_v1_rule` — `KeyError: 'max_candidates_per_asset'`: `ledger["selection"]` has no such key; the rule parameters live at `ledger["selection_rule"]["max_candidates_per_asset"]`. The `selection_block_sha256` check already locks the whole rule block.
+
+**Verification:** `PYTHONPATH=src python3 -m pytest tests/ -q` → **759 passed**, exit 0; `python3 scripts/verify_v3_selection_run.py` → `"ok": true`. `compute_code_hash()` unchanged `2efd3b18…`; no `src/` changes; v1/v2 artifacts unchanged.
+
+
+## Initial task message for next agent
+
+**Status (verified 2026-10-20T18:19:39Z):**
+- The authorized v3 selection run is **COMPLETE** and verified: `research/ledger_v3.json` `status: COMPLETED`, `holdout_exposed_count = 0`, outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`, 6 assets evaluated, 4 with candidate (ICPUSDT, PEPEUSDT, SHIBUSDT, WLDUSDT), 2 without candidate (AAVEUSDT `NO_CANDIDATE`, QNTUSDT `INSUFFICIENT_EVIDENCE`).
+- Full suite green: **759 passed**, exit 0; `scripts/verify_v3_selection_run.py` → `"ok": true, "failures": []`.
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged; no `src/breakout_research/`, `src/v2_campaign/`, or `src/v3_campaign/` files modified; v1/v2 artifacts unchanged.
+- v3 confirmatory window: opens `2026-10-20T13:00:00Z`, single-use, minimum 2,160 h, earliest end `2027-01-18T13:00:00Z`; currently `NOT_STARTED`. v2 confirmatory window time-blocked until `2027-01-17T22:00:00Z`.
+
+**Next (one bounded task):** No code or test changes are currently required — the tree is green. The next meaningful step is the v3 confirmatory window procedure once its candle data is available (earliest end `2027-01-18T13:00:00Z`, single use, no ranking or re-tuning on it). Until then, maintain the green tree: re-run `PYTHONPATH=src python3 -m pytest tests/ -q` and `python3 scripts/verify_v3_selection_run.py` after any change, and confirm `compute_code_hash()` remains `2efd3b18…`.
+
+**Do NOT:** modify `src/breakout_research/`, `src/v2_campaign/`, or `src/v3_campaign/`; edit `configs/research_v3_selection_authorization_1.json` in place; edit `research/data_manifest_v3.json`, `research/universe_manifest_v3.json`, `configs/research_v3_candidate_freeze.json`, `configs/research_v3_candidate_freeze_amendment_1.json`, `configs/research_v3_candidate_freeze_amendment_2.json`, `configs/research_v3_data_manifest_amendment_1.json`, `configs/research_v3_execution.json`, `configs/research_v3_execution_amendment_1.json` or `configs/research_v3.json` in place; start a second v3 selection run; read any confirmatory-window candle before its authorized time; reuse the v1 holdout or v2 confirmatory window; write into any v1 or v2 output path; modify any v1 or v2 artifact.
+
+**Acceptance criteria:** `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; `python3 scripts/verify_v3_selection_run.py` exits 0; `compute_code_hash()` is unchanged; `holdout_exposed_count = 0` in ledger and checkpoint; no v1 or v2 artifact changed.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v3_selection_run.py`; `python3 scripts/verify_v3_selection_authorization_1.py`; `python3 scripts/report_v3_benchmark_dependency.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.

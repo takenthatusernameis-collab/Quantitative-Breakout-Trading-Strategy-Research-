@@ -271,8 +271,35 @@ def test_the_v2_benchmark_dataset_stays_clear_of_the_v3_development_boundary():
 
 
 def test_no_v3_execution_artifact_exists():
-    for relative in report.V3_EXECUTION_ARTIFACTS:
-        assert not (REPO_ROOT / relative).exists(), f"{relative} must not exist before an authorized run"
+    """State-adaptive: before the run no v3 execution artifact exists; after
+    the run the executed state matches the authorization (this check replaces
+    the v2-style "nothing exists" assertion, which became false once the
+    single authorized v3 selection run completed).
+    """
+    ledger_path = REPO_ROOT / "research/ledger_v3.json"
+    if not ledger_path.exists():
+        # Before the run: nothing may exist.
+        for relative in report.V3_EXECUTION_ARTIFACTS:
+            assert not (REPO_ROOT / relative).exists(), f"{relative} must not exist before an authorized run"
+        return
+    # After the run: the executed state must match the authorization.
+    ledger = report.load_json(ledger_path)
+    authorization = report.load_json(REPO_ROOT / report.V3_AUTHORIZATION)
+    run = authorization["authorized_run"]
+    assert ledger["status"] == "COMPLETED"
+    assert ledger["run_id"] == run["run_id"]
+    assert ledger["campaign_id"] == run["campaign_id"]
+    assert ledger["holdout_exposed_count"] == 0
+    bounds = run["bounds"]
+    counts = ledger["counts"]
+    assert counts["config_units"] <= bounds["max_total_config_units"]
+    assert counts["execution_units"] <= bounds["planned_execution_units"]
+    assert counts["records_written"] <= bounds["planned_execution_units"]
+    assert counts["executed"] + counts["skipped_already_complete"] == counts["records_written"]
+    selection = ledger["selection"]
+    pairs = run["scope"]["binance_pairs"]
+    assert set(selection["assets_with_candidate"]) | set(selection["assets_without_candidate"]) == set(pairs)
+    assert selection["assets_without_candidate_reported"] is True
 
 
 def test_the_gap_is_either_closed_or_recorded_and_unauthorized():
@@ -367,7 +394,21 @@ def test_the_completed_v2_run_evaluated_the_btc_filter_on_every_validation_fold(
 
 def test_the_report_agrees_with_the_ledger_derived_exposure():
     state = report.v3_state_report(REPO_ROOT)
-    assert state["v3_execution_artifacts_present"] == []
+    ledger_path = REPO_ROOT / "research/ledger_v3.json"
+    if not ledger_path.exists():
+        # Before the run: no v3 execution artifacts are present yet.
+        assert state["v3_execution_artifacts_present"] == []
+    else:
+        # After the run: the report lists exactly the artifacts that exist
+        # on disk, each of which matches a ledger entry.
+        existing = set(state["v3_execution_artifacts_present"])
+        ledger = load_json(ledger_path)
+        assert existing, "at least one v3 execution artifact must be present after an authorized run"
+        for relative in existing:
+            assert (REPO_ROOT / relative).exists(), f"{relative} reported present but missing on disk"
+        for relative in report.V3_EXECUTION_ARTIFACTS:
+            if relative in existing:
+                assert (REPO_ROOT / relative).exists()
     # The report reports the state of the repository, not a remembered state:
     # the versioned selection authorization exists from the session that
     # delivered it, and the report says so.

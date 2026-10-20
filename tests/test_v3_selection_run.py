@@ -254,9 +254,12 @@ def test_the_selection_outcome_covers_the_six_assets(clean_report: Dict[str, Any
     assert selection["assets_evaluated"] == 6
     assert sorted(selection["per_asset"]) == sorted(pairs)
     assert selection["assets_without_candidate_reported"] is True
-    assert sorted(selection["assets_with_candidate"]) + sorted(
-        selection["assets_without_candidate"]
-    ) == sorted(pairs)
+    assert (
+        sorted(
+            selection["assets_with_candidate"] + selection["assets_without_candidate"]
+        )
+        == sorted(pairs)
+    )
     assert clean_report["assets_evaluated"] == 6
     assert clean_report["outcome"] == selection["outcome"]
 
@@ -267,7 +270,7 @@ def test_the_selection_rule_is_the_unchanged_v1_rule() -> None:
     expected = _sha256_bytes(_canonical(spec_v1["selection"]).encode("utf-8"))
     assert ledger["selection"]["selection_block_sha256"] == expected
     assert (
-        ledger["selection"]["max_candidates_per_asset"]
+        ledger["selection_rule"]["max_candidates_per_asset"]
         == spec_v1["selection"]["max_candidates_per_asset"]
     )
 
