@@ -89,6 +89,10 @@ def _mirror_repo(tmp_path: Path) -> Path:
             dirs[:] = ["v2_evidence"]
         (root / relative).mkdir(parents=True, exist_ok=True)
         for name in files:
+            if relative == Path("research_state") and name == "checkpoint_v2.json":
+                # The mirror holds no run artifact: the verifier's executed-state
+                # rule is exercised against the real repository, not the mirror.
+                continue
             (root / relative / name).symlink_to(Path(current) / name)
     return root
 
@@ -360,12 +364,54 @@ def test_amendment_authorizes_nothing():
     assert amendment["amendment_status"] == "PREREGISTERED_AMENDMENT_DESIGN_ONLY"
 
 
-def test_no_v2_execution_artifacts_or_result_rows_exist():
-    for relative in verifier.V2_EXECUTION_ARTIFACTS:
-        assert not (REPO_ROOT / relative).exists(), relative
+def test_the_executed_state_stays_inside_the_amendment_bounds():
+    """The performed run, if there is one, stayed inside *this* amendment.
+
+    Before the run this asserts the not-executed state; after the run it
+    asserts that the recorded counts stay inside the amendment's bounds and
+    that nothing is exposed. The verifier's rule was replaced -- not deleted --
+    when the run happened.
+    """
+    ledger_path = REPO_ROOT / "research" / "ledger_v2.json"
     data = _load(DATA_V2_PATH)
     assert data["confirmatory_window"]["holdout_exposed_count"] == 0
     assert data["confirmatory_window"]["confirmatory_window_status"] == "NOT_STARTED"
+    if not ledger_path.exists():
+        for relative in verifier.V2_EXECUTION_ARTIFACTS:
+            assert not (REPO_ROOT / relative).exists(), relative
+        return
+    amendment = _load(AMENDMENT_PATH)
+    ledger = _load(ledger_path)
+    bounds = amendment["v2_selection_authorization"]["bounds"]
+    counts = ledger["counts"]
+    assert counts["config_units"] <= bounds["max_total_config_units"]
+    spec_v1 = _load(SPEC_V1_PATH)
+    planned = (
+        bounds["max_assets"]
+        * bounds["max_configs_per_asset"]
+        * len(spec_v1["folds"]["window_fractions"])
+        * len(spec_v1["costs"]["scenarios"])
+    )
+    assert counts["execution_units"] <= planned
+    assert ledger["holdout_exposed_count"] == 0
+    assert not ledger["v1_artifacts_touched"]
+
+
+def test_verifier_detects_an_executed_state_above_the_amendment_bounds(tmp_path):
+    root = _mirror_repo(tmp_path)
+    ledger = {
+        "scope": {"binance_pairs": [], "constituents": []},
+        "bounds": {},
+        "counts": {"config_units": 10_000_000, "execution_units": 10_000_000},
+        "holdout_exposed_count": 0,
+        "v1_artifacts_touched": [],
+    }
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any(
+        "exceeds this amendment's configuration-unit bound" in failure
+        for failure in failures
+    )
 
 
 def test_v1_artifacts_are_unchanged():
@@ -496,9 +542,16 @@ def test_verifier_detects_an_edited_protocol(tmp_path):
 
 def test_verifier_detects_a_v2_execution_artifact(tmp_path):
     root = _mirror_repo(tmp_path)
+    # An execution artifact without the ledger of the run is an inconsistent
+    # state: the ledger is what records the run's identity and its counts.
+    (root / "research" / "ledger_v2.json").unlink(missing_ok=True)
+    (root / "research" / "results_manifest_v2.json").unlink(missing_ok=True)
     (root / "research" / "shards_v2").mkdir(exist_ok=True)
     failures = _failures(root)
-    assert any("a v2 execution artifact exists" in failure for failure in failures)
+    assert any(
+        "a v2 execution artifact exists without the ledger of the run" in failure
+        for failure in failures
+    )
 
 
 def test_verifier_detects_a_v2_result_row(tmp_path):

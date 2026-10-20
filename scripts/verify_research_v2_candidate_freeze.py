@@ -410,10 +410,40 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     if "research/candidate_manifest_v2.json" in remainder_text:
         failures.append("the v1-campaign manifest_version 2 artifact is referenced outside the supersedes block")
 
-    # 9. Nothing has been executed and nothing is exposed.
-    for relative in V2_EXECUTION_ARTIFACTS:
-        if (repo_root / relative).exists():
-            failures.append(f"a v2 execution artifact exists: {relative}")
+    # 9. The executed state, if it exists, is bound to the frozen candidate set and
+    #    the frozen data boundary; nothing is exposed.
+    #
+    #    This rule was written before the authorized run as "nothing has been
+    #    executed". The run has happened, so the rule was replaced -- not deleted
+    #    -- by a check that is at least as strict in both states: before the run
+    #    no v2 execution artifact exists at all, and after the run the executed
+    #    state is bound to *this* freeze.
+    executed_artifacts = [
+        relative for relative in V2_EXECUTION_ARTIFACTS if (repo_root / relative).exists()
+    ]
+    if executed_artifacts:
+        ledger_path = repo_root / "research" / "ledger_v2.json"
+        if not ledger_path.exists():
+            failures.append("a v2 execution artifact exists without the ledger of the run")
+        else:
+            ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+            frozen = freeze.get("frozen_candidate_set") or {}
+            ledger_scope = ledger.get("scope") or {}
+            if list(ledger_scope.get("binance_pairs") or []) != list(frozen.get("binance_pairs") or []):
+                failures.append("the executed run is not scoped to the frozen candidate set")
+            if list(ledger_scope.get("constituents") or []) != list(frozen.get("constituents") or []):
+                failures.append("the executed run is not scoped to the frozen constituents")
+            ledger_boundary = ledger.get("data_boundary") or {}
+            if ledger_boundary.get("candles_before_utc") != (
+                freeze.get("data_boundary") or {}
+            ).get("confirmatory_window_start_utc"):
+                failures.append("the executed run did not stop at the frozen data boundary")
+            if ledger_boundary.get("confirmatory_window_never_read_during_selection") is not True:
+                failures.append("the executed run does not record that the confirmatory window was never read")
+            if ledger.get("holdout_exposed_count") != 0:
+                failures.append("the executed run records a confirmatory-window exposure")
+            if ledger.get("v1_artifacts_touched"):
+                failures.append("the executed run touched a v1 artifact")
     results_path = repo_root / "research" / "results.jsonl"
     if results_path.exists():
         with results_path.open("rb") as handle:

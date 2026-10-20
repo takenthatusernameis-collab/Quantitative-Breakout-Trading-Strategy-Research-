@@ -391,10 +391,52 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     if amendment.get("amendment_status") != "PREREGISTERED_AMENDMENT_DESIGN_ONLY":
         failures.append("the amendment status does not record that it is a design artifact")
 
-    # 12. Nothing has been executed and nothing is exposed.
-    for relative in V2_EXECUTION_ARTIFACTS:
-        if (repo_root / relative).exists():
-            failures.append(f"a v2 execution artifact exists: {relative}")
+    # 12. The executed state, if it exists, stays inside this amendment's bounds and
+    #     uses this amendment's paths; nothing is exposed.
+    #
+    #     This rule was written before the authorized run as "nothing has been
+    #     executed". The run has happened, so the rule was replaced -- not deleted
+    #     -- by a check that is at least as strict in both states: before the run no
+    #     v2 execution artifact exists at all, and after the run the executed state
+    #     stays inside the bounds and the paths that this amendment records.
+    executed_artifacts = [
+        relative for relative in V2_EXECUTION_ARTIFACTS if (repo_root / relative).exists()
+    ]
+    if executed_artifacts:
+        ledger_path = repo_root / "research" / "ledger_v2.json"
+        if not ledger_path.exists():
+            failures.append("a v2 execution artifact exists without the ledger of the run")
+        else:
+            ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+            recorded = (amendment.get("v2_selection_authorization") or {}).get("bounds") or {}
+            ledger_bounds = ledger.get("bounds") or {}
+            for key in ("max_assets", "max_configs_per_asset", "max_total_config_units", "attempts"):
+                if key in recorded and ledger_bounds.get(key) != recorded[key]:
+                    failures.append(f"the executed run does not carry this amendment's bound {key}")
+            counts = ledger.get("counts") or {}
+            if int(counts.get("config_units") or 0) > int(recorded.get("max_total_config_units") or 0):
+                failures.append("the executed run exceeds this amendment's configuration-unit bound")
+            # The amendment enforces the configuration-unit bound; the fold and
+            # cost multipliers follow the inherited, unchanged v1 blocks, so the
+            # execution-unit bound is the configuration-unit bound multiplied by
+            # the number of validation folds and cost scenarios.
+            fold_count = len((spec_v1.get("folds") or {}).get("window_fractions") or [])
+            cost_count = len((spec_v1.get("costs") or {}).get("scenarios") or [])
+            planned_execution_units = (
+                int(recorded.get("max_assets") or 0)
+                * int(recorded.get("max_configs_per_asset") or 0)
+                * fold_count
+                * cost_count
+            )
+            if int(counts.get("execution_units") or 0) > planned_execution_units:
+                failures.append("the executed run exceeds this amendment's execution-unit bound")
+            records_written = counts.get("records_written")
+            if records_written is not None and int(records_written) > planned_execution_units:
+                failures.append("the executed run wrote more records than this amendment's bound")
+            if ledger.get("holdout_exposed_count") != 0:
+                failures.append("the executed run records a confirmatory-window exposure")
+            if ledger.get("v1_artifacts_touched"):
+                failures.append("the executed run touched a v1 artifact")
     results_path = repo_root / RESULTS_STREAM_RELATIVE
     if results_path.exists():
         with results_path.open("rb") as handle:

@@ -76,7 +76,11 @@ def _mirror_repo(tmp_path: Path) -> Path:
     """
     root = tmp_path / "repo"
     skip_dirs = {".git", "__pycache__", ".pytest_cache"}
-    skip_relative = {Path("research/results_shards"), Path("research/campaign_cycles")}
+    skip_relative = {
+        Path("research/results_shards"),
+        Path("research/campaign_cycles"),
+        Path("research/shards_v2"),
+    }
     for current, dirs, files in os.walk(REPO_ROOT):
         dirs[:] = [name for name in dirs if name not in skip_dirs]
         relative = Path(current).relative_to(REPO_ROOT)
@@ -256,9 +260,40 @@ def test_the_amendment_authorizes_nothing():
         assert authorization_block[flag] is False, flag
 
 
-def test_nothing_has_been_executed():
-    for relative in verifier.V2_EXECUTION_ARTIFACTS:
-        assert not (REPO_ROOT / relative).exists(), relative
+def test_the_executed_state_carries_the_amended_tree_identity():
+    """The performed run, if there is one, carries *this* amendment's identity.
+
+    Before the run this asserts the not-executed state; after the run it
+    asserts that the run's composite identity binds the amended hashed-set
+    digest, the authorized ordered code hash and the live execution path. The
+    verifier's rule was replaced -- not deleted -- when the run happened.
+    """
+    ledger_path = REPO_ROOT / "research" / "ledger_v2.json"
+    if not ledger_path.exists():
+        for relative in verifier.V2_EXECUTION_ARTIFACTS:
+            assert not (REPO_ROOT / relative).exists(), relative
+        return
+    amendment = _load(AMENDMENT_PATH)
+    ledger = _load(ledger_path)
+    identity = ledger["code_identity"]
+    constraint = amendment["code_hash_constraint"]
+    assert identity["hashed_set_digest"] == constraint["canonical_source_digest"]
+    assert identity["authorized_code_hash"] == constraint["authorized_code_hash"]
+    assert identity["execution_path_digest"] == verifier.canonical_source_digest(
+        REPO_ROOT, "src/v2_campaign"
+    )
+
+
+def test_verifier_detects_an_executed_state_with_a_foreign_tree_identity(tmp_path):
+    root = _mirror_repo(tmp_path)
+    ledger = _load(REPO_ROOT / "research" / "ledger_v2.json")
+    ledger["code_identity"]["hashed_set_digest"] = "0" * 64
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any(
+        "does not carry this amendment's hashed-set digest" in failure
+        for failure in failures
+    )
 
 
 def test_v1_artifacts_are_unchanged():

@@ -376,10 +376,39 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     if amendment.get("amendment_status") != "PREREGISTERED_CODE_HASH_AMENDMENT_DESIGN_ONLY":
         failures.append("the amendment status does not record that it is a design artifact")
 
-    # 9. Nothing has been executed and the v1 evidence is byte-identical.
-    for relative in V2_EXECUTION_ARTIFACTS:
-        if (repo_root / relative).exists():
-            failures.append(f"a v2 execution artifact exists: {relative}")
+    # 9. The executed state, if it exists, is bound to the amended tree identity,
+    #    and the v1 evidence is byte-identical.
+    #
+    #    This rule was written before the authorized run as "nothing has been
+    #    executed". The run has happened, so the rule was replaced -- not deleted
+    #    -- by a check that is at least as strict in both states: before the run no
+    #    v2 execution artifact exists at all, and after the run the executed state
+    #    carries the tree identity that this amendment records.
+    executed_artifacts = [
+        relative for relative in V2_EXECUTION_ARTIFACTS if (repo_root / relative).exists()
+    ]
+    if executed_artifacts:
+        ledger_path = repo_root / "research" / "ledger_v2.json"
+        if not ledger_path.exists():
+            failures.append("a v2 execution artifact exists without the ledger of the run")
+        else:
+            ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+            identity = ledger.get("code_identity") or {}
+            constraint = amendment.get("code_hash_constraint") or {}
+            if identity.get("hashed_set_digest") != constraint.get("canonical_source_digest"):
+                failures.append(
+                    "the executed run does not carry this amendment's hashed-set digest"
+                )
+            if identity.get("execution_path_digest") != canonical_source_digest(
+                repo_root, "src/v2_campaign"
+            ):
+                failures.append(
+                    "the executed run does not carry the digest of the live execution path"
+                )
+            if identity.get("authorized_code_hash") != constraint.get("authorized_code_hash"):
+                failures.append(
+                    "the executed run does not carry this amendment's authorized code hash"
+                )
     for relative, digest in V1_ARTIFACT_SHA256.items():
         target = repo_root / relative
         if not target.exists():

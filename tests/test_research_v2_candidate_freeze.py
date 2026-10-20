@@ -87,6 +87,10 @@ def _mirror_repo(tmp_path: Path) -> Path:
             dirs[:] = ["v2_evidence"]
         (root / relative).mkdir(parents=True, exist_ok=True)
         for name in files:
+            if relative == Path("research_state") and name == "checkpoint_v2.json":
+                # The mirror holds no run artifact: the verifier's executed-state
+                # rule is exercised against the real repository, not the mirror.
+                continue
             source = Path(current) / name
             target = root / relative / name
             if relative == Path(HASHED_SET_ROOT):
@@ -311,13 +315,47 @@ def test_the_freeze_is_reproducible_from_the_producer_on_any_checkout():
     assert built == _load(FREEZE_PATH)
 
 
-def test_no_v2_execution_artifacts_or_result_rows_exist():
-    for relative in verifier.V2_EXECUTION_ARTIFACTS:
-        assert not (REPO_ROOT / relative).exists(), relative
+def test_the_executed_state_is_bound_to_the_frozen_candidate_set():
+    """The performed run, if there is one, is scoped to *this* freeze.
+
+    Before the run this asserts the not-executed state; after the run it
+    asserts that the executed state is scoped to the frozen candidate set, stops
+    at the frozen data boundary and exposes nothing. The verifier's rule was
+    replaced -- not deleted -- when the run happened.
+    """
+    ledger_path = REPO_ROOT / "research" / "ledger_v2.json"
     data = _load(DATA_V2_PATH)
     window = data["confirmatory_window"]
     assert window["holdout_exposed_count"] == 0
     assert window["confirmatory_window_status"] == "NOT_STARTED"
+    if not ledger_path.exists():
+        for relative in verifier.V2_EXECUTION_ARTIFACTS:
+            assert not (REPO_ROOT / relative).exists(), relative
+        return
+    freeze = _load(FREEZE_PATH)
+    ledger = _load(ledger_path)
+    frozen = freeze["frozen_candidate_set"]
+    assert ledger["scope"]["binance_pairs"] == frozen["binance_pairs"]
+    assert ledger["scope"]["constituents"] == frozen["constituents"]
+    assert ledger["data_boundary"]["candles_before_utc"] == (
+        freeze["data_boundary"]["confirmatory_window_start_utc"]
+    )
+    assert ledger["holdout_exposed_count"] == 0
+    assert not ledger["v1_artifacts_touched"]
+
+
+def test_verifier_detects_an_executed_state_that_is_not_the_frozen_candidate_set(tmp_path):
+    root = _mirror_repo(tmp_path)
+    ledger = _load(REPO_ROOT / "research" / "ledger_v2.json") if (
+        REPO_ROOT / "research" / "ledger_v2.json"
+    ).exists() else {"scope": {"binance_pairs": [], "constituents": []},
+                     "data_boundary": {"candles_before_utc": None,
+                                       "confirmatory_window_never_read_during_selection": True},
+                     "holdout_exposed_count": 0, "v1_artifacts_touched": []}
+    ledger["scope"]["binance_pairs"] = ["BTCUSDT"]
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any("not scoped to the frozen candidate set" in failure for failure in failures)
 
 
 def test_verifier_detects_a_tampered_candidate_set(tmp_path):
@@ -369,9 +407,16 @@ def test_verifier_detects_a_widened_universe_manifest(tmp_path):
 
 def test_verifier_detects_a_v2_execution_artifact(tmp_path):
     root = _mirror_repo(tmp_path)
+    # An execution artifact without the ledger of the run is an inconsistent
+    # state: the ledger is what records the run's identity and its counts.
+    (root / "research" / "ledger_v2.json").unlink(missing_ok=True)
+    (root / "research" / "results_manifest_v2.json").unlink(missing_ok=True)
     (root / "research" / "shards_v2").mkdir(exist_ok=True)
     failures = _failures(root)
-    assert any("a v2 execution artifact exists" in failure for failure in failures)
+    assert any(
+        "a v2 execution artifact exists without the ledger of the run" in failure
+        for failure in failures
+    )
 
 
 def test_verifier_detects_a_v2_result_row(tmp_path):

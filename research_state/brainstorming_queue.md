@@ -1389,3 +1389,99 @@ result stream stay untouched either way. The delivery decision itself is not mad
 **Verification.** `PYTHONPATH=src python3 -m pytest tests/ -q` → 339 passed, exit 0 (284 pre-existing +
 55 new); all seven v2 verifiers exit 0; `src/breakout_research/` untouched; every frozen v1 and v2 artifact
 byte-identical; no v2 result row, shard, ledger, result manifest or checkpoint exists.
+
+## BRAIN-008 §16 implementation record — the authorized v2 selection run was performed (2026-10-20T06:40Z, separate session)
+
+**Task.** The session that wrote the selection authorization 1 delivered the code and the artifact and ran
+nothing. This session performed the **single authorized v2 selection run** over the 18 frozen constituents,
+reported its selection outcome honestly, decided the delivery of the result volume (residual limitation
+`RL2`) and replaced the authorization verifier's nothing-runs rule by an executed-state check.
+
+**The rehearsal came first, as the handoff required, and it consumed nothing.** `scripts/v2_selection_rehearsal.py`
+runs the real execution path against the real v2 datasets with every output redirected to a temporary
+directory outside the repository, so neither the ledger nor the attempt was touched. Two units were measured
+individually (15.839 ms and 15.693 ms for ADAUSDT / cfg_0000 / fold 0 / cost 0 and cost 1), 23 units gave a
+median of 15.839 ms, and the result record is 1,050.6 bytes on average. The full pipeline was then exercised
+end to end (`--mode pipeline`: the real `run_selection` with the grid reduced to one configuration per asset,
+216 units, 9.647 s, 22 shard files) and it produced the ledger, the shards, the checkpoint, the result stream
+and the selection summary with no defect.
+
+**What the rehearsal could not have told us, and what the run did.** The grid is not uniform. The cost of a
+unit grows with the entry lookback (12 … 720 bars) and with the BTC-trend-filter configurations, which
+recompute the 26,280-candle BTC EMA twice per unit (once in `generate_entry_signals`, once in
+`run_fold_backtest`). The rehearsal sampled the first configurations and extrapolated ≈ 2.2 h; the real run
+measures **34.2 units/s in the cheap regions and 20.6 units/s in the expensive ones**, 99.5 % CPU-bound, and
+projects to **≈ 5 h**. The filesystem is not the bottleneck (an fsync costs 0.28 ms on this container). This
+is the substance of prompt gap `P9-2026-10-20-LONG-RUN-COST-AND-RESUME-BUDGET` in
+`research_state/prompt_evolution.md`: a handoff that asks for the *outcome* of a five-hour run, without
+saying that the run is resumable and that the outcome may not be available in the session that starts it, is
+a prompt gap.
+
+**The run.** `scripts/run_v2_selection.py` wraps `v2_campaign.runner.run_selection` with a progress line and
+prints the ledger document. It writes only the five authorized v2 paths and consumes the single authorized
+attempt. The run is **one logical run**: a killed process leaves the ledger `RUNNING` with its verified
+shards, and the next process resumes it from those shards instead of starting a second run. The number of
+resumes is bounded by the already recorded `max_retries_on_technical_failure` (3), and a completed run is
+never re-run. No file under `src/breakout_research/` or `src/v2_campaign/` was added, edited or deleted, so
+the canonical digests (`3e8e4169…` and `c69cc021…`) and the ordered code hash (`2efd3b18…`) are unchanged and
+the authorization was never rebuilt.
+
+**Rule 12 was replaced, not deleted.** The authorization verifier asserted that no v2 execution artifact
+exists; that assertion is false by design once the run has happened. The rule is now state-adaptive and at
+least as strict in both states: before the run, no v2 execution artifact exists at all; after the run, the
+ledger names the authorized run and is bound to the authorization's manifest hash, its scope is the frozen
+candidate set, no confirmatory exposure is recorded, the counts stay inside the authorized bounds and add
+up, a completed run evaluated the whole authorized grid, the selection outcome covers every asset of the
+frozen scope and reports the assets without a candidate, and the checkpoint and the results manifest are
+bound to the authorized run code identity, the v2 specification and the v2 data manifest; in both states the
+v1 evidence is byte-identical, no v2 row appears in the v1 result stream, and the confirmatory window is
+still `NOT_STARTED`. Nine tamper tests cover the new check.
+
+**The deeper check is a separate script.** `scripts/verify_v2_selection_run.py` verifies the record set
+itself: every shard against the results manifest (sha256, byte size, record count, no orphan), every record
+re-computing its own experiment id and carrying the authorized identities, every grid unit appearing exactly
+once, the buy-and-hold baselines recomputed from the datasets, the **selection outcome recomputed with the
+unchanged v1 selector from the records** and compared with what the run reported, and the result stream
+compared with the projection of the verified shards.
+
+**The outcome of the run.** The single authorized run started at `2026-10-20T02:02:04.655376Z` and
+completed at `2026-10-20T06:26:28.209906Z` — 15,863.55 s, 31.37 units/s, **0 resumes, 0 technical
+failures** — and it evaluated the whole authorized grid (497,664 execution units, `executed 497,664`,
+`records_written 497,664`, `config_units 41,472`, `holdout_exposed_count 0`, no v1 artifact touched). The
+outcome is `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE` over 18 evaluated assets: **14 assets have a
+candidate** (ADA `cfg_0073`, AVAX `cfg_0246`, BNB `cfg_0089`, DOGE `cfg_0736`, ETH `cfg_1241`, HBAR
+`cfg_0772`, LTC `cfg_0084`, NEAR `cfg_1564`, SOL `cfg_0732`, SUI `cfg_0507`, UNI `cfg_1570`, XLM `cfg_0124`,
+XRP `cfg_0041`, ZEC `cfg_0270`, all `CANDIDATE_PENDING_HOLDOUT`) and **4 do not** (BCH, LINK, TRX
+`INSUFFICIENT_EVIDENCE`, BTC `NO_CANDIDATE`). The four are reported in
+`assets_without_candidate` with `assets_without_candidate_reported = true`, which is what the protocol
+requires.
+
+**The outcome was recomputed, not taken on trust.** `scripts/verify_v2_selection_run.py` reads the 9,971
+verified shards, re-computes every record's `experiment_id`, re-computes the buy-and-hold baselines from the
+datasets, re-applies the unchanged v1 selector to the record set and compares the result with the ledger —
+per asset, per status, per configuration, per economic status, per gate count, plus the outcome label and
+both asset lists. It agrees on all 18 assets and reports `"ok": true`. The result stream's sha256 equals the
+sha256 of the shard bytes in shard order, so the stream is exactly the projection of the shards, and
+`scripts/regenerate_v2_result_stream.py` rebuilds it byte for byte (497,664 rows, 512,616,732 bytes).
+
+**The delivery decision (`RL2`).** The shards under `research/shards_v2/` are the authoritative record set
+and are committed as many small files, exactly as the v1 campaign committed 20,041 of them. The single-file
+result stream `research/results_v2.jsonl` is **not** committed: at ≈ 500 MB it is far above the 100 MB
+per-file push limit, and it carries no information that the shards do not carry — it is their concatenation
+in shard order. It is listed in `.gitignore` and `scripts/regenerate_v2_result_stream.py` rebuilds it from
+the shards on demand, atomically and re-verifying every experiment id while it writes. The v1 shards, the v1
+ledger and the v1 result stream are untouched either way.
+
+**Falsifiers for this delivery.** If the ledger does not name the authorized run, or is not bound to the
+authorization's manifest hash, the delivery is invalid. If the recorded counts leave the authorized bounds or
+do not add up, it is invalid. If a confirmatory exposure is recorded anywhere, it is invalid. If a record
+does not re-compute its own experiment id, or carries a foreign code, specification or unit-data identity, or
+is a holdout record, it is invalid. If a grid unit is missing or duplicated, it is invalid. If the
+recomputed selection outcome differs from the recorded one, it is invalid. If the v1 evidence is not
+byte-identical, or a v2 row appears in the v1 result stream, it is invalid.
+
+**Residual limitation (recorded, not fixed).** The result volume of the authorized run is ≈ 500 MB in
+≈ 10,000 shard files of ≈ 52 KB each. The files are far below the 4 MiB per-file ceiling and the per-file
+push limit, but the count is high because the run flushes the shard writer every 50 records
+(`checkpointing.batch_size` of the frozen v1 specification). The flush cadence is inside the hashed set and
+inside the frozen specification, so it was not changed.

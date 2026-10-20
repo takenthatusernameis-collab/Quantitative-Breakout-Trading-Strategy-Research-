@@ -942,3 +942,67 @@ the commit that carries it is recorded in git history for this file.
 
 **Rollback instruction:** revert the commit that carries this entry and the added README paragraph; no
 research artifact is affected.
+
+## P9-2026-10-20-LONG-RUN-COST-AND-RESUME-BUDGET
+
+### Triggering evidence
+
+The handoff that started the 2026-10-20T01:54Z session authorized "the single authorized v2 selection
+run over the 18 frozen constituents" and asked for its selection outcome, but it said nothing about how
+long that run takes, how it behaves when the session that started it ends, or what the run leaves
+behind when it is interrupted. The authorized grid is 18 assets x 2,304 configurations x 4 validation
+folds x 3 cost scenarios = 497,664 execution units, and the grid is not uniform: the cost of a unit
+grows with the entry lookback (12 to 720 bars), so the rate of the run oscillates by a factor of
+about two over the grid. The measured rate of the performed run was 30.8 to 34.2 units per second in
+the cheap regions of the grid and 20.6 units per second in the expensive ones, and the whole run
+projects to roughly five hours of wall clock. A session prompt that asks for the *outcome* of a run
+of that size, without saying that the run is resumable and that the outcome may not be available in
+the session that starts it, is a prompt gap: the agent that follows it can either overrun its session
+or, worse, kill the run and restart it and thereby burn the single authorized attempt.
+
+### Cause classification
+
+Missing operational budget in the handoff, not a defect in the research protocol. The execution path
+already encodes the correct behaviour: the run writes verified shards, the ledger and the checkpoint
+at a durable boundary every 50 records, a killed process leaves the run `RUNNING` in the ledger, and
+the next process resumes the *same* logical run from the verified shards. The prompt simply did not
+tell the agent that this is the expected way for the run to end, nor that the session's idle limit
+(every tool call must be shorter than the idle timeout) makes a five-hour run a multi-session
+activity in practice.
+
+### Revision summary — minimal instruction change
+
+One paragraph added to the handoff's "next task" section: the size of the authorized grid and its
+measured unit cost, the rule that the run must never be killed and restarted to "get a fresh
+attempt" (a restart must be a *resume* of the same logical run, never a second run), and the rule
+that when the session cannot wait for the run to finish, the handoff must record the exact resume
+point (the checkpoint's `completed_records`, the shard count and the ledger status) instead of
+reporting an outcome. No research artifact, no threshold, no holdout rule and no acceptance criterion
+changed.
+
+### Expected effect
+
+The agent that performs a long authorized run treats an interrupted run as a normal, resumable state
+rather than as a failure, records the resume point, and reports the selection outcome only when the
+ledger actually says `COMPLETED`. This is a hypothesis, not a measured result.
+
+### Regression scenarios and status
+
+| Scenario | Required behavior | Status at revision |
+|---|---|---|
+| The session ends while the run is in progress | The handoff records the resume point; the run is not restarted | Implemented this session: `research_state/agent_handoff.md` carries the resume protocol, the measured unit cost (31.37 units/s over the whole run; 34.2 units/s in the cheap regions of the grid and 20.6 units/s in the expensive ones) and the final counts (497,664 records in 9,971 shards, 516 MB) |
+| The run is killed and started again | The second process resumes the same logical run from the verified shards | Unchanged: `src/v2_campaign/runner.py::claim_attempt` resumes a `RUNNING` ledger entry and refuses a second attempt; the bound of three resumes is the authorization's `max_retries_on_technical_failure` |
+| A session reports an outcome that the ledger does not support | The outcome is reported only when the ledger status is `COMPLETED` | Implemented this session: `scripts/verify_v2_selection_run.py` recomputes the selection outcome from the records and compares it with the ledger, and it fails while the run is not complete |
+| Section 2A E vacuous-check rule (P7/P8) | Unchanged | Still enforced; the new check recomputes the outcome from the record set rather than comparing an artifact with itself |
+
+**Known trade-offs:** one added paragraph in the handoff. It makes the handoff longer and it tells
+the agent to plan for a multi-session task; it does not add a research gate or a new authorization.
+
+**Reviewer/verifier status:** self-review in this session. Verified by
+`PYTHONPATH=src python3 -m pytest tests/ -q` (351 passed, exit 0), by all seven v2 verifiers (exit 0) and by
+`PYTHONPATH=src python3 scripts/verify_v2_selection_run.py` (exit 0, `"ok": true`), whose results are
+recorded in `research_state/agent_handoff.md`. Behavioral effectiveness beyond this session is
+`NOT_YET_VERIFIED`.
+
+**Rollback instruction:** revert the commit that carries this entry and the added handoff paragraph;
+no research artifact is affected.

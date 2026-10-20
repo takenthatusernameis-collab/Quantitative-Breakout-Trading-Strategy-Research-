@@ -83,11 +83,18 @@ def _mirror_repo(tmp_path: Path) -> Path:
 
     The two source trees are copied for real, so a test may modify them without
     ever writing to the working tree. The large result directories are skipped:
-    the verifier never reads them.
+    the verifier never reads them. The v2 shard directory is replaced by an
+    empty placeholder of the same shape, because the verifier only checks that
+    the shards exist; their record-level verification is the deeper check of
+    ``scripts/verify_v2_selection_run.py``.
     """
     root = tmp_path / "repo"
     skip_dirs = {".git", "__pycache__", ".pytest_cache"}
-    skip_relative = {Path("research/results_shards"), Path("research/campaign_cycles")}
+    skip_relative = {
+        Path("research/results_shards"),
+        Path("research/campaign_cycles"),
+        Path("research/shards_v2"),
+    }
     copy_relative = {Path(HASHED_SET_ROOT), Path(EXECUTION_PATH_ROOT)}
     for current, dirs, files in os.walk(REPO_ROOT):
         dirs[:] = [name for name in dirs if name not in skip_dirs]
@@ -103,6 +110,7 @@ def _mirror_repo(tmp_path: Path) -> Path:
                 shutil.copyfile(source, target)
             else:
                 target.symlink_to(source)
+    (root / "research" / "shards_v2" / "v2-campaign").mkdir(parents=True, exist_ok=True)
     return root
 
 
@@ -289,18 +297,145 @@ def test_the_execution_path_accepts_the_authorization() -> None:
     assert plan.scope["binance_pairs"][0] == "ADAUSDT"
 
 
-def test_nothing_has_been_executed() -> None:
-    for relative in (
-        "research/shards_v2",
-        "research/ledger_v2.json",
-        "research/results_manifest_v2.json",
-        "research/results_v2.jsonl",
-        "research_state/checkpoint_v2.json",
-    ):
-        assert not (REPO_ROOT / relative).exists(), relative
+def _completed_ledger(authorization: Dict[str, Any]) -> Dict[str, Any]:
+    """A ledger of a *completed* run of the authorized run.
+
+    It is used by the tamper tests of the executed state, so that they do not
+    depend on whether the real run has already been performed.
+    """
+    run = authorization["authorized_run"]
+    pairs = list(run["scope"]["binance_pairs"])
+    constituents = list(run["scope"]["constituents"])
+    planned = int(run["bounds"]["planned_execution_units"])
+    return {
+        "artifact": "v2_selection_ledger",
+        "artifact_version": "v2-selection-ledger-1",
+        "run_id": run["run_id"],
+        "campaign_id": run["campaign_id"],
+        "run_phase": run["run_phase"],
+        "status": "COMPLETED",
+        "started_utc": "2026-10-20T00:00:00Z",
+        "completed_utc": "2026-10-20T01:00:00Z",
+        "authorization_manifest_hash": authorization["manifest_hash"],
+        "specification_hash": "synthetic",
+        "scope": {
+            "constituents": constituents,
+            "binance_pairs": pairs,
+            "count": len(constituents),
+            "excluded_after_validation": dict(run["scope"]["excluded_after_validation"]),
+        },
+        "counts": {
+            "config_units": int(run["bounds"]["planned_config_units"]),
+            "execution_units": planned,
+            "executed": planned,
+            "skipped_already_complete": 0,
+            "records_written": planned,
+        },
+        "selection": {
+            "assets_evaluated": len(pairs),
+            "assets_with_candidate": [],
+            "assets_without_candidate": list(pairs),
+            "assets_without_candidate_reported": True,
+            "outcome": "NO_CANDIDATE_SURVIVED_THE_SELECTION_RULE",
+            "per_asset": {
+                pair: {
+                    "status": "NO_CANDIDATE",
+                    "economic_status": "NO_CANDIDATE",
+                    "config_id": None,
+                    "counts": {},
+                }
+                for pair in pairs
+            },
+        },
+        "holdout_exposed_count": 0,
+        "runs": [],
+    }
+
+
+def _write_completed_ledger(root: Path) -> Dict[str, Any]:
+    """Put a completed ledger of the authorized run into the mirrored tree."""
+    ledger = _completed_ledger(_load(AUTHORIZATION_PATH))
+    _replace(root, "research/ledger_v2.json", ledger)
+    return ledger
+
+
+def _real_checkpoint() -> Dict[str, Any]:
+    """The checkpoint of the performed run, or a synthetic one before it ran."""
+    path = REPO_ROOT / "research_state" / "checkpoint_v2.json"
+    if path.exists():
+        return _load(path)
+    authorization = _load(AUTHORIZATION_PATH)
+    return {
+        "protocol_hash": _load(SPEC_V2_PATH)["specification_hash"],
+        "code_hash": authorization["authorized_run"]["code_identity"]["run_code_identity"],
+        "current_asset_index": 0,
+        "current_config_index": 0,
+        "current_fold_index": 0,
+        "current_cost_index": 0,
+        "completed_records": 0,
+        "last_verified_record": 0,
+        "holdout_exposed_count": 0,
+        "next_unit": {},
+        "timestamp_utc": "2026-10-20T00:00:00Z",
+        "pilot_completed": True,
+        "pilot_passed": True,
+    }
+
+
+def _real_results_manifest() -> Dict[str, Any]:
+    """The results manifest of the performed run, or a synthetic one."""
+    path = REPO_ROOT / "research" / "results_manifest_v2.json"
+    if path.exists():
+        return _load(path)
+    authorization = _load(AUTHORIZATION_PATH)
+    run = authorization["authorized_run"]
+    return {
+        "schema_version": "result-shard-v1",
+        "campaign_id": run["campaign_id"],
+        "specification_hash": _load(SPEC_V2_PATH)["specification_hash"],
+        "code_hash": run["code_identity"]["run_code_identity"],
+        "data_manifest_hash": _load(DATA_MANIFEST_PATH)["manifest_hash"],
+        "shards": [],
+        "total_records": 0,
+        "total_bytes": 0,
+    }
+
+
+def test_the_executed_state_is_consistent_with_the_authorization() -> None:
+    """The state of the performed run agrees with the authorization.
+
+    Before the run this test asserts the not-executed state; after the run it
+    asserts the executed state. Either way the v1 evidence is byte-identical
+    and no confirmatory exposure is recorded.
+    """
+    ledger_path = REPO_ROOT / "research" / "ledger_v2.json"
+    executed = ledger_path.exists()
     data_manifest = _load(DATA_MANIFEST_PATH)
     assert data_manifest["confirmatory_window"]["holdout_exposed_count"] == 0
     assert data_manifest["confirmatory_window"]["confirmatory_window_status"] == "NOT_STARTED"
+    if not executed:
+        for relative in (
+            "research/shards_v2",
+            "research/results_manifest_v2.json",
+            "research/results_v2.jsonl",
+            "research_state/checkpoint_v2.json",
+        ):
+            assert not (REPO_ROOT / relative).exists(), relative
+        return
+    authorization = _load(AUTHORIZATION_PATH)
+    run = authorization["authorized_run"]
+    ledger = _load(ledger_path)
+    assert ledger["run_id"] == run["run_id"]
+    assert ledger["campaign_id"] == run["campaign_id"]
+    assert ledger["authorization_manifest_hash"] == authorization["manifest_hash"]
+    assert ledger["status"] in {"RUNNING", "INTERRUPTED", "COMPLETED"}
+    assert ledger["holdout_exposed_count"] == 0
+    assert ledger["scope"]["binance_pairs"] == run["scope"]["binance_pairs"]
+    assert ledger["counts"]["config_units"] <= run["bounds"]["max_total_config_units"]
+    assert ledger["counts"]["execution_units"] <= run["bounds"]["planned_execution_units"]
+    assert (REPO_ROOT / "research" / "shards_v2" / "v2-campaign").is_dir()
+    assert (REPO_ROOT / "research_state" / "checkpoint_v2.json").exists()
+    assert (REPO_ROOT / "research" / "results_manifest_v2.json").exists()
 
 
 def test_the_v1_artifacts_are_byte_identical() -> None:
@@ -435,11 +570,114 @@ def test_verifier_detects_an_authorized_confirmatory_evaluation(tmp_path: Path) 
     assert any("confirmatory_evaluation_authorized" in failure for failure in failures)
 
 
-def test_verifier_detects_a_v2_execution_artifact(tmp_path: Path) -> None:
+def test_verifier_detects_an_execution_artifact_without_a_ledger(tmp_path: Path) -> None:
     root = _mirror_repo(tmp_path)
-    (root / "research" / "shards_v2" / "v2-campaign").mkdir(parents=True)
+    (root / "research" / "shards_v2" / "v2-campaign").mkdir(parents=True, exist_ok=True)
+    (root / "research" / "ledger_v2.json").unlink(missing_ok=True)
     failures = _failures(root)
-    assert any("v2 execution artifact exists" in failure for failure in failures)
+    assert any("without the ledger of the authorized run" in failure for failure in failures)
+
+
+def test_verifier_detects_a_ledger_that_names_another_run(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _write_completed_ledger(root)
+    ledger["run_id"] = "v2-selection-some-other-run"
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any("does not record the authorized run" in failure for failure in failures)
+
+
+def test_verifier_detects_counts_above_the_authorized_bounds(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _write_completed_ledger(root)
+    ledger["counts"]["records_written"] = 10_000_000
+    ledger["counts"]["executed"] = 10_000_000
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any(
+        "more records than the authorized execution-unit bound" in failure
+        for failure in failures
+    )
+
+
+def test_verifier_detects_ledger_counts_that_do_not_add_up(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _write_completed_ledger(root)
+    ledger["counts"]["skipped_already_complete"] = 7
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any("counts do not add up" in failure for failure in failures)
+
+
+def test_verifier_detects_a_ledger_with_a_nonzero_holdout_exposure(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _write_completed_ledger(root)
+    ledger["holdout_exposed_count"] = 1
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any("ledger records a confirmatory exposure" in failure for failure in failures)
+
+
+def test_verifier_detects_a_confirmatory_exposure_in_the_checkpoint(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    _write_completed_ledger(root)
+    checkpoint = _real_checkpoint()
+    checkpoint["holdout_exposed_count"] = 3
+    _replace(root, "research_state/checkpoint_v2.json", checkpoint)
+    failures = _failures(root)
+    assert any("checkpoint records a confirmatory exposure" in failure for failure in failures)
+
+
+def test_verifier_detects_a_checkpoint_bound_to_another_code_identity(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    _write_completed_ledger(root)
+    checkpoint = _real_checkpoint()
+    checkpoint["code_hash"] = "0" * 64
+    _replace(root, "research_state/checkpoint_v2.json", checkpoint)
+    failures = _failures(root)
+    assert any(
+        "checkpoint is not bound to the authorized run code identity" in failure
+        for failure in failures
+    )
+
+
+def test_verifier_detects_a_results_manifest_bound_to_another_code_identity(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    _write_completed_ledger(root)
+    manifest = _real_results_manifest()
+    manifest["code_hash"] = "0" * 64
+    _replace(root, "research/results_manifest_v2.json", manifest)
+    failures = _failures(root)
+    assert any(
+        "results manifest is not bound to the authorized run code identity" in failure
+        for failure in failures
+    )
+
+
+def test_verifier_detects_a_selection_outcome_that_omits_an_asset(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _write_completed_ledger(root)
+    omitted = ledger["selection"]["per_asset"].pop("BTCUSDT")
+    ledger["selection"]["assets_evaluated"] -= 1
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any("omits the asset BTCUSDT" in failure for failure in failures)
+    assert omitted["status"] == "NO_CANDIDATE"
+
+
+def test_verifier_detects_a_selection_outcome_that_hides_the_missing_candidates(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _write_completed_ledger(root)
+    ledger["selection"]["assets_without_candidate_reported"] = False
+    _replace(root, "research/ledger_v2.json", ledger)
+    failures = _failures(root)
+    assert any(
+        "does not report the assets without a candidate" in failure for failure in failures
+    )
 
 
 def test_verifier_detects_a_v2_result_row(tmp_path: Path) -> None:

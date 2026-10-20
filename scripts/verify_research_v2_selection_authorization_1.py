@@ -28,7 +28,27 @@ candle and never runs a grid. It checks:
 10. the stopping conditions, the rollback rule and the falsifiers are recorded;
 11. the execution path accepts this authorization and resolves a run plan from
     the repository without executing anything;
-12. nothing has been executed and the v1 evidence is byte-identical.
+12. the executed state is consistent with the authorization and the v1 evidence
+    is byte-identical.
+
+Rule 12 is state-adaptive and is never weaker than the state it replaces. It
+was written before the authorized run as "nothing has been executed"; once the
+run has happened that assertion is false by design, so the rule was replaced --
+not deleted -- by an executed-state check that is at least as strict:
+
+* before the run: no v2 execution artifact exists at all;
+* after the run: the ledger names the authorized run and is bound to the
+  authorization's manifest hash, the recorded counts stay inside the authorized
+  bounds and add up, no confirmatory exposure is recorded, the selection
+  outcome covers every asset of the frozen scope and reports the assets without
+  a candidate, the checkpoint and the results manifest are bound to the
+  authorized code and protocol identities;
+* in both states: the v1 evidence is byte-identical, no v2 row appears in the
+  v1 result stream, and the v2 data manifest records no confirmatory
+  exposure.
+
+The record-level verification of the shards is a separate, deeper check; it
+lives in ``scripts/verify_v2_selection_run.py``.
 
 Exit status is 0 when every check passes and 1 otherwise. The report is
 printed as JSON so it can be diffed between runs.
@@ -81,6 +101,14 @@ V2_EXECUTION_ARTIFACTS = (
     "research/results_v2.jsonl",
     "research_state/checkpoint_v2.json",
 )
+
+LEDGER_RELATIVE = "research/ledger_v2.json"
+SHARDS_RELATIVE = "research/shards_v2"
+RESULTS_MANIFEST_RELATIVE = "research/results_manifest_v2.json"
+RESULTS_STREAM_RELATIVE = "research/results_v2.jsonl"
+CHECKPOINT_RELATIVE = "research_state/checkpoint_v2.json"
+
+RUN_STATUSES = ("RUNNING", "INTERRUPTED", "COMPLETED")
 
 
 def canonical(obj: Any) -> str:
@@ -140,6 +168,117 @@ def dig(document: Any, dotted: str) -> Any:
 
 def _load(path: Path) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _verify_executed_state(
+    repo_root: Path,
+    authorization: Dict[str, Any],
+    run: Dict[str, Any],
+    constituents: List[str],
+    pairs: List[str],
+    spec_v2: Dict[str, Any],
+    data_manifest: Dict[str, Any],
+) -> List[str]:
+    """Check the state of the performed run against the authorization.
+
+    Every expectation is recomputed from the repository: the ledger, the
+    checkpoint and the results manifest are read from disk and are compared
+    with the identities and the bounds that the authorization records. The
+    record-level verification of the shards is deeper and lives in
+    ``scripts/verify_v2_selection_run.py``.
+    """
+    failures: List[str] = []
+    bounds = run.get("bounds") or {}
+    planned_units = int(bounds.get("planned_execution_units") or 0)
+    max_config_units = int(bounds.get("max_total_config_units") or 0)
+    identity = run.get("code_identity") or {}
+    specification_hash = str(spec_v2.get("specification_hash"))
+    data_manifest_hash = str(data_manifest.get("manifest_hash"))
+
+    ledger = _load(repo_root / LEDGER_RELATIVE)
+    if ledger.get("run_id") != run.get("run_id"):
+        failures.append("the ledger does not record the authorized run")
+    if ledger.get("campaign_id") != run.get("campaign_id"):
+        failures.append("the ledger does not record the authorized campaign")
+    if ledger.get("authorization_manifest_hash") != authorization.get("manifest_hash"):
+        failures.append("the ledger is not bound to the authorized manifest hash")
+    status = str(ledger.get("status") or "")
+    if status not in RUN_STATUSES:
+        failures.append(f"the ledger carries an unknown run status {status!r}")
+    if ledger.get("holdout_exposed_count") != 0:
+        failures.append("the ledger records a confirmatory exposure")
+
+    ledger_scope = ledger.get("scope") or {}
+    if list(ledger_scope.get("constituents") or []) != list(constituents):
+        failures.append("the ledger scope is not the frozen candidate set")
+    if list(ledger_scope.get("binance_pairs") or []) != list(pairs):
+        failures.append("the ledger scope is not the frozen Binance pairs")
+    if ledger_scope.get("count") != len(constituents):
+        failures.append("the ledger scope count is not the frozen candidate count")
+
+    counts = ledger.get("counts") or {}
+    if int(counts.get("config_units") or 0) > max_config_units:
+        failures.append("the run exceeds the authorized configuration-unit bound")
+    if int(counts.get("execution_units") or 0) > planned_units:
+        failures.append("the run exceeds the authorized execution-unit bound")
+    records_written = counts.get("records_written")
+    if records_written is not None:
+        records_written = int(records_written)
+        if records_written > planned_units:
+            failures.append("the run wrote more records than the authorized execution-unit bound")
+        executed = int(counts.get("executed") or 0)
+        skipped = int(counts.get("skipped_already_complete") or 0)
+        if executed + skipped != records_written:
+            failures.append(
+                "the ledger counts do not add up: executed + skipped_already_complete "
+                "!= records_written"
+            )
+    if status == "COMPLETED":
+        if int(records_written or 0) != planned_units:
+            failures.append("the completed run did not evaluate the whole authorized grid")
+        selection = ledger.get("selection") or {}
+        if int(selection.get("assets_evaluated") or 0) != len(pairs):
+            failures.append("the selection outcome does not cover the frozen candidate set")
+        if selection.get("assets_without_candidate_reported") is not True:
+            failures.append("the selection outcome does not report the assets without a candidate")
+        per_asset = selection.get("per_asset") or {}
+        for pair in pairs:
+            if pair not in per_asset:
+                failures.append(f"the selection outcome omits the asset {pair}")
+
+    checkpoint_path = repo_root / CHECKPOINT_RELATIVE
+    if not checkpoint_path.exists():
+        failures.append("the run left no checkpoint")
+    else:
+        checkpoint = _load(checkpoint_path)
+        if checkpoint.get("holdout_exposed_count") != 0:
+            failures.append("the checkpoint records a confirmatory exposure")
+        if checkpoint.get("code_hash") != identity.get("run_code_identity"):
+            failures.append("the checkpoint is not bound to the authorized run code identity")
+        if checkpoint.get("protocol_hash") != specification_hash:
+            failures.append("the checkpoint is not bound to the authorized v2 specification")
+        if int(checkpoint.get("completed_records") or 0) > planned_units:
+            failures.append("the checkpoint claims more records than the authorized bound")
+
+    manifest_path = repo_root / RESULTS_MANIFEST_RELATIVE
+    if not manifest_path.exists():
+        failures.append("the run left no results manifest")
+    else:
+        manifest = _load(manifest_path)
+        if manifest.get("campaign_id") != run.get("campaign_id"):
+            failures.append("the results manifest is bound to another campaign")
+        if manifest.get("code_hash") != identity.get("run_code_identity"):
+            failures.append("the results manifest is not bound to the authorized run code identity")
+        if manifest.get("specification_hash") != specification_hash:
+            failures.append("the results manifest is not bound to the authorized v2 specification")
+        if manifest.get("data_manifest_hash") != data_manifest_hash:
+            failures.append("the results manifest is not bound to the authorized v2 data manifest")
+        if int(manifest.get("total_records") or 0) > planned_units:
+            failures.append("the results manifest claims more records than the authorized bound")
+
+    if not (repo_root / SHARDS_RELATIVE).is_dir():
+        failures.append("the run left no shards")
+    return failures
 
 
 def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
@@ -402,10 +541,27 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         if plan.boundary_ms <= 0:
             failures.append("the execution path resolves no data boundary")
 
-    # 12. Nothing has been executed and the v1 evidence is byte-identical.
-    for relative in V2_EXECUTION_ARTIFACTS:
-        if (repo_root / relative).exists():
-            failures.append(f"a v2 execution artifact exists: {relative}")
+    # 12. The executed state is consistent with the authorization, and the v1
+    #     evidence is byte-identical.
+    executed_artifacts = [
+        relative for relative in V2_EXECUTION_ARTIFACTS if (repo_root / relative).exists()
+    ]
+    if not executed_artifacts:
+        # The authorized run has not been performed. This is a consistent
+        # state: the authorization permits one run and nothing was run.
+        pass
+    elif not (repo_root / LEDGER_RELATIVE).exists():
+        failures.append(
+            "a v2 execution artifact exists without the ledger of the authorized run: "
+            + ", ".join(executed_artifacts)
+        )
+    else:
+        failures.extend(
+            _verify_executed_state(
+                repo_root, authorization, run, constituents, pairs, spec_v2, data_manifest
+            )
+        )
+
     results_stream = repo_root / "research" / "results.jsonl"
     if results_stream.exists():
         with results_stream.open("r", encoding="utf-8") as handle:
