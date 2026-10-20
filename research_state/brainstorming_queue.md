@@ -2603,6 +2603,26 @@ outstanding as a separate bounded task).
 authorization and the runbook must exist before the first candle is read. The run itself remains
 blocked by the window.
 
+**Decision update 2026-10-20 UTC (HEAD `37e99599`, canonical source digest `3e8e4169…`):** the
+v3 line delivered by BRAIN-012 stage 1 is decided in one respect by a new item, **BRAIN-013** (see
+"BRAIN-013" below).
+
+- BRAIN-013 (P1) — `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. The v3 universe **declares**
+  `BTCUSDT` as its benchmark constituent (`research/universe_manifest_v3.json` →
+  `benchmark_asset.included_in_universe: true`), but the v3 data manifest contains **no dataset
+  for it**, while 576 of the 2,304 inherited configurations (25% of the grid) need the BTC series
+  and the frozen engine pairs that series with the asset series **by index**
+  (`src/breakout_research/signals/generator.py:90-92`), which contradicts the frozen methodology
+  (`docs/research_protocol.md:101` — "Align BTC and target asset by UTC candle close"). The v3
+  stage-1 constituent validation covered the derived batch of twenty and never the declared
+  benchmark, so the v3 selection run has no lawful benchmark dataset: the only hash-verified BTC
+  dataset in the repository (v2's) is 17 hours out of index with the v3 asset window. The decision
+  record compares five designs and recommends publishing a v3-bound benchmark dataset and aligning
+  by UTC candle close in new code outside the hashed set. The finding also quantifies a deviation
+  of the **completed** v1/v2 runs (93,312 of 497,664 v2 records evaluated the BTC filter against a
+  BTC EMA taken from a different period), which is recorded for disclosure, not repaired. Nothing
+  was implemented in that session, no provider was contacted, and no artifact was edited.
+
 ---
 
 ## BRAIN-012 — Versioned, auditable market-cap expansion program (v3+)
@@ -2721,5 +2741,255 @@ The user explicitly requested that the breakout research program keep adding new
 4. `research/v_universe_expansion_log.json` did not exist. Written with the v3 entry of the hash chain.
 5. No v3 test module existed, although the specification's own P1 evidence names `tests/test_research_v3_spec.py`. Six modules, 63 tests, written.
 6. The v3 specification's stale `data_integrity.data_manifest` reference. Corrected by `configs/research_v3_spec_amendment_1.json` and disclosed by the manifest verifier as a warning; without a verified amendment the manifest verifier fails.
+7. **The declared benchmark constituent was never validated.** The v3 universe manifest declares
+   `BTCUSDT` as a constituent (`benchmark_asset.included_in_universe: true`) but the v3 data
+   manifest contains no dataset for it, because the constituent validation processed only the
+   derived batch of twenty. 576 of the 2,304 inherited configurations need the BTC series and the
+   engine pairs it with the asset series by index, so the v3 selection run has no lawful
+   benchmark dataset. Decided by **BRAIN-013** below; not corrected in stage 1, and it blocks the
+   v3 selection run until the benchmark dataset is published.
 
 **Staged acceptance tests (status after stage 1):** 1 satisfied (self-hashed immutable specification, byte-equal inherited blocks, 2,304 configurations); 2 satisfied (snapshot-identity tuple complete and self-consistent, `supersedes` → v2 manifest identity); 3 satisfied (freeze hash-bound and, through the amendment, exactly the six validated constituents, excluded assets carry reasons); 4 satisfied (no file under `src/breakout_research/` or `src/v2_campaign/` touched; `compute_code_hash()` `608c7340…` is an environment fact, the authorized value of record `2efd3b18…` and the canonical digest `3e8e4169…` are unchanged); 5 satisfied (all v3 verifiers exit 0; the full suite is 608/608 green; no v1/v2 artifact sha256 changed); 6 satisfied (no v3 result row, shard, ledger, result manifest, checkpoint or holdout exposure exists — `research/shards_v3/`, `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json` are all absent); 7 satisfied (the expansion log is append-only and records the prior floor and the new candidates); 8 not applicable to this pass (the pass yielded new eligible names, so `AWAITING_NEW_CANDIDATES` was not entered; the bounded P7D next-pass cadence is recorded in the log entry); 9 and 10 open — they belong to the authorized v3 run, which does not exist yet; the v2 confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
+
+---
+
+## BRAIN-013 — The v3 universe declares a benchmark constituent it does not contain, and the frozen engine pairs the BTC series with the asset series by index
+
+**Priority:** P1 — blocks the v3 selection run; does not block the v2 confirmatory evaluation (which is time-blocked until `2027-01-17T22:00:00Z`)
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`
+**Cause labels:** `SCOPE_DECISION`, `RESEARCH_DESIGN_RISK`
+**Confidence:** high — every fact below is recomputed from the repository by `scripts/report_v3_benchmark_dependency.py` and locked by `tests/test_v3_benchmark_dependency.py`.
+
+### Evidence (revalidated against the live tree at `37e99599`)
+
+- The v3 universe **declares** the benchmark: `research/universe_manifest_v3.json` →
+  `benchmark_asset = {symbol: BTCUSDT, role: trend_filter_and_benchmark, included_in_universe: true}`,
+  and `configs/research_v3.json` → `universe.benchmark_asset = "BTCUSDT"`. The frozen v1
+  methodology requires it (README Section 3: "Include BTCUSDT as a benchmark and as the BTC
+  trend-filter input even if BTC is not otherwise included in the eligible universe").
+- The v3 data manifest **does not contain it**: `research/data_manifest_v3.json` has 14 asset
+  entries and 6 validated `content_hashes` (AAVEUSDT, ICPUSDT, PEPEUSDT, QNTUSDT, SHIBUSDT,
+  WLDUSDT) and **no `BTCUSDT` entry**. The v1 precedent is the opposite: the v1 universe's
+  `eligible_assets` do not contain BTC either, but the v1 **data manifest** does
+  (`research/data_manifest.json` → `assets.BTCUSDT`), as does the v2 data manifest
+  (`research/data_manifest_v2.json` → `assets.BTCUSDT`, content hash `740f3590…`). The v3
+  delivery broke that precedent: the stage-1 constituent validation processed the derived
+  batch of twenty and never the declared benchmark.
+- A quarter of the inherited grid needs the BTC series: `research/config_manifest.json` holds
+  2,304 configurations, of which **576** use `trend_filter = btc_ema_168` (576 per trend
+  filter, 25% of the grid). The v3 specification inherits the grid byte-equal, so a v3 run
+  that cannot supply an index-aligned BTC series cannot evaluate those 576 configurations per
+  asset.
+- The frozen engine pairs the BTC series with the asset series **by index**, not by timestamp:
+  `src/breakout_research/signals/generator.py:90-92` compares `closes[i]` with `btc_ema_168[i]`
+  where `i` indexes the *passed* candle list, and `src/breakout_research/backtest/backtester.py:203-207`
+  slices the **asset** series to the fold window while `btc_candles` is passed through unsliced.
+  The behavioural probe in `scripts/report_v3_benchmark_dependency.py` shows a BTC series with
+  identical values at different instants produces identical signals (`probe_timestamps_ignored`),
+  while changing the BTC value at one index changes the outcome (`probe_index_value_used`).
+- The frozen methodology says the opposite: `docs/research_protocol.md:101` — "**BTC Filter:**
+  Align BTC and target asset by UTC candle close" — and `:102` — "No forward-fill for missing BTC
+  observations". The implementation therefore contradicts the frozen protocol text for every
+  validation fold whose start is not the dataset start.
+- The windows differ. The six validated v3 assets share one window
+  (`2023-10-21T11:00:00Z` … `2026-10-20T10:00:00Z`, 26,280 candles each); the v2 BTC dataset
+  covers `2023-10-20T18:00:00Z` … `2026-10-19T17:00:00Z`. The index-0 candles are **17 hours
+  apart**, so index `i` of the v2 BTC series is a different instant from index `i` of a v3 asset
+  series, and the v3 assets' last 17 candles have no BTC counterpart at all.
+- The v2 line was internally consistent: all 18 v2 assets and BTC share the identical window
+  (`2023-10-20T18:00:00Z` … `2026-10-19T17:00:00Z`), so index alignment equalled timestamp
+  alignment for the first validation fold. The v3 batch broke that property.
+- Consequence for the **completed** v1 and v2 runs (recorded, not repaired here): the ledger
+  (`research/ledger_v2.json`) shows 41,472 configuration units and 497,664 execution units
+  (18 assets × 2,304 configurations × 4 validation folds × 3 cost scenarios). The BTC filter
+  therefore covers 124,416 v2 records (25%), of which **93,312** (folds 1–3) compared the
+  asset's close with a BTC EMA taken from the start of the three-year history rather than from
+  the same hour. Fold 0 (31,104 records) was aligned. The v1 run used the same engine and the
+  same call shape (`src/breakout_research/campaign.py:429-435`).
+- The v2 **confirmatory** path is not affected: `src/v2_confirmatory/runner.py:640-646` slices
+  the asset series **and** the benchmark series to the same window before calling the engine, so
+  index alignment equals timestamp alignment there. A v3 confirmatory path that slices both
+  series to the window inherits the correct behaviour.
+- No v3 execution artifact exists (`research/shards_v3/`, `research/ledger_v3.json`,
+  `research/results_manifest_v3.json`, `research/results_v3.jsonl`,
+  `research_state/checkpoint_v3.json`, `research/v3_selected_configurations_manifest.json` are
+  all absent), and no v3 selection authorization exists. The v2 confirmatory window stays
+  `NOT_STARTED` with `holdout_exposed_count = 0`.
+
+### Causal model
+
+- **Observed fact:** the v3 universe declares `BTCUSDT` as a constituent; the v3 data manifest has
+  no dataset for it; the inherited grid needs it for 576 of 2,304 configurations per asset; the
+  engine pairs it with the asset series by index.
+- **Inferred root cause:** the v3 stage-1 constituent validation was scoped to the *derived batch*
+  of twenty candidates and did not cover the *declared benchmark* of the same universe version.
+  The gap is silent because the universe manifest's `benchmark_asset` block is declarative: no
+  artifact in the v3 chain asserts that every declared constituent has a hash-verified dataset.
+- **Unknowns:** whether a fresh, index-aligned BTC dataset can be retrieved under the v3 window
+  rule from the same provider and endpoint policy the v3 validation used
+  (`https://api.binance.com/api/v3/klines` with the documented failover
+  `https://data-api.binance.vision/api/v3/klines`); the exact size of the deviation between the
+  index alignment actually used by the completed v1/v2 runs and the UTC alignment the frozen
+  methodology requires.
+- **Downstream risks:** (a) a v3 selection run that reuses the v2 BTC dataset would silently
+  evaluate 25% of its grid against a misaligned series; (b) a v3 run that drops the BTC-filter
+  configurations would change the inherited grid and the selection rule; (c) an implementation
+  that "fixes" the alignment inside `src/breakout_research/` would change the hashed set and
+  invalidate the v1 campaign authorization and every v2 identity tuple; (d) a v3 run that keeps
+  the index alignment would knowingly contradict `docs/research_protocol.md:101` and would not be
+  comparable with the confirmatory evaluation, which aligns correctly.
+
+### Alternatives to compare
+
+**Design A — Publish a v3-bound benchmark dataset and align by UTC candle close (recommended).**
+Retrieve BTCUSDT once under the v3 window rule (the same 26,280 closed hourly candles ending at
+the last fully closed hour before the v3 market-cap snapshot `2026-10-20T11:45:59Z`, i.e. the
+window the six validated assets already use), publish it in a **versioned** v3 data-manifest
+amendment (the v3 data manifest itself is hash-bound by the freeze amendment
+`1f0f3d65…` and by the execution protocol `9e92a35d…` and is therefore not edited in place), and
+have the v3 execution path slice the asset series **and** the benchmark series to the same
+fold window before calling the engine, so that the engine's index alignment equals UTC
+alignment. Correctness: matches `docs/research_protocol.md:101` exactly. Validity: the v3 result
+is produced under the frozen methodology; the deviation from the *v1/v2 implementation* is
+disclosed, not inherited. Cost: one bounded provider read, one new dataset, one amendment
+cascade (data-manifest amendment → freeze amendment 2 → execution amendment 1) and a new
+execution path. Failure modes: the provider may be unavailable (the primary host answered HTTP
+451 in earlier sessions; the failover host served the v3 validation on 2026-10-20) — then the run
+is `BLOCKED_EXTERNAL`, never a substitute dataset. Reversibility: strictly additive; nothing
+already delivered is edited.
+
+**Design B — Reuse the v2 BTC dataset inside the v3 run (rejected).** The v2 dataset is immutable,
+hash-verified and entirely before the v3 development boundary (`2026-10-20T13:00:00Z`), so using
+it violates no recorded rule. It is nevertheless **index-misaligned with the v3 assets by 17
+hours** and 17 candles shorter, and the v3 assets' last 17 candles have no BTC counterpart. The
+alternative of trimming every v3 asset to the v2 BTC coverage would move the fold boundaries
+(0.065% of the span) and would still leave the benchmark as a v2 artifact inside a v3 run. The
+mismatch is a *silent* correctness defect, which is what this record exists to prevent.
+
+**Design C — Drop the BTC-filter configurations from the v3 grid (rejected).** It would remove 576
+of 2,304 configurations per asset, i.e. change the grid the v3 specification inherits byte-equal
+and change the space the unchanged v1 selection rule ranges over. Forbidden by the inheritance
+rule and by BRAIN-012 D-6.
+
+**Design D — Fix the alignment inside the hashed engine and re-run v1/v2 (rejected, out of
+scope).** `src/breakout_research/` is the hashed set (canonical digest `3e8e4169…`, authorized
+ordered digest `2efd3b18…`). Editing it invalidates the v1 campaign authorization and every v2
+identity tuple, and re-running the completed v1 and v2 campaigns is not reproducible inside this
+program. The finding is recorded here and must be disclosed in the final report; the v3 path
+implements the correct alignment in **new** code outside the hashed set, which is the only place
+it can be implemented without voiding the frozen work.
+
+**Design E — Let the v3 run inherit the v1/v2 index alignment (rejected).** It preserves
+cross-version comparability but knowingly implements a behaviour the frozen methodology
+contradicts, and it would make the v3 selection inconsistent with the v3 confirmatory path,
+which aligns correctly. Comparability is preserved instead by *disclosure* of the v1/v2 deviation.
+
+### Recommendation
+
+**Design A**, with **Design B** as the recorded fallback only if the provider is unavailable at
+the time of the bounded retrieval, and even then only after a further recorded decision that
+accepts the 17-hour misalignment for a *development-only* benchmark. Concretely, the
+implementation session must:
+
+1. retrieve BTCUSDT once under the v3 window rule, through the documented primary → failover
+   policy, storing the raw response, its sha256 and the retrieval timestamp, exactly as the v3
+   stage-1 retrieval did;
+2. publish the dataset and its hash-verified entry in a **versioned** v3 data-manifest amendment
+   (`configs/research_v3_data_manifest_amendment_1.json`), and re-bind the data-manifest
+   identity in a freeze amendment 2 and an execution amendment 1 — the three immutable artifacts
+   that name `6793d86c…` are not edited in place;
+3. implement the v3 selection execution path in `src/v3_campaign/` (outside the hashed set),
+   which slices the asset series **and** the benchmark series to the same fold window before
+   calling the frozen engine, and which **fails closed** when the benchmark series is missing,
+   not index-aligned, or shorter than the evaluated window;
+4. bind the benchmark rule in the v3 selection authorization
+   (`configs/research_v3_selection_authorization_1.json`), which must name the benchmark
+   dataset, its content hash, the alignment rule and the deviation disclosure;
+5. record the v1/v2 deviation (93,312 of 497,664 v2 records evaluated the BTC filter against a
+   BTC EMA from a different period) in the final report, not in a frozen artifact.
+
+### Decision criteria (D-1 … D-8)
+
+- **D-1** No v1 or v2 artifact, manifest, ledger, shard or holdout record is modified; the
+  correction is carried by versioned amendments only.
+- **D-2** The benchmark dataset is hash-verified and index-aligned with the evaluated v3 assets
+  (identical first and last candle timestamps and candle count), or the run fails closed.
+- **D-3** The v3 execution path lives outside the hashed set (`src/v3_campaign/`); the hashed-set
+  canonical digest `3e8e4169…` and the authorized ordered digest `2efd3b18…` stay unchanged.
+- **D-4** The alignment rule follows the frozen methodology (`docs/research_protocol.md:101`):
+  the BTC series is aligned to the asset series by UTC candle close, with no forward fill.
+- **D-5** The inherited grid, costs, folds, selection rule and metric are unchanged; the BTC
+  filter's 576 configurations per asset are evaluated, never dropped.
+- **D-6** The development-data boundary stays `2026-10-20T13:00:00Z`; no v2 confirmatory-window
+  candle and no v1 holdout is read; `holdout_exposed_count` stays 0.
+- **D-7** The provider dependency is bounded: one read of one asset, with the documented failover
+  and both HTTP statuses recorded; an unavailable provider yields `BLOCKED_EXTERNAL`, never a
+  substitute dataset.
+- **D-8** The v1/v2 deviation is disclosed in the final report with its exact count, so the
+  completed runs are not read as if they had implemented the protocol's alignment rule.
+
+### Falsifying evidence
+
+- A v3 run whose benchmark series is not index-aligned with the evaluated assets, or whose
+  `btc_ema_168` configurations were skipped, dropped or re-derived.
+- A v3 artifact that edits `research/data_manifest_v3.json`,
+  `configs/research_v3_candidate_freeze_amendment_1.json` or `configs/research_v3_execution.json`
+  in place instead of amending them.
+- A v3 run whose experiment IDs do not bind the benchmark content hash for the BTC-filter
+  configurations (the v1 rule binds the BTC dataset hash into the unit data hash).
+- Evidence that a v3-bound BTC dataset is *not* retrievable under the v3 window rule, which would
+  demote Design A to `WAITING_EXTERNAL_INTERVENTION` and force the recorded fallback decision.
+- Evidence that the UTC alignment changes the selection outcome of a v3 asset, which would make
+  the v1/v2 deviation material rather than cosmetic and would require the v2 confirmatory
+  protocol to disclose it before the window is read.
+
+### Rollback
+
+- The implementation is additive: `src/v3_campaign/`, the versioned amendments, the new dataset
+  and the authorization can be deleted without touching a single v1 or v2 artifact. The append-only
+  expansion log (`research/v_universe_expansion_log.json`) records an abandoned attempt and its
+  reason.
+- No rollback of the v1 or v2 line is ever required or permitted. The v1/v2 deviation is a
+  disclosure, not a repair.
+- A v3 selection run that has started is never re-run; a boundary abort rolls the ledger back and
+  releases the single authorized attempt, as the v2 authorization prescribes.
+
+### Staged acceptance tests (for the later implementation session)
+
+1. The bounded BTC retrieval records the endpoint, both probed HTTP statuses, the raw response
+   bytes, their sha256 and the retrieval timestamp, and the dataset is written under
+   `research/data/candles_v3/` with the canonical hourly CSV hash.
+2. The new BTC dataset's window is **identical** to the six validated v3 assets' window
+   (`2023-10-21T11:00:00Z` … `2026-10-20T10:00:00Z`, 26,280 closed hourly candles, no gaps, no
+   rejected rows) — recomputed from the manifest, never copied.
+3. The benchmark entry is published by a versioned amendment; the v3 data manifest, the freeze
+   amendment 1 and the execution protocol are byte-unchanged, and the amendments that re-bind the
+   data-manifest identity are hash-bound and self-verifying.
+4. `src/v3_campaign/` refuses to run when the benchmark series is missing, shorter than the
+   evaluated window, or not index-aligned with the asset series; the refusal is a test, not a
+   comment.
+5. The v3 execution path slices the asset series and the benchmark series to the same fold
+   window; a test asserts that the BTC series the engine receives is the fold-window slice, not
+   the full history.
+6. The 576 `btc_ema_168` configurations per asset are evaluated; the run's unit count is
+   `assets × 2,304 × 4 validation folds × 3 cost scenarios`, and the holdout-position fold is
+   never evaluated and `holdout_exposed_count` stays 0.
+7. Every v3 verifier exits 0, the full suite is green, the hashed-set canonical digest is still
+   `3e8e4169…`, the authorized ordered digest is still `2efd3b18…`, and no v1 or v2 artifact
+   sha256 changed.
+8. No v3 execution artifact exists before the run: `research/shards_v3/`,
+   `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`,
+   `research_state/checkpoint_v3.json` stay absent; the v2 confirmatory window stays
+   `NOT_STARTED` with `holdout_exposed_count = 0`.
+
+### Implementation note
+
+**Not implemented in this session** (README Section 2A C1: the decision record and its
+implementation do not belong in the same session). This session delivered the decision record,
+the read-only evidence script `scripts/report_v3_benchmark_dependency.py` and the deterministic
+test module `tests/test_v3_benchmark_dependency.py` (the facts are recomputed from the
+repository, so the module stays green both before and after the implementation). No provider was
+contacted, no candle was read or fetched, no v1, v2 or v3 artifact was edited, and no file under
+`src/breakout_research/` or `src/v2_campaign/` was touched.
+
+**Marked:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
