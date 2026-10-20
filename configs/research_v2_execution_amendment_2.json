@@ -1,0 +1,80 @@
+{
+  "artifact": "v2_execution_amendment",
+  "artifact_version": "v2-execution-amendment-2",
+  "version": 2,
+  "amendment_number": 2,
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-20T07:05:00Z",
+  "amendment_status": "PREREGISTERED_AMENDMENT_DESIGN_ONLY",
+  "description": "Versioned amendment to configs/research_v2_execution.json adding the authorized path for the published v2 selected-configuration manifest derived from the completed v2 selection run.",
+  "amends": {
+    "file": "configs/research_v2_execution.json",
+    "file_sha256": "dd45f840532318ceb80a203bace1fb2083e5a28260f8fd473de9d179a361934c",
+    "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+    "note": "The execution protocol is immutable and was not edited. Its file digest and its own specification_hash are recorded here unchanged; the amendment authorizes an additional published artifact path."
+  },
+  "references": {
+    "configs_research_v2": {
+      "file": "configs/research_v2.json",
+      "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+    },
+    "universe_manifest_v2": {
+      "file": "research/universe_manifest_v2.json",
+      "manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88"
+    },
+    "data_manifest_v2": {
+      "file": "research/data_manifest_v2.json",
+      "manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e"
+    },
+    "candidate_freeze_v2": {
+      "file": "configs/research_v2_candidate_freeze.json",
+      "manifest_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f"
+    },
+    "v2_code_hash_amendment_1": {
+      "file": "configs/research_v2_code_hash_amendment_1.json",
+      "manifest_hash": "4409b6af54acb2982e1f286f9c6ebd1ce1b7628a90c476dede6da3c04d8762c1"
+    },
+    "v2_execution_amendment_1": {
+      "file": "configs/research_v2_execution_amendment_1.json",
+      "manifest_hash": "1149d9cb3ee9ea35f16512502c43c4cf0ee13b0ae2fb91e2dc691663b99195db"
+    },
+    "v2_selection_authorization_1": {
+      "file": "configs/research_v2_selection_authorization_1.json",
+      "manifest_hash": "76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918"
+    },
+    "v1_campaign_authorization": {
+      "file": "research_state/campaign_authorization.json",
+      "protocol_version": "v1",
+      "authorized": true,
+      "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
+    }
+  },
+  "v2_result_layout_amendment": {
+    "description": "Add the published selected-configuration manifest path to the v2 result layout. The path is not research/candidate_manifest.json nor research/candidate_manifest_v2.json.",
+    "campaign_id": "v2-campaign",
+    "paths": {
+      "shard_directory": "research/shards_v2",
+      "ledger_path": "research/ledger_v2.json",
+      "results_manifest_path": "research/results_manifest_v2.json",
+      "selected_configurations_manifest_path": "research/v2_selected_configurations_manifest.json",
+      "selected_configurations_manifest_hash": "7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862"
+    },
+    "writes_into_v1_forbidden": true,
+    "authorization_rules": [
+      "Only the published outcome of the completed authorized run may be written; no second run is authorized",
+      "No confirmatory-window evaluation is authorized by this amendment",
+      "No candle fetch is authorized by this amendment",
+      "The manifest must list all 18 assets of the frozen scope with explicit reasons for assets without a candidate"
+    ]
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "verify_command": "python3 scripts/verify_research_v2_execution_amendment_2.py"
+  },
+  "manifest_hash": "6c89cafebafc9cadff90b8405810eb1489a2cb9160a409a4a4ea31e4c6705f46"
+}

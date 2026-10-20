@@ -1,0 +1,289 @@
+{
+  "artifact": "v2_selected_configurations_manifest",
+  "artifact_version": "v2-selected-configurations-manifest-1",
+  "version": 1,
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-20T07:00:00Z",
+  "manifest_status": "PUBLISHED_FROM_VERIFIED_SHARDS",
+  "description": "Published outcome of the authorized v2 selection run over the frozen candidate set, derived from verified shards under the unchanged v1 selection rule.",
+  "run_identity": {
+    "run_id": "v2-selection-20261019",
+    "campaign_id": "v2-campaign",
+    "authorization_manifest_hash": "76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918",
+    "run_code_identity": "08658436f54156282b6eda57330bc81158394447c6a0d89227297408dca14a87",
+    "ordered_code_hash_authorized": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "execution_path_digest": "c69cc02188d95def8a9c2e24f717ccc20c36035d5049a3216451e841dfe42cba"
+  },
+  "specification_identities": {
+    "spec_v1_hash": "09c79d0ba225a7e53dc432a16cb8669a823972bf19408a3f16be3d12f895464d",
+    "spec_v2_hash": "727d858573d13e7435ae1af6c859d774beae48cb1f08cdda58f7311ff16df8df",
+    "selection_rule_digest": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e",
+    "selection_rule_reference": "configs/research_v1.json#selection"
+  },
+  "data_identities": {
+    "universe_manifest_v2_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+    "data_manifest_v2_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+    "candidate_freeze_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f"
+  },
+  "scope": {
+    "frozen_candidate_set": {
+      "count": 18,
+      "constituents": [
+        "ADA",
+        "AVAX",
+        "BCH",
+        "BNB",
+        "BTC",
+        "DOGE",
+        "ETH",
+        "HBAR",
+        "LINK",
+        "LTC",
+        "NEAR",
+        "SOL",
+        "SUI",
+        "TRX",
+        "UNI",
+        "XLM",
+        "XRP",
+        "ZEC"
+      ],
+      "binance_pairs": [
+        "ADAUSDT",
+        "AVAXUSDT",
+        "BCHUSDT",
+        "BNBUSDT",
+        "BTCUSDT",
+        "DOGEUSDT",
+        "ETHUSDT",
+        "HBARUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "NEARUSDT",
+        "SOLUSDT",
+        "SUIUSDT",
+        "TRXUSDT",
+        "UNIUSDT",
+        "XLMUSDT",
+        "XRPUSDT",
+        "ZECUSDT"
+      ],
+      "membership_rule": "Exactly the constituents marked validated in research/universe_manifest_v2.json (validated == true, exclusion_reason == null). Membership is not re-derived, re-ranked, widened or narrowed by this artifact.",
+      "universe_manifest_path": "research/universe_manifest_v2.json",
+      "universe_manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+      "data_manifest_path": "research/data_manifest_v2.json",
+      "data_manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+      "benchmark_asset": "BTCUSDT",
+      "widening_by_reranking_forbidden": true,
+      "excluded_assets_stay_excluded": true,
+      "excluded_after_validation": {
+        "HYPEUSDT": "insufficient_hourly_history",
+        "XMRUSDT": "binance_spot_unavailable"
+      },
+      "excluded_by_rule": {
+        "USDT": "stablecoin_excluded",
+        "USDC": "stablecoin_excluded",
+        "FIGR_HELOC": "exchange_token_excluded",
+        "USDS": "stablecoin_excluded",
+        "WBT": "exchange_token_excluded",
+        "LEO": "exchange_token_excluded",
+        "RAIN": "exchange_token_excluded",
+        "USDE": "stablecoin_excluded",
+        "DAI": "stablecoin_excluded",
+        "CC": "exchange_token_excluded",
+        "USD1": "stablecoin_excluded",
+        "GRAM": "exchange_token_excluded"
+      },
+      "exclusion_note": "HYPEUSDT and XMRUSDT failed the BRAIN-008 section 3 validation and are not v2 candidates. Twelve further assets were removed by the exclusion rules before validation. Every exclusion carries a reason; nothing was promoted, substituted or admitted by lowering a threshold."
+    },
+    "assets_evaluated": 18
+  },
+  "derived_from": {
+    "records_read": 497664,
+    "shard_directory": "research/shards_v2/v2-campaign",
+    "results_manifest_path": "research/results_manifest_v2.json",
+    "ledger_path": "research/ledger_v2.json",
+    "experiment_ids_verified": true,
+    "all_grid_units_present": true
+  },
+  "selections": {
+    "ADAUSDT": {
+      "asset": "ADAUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0073",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "AVAXUSDT": {
+      "asset": "AVAXUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0246",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "BCHUSDT": {
+      "asset": "BCHUSDT",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "economic_status": "INSUFFICIENT_EVIDENCE",
+      "config_id": null,
+      "selected": false,
+      "reason": "INSUFFICIENT_EVIDENCE",
+      "candidate_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "BNBUSDT": {
+      "asset": "BNBUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0089",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "BTCUSDT": {
+      "asset": "BTCUSDT",
+      "status": "NO_CANDIDATE",
+      "economic_status": "NO_CANDIDATE",
+      "config_id": null,
+      "selected": false,
+      "reason": "NO_CANDIDATE",
+      "candidate_status": "NO_CANDIDATE"
+    },
+    "DOGEUSDT": {
+      "asset": "DOGEUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0736",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "ETHUSDT": {
+      "asset": "ETHUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_1241",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "HBARUSDT": {
+      "asset": "HBARUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0772",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "LINKUSDT": {
+      "asset": "LINKUSDT",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "economic_status": "INSUFFICIENT_EVIDENCE",
+      "config_id": null,
+      "selected": false,
+      "reason": "INSUFFICIENT_EVIDENCE",
+      "candidate_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "LTCUSDT": {
+      "asset": "LTCUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0084",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "NEARUSDT": {
+      "asset": "NEARUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_1564",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "SOLUSDT": {
+      "asset": "SOLUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0732",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "SUIUSDT": {
+      "asset": "SUIUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0507",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "TRXUSDT": {
+      "asset": "TRXUSDT",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "economic_status": "INSUFFICIENT_EVIDENCE",
+      "config_id": null,
+      "selected": false,
+      "reason": "INSUFFICIENT_EVIDENCE",
+      "candidate_status": "INSUFFICIENT_EVIDENCE"
+    },
+    "UNIUSDT": {
+      "asset": "UNIUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_1570",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "XLMUSDT": {
+      "asset": "XLMUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0124",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "XRPUSDT": {
+      "asset": "XRPUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0041",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    },
+    "ZECUSDT": {
+      "asset": "ZECUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0270",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT"
+    }
+  },
+  "outcome": "CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE",
+  "assets_with_candidate": [
+    "ADAUSDT",
+    "AVAXUSDT",
+    "BNBUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "HBARUSDT",
+    "LTCUSDT",
+    "NEARUSDT",
+    "SOLUSDT",
+    "SUIUSDT",
+    "UNIUSDT",
+    "XLMUSDT",
+    "XRPUSDT",
+    "ZECUSDT"
+  ],
+  "assets_without_candidate": [
+    "BCHUSDT",
+    "BTCUSDT",
+    "LINKUSDT",
+    "TRXUSDT"
+  ],
+  "assets_without_candidate_reported": true,
+  "manifest_hash_excluded_keys": [
+    "manifest_hash"
+  ],
+  "manifest_hash": "7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862"
+}

@@ -1516,3 +1516,41 @@ prerequisite list, and the v2 selection run itself; a recorded decision on resid
 campaign runtime gate compares the live ordered digest); and, only after the selected-configuration manifest
 is committed and hash-bound **and** the confirmatory window exists (not before `2027-01-17T22:00:00Z`), the
 separately authorized confirmatory evaluation.
+
+
+### Session activity — 2026-10-20T07:10:00Z (this session)
+
+**Task (from the durable handoff at 06:40Z):** deliver the **versioned v2 selected-configuration manifest** — the published outcome of the authorized v2 selection run — together with the **versioned amendment that authorizes its path**. Design deliverables only; no second run, no confirmatory-window read.
+
+**Outcome:** **Delivered and verified.** The manifest is derived from the verified v2 shards with every record's `experiment_id` re-verified (497,664 records), and it matches `research/ledger_v2.json` `selection.per_asset` exactly for all 18 assets. `configs/research_v2_execution_amendment_2.json` authorizes the new unambiguous path `research/v2_selected_configurations_manifest.json` (not the v1 artifacts). No frozen artifact edited, no `src/` changed, no run artifacts modified, no second run started.
+
+**Files added**
+- `scripts/publish_v2_selected_configurations.py` — deterministic producer (reads verified shards, re-verifies `experiment_id`, idempotent; refuses to overwrite without `--force`)
+- `scripts/verify_v2_selected_configurations_manifest.py` — read-only offline verifier (compares manifest with ledger, re-verifies shard records)
+- `research/v2_selected_configurations_manifest.json` — published manifest, `manifest_hash 7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862`
+- `scripts/build_v2_execution_amendment_2.py` — deterministic amendment producer
+- `scripts/verify_research_v2_execution_amendment_2.py` — read-only offline verifier
+- `configs/research_v2_execution_amendment_2.json` — amendment 2 authorizing the manifest path
+
+**State verified (2026-10-20T07:10Z)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **351 passed**, exit 0
+- all seven v2 verifiers exit 0; `python3 scripts/verify_v2_selected_configurations_manifest.py` → `{"ok": true, "failures": []}`; `python3 scripts/verify_research_v2_execution_amendment_2.py` → `{"ok": true, "failures": []}`
+- `PYTHONPATH=src python3 scripts/verify_v2_selection_run.py` → `{"ok": true, "failures": []}`; `PYTHONPATH=src python3 scripts/regenerate_v2_result_stream.py` → ok
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (unchanged)
+- canonical digests unchanged: hashed set `3e8e4169…`, execution path `c69cc021…`
+- v1 artifact sha256s unchanged; no `src/breakout_research/` or `src/v2_campaign/` changes; no frozen artifact changes; run artifacts untouched
+
+**Manifest outcome (matches ledger exactly):** `outcome = CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`, 18 assets. 14 candidates (CANDIDATE_SELECTED/CANDIDATE_PENDING_HOLDOUT) with configs `cfg_0073,0246,0089,0736,1241,0772,0084,1564,0732,0507,1570,0124,0041,0270`; 4 without candidates: BCHUSDT `INSUFFICIENT_EVIDENCE`, BTCUSDT `NO_CANDIDATE`, LINKUSDT `INSUFFICIENT_EVIDENCE`, TRXUSDT `INSUFFICIENT_EVIDENCE`. Derived from 497,664 verified shard records (all `experiment_id`s re-verified). The manifest path `research/v2_selected_configurations_manifest.json` is not `research/candidate_manifest.json` or `research/candidate_manifest_v2.json`.
+
+**Amendment 2:** authorizes only the new path; does not authorize confirmatory evaluation, no candle fetch, no second run. Protocol file not edited (digest recorded).
+
+## Initial task message for next agent
+
+**Next:** reconcile `configs/research_v2.json` (P2/P3 still read `OUTSTANDING` although delivered) with the delivered prerequisite list via a versioned amendment, record a decision on residual limitation `RL1` (v1 campaign runtime gate compares live ordered digest), and only after the selected-configuration manifest is committed and hash-bound *and* the confirmatory window exists (earliest `2027-01-17T22:00:00Z`), proceed to the separately authorized confirmatory evaluation. No changes to frozen artifacts that would affect the completed run unless strictly necessary and version-amended.
+
+**Status (verified 2026-10-20T07:10Z):**
+- v2 selected-configuration manifest published and verified (`research/v2_selected_configurations_manifest.json`, manifest_hash `7acc7fe0…`), matching the ledger exactly; derived from 497,664 verified shards with experiment IDs re-verified.
+- `configs/research_v2_execution_amendment_2.json` authorizes the new manifest path (`research/v2_selected_configurations_manifest.json`), does not authorize confirmatory evaluation or a second run.
+- All verifiers pass (7 v2 verifiers + the new manifest and amendment 2 verifiers), full suite 351/351 green, `compute_code_hash()` still `2efd3b18…`, canonical digests unchanged, v1 artifacts byte-unchanged.
+
+**Do NOT:** edit `src/breakout_research/` or `src/v2_campaign/`; edit frozen artifacts; re-run the completed v2 selection run; read confirmatory-window candles or evaluate holdout; touch v1 paths or the run artifacts; re-run producer scripts that would rewrite existing artifacts without `--force` and recorded reason.
