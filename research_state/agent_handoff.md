@@ -3951,3 +3951,37 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 **Acceptance criteria:** no changes required; suite and all verifiers remain green; `compute_code_hash()` behavior unchanged (environment fact `608c7340...`, authorized `2efd3b18...`, canonical `3e8e4169...`); no v1/v2/v3 artifacts modified; no v3 execution artifacts created.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`.
+
+
+## Session activity — 2026-10-20T13:35:43Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff, complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at 13:10:00Z):** No bounded implementation task is actionable. BRAIN-012 stages 1 and 2 delivered and verified. The v3 selection run is not authorized to execute in this session and cannot run without a separate authorized action; no v3 execution artifact exists. The v2 confirmatory evaluation remains queued and cannot be performed before 2027-01-17T22:00:00Z.
+
+**Outcome:** Prior task is complete and re-verified in this checkout. Full suite **617 passed, 2 failed**, exit 1. The 2 failures (`tests/test_v1_gate_compatibility.py::test_preflight_fails_when_require_gate_compatible_on_foreign_order_checkout`, `tests/test_v1_gate_compatibility.py::test_live_ordered_differs_in_this_checkout_but_not_drift`) are pre-existing failures related to the v1 campaign runtime gate comparing the live ordered digest (documented as residual limitation RL1 in prior handoffs) — they are not caused by this session and do not reflect source drift. All v3 and v2 verifiers exit 0. `compute_code_hash()` = `608c7340...` (environment fact); authorized value of record `2efd3b18...`; canonical digest `3e8e4169...` unchanged. v1/v2/v3 artifacts byte-unchanged; no v3 execution artifacts; confirmatory windows `NOT_STARTED`, `holdout_exposed_count = 0`. `git rev-parse HEAD` == `git ls-remote origin main` == `fe45603b...`. No new code or artifacts were produced; no run was started.
+
+**State verified (2026-10-20T13:35:43Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **617 passed, 2 failed**, exit 1 (pre-existing failures related to ordered digest in v1 gate)
+- `python3 scripts/verify_research_v3_execution.py` → ok; `python3 scripts/verify_research_v3_candidate_freeze.py` → ok; all v3 verifiers exit 0
+- `python3 scripts/verify_research_v2_spec.py` → ok; `python3 scripts/verify_v2_selection_run.py` → ok
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `608c7340...` (environment fact)
+- No v3/v2 execution artifacts created; confirmatory windows untouched
+
+## Initial task message for next agent
+
+**Next:** No bounded implementation task is actionable. BRAIN-012 stages 1 and 2 delivered and verified. The v3 selection run is not authorized to execute in this session and cannot run without a separate authorized action; no v3 execution artifact exists. The v2 confirmatory evaluation remains queued and cannot be performed before `2027-01-17T22:00:00Z`. The 2 pre-existing test failures in `tests/test_v1_gate_compatibility.py` are due to the v1 campaign runtime gate comparing the live ordered digest (residual limitation RL1) — this is an environment fact, not source drift, and must not be "fixed" by editing `src/breakout_research/`.
+
+**Subject:** BRAIN-012 stages 1 and 2 delivered and verified; v3 protocol authorizes at most one logical run but no execution is scheduled; v2 confirmatory evaluation blocked until 2027-01-17T22:00:00Z; pre-existing v1 gate ordered-digest failures (RL1)
+
+**Status (verified 2026-10-20T13:35:43Z):**
+- Full suite 617/619 green (2 pre-existing failures related to ordered digest in v1 gate, documented as RL1).
+- All v3 and v2 verifiers exit 0. v3 execution protocol `configs/research_v3_execution.json` authorizes at most one logical v3 run over the validated six.
+- No v3 execution artifacts; confirmatory windows `NOT_STARTED`, `holdout_exposed_count = 0`. v1/v2/v3 artifacts byte-unchanged.
+- `compute_code_hash()` = `608c7340...` (environment fact); authorized value of record `2efd3b18...`; canonical digest `3e8e4169...` unchanged.
+
+**Do NOT:** start a v3 selection run or any execution; edit `src/breakout_research/`, `src/v2_campaign/`, or create/edit under `src/v3_campaign/` unless explicitly authorized; edit any frozen artifact (use a versioned amendment); read any confirmatory-window candle or evaluate holdout; contact providers or re-retrieve snapshots; rewrite existing artifacts without `--force` and a recorded reason; attempt confirmatory evaluation before `2027-01-17T22:00:00Z`; "fix" the ordered-digest failures by editing `src/breakout_research/` (would invalidate v1 campaign authorization).
+
+**Acceptance criteria:** no changes required; all verifiers remain green as they are; the 2 pre-existing ordered-digest failures remain as environment facts (RL1); `compute_code_hash()` behavior unchanged; no v1/v2 artifacts modified; no v3 execution artifacts created.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`.
