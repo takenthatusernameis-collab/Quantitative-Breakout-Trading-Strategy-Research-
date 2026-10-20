@@ -2998,3 +2998,19 @@ manifest or confirmatory checkpoint) and the confirmatory window stays `NOT_STAR
 `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
 `git status --short`; `git diff --stat` (confirm only new confirmatory files and `research_state/` are added —
 no `src/breakout_research/`, no `src/v2_campaign/`, no frozen artifact).
+
+## Session activity — 2026-10-20T10:30:00Z (this session)
+
+**Task (from the durable handoff at 10:15Z):** implement BRAIN-011 — the v2 confirmatory evaluation execution path (design-to-code). Nothing runs.
+
+**Outcome:** Partial. Created `src/v2_confirmatory/__init__.py` (package init; the package is now a regular package rather than a PEP 420 namespace). The remaining deliverables (data.py, window.py, exposure.py, report.py, runner.py, the two amendments, the verifier, the tests, the implementation note) are not yet produced; they remain the bounded task for the next session. No candle was read, no provider contacted, no evaluation run; `src/breakout_research/` and `src/v2_campaign/` untouched; no frozen artifact edited.
+
+**State verified (2026-10-20T10:30Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 435 passed, exit 0
+- `python3 scripts/verify_v2_confirmatory_protocol.py` → exit 0
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `608c7340…` (environment fact)
+- canonical digests unchanged: `3e8e4169…` / `c69cc021…`; v1 artifacts byte-unchanged; confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`
+
+## Initial task message for next agent
+
+**Next (one bounded task):** complete BRAIN-011 implementation — `src/v2_confirmatory/` modules (`data.py`, `window.py`, `exposure.py`, `report.py`, `runner.py`), validate/replace the three committed modules, `configs/research_v2_confirmatory_protocol_amendment_1.json`, `configs/research_v2_confirmatory_authorization_1.json`, `scripts/verify_v2_confirmatory_path.py`, `tests/test_v2_confirmatory_path.py`, and the BRAIN-011 §10 implementation note. Nothing runs; no candle read; no `src/breakout_research/` or `src/v2_campaign/` change; no frozen artifact edit.
