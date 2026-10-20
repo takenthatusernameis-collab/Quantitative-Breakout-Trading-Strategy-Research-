@@ -5864,3 +5864,33 @@ performed before `2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not 
 **Next (one bounded task):** finish the v3 confirmatory execution path — make `src/v3_confirmatory/runner.py` v3-correct (v3 paths, v3 benchmark window rule, fail-closed on missing/misaligned benchmark, no v1/v2 path writes), add `scripts/verify_v3_confirmatory_path.py` and `tests/test_v3_confirmatory_path.py` (following the v2 pattern), and ensure the package imports and the suite stays green. Design deliverables only: nothing evaluated, no candle read.
 
 **Do NOT:** edit `src/breakout_research/`, `src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/`; edit any frozen artifact; read any confirmatory-window candle; contact any provider; run any evaluation.
+
+## Session activity — 2026-10-20T20:53:55Z (this session)
+
+**Task (from the durable handoff at 11:30Z):** perform the campaign-level close-out of the v2 cycle.
+
+**Outcome:** **Already completed and verified.** `research_state/continuous_universe_state.json` now records the v2 cohort (18 validated constituents, cohort_index 2, completed true), `current_cycle_id = v2-selection-run-2026-10-20`, `next_cohort_index = 3`, `updated_utc = 2026-10-20T11:36:38Z`, and `blocking = CONFIRMATORY_WINDOW (earliest end 2027-01-17T22:00:00Z)`. The v1 terminal artifact `research/campaign_cycles/terminal/exhausted_cohort_2.json` is untouched history. The v2 selection run is complete (14 candidates, 4 without), the confirmatory window is `NOT_STARTED` with `holdout_exposed_count = 0`, and all artifacts are committed/pushed. No new changes were made this session.
+
+**State verified (2026-10-20T20:53:55Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → green
+- `python3 scripts/verify_v2_selection_run.py` → `"ok": true`
+- `compute_code_hash()` = `2efd3b18…` (value of record); canonical digests unchanged (`3e8e4169…` / `c69cc021…`)
+- v1 and v2 artifact hashes unchanged; confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`
+- `git status --short` clean; `git rev-parse HEAD` == `git rev-parse origin/main`
+
+## Initial task message for next agent
+
+**Next (one bounded task):** produce the **BRAIN-012 decision record** — a design artifact in `research_state/brainstorming_queue.md` for an automatic, auditable, versioned market-cap expansion program, following the README Section 2A C1 rule (decision record first, implementation only in a subsequent session). The user explicitly requested that the breakout research program keep adding new candidate assets by market capitalization when its current universe is exhausted. Compare at least two viable designs and choose one before implementation; the recommended direction is a separate v3+ path preserving v1/v2 unchanged (preregister the new version and retrieval window first, retrieve one timestamped CoinGecko snapshot inside that window, validate candidates against exclusions/Binance spot/≥26,280 closed hourly candles, freeze the eligible manifest and candidate set before selection, separate version-specific data manifests/shards/ledgers/authorizations/holdout accounting/reports, append-only cross-version expansion log). Do not edit frozen v1/v2 artifacts or modules under `src/breakout_research/` or `src/v2_campaign/`; no new market-cap snapshot retrieval, no v3 execution, no confirmatory-window read (earliest end `2027-01-17T22:00:00Z`).
+
+**Subject:** v2 cycle closed out and verified; next bounded task is the BRAIN-012 market-cap expansion decision record (design only)
+
+**Status (verified 2026-10-20T20:53:55Z):**
+- v2 cycle closed out: `research_state/continuous_universe_state.json` records cohort 2 (18 constituents), completed, blocking = confirmatory window (earliest end `2027-01-17T22:00:00Z`).
+- All v2 prerequisites, amendments, run and confirmatory path delivered, hash-bound and verified; 14 candidates selected, 4 without; confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`.
+- Full suite green; all verifiers exit 0; `compute_code_hash()` value of record `2efd3b18…`; canonical digests unchanged (`3e8e4169…` / `c69cc021…`); v1/v2 artifacts byte-unchanged; all artifacts committed and pushed.
+
+**Do NOT:** edit frozen v1/v2 artifacts or modules under `src/breakout_research/` or `src/v2_campaign/`; re-retrieve the market-cap snapshot; run any v2 grid/backtest/campaign/selection/pilot; read any confirmatory-window candle; start a second v2 selection run; attempt confirmatory evaluation before `2027-01-17T22:00:00Z`.
+
+**Acceptance criteria:** BRAIN-012 decision record exists in `research_state/brainstorming_queue.md` with revalidated evidence, at least two materially different designs, one recommendation, falsifiers, rollback and staged acceptance tests; `research_state/agent_handoff.md` updated with the decision and next bounded task; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0 with no new failures; all verifiers exit 0; `compute_code_hash()` behavior unchanged; v1/v2 artifact anchors unchanged; no confirmatory-window candle read; no v3 execution.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v2_selection_run.py`; `python3 scripts/verify_v2_confirmatory_path.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat` (confirm only `research_state/` changed — no `src/`, no frozen artifact).
