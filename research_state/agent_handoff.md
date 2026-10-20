@@ -2251,3 +2251,49 @@ location correction in the immutable `configs/research_v2_code_hash_amendment_1.
 judged worth an artifact change rather than a queue note); and, only after the confirmatory window
 exists (not before `2027-01-17T22:00:00Z`) and the confirmatory protocol is committed and
 hash-bound, the separately authorized confirmatory evaluation.
+
+
+## Session activity — 2026-10-20T08:30:00Z (this session)
+
+**Task (from the durable handoff at 08:21Z):** implement the **BRAIN-010 pre-flight** — the checkout-compatibility checker that decides whether a v1 campaign resume may be started, and that reports a foreign directory order as an *environment fact* instead of as source drift. Code only, outside the hashed set.
+
+**Outcome:** **Delivered and verified.** Implemented `scripts/verify_v1_gate_compatibility.py` (read-only, offline, JSON report, exit 0/1; with `--require-gate-compatible` exits non-zero on incompatible checkout and prints an environment-fact message to stderr) and `tests/test_v1_gate_compatibility.py` (8 deterministic tests covering the eight staged acceptance tests of BRAIN-010 §6). The pre-flight recomputes the canonical digest of `src/breakout_research` (matches recorded `3e8e4169…`), checks that the authorized ordered digest `2efd3b18…` is reproducible under some block-order permutation of the tree (the gate's comparison is about checkout compatibility, not source drift), reports live ordered digest/enumeration order and `gate_compatible`. In this checkout the live ordered digest differs from the authorized value of record but the canonical digest matches and the authorized digest is in variants — treated as environment fact, not drift. A real edit to the hashed set changes the canonical digest and makes the authorized digest unreproducible. No changes to `src/breakout_research/` or `src/v2_campaign/`, no frozen artifacts edited, no run artifacts modified, no confirmatory-window read.
+
+**Files added**
+- `scripts/verify_v1_gate_compatibility.py` — pre-flight (outside hashed set)
+- `tests/test_v1_gate_compatibility.py` — 8 deterministic tests
+
+**State verified (2026-10-20T08:30Z)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **387 passed**, exit 0 (379 pre-existing + 8 new)
+- `python3 scripts/verify_v1_gate_compatibility.py` → ok, canonical matches recorded `3e8e4169…`, authorized digest found in 120 permutations, `gate_compatible=false` in this checkout (environment fact)
+- `python3 scripts/verify_v1_gate_compatibility.py --require-gate-compatible` → exit 1 with environment-fact message on stderr
+- All eleven v2 verifiers still exit 0; `PYTHONPATH=src python3 scripts/verify_v2_selection_run.py` → `"ok": true, "failures": []`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `608c7340…` (environment fact, unchanged)
+- Canonical digests unchanged: hashed set `3e8e4169…`, execution path `c69cc021…`; v1/v2 artifacts byte-unchanged; `src/` untouched
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. Implementation followed BRAIN-010 and existing repo patterns.
+
+**Checkpoint / persistence status**
+- Local commit: not created by the agent (no explicit user request). Working tree carries the two new files and this handoff update.
+- Remote persistence: unchanged from previous state; artifacts not yet committed/pushed.
+
+**Unresolved blockers (ranked)**
+1. **BRAIN-010 implementation done** — pre-flight exists. The RL1 location correction in immutable `configs/research_v2_code_hash_amendment_1.json` remains a note (artifact immutable; not edited).
+2. **The confirmatory window cannot exist before `2027-01-17T22:00:00Z`** — opens `2026-10-19T22:00:00Z`, needs ≥ 2160 closed hourly candles.
+3. `configs/research_v2.json` still records P2/P3 as `OUTSTANDING` (immutable; correction via amendment if needed).
+4. `research/results_v2.jsonl` not committed by design (`RL2`), regenerated on demand.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** Decide and record the **RL1 location correction** in the immutable `configs/research_v2_code_hash_amendment_1.json`. BRAIN-010 notes it names `campaign.py (_verify_pilot_gate)` and `pilot_gate_validator.py` but only `campaign.py` contains the checkout-dependent ordered-digest comparison; `pilot_gate_validator.py:93` compares pilot evidence with itself. The artifact is immutable and must not be edited in place — produce a versioned amendment (following the established pattern: `research_v2_code_hash_amendment_1.json` was added by amendment) that corrects the recorded location without changing behavior, or record the correction as a non-editing note if an amendment is not strictly necessary. Design deliverable only; no `src/` change, no run, no candle read.
+
+**Subject:** BRAIN-010 pre-flight implemented; next bounded task is the RL1 location correction record/amendment
+
+**Status (verified 2026-10-20T08:30Z):**
+- BRAIN-010 implemented: `scripts/verify_v1_gate_compatibility.py` and tests pass; all 11 v2 verifiers pass; full suite 387/387 green.
+- Gate compatibility: in this checkout not gate-compatible (environment fact), but canonical digest matches and authorized ordered digest is reproducible under some permutation — pre-flight reports correctly.
+- All v2 prerequisites delivered and verified; v2 selection run complete (14 candidates, 4 without); confirmatory window not actionable before 2027-01-17T22:00:00Z.
+
+**Do NOT:** edit `src/breakout_research/` or `src/v2_campaign/`; edit frozen artifacts in place; edit `research_state/campaign_authorization.json` or `research_state/checkpoint.json`; run any grid/campaign/selection/pilot; read confirmatory-window candles; touch v1/v2 run artifacts; re-run producer scripts that would rewrite existing artifacts.
+
+**Acceptance criteria:** correction recorded (amendment if appropriate, else documented); all verifiers still pass; full suite green; no `src/` change; no frozen artifact edited in place.
