@@ -2608,7 +2608,7 @@ blocked by the window.
 ## BRAIN-012 — Versioned, auditable market-cap expansion program (v3+)
 
 **Priority:** P1 — future-facing, not blocking the v2 confirmatory evaluation
-**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (design record only; no implementation in this session)
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` at design time; stage 1 has since been implemented and verified — see "Stage 1 delivered" at the end of this section (`STAGE_1_DELIVERED_AND_VERIFIED`)
 **Cause labels:** `SCOPE_DECISION`, `DATA_OR_EXTERNAL_SERVICE`, `PERMANENT_LIMIT`
 **Confidence:** high — the v2 chain is complete and immutable; the expansion must be strictly additive.
 
@@ -2697,3 +2697,29 @@ The user explicitly requested that the breakout research program keep adding new
 **Not implemented in this session** (README Section 2A C1): this is a decision record only. The first implementation session delivers the v3 specification, snapshot retrieval, validation, candidate freeze and verifier — nothing runs, no provider is contacted beyond the single bounded retrieval, no v1/v2 artifact is edited, and no `src/breakout_research/` or `src/v2_campaign/` file is touched. The confirmatory evaluation of v2 remains blocked until `2027-01-17T22:00:00Z` and is unaffected by this record.
 
 **Marked:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
+
+### Stage 1 delivered — v3 specification, snapshot, validation, candidate freeze (2026-10-20, implementation session)
+
+**Marked:** `STAGE_1_DELIVERED_AND_VERIFIED` — stage 2 (the v3 execution protocol and the bounded run authorization) is queued; nothing runs, no v3 execution artifact exists.
+
+**Delivered and verified (all digests recomputed from the files on disk):**
+
+- `configs/research_v3.json` — the preregistered v3 specification (`specification_hash d6a5f8bb…`), immutable, with the pinned retrieval window, the published exclusion amendment reference, the v2 floor rule, the holdout rules and the expansion program.
+- `configs/research_v3_exclusion_amendment_1.json` — the published v3 exclusion classifier (`amendment_hash f26848d8…`).
+- `research/v3_evidence/raw_market_cap_response.json` — the one bounded in-window CoinGecko retrieval (sha256 `01384576…`, retrieved `2026-10-20T11:45:59Z`, inside the pinned window `2026-10-20T11:45:00Z` … `2026-10-27T11:45:00Z`). It was **not** re-retrieved; every later step reads the stored bytes.
+- `research/universe_manifest_v3.json` (`manifest_hash e53db5ed…`) and `research/data_manifest_v3.json` (`manifest_hash 6793d86c…`) — the P2/P3 evidence: 20 candidates below the v2 floor, **6 validated** (AAVEUSDT, ICPUSDT, PEPEUSDT, QNTUSDT, SHIBUSDT, WLDUSDT) with 26,280 hash-verified closed hourly candles each, **14 excluded with a recorded reason** (`binance_spot_unavailable` ×6, `insufficient_hourly_history` ×8), shortfall 14, no backfill and no substitute.
+- `configs/research_v3_candidate_freeze.json` (`manifest_hash 12a981b1…`) — the frozen artifact, **byte-unchanged**; the correction is carried by `configs/research_v3_candidate_freeze_amendment_1.json` (`manifest_hash 1f0f3d65…`), which records the validated set of six by reference and authorizes nothing.
+- `configs/research_v3_spec_amendment_1.json` (`manifest_hash cda06af6…`) — corrects the one stale reference the v3 specification inherited from v2 (`universe.eligibility_validation.data_integrity.data_manifest` named the v2 data manifest) by reference, and reconciles P2/P3/P4 as delivered.
+- `research/v_universe_expansion_log.json` — the append-only hash chain (v3 entry `entry_hash 02b36a25…`, `previous_entry_hash: null` because v1 and v2 predate the log); the builder refuses a second v3 entry.
+- Verifiers: `scripts/verify_research_v3_spec.py`, `scripts/verify_research_v3_manifests.py`, `scripts/verify_research_v3_candidate_freeze.py`, `scripts/verify_v3_candidate_freeze_amendment_1.py`, `scripts/verify_v3_spec_amendment_1.py`, `scripts/verify_v3_universe_expansion_log.py` — all exit 0. Tests: six v3 modules, 63 tests.
+
+**Defects found in the first stage-1 delivery and how they were corrected** (no frozen artifact was edited in place):
+
+1. The P2/P3 validation had never been performed — the manifests carried `validated: false`, `candles_verified: false`, `observed_candle_count: 0` and `content_hash: null`. Corrected by running the real validation and rebuilding both manifests (`scripts/v3_constituent_validation.py`, CLI `scripts/build_v3_manifests.py`).
+2. The candidate freeze had frozen the derived batch of twenty and asserted `validated: true` for every one of them. Corrected by reference through the freeze amendment 1; the freeze verifier now resolves the effective candidate set through the verified amendment and **fails** when the amendment is absent.
+3. `scripts/verify_research_v3_manifests.py` — the verifier the frozen exclusion amendment names — did not exist. Written; it re-derives the candidate batch from the stored snapshot instead of trusting a hand-written list.
+4. `research/v_universe_expansion_log.json` did not exist. Written with the v3 entry of the hash chain.
+5. No v3 test module existed, although the specification's own P1 evidence names `tests/test_research_v3_spec.py`. Six modules, 63 tests, written.
+6. The v3 specification's stale `data_integrity.data_manifest` reference. Corrected by `configs/research_v3_spec_amendment_1.json` and disclosed by the manifest verifier as a warning; without a verified amendment the manifest verifier fails.
+
+**Staged acceptance tests (status after stage 1):** 1 satisfied (self-hashed immutable specification, byte-equal inherited blocks, 2,304 configurations); 2 satisfied (snapshot-identity tuple complete and self-consistent, `supersedes` → v2 manifest identity); 3 satisfied (freeze hash-bound and, through the amendment, exactly the six validated constituents, excluded assets carry reasons); 4 satisfied (no file under `src/breakout_research/` or `src/v2_campaign/` touched; `compute_code_hash()` `608c7340…` is an environment fact, the authorized value of record `2efd3b18…` and the canonical digest `3e8e4169…` are unchanged); 5 satisfied (all v3 verifiers exit 0; the full suite is 608/608 green; no v1/v2 artifact sha256 changed); 6 satisfied (no v3 result row, shard, ledger, result manifest, checkpoint or holdout exposure exists — `research/shards_v3/`, `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json` are all absent); 7 satisfied (the expansion log is append-only and records the prior floor and the new candidates); 8 not applicable to this pass (the pass yielded new eligible names, so `AWAITING_NEW_CANDIDATES` was not entered; the bounded P7D next-pass cadence is recorded in the log entry); 9 and 10 open — they belong to the authorized v3 run, which does not exist yet; the v2 confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.

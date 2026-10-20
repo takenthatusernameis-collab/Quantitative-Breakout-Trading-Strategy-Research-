@@ -1,163 +1,1311 @@
 {
   "assets": {
     "AAVEUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/AAVE_1h.csv",
-      "observed_candle_count": 0,
+      "content_hash": "a46eb674706d1a53275a41d40d5aa4354a872469197beb00a8c669498cb2b47f",
+      "dataset_path": "research/data/candles_v3/AAVEUSDT_1h_a46eb674706d1a53.csv",
+      "download_attempts": 27,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1697886000000,
+      "gaps": [],
+      "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 26280,
+      "provider": "binance",
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:17.084785+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "AAVEUSDT",
-      "validated": false
+      "validated": true
     },
     "ASTERUSDT": {
       "content_hash": null,
-      "dataset_path": "research/data/candles_v3/ASTER_1h.csv",
-      "observed_candle_count": 0,
+      "dataset_path": null,
+      "download_attempts": 10,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1759752000000,
+      "gaps": [],
+      "hash_algorithm": null,
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 9095,
+      "provider": null,
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:34.754761+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "ASTERUSDT",
-      "validated": false
-    },
-    "BTWUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/BTW_1h.csv",
-      "observed_candle_count": 0,
-      "symbol": "BTWUSDT",
-      "validated": false
-    },
-    "CROUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/CRO_1h.csv",
-      "observed_candle_count": 0,
-      "symbol": "CROUSDT",
       "validated": false
     },
     "ENAUSDT": {
       "content_hash": null,
-      "dataset_path": "research/data/candles_v3/ENA_1h.csv",
-      "observed_candle_count": 0,
+      "dataset_path": null,
+      "download_attempts": 23,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1712044800000,
+      "gaps": [],
+      "hash_algorithm": null,
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 22347,
+      "provider": null,
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:09.710965+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "ENAUSDT",
       "validated": false
     },
-    "HTXUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/HTX_1h.csv",
-      "observed_candle_count": 0,
-      "symbol": "HTXUSDT",
-      "validated": false
-    },
     "ICPUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/ICP_1h.csv",
-      "observed_candle_count": 0,
+      "content_hash": "d4eea992d5e4fd113f8d508476e0c81b5740166024f16d4d92ff933df7f0a3a8",
+      "dataset_path": "research/data/candles_v3/ICPUSDT_1h_d4eea992d5e4fd11.csv",
+      "download_attempts": 27,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1697886000000,
+      "gaps": [],
+      "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 26280,
+      "provider": "binance",
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:59.727715+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "ICPUSDT",
-      "validated": false
-    },
-    "MNTUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/MNT_1h.csv",
-      "observed_candle_count": 0,
-      "symbol": "MNTUSDT",
-      "validated": false
+      "validated": true
     },
     "MORPHOUSDT": {
       "content_hash": null,
-      "dataset_path": "research/data/candles_v3/MORPHO_1h.csv",
-      "observed_candle_count": 0,
+      "dataset_path": null,
+      "download_attempts": 10,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1759503600000,
+      "gaps": [],
+      "hash_algorithm": null,
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 9164,
+      "provider": null,
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:49.709964+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "MORPHOUSDT",
-      "validated": false
-    },
-    "MUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/M_1h.csv",
-      "observed_candle_count": 0,
-      "symbol": "MUSDT",
-      "validated": false
-    },
-    "OKBUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/OKB_1h.csv",
-      "observed_candle_count": 0,
-      "symbol": "OKBUSDT",
       "validated": false
     },
     "ONDOUSDT": {
       "content_hash": null,
-      "dataset_path": "research/data/candles_v3/ONDO_1h.csv",
-      "observed_candle_count": 0,
+      "dataset_path": null,
+      "download_attempts": 14,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1744380000000,
+      "gaps": [],
+      "hash_algorithm": null,
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 13365,
+      "provider": null,
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:21.294915+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "ONDOUSDT",
       "validated": false
     },
     "PEPEUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/PEPE_1h.csv",
-      "observed_candle_count": 0,
+      "content_hash": "30402a07c4c3729ed8eb8fb81b226942538ef34927e413730b0226ec70e3462a",
+      "dataset_path": "research/data/candles_v3/PEPEUSDT_1h_30402a07c4c3729e.csv",
+      "download_attempts": 27,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1697886000000,
+      "gaps": [],
+      "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 26280,
+      "provider": "binance",
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:42.112387+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "PEPEUSDT",
-      "validated": false
+      "validated": true
     },
     "PUMPUSDT": {
       "content_hash": null,
-      "dataset_path": "research/data/candles_v3/PUMP_1h.csv",
-      "observed_candle_count": 0,
+      "dataset_path": null,
+      "download_attempts": 10,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1757592000000,
+      "gaps": [],
+      "hash_algorithm": null,
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 9695,
+      "provider": null,
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:31.385825+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "PUMPUSDT",
       "validated": false
     },
     "QNTUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/QNT_1h.csv",
-      "observed_candle_count": 0,
+      "content_hash": "30ef9d68f060221d87ebf7630aa190cd41f5c9df26434cb457af2a60a44c7fae",
+      "dataset_path": "research/data/candles_v3/QNTUSDT_1h_30ef9d68f060221d.csv",
+      "download_attempts": 27,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1697886000000,
+      "gaps": [],
+      "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 26280,
+      "provider": "binance",
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:03.191250+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "QNTUSDT",
-      "validated": false
+      "validated": true
     },
     "SHIBUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/SHIB_1h.csv",
-      "observed_candle_count": 0,
+      "content_hash": "56722ac42edf3885dc1b73dd98a8e279c075789cda4dc2c3f02bde4498b3b477",
+      "dataset_path": "research/data/candles_v3/SHIBUSDT_1h_56722ac42edf3885.csv",
+      "download_attempts": 27,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1697886000000,
+      "gaps": [],
+      "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 26280,
+      "provider": "binance",
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:40:55.881508+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "SHIBUSDT",
-      "validated": false
+      "validated": true
     },
     "SKYUSDT": {
       "content_hash": null,
-      "dataset_path": "research/data/candles_v3/SKY_1h.csv",
-      "observed_candle_count": 0,
+      "dataset_path": null,
+      "download_attempts": 10,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1758096000000,
+      "gaps": [],
+      "hash_algorithm": null,
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 9555,
+      "provider": null,
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:53.074066+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "SKYUSDT",
       "validated": false
     },
     "TAOUSDT": {
       "content_hash": null,
-      "dataset_path": "research/data/candles_v3/TAO_1h.csv",
-      "observed_candle_count": 0,
+      "dataset_path": null,
+      "download_attempts": 23,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1712836800000,
+      "gaps": [],
+      "hash_algorithm": null,
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 22127,
+      "provider": null,
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:40:49.160687+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "TAOUSDT",
       "validated": false
     },
     "WLDUSDT": {
-      "content_hash": null,
-      "dataset_path": "research/data/candles_v3/WLD_1h.csv",
-      "observed_candle_count": 0,
+      "content_hash": "0430a038bafa14ac2f4abcc0ccc214b7aef3801fd27d0e588ab4bf3d525ee6f3",
+      "dataset_path": "research/data/candles_v3/WLDUSDT_1h_0430a038bafa14ac.csv",
+      "download_attempts": 27,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1697886000000,
+      "gaps": [],
+      "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 26280,
+      "provider": "binance",
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:28.015331+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "WLDUSDT",
-      "validated": false
+      "validated": true
     },
     "WLFIUSDT": {
       "content_hash": null,
-      "dataset_path": "research/data/candles_v3/WLFI_1h.csv",
-      "observed_candle_count": 0,
+      "dataset_path": null,
+      "download_attempts": 10,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1756731600000,
+      "gaps": [],
+      "hash_algorithm": null,
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 9934,
+      "provider": null,
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T12:41:46.270821+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
       "symbol": "WLFIUSDT",
       "validated": false
     }
   },
-  "binance_spot_verification": {},
-  "candles_verified": false,
-  "code_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
-  "confirmatory_window": {
-    "confirmatory_window_status": "NOT_STARTED",
-    "holdout_exposed_count": 0
+  "binance_spot_verification": {
+    "AAVEUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "AAVEUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 52,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "AAVEUSDT",
+          "probed_at_utc": "2026-10-20T12:41:10.402962+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "AAVE",
+          "elapsed_ms": 654,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "AAVEUSDT",
+          "probed_at_utc": "2026-10-20T12:41:10.455840+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:10.455840+00:00"
+    },
+    "ASTERUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "ASTERUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 32,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "ASTERUSDT",
+          "probed_at_utc": "2026-10-20T12:41:31.385867+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "ASTER",
+          "elapsed_ms": 656,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "ASTERUSDT",
+          "probed_at_utc": "2026-10-20T12:41:31.418981+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:31.418981+00:00"
+    },
+    "BTWUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "BTWUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 105,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "BTWUSDT",
+          "probed_at_utc": "2026-10-20T12:41:03.191295+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 655,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "BTWUSDT",
+          "probed_at_utc": "2026-10-20T12:41:03.297551+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-20T12:41:03.297551+00:00"
+    },
+    "CROUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "CROUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 106,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "CROUSDT",
+          "probed_at_utc": "2026-10-20T12:40:55.881550+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 658,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "CROUSDT",
+          "probed_at_utc": "2026-10-20T12:40:55.988424+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-20T12:40:55.988424+00:00"
+    },
+    "ENAUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "ENAUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 34,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "ENAUSDT",
+          "probed_at_utc": "2026-10-20T12:41:03.953695+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "ENA",
+          "elapsed_ms": 652,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "ENAUSDT",
+          "probed_at_utc": "2026-10-20T12:41:03.988614+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:03.988614+00:00"
+    },
+    "HTXUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "HTXUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 100,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "HTXUSDT",
+          "probed_at_utc": "2026-10-20T12:41:59.727765+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 660,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "HTXUSDT",
+          "probed_at_utc": "2026-10-20T12:41:59.829001+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-20T12:41:59.829001+00:00"
+    },
+    "ICPUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "ICPUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 38,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "ICPUSDT",
+          "probed_at_utc": "2026-10-20T12:41:53.074107+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "ICP",
+          "elapsed_ms": 651,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "ICPUSDT",
+          "probed_at_utc": "2026-10-20T12:41:53.112771+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:53.112771+00:00"
+    },
+    "MNTUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "MNTUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 37,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "MNTUSDT",
+          "probed_at_utc": "2026-10-20T12:41:42.112430+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 673,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "MNTUSDT",
+          "probed_at_utc": "2026-10-20T12:41:42.150427+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-20T12:41:42.150427+00:00"
+    },
+    "MORPHOUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "MORPHOUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 98,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "MORPHOUSDT",
+          "probed_at_utc": "2026-10-20T12:41:46.270873+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "MORPHO",
+          "elapsed_ms": 653,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "MORPHOUSDT",
+          "probed_at_utc": "2026-10-20T12:41:46.369833+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:46.369833+00:00"
+    },
+    "MUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "MUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 33,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "MUSDT",
+          "probed_at_utc": "2026-10-20T12:41:34.754801+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 649,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "MUSDT",
+          "probed_at_utc": "2026-10-20T12:41:34.788574+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-20T12:41:34.788574+00:00"
+    },
+    "OKBUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "OKBUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 36,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "OKBUSDT",
+          "probed_at_utc": "2026-10-20T12:41:09.711019+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 654,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "OKBUSDT",
+          "probed_at_utc": "2026-10-20T12:41:09.748044+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-20T12:41:09.748044+00:00"
+    },
+    "ONDOUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "ONDOUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 120,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "ONDOUSDT",
+          "probed_at_utc": "2026-10-20T12:41:17.084825+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "ONDO",
+          "elapsed_ms": 657,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "ONDOUSDT",
+          "probed_at_utc": "2026-10-20T12:41:17.205440+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:17.205440+00:00"
+    },
+    "PEPEUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "PEPEUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 30,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "PEPEUSDT",
+          "probed_at_utc": "2026-10-20T12:41:35.439220+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "PEPE",
+          "elapsed_ms": 656,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "PEPEUSDT",
+          "probed_at_utc": "2026-10-20T12:41:35.470284+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:35.470284+00:00"
+    },
+    "PUMPUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "PUMPUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 33,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "PUMPUSDT",
+          "probed_at_utc": "2026-10-20T12:41:28.015369+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "PUMP",
+          "elapsed_ms": 655,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "PUMPUSDT",
+          "probed_at_utc": "2026-10-20T12:41:28.049306+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:28.049306+00:00"
+    },
+    "QNTUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "QNTUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 101,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "QNTUSDT",
+          "probed_at_utc": "2026-10-20T12:40:56.647998+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "QNT",
+          "elapsed_ms": 653,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "QNTUSDT",
+          "probed_at_utc": "2026-10-20T12:40:56.750272+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:40:56.750272+00:00"
+    },
+    "SHIBUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "SHIBUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 66,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "SHIBUSDT",
+          "probed_at_utc": "2026-10-20T12:40:49.160770+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "SHIB",
+          "elapsed_ms": 716,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "SHIBUSDT",
+          "probed_at_utc": "2026-10-20T12:40:49.228048+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:40:49.228048+00:00"
+    },
+    "SKYUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "SKYUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 35,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "SKYUSDT",
+          "probed_at_utc": "2026-10-20T12:41:49.710003+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "SKY",
+          "elapsed_ms": 661,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "SKYUSDT",
+          "probed_at_utc": "2026-10-20T12:41:49.746366+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:49.746366+00:00"
+    },
+    "TAOUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "TAOUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 56,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "TAOUSDT",
+          "probed_at_utc": "2026-10-20T12:40:43.351450+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "TAO",
+          "elapsed_ms": 657,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "TAOUSDT",
+          "probed_at_utc": "2026-10-20T12:40:43.408295+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:40:43.408295+00:00"
+    },
+    "WLDUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "WLDUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 32,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "WLDUSDT",
+          "probed_at_utc": "2026-10-20T12:41:21.294957+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "WLD",
+          "elapsed_ms": 655,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "WLDUSDT",
+          "probed_at_utc": "2026-10-20T12:41:21.328226+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:21.328226+00:00"
+    },
+    "WLFIUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "WLFIUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 37,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "WLFIUSDT",
+          "probed_at_utc": "2026-10-20T12:41:42.825137+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "WLFI",
+          "elapsed_ms": 656,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "WLFIUSDT",
+          "probed_at_utc": "2026-10-20T12:41:42.862979+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-20T12:41:42.862979+00:00"
+    }
   },
-  "content_hashes": {},
-  "created_utc": "2026-10-20T11:45:59Z",
+  "candles_verified": true,
+  "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+  "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+  "code_hash_note": "code_hash is the authorized value of record for the hashed set, cross-checked against research_state/campaign_authorization.json; canonical_source_digest is the portable identity of the tree (BRAIN-009).",
+  "confirmatory_window": {
+    "candidate_manifest_hash": null,
+    "confirmatory_window_status": "NOT_STARTED",
+    "holdout_exposed_count": 0,
+    "note": "No confirmatory-window candle has been read. The v3 confirmatory window starts after the v3 candidate freeze and needs at least 2160 closed hourly candles, so it cannot be evaluated in this session. Neither the v1 holdout nor the v2 confirmatory window is reused.",
+    "v1_holdout_reuse": "forbidden",
+    "v2_confirmatory_window_reuse": "forbidden"
+  },
+  "content_hashes": {
+    "AAVEUSDT": "a46eb674706d1a53275a41d40d5aa4354a872469197beb00a8c669498cb2b47f",
+    "ICPUSDT": "d4eea992d5e4fd113f8d508476e0c81b5740166024f16d4d92ff933df7f0a3a8",
+    "PEPEUSDT": "30402a07c4c3729ed8eb8fb81b226942538ef34927e413730b0226ec70e3462a",
+    "QNTUSDT": "30ef9d68f060221d87ebf7630aa190cd41f5c9df26434cb457af2a60a44c7fae",
+    "SHIBUSDT": "56722ac42edf3885dc1b73dd98a8e279c075789cda4dc2c3f02bde4498b3b477",
+    "WLDUSDT": "0430a038bafa14ac2f4abcc0ccc214b7aef3801fd27d0e588ab4bf3d525ee6f3"
+  },
+  "created_utc": "2026-10-20T12:42:00Z",
+  "data_source": {
+    "backoff_seconds": 5,
+    "endpoint": "https://api.binance.com/api/v3/klines",
+    "endpoint_candidates": [
+      "https://api.binance.com/api/v3/klines",
+      "https://data-api.binance.vision/api/v3/klines"
+    ],
+    "endpoint_policy": "same-provider failover; selected endpoint recorded per asset",
+    "interval": "1h",
+    "max_retries": 3,
+    "provider": "binance",
+    "rate_limit_per_minute": 1200,
+    "retrieval_timestamp_utc": "2026-10-20T12:42:00.492945+00:00"
+  },
+  "exclusion_reasons": {
+    "ASTERUSDT": "insufficient_hourly_history",
+    "BTWUSDT": "binance_spot_unavailable",
+    "CROUSDT": "binance_spot_unavailable",
+    "ENAUSDT": "insufficient_hourly_history",
+    "HTXUSDT": "binance_spot_unavailable",
+    "MNTUSDT": "binance_spot_unavailable",
+    "MORPHOUSDT": "insufficient_hourly_history",
+    "MUSDT": "binance_spot_unavailable",
+    "OKBUSDT": "binance_spot_unavailable",
+    "ONDOUSDT": "insufficient_hourly_history",
+    "PUMPUSDT": "insufficient_hourly_history",
+    "SKYUSDT": "insufficient_hourly_history",
+    "TAOUSDT": "insufficient_hourly_history",
+    "WLFIUSDT": "insufficient_hourly_history"
+  },
   "hashing": {
     "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
     "manifest_hash_excluded_keys": [
       "manifest_hash",
       "snapshot_identity.data_manifest_hash"
-    ]
+    ],
+    "note": "manifest_hash is the sha256 of the manifest body with manifest_hash and snapshot_identity.data_manifest_hash removed, so that the manifest can carry the data-manifest hash without hashing itself into a cycle."
   },
-  "manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5",
+  "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
   "market_cap_source": {
     "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
     "provider": "coingecko",
@@ -166,12 +1314,18 @@
     "raw_response_path": "research/v3_evidence/raw_market_cap_response.json",
     "retrieval_timestamp_utc": "2026-10-20T11:45:59Z"
   },
+  "notes": "v3 data manifest. Every accepted asset references an immutable canonical hourly CSV dataset under research/data/candles_v3. Synthetic records are never permitted. Nothing here is a research result: no grid, backtest, campaign or candidate selection has been run under v3.",
+  "prerequisite_status": {
+    "P3": "DELIVERED_BY_THIS_ARTIFACT",
+    "note": "configs/research_v3.json is immutable and still records P2 and P3 as OUTSTANDING; that statement describes the specification's own scope at freeze time and is not rewritten here. Flipping it requires a versioned amendment to the specification."
+  },
   "protocol_version": "v3",
-  "retrieval_timestamp_utc": "2026-10-20T11:45:59Z",
+  "provenance_ok": true,
+  "retrieval_timestamp_utc": "2026-10-20T12:42:00.493066+00:00",
   "snapshot_identity": {
     "candidate_manifest_hash": null,
-    "code_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
-    "data_manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5",
+    "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "data_manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
     "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
     "market_cap_source_retrieval_timestamp_utc": "2026-10-20T11:45:59Z",
     "protocol_version": "v3",
@@ -179,147 +1333,161 @@
     "universe_version": "v3"
   },
   "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+  "supersedes": {
+    "data_manifest_path": "research/data_manifest_v2.json",
+    "data_manifest_sha256": "0240be6f0f1e8c53b60cff0e9a1e3ccad8879e9282b1d0ff4f118b0168227eb8",
+    "protocol_version": "v2",
+    "universe_version": "v2"
+  },
   "universe_version": "v3",
   "validation_results": {
     "AAVEUSDT": {
-      "binance_spot_verified": false,
-      "candle_history_verified": false,
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
       "exclusion_reason": null,
-      "observed_candles": null,
-      "validated": false
+      "observed_candles": 26280,
+      "validated": true
     },
     "ASTERUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "exclusion_reason": null,
-      "observed_candles": null,
+      "exclusion_reason": "insufficient_hourly_history",
+      "observed_candles": 9095,
       "validated": false
     },
     "BTWUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "observed_candles": null,
       "validated": false
     },
     "CROUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "observed_candles": null,
       "validated": false
     },
     "ENAUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "exclusion_reason": null,
-      "observed_candles": null,
+      "exclusion_reason": "insufficient_hourly_history",
+      "observed_candles": 22347,
       "validated": false
     },
     "HTXUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "observed_candles": null,
       "validated": false
     },
     "ICPUSDT": {
-      "binance_spot_verified": false,
-      "candle_history_verified": false,
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
       "exclusion_reason": null,
-      "observed_candles": null,
-      "validated": false
+      "observed_candles": 26280,
+      "validated": true
     },
     "MNTUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "observed_candles": null,
       "validated": false
     },
     "MORPHOUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "exclusion_reason": null,
-      "observed_candles": null,
+      "exclusion_reason": "insufficient_hourly_history",
+      "observed_candles": 9164,
       "validated": false
     },
     "MUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "observed_candles": null,
       "validated": false
     },
     "OKBUSDT": {
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "exclusion_reason": null,
+      "exclusion_reason": "binance_spot_unavailable",
       "observed_candles": null,
       "validated": false
     },
     "ONDOUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "exclusion_reason": null,
-      "observed_candles": null,
+      "exclusion_reason": "insufficient_hourly_history",
+      "observed_candles": 13365,
       "validated": false
     },
     "PEPEUSDT": {
-      "binance_spot_verified": false,
-      "candle_history_verified": false,
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
       "exclusion_reason": null,
-      "observed_candles": null,
-      "validated": false
+      "observed_candles": 26280,
+      "validated": true
     },
     "PUMPUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "exclusion_reason": null,
-      "observed_candles": null,
+      "exclusion_reason": "insufficient_hourly_history",
+      "observed_candles": 9695,
       "validated": false
     },
     "QNTUSDT": {
-      "binance_spot_verified": false,
-      "candle_history_verified": false,
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
       "exclusion_reason": null,
-      "observed_candles": null,
-      "validated": false
+      "observed_candles": 26280,
+      "validated": true
     },
     "SHIBUSDT": {
-      "binance_spot_verified": false,
-      "candle_history_verified": false,
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
       "exclusion_reason": null,
-      "observed_candles": null,
-      "validated": false
+      "observed_candles": 26280,
+      "validated": true
     },
     "SKYUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "exclusion_reason": null,
-      "observed_candles": null,
+      "exclusion_reason": "insufficient_hourly_history",
+      "observed_candles": 9555,
       "validated": false
     },
     "TAOUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "exclusion_reason": null,
-      "observed_candles": null,
+      "exclusion_reason": "insufficient_hourly_history",
+      "observed_candles": 22127,
       "validated": false
     },
     "WLDUSDT": {
-      "binance_spot_verified": false,
-      "candle_history_verified": false,
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
       "exclusion_reason": null,
-      "observed_candles": null,
-      "validated": false
+      "observed_candles": 26280,
+      "validated": true
     },
     "WLFIUSDT": {
-      "binance_spot_verified": false,
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "exclusion_reason": null,
-      "observed_candles": null,
+      "exclusion_reason": "insufficient_hourly_history",
+      "observed_candles": 9934,
       "validated": false
     }
+  },
+  "window_policy": {
+    "bound_to": "market_cap_source_retrieval_timestamp_utc",
+    "candle_count": 26280,
+    "closed_candles_only": true,
+    "interval": "1h",
+    "last_closed_open_timestamp_ms": 1792490400000,
+    "note": "The candle window ends at the last fully closed hour at the snapshot retrieval timestamp, so the dataset is bound to the same snapshot as the universe and re-running the validation reproduces byte-identical datasets."
   }
 }

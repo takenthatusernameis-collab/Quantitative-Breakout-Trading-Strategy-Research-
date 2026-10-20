@@ -1,0 +1,131 @@
+{
+  "amendment_status": "PUBLISHED_CORRECTION_NO_AUTHORIZATION",
+  "artifact": "v3_spec_amendment",
+  "artifact_version": "v3-spec-amendment-1",
+  "binding": {
+    "candidate_freeze": {
+      "file_sha256": "0477f5629dcc240d376c8c83c8d226532fea8568ce990941420044174de56f48",
+      "manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4",
+      "path": "configs/research_v3_candidate_freeze.json"
+    },
+    "candidate_freeze_amendment": {
+      "file_sha256": "e20e277da9a73f92662cc960a7345bc5a1423b22c2c06f80f77433d6b5515e23",
+      "manifest_hash": "1f0f3d6535d2e7b16fce093177f8d7ca1048bc8597c8df1b0835208b29b54e55",
+      "path": "configs/research_v3_candidate_freeze_amendment_1.json"
+    },
+    "data_manifest": {
+      "file_sha256": "2507180ddd1c728852919f49c5341446babf1a37ee21f1cf3807b871db77d636",
+      "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "path": "research/data_manifest_v3.json"
+    },
+    "universe_manifest": {
+      "file_sha256": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63",
+      "manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+      "path": "research/universe_manifest_v3.json"
+    }
+  },
+  "corrections": [
+    {
+      "cause": "the eligibility-validation block was copied from the v2 specification when the v3 specification was written, and the data-manifest reference was not updated to the v3 artifact",
+      "effect": "the v3 data-integrity rule refers to the v3 data manifest, the artifact the BRAIN-012 P2/P3 validation produced; every other field of the block (hash_verified, provenance, survivorship_and_adjustment_policy) is unchanged and keeps the value the immutable specification records",
+      "effective_value": "research/data_manifest_v3.json",
+      "evidence": {
+        "file_sha256": "2507180ddd1c728852919f49c5341446babf1a37ee21f1cf3807b871db77d636",
+        "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+        "path": "research/data_manifest_v3.json"
+      },
+      "id": "C1",
+      "path": "universe.eligibility_validation.data_integrity.data_manifest",
+      "recorded_value": "research/data_manifest_v2.json"
+    }
+  ],
+  "created_utc": "2026-10-20T12:55:00Z",
+  "description": "Versioned amendment correcting one stale reference of the immutable v3 specification and recording the delivered prerequisite status by reference.",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-012",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-012 (DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION)",
+    "immutable_specification_is_not_edited": true,
+    "pattern": "the repository's established pattern: a hash-bound specification is never edited in place, a versioned amendment records the correction by reference"
+  },
+  "execution_authorization": {
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "This amendment authorizes nothing. It corrects one stale reference and records the delivered prerequisite status."
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with the manifest_hash key removed."
+  },
+  "immutable_specification": {
+    "file_sha256": "2c903a2915cb1e80f0028126753a9309d1e18b49056714ef789bf410e48620f4",
+    "path": "configs/research_v3.json",
+    "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58"
+  },
+  "manifest_hash": "cda06af6b048a302a2f7f4d2a114819a91725e14c8ba04852d74f21599315ca3",
+  "precedence": {
+    "rule": "A consumer of the effective v3 specification resolves universe.eligibility_validation.data_integrity.data_manifest through this amendment when the amendment is present and verified, and reads the immutable specification otherwise. The immutable specification is never rewritten.",
+    "superseded": [
+      "universe.eligibility_validation.data_integrity.data_manifest"
+    ],
+    "unchanged": [
+      "strategy_grid",
+      "costs",
+      "execution",
+      "folds",
+      "selection",
+      "pilot",
+      "metrics",
+      "baselines",
+      "fixed_breakout_baseline",
+      "status",
+      "checkpointing",
+      "universe.snapshot_retrieval",
+      "universe.expansion_scope",
+      "universe.eligibility_validation.candle_history",
+      "universe.eligibility_validation.binance_spot_verification",
+      "holdout",
+      "expansion_program"
+    ]
+  },
+  "producer": {
+    "deterministic": true,
+    "path": "scripts/build_v3_spec_amendment_1.py",
+    "verify_command": "python3 scripts/verify_v3_spec_amendment_1.py"
+  },
+  "reconciliation": {
+    "P1": {
+      "evidence": "configs/research_v3.json",
+      "status_recorded": "SATISFIED_BY_THIS_SPEC"
+    },
+    "P2": {
+      "evidence": "research/universe_manifest_v3.json",
+      "manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+      "status_recorded": "DELIVERED"
+    },
+    "P3": {
+      "evidence": "research/data_manifest_v3.json",
+      "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "status_recorded": "DELIVERED"
+    },
+    "P4": {
+      "amendment": "configs/research_v3_candidate_freeze_amendment_1.json",
+      "amendment_manifest_hash": "1f0f3d6535d2e7b16fce093177f8d7ca1048bc8597c8df1b0835208b29b54e55",
+      "evidence": "configs/research_v3_candidate_freeze.json",
+      "manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4",
+      "status_recorded": "DELIVERED"
+    },
+    "P5": {
+      "note": "the v3 execution protocol and the bounded run authorization are not delivered",
+      "status_recorded": "OUTSTANDING"
+    },
+    "P6": {
+      "note": "the v3 confirmatory-window protocol, its runbook and its authorization are not delivered",
+      "status_recorded": "OUTSTANDING"
+    },
+    "note": "configs/research_v3.json is immutable and hash-verified; its own P2, P3 and P4 fields remain OUTSTANDING in the file. This amendment records the delivered status by reference only, exactly as configs/research_v2_spec_amendment_1.json does for the v2 specification."
+  }
+}

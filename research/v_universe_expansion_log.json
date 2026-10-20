@@ -1,0 +1,390 @@
+{
+  "artifact": "v_universe_expansion_log",
+  "artifact_version": 1,
+  "created_utc": "2026-10-20T12:50:00Z",
+  "entries": [
+    {
+      "candidate_batch": {
+        "count": 20,
+        "members": [
+          {
+            "binance_pair": "TAOUSDT",
+            "coingecko_id": "bittensor",
+            "market_cap_usd": 2993154302,
+            "name": "Bittensor",
+            "rank": 1,
+            "symbol": "TAO"
+          },
+          {
+            "binance_pair": "SHIBUSDT",
+            "coingecko_id": "shiba-inu",
+            "market_cap_usd": 2929625048,
+            "name": "Shiba Inu",
+            "rank": 2,
+            "symbol": "SHIB"
+          },
+          {
+            "binance_pair": "CROUSDT",
+            "coingecko_id": "crypto-com-chain",
+            "market_cap_usd": 2864236907,
+            "name": "Cronos",
+            "rank": 3,
+            "symbol": "CRO"
+          },
+          {
+            "binance_pair": "QNTUSDT",
+            "coingecko_id": "quant-network",
+            "market_cap_usd": 2821606025,
+            "name": "Quant",
+            "rank": 4,
+            "symbol": "QNT"
+          },
+          {
+            "binance_pair": "BTWUSDT",
+            "coingecko_id": "bitway",
+            "market_cap_usd": 2632769019,
+            "name": "Bitway",
+            "rank": 5,
+            "symbol": "BTW"
+          },
+          {
+            "binance_pair": "ENAUSDT",
+            "coingecko_id": "ethena",
+            "market_cap_usd": 2506212713,
+            "name": "Ethena",
+            "rank": 6,
+            "symbol": "ENA"
+          },
+          {
+            "binance_pair": "OKBUSDT",
+            "coingecko_id": "okb",
+            "market_cap_usd": 2387414683,
+            "name": "OKB",
+            "rank": 7,
+            "symbol": "OKB"
+          },
+          {
+            "binance_pair": "AAVEUSDT",
+            "coingecko_id": "aave",
+            "market_cap_usd": 2288549533,
+            "name": "Aave",
+            "rank": 8,
+            "symbol": "AAVE"
+          },
+          {
+            "binance_pair": "ONDOUSDT",
+            "coingecko_id": "ondo-finance",
+            "market_cap_usd": 2114214158,
+            "name": "Ondo",
+            "rank": 9,
+            "symbol": "ONDO"
+          },
+          {
+            "binance_pair": "WLDUSDT",
+            "coingecko_id": "worldcoin-wld",
+            "market_cap_usd": 2075657274,
+            "name": "Worldcoin",
+            "rank": 10,
+            "symbol": "WLD"
+          },
+          {
+            "binance_pair": "PUMPUSDT",
+            "coingecko_id": "pump-fun",
+            "market_cap_usd": 2052975001,
+            "name": "Pump.fun",
+            "rank": 11,
+            "symbol": "PUMP"
+          },
+          {
+            "binance_pair": "ASTERUSDT",
+            "coingecko_id": "aster-2",
+            "market_cap_usd": 1903142098,
+            "name": "Aster",
+            "rank": 12,
+            "symbol": "ASTER"
+          },
+          {
+            "binance_pair": "MUSDT",
+            "coingecko_id": "memecore",
+            "market_cap_usd": 1853798672,
+            "name": "MemeCore",
+            "rank": 13,
+            "symbol": "M"
+          },
+          {
+            "binance_pair": "PEPEUSDT",
+            "coingecko_id": "pepe",
+            "market_cap_usd": 1771535971,
+            "name": "Pepe",
+            "rank": 14,
+            "symbol": "PEPE"
+          },
+          {
+            "binance_pair": "MNTUSDT",
+            "coingecko_id": "mantle",
+            "market_cap_usd": 1743605666,
+            "name": "Mantle",
+            "rank": 15,
+            "symbol": "MNT"
+          },
+          {
+            "binance_pair": "WLFIUSDT",
+            "coingecko_id": "world-liberty-financial",
+            "market_cap_usd": 1702491896,
+            "name": "World Liberty Financial",
+            "rank": 16,
+            "symbol": "WLFI"
+          },
+          {
+            "binance_pair": "MORPHOUSDT",
+            "coingecko_id": "morpho",
+            "market_cap_usd": 1697252225,
+            "name": "Morpho",
+            "rank": 17,
+            "symbol": "MORPHO"
+          },
+          {
+            "binance_pair": "SKYUSDT",
+            "coingecko_id": "sky",
+            "market_cap_usd": 1686355448,
+            "name": "Sky",
+            "rank": 18,
+            "symbol": "SKY"
+          },
+          {
+            "binance_pair": "ICPUSDT",
+            "coingecko_id": "internet-computer",
+            "market_cap_usd": 1572667216,
+            "name": "Internet Computer",
+            "rank": 19,
+            "symbol": "ICP"
+          },
+          {
+            "binance_pair": "HTXUSDT",
+            "coingecko_id": "htx-dao",
+            "market_cap_usd": 1468004153,
+            "name": "HTX DAO",
+            "rank": 20,
+            "symbol": "HTX"
+          }
+        ],
+        "rule": "assets of the fresh snapshot strictly below the recorded v2 floor, minus the prior-universe assets and the published exclusion rules"
+      },
+      "created_utc": "2026-10-20T12:42:00Z",
+      "data_manifest": {
+        "file_sha256": "2507180ddd1c728852919f49c5341446babf1a37ee21f1cf3807b871db77d636",
+        "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+        "path": "research/data_manifest_v3.json"
+      },
+      "entry_hash": "02b36a25d02334e4845ea00406a8cb959581c46499aeed480bd5bfa3a93b5e2f",
+      "excluded_candidates": {
+        "count": 14,
+        "members": [
+          {
+            "binance_pair": "TAOUSDT",
+            "exclusion_reason": "insufficient_hourly_history",
+            "market_cap_usd": 2993154302,
+            "observed_candles": 22127,
+            "rank": 1
+          },
+          {
+            "binance_pair": "CROUSDT",
+            "exclusion_reason": "binance_spot_unavailable",
+            "market_cap_usd": 2864236907,
+            "observed_candles": null,
+            "rank": 3
+          },
+          {
+            "binance_pair": "BTWUSDT",
+            "exclusion_reason": "binance_spot_unavailable",
+            "market_cap_usd": 2632769019,
+            "observed_candles": null,
+            "rank": 5
+          },
+          {
+            "binance_pair": "ENAUSDT",
+            "exclusion_reason": "insufficient_hourly_history",
+            "market_cap_usd": 2506212713,
+            "observed_candles": 22347,
+            "rank": 6
+          },
+          {
+            "binance_pair": "OKBUSDT",
+            "exclusion_reason": "binance_spot_unavailable",
+            "market_cap_usd": 2387414683,
+            "observed_candles": null,
+            "rank": 7
+          },
+          {
+            "binance_pair": "ONDOUSDT",
+            "exclusion_reason": "insufficient_hourly_history",
+            "market_cap_usd": 2114214158,
+            "observed_candles": 13365,
+            "rank": 9
+          },
+          {
+            "binance_pair": "PUMPUSDT",
+            "exclusion_reason": "insufficient_hourly_history",
+            "market_cap_usd": 2052975001,
+            "observed_candles": 9695,
+            "rank": 11
+          },
+          {
+            "binance_pair": "ASTERUSDT",
+            "exclusion_reason": "insufficient_hourly_history",
+            "market_cap_usd": 1903142098,
+            "observed_candles": 9095,
+            "rank": 12
+          },
+          {
+            "binance_pair": "MUSDT",
+            "exclusion_reason": "binance_spot_unavailable",
+            "market_cap_usd": 1853798672,
+            "observed_candles": null,
+            "rank": 13
+          },
+          {
+            "binance_pair": "MNTUSDT",
+            "exclusion_reason": "binance_spot_unavailable",
+            "market_cap_usd": 1743605666,
+            "observed_candles": null,
+            "rank": 15
+          },
+          {
+            "binance_pair": "WLFIUSDT",
+            "exclusion_reason": "insufficient_hourly_history",
+            "market_cap_usd": 1702491896,
+            "observed_candles": 9934,
+            "rank": 16
+          },
+          {
+            "binance_pair": "MORPHOUSDT",
+            "exclusion_reason": "insufficient_hourly_history",
+            "market_cap_usd": 1697252225,
+            "observed_candles": 9164,
+            "rank": 17
+          },
+          {
+            "binance_pair": "SKYUSDT",
+            "exclusion_reason": "insufficient_hourly_history",
+            "market_cap_usd": 1686355448,
+            "observed_candles": 9555,
+            "rank": 18
+          },
+          {
+            "binance_pair": "HTXUSDT",
+            "exclusion_reason": "binance_spot_unavailable",
+            "market_cap_usd": 1468004153,
+            "observed_candles": null,
+            "rank": 20
+          }
+        ]
+      },
+      "holdout": {
+        "rule": "a v3 expansion never reads, re-times, reuses or extends the v2 confirmatory window, and never touches the v2 holdout exposure counter",
+        "v1_holdout_reuse": "forbidden",
+        "v2_confirmatory_window_reuse": "forbidden"
+      },
+      "manifest": {
+        "file_sha256": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63",
+        "manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+        "path": "research/universe_manifest_v3.json"
+      },
+      "new_floor": {
+        "basis": "lowest_ranked_candidate_of_this_version",
+        "market_cap_usd": 1468004153,
+        "rule": "The floor of the next version is the market capitalization of the lowest-ranked candidate of this version.",
+        "symbol": "HTXUSDT",
+        "validated_set_floor": {
+          "market_cap_usd": 1572667216,
+          "note": "recorded for transparency: the floor rule of the specification uses the lowest-ranked candidate of the version, not the lowest-ranked validated constituent",
+          "symbol": "ICPUSDT"
+        }
+      },
+      "previous_entry_hash": null,
+      "prior_universe_floor": {
+        "comparison": "strictly_less_than",
+        "floor_market_cap_usd": 3627324049,
+        "floor_symbol": "HBARUSDT",
+        "source_manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+        "source_manifest_path": "research/universe_manifest_v2.json",
+        "source_universe_version": "v2"
+      },
+      "program_state": {
+        "cadence_mode": "bounded_cadence_not_polling",
+        "earliest_next_pass_utc": "2026-10-27T12:42:00Z",
+        "minimum_interval_between_passes": "P7D",
+        "polling_forbidden": "The program must not contact the provider on every agent activation; a pass is scheduled at the bounded cadence instead.",
+        "rule": "Completion or exhaustion of one frozen version routes to the preregistration of the next version, never to a rewrite of the finished snapshot.",
+        "state": "VERSION_COMPLETE_ROUTED_TO_NEXT_VERSION"
+      },
+      "protocol_version": "v3",
+      "snapshot": {
+        "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+        "provider": "coingecko",
+        "ranking_depth": 99,
+        "raw_response_hash": "013845766d1e84d02122bcfac97a7f8f0cf598ae14f6a2adcaba380726f8b1d9",
+        "retrieval_timestamp_utc": "2026-10-20T11:45:59Z"
+      },
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+      "universe_version": "v3",
+      "validated_candidate_set": {
+        "count": 6,
+        "members": [
+          {
+            "binance_pair": "SHIBUSDT",
+            "content_hash": "56722ac42edf3885dc1b73dd98a8e279c075789cda4dc2c3f02bde4498b3b477",
+            "market_cap_usd": 2929625048,
+            "rank": 2
+          },
+          {
+            "binance_pair": "QNTUSDT",
+            "content_hash": "30ef9d68f060221d87ebf7630aa190cd41f5c9df26434cb457af2a60a44c7fae",
+            "market_cap_usd": 2821606025,
+            "rank": 4
+          },
+          {
+            "binance_pair": "AAVEUSDT",
+            "content_hash": "a46eb674706d1a53275a41d40d5aa4354a872469197beb00a8c669498cb2b47f",
+            "market_cap_usd": 2288549533,
+            "rank": 8
+          },
+          {
+            "binance_pair": "WLDUSDT",
+            "content_hash": "0430a038bafa14ac2f4abcc0ccc214b7aef3801fd27d0e588ab4bf3d525ee6f3",
+            "market_cap_usd": 2075657274,
+            "rank": 10
+          },
+          {
+            "binance_pair": "PEPEUSDT",
+            "content_hash": "30402a07c4c3729ed8eb8fb81b226942538ef34927e413730b0226ec70e3462a",
+            "market_cap_usd": 1771535971,
+            "rank": 14
+          },
+          {
+            "binance_pair": "ICPUSDT",
+            "content_hash": "d4eea992d5e4fd113f8d508476e0c81b5740166024f16d4d92ff933df7f0a3a8",
+            "market_cap_usd": 1572667216,
+            "rank": 19
+          }
+        ]
+      }
+    }
+  ],
+  "entry_count": 1,
+  "entry_rule": "Each universe version appends exactly one entry to the log. Every entry carries its own hash and the hash of the previous entry, so the log is append-only and its history is verifiable.",
+  "genesis_note": "The v1 and v2 universes predate this log, which was introduced with BRAIN-012 recommendation 7. The chain therefore starts with the v3 entry, whose previous_entry_hash is null; every later universe version appends after it.",
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "chain_rule": "each entry's previous_entry_hash is the entry_hash of its predecessor",
+    "entry_hash_rule": "entry_hash is the sha256 of the entry body with the entry_hash key removed"
+  },
+  "log_mode": "append_only_hash_chain",
+  "log_path": "research/v_universe_expansion_log.json",
+  "producer": {
+    "deterministic": true,
+    "path": "scripts/build_v3_universe_expansion_log.py",
+    "verify_command": "python3 scripts/verify_v3_universe_expansion_log.py"
+  }
+}
