@@ -5906,3 +5906,17 @@ performed before `2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not 
 **Next (one bounded task):** finish the v3 confirmatory execution path — make `src/v3_confirmatory/runner.py` v3-correct (v3 paths, v3 benchmark window rule, fail-closed on missing/misaligned benchmark, no v1/v2 path writes), add `scripts/verify_v3_confirmatory_path.py` and `tests/test_v3_confirmatory_path.py` (following the v2 pattern), and ensure the package imports and the suite stays green. Design deliverables only: nothing evaluated, no candle read.
 
 **Do NOT:** edit `src/breakout_research/`, `src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/`; edit any frozen artifact; read any confirmatory-window candle; contact any provider; run any evaluation.
+
+## Session activity — 2026-10-20T20:59:22Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it, update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Prior task verified complete. `configs/research_v3_confirmatory_protocol.json` exists and self-verifies (`scripts/verify_v3_confirmatory_protocol.py` → `{"ok": true, "failures": []}`); `tests/test_v3_confirmatory_protocol.py` → 37 passed. Full suite 837 passed, exit 0. `compute_code_hash()` = `2efd3b18…` unchanged; canonical digests unchanged; no `src/` changes; no frozen artifact changed; `holdout_exposed_count = 0`.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** produce the **v3 confirmatory execution path** — a versioned, design-only deliverable following the v2 precedent (`src/v2_confirmatory/`), living outside the hashed set, that implements the preregistered v3 confirmatory protocol without running it. Nothing evaluates, no candle is read.
+
+**Do NOT:** run any confirmatory evaluation; read any confirmatory-window candle; write under `src/breakout_research/` or `src/v2_campaign/`; edit frozen artifacts in place.
+
+**Acceptance criteria:** full suite exits 0; all existing verifiers exit 0; `compute_code_hash()` unchanged; no confirmatory output path exists; `holdout_exposed_count = 0`.
