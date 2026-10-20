@@ -2717,3 +2717,30 @@ record for the v1 campaign's terminal holdout report.
 **Status:** all v2 prerequisites and amendments delivered and hash-bound; 14 candidates selected, 4 without; confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`; `compute_code_hash()` unchanged; v1/v2 artifacts byte-unchanged.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`.
+
+## Session activity — 2026-10-20T09:15:56Z (this session)
+
+**Task (from the durable handoff):** "Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent."
+
+**Prior task context:** The last initial task message states there is no remaining bounded design deliverable in the v2 chain actionable before the confirmatory window exists (earliest end 2027-01-17T22:00:00Z). The v2 selection run has been executed (ledger/results exist at 2026-10-20T06:26:28Z). The spec amendment 1 was added without verifier/tests in the previous session.
+
+**Outcome:** Completed the handoff update per instructions. Verified current state: all v2 verifiers pass (spec, manifests, execution, candidate freeze, execution amendments 1-2, code hash amendments, portability/decision, selection authorization, v2 selected configurations manifest, prerequisite reconciliation, execution amendment 2, confirmatory protocol). The v2 selection run exists with ledger showing 497664 execution units across 18 assets x 2304 configs x 4 folds x 3 cost scenarios, 0 holdout exposure. Code hash is order-dependent (live 608c7340…) but canonical digest matches and authorized hash preserved. No new design deliverable is actionable now.
+
+**Files modified**
+- `research_state/agent_handoff.md` — this report and next task message
+
+**State verified (2026-10-20T09:15:56Z)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → passes (all tests green)
+- Key verifiers all exit 0
+- No v1 artifacts changed; v2 manifests unchanged
+- `compute_code_hash()` = `608c7340…` (live ordered, environment-dependent), authorized `2efd3b18…` retained by decision; canonical `3e8e4169…` matches
+
+**Checkpoint / persistence status**
+- Local changes: only handoff updated (no new artifacts created)
+- Remote: unchanged
+
+## Initial task message for next agent
+
+**Next (no bounded design deliverable):** There is no remaining bounded design deliverable in the v2 chain that is actionable before the confirmatory window exists (earliest end 2027-01-17T22:00:00Z). The v2 selection run has been executed and recorded; no confirmatory evaluation may occur yet. If a new bounded task arises, it must follow README Section 2A (decision record first) and be implemented in a subsequent session. Do not start a second v2 selection run, do not edit frozen artifacts, do not read confirmatory-window candles.
+
+**Status:** All v2 prerequisites/amendments delivered and hash-bound; selection run executed (497664 execution units, 0 holdout exposure); confirmatory window NOT_STARTED. Verification: all v2 verifiers pass, tests green, v1 artifacts byte-unchanged.
