@@ -868,6 +868,24 @@ residual limitation `RL1` of BRAIN-009 is decided by a new item, **BRAIN-010** (
   **incomplete**: `src/breakout_research/backtest/shards.py` (line 480) is a third live-vs-recorded
   site. See "BRAIN-010 implementation note" at the end of this file.
 
+**Decision update 2026-10-20 UTC (HEAD `8f779b11`, canonical source digest `3e8e4169…`):** the v2
+confirmatory evaluation, which the preregistration left without an executable, authorized path, is decided by
+**BRAIN-011** (see "BRAIN-011" below).
+
+- BRAIN-011 (P0) — `IMPLEMENTED_AND_VERIFIED`, and the confirmatory path is now **preregistered end to end**.
+  The v2 confirmatory evaluation has a real package outside the hashed set (`src/v2_confirmatory/`: data,
+  window, exposure, report, artifacts, runner), a criterion-reconciliation amendment
+  (`configs/research_v2_confirmatory_protocol_amendment_1.json` `2701c634…`) that settles the conflict
+  between the frozen specification's promotion rule and the protocol's buy-and-hold rule, a run authorization
+  (`configs/research_v2_confirmatory_authorization_1.json` `f411aba9…`) for at most one logical run, a
+  read-only offline verifier (`scripts/verify_v2_confirmatory_path.py`) and 48 deterministic tests. The
+  **preregistered operator runbook** (`configs/research_v2_confirmatory_runbook_1.json` `d81d9197…`) fixes
+  the ordered procedure, the binding identities, the failure decision table, the acceptance checks and the
+  prohibitions, and its readiness probe and write order are verified against the **delivered** code with the
+  Python AST. **Nothing ran**: no candle was read, no provider was contacted, no confirmatory artifact exists,
+  and the confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`. The run itself may not
+  start before `2027-01-17T22:00:00Z` and it then consumes the single use of the window.
+
 ---
 
 ## BRAIN-008 — The market-cap universe provider is reachable: the "exhausted universe" is a protocol boundary, not an external one
@@ -2418,3 +2436,59 @@ skeleton's bytes remain in git history at `72a7eb4e` either way.
 authorization's `durability.authorization_commit` and the protocol's `durability.protocol_commit` are
 `PENDING_COMMIT`: the commit that carries them must exist before the first candle is read, and the commit
 hashes are recorded by the committing session.
+
+### 11. The preregistered confirmatory runbook — delivered (2026-10-20, separate session)
+
+**What it is.** `configs/research_v2_confirmatory_runbook_1.json`
+(`manifest_hash d81d919718f2f100f2e091eed8b43a4a228213313dc1dab0fc1a512e929f2a6a`), built by
+`scripts/build_v2_confirmatory_runbook_1.py` and verified by
+`scripts/verify_v2_confirmatory_runbook_1.py` (exit 0) with 32 deterministic tests in
+`tests/test_v2_confirmatory_runbook_1.py`. The runbook is the **operator procedure** of the single authorized
+confirmatory run: the authorization says *what* may be done, the runbook says *in which order*, so the session
+that eventually executes the run follows a preregistered procedure instead of improvising one after the
+single-use window has been burned. It is a design deliverable: it authorizes nothing, fetches nothing, reads no
+candle and writes no confirmatory artifact.
+
+**What it fixes, in rules only.**
+1. **The ordered steps** — `PREFLIGHT`, `READINESS_PROBE`, `SINGLE_RETRIEVAL`,
+   `DATASET_PERSISTENCE_AND_EXPOSURE`, `WINDOW_MANIFEST`, `PRECONDITION_RECHECK`, `EVALUATION`, `VERDICT`,
+   `WRITE_OUTPUT_LAYOUT`, `ACCEPTANCE`; each step states its action, what it may not do and what happens when it
+   fails.
+2. **The binding identities** — the authorization `f411aba9…`, the protocol `bba95394…`, the amendment
+   `2701c634…`, the selected-configurations manifest `7acc7fe0…`, the v2 data manifest `9f64d8d1…`, the v2
+   specification `49fb0814…`, the hashed-set canonical digest `3e8e4169…`, the execution-path digest
+   `fd748860…` and the composite run identity `fcf8ba95…`.
+3. **The failure decision table** — seven modes, each answering the same six questions (detection, response,
+   exposure effect, artifact state, resumability, how it is reported): an abort before the first payload read
+   (roll back, the attempt is released), an abort after a payload read (`EXPOSED_ABORTED`, the window is spent,
+   the persisted datasets are reused by a resume of the same run), a provider or rate-limit failure (the frozen
+   retry budget, then a resume), a hash mismatch (refuse, do not repair, do not re-read the window), a
+   non-trading or insufficient pair (refuse), a zero-trade or failing asset (report it, never hide it) and the
+   case where no configuration survives (the null result is reported).
+4. **The acceptance checks** — ten checks, each with the exact verification commands.
+5. **What the run may never do** — thirteen prohibitions, from "read the window twice" to "a completed run is
+   never re-run".
+
+**Two properties that make the runbook non-vacuous.** The readiness probe the runbook prescribes is checked
+against the **delivered** `src/v2_confirmatory/window.py` (its two metadata endpoints, their order and the
+primary-to-failover order are read from that source with the Python AST), and the write order of the eight
+authorized output paths is checked against the **delivered** `src/v2_confirmatory/runner.py` (the order in which
+the runner writes them is read from that source with the Python AST). The producer refuses to write a runbook
+whose write order does not match the delivered runner, and the verifier fails when the two diverge. The retry
+budget, the backoff and the rate limit are checked against the frozen `configs/research_v2.json` `data` block.
+
+**State verified (2026-10-20).** `PYTHONPATH=src python3 -m pytest tests/ -q` → **515 passed**, exit 0
+(483 pre-existing + 32 new). `python3 scripts/verify_v2_confirmatory_runbook_1.py` → `"ok": true,
+"failures": []`, exit 0. All 19 repository-wide verifiers exit 0 (`verify_cycle_results.py` is a per-cycle tool
+that takes a directory argument and is not a repository-wide verifier). The hashed set's canonical digest is
+still `3e8e4169…`, the execution path's is still `fd748860…` and the composite run identity is still
+`fcf8ba95…`; `compute_code_hash()` returns `608c7340…` — an environment fact of this checkout, never an
+identity. The v1 artifact sha256 anchors are unchanged (`558d6099…`, `c8f367d2…`, `cf39de42…`, `87589f83…`,
+`a68b061a…`) and the frozen v2 artifacts are unchanged. **No confirmatory artifact exists** and the
+confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
+
+**Outstanding.** The run itself — it may not start before `2027-01-17T22:00:00Z` and it then consumes the
+single use of the window. The runbook's `durability.runbook_commit` is `PENDING_COMMIT`; the commit that
+carries it must exist before the first candle is read. The next preparatory work is the independent audit of the
+delivered path against BRAIN-011 (README stage 6) and the campaign-level close-out of the v2 cycle; the
+user-authorized BRAIN-012 market-cap expansion design is queued behind them.

@@ -3203,3 +3203,229 @@ unchanged; **no confirmatory artifact exists** and the confirmatory window stays
 `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
 `git status --short`; `git diff --stat` (confirm only new confirmatory files and `research_state/` are added —
 no `src/breakout_research/`, no `src/v2_campaign/`, no frozen artifact).
+
+## Session activity — 2026-10-20T10:55:28Z (this session)
+
+**Task (from the durable handoff at 10:40Z):** produce the **preregistered v2 confirmatory runbook** — a
+versioned, self-hashed, immutable *design deliverable* that fixes the operator procedure of the single
+authorized confirmatory run, so that the January session **executes** a preregistered procedure instead of
+improvising one after the single-use window has been burned. Nothing runs; no candle is read; no provider is
+contacted.
+
+**Outcome:** **delivered and verified.** The runbook is a new immutable artifact with a deterministic producer,
+a read-only offline verifier and 32 deterministic tests. It fixes the ten ordered steps, the five global
+rules, the readiness probe, the retrieval, the evaluation, the eight-path write order, the binding
+identities, the seven-mode failure decision table, the ten acceptance checks and the thirteen prohibitions.
+**No candle was read, no provider was contacted, no evaluation ran, no confirmatory artifact exists**, the
+confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`, `src/breakout_research/` and
+`src/v2_campaign/` are untouched, the bound execution path is byte-unchanged and no frozen artifact was
+edited.
+
+**Files added**
+- `configs/research_v2_confirmatory_runbook_1.json` — the preregistered operator procedure,
+  `manifest_hash d81d919718f2f100f2e091eed8b43a4a228213313dc1dab0fc1a512e929f2a6a`,
+  `runbook_status PREREGISTERED_OPERATOR_PROCEDURE_NOT_EXECUTED`,
+  `authorizes_a_candle_read / authorizes_an_evaluation / authorizes_a_second_run = false`,
+  `durability.runbook_commit = null`, `durability.runbook_commit_status = PENDING_COMMIT`
+- `scripts/build_v2_confirmatory_runbook_1.py` — deterministic producer; it **refuses to overwrite** an
+  existing artifact without `--force` (exit 1, `refusing to overwrite … without --force`) and refuses to write
+  a runbook whose write order does not match the delivered runner
+- `scripts/verify_v2_confirmatory_runbook_1.py` — read-only offline verifier (exit 0/1, JSON report)
+- `tests/test_v2_confirmatory_runbook_1.py` — 32 tests
+
+**Files changed**
+- `research_state/brainstorming_queue.md` — BRAIN-011 §11 (the runbook record: what it fixes, the two
+  non-vacuous properties, the verified state, what remains outstanding) and a BRAIN-011 status bullet in the
+  current-phase decision
+- `research_state/agent_handoff.md` — this entry and the next task message
+
+**Files kept byte-for-byte:** `src/v2_confirmatory/runner.py`, `src/v2_confirmatory/window.py` and every other
+file under `src/`; every frozen v1 and v2 artifact; `configs/research_v2_confirmatory_authorization_1.json`;
+`configs/research_v2_confirmatory_protocol.json`; `configs/research_v2_confirmatory_protocol_amendment_1.json`.
+
+**What the runbook fixes, in rules only**
+1. **The ordered steps** — `PREFLIGHT`, `READINESS_PROBE`, `SINGLE_RETRIEVAL`,
+   `DATASET_PERSISTENCE_AND_EXPOSURE`, `WINDOW_MANIFEST`, `PRECONDITION_RECHECK`, `EVALUATION`, `VERDICT`,
+   `WRITE_OUTPUT_LAYOUT`, `ACCEPTANCE`; each step states its action, its prohibition and its failure
+   behaviour, and the five global rules govern all of them.
+2. **The binding identities** — the authorization `f411aba9…`, the protocol `bba95394…`, the amendment
+   `2701c634…`, the selected-configurations manifest `7acc7fe0…`, the v2 data manifest `9f64d8d1…`, the v2
+   specification `49fb0814…`, the hashed-set canonical digest `3e8e4169…`, the execution-path digest
+   `fd748860…` and the composite run identity `fcf8ba95…`.
+3. **The failure decision table** — seven modes, each answering the same six questions (detection, response,
+   exposure effect, artifact state, resumability, reporting): an abort before the first payload read (roll
+   back, the attempt is released, exposure stays zero), an abort after a payload read (`EXPOSED_ABORTED`,
+   the window is spent, the persisted datasets are reused by a resume of the same run), a provider or
+   rate-limit failure (the frozen retry budget, then a resume), a hash mismatch (refuse, do not repair, do
+   not re-read the window), a non-trading or insufficient pair (refuse), a zero-trade or failing asset
+   (report it, never hide it) and the case where no configuration survives (the null result is reported).
+4. **The acceptance checks** — ten checks plus the exact verification commands and the three conditions
+   under which the output is accepted.
+5. **What the run may never do** — thirteen prohibitions, from reading the window twice to re-running a
+   completed run.
+
+**Two properties that make the runbook non-vacuous (and why they are the hard part).** The readiness probe
+the runbook prescribes is checked against the **delivered** `src/v2_confirmatory/window.py` (its two metadata
+endpoints, their order and the primary→failover order are read from that file with the Python AST), and the
+write order of the eight authorized output paths is checked against the **delivered**
+`src/v2_confirmatory/runner.py` (the order in which the runner writes them is read from that file with the
+Python AST). Both are recomputed from repository state, never copied, and the producer refuses to write a
+runbook whose write order does not match the delivered runner, while the verifier fails when the two
+diverge. The retry budget, the backoff and the rate limit are checked against the frozen
+`configs/research_v2.json` `data` block.
+
+**State verified (2026-10-20T10:55Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **515 passed**, exit 0 (483 pre-existing + 32 new)
+- `python3 scripts/verify_v2_confirmatory_runbook_1.py` → `"ok": true, "failures": []`, exit 0
+- all 19 repository-wide verifiers exit 0 (`verify_cycle_results.py` takes a cycle directory and is not a
+  repository-wide verifier)
+- hashed-set canonical digest `3e8e4169…` unchanged; execution-path canonical digest `fd748860…`; composite
+  run identity `fcf8ba95…`; `compute_code_hash()` = `608c7340…` (environment fact, never an identity); the
+  authorized value of record `2efd3b18…` untouched
+- v1 anchors unchanged (`558d6099…`, `c8f367d2…`, `cf39de42…`, `87589f83…`, `a68b061a…`); v2 hashes unchanged
+  (`4e927e52…`, `9f64d8d1…`, `49fb0814…`, `5a56b3d8…`, `aa902aa9…`, `bba95394…`, `7acc7fe0…`, `76be0d3b…`)
+- **no confirmatory artifact** (no window manifest, shard, ledger, results manifest, result row, checkpoint,
+  report); `research/data_manifest_v2.json` still records `confirmatory_window_status = NOT_STARTED` and
+  `holdout_exposed_count = 0`
+- the only unrelated working-tree change is the controller-driven `authorized_at_utc` refresh in
+  `research_state/campaign_authorization.json` (the repository's own test suite rewrites it; its
+  `code_hash`, `specification_hash` and `authorized` fields are unchanged)
+
+**Rule → code → test map** (`NOT_RUN` for every field no test executes directly): the self-hash and the
+canonicalization → the artifact's `hashing` block → `test_the_runbook_is_self_hashing`; the producer's
+determinism and its overwrite refusal → `scripts/build_v2_confirmatory_runbook_1.py` →
+`test_the_runbook_is_reproducible_from_its_producer`, `test_the_producer_refuses_to_overwrite_without_force`;
+the binding identities → `binding_identities` → `test_the_binding_identities_are_the_live_ones`,
+`test_the_runbook_binds_the_authorization_and_not_a_copy_of_it`; the frozen 14/4 scope → `applies_to` →
+`test_the_scope_is_the_frozen_fourteen_and_four`; the window bounds → the frozen
+`configs/research_v2_candidate_freeze.json` → `test_the_window_bounds_follow_from_the_frozen_freeze`; the
+readiness probe → the delivered `src/v2_confirmatory/window.py` → `test_the_readiness_probe_is_the_delivered_probe`;
+the retry budget and the rate limit → the frozen `configs/research_v2.json` `data` block →
+`test_the_retry_budget_and_the_rate_limit_are_the_frozen_ones`; the ordered steps → `operator_procedure` →
+`test_the_ordered_steps_are_the_required_ones`; the write order → the delivered
+`src/v2_confirmatory/runner.py` → `test_the_write_order_is_the_order_the_delivered_runner_writes`,
+`test_the_write_order_names_the_authorized_paths`; the failure table → `failure_decision_table` →
+`test_the_failure_decision_table_decides_every_mode`, `test_the_failure_modes_carry_their_consequences`; the
+acceptance checks and the prohibitions → `acceptance_checks`, `prohibitions` →
+`test_the_acceptance_checks_name_existing_files`,
+`test_the_prohibitions_cover_the_rules_the_run_may_not_break`; the authorization grants nothing →
+`authorizes_a_candle_read / authorizes_an_evaluation / authorizes_a_second_run` →
+`test_the_runbook_authorizes_nothing`; the untouched frozen tree → the v1 evidence and the v2 selection
+artifacts → `test_no_confirmatory_artifact_exists`, `test_the_v1_and_v2_artifacts_are_byte_unchanged`; the
+verifier → `scripts/verify_v2_confirmatory_runbook_1.py` → `test_the_verifier_passes_on_the_delivered_tree`
+plus twelve tamper tests (a tampered manifest hash, a changed binding identity, a changed authorization
+binding, a dropped failure mode, a reordered write order, a changed readiness endpoint, a changed retry
+budget, a widened scope, a self-authorizing runbook, a dropped prohibition, a dropped acceptance check and a
+runbook that claims to be committed).
+
+**Persistence:** branch `main`, HEAD `8f779b11` == `origin/main` at session start. **No commit was created**
+(no explicit user request); the working tree carries the four new files and the two `research_state/` edits.
+
+**Unsuccessful approaches and their retry conditions.**
+1. The first AST extraction of the write order missed the shard write, because the runner writes the shard
+   with `_atomic_write_text(shard_path, shard_text)` — a bare name, not a subscript of `plan.paths` — so the
+   extractor now maps the `ast.Name` `shard_path` to the shard path. A retry is justified only if the
+   runner's write sequence changes.
+2. The first verifier imported the live `v2_confirmatory.window` module instead of parsing the target tree,
+   which would have verified the wrong checkout; it now parses the repo root it is pointed at with
+   `ast.parse`. A retry is justified only if the verifier's target-root handling changes.
+3. `METADATA_ENDPOINTS` in `window.py` is an `ast.AnnAssign` and its endpoints are f-strings, so the first
+   extraction returned empty values; the extractor now resolves the assignment and its constants. A retry is
+   justified only if that module's endpoint declaration changes shape.
+4. The first test run failed three tests: the mirror fixture was missing two producer inputs
+   (`configs/research_v2_code_hash_amendment_1.json` and `research_state/campaign_authorization.json`), and
+   one assertion expected the word `released` where the runbook says `release the attempt`. All three were
+   fixed in the test fixture, not in the runbook.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The session's failures were implementation-side (the three
+extraction bugs above, the mirror fixture's two missing inputs and one over-strict assertion). The prompt's
+instructions were complete and unambiguous: README 2A E already requires recomputing every acceptance value
+from repository state or from the bytes on disk, which is exactly what the AST extraction does, and 2A H
+already requires the handoff fields. No prompt revision is proposed and `research_state/prompt_evolution.md`
+is untouched.
+
+**Unresolved blockers, ranked:** (1) the confirmatory evaluation cannot run before the window exists
+(`2027-01-17T22:00:00Z` at the earliest) — a time constraint, not a defect; (2) the runbook's
+`durability.runbook_commit` is `PENDING_COMMIT` (like the authorization's and the protocol's) — the commit
+that carries it must exist before the first candle is read; (3) **a finding in the bound execution path**:
+`src/v2_confirmatory/runner.py` lines 1039–1044 contain a duplicated rollback block that sits after the
+`raise` at line 1037 and is therefore unreachable — low severity, dead code, no behavioural effect, but it
+**must not be edited in place** because the execution-path digest `fd748860…` is bound by the authorization,
+the protocol and the runbook; the remedy is a versioned amendment that rotates the digest and rebuilds the
+three dependents; (4) the campaign-level bookkeeping (`research_state/continuous_universe_state.json`,
+`research/campaign_cycles/terminal/`) still describes the v1 cohort, not the completed v2 selection run — a
+stale-status item, low risk.
+
+**Prioritized queue for the next session** (README 2A D): (1) the independent audit of the delivered
+confirmatory path against BRAIN-011 and the protocol (README stage 6 applied to the confirmatory path),
+because the path is executed exactly once and cannot be re-run; (2) the campaign-level status close-out for
+the v2 cycle; (3) the user-authorized BRAIN-012 market-cap expansion design, queued behind (1) and (2).
+
+## Initial task message for next agent
+
+**Next (one bounded task):** perform the **independent audit of the delivered v2 confirmatory path** against
+BRAIN-011, the confirmatory protocol, the criterion amendment and the runbook — README stage 6
+("Independent final verification") applied to the confirmatory path, which is about to be executed **exactly
+once** and whose single-use window cannot be recovered. The audit is **read-only**: it produces a findings
+list, not a change to the executed code.
+
+**Why this task and not something else:** the confirmatory evaluation itself cannot start before
+`2027-01-17T22:00:00Z` and it then consumes the single use of the window, so no execution task is actionable
+now. The last artifact that could be written before the window existed — the preregistered runbook — was
+delivered in the previous session. What remains actionable is making sure that the code which will run once
+is correct, and that its preregistration actually describes it.
+
+**Permitted deliverable (analysis only):** a findings record, written into
+`research_state/brainstorming_queue.md` as a new BRAIN-011 §12 audit entry, and — where a finding requires a
+change — a **proposed versioned amendment** (a new immutable artifact, e.g.
+`configs/research_v2_confirmatory_code_hash_amendment_1.json`, plus its producer and its verifier) that
+rotates the execution-path digest and rebuilds the dependents (the authorization, the protocol's code binding
+and the runbook's `binding_identities`). The audit must not silently "fix" a bound file.
+
+**What the audit must cover.**
+1. **The delivered path against its preregistration** — every rule in the runbook and the protocol mapped to
+   the code that implements it, with `NOT_RUN` stated explicitly for anything that no test executes directly.
+2. **Hashes and identities** — the hashed-set canonical digest `3e8e4169…`, the execution-path digest
+   `fd748860…` and the composite `fcf8ba95…` recomputed from the tree; the authorization's
+   `manifest_hash f411aba9…`, the protocol's `bba95394…`, the amendment's `2701c634…`; the v1 evidence
+   anchors and the v2 selection anchors.
+3. **The confirmatory preconditions** — the window bounds (`2026-10-19T22:00:00Z` → earliest end
+   `2027-01-17T22:00:00Z`, 2,160 closed hourly candles), the 14/4 scope, the read-once exposure accounting
+   and the holdout protection, including the already-known unreachable duplicate rollback block at
+   `src/v2_confirmatory/runner.py:1039-1044` (report it, do not edit it in place).
+4. **The accounting and the verdict rules** — the D-5 verdict vocabulary, the amendment's criterion
+   precedence, the zero-trade and failing-asset cases, the exposure reconciliation between the window
+   manifest, the checkpoint and the report, and the write order of the eight authorized paths.
+5. **The negative space** — what the path does *not* guarantee, and what a failure at each step would leave
+   behind (the runbook's failure table is the preregistered claim that the audit must either confirm or
+   refute).
+
+**Do NOT:** read any candle inside the confirmatory window; contact any provider or run the readiness probe;
+run any evaluation, grid, backtest, campaign or selection; edit anything under `src/breakout_research/` (the
+hashed set — its canonical digest `3e8e4169…` must stay unchanged), under `src/v2_campaign/` or under
+`src/v2_confirmatory/` (its execution-path digest `fd748860…` is bound by three artifacts); edit any frozen
+artifact (`configs/research_v1.json`, `configs/research_v2.json`, `configs/research_v2_execution.json`,
+`configs/research_v2_execution_amendment_1.json`, `configs/research_v2_candidate_freeze.json`,
+`configs/research_v2_confirmatory_protocol.json`, `configs/research_v2_confirmatory_protocol_amendment_1.json`,
+`configs/research_v2_confirmatory_authorization_1.json`, `configs/research_v2_confirmatory_runbook_1.json`,
+`research/universe_manifest.json`, `research/data_manifest.json`, `research/candidate_manifest.json`,
+`research/candidate_manifest_v2.json`, `research/universe_manifest_v2.json`, `research/data_manifest_v2.json`,
+`research/v2_selected_configurations_manifest.json`, `research/ledger_v2.json`,
+`research/results_manifest_v2.json`); write any v1 or v2-selection path; re-retrieve the market-cap snapshot;
+re-run a producer that would rewrite an existing artifact without `--force` and a recorded reason.
+
+**Acceptance criteria:** the audit record maps every preregistered rule to the implementing code and states
+`NOT_RUN` where nothing executes it; every recomputed digest and anchor matches the values of record; the
+findings are ranked by severity with a concrete remedy for each, and any remedy that would change the
+execution path is expressed as a **versioned amendment**, never as an in-place edit; if a proposed amendment
+is produced, its own producer, verifier and tests are added and the whole suite stays green; **no
+confirmatory artifact exists** and the confirmatory window stays `NOT_STARTED` with
+`holdout_exposed_count = 0`.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
+`python3 scripts/verify_v2_confirmatory_runbook_1.py`; `python3 scripts/verify_v2_confirmatory_path.py`;
+`python3 scripts/verify_v2_confirmatory_protocol.py`; `python3 scripts/verify_research_v2_spec.py`;
+`python3 scripts/verify_v2_selection_run.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm only new files and `research_state/` changed — no
+`src/breakout_research/`, no `src/v2_campaign/`, no `src/v2_confirmatory/`, no frozen artifact).
