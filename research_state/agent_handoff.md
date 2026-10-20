@@ -3429,3 +3429,39 @@ confirmatory artifact exists** and the confirmatory window stays `NOT_STARTED` w
 `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
 `git status --short`; `git diff --stat` (confirm only new files and `research_state/` changed — no
 `src/breakout_research/`, no `src/v2_campaign/`, no `src/v2_confirmatory/`, no frozen artifact).
+
+## Session activity — 2026-10-20T11:05:00Z (this session)
+
+**Task (from the durable handoff at 10:55Z):** perform the **independent audit of the delivered v2 confirmatory path** against BRAIN-011, the confirmatory protocol, the criterion amendment and the runbook — README stage 6 applied to the confirmatory path. Read-only.
+
+**Outcome:** **Audit completed (read-only).** Mapped every preregistered rule to implementing code in `src/v2_confirmatory/` (window/readiness, scope/selection binding, exposure/single-use, output layout/forbidden paths, accounting, verdict rules). All identities/digests/anchors match; verifiers pass (`verify_v2_confirmatory_path.py`, `verify_v2_confirmatory_runbook_1.py`, full suite 515/515). **No confirmatory artifacts exist**, window `NOT_STARTED`, `holdout_exposed_count=0`. Findings recorded in `research_state/brainstorming_queue.md` §12. **P0 finding:** unreachable duplicate rollback block in `src/v2_confirmatory/runner.py` (~lines 1039–1050) — cannot edit in place (execution-path digest `fd748860...` bound by authorization/protocol/runbook); remedy is a **versioned amendment** rotating the execution-path digest and updating dependents.
+
+**State verified (2026-10-20T11:05:00Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **515 passed**, exit 0
+- `python3 scripts/verify_v2_confirmatory_path.py` → `"ok": true, "failures": []`, exit 0
+- `python3 scripts/verify_v2_confirmatory_runbook_1.py` → `"ok": true, "failures": []`, exit 0
+- Digests: hashed-set `3e8e4169…` unchanged; execution-path `fd748860…`; composite `fcf8ba95…`; `compute_code_hash()` `608c7340…` (env fact)
+- No confirmatory artifacts; v1 anchors and frozen v2 artifacts unchanged
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. Read-only audit, no implementation defects found requiring prompt change.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** prepare a **versioned confirmatory execution-path digest amendment** to fix the unreachable duplicate rollback block in `src/v2_confirmatory/runner.py` without changing behavior. This is a design+artifact task (propose amendment + producer + verifier + tests) — **do not execute the confirmatory run** (window opens 2026-10-19T22:00:00Z, earliest end 2027-01-17T22:00:00Z).
+
+**Subject:** Confirmatory path audited — fix bound execution-path digest via versioned amendment (read-only audit done)
+
+**Status (verified 2026-10-20T11:05:00Z):**
+- Audit complete (§12 in `research_state/brainstorming_queue.md`). All verifiers pass, no confirmatory artifacts, window `NOT_STARTED`.
+- **P0:** `src/v2_confirmatory/runner.py` has unreachable duplicate rollback (lines ~1039–1050) after `raise` in except block. Cannot edit in place — `execution_path_digest fd748860...` bound by `configs/research_v2_confirmatory_authorization_1.json`, protocol/amendment, runbook.
+
+**Required deliverables (design/artifacts only):**
+1. Create `configs/research_v2_confirmatory_code_hash_amendment_1.json` (or next number) rotating execution-path digest. Compute new digest via same canonicalization as identity code (order-independent over `src/v2_confirmatory/*.py` as used by `src/v2_confirmatory/identity.py`).
+2. Add producer `scripts/build_v2_confirmatory_code_hash_amendment_1.py` and verifier `scripts/verify_v2_confirmatory_code_hash_amendment_1.py` following existing amendment patterns.
+3. Update dependents via amendments if needed: authorization/protocol/runbook binding identities must reference new digest (use existing amendment mechanisms).
+4. Add tests covering the amendment and that verifiers pass.
+5. Fix the dead code **in a way that doesn't change behavior** — remove the unreachable duplicate block (it’s dead). After removal, recompute digest and produce amendment.
+
+**Do NOT:** run confirmatory evaluation, read candles, contact providers; edit `src/breakout_research/` (hashed set); edit frozen artifacts directly without amendment path; create confirmatory artifacts.
+
+**Acceptance:** all verifiers pass including new one; full suite green; digests updated consistently; no confirmatory artifacts created; v1 anchors unchanged.

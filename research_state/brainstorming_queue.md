@@ -2492,3 +2492,31 @@ single use of the window. The runbook's `durability.runbook_commit` is `PENDING_
 carries it must exist before the first candle is read. The next preparatory work is the independent audit of the
 delivered path against BRAIN-011 (README stage 6) and the campaign-level close-out of the v2 cycle; the
 user-authorized BRAIN-012 market-cap expansion design is queued behind them.
+
+
+### §12 — Independent audit of the delivered v2 confirmatory path (2026-10-20, read-only)
+
+**Scope:** audited the delivered confirmatory path (`src/v2_confirmatory/`) against BRAIN-011, the protocol (`configs/research_v2_confirmatory_protocol.json`), protocol amendment 1, the authorization (`configs/research_v2_confirmatory_authorization_1.json`), the runbook (`configs/research_v2_confirmatory_runbook_1.json`), and the selected configurations manifest. **Read-only; no edits made to source, frozen artifacts, or the execution path.**
+
+**Verification results:**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **515 passed**, exit 0 (483 pre-existing + 32 new). All verifiers pass including `verify_v2_confirmatory_path.py` and `verify_v2_confirmatory_runbook_1.py`.
+- **Identities (from `verify_v2_confirmatory_path.py`):** hashed-set canonical digest `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` (unchanged), execution-path digest `fd748860acec6bd5c583bfdc1dc5421409b2e1eecabcc0e00996597d13bfaf10`, composite `run_code_identity fcf8ba956d2def013af3af157c63ec08c95e851e42037a80c3f67d32c2e7f0e8`. `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925` (checkout-dependent environment fact; not an identity). Authorized ordered value `2efd3b18...` untouched.
+- **Scope:** 14 in-scope (ADA/AVAX/BNB/DOGE/ETH/HBAR/LTC/NEAR/SOL/SUI/UNI/XLM/XRP/ZEC), 4 out of scope without candidate (BCH/BTC/LINK/TRX). Window opens `2026-10-19T22:00:00Z`, earliest end `2027-01-17T22:00:00Z`, minimum 2160 closed hourly candles, single-use.
+- **Bindings:** authorization `f411aba9...`, protocol `bba95394...`, amendment 1 `2701c634...`, selected manifest `7acc7fe0...`, v2 data manifest `9f64d8d1...`, v2 spec `49fb0814...` — all match recorded hashes.
+- **State:** no confirmatory artifacts exist (`CONFIRMATORY_ARTIFACTS` all absent). `research/data_manifest_v2.json` records `confirmatory_window_status = NOT_STARTED`, `holdout_exposed_count = 0`. V1 anchors and frozen v2 artifacts byte-unchanged.
+
+**Findings (ranked):**
+
+1. **P0 — Unreachable duplicate rollback block (code defect, must NOT be edited in place).** In `src/v2_confirmatory/runner.py` lines ~1039–1050 there is a second `for path in created_files: ... unlink(); for path in created_dirs: shutil.rmtree(...); raise` block that appears **after** the `raise` at line ~1037 (inside the `except Exception:` handler) — it is unreachable dead code. The execution-path digest `fd748860...` is bound by authorization, protocol/amendment, and runbook; in-place edit would change it and invalidate bindings. **Remedy (versioned amendment):** propose `configs/research_v2_confirmatory_code_hash_amendment_1.json` (or next amendment number) rotating the execution-path digest and updating `binding_identities.code_identity.execution_path_digest` in authorization/protocol/runbook via their amendment paths, plus producer/verifier/tests. **No change made.**
+
+2. **P1 — Readiness probe implementation matches preregistration.** `src/v2_confirmatory/window.py` defines `METADATA_ENDPOINTS` with primary→failover order using `/api/v3/time` and `/api/v3/exchangeInfo` (Binance primary `api.binance.com`, failover `data-api.binance.vision`), `FAILOVER_STATUS_CODES` include 403/429/451/500/502/503/504, `MIN_WINDOW_HOURS=2160`, and `window_bounds()` computes earliest end as `window_start + 2160h`. The runbook correctly states probe is metadata-only (no candle fetch, no `holdout_exposed_count` increment). Tests inject clock/probe so no network calls occur. **OK.**
+
+3. **P1 — Output layout and forbidden paths enforced.** `src/v2_confirmatory/runner.py` defines `DEFAULT_PATHS` writing only to `research/v2_confirmatory_window_manifest.json`, `research/shards_v2_confirmatory/` (shard written as `plan.paths["shards_dir"]`), `research/ledger_v2_confirmatory.json`, `research/results_manifest_v2_confirmatory.json`, `research_state/checkpoint_v2_confirmatory.json`, `reports/confirmatory_evaluation_v2.json`, `reports/confirmatory_report_v2.md` plus results stream. `assert_output_paths_allowed()` and `V1_PATHS_FORBIDDEN`/`V2_SELECTION_PATHS_FORBIDDEN` prevent writing to v1 or v2-selection paths. Runbook write order matches the delivered runner’s sequence. **OK.**
+
+4. **P1 — Exposure accounting and single-use semantics.** `src/v2_confirmatory/exposure.py` tracks `holdout_exposed_count` increments once per exposure event, never decreases; `window_is_spent()` gates abort handling. On abort after payload read, status becomes `EXPOSED_ABORTED` with checkpoint written; before first payload read, attempt is released and window untouched. **OK.**
+
+5. **P1 — Scope/selection binding correct.** `src/v2_confirmatory/scope.py` loads from `research/v2_selected_configurations_manifest.json` (14 in-scope with `selected` entries, 4 out of scope reported). The criterion precedence is bound via protocol amendment 1 (frozen v2 spec governs; protocol’s buy-and-hold criterion reported beside it). **OK.**
+
+6. **P2 — Campaign-level status not updated.** `research_state/continuous_universe_state.json` and `research/campaign_cycles/terminal/` still describe v1 cohort; v2 selection completed but campaign close-out not done. **Remedy:** separate bounded task (documented as next after audit). No change made.
+
+**Conclusion:** The delivered path is correctly preregistered, bound, and verifiably not executed. The only code-level issue is the unreachable duplicate rollback block (P0) which cannot be edited in place due to bound digests — requires a versioned amendment rotating the execution-path digest. All other checks pass; no confirmatory artifacts exist; window remains `NOT_STARTED` with `holdout_exposed_count=0`. The path is ready for independent verification but must not be run before `2027-01-17T22:00:00Z`.
