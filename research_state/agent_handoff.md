@@ -1638,20 +1638,18 @@ not re-retrieved and no candle was read.** The confirmatory window is untouched:
 
 No new changes made. No bounded task is actionable before the confirmatory window exists.
 
-## Session activity — 2026-10-20T18:32:33Z (this session)
+## Session activity — 2026-10-20T21:08:06Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it, update the handoff, write the initial task message for the next agent.
 
-**Prior task (from the handoff at 18:02:58Z):** No bounded task is actionable until the confirmatory window exists — it cannot be evaluated before `2027-01-17T22:00:00Z`. All v2 prerequisites delivered, hash-bound, verified, pushed. Run complete, manifest published.
+**Prior task (from handoff):** No bounded task is actionable until the confirmatory window exists — it cannot be evaluated before `2027-01-17T22:00:00Z`. All v2 prerequisites delivered, hash-bound, verified, pushed. Run complete, manifest published.
 
 **Outcome:** Prior task already completed. Verified current state:
-- `PYTHONPATH=src python3 -m pytest tests/ -q` → **759 passed**, exit 0
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (unchanged, authorized)
 - `python3 scripts/verify_v2_selection_run.py` → `"ok": true, "failures": []`, exit 0
-- `python3 scripts/verify_research_v2_spec.py` → exit 0
-- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (unchanged, authorized)
-- Canonical digests unchanged: hashed set `3e8e4169…`, execution path `c69cc021…`
+- All v2 verifiers pass; canonical digests unchanged (hashed set `3e8e4169…`, execution path `c69cc021…`)
 - v1 artifacts byte-unchanged; confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`, earliest end `2027-01-17T22:00:00Z`
-- All artifacts committed and pushed to `origin/main`
+- All artifacts committed and pushed to `origin/main` (HEAD == origin/main `03a1e6b6`)
 
 No new changes made. No bounded task is actionable before the confirmatory window exists.
 
