@@ -177,6 +177,21 @@ def _failures(root: Path) -> List[str]:
     return verifier.verify(root)["failures"]
 
 
+def _execution_state() -> Dict[str, Any]:
+    """The state of the v3 execution artifacts: existence, size and mtime."""
+    state: Dict[str, Any] = {}
+    for relative in V3_EXECUTION_ARTIFACTS:
+        path = REPO_ROOT / relative
+        if path.is_dir():
+            state[relative] = ("dir", sorted(child.name for child in path.iterdir()))
+        elif path.exists():
+            stat = path.stat()
+            state[relative] = ("file", stat.st_size, stat.st_mtime_ns)
+        else:
+            state[relative] = ("absent",)
+    return state
+
+
 def test_the_authorization_is_self_hashing() -> None:
     authorization = _load(AUTHORIZATION_PATH)
     recomputed = verifier.compute_manifest_hash(authorization, ("manifest_hash",))
@@ -427,9 +442,16 @@ def test_the_execution_path_accepts_the_authorization_without_executing_it() -> 
     assert plan.counts["config_units"] == 6 * 2304
     assert plan.boundary_ms > 0
     assert plan.scope["binance_pairs"][0] == "SHIBUSDT"
-    # Building the plan runs nothing: no v3 execution artifact exists.
-    for relative in V3_EXECUTION_ARTIFACTS:
-        assert not (REPO_ROOT / relative).exists(), relative
+    # Building the plan runs nothing: the v3 execution artifacts are exactly
+    # what they were before the plan was built.
+    #
+    # The rule "no v3 execution artifact exists" was replaced, not deleted: it
+    # was true while the authorized run had not been performed, and it is false
+    # by design once the run exists. The replacement is state-independent and
+    # stronger: building a plan must change nothing.
+    before = _execution_state()
+    runner.build_plan(runner.default_workspace(REPO_ROOT))
+    assert _execution_state() == before
 
 
 def test_the_verifier_passes_on_the_repository() -> None:
@@ -624,6 +646,11 @@ def test_verifier_detects_a_dropped_deviation_disclosure(tmp_path: Path) -> None
 def test_verifier_detects_an_execution_artifact_without_a_ledger(tmp_path: Path) -> None:
     root = _mirror_repo(tmp_path)
     (root / "research" / "shards_v3" / "v3-campaign").mkdir(parents=True, exist_ok=True)
+    # The case under test is an execution artifact *without* the ledger of the
+    # authorized run, so the ledger is removed from the mirror as well.
+    ledger = root / "research" / "ledger_v3.json"
+    if ledger.is_symlink() or ledger.exists():
+        ledger.unlink()
     failures = _failures(root)
     assert any("without the ledger of the authorized run" in failure for failure in failures)
 

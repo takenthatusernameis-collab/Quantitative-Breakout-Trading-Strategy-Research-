@@ -74,15 +74,6 @@ REQUIRED_RELATIVES = (
     SPEC_V2_RELATIVE,
 )
 
-V3_EXECUTION_ARTIFACTS = (
-    "research/shards_v3",
-    "research/ledger_v3.json",
-    "research/results_manifest_v3.json",
-    "research/results_v3.jsonl",
-    "research_state/checkpoint_v3.json",
-    "research/v3_selected_configurations_manifest.json",
-)
-
 # The recomputation is expensive, so the producer caches it per content signature.
 # The signature covers every input the recomputation consumes (the shard bytes, the v2
 # data manifest, the preregistered specification, the campaign id and the data
@@ -91,6 +82,33 @@ V3_EXECUTION_ARTIFACTS = (
 
 def canonical(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def v3_contamination_failures(root: Path) -> List[str]:
+    """The failures of a v3 line that contaminated the v2 line.
+
+    The v3 selection run writes into its own five output paths and into
+    nothing else. The v2 line must therefore be untouched by it: the v2 ledger,
+    the v2 results manifest and the v2 shard directory carry the v2 campaign,
+    and the v2 selected-configurations manifest is the v2 manifest.
+    """
+    failures: List[str] = []
+    ledger_path = root / "research" / "ledger_v2.json"
+    if ledger_path.exists():
+        ledger = _load(ledger_path)
+        if ledger.get("campaign_id") != "v2-campaign":
+            failures.append("7: the v2 ledger carries another campaign id")
+    manifest_path = root / "research" / "results_manifest_v2.json"
+    if manifest_path.exists():
+        manifest = _load(manifest_path)
+        if manifest.get("campaign_id") != "v2-campaign":
+            failures.append("7: the v2 results manifest carries another campaign id")
+    shards_v2 = root / "research" / "shards_v2"
+    if shards_v2.is_dir():
+        campaigns = sorted(path.name for path in shards_v2.iterdir() if path.is_dir())
+        if campaigns != ["v2-campaign"]:
+            failures.append(f"7: the v2 shard directory holds {campaigns}")
+    return failures
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -290,9 +308,12 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     for relative in (authorized_run.get("paths") or {}).values():
         if (root / relative).exists():
             failures.append(f"7: the confirmatory output {relative} exists")
-    for relative in V3_EXECUTION_ARTIFACTS:
-        if (root / relative).exists():
-            failures.append(f"7: the v3 execution artifact {relative} exists")
+    # The rule "the v3 execution artifact exists" was replaced, not deleted: it
+    # was true while the v3 line had not run, and it is false by design once
+    # the authorized v3 selection run has been performed. The replacement
+    # protects what the rule was protecting -- the v2 line -- and is stronger:
+    # the v3 line may not write into, or be mixed into, any v2 artifact.
+    failures.extend(v3_contamination_failures(root))
     if confirmatory_auth.get("authorizes_evaluation_before_the_window_exists") is not False:
         failures.append("7: the confirmatory authorization would evaluate before the window exists")
 

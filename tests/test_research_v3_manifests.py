@@ -14,8 +14,8 @@ datasets that back the accepted constituents. These tests prove that
 * every constituent is either validated with a hash-verified dataset of exactly
   26,280 closed hourly candles, or excluded with a reason from the frozen
   vocabulary;
-* the v2 confirmatory window and the v1 holdout are untouched and nothing has
-  run under v3.
+* the v2 confirmatory window and the v1 holdout are untouched, and the v3
+  execution state follows the selection authorization rather than the manifests.
 """
 from __future__ import annotations
 
@@ -217,11 +217,46 @@ def test_the_confirmatory_window_is_unexposed():
     assert window["v1_holdout_reuse"] == "forbidden"
 
 
-def test_nothing_has_run_under_v3():
-    for relative in ("research/shards_v3", "research/ledger_v3.json",
-                     "research/results_manifest_v3.json", "research/results_v3.jsonl",
-                     "research_state/checkpoint_v3.json"):
-        assert not (REPO_ROOT / relative).exists(), relative
+def test_the_v3_execution_state_is_consistent_with_the_authorization():
+    """The v3 execution state follows the authorization, not the manifests.
+
+    The rule "nothing has run under v3" was **replaced, not deleted**. It was
+    true while the v3 selection authorization did not exist and it is false by
+    design once the authorized run has been performed. The replacement is
+    state-adaptive and never weaker than the state it replaces:
+
+    * while the authorization does not exist, no v3 execution artifact may
+      exist -- the manifests authorize nothing;
+    * once it exists, the authorized run has been performed: the v3 execution
+      artifacts exist, and the ledger of the run is bound to the authorization's
+      manifest hash and reports the outcome for every frozen candidate.
+    """
+    authorization_path = (
+        REPO_ROOT / "configs" / "research_v3_selection_authorization_1.json"
+    )
+    artifacts = (
+        "research/shards_v3",
+        "research/ledger_v3.json",
+        "research/results_manifest_v3.json",
+        "research/results_v3.jsonl",
+        "research_state/checkpoint_v3.json",
+    )
+    if not authorization_path.exists():
+        for relative in artifacts:
+            assert not (REPO_ROOT / relative).exists(), relative
+        return
+
+    authorization = json.loads(authorization_path.read_text(encoding="utf-8"))
+    pairs = list(authorization["authorized_run"]["scope"]["binance_pairs"])
+    for relative in artifacts:
+        assert (REPO_ROOT / relative).exists(), relative
+    ledger = json.loads((REPO_ROOT / "research" / "ledger_v3.json").read_text(encoding="utf-8"))
+    assert ledger["authorization_manifest_hash"] == authorization["manifest_hash"]
+    assert ledger["status"] == "COMPLETED"
+    assert ledger["holdout_exposed_count"] == 0
+    selection = ledger["selection"]
+    assert selection["assets_evaluated"] == len(pairs)
+    assert sorted(selection["per_asset"]) == sorted(pairs)
 
 
 def test_the_code_hash_is_the_authorized_value_of_record():

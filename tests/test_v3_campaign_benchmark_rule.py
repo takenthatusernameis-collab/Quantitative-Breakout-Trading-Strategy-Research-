@@ -16,7 +16,7 @@ and to implement the benchmark rule of ``docs/research_protocol.md:101``
   a unit binds the benchmark dataset;
 * the run is refused without the versioned authorization -- the refusal is
   exercised against a workspace whose authorization file is absent -- and it
-  creates no v3 execution artifact;
+  creates or modifies no v3 execution artifact;
 * no confirmatory-window candle is read by the data loader.
 """
 from __future__ import annotations
@@ -77,6 +77,20 @@ def _load(path: Path):
     if not path.exists():
         pytest.skip(f"{path.name} is not present in this checkout")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _output_state() -> dict:
+    """The state of the v3 output paths: existence, size and modification time."""
+    state = {}
+    for path in V3_EXECUTION_PATHS:
+        if path.is_dir():
+            state[str(path)] = ("dir", sorted(child.name for child in path.iterdir()))
+        elif path.exists():
+            stat = path.stat()
+            state[str(path)] = ("file", stat.st_size, stat.st_mtime_ns)
+        else:
+            state[str(path)] = ("absent",)
+    return state
 
 
 def _candle(timestamp: int, close: float = 100.0) -> Candle:
@@ -274,16 +288,24 @@ def test_run_is_refused_without_the_authorization():
     The versioned v3 selection authorization exists since the session that
     delivered it, so the refusal is exercised against a workspace whose
     authorization file is absent: the run must be refused there, and a refused
-    run must not create a v3 execution artifact.
+    run must not create **or modify** a v3 execution artifact.
+
+    The rule "a refused run must not create a v3 execution artifact" was
+    replaced, not deleted: while the authorized run had not been performed, the
+    v3 output paths did not exist, so their absence was the proof. Once the
+    authorized run has been performed they exist, and the proof is that a
+    refused run leaves them exactly as they were -- which is the stronger
+    statement and holds in both states.
     """
     workspace = dataclasses.replace(
         default_workspace(REPO_ROOT),
         authorization=REPO_ROOT / "configs" / "research_v3_selection_authorization_absent.json",
     )
+    before = _output_state()
     with pytest.raises(ScopeError):
         run_selection(workspace)
-    for path in V3_EXECUTION_PATHS:
-        assert not path.exists(), f"a refused run must not create {path}"
+    after = _output_state()
+    assert after == before, "a refused run must not create or modify a v3 execution artifact"
 
 
 def test_the_engine_never_receives_the_unsliced_benchmark_series():

@@ -5103,3 +5103,20 @@ runs.
 `git status --short`; `git diff --stat` (confirm only the new v3 output paths, the new verifier and
 its tests, and `research_state/` — no `src/breakout_research/`, no `src/v2_campaign/`, no
 `src/v3_campaign/`, no frozen artifact).
+
+
+## Session activity — 2026-10-20T17:45:00Z (this session)
+
+**Task (from the durable handoff at 10:50Z):** perform the authorized v3 selection run (rehearsed first), verify with a new record-level verifier, write deterministic tests, and ensure the run is resumable and the counts/holdout are correct.
+
+**Outcome:** **Delivered.** The authorized v3 selection run is **COMPLETE** and verified. The rehearsal probes were executed before starting the run (micro/pipeline/boundary/abort); all outputs went to a temporary directory, boundary refusal works, and abort exercises rollback. The run completed on `2026-10-20T17:45:20Z` (started `2026-10-20T16:32:24Z`), with **2 resumes** (interrupted twice), for a total of **3 resume events**; `resumes_bounded_by` max_retries_on_technical_failure=3 was not exceeded.
+
+**Run results:**
+- 6 assets evaluated: SHIBUSDT, QNTUSDT, AAVEUSDT, WLDUSDT, PEPEUSDT, ICPUSDT
+- `outcome = CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`
+- 13,824 config units, 165,888 execution units
+- `executed 53,838`, `skipped_already_complete 112,050`, `records_written 165,888`
+- `holdout_exposed_count = 0` in ledger and checkpoint; no confirmatory-window candle read
+- `confirmatory_window_start_utc = 2026-10-20T13:00:00Z`, still `NOT_STARTED` for v3; v2 still time-blocked until `2027-01-17T22:00:00Z`
+
+**Artifacts produced:** `research/shards_v3/v3-campaign/` (3,323 shard files), `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json`. The result stream was reconstructed from shards (projection matches; sha256 `63860a7143b79ebc73edbbadfae14629b902862ab51cfbffffdced29ddf466d6`). All record `experiment_id`s verified, counts match planned bounds. `scripts/verify_v3_selection_run.py` → `"ok": true, "failures": []`. `compute_code_hash()` remains `2efd3b18…`; canonical digests unchanged (`3e8e4169…`, `c69cc021…`, `277a4bbe…`, `29cd064e…`). v1/v2 artifacts unchanged; no `src/breakout_research/`, `src/v2_campaign/`, or `src/v3_campaign/` files modified.

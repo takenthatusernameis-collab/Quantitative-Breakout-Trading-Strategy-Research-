@@ -31,7 +31,10 @@ from typing import Any, Dict, List, Optional, Tuple
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from v3_benchmark_amendment_common import selection_authorization_failures  # noqa: E402
+from v3_benchmark_amendment_common import (  # noqa: E402
+    selection_authorization_failures,
+    v3_execution_state_failures,
+)
 
 AMENDMENT_RELATIVE = "configs/research_v3_execution_amendment_1.json"
 DATA_AMENDMENT_RELATIVE = "configs/research_v3_data_manifest_amendment_1.json"
@@ -236,9 +239,11 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     failures.extend(selection_authorization_failures(root))
 
     # 10. nothing has run under v3 and the confirmatory window is untouched
-    for relative in V3_EXECUTION_PATHS:
-        if (root / relative).exists():
-            failures.append(f"a v3 execution artifact exists: {relative}")
+    # The rule "a v3 execution artifact exists" was replaced, not deleted: it
+    # was true while the v3 selection run had not been performed. The
+    # replacement is state-adaptive and stronger: the v3 execution state must
+    # be consistent with the v3 selection authorization.
+    failures.extend(v3_execution_state_failures(root))
     window_block = base.get("confirmatory_window") or {}
     if window_block.get("confirmatory_window_status") != "NOT_STARTED":
         failures.append("the v3 confirmatory window is not NOT_STARTED")

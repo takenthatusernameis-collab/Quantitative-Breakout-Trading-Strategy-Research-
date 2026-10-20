@@ -364,6 +364,58 @@ def selection_authorization_failures(repo_root: Path) -> List[str]:
     return failures
 
 
+def v3_execution_state_failures(repo_root: Path) -> List[str]:
+    """The failures of the v3 execution state.
+
+    The rule that replaced the former "a v3 execution artifact exists" check
+    is **state-adaptive** and is never weaker than the state it replaces:
+
+    * while the v3 selection authorization does not exist, no v3 execution
+      artifact may exist -- the cascade is then the last word, and a v3
+      execution artifact would contradict it;
+    * once the authorization exists, the authorized run has been performed: the
+      v3 execution artifacts are the authorized ones, the ledger of the run is
+      bound to the authorization's manifest hash, reports a completed run and
+      records no confirmatory exposure. A v3 execution artifact that is not
+      backed by the authorization, or a ledger that is not bound to it, is a
+      contradiction of the cascade.
+    """
+    root = Path(repo_root)
+    authorization_path = root / V3_AUTHORIZATION_RELATIVE
+    existing = [relative for relative in V3_EXECUTION_PATHS if (root / relative).exists()]
+    if not authorization_path.exists():
+        return [
+            f"a v3 execution artifact exists without the v3 selection authorization: {relative}"
+            for relative in existing
+        ]
+    if not existing:
+        return []
+    failures: List[str] = []
+    ledger_path = root / "research" / "ledger_v3.json"
+    if not ledger_path.exists():
+        failures.append(
+            "a v3 execution artifact exists without the ledger of the authorized run: "
+            + ", ".join(existing)
+        )
+        return failures
+    ledger = read_json(ledger_path)
+    authorization = read_json(authorization_path)
+    if ledger.get("authorization_manifest_hash") != authorization.get("manifest_hash"):
+        failures.append("the v3 ledger is not bound to the v3 selection authorization")
+    if ledger.get("status") != "COMPLETED":
+        failures.append(
+            f"the v3 ledger reports the run status {ledger.get('status')!r}, not 'COMPLETED'"
+        )
+    if int(ledger.get("holdout_exposed_count") or 0) != 0:
+        failures.append("the v3 ledger records a confirmatory exposure")
+    run = authorization.get("authorized_run") or {}
+    if ledger.get("run_id") != run.get("run_id"):
+        failures.append("the v3 ledger does not record the authorized run id")
+    if ledger.get("campaign_id") != run.get("campaign_id"):
+        failures.append("the v3 ledger does not record the authorized campaign id")
+    return failures
+
+
 __all__ = [
     "BENCHMARK_SYMBOL",
     "DATA_AMENDMENT_1_RELATIVE",
@@ -395,4 +447,5 @@ __all__ = [
     "sha256_bytes",
     "sha256_file",
     "v1_anchor_digests",
+    "v3_execution_state_failures",
 ]

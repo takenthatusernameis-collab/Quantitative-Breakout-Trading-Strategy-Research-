@@ -15,6 +15,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from v3_benchmark_amendment_common import v3_execution_state_failures  # noqa: E402
 
 AMENDMENT_PATH = REPO_ROOT / "configs" / "research_v3_candidate_freeze_amendment_1.json"
 FREEZE_RELATIVE = "configs/research_v3_candidate_freeze.json"
@@ -34,7 +37,8 @@ V1_ANCHORS = (
     "research/candidate_manifest_v2.json",
 )
 
-#: The paths a v3 execution run would create. None of them may exist yet.
+#: The paths a v3 execution run creates. Their state is checked against the
+#: v3 selection authorization, not against their mere existence.
 V3_EXECUTION_PATHS = (
     "research/shards_v3",
     "research/ledger_v3.json",
@@ -246,9 +250,11 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             failures.append(f"the v1 anchor for {relative} does not match the file")
 
     # 14. nothing has run under v3
-    for relative in V3_EXECUTION_PATHS:
-        if (repo_root / relative).exists():
-            failures.append(f"a v3 execution artifact exists: {relative}")
+    # The rule "a v3 execution artifact exists" was replaced, not deleted: it
+    # was true while the v3 selection run had not been performed. The
+    # replacement is state-adaptive and stronger: the v3 execution state must
+    # be consistent with the v3 selection authorization.
+    failures.extend(v3_execution_state_failures(repo_root))
     window = data.get("confirmatory_window") or {}
     if window.get("confirmatory_window_status") != "NOT_STARTED":
         failures.append("the v3 confirmatory window is not NOT_STARTED")

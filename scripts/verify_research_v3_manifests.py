@@ -29,6 +29,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from v3_constituent_validation import derive_batch, parse_iso_utc  # noqa: E402
+from v3_benchmark_amendment_common import v3_execution_state_failures  # noqa: E402
 
 SPEC_RELATIVE = "configs/research_v3.json"
 AMENDMENT_RELATIVE = "configs/research_v3_exclusion_amendment_1.json"
@@ -264,10 +265,12 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     if window.get("v1_holdout_reuse") != "forbidden":
         failures.append("the v3 data manifest does not forbid the v1 holdout reuse")
 
-    # 9. nothing has run under v3
-    for relative in V3_EXECUTION_PATHS:
-        if (repo_root / relative).exists():
-            failures.append(f"a v3 execution artifact exists: {relative}")
+    # 9. The v3 execution state is consistent with the v3 selection
+    # authorization. The rule "nothing has run under v3" was replaced, not
+    # deleted: it was true while the authorized run had not been performed and
+    # it is false by design once the run exists. The replacement is
+    # state-adaptive and stronger.
+    failures.extend(v3_execution_state_failures(repo_root))
 
     # 10. the frozen v1 and v2 evidence is byte-identical
     for relative in FROZEN_ANCHORS:

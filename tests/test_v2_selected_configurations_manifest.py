@@ -221,8 +221,12 @@ def test_the_manifest_authorizes_nothing():
     assert authorization["authorizes_a_candle_read_before_the_window_exists"] is False
     for relative in authorization["authorized_run"]["paths"].values():
         assert not (REPO_ROOT / relative).exists(), relative
-    for relative in verifier.V3_EXECUTION_ARTIFACTS:
-        assert not (REPO_ROOT / relative).exists(), relative
+    # The rule "the v3 execution artifacts do not exist" was replaced, not
+    # deleted: it was true while the v3 line had not run and it is false by
+    # design once the authorized v3 selection run has been performed. The
+    # replacement protects the v2 line, which is what the rule was for: the v3
+    # line must not have contaminated any v2 artifact.
+    assert verifier.v3_contamination_failures(REPO_ROOT) == []
 
 
 def test_the_anchored_artifacts_are_byte_unchanged():
