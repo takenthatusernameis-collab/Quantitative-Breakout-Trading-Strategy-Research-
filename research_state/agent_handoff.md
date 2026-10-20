@@ -3716,3 +3716,21 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 **Acceptance criteria:** no changes required; suite and verifiers remain green; authorized code hash stays `2efd3b18…`; v1 artifacts unchanged; `confirmatory_window_status` `NOT_STARTED`, `holdout_exposed_count` 0.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git rev-parse main` and `git rev-parse origin/main` (confirm they match).
+
+## Session activity — 2026-10-20T11:36:38Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it (campaign-level close-out of the v2 cycle), update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Campaign-level close-out delivered. `research_state/continuous_universe_state.json` now describes the v2 cycle: current cohort = the 18 validated constituents of `research/universe_manifest_v2.json` (`4e927e52…`), `current_cycle_id = v2-selection-run-2026-10-20`, `next_cohort_index = 3`, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end 2027-01-17T22:00:00Z)`, outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE` (14 candidates, 4 reported without a candidate). The v1 `exhausted_cohort_2.json` terminal artifact is left untouched as history. No `src/` change, no frozen artifact edit, no provider contact, no candle read.
+
+**State verified (2026-10-20T11:36:38Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 545 passed, exit 0
+- all verifiers exit 0; `verify_v2_selection_run.py` → `"ok": true`
+- `compute_code_hash()` = `608c7340…` (environment fact); authorized `2efd3b18…`, canonical `3e8e4169…` unchanged
+- confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`
+
+## Initial task message for next agent
+
+**Next (one bounded task):** produce the **BRAIN-012 decision record** — a brainstorming-queue item for the versioned, auditable market-cap expansion program (v3+), as queued by the user-authorized follow-on note. Design only: compare at least two viable designs, choose one, record falsifiers/rollback/acceptance tests; mark `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`. Do not implement in the same session (README 2A C1). No new market-cap snapshot, no v1/v2 artifact edit, no `src/` change.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`.
