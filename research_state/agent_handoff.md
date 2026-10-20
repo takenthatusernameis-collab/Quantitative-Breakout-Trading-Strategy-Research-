@@ -4437,3 +4437,319 @@ exists yet, and the v2 confirmatory window stays `NOT_STARTED` with `holdout_exp
 `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
 `git status --short`; `git diff --stat` (confirm only new v3 files and `research_state/` — no
 `src/breakout_research/`, no `src/v2_campaign/`, no frozen artifact).
+
+## Session activity — 2026-10-20T16:02:00Z (this session)
+
+**Task (from the durable handoff at 15:45:00Z):** "implement **BRAIN-013** — publish the v3 benchmark
+dataset and build the benchmark rule into the v3 selection execution path." Four bounded items:
+(1) one bounded BTCUSDT retrieval under the v3 window rule with raw response, sha256 and retrieval
+timestamp; (2) publish the benchmark entry by a versioned data-manifest amendment and re-bind the
+data-manifest identity in a freeze amendment 2 and an execution amendment 1; (3) implement
+`src/v3_campaign/` outside the hashed set with the benchmark rule built in (both series sliced to the
+same fold window, fail-closed, BTC configurations never dropped); (4) a read-only offline verifier and
+deterministic tests for every new artifact and rule.
+
+**Outcome: items 1–4 are delivered and verified. No v3 grid, backtest, campaign or selection was
+run**, no v3 selection authorization exists, and no confirmatory-window candle was read.
+
+### 1. The bounded retrieval (item 1)
+
+- One bounded read of `BTCUSDT` through the frozen `DataFetcher` and the documented primary →
+  failover policy: the primary host `https://api.binance.com/api/v3/klines` answered **HTTP 451** on
+  every probe, the failover host `https://data-api.binance.vision/api/v3/klines` answered **HTTP 200**;
+  27 data requests, 54 page records (27 × 451 + 27 × 200).
+- Dataset `research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv`, canonical hourly-CSV content
+  hash `50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e`, 26,280 closed hourly
+  candles, `2023-10-21T11:00:00Z` … `2026-10-20T10:00:00Z`, no gaps, no rejected rows — **the same
+  window as the six validated v3 assets** (identical first candle `1697886000000`, last candle
+  `1792490400000`, count 26,280), recomputed from the manifest and never copied.
+- Evidence `research/v3_evidence/benchmark_retrieval.json` (retrieval timestamp
+  `2026-10-20T15:40:42.912038+00:00`) and the raw provider rows
+  `research/v3_evidence/benchmark_raw_klines.json` (file sha256
+  `713656198b1a5f3b78e39027e9e0f2415aab6dfdb8f36754c2b50138539892ca`, 26,280 rows).
+- **Disclosure:** during the first dry run of `scripts/retrieve_v3_benchmark.py` one unintended request
+  went to the failover host without a `symbol` parameter; it returned an error response, no data was
+  retrieved and no artifact was written from it. The 27 recorded requests are the bounded retrieval.
+  No other provider contact was made.
+
+### 2. The amendment cascade (item 2)
+
+| artifact | manifest hash | what it does |
+| --- | --- | --- |
+| `configs/research_v3_data_manifest_amendment_1.json` | `f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e` | publishes the BTCUSDT entry; records the **effective** data-manifest identity `88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321` |
+| `configs/research_v3_candidate_freeze_amendment_2.json` | `41c5c10515bca609881484adc558481aadda30981ed25125119a235a562f9f1f` | re-binds the frozen candidate set's data-manifest identity; records the benchmark rule |
+| `configs/research_v3_execution_amendment_1.json` | `bbd7617835243692a5f3630a39a5b3fbc47e6ed33a0cf4c16aaa3f77b9986816` | re-binds the execution protocol's evaluation-scope identity; records the benchmark rule, the fail-closed list and the deviation disclosure |
+
+The three immutable artifacts that named the superseded identities — `research/data_manifest_v3.json`
+(`6793d86c…`), `configs/research_v3_candidate_freeze.json` (`c8679832…`), `configs/research_v3_execution.json`
+(`6793d86c…`) — are **byte-unchanged**, and each amendment records the sha256 of the artifact it repairs.
+Each amendment has a deterministic builder (refuses to overwrite without `--force`) and a read-only
+offline verifier; all three verifiers exit 0. The cascade authorizes nothing
+(`execution_authorized: false`, `grid_run_authorized: false`, `selection_authorization_present: false`).
+
+### 3. The v3 execution path (item 3)
+
+`src/v3_campaign/` (8 modules: `__init__`, `benchmark`, `data`, `errors`, `identity`, `runner`, `scope`,
+`units`) lives outside the hashed set: `compute_code_hash()` is still
+`2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`, the hashed-set canonical digest is
+still `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, and the path has its own
+canonical digest `29cd064e3f67e6bb66b052978bba61290adc97d4b3f8f7989fe2a01e1990cd55` (composite run
+identity `adbb9b760ac652d4de8fb8764eb85315d8dd5d3d9a419e97d65f97662f3c8fd7`).
+
+- `benchmark.py` — the benchmark rule: the dataset is hash-verified, the asset and the benchmark must
+  be index-aligned at the dataset level, and **both series are sliced to the same fold window** before
+  the frozen engine is called, so that the engine's index pairing `closes[i]` / `btc_ema_168[i]` *is*
+  the UTC-candle-close alignment of `docs/research_protocol.md:101`. Nothing is forward-filled.
+- **Fails closed** before the engine is called: a missing, a shorter and a misaligned benchmark raise
+  `BenchmarkAlignmentError`.
+- **The grid is never reduced:** the 576 `btc_ema_168` configurations per asset are enumerated like
+  every other configuration, and a BTC unit's data hash binds the benchmark content hash (v1 rule).
+- `scope.py` resolves the frozen scope through the amendment chain and refuses any authorization that
+  does not agree with it; `data.py` resolves the effective data manifest and refuses a dataset that
+  reaches into the confirmatory window; `runner.py` executes the bounded run and refuses to start
+  without `configs/research_v3_selection_authorization_1.json`, which does not exist.
+
+### 4. Verifiers and tests (item 4)
+
+New: `scripts/v3_benchmark_amendment_common.py`, `scripts/build_v3_{data_manifest_amendment_1,
+candidate_freeze_amendment_2,execution_amendment_1}.py`, `scripts/verify_v3_{data_manifest_amendment_1,
+candidate_freeze_amendment_2,execution_amendment_1}.py`, `scripts/retrieve_v3_benchmark.py`,
+`scripts/report_v1_v2_btc_alignment_deviation.py`, and three test modules
+(`tests/test_v3_benchmark_dataset.py` 9 tests, `tests/test_v3_benchmark_amendments.py` 14 tests,
+`tests/test_v3_campaign_benchmark_rule.py` 20 tests).
+
+**State verified (2026-10-20T16:02:00Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **698 passed**, exit 0 (654 pre-existing + 44 new)
+- `scripts/verify_v3_data_manifest_amendment_1.py`, `scripts/verify_v3_candidate_freeze_amendment_2.py`,
+  `scripts/verify_v3_execution_amendment_1.py` → `{"ok": true, "failures": []}`, exit 0
+- every other `scripts/verify_*.py` exits 0 (`scripts/verify_cycle_results.py` requires a
+  `cycle_dir` argument and is not a repository-wide gate)
+- `scripts/report_v3_benchmark_dependency.py` → `status: BENCHMARK_DATASET_AVAILABLE`,
+  `blocking: false` (the report now resolves the **effective** manifest — base plus amendment — and
+  distinguishes `benchmark_in_v3_base_data_manifest: false` from `benchmark_in_v3_data_manifest: true`)
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` ==
+  the authorized value of record (`src/breakout_research/` untouched); canonical digests unchanged:
+  hashed set `3e8e4169…`, v2 selection path `c69cc021…`, v2 confirmatory path `277a4bbe…`
+- no v3 execution artifact exists: `research/shards_v3/`, `research/ledger_v3.json`,
+  `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json`
+  are all absent; no `configs/research_v3_selection_authorization_1.json`; the v2 confirmatory window
+  stays `NOT_STARTED` with `holdout_exposed_count = 0`
+
+### The correction this session carried (important)
+
+The deviation of the completed v1/v2 runs was recomputed from the frozen fold rule
+(`scripts/report_v1_v2_btc_alignment_deviation.py` →
+`research/v3_evidence/v1_v2_btc_alignment_deviation.json`): **every** validation fold was misaligned,
+not folds 1–3 — the first validation fold already starts at 40% of the span, so fold 0 is misaligned by
+−10,512 h as well (folds 1–3: −13,140 h, −15,768 h, −18,396 h). The affected count is **124,416 of
+497,664 v2 records (25%)**, not 93,312. The two factual sentences of the BRAIN-013 record and the
+misleading test `test_the_completed_v2_run_evaluated_the_btc_filter_on_three_of_four_folds` are
+corrected in place; the disclosure is carried by
+`configs/research_v3_execution_amendment_1.json` → `deviation_disclosure`.
+
+**Rule → code → test map**
+
+| Rule | Implementation | Test |
+| --- | --- | --- |
+| one bounded retrieval, raw bytes + sha256 + timestamp recorded | `scripts/retrieve_v3_benchmark.py` | `tests/test_v3_benchmark_dataset.py::test_raw_provider_response_is_retained_and_matches_the_evidence`, `::test_retrieval_is_bounded_and_recorded` |
+| the benchmark window is identical to the six validated assets' window | `scripts/v3_benchmark_amendment_common.py` | `::test_dataset_is_index_aligned_with_every_validated_candidate` |
+| the entry is published by a versioned amendment; the base artifacts stay byte-unchanged | `scripts/build_v3_data_manifest_amendment_1.py` | `tests/test_v3_benchmark_amendments.py::test_base_artifacts_are_not_edited_in_place`, `::test_amendment_is_reproduced_deterministically_by_its_builder` |
+| the effective data-manifest identity recomputes and is bound downstream | `src/v3_campaign/data.py:resolve_effective_data_manifest` | `::test_effective_data_manifest_identity_recomputes_and_is_bound_downstream` |
+| both series are sliced to the same fold window before the engine call | `src/v3_campaign/benchmark.py:align_window` | `tests/test_v3_campaign_benchmark_rule.py::test_aligned_window_carries_identical_timestamps`, `::test_the_engine_never_receives_the_unsliced_benchmark_series` |
+| missing / short / misaligned benchmark fails closed | `src/v3_campaign/benchmark.py` | `::test_missing_benchmark_fails_closed`, `::test_short_benchmark_fails_closed`, `::test_misaligned_benchmark_fails_closed` |
+| the 576 BTC configurations are never dropped | `src/v3_campaign/units.py:btc_filter_configurations` | `::test_the_grid_is_never_reduced` |
+| the BTC unit's data identity binds the benchmark dataset | `src/v3_campaign/units.py:unit_data_hash` | `::test_unit_data_hash_binds_the_benchmark_for_btc_units_only` |
+| no run without the versioned authorization | `src/v3_campaign/runner.py:build_plan` | `::test_run_is_refused_without_the_authorization` |
+| the v3 path is outside the hashed set | `src/v3_campaign/identity.py` | `::test_v3_path_lives_outside_the_hashed_set`, `::test_v3_path_has_a_stable_canonical_digest` |
+| no confirmatory-window candle is read | `src/v3_campaign/data.py:load_development_candles` | `::test_no_confirmatory_window_candle_is_read` |
+
+**Findings, classified**
+- `CONFIRMED` — the benchmark dataset exists, is hash-verified and is index-aligned with the six
+  validated v3 assets; the amendment cascade re-binds the identity without editing a frozen artifact;
+  the v3 path implements the UTC-candle-close alignment and fails closed.
+- `CONFIRMED` — the deviation of the completed v1/v2 runs affects **all four** validation folds
+  (124,416 records), not three of them (93,312).
+- `DISPROVEN` — the 15:45:00Z entry's blockers 1 and 2 ("the v3 benchmark dataset is missing", "the v3
+  selection execution path does not exist") — both are closed by this session.
+- `STALE` — `configs/research_v2.json` (P2/P3) and `configs/research_v2_candidate_freeze.json`
+  (`selection_remainder`) still say `OUTSTANDING`; both artifacts are frozen and are reconciled by
+  versioned amendments, not by edits. The v2-specification amendment remains queued.
+- `UNVERIFIED_CLAIM` — nothing new was asserted beyond the measurements above; the v3 selection run
+  itself has not been performed and its outcome is unknown.
+
+**Unsuccessful attempts and their retry conditions**
+- The first draft of `src/v3_campaign/units.py` and `runner.py` imported `compute_experiment_id`
+  with the v2 argument order; the v2 module was read first and the call was aligned to it before the
+  first test run, so no retry was needed.
+- The first run of `tests/test_v3_benchmark_amendments.py` failed two tests: the effective hash was
+  read from a top-level key that does not exist (it lives in `effective_data_manifest`), and the
+  candidate set was compared in the frozen rank order against an alphabetically sorted list. Both
+  were test-side mistakes; fixed in the test, not in the artifacts.
+- The first run of `tests/test_v3_campaign_benchmark_rule.py` failed three tests: the fail-closed
+  string was matched against the wrong field, the fold-window assertion assumed the fold boundary
+  falls on an hour (it does not), and the confirmatory-window instant was miscalculated. All three
+  were test-side; fixed in the test.
+- No unchanged action was retried after a deterministic failure.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The task message was complete and unambiguous; every
+defect found in this session was implementation-side (the effective-manifest resolution, the
+fold-window slicing of the benchmark, the amendment-chain resolution in `scope.py`). Nothing in the
+prompt was missing, ambiguous or contradicted, so `research_state/prompt_evolution.md` is untouched.
+
+**Commit / persistence:** branch `main`; HEAD `a434a5bf` (`chore(kilo): checkpoint agent session`).
+**The agent did not create a commit** (no explicit user request to commit); the working tree carries
+the three amendments, the benchmark dataset, the three evidence files, the six new scripts, the
+`src/v3_campaign/` package, the three new test modules, the corrected BRAIN-013 record, the updated
+`scripts/report_v3_benchmark_dependency.py` and `tests/test_v3_benchmark_dependency.py`, and this
+handoff section. The harness checkpoint is responsible for the commit. The only unrelated working-tree
+change is the controller-driven `authorized_at_utc` refresh in
+`research_state/campaign_authorization.json` (restored with `git checkout --` after the test run).
+
+**Artifact / recovery:** every artifact of this session is reconstructible from the repository; the
+three builders rebuild the three amendments byte for byte and the three verifiers recompute every
+fact they assert.
+
+**Checkpoint reconciliation:** not applicable — no run, no shard, no result row and no ledger were
+produced by this session.
+
+**Unresolved blockers (ranked)**
+1. **The v3 selection authorization does not exist** — `configs/research_v3_selection_authorization_1.json`.
+   `src/v3_campaign/runner.py` refuses to start without it, so the v3 selection run cannot be
+   performed yet. BRAIN-013 item 4 requires it to name the benchmark dataset, its content hash, the
+   alignment rule and the deviation disclosure. **This is the next bounded task.**
+2. **The v2 confirmatory evaluation is time-blocked** until `2027-01-17T22:00:00Z` — a time
+   constraint, not a defect. Its path, protocol, amendments and authorization are delivered and verified.
+3. **The stale `OUTSTANDING` wording** in `configs/research_v2.json` (P2/P3) and in
+   `configs/research_v2_candidate_freeze.json` (`selection_remainder`) is reconciled by a versioned
+   amendment for the v2 specification, which is queued behind (1) and is cosmetic.
+4. **The v1/v2 BTC-alignment deviation is a disclosure obligation** for the final report — now
+   quantified exactly (124,416 of 497,664 records, all four validation folds) and carried by
+   `configs/research_v3_execution_amendment_1.json` → `deviation_disclosure`; it is not repairable
+   without invalidating the v1 authorization.
+5. **The v3 selection run itself** (authorized only after (1)) and the v3 confirmatory path remain
+   outstanding.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** build the **v3 selection authorization 1**
+(`configs/research_v3_selection_authorization_1.json`) — the versioned, hash-bound artifact that
+authorizes exactly one bounded v3 selection grid run over the frozen candidate set, with the benchmark
+rule and the deviation disclosure bound into it. **Nothing runs in this session**: the artifact is a
+design deliverable, produced by a deterministic builder, checked by a read-only offline verifier and
+locked by deterministic tests, following the v2 precedent
+(`scripts/build_v2_selection_authorization_1.py`,
+`scripts/verify_research_v2_selection_authorization_1.py`,
+`tests/test_research_v2_selection_authorization_1.py`,
+`configs/research_v2_selection_authorization_1.json`).
+
+**Subject:** the v3 benchmark dataset and the v3 execution path are delivered; the v3 selection run is
+refused because the versioned authorization that would permit it does not exist.
+
+**Status (verified 2026-10-20T16:02:00Z):**
+- Full suite **698/698 green** (654 pre-existing + 44 added by this session); every v1, v2 and v3
+  verifier exits 0; `scripts/report_v3_benchmark_dependency.py` → `status: BENCHMARK_DATASET_AVAILABLE`;
+  `compute_code_hash()` `2efd3b18…` (equal to the authorized value of record in this checkout);
+  canonical digests unchanged (`3e8e4169…` hashed set, `c69cc021…` v2 selection path,
+  `277a4bbe…` v2 confirmatory path); the v3 path's own digest is `29cd064e…`; no v1/v2/v3 frozen
+  artifact byte changed.
+- **The v3 line is unblocked up to the authorization.** The benchmark dataset exists, is hash-verified
+  and index-aligned with the six validated v3 assets
+  (`research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv`, content hash `50d357b0…`, 26,280
+  candles, `2023-10-21T11:00:00Z` … `2026-10-20T10:00:00Z`); the amendment cascade is published
+  (data-manifest amendment `f47380c1…`, freeze amendment 2 `41c5c105…`, execution amendment 1
+  `bbd76178…`) and the effective data-manifest identity is `88e90960…`; `src/v3_campaign/` implements
+  the benchmark rule (both series sliced to the same fold window, fail-closed on a missing, short or
+  misaligned benchmark, 576 BTC configurations never dropped) and **refuses to start** because
+  `configs/research_v3_selection_authorization_1.json` does not exist.
+- **The v2 line is closed up to its time block** (delivered, frozen, independently re-derived on
+  2026-10-20T15:45Z — do not redo it); its remaining step is the time-blocked confirmatory evaluation,
+  earliest end `2027-01-17T22:00:00Z`.
+- **Corrected fact to carry forward:** the completed v1/v2 runs evaluated the BTC trend filter against
+  a BTC EMA from a different period on **124,416 of 497,664** v2 records — **every** validation fold
+  (the first fold already starts at 40% of the span), not 93,312 records on folds 1–3. Evidence:
+  `research/v3_evidence/v1_v2_btc_alignment_deviation.json`; disclosure:
+  `configs/research_v3_execution_amendment_1.json` → `deviation_disclosure`. The BRAIN-013 record and
+  the v3 benchmark-dependency test are corrected in place.
+
+**The v3 path's own contract — build the artifact to satisfy it** (`src/v3_campaign/scope.py`:
+`validate_authorization`, `src/v3_campaign/runner.py`: `build_plan`):
+
+| field the v3 path reads | required value |
+| --- | --- |
+| `hashing.manifest_hash_excluded_keys` | non-empty; `manifest_hash` = sha256 over the canonical JSON of the body minus those keys |
+| `manifest_hash` | recomputes |
+| `authorized_run.authorized` | `true` |
+| `authorized_run.max_runs` | `1` |
+| `authorized_run.run_id` / `campaign_id` / `run_phase` | a run identity, `v3-campaign`, `selection_grid` |
+| `authorized_run.scope.binance_pairs` | exactly `["SHIBUSDT","QNTUSDT","AAVEUSDT","WLDUSDT","PEPEUSDT","ICPUSDT"]` (the frozen candidate set, in that order) |
+| `authorized_run.selection_rule.selection_block_sha256` | the digest of the **unchanged v1** `selection` block (`configs/research_v1.json` → `selection`) |
+| `authorized_run.selection_rule.max_candidates_per_asset` | `1` (the v1 rule) |
+| `authorized_run.code_identity.hashed_set_digest` | `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` |
+| `authorized_run.code_identity.execution_path_digest` | the current canonical digest of `src/v3_campaign/` — **recompute it** (`src/v3_campaign/identity.py:execution_path_digest`); it changes if you touch the package |
+| `authorized_run.benchmark.dataset_path` / `content_hash` | `research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv` / `50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e` |
+| `authorized_run.benchmark.alignment_rule` | exactly `the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called` |
+| `authorized_run.benchmark.btc_configurations_dropped` | `false` |
+| `authorized_run.paths` | `shards_dir`, `ledger`, `results_manifest`, `results_stream`, `checkpoint` → `research/shards_v3`, `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json` |
+| `authorized_run.bounds` | `max_assets` 6, `max_configs_per_asset` 2304, `max_total_config_units` 13,824, `max_retries_on_technical_failure` ≤ 3 |
+| `authorized_run.data_boundary.candles_before_utc` | `2026-10-20T13:00:00Z` (must equal the frozen scope's confirmatory-window start) |
+
+Also required by BRAIN-013 item 4 and by the amendment cascade: the authorization must **name the
+deviation disclosure** (the 124,416-record figure, the evidence path
+`research/v3_evidence/v1_v2_btc_alignment_deviation.json`) and the **effective data-manifest identity**
+`88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321`, and it must state that it
+authorizes nothing else (no confirmatory read, no candle fetch, no source-tree change).
+
+**One bounded task (in this order):**
+1. Write `scripts/build_v3_selection_authorization_1.py`: a deterministic producer that recomputes every
+   fact it records (the candidate set from the freeze chain, the selection-rule digest from the v1
+   block, the code identity from the source tree, the benchmark dataset and its content hash from the
+   effective data manifest, the deviation counts from the evidence file) and refuses to overwrite an
+   existing artifact without `--force`. It must not copy a digest out of an artifact it is describing.
+2. Write the artifact `configs/research_v3_selection_authorization_1.json` with the shape above.
+3. Write `scripts/verify_v3_selection_authorization_1.py`: a read-only offline verifier that
+   re-derives every expectation from the repository, checks that the artifact authorizes exactly one
+   bounded selection run, that it binds the benchmark rule and the disclosure, that its scope is the
+   frozen candidate set and that the BTC configurations are not dropped, and that it authorizes no
+   confirmatory read.
+4. Write `tests/test_v3_selection_authorization_1.py` (deterministic; include a mirror/tamper control
+   where the repository's pattern uses one), and add the producer/verifier tests to the suite.
+
+**Do NOT:** run any grid, backtest, campaign or selection (the authorization is the deliverable; the run
+is a later, separately authorized session); create or read any confirmatory-window candle (the v3
+window opens `2026-10-20T13:00:00Z` and is single-use, minimum 2,160 h, earliest end
+`2027-01-18T13:00:00Z`; the v2 confirmatory window is time-blocked until `2027-01-17T22:00:00Z`);
+write any file under `src/breakout_research/` or `src/v2_campaign/`; edit `research/data_manifest_v3.json`,
+`research/universe_manifest_v3.json`, `configs/research_v3_candidate_freeze.json`,
+`configs/research_v3_candidate_freeze_amendment_1.json`, `configs/research_v3_candidate_freeze_amendment_2.json`,
+`configs/research_v3_data_manifest_amendment_1.json`, `configs/research_v3_execution.json`,
+`configs/research_v3_execution_amendment_1.json` or `configs/research_v3.json` in place (amend them
+instead); contact any provider (no further retrieval is authorized or needed); re-retrieve or re-time
+the market-cap snapshot; reuse the v1 holdout or the v2 confirmatory window; re-run a producer that
+would rewrite an existing artifact without `--force` and a recorded reason; reproduce or "re-verify"
+the v2 selected-configurations manifest.
+
+**Acceptance criteria:** the authorization artifact exists, is hash-bound and self-verifying, and
+records exactly one bounded v3 selection run over the frozen candidate set with the benchmark rule and
+the deviation disclosure bound into it; its builder is deterministic and reproduces the artifact byte
+for byte; the read-only verifier exits 0 on the clean tree and fails on a tampered tree; deterministic
+tests exist for the artifact, the builder and the verifier; the full suite exits 0 and all existing
+verifiers still exit 0; `compute_code_hash()` and the canonical digests (`3e8e4169…`, `c69cc021…`,
+`277a4bbe…`) are unchanged; **no v3 execution artifact exists** (`research/shards_v3/`,
+`research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`,
+`research_state/checkpoint_v3.json` absent), no confirmatory-window candle has been read, and the v2
+confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
+`python3 scripts/verify_v3_selection_authorization_1.py`;
+`python3 scripts/verify_v3_data_manifest_amendment_1.py`;
+`python3 scripts/verify_v3_candidate_freeze_amendment_2.py`;
+`python3 scripts/verify_v3_execution_amendment_1.py`;
+`python3 scripts/report_v3_benchmark_dependency.py`;
+`python3 scripts/verify_research_v3_spec.py`; `python3 scripts/verify_research_v3_manifests.py`;
+`python3 scripts/verify_research_v3_candidate_freeze.py`;
+`python3 scripts/verify_research_v3_execution.py`;
+`python3 scripts/verify_v2_selected_configurations_manifest.py`;
+`python3 scripts/verify_v2_selection_run.py`; `python3 scripts/verify_research_v2_spec.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm only new v3 files and `research_state/` — no
+`src/breakout_research/`, no `src/v2_campaign/`, no frozen artifact).

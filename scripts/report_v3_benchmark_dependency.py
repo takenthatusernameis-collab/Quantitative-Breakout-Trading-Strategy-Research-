@@ -51,6 +51,7 @@ HOUR_MS = 3_600_000
 
 V3_UNIVERSE_MANIFEST = "research/universe_manifest_v3.json"
 V3_DATA_MANIFEST = "research/data_manifest_v3.json"
+V3_DATA_MANIFEST_AMENDMENT_1 = "configs/research_v3_data_manifest_amendment_1.json"
 V2_DATA_MANIFEST = "research/data_manifest_v2.json"
 V1_DATA_MANIFEST = "research/data_manifest.json"
 CONFIG_MANIFEST = "research/config_manifest.json"
@@ -260,20 +261,29 @@ def _index_offset_ms(asset: Dict[str, Any], benchmark: Dict[str, Any]) -> Option
 
 
 def v3_state_report(repo_root: Path) -> Dict[str, Any]:
-    """Whether an index-aligned, hash-verified BTC benchmark dataset exists."""
+    """Whether an index-aligned, hash-verified BTC benchmark dataset exists.
+
+    The dataset is looked up in the **effective** v3 data manifest: the base
+    manifest plus the benchmark entry published by
+    ``configs/research_v3_data_manifest_amendment_1.json``. The base manifest
+    is frozen and is not edited in place, so the benchmark entry lives in the
+    amendment and the v3 execution path materializes the effective view at run
+    time; a report that looked only at the base manifest would keep reporting
+    a gap that no longer exists.
+    """
     root = Path(repo_root)
     universe = load_json(root / V3_UNIVERSE_MANIFEST)
-    data_manifest = load_json(root / V3_DATA_MANIFEST)
+    base_data_manifest = load_json(root / V3_DATA_MANIFEST)
     spec = load_json(root / V3_SPEC)
     execution = load_json(root / V3_EXECUTION)
 
     benchmark_symbol = str((universe.get("benchmark_asset") or {}).get("symbol") or "BTCUSDT")
     declared_benchmark = (universe.get("benchmark_asset") or {})
 
-    assets = data_manifest.get("assets") or {}
+    assets = base_data_manifest.get("assets") or {}
     validated = sorted(
         symbol for symbol, entry in assets.items()
-        if (data_manifest.get("content_hashes") or {}).get(symbol)
+        if (base_data_manifest.get("content_hashes") or {}).get(symbol)
     )
     windows = {
         symbol: _window_of(assets[symbol]) for symbol in validated if symbol in assets
@@ -286,8 +296,30 @@ def v3_state_report(repo_root: Path) -> Dict[str, Any]:
     if len(distinct_windows) == 1 and windows:
         asset_window = next(iter(windows.values()))
 
-    in_v3 = benchmark_symbol in assets
-    benchmark_entry = assets.get(benchmark_symbol) or {}
+    in_base = benchmark_symbol in assets
+
+    # The effective data manifest: the base manifest plus the published
+    # benchmark entry. Recomputed here from the bytes on disk.
+    data_manifest = base_data_manifest
+    amendment_entry: Dict[str, Any] = {}
+    amendment_path = root / V3_DATA_MANIFEST_AMENDMENT_1
+    if amendment_path.exists():
+        amendment = load_json(amendment_path)
+        amendment_entry = (amendment.get("benchmark_asset") or {}).get("entry") or {}
+        if amendment_entry:
+            data_manifest = json.loads(json.dumps(base_data_manifest))
+            data_manifest.pop("manifest_hash", None)
+            snapshot = data_manifest.get("snapshot_identity")
+            if isinstance(snapshot, dict):
+                snapshot.pop("data_manifest_hash", None)
+            data_manifest.setdefault("assets", {})[benchmark_symbol] = amendment_entry
+            data_manifest.setdefault("content_hashes", {})[benchmark_symbol] = (
+                amendment_entry.get("content_hash")
+            )
+
+    effective_assets = data_manifest.get("assets") or {}
+    in_v3 = benchmark_symbol in effective_assets
+    benchmark_entry = effective_assets.get(benchmark_symbol) or {}
     v3_benchmark_window = _window_of(benchmark_entry) if in_v3 else None
 
     # The only other hash-verified BTC dataset in the repository.
@@ -335,6 +367,8 @@ def v3_state_report(repo_root: Path) -> Dict[str, Any]:
         "declared_benchmark_asset": declared_benchmark,
         "benchmark_symbol": benchmark_symbol,
         "benchmark_in_v3_data_manifest": in_v3,
+        "benchmark_in_v3_base_data_manifest": in_base,
+        "benchmark_published_by_amendment": bool(amendment_entry),
         "v3_benchmark_window": v3_benchmark_window,
         "v3_validated_assets": validated,
         "v3_validated_asset_count": len(validated),
@@ -367,10 +401,49 @@ def build_report(repo_root: Path) -> Dict[str, Any]:
 
     if state["index_aligned_benchmark_available"]:
         status = "BENCHMARK_DATASET_AVAILABLE"
+        summary = (
+            "The v3 universe declares {symbol} as the benchmark constituent and a "
+            "hash-verified, index-aligned dataset for it is published by a versioned "
+            "data-manifest amendment and materialized as the effective v3 data manifest. "
+            "{share:.0%} of the inherited grid ({count} of {total} configurations) needs "
+            "the BTC series, and the v3 execution path slices the asset series and the "
+            "benchmark series to the same fold window, so the frozen engine's index "
+            "pairing is the UTC-candle-close alignment the frozen methodology requires. "
+            "No v3 run has been performed and no v3 selection authorization exists."
+        ).format(
+            symbol=state["benchmark_symbol"],
+            share=(grid["btc_filter_share"] or 0.0),
+            count=grid["btc_filter_configurations"],
+            total=grid["total_configurations"],
+        )
     elif state["v3_selection_authorization_present"]:
         status = "BLOCKED_MISSING_BENCHMARK_DATASET_AUTHORIZATION_EXISTS"
+        summary = (
+            "The v3 universe declares {symbol} as the benchmark constituent, but the "
+            "effective v3 data manifest contains no dataset for it, while {share:.0%} of "
+            "the inherited grid ({count} of {total} configurations) needs the BTC series. "
+            "The frozen engine pairs the BTC series with the asset series by index, so a "
+            "benchmark dataset with a different window is silently misaligned."
+        ).format(
+            symbol=state["benchmark_symbol"],
+            share=(grid["btc_filter_share"] or 0.0),
+            count=grid["btc_filter_configurations"],
+            total=grid["total_configurations"],
+        )
     else:
         status = "BLOCKED_MISSING_BENCHMARK_DATASET"
+        summary = (
+            "The v3 universe declares {symbol} as the benchmark constituent, but the "
+            "effective v3 data manifest contains no dataset for it, while {share:.0%} of "
+            "the inherited grid ({count} of {total} configurations) needs the BTC series. "
+            "The frozen engine pairs the BTC series with the asset series by index, so a "
+            "benchmark dataset with a different window is silently misaligned."
+        ).format(
+            symbol=state["benchmark_symbol"],
+            share=(grid["btc_filter_share"] or 0.0),
+            count=grid["btc_filter_configurations"],
+            total=grid["total_configurations"],
+        )
 
     return {
         "artifact": "v3_benchmark_dependency_report",
@@ -379,18 +452,7 @@ def build_report(repo_root: Path) -> Dict[str, Any]:
         "repo_root": str(root),
         "status": status,
         "blocking": status != "BENCHMARK_DATASET_AVAILABLE",
-        "summary": (
-            "The v3 universe declares {symbol} as the benchmark constituent, but the v3 data "
-            "manifest contains no dataset for it, while {share:.0%} of the inherited grid "
-            "({count} of {total} configurations) needs the BTC series. The frozen engine pairs "
-            "the BTC series with the asset series by index, so a benchmark dataset with a "
-            "different window is silently misaligned."
-        ).format(
-            symbol=state["benchmark_symbol"],
-            share=(grid["btc_filter_share"] or 0.0),
-            count=grid["btc_filter_configurations"],
-            total=grid["total_configurations"],
-        ),
+        "summary": summary,
         "grid": grid,
         "alignment": alignment,
         "v3_state": state,

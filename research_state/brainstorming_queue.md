@@ -2796,16 +2796,25 @@ The user explicitly requested that the breakout research program keep adding new
   covers `2023-10-20T18:00:00Z` … `2026-10-19T17:00:00Z`. The index-0 candles are **17 hours
   apart**, so index `i` of the v2 BTC series is a different instant from index `i` of a v3 asset
   series, and the v3 assets' last 17 candles have no BTC counterpart at all.
-- The v2 line was internally consistent: all 18 v2 assets and BTC share the identical window
-  (`2023-10-20T18:00:00Z` … `2026-10-19T17:00:00Z`), so index alignment equalled timestamp
-  alignment for the first validation fold. The v3 batch broke that property.
+- The v2 line was internally consistent in its **windows**: all 18 v2 assets and BTC share the
+  identical window (`2023-10-20T18:00:00Z` … `2026-10-19T17:00:00Z`). **Corrected 2026-10-20:** the
+  original text of this record concluded from that that "index alignment equalled timestamp
+  alignment for the first validation fold". It did not: the first validation fold starts at 40% of
+  the span, so the engine paired the asset's fold-window index `i` with the BTC candle at the
+  **start of the history**, 10,512 h earlier. Index alignment equals timestamp alignment only for
+  the *development* prefix of the dataset, which no validation fold is.
 - Consequence for the **completed** v1 and v2 runs (recorded, not repaired here): the ledger
   (`research/ledger_v2.json`) shows 41,472 configuration units and 497,664 execution units
   (18 assets × 2,304 configurations × 4 validation folds × 3 cost scenarios). The BTC filter
-  therefore covers 124,416 v2 records (25%), of which **93,312** (folds 1–3) compared the
-  asset's close with a BTC EMA taken from the start of the three-year history rather than from
-  the same hour. Fold 0 (31,104 records) was aligned. The v1 run used the same engine and the
-  same call shape (`src/breakout_research/campaign.py:429-435`).
+  therefore covers 124,416 v2 records (25%). **Corrected 2026-10-20:** the original text of this
+  record claimed that 93,312 records (folds 1–3) were misaligned and that fold 0 (31,104 records)
+  was aligned. Recomputation from the frozen fold rule
+  (`scripts/report_v1_v2_btc_alignment_deviation.py` →
+  `research/v3_evidence/v1_v2_btc_alignment_deviation.json`) shows that **no validation fold was
+  aligned**: the per-fold offsets are −10,512 h (fold 0), −13,140 h (fold 1), −15,768 h (fold 2)
+  and −18,396 h (fold 3). The affected count is therefore **124,416 of 497,664 records (25%)**,
+  not 93,312. The v1 run used the same engine and the same call shape
+  (`src/breakout_research/campaign.py:429-435`).
 - The v2 **confirmatory** path is not affected: `src/v2_confirmatory/runner.py:640-646` slices
   the asset series **and** the benchmark series to the same window before calling the engine, so
   index alignment equals timestamp alignment there. A v3 confirmatory path that slices both
@@ -2905,8 +2914,9 @@ implementation session must:
 4. bind the benchmark rule in the v3 selection authorization
    (`configs/research_v3_selection_authorization_1.json`), which must name the benchmark
    dataset, its content hash, the alignment rule and the deviation disclosure;
-5. record the v1/v2 deviation (93,312 of 497,664 v2 records evaluated the BTC filter against a
-   BTC EMA from a different period) in the final report, not in a frozen artifact.
+5. record the v1/v2 deviation (**124,416** of 497,664 v2 records — every validation fold — evaluated
+   the BTC filter against a BTC EMA from a different period; the original text of this record said
+   93,312 and is corrected above) in the final report, not in a frozen artifact.
 
 ### Decision criteria (D-1 … D-8)
 
@@ -2993,3 +3003,114 @@ contacted, no candle was read or fetched, no v1, v2 or v3 artifact was edited, a
 `src/breakout_research/` or `src/v2_campaign/` was touched.
 
 **Marked:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
+
+---
+
+## BRAIN-013 implementation record — the benchmark dataset, the amendment cascade and the v3 execution path (2026-10-20T15:45Z, separate session)
+
+**Session:** one bounded implementation session, 2026-10-20T15:4xZ, in a separate session from the
+decision record above. **Outcome:** the recommendation's items 1–3 are delivered; item 4 (the v3
+selection authorization) and item 5 (the final report) remain outstanding. **No v3 grid, backtest,
+campaign or selection was run**, and none is authorized.
+
+### 1. The bounded retrieval (recommendation item 1)
+
+- One bounded read of `BTCUSDT` through the frozen `DataFetcher` and the documented primary →
+  failover policy: the primary host `https://api.binance.com/api/v3/klines` answered **HTTP 451**
+  on every probe and the failover host `https://data-api.binance.vision/api/v3/klines` answered
+  **HTTP 200**; 27 data requests, 54 page records (27 × 451 + 27 × 200).
+- Dataset: `research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv`, canonical hourly-CSV
+  content hash `50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e`, 26,280 closed
+  hourly candles, `2023-10-21T11:00:00Z` … `2026-10-20T10:00:00Z`, no gaps, no rejected rows.
+- Evidence: `research/v3_evidence/benchmark_retrieval.json` (retrieval timestamp
+  `2026-10-20T15:40:42.912038+00:00`) and the raw provider rows
+  `research/v3_evidence/benchmark_raw_klines.json`, file sha256
+  `713656198b1a5f3b78e39027e9e0f2415aab6dfdb8f36754c2b50138539892ca`, 26,280 rows.
+- The window is **identical** to the six validated v3 assets' window (same first candle
+  `1697886000000`, same last candle `1792490400000`, same count 26,280), recomputed from the
+  manifest and never copied.
+- **Disclosure:** during the first dry run of `scripts/retrieve_v3_benchmark.py`, one unintended
+  request was made to the failover host without a `symbol` parameter. It returned an error
+  response, no data was retrieved and no artifact was written from it; the 27 recorded requests
+  are the bounded retrieval above. No other provider contact was made in this session.
+
+### 2. The amendment cascade (recommendation item 2)
+
+| artifact | manifest hash | what it does |
+| --- | --- | --- |
+| `configs/research_v3_data_manifest_amendment_1.json` | `f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e` | publishes the BTCUSDT entry; records the **effective** data-manifest identity `88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321` |
+| `configs/research_v3_candidate_freeze_amendment_2.json` | `41c5c10515bca609881484adc558481aadda30981ed25125119a235a562f9f1f` | re-binds the frozen candidate set's data-manifest identity; records the benchmark rule |
+| `configs/research_v3_execution_amendment_1.json` | `bbd7617835243692a5f3630a39a5b3fbc47e6ed33a0cf4c16aaa3f77b9986816` | re-binds the execution protocol's evaluation-scope identity; records the benchmark rule, the fail-closed list and the deviation disclosure |
+
+- The three immutable artifacts that named the superseded identities — `research/data_manifest_v3.json`
+  (`6793d86c…`), `configs/research_v3_candidate_freeze.json` (`c8679832…`) and
+  `configs/research_v3_execution.json` (`6793d86c…`) — are **byte-unchanged**; each amendment records
+  the sha256 of the artifact it repairs.
+- The effective identity is recomputed from the base manifest plus the published entry by the
+  verifiers and by the execution path; it is materialized at run time, not stored in a file.
+- Each amendment is produced by a deterministic builder (`scripts/build_v3_*_amendment_*.py`, which
+  refuse to overwrite without `--force`) and checked by a read-only offline verifier
+  (`scripts/verify_v3_*_amendment_*.py`). All three verifiers exit 0.
+- The cascade authorizes nothing: `execution_authorized: false`, `grid_run_authorized: false`,
+  `selection_authorization_present: false` in both downstream amendments.
+
+### 3. The v3 execution path (recommendation item 3)
+
+`src/v3_campaign/` lives outside the hashed set: `compute_code_hash()` is still
+`2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`, the hashed-set canonical digest
+is still `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, and the v3 path has
+its own canonical digest `29cd064e3f67e6bb66b052978bba61290adc97d4b3f8f7989fe2a01e1990cd55`
+(composite run identity `adbb9b760ac652d4de8fb8764eb85315d8dd5d3d9a419e97d65f97662f3c8fd7`).
+
+- `benchmark.py` — the benchmark rule: the dataset is hash-verified, the asset and the benchmark
+  must be index-aligned at the dataset level (identical first candle, last candle and candle
+  count), and **both series are sliced to the same fold window** before the frozen engine is
+  called, so that the engine's index pairing `closes[i]` / `btc_ema_168[i]` *is* the
+  UTC-candle-close alignment of `docs/research_protocol.md:101`. Nothing is forward-filled.
+- **Fails closed:** a missing, a shorter and a misaligned benchmark raise
+  `BenchmarkAlignmentError` **before** the engine is called (`tests/test_v3_campaign_benchmark_rule.py`).
+- **The grid is never reduced:** the 576 `btc_ema_168` configurations per asset are enumerated like
+  every other configuration, and the unit data hash of a BTC unit binds the benchmark content hash
+  (the v1 rule).
+- `scope.py` resolves the frozen scope through the amendment chain (the base freeze binds a
+  superseded data-manifest identity; freeze amendment 2 re-binds it) and refuses any authorization
+  that does not agree with it; `data.py` resolves the effective data manifest and refuses a dataset
+  that reaches into the confirmatory window; `runner.py` executes the bounded run and refuses to
+  start without `configs/research_v3_selection_authorization_1.json`, which does not exist.
+
+### 4. The correction carried by this session
+
+The recomputation of the deviation from the frozen fold rule shows that the deviation affects
+**every** validation fold, not folds 1–3: the first validation fold already starts at 40% of the
+span, so fold 0 is misaligned by −10,512 h as well (folds 1–3: −13,140 h, −15,768 h, −18,396 h).
+The affected count is **124,416 of 497,664 v2 records (25%)**, not 93,312. The evidence is
+`research/v3_evidence/v1_v2_btc_alignment_deviation.json`
+(`scripts/report_v1_v2_btc_alignment_deviation.py`), the disclosure is carried by
+`configs/research_v3_execution_amendment_1.json` → `deviation_disclosure`, and the two factual
+sentences of the decision record above are corrected in place.
+
+### Staged acceptance tests (status after this session)
+
+1. satisfied — the retrieval records the endpoint, both probed HTTP statuses, the raw response
+   bytes, their sha256 and the retrieval timestamp; the dataset carries the canonical hourly CSV
+   hash.
+2. satisfied — the benchmark window is identical to the six validated v3 assets' window
+   (recomputed from the manifest).
+3. satisfied — the benchmark entry is published by a versioned amendment; the three base artifacts
+   are byte-unchanged; the re-binding amendments are hash-bound and self-verifying.
+4. satisfied — `src/v3_campaign/` refuses a missing, a short and a misaligned benchmark, and the
+   refusal is a test, not a comment.
+5. satisfied — the engine receives the fold-window slice of the benchmark, never the full history
+   (asserted against the runner's source and by the alignment tests).
+6. satisfied — the 576 `btc_ema_168` configurations per asset are enumerated, the unit count is
+   `assets × 2,304 × 4 validation folds × 3 cost scenarios`, the holdout-position fold is never
+   enumerated and `holdout_exposed_count` stays 0.
+7. satisfied — every v3 verifier exits 0, the full suite is 697/697 green, the hashed-set digest is
+   still `3e8e4169…`, the authorized ordered digest is still `2efd3b18…`, and no v1 or v2 artifact
+   sha256 changed.
+8. satisfied — no v3 execution artifact exists: `research/shards_v3/`, `research/ledger_v3.json`,
+   `research/results_manifest_v3.json`, `research/results_v3.jsonl`,
+   `research_state/checkpoint_v3.json` are all absent; the v2 confirmatory window stays
+   `NOT_STARTED` with `holdout_exposed_count = 0`.
+
+**Marked:** `IMPLEMENTED_STAGE_1_COMPLETE_AUTHORIZATION_OUTSTANDING`.

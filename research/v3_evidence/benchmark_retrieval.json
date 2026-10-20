@@ -1,0 +1,418 @@
+{
+  "artifact": "v3_benchmark_retrieval",
+  "artifact_version": 1,
+  "as_of_utc": "2026-10-20T11:45:59Z",
+  "created_utc": "2026-10-20T15:40:42.912038+00:00",
+  "dataset": {
+    "bytes": 2427366,
+    "content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+    "dataset_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+    "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+    "sha256": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e"
+  },
+  "endpoint_failures": [
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451",
+    "https://api.binance.com/api/v3/klines: HTTP 451"
+  ],
+  "endpoint_policy": {
+    "endpoints": [
+      "https://api.binance.com/api/v3/klines",
+      "https://data-api.binance.vision/api/v3/klines"
+    ],
+    "failover_status_codes": [
+      403,
+      429,
+      451,
+      500,
+      502,
+      503,
+      504
+    ],
+    "rule": "the frozen DataFetcher performs the primary -> failover policy; a failover happens only on the documented access/rate-limit/transient status codes"
+  },
+  "endpoint_used": "https://data-api.binance.vision/api/v3/klines",
+  "endpoints_used": [
+    "https://data-api.binance.vision/api/v3/klines"
+  ],
+  "gaps": [],
+  "http_status_of_each_probed_host": {
+    "https://api.binance.com/api/v3/klines": 451,
+    "https://data-api.binance.vision/api/v3/klines": 200
+  },
+  "note": "This is a data retrieval, not a research result. No grid, backtest, campaign or selection has been run under v3, and no confirmatory-window candle was read.",
+  "protocol_version": "v3",
+  "raw_response": {
+    "bytes": 4726429,
+    "note": "the raw kline rows exactly as the provider returned them, concatenated into one JSON array",
+    "page_count": 54,
+    "pages": [
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178846,
+        "http_status": 200,
+        "sha256": "6153d552ff47ac91d6692107ea9f765491f5aa240d9dd2d9d68d99cedbfbfa0f",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 179360,
+        "http_status": 200,
+        "sha256": "5da14f957aed2c2f833495804a939b7697cd7aee5ae99d92cca4da7e6d57a9fd",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 179097,
+        "http_status": 200,
+        "sha256": "8562717fe99ec00fcdcdda3bbd0bb67df27e5595dc7cb6501aba17488806821e",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 180379,
+        "http_status": 200,
+        "sha256": "add0d9fdfdbb4091816d81f1ea7b688a7bf6d7c465b36c0b5c8231d7e1bed0cb",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 179295,
+        "http_status": 200,
+        "sha256": "5e3609f8ed51028c46b33ab67fbad0a61d29e2292c2c12657d418112e00f9db2",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178636,
+        "http_status": 200,
+        "sha256": "bd9b2a7f6088c8022dcdccac7e0a75e5e5da4b725f1e32972bf1456ed03b03fc",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 179113,
+        "http_status": 200,
+        "sha256": "0c08bc367b3db5bd60b15d100376ba58281ba820eb09cc21bcdab896e16808a2",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178870,
+        "http_status": 200,
+        "sha256": "2165833b757ed1032c365d4f23acde1e2e635c697b6d1d71ccc4173b2c0adba8",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178906,
+        "http_status": 200,
+        "sha256": "3228194282d7afc42dd23e482c5f3d7c08a6f44d9be2e8f83d73cc28a792abc4",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 180807,
+        "http_status": 200,
+        "sha256": "410eb05bda08939c389765b15ea154a7ca2cfaab1a7ad5cb78715c36069a4574",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 181043,
+        "http_status": 200,
+        "sha256": "6b62a6c9c977f3da6d1889fa18f22f767968c89483d93171e9ef3f30a8bf9610",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 180710,
+        "http_status": 200,
+        "sha256": "0ad4abdba3569c9fade19f6e8214cee16e2c9a6a40641f875675e470ef4f2bc3",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 179450,
+        "http_status": 200,
+        "sha256": "0e24c28773b9d10681be355fc0d965233084eff61e1308a0100f182ddb944ce4",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 180765,
+        "http_status": 200,
+        "sha256": "ecd34e37d57bb9b9f359809fa6ff2c60d4aded8324d20134898afce01cbe047a",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 182388,
+        "http_status": 200,
+        "sha256": "700b5585603d6f11d1208ad66384ddfaad61131fabfe4c59a0c5531a9c5f8ea4",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 182641,
+        "http_status": 200,
+        "sha256": "a7444616f624ee7bdb328098bbf617c97dabd0ea0b27ff723257b25a64ce18ed",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 182377,
+        "http_status": 200,
+        "sha256": "3cbf9519187ba0f196eba706595cbcc8d6fca3ee59fd8e7d0c64f666d8a7909d",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 183514,
+        "http_status": 200,
+        "sha256": "068a325c64069b07e265c5ded772cd8af0c3e7e51e06679583de949062767b3e",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 179764,
+        "http_status": 200,
+        "sha256": "91079b6c878c62f4f2c98bbf5fdb747a89065bcf9823c61fd66bb2586032b2de",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178369,
+        "http_status": 200,
+        "sha256": "8894668dcccd3c2c944499f80b0bd1ebf85e2a6c8dcde29affd8933dc70441b7",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 179624,
+        "http_status": 200,
+        "sha256": "7ae2095358189b6e3cc90c355eadd98d020767a25f4608a1012799e30f4af9b4",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178739,
+        "http_status": 200,
+        "sha256": "f12c82ee12857ea09049f82696f7afc097af55475a6288f318ebc40b03d89b81",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178413,
+        "http_status": 200,
+        "sha256": "b0df1164ebc92c563f26891e1dc68738d79bef1c24fc62339a348ceac0b7ed25",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178642,
+        "http_status": 200,
+        "sha256": "e07186a24aa61d06ef0dfd50b9137204d897c26fa9ac31e6415342dfee36aed3",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178241,
+        "http_status": 200,
+        "sha256": "76af58115f47874aa4e819a0adee956e74cea16d08ad626fe597460a622cd87b",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 178545,
+        "http_status": 200,
+        "sha256": "85ba72060dc38dea8cc147e615c738f04c9714a9dd82d01271f27d414d456a59",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      },
+      {
+        "bytes": 224,
+        "http_status": 451,
+        "sha256": "79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348",
+        "url": "https://api.binance.com/api/v3/klines"
+      },
+      {
+        "bytes": 49920,
+        "http_status": 200,
+        "sha256": "39e5565132e29aaa36925c7bfa49c061e45ed5b60c02f52be3635e61d9dc6d71",
+        "url": "https://data-api.binance.vision/api/v3/klines"
+      }
+    ],
+    "path": "research/v3_evidence/benchmark_raw_klines.json",
+    "row_count": 26280,
+    "sha256": "713656198b1a5f3b78e39027e9e0f2415aab6dfdb8f36754c2b50138539892ca"
+  },
+  "rejected_rows": 0,
+  "request_count": 27,
+  "retrieval_completed_utc": "2026-10-20T15:40:42.912038+00:00",
+  "retrieval_started_utc": "2026-10-20T15:40:36.719898+00:00",
+  "retrieval_timestamp_utc": "2026-10-20T15:40:42.912038+00:00",
+  "role": "benchmark_asset_and_trend_filter_input",
+  "snapshot_binding": {
+    "raw_response_hash": "013845766d1e84d02122bcfac97a7f8f0cf598ae14f6a2adcaba380726f8b1d9",
+    "retrieval_timestamp_utc": "2026-10-20T11:45:59Z"
+  },
+  "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+  "symbol": "BTCUSDT",
+  "validated": true,
+  "window": {
+    "expected_candle_count": 26280,
+    "first_candle_timestamp": 1697886000000,
+    "first_candle_utc": "2023-10-21T11:00:00+00:00",
+    "last_candle_timestamp": 1792490400000,
+    "last_candle_utc": "2026-10-20T10:00:00+00:00",
+    "observed_candle_count": 26280,
+    "rule": "the window is bound to the market-capitalization snapshot: exactly min_candles closed hourly candles ending at the last fully closed hour before the snapshot retrieval timestamp"
+  }
+}

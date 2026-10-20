@@ -1,0 +1,284 @@
+{
+  "alignment_rule": {
+    "fail_closed": "the v3 execution path refuses to run when the benchmark series is missing, shorter than the evaluated window or not index-aligned with the asset series",
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+    "index_alignment": {
+      "asset_windows": {
+        "AAVEUSDT": {
+          "file_sha256": "a46eb674706d1a53275a41d40d5aa4354a872469197beb00a8c669498cb2b47f",
+          "first_candle_timestamp": 1697886000000,
+          "last_candle_timestamp": 1792490400000,
+          "observed_candle_count": 26280
+        },
+        "ICPUSDT": {
+          "file_sha256": "d4eea992d5e4fd113f8d508476e0c81b5740166024f16d4d92ff933df7f0a3a8",
+          "first_candle_timestamp": 1697886000000,
+          "last_candle_timestamp": 1792490400000,
+          "observed_candle_count": 26280
+        },
+        "PEPEUSDT": {
+          "file_sha256": "30402a07c4c3729ed8eb8fb81b226942538ef34927e413730b0226ec70e3462a",
+          "first_candle_timestamp": 1697886000000,
+          "last_candle_timestamp": 1792490400000,
+          "observed_candle_count": 26280
+        },
+        "QNTUSDT": {
+          "file_sha256": "30ef9d68f060221d87ebf7630aa190cd41f5c9df26434cb457af2a60a44c7fae",
+          "first_candle_timestamp": 1697886000000,
+          "last_candle_timestamp": 1792490400000,
+          "observed_candle_count": 26280
+        },
+        "SHIBUSDT": {
+          "file_sha256": "56722ac42edf3885dc1b73dd98a8e279c075789cda4dc2c3f02bde4498b3b477",
+          "first_candle_timestamp": 1697886000000,
+          "last_candle_timestamp": 1792490400000,
+          "observed_candle_count": 26280
+        },
+        "WLDUSDT": {
+          "file_sha256": "0430a038bafa14ac2f4abcc0ccc214b7aef3801fd27d0e588ab4bf3d525ee6f3",
+          "first_candle_timestamp": 1697886000000,
+          "last_candle_timestamp": 1792490400000,
+          "observed_candle_count": 26280
+        }
+      },
+      "benchmark_symbol": "BTCUSDT",
+      "benchmark_window": {
+        "file_sha256": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+        "first_candle_timestamp": 1697886000000,
+        "last_candle_timestamp": 1792490400000,
+        "observed_candle_count": 26280
+      },
+      "evaluated_assets": [
+        "AAVEUSDT",
+        "ICPUSDT",
+        "PEPEUSDT",
+        "QNTUSDT",
+        "SHIBUSDT",
+        "WLDUSDT"
+      ],
+      "index_aligned": true,
+      "misaligned_assets": [],
+      "rule": "the benchmark dataset and every evaluated asset dataset share the first candle timestamp, the last candle timestamp and the candle count"
+    },
+    "methodology": "docs/research_protocol.md:101 - Align BTC and target asset by UTC candle close",
+    "rule": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called, so that the engine's index pairing equals the UTC-candle-close alignment; no observation is forward-filled and no value is interpolated"
+  },
+  "amendment_status": "PUBLISHED_BENCHMARK_ENTRY_NO_AUTHORIZATION",
+  "artifact": "v3_data_manifest_amendment_1",
+  "artifact_version": 1,
+  "benchmark_asset": {
+    "content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+    "dataset_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+    "entry": {
+      "content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+      "dataset_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+      "download_attempts": 27,
+      "endpoint": "https://data-api.binance.vision/api/v3/klines",
+      "endpoint_failures": [
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451",
+        "https://api.binance.com/api/v3/klines: HTTP 451"
+      ],
+      "endpoints_used": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "expected_candle_count": 26280,
+      "first_candle_timestamp": 1697886000000,
+      "gaps": [],
+      "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+      "interval": "1h",
+      "last_candle_timestamp": 1792490400000,
+      "observed_candle_count": 26280,
+      "provider": "binance",
+      "rejected_rows": 0,
+      "retrieval_timestamp_utc": "2026-10-20T15:40:42.912038+00:00",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+      "symbol": "BTCUSDT",
+      "validated": true
+    },
+    "first_candle_timestamp": 1697886000000,
+    "included_in_universe": true,
+    "is_candidate": false,
+    "is_candidate_note": "the benchmark is not a member of the frozen candidate set; it is the trend-filter input of the inherited grid, as in v1",
+    "last_candle_timestamp": 1792490400000,
+    "observed_candle_count": 26280,
+    "role": "trend_filter_and_benchmark",
+    "symbol": "BTCUSDT"
+  },
+  "created_utc": "2026-10-20T15:40:42.912038+00:00",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-013",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-013",
+    "design": "Design A - publish a v3-bound benchmark dataset and align by UTC candle close",
+    "sections_deliberately_not_implemented_here": [
+      "the v3 selection run and the v3 selection authorization",
+      "the v3 confirmatory-window evaluation"
+    ],
+    "sections_implemented_here": [
+      "BRAIN-013 D-2: the benchmark dataset is hash-verified and index-aligned",
+      "BRAIN-013 D-4: the alignment rule follows the frozen methodology",
+      "BRAIN-013 D-7: the provider dependency is bounded and recorded",
+      "BRAIN-013 D-8: the v1/v2 deviation is disclosed with its exact count"
+    ]
+  },
+  "deviation_disclosure": {
+    "correction": "BRAIN-013 recorded that fold 0 was aligned and that 93,312 of 497,664 v2 records were affected; recomputation from the frozen fold rule shows that the first validation fold already starts 40% of the way into the history, so no validation fold was aligned and the affected count is 124,416",
+    "evidence_path": "research/v3_evidence/v1_v2_btc_alignment_deviation.json",
+    "evidence_sha256": "0ec363dab6f7afc72cdbd11149ff240118ee81bdb13fe76d4b7648a9aa408394",
+    "misaligned_validation_folds": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "records_with_btc_filter": 124416,
+    "repair": "none: the completed runs are immutable and are not re-run; the deviation is a disclosure for the final report",
+    "share_of_records": 0.25,
+    "statement": "the completed v1 and v2 runs evaluated the BTC trend filter under the frozen engine's index pairing, not under the UTC-candle-close alignment the frozen methodology requires",
+    "total_v2_records": 497664
+  },
+  "effective_data_manifest": {
+    "base_manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+    "base_manifest_path": "research/data_manifest_v3.json",
+    "base_manifest_sha256": "2507180ddd1c728852919f49c5341446babf1a37ee21f1cf3807b871db77d636",
+    "effective_asset_count": 15,
+    "effective_content_hash_count": 7,
+    "effective_data_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321",
+    "hashing_rule": "the effective identity is the sha256 over the canonical JSON of the base manifest body -- with manifest_hash and snapshot_identity.data_manifest_hash removed -- plus the published benchmark entry in assets and content_hashes and the benchmark_asset block",
+    "note": "the effective view is materialized by the v3 execution path at run time from the base manifest and this amendment; no file carries it"
+  },
+  "execution_authorization": {
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "this amendment publishes a dataset and an identity. It authorizes no run, no evaluation and no confirmatory-window read.",
+    "selection_authorization_present": false
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed."
+  },
+  "manifest_hash": "f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e",
+  "precedence": {
+    "base_manifest_edited": false,
+    "resolution_rule": "a verifier that reads the v3 datasets resolves them through this amendment and refuses a benchmark entry that is not index-aligned with the evaluated assets",
+    "rule": "the effective data manifest of universe version v3 is research/data_manifest_v3.json plus the benchmark entry published by this amendment",
+    "superseded": [],
+    "unchanged": [
+      "research/data_manifest_v3.json",
+      "research/universe_manifest_v3.json",
+      "configs/research_v3_candidate_freeze.json",
+      "configs/research_v3_candidate_freeze_amendment_1.json",
+      "configs/research_v3_execution.json"
+    ]
+  },
+  "problem": {
+    "affected_artifact_manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+    "affected_artifact_path": "research/data_manifest_v3.json",
+    "affected_artifact_sha256": "2507180ddd1c728852919f49c5341446babf1a37ee21f1cf3807b871db77d636",
+    "grid_configurations_requiring_the_btc_series": 576,
+    "grid_configurations_total": 2304,
+    "repair": "the data manifest is hash-bound by the freeze amendment 1 and by the execution protocol, so it is not edited in place; the benchmark entry is published by this amendment and the effective identity is re-bound by the freeze amendment 2 and the execution amendment 1",
+    "statement": "research/universe_manifest_v3.json declares BTCUSDT as the benchmark constituent (benchmark_asset.included_in_universe = true) and the v1 methodology requires BTC as the trend-filter input, but research/data_manifest_v3.json holds no dataset for it, while 576 of the 2,304 inherited configurations per asset need the BTC series."
+  },
+  "related_artifacts": {
+    "v1_anchors": {
+      "configs/research_v1.json": "558d60990af9310d5cedbc41a58dbf29eb4dc869f8e45dc1cb2baf644480490d",
+      "research/candidate_manifest.json": "87589f83f3bfe22517bb73257d285ec47d602c19a892f0971035e1523df4f1d6",
+      "research/candidate_manifest_v2.json": "a68b061a8c314828bf60478ef8f826ee9d532c6e5ff1545c8afaa2c8e03dfa49",
+      "research/data_manifest.json": "cf39de420cfc7328bd4a244c7f485e4b81c01dae108f17f2719d6ca6e7310580",
+      "research/universe_manifest.json": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd"
+    },
+    "v3_candidate_freeze": {
+      "manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4",
+      "path": "configs/research_v3_candidate_freeze.json"
+    },
+    "v3_candidate_freeze_amendment_1": {
+      "manifest_hash": "1f0f3d6535d2e7b16fce093177f8d7ca1048bc8597c8df1b0835208b29b54e55",
+      "path": "configs/research_v3_candidate_freeze_amendment_1.json"
+    },
+    "v3_data_manifest": {
+      "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "path": "research/data_manifest_v3.json"
+    },
+    "v3_execution_protocol": {
+      "path": "configs/research_v3_execution.json",
+      "specification_hash": "9e92a35d3f0cc79db409c0e4ec60ba0d8f2d21df14b367e9dfddec50993b7480"
+    },
+    "v3_specification": {
+      "path": "configs/research_v3.json",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58"
+    },
+    "v3_universe_manifest": {
+      "benchmark_asset": {
+        "included_in_universe": true,
+        "role": "trend_filter_and_benchmark",
+        "symbol": "BTCUSDT"
+      },
+      "manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+      "path": "research/universe_manifest_v3.json"
+    }
+  },
+  "retrieval_evidence": {
+    "endpoint_failures": [
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451"
+    ],
+    "endpoint_used": "https://data-api.binance.vision/api/v3/klines",
+    "endpoints_used": [
+      "https://data-api.binance.vision/api/v3/klines"
+    ],
+    "evidence_path": "research/v3_evidence/benchmark_retrieval.json",
+    "evidence_sha256": "af72102db769bb52fa3d2533a6458fe9e1e44193c119dd52aadb4593f88195ff",
+    "http_status_of_each_probed_host": {
+      "https://api.binance.com/api/v3/klines": 451,
+      "https://data-api.binance.vision/api/v3/klines": 200
+    },
+    "policy": "one bounded retrieval of one asset under the v3 window rule through the frozen primary -> failover policy; the raw response, its sha256 and the retrieval timestamp are recorded",
+    "raw_response_bytes": 4726429,
+    "raw_response_path": "research/v3_evidence/benchmark_raw_klines.json",
+    "raw_response_row_count": 26280,
+    "raw_response_sha256": "713656198b1a5f3b78e39027e9e0f2415aab6dfdb8f36754c2b50138539892ca",
+    "request_count": 27,
+    "retrieval_started_utc": "2026-10-20T15:40:36.719898+00:00",
+    "retrieval_timestamp_utc": "2026-10-20T15:40:42.912038+00:00"
+  }
+}

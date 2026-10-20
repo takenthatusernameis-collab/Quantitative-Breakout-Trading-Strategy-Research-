@@ -1,0 +1,59 @@
+{
+  "artifact": "v1_v2_btc_alignment_deviation",
+  "artifact_version": 1,
+  "correction": "BRAIN-013 recorded that fold 0 was aligned and that 93,312 of 497,664 v2 records were affected. Recomputation from the frozen fold rule shows that the first validation fold starts at 40% of the span, so no validation fold was aligned and the affected count is 124,416, not 93,312.",
+  "counts": {
+    "aligned_validation_folds": [],
+    "assets": 18,
+    "btc_filter_configurations_per_asset": 576,
+    "cost_scenarios": 3,
+    "misaligned_validation_folds": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "records_with_btc_filter": 124416,
+    "share_of_records": 0.25,
+    "total_configurations_per_asset": 2304,
+    "total_v2_records": 497664,
+    "validation_folds": 4
+  },
+  "created_utc": "2026-10-20T15:42:50.897614+00:00",
+  "engine_rule": "src/breakout_research/signals/generator.py compares closes[i] with btc_ema_168[i], where i indexes the fold window of the asset and the BTC series is passed unsliced; src/breakout_research/backtest/backtester.py slices the asset series to the fold window and not the BTC series.",
+  "finding": "The completed v1 and v2 runs evaluated the BTC trend filter under the frozen engine's index pairing, not under the UTC-candle-close alignment the frozen methodology requires. The deviation affects every validation fold, because the first validation fold already starts 40% of the way into the history.",
+  "methodology_rule": "docs/research_protocol.md:101 - Align BTC and target asset by UTC candle close",
+  "per_fold_offset": [
+    {
+      "aligned": false,
+      "btc_index_zero_candle_utc": "2023-10-20T18:00:00+00:00",
+      "fold_first_candle_utc": "2024-12-31T17:36:00+00:00",
+      "fold_index": 0,
+      "offset_hours": -10512
+    },
+    {
+      "aligned": false,
+      "btc_index_zero_candle_utc": "2023-10-20T18:00:00+00:00",
+      "fold_first_candle_utc": "2025-04-20T05:30:00+00:00",
+      "fold_index": 1,
+      "offset_hours": -13140
+    },
+    {
+      "aligned": false,
+      "btc_index_zero_candle_utc": "2023-10-20T18:00:00+00:00",
+      "fold_first_candle_utc": "2025-08-07T17:24:00+00:00",
+      "fold_index": 2,
+      "offset_hours": -15768
+    },
+    {
+      "aligned": false,
+      "btc_index_zero_candle_utc": "2023-10-20T18:00:00+00:00",
+      "fold_first_candle_utc": "2025-11-25T05:17:59.999000+00:00",
+      "fold_index": 3,
+      "offset_hours": -18396
+    }
+  ],
+  "read_only": true,
+  "repair": "None. The completed runs are immutable; the deviation is a disclosure for the final report. The v3 execution path implements the correct alignment in new code outside the hashed set.",
+  "v2_btc_and_asset_windows_share_the_same_span": true
+}

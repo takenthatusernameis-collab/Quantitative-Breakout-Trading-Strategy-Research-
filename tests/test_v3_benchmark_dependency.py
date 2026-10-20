@@ -1,17 +1,19 @@
 """Deterministic tests for the v3 BTC benchmark dependency (BRAIN-013).
 
 The v3 universe declares ``BTCUSDT`` as a constituent -- the benchmark and the
-BTC trend-filter input -- but the v3 data manifest contains no dataset for it,
-while a quarter of the inherited 2,304-configuration grid needs the BTC series.
-The frozen engine pairs that series with the asset series **by index**, so a
-benchmark dataset with a different window is silently misaligned.
+BTC trend-filter input -- while a quarter of the inherited 2,304-configuration
+grid needs the BTC series. The frozen engine pairs that series with the asset
+series **by index**, so a benchmark dataset with a different window is silently
+misaligned.
 
-These tests lock the facts behind that finding. Every expectation is
-recomputed from the repository (the manifests, the configuration manifest, the
-frozen source and the frozen methodology text); nothing is compared against a
-constant copied out of the artifact it describes. The facts they assert are
-invariants: they hold both while the gap exists and after the benchmark dataset
-is published, so the module stays green across the implementation of BRAIN-013.
+The benchmark entry is published by a **versioned amendment**, not by editing
+the frozen base manifest: the base manifest stays byte-unchanged and the
+*effective* v3 data manifest (base plus amendment) carries the entry. These
+tests lock both facts, recomputed from the repository (the manifests, the
+amendment, the configuration manifest, the frozen source and the frozen
+methodology text); nothing is compared against a constant copied out of the
+artifact it describes. The facts they assert are invariants: they hold while
+the gap exists and after the benchmark dataset is published.
 """
 
 from __future__ import annotations
@@ -43,6 +45,7 @@ import report_v3_benchmark_dependency as report  # noqa: E402
 
 V3_UNIVERSE_MANIFEST = "research/universe_manifest_v3.json"
 V3_DATA_MANIFEST = "research/data_manifest_v3.json"
+V3_DATA_MANIFEST_AMENDMENT_1 = "configs/research_v3_data_manifest_amendment_1.json"
 V2_DATA_MANIFEST = "research/data_manifest_v2.json"
 CONFIG_MANIFEST = "research/config_manifest.json"
 V1_SPEC = "configs/research_v1.json"
@@ -212,7 +215,13 @@ def test_the_v3_validated_assets_share_one_canonical_window():
     assert first < last
 
 
-def test_the_only_other_btc_dataset_is_not_index_aligned_with_the_v3_assets():
+def test_the_base_v3_data_manifest_is_not_edited_and_the_other_btc_dataset_is_not_aligned():
+    """The frozen base manifest stays free of the benchmark entry.
+
+    The benchmark entry is published by a **versioned amendment**, so the base
+    manifest is byte-unchanged; the effective manifest that the v3 execution
+    path materializes at run time does carry it.
+    """
     v3 = load_json(V3_DATA_MANIFEST)
     v2 = load_json(V2_DATA_MANIFEST)
     symbol = "BTCUSDT"
@@ -222,13 +231,33 @@ def test_the_only_other_btc_dataset_is_not_index_aligned_with_the_v3_assets():
     v3_first = v3_assets[validated[0]]["first_candle_timestamp"]
     v3_last = v3_assets[validated[0]]["last_candle_timestamp"]
 
-    assert symbol not in v3_assets, "the v3 data manifest has no benchmark dataset"
+    assert symbol not in v3_assets, "the base v3 data manifest is not edited in place"
     assert symbol not in v3["content_hashes"]
 
     v2_entry = v2["assets"][symbol]
     assert v2_entry["first_candle_timestamp"] != v3_first
     assert v2_entry["last_candle_timestamp"] != v3_last
     assert v2_entry["first_candle_timestamp"] < v3_first
+
+
+def test_the_effective_v3_data_manifest_carries_an_index_aligned_benchmark():
+    """The amendment-published benchmark is index-aligned with the v3 assets."""
+    state = report.v3_state_report(REPO_ROOT)
+    assert state["benchmark_published_by_amendment"] is True
+    assert state["benchmark_in_v3_base_data_manifest"] is False
+    assert state["benchmark_in_v3_data_manifest"] is True
+    assert state["index_aligned_benchmark_available"] is True
+
+    window = state["v3_benchmark_window"]
+    asset_window = state["v3_asset_window"]
+    assert window["first_candle_timestamp"] == asset_window["first_candle_timestamp"]
+    assert window["last_candle_timestamp"] == asset_window["last_candle_timestamp"]
+    assert window["observed_candle_count"] == asset_window["observed_candle_count"] == 26_280
+
+    entry = load_json(V3_DATA_MANIFEST_AMENDMENT_1)["benchmark_asset"]["entry"]
+    dataset = REPO_ROOT / entry["dataset_path"]
+    assert dataset.exists()
+    assert entry["content_hash"] == window["content_hash"]
 
 
 def test_the_v2_benchmark_dataset_stays_clear_of_the_v3_development_boundary():
@@ -288,14 +317,21 @@ def test_the_decision_record_states_the_comparison_and_the_recommendation():
 # --------------------------------------------------------------------------
 
 
-def test_the_completed_v2_run_evaluated_the_btc_filter_on_three_of_four_folds():
+def test_the_completed_v2_run_evaluated_the_btc_filter_on_every_validation_fold():
     """Quantify, from the ledger and the frozen rule, what the misalignment touched.
 
     The v2 run evaluated every asset on every configuration of the inherited
     grid over the four validation folds and the three cost scenarios. The BTC
     filter is one of the four trend filters, and the engine indexes the BTC
-    series from the start of the history, so the filter's value on folds 1-3
-    was taken from a different period than the asset's bar.
+    series from the start of the history, so the filter's value on **every**
+    validation fold was taken from a different period than the asset's bar:
+    the first validation fold already starts at 40% of the span, so no
+    validation fold was aligned.
+
+    (The original form of this test asserted three misaligned folds and
+    93,312 affected records; the recomputation from the frozen fold rule
+    shows four misaligned folds and 124,416 affected records. The correction
+    is carried by ``research/v3_evidence/v1_v2_btc_alignment_deviation.json``.)
     """
     ledger = load_json(V2_LEDGER)
     spec = load_json(V1_SPEC)
@@ -316,9 +352,17 @@ def test_the_completed_v2_run_evaluated_the_btc_filter_on_three_of_four_folds():
     assert total_units == asset_count * total_configs * fold_count * cost_count
 
     btc_records = asset_count * btc_configs * fold_count * cost_count
-    misaligned_records = asset_count * btc_configs * (fold_count - 1) * cost_count
+    misaligned_records = asset_count * btc_configs * fold_count * cost_count
     assert btc_records == total_units // 4
-    assert misaligned_records == total_units * 3 // 16
+    assert misaligned_records == total_units // 4 == 124_416
+
+    # The fold rule itself: every validation window starts after the first
+    # candle of the dataset, so the engine's BTC index 0 is never the asset's
+    # first bar of the fold.
+    fractions = spec["folds"]["window_fractions"]
+    assert len(fractions) == fold_count
+    assert all(fraction > 0 for fraction in fractions)
+    assert spec["folds"]["development_fraction"] == 0.8
 
 
 def test_the_report_agrees_with_the_ledger_derived_exposure():

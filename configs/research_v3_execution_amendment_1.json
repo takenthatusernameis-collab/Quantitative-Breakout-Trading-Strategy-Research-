@@ -1,0 +1,145 @@
+{
+  "amendment_status": "PUBLISHED_BENCHMARK_RULE_NO_AUTHORIZATION",
+  "artifact": "v3_execution_amendment_1",
+  "artifact_version": 1,
+  "benchmark_rule": {
+    "alignment": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called, so that the engine's index pairing equals the UTC-candle-close alignment of docs/research_protocol.md:101",
+    "content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+    "dataset_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+    "exposure_rule": "the benchmark dataset is development data; it lies entirely before the confirmatory window and no confirmatory-window candle is read",
+    "fail_closed": [
+      "the benchmark series is missing",
+      "the benchmark series is shorter than the evaluated window",
+      "the benchmark series is not index-aligned with the asset series"
+    ],
+    "first_candle_timestamp": 1697886000000,
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+    "last_candle_timestamp": 1792490400000,
+    "no_forward_fill": true,
+    "observed_candle_count": 26280,
+    "role": "trend_filter_and_benchmark",
+    "source": "configs/research_v3_data_manifest_amendment_1.json",
+    "symbol": "BTCUSDT"
+  },
+  "code_hash_constraint": {
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "edit_under_src_breakout_research_forbidden_without_reauthorization": true,
+    "hashed_source_root": "src/breakout_research",
+    "identity_rule": "the identity of a source tree is its canonical source digest -- the sha256 over the POSIX relative path and the content digest of every *.py file in ascending path order -- and never the checkout-dependent ordered digest compute_code_hash() (BRAIN-009)",
+    "v3_execution_must_live_outside_hashed_set": true,
+    "v3_execution_root": "src/v3_campaign"
+  },
+  "created_utc": "2026-10-20T15:45:00Z",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-013",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-013",
+    "stage": "stage 1 (the benchmark dataset and the amendment cascade)"
+  },
+  "deviation_disclosure": {
+    "evidence_path": "research/v3_evidence/v1_v2_btc_alignment_deviation.json",
+    "misaligned_validation_folds": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "records_with_btc_filter": 124416,
+    "statement": "the completed v1 and v2 runs evaluated the BTC trend filter under the frozen engine's index pairing; the deviation is a disclosure for the final report and is not repaired",
+    "total_v2_records": 497664
+  },
+  "evaluation_scope": {
+    "candidate_freeze_amendment_2_hash": "41c5c10515bca609881484adc558481aadda30981ed25125119a235a562f9f1f",
+    "candidate_freeze_amendment_2_path": "configs/research_v3_candidate_freeze_amendment_2.json",
+    "candidate_freeze_amendment_hash": "1f0f3d6535d2e7b16fce093177f8d7ca1048bc8597c8df1b0835208b29b54e55",
+    "candidate_freeze_amendment_path": "configs/research_v3_candidate_freeze_amendment_1.json",
+    "candidate_freeze_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4",
+    "candidate_freeze_path": "configs/research_v3_candidate_freeze.json",
+    "constituents": [
+      "SHIBUSDT",
+      "QNTUSDT",
+      "AAVEUSDT",
+      "WLDUSDT",
+      "PEPEUSDT",
+      "ICPUSDT"
+    ],
+    "count": 6,
+    "data_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321",
+    "data_manifest_path": "research/data_manifest_v3.json",
+    "excluded_assets_stay_excluded": true,
+    "rule": "the evaluated scope is the frozen candidate set; the benchmark is not a candidate and does not widen the scope",
+    "superseded_data_manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+    "unchanged_by_this_amendment": true,
+    "universe_manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+    "universe_manifest_path": "research/universe_manifest_v3.json",
+    "widening_by_reranking_forbidden": true
+  },
+  "execution_authorization": {
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "this amendment records the benchmark rule and the re-bound identity. It authorizes no run, no evaluation and no confirmatory-window read.",
+    "selection_authorization_present": false
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed."
+  },
+  "manifest_hash": "bbd7617835243692a5f3630a39a5b3fbc47e6ed33a0cf4c16aaa3f77b9986816",
+  "precedence": {
+    "resolution_rule": "a verifier that reads the v3 evaluation scope resolves the data-manifest identity through this amendment when the amendment is present and verified",
+    "rule": "the effective data-manifest identity of the v3 evaluation scope is the one recorded by this amendment; the base manifest's identity is superseded by reference only",
+    "superseded": [
+      "evaluation_scope.data_manifest_hash"
+    ],
+    "unchanged": [
+      "evaluation_scope.constituents",
+      "evaluation_scope.count",
+      "selection_data_boundary",
+      "selection_rule",
+      "resource_and_attempt_bounds",
+      "candidate_freeze_and_confirmatory_window",
+      "v3_result_layout",
+      "stopping_conditions_rollback_falsifiers"
+    ]
+  },
+  "problem": {
+    "affected_artifact_path": "configs/research_v3_execution.json",
+    "affected_artifact_sha256": "ac936a1dd02587006ee73681a83036ce28f82c6d9fdcb5683999a2a3b796daea",
+    "affected_artifact_specification_hash": "9e92a35d3f0cc79db409c0e4ec60ba0d8f2d21df14b367e9dfddec50993b7480",
+    "repair": "the execution protocol is hash-bound and is not edited in place; the benchmark rule and the re-bound identity are recorded by this amendment",
+    "statement": "the v3 execution protocol binds the identity of research/data_manifest_v3.json and does not mention the benchmark constituent that the v3 universe declares and that a quarter of the inherited grid needs."
+  },
+  "related_artifacts": {
+    "v1_anchors": {
+      "configs/research_v1.json": "558d60990af9310d5cedbc41a58dbf29eb4dc869f8e45dc1cb2baf644480490d",
+      "research/candidate_manifest.json": "87589f83f3bfe22517bb73257d285ec47d602c19a892f0971035e1523df4f1d6",
+      "research/candidate_manifest_v2.json": "a68b061a8c314828bf60478ef8f826ee9d532c6e5ff1545c8afaa2c8e03dfa49",
+      "research/data_manifest.json": "cf39de420cfc7328bd4a244c7f485e4b81c01dae108f17f2719d6ca6e7310580",
+      "research/universe_manifest.json": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd"
+    },
+    "v3_candidate_freeze_amendment_2": {
+      "manifest_hash": "41c5c10515bca609881484adc558481aadda30981ed25125119a235a562f9f1f",
+      "path": "configs/research_v3_candidate_freeze_amendment_2.json"
+    },
+    "v3_data_manifest": {
+      "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "path": "research/data_manifest_v3.json"
+    },
+    "v3_data_manifest_amendment_1": {
+      "effective_data_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321",
+      "manifest_hash": "f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e",
+      "path": "configs/research_v3_data_manifest_amendment_1.json"
+    },
+    "v3_execution_protocol": {
+      "path": "configs/research_v3_execution.json",
+      "specification_hash": "9e92a35d3f0cc79db409c0e4ec60ba0d8f2d21df14b367e9dfddec50993b7480"
+    },
+    "v3_specification": {
+      "path": "configs/research_v3.json",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58"
+    }
+  }
+}

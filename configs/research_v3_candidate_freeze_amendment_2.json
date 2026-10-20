@@ -1,0 +1,372 @@
+{
+  "alignment_rule": {
+    "fail_closed": "the v3 execution path refuses to run when the benchmark series is missing, shorter than the evaluated window or not index-aligned with the asset series",
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+    "methodology": "docs/research_protocol.md:101 - Align BTC and target asset by UTC candle close",
+    "rule": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called, so that the engine's index pairing equals the UTC-candle-close alignment; nothing is forward-filled",
+    "source": "configs/research_v3_data_manifest_amendment_1.json"
+  },
+  "amendment_status": "PUBLISHED_REBOUND_DATA_MANIFEST_IDENTITY_NO_AUTHORIZATION",
+  "artifact": "v3_candidate_freeze_amendment_2",
+  "artifact_version": 2,
+  "benchmark_asset": {
+    "content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+    "dataset_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+    "first_candle_timestamp": 1697886000000,
+    "is_candidate": false,
+    "last_candle_timestamp": 1792490400000,
+    "observed_candle_count": 26280,
+    "role": "trend_filter_and_benchmark",
+    "symbol": "BTCUSDT"
+  },
+  "created_utc": "2026-10-20T15:45:00Z",
+  "data_boundary": {
+    "confirmatory_window_start_utc": "2026-10-20T13:00:00Z",
+    "earliest_possible_confirmatory_window_end_utc": "2027-01-18T13:00:00Z",
+    "min_confirmatory_window_hours": 2160,
+    "note": "the confirmatory-window rules and the development-data boundary are unchanged; they are copied here so that the effective boundary is readable from a single artifact",
+    "window_moved_by_this_amendment": false
+  },
+  "design_basis": {
+    "brainstorming_item": "BRAIN-013",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-013",
+    "stage": "stage 1 (the benchmark dataset and the amendment cascade)"
+  },
+  "execution_authorization": {
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "this amendment re-binds one identity and records the benchmark rule. It authorizes no run, no evaluation and no confirmatory-window read.",
+    "selection_authorization_present": false
+  },
+  "frozen_candidate_set": {
+    "binance_pairs": [
+      "SHIBUSDT",
+      "QNTUSDT",
+      "AAVEUSDT",
+      "WLDUSDT",
+      "PEPEUSDT",
+      "ICPUSDT"
+    ],
+    "count": 6,
+    "excluded_candidates": {
+      "count": 14,
+      "members": [
+        {
+          "binance_pair": "TAOUSDT",
+          "coingecko_id": "bittensor",
+          "exclusion_reason": "insufficient_hourly_history",
+          "market_cap_rank": 35,
+          "market_cap_usd": 2993154302,
+          "name": "Bittensor",
+          "observed_candles": 22127,
+          "rank": 1,
+          "symbol": "TAO"
+        },
+        {
+          "binance_pair": "CROUSDT",
+          "coingecko_id": "crypto-com-chain",
+          "exclusion_reason": "binance_spot_unavailable",
+          "market_cap_rank": 37,
+          "market_cap_usd": 2864236907,
+          "name": "Cronos",
+          "observed_candles": null,
+          "rank": 3,
+          "symbol": "CRO"
+        },
+        {
+          "binance_pair": "BTWUSDT",
+          "coingecko_id": "bitway",
+          "exclusion_reason": "binance_spot_unavailable",
+          "market_cap_rank": 40,
+          "market_cap_usd": 2632769019,
+          "name": "Bitway",
+          "observed_candles": null,
+          "rank": 5,
+          "symbol": "BTW"
+        },
+        {
+          "binance_pair": "ENAUSDT",
+          "coingecko_id": "ethena",
+          "exclusion_reason": "insufficient_hourly_history",
+          "market_cap_rank": 41,
+          "market_cap_usd": 2506212713,
+          "name": "Ethena",
+          "observed_candles": 22347,
+          "rank": 6,
+          "symbol": "ENA"
+        },
+        {
+          "binance_pair": "OKBUSDT",
+          "coingecko_id": "okb",
+          "exclusion_reason": "binance_spot_unavailable",
+          "market_cap_rank": 44,
+          "market_cap_usd": 2387414683,
+          "name": "OKB",
+          "observed_candles": null,
+          "rank": 7,
+          "symbol": "OKB"
+        },
+        {
+          "binance_pair": "ONDOUSDT",
+          "coingecko_id": "ondo-finance",
+          "exclusion_reason": "insufficient_hourly_history",
+          "market_cap_rank": 48,
+          "market_cap_usd": 2114214158,
+          "name": "Ondo",
+          "observed_candles": 13365,
+          "rank": 9,
+          "symbol": "ONDO"
+        },
+        {
+          "binance_pair": "PUMPUSDT",
+          "coingecko_id": "pump-fun",
+          "exclusion_reason": "insufficient_hourly_history",
+          "market_cap_rank": 50,
+          "market_cap_usd": 2052975001,
+          "name": "Pump.fun",
+          "observed_candles": 9695,
+          "rank": 11,
+          "symbol": "PUMP"
+        },
+        {
+          "binance_pair": "ASTERUSDT",
+          "coingecko_id": "aster-2",
+          "exclusion_reason": "insufficient_hourly_history",
+          "market_cap_rank": 52,
+          "market_cap_usd": 1903142098,
+          "name": "Aster",
+          "observed_candles": 9095,
+          "rank": 12,
+          "symbol": "ASTER"
+        },
+        {
+          "binance_pair": "MUSDT",
+          "coingecko_id": "memecore",
+          "exclusion_reason": "binance_spot_unavailable",
+          "market_cap_rank": 54,
+          "market_cap_usd": 1853798672,
+          "name": "MemeCore",
+          "observed_candles": null,
+          "rank": 13,
+          "symbol": "M"
+        },
+        {
+          "binance_pair": "MNTUSDT",
+          "coingecko_id": "mantle",
+          "exclusion_reason": "binance_spot_unavailable",
+          "market_cap_rank": 58,
+          "market_cap_usd": 1743605666,
+          "name": "Mantle",
+          "observed_candles": null,
+          "rank": 15,
+          "symbol": "MNT"
+        },
+        {
+          "binance_pair": "WLFIUSDT",
+          "coingecko_id": "world-liberty-financial",
+          "exclusion_reason": "insufficient_hourly_history",
+          "market_cap_rank": 60,
+          "market_cap_usd": 1702491896,
+          "name": "World Liberty Financial",
+          "observed_candles": 9934,
+          "rank": 16,
+          "symbol": "WLFI"
+        },
+        {
+          "binance_pair": "MORPHOUSDT",
+          "coingecko_id": "morpho",
+          "exclusion_reason": "insufficient_hourly_history",
+          "market_cap_rank": 61,
+          "market_cap_usd": 1697252225,
+          "name": "Morpho",
+          "observed_candles": 9164,
+          "rank": 17,
+          "symbol": "MORPHO"
+        },
+        {
+          "binance_pair": "SKYUSDT",
+          "coingecko_id": "sky",
+          "exclusion_reason": "insufficient_hourly_history",
+          "market_cap_rank": 62,
+          "market_cap_usd": 1686355448,
+          "name": "Sky",
+          "observed_candles": 9555,
+          "rank": 18,
+          "symbol": "SKY"
+        },
+        {
+          "binance_pair": "HTXUSDT",
+          "coingecko_id": "htx-dao",
+          "exclusion_reason": "binance_spot_unavailable",
+          "market_cap_rank": 65,
+          "market_cap_usd": 1468004153,
+          "name": "HTX DAO",
+          "observed_candles": null,
+          "rank": 20,
+          "symbol": "HTX"
+        }
+      ],
+      "rule": "every derived-batch constituent that failed a validation step, with the reason recorded by the validation; an excluded candidate is reported, never hidden",
+      "source": "research/universe_manifest_v3.json"
+    },
+    "members": [
+      {
+        "binance_pair": "SHIBUSDT",
+        "coingecko_id": "shiba-inu",
+        "content_hash": "56722ac42edf3885dc1b73dd98a8e279c075789cda4dc2c3f02bde4498b3b477",
+        "dataset_path": "research/data/candles_v3/SHIBUSDT_1h_56722ac42edf3885.csv",
+        "market_cap_rank": 36,
+        "market_cap_usd": 2929625048,
+        "name": "Shiba Inu",
+        "observed_candles": 26280,
+        "rank": 2,
+        "symbol": "SHIB"
+      },
+      {
+        "binance_pair": "QNTUSDT",
+        "coingecko_id": "quant-network",
+        "content_hash": "30ef9d68f060221d87ebf7630aa190cd41f5c9df26434cb457af2a60a44c7fae",
+        "dataset_path": "research/data/candles_v3/QNTUSDT_1h_30ef9d68f060221d.csv",
+        "market_cap_rank": 39,
+        "market_cap_usd": 2821606025,
+        "name": "Quant",
+        "observed_candles": 26280,
+        "rank": 4,
+        "symbol": "QNT"
+      },
+      {
+        "binance_pair": "AAVEUSDT",
+        "coingecko_id": "aave",
+        "content_hash": "a46eb674706d1a53275a41d40d5aa4354a872469197beb00a8c669498cb2b47f",
+        "dataset_path": "research/data/candles_v3/AAVEUSDT_1h_a46eb674706d1a53.csv",
+        "market_cap_rank": 46,
+        "market_cap_usd": 2288549533,
+        "name": "Aave",
+        "observed_candles": 26280,
+        "rank": 8,
+        "symbol": "AAVE"
+      },
+      {
+        "binance_pair": "WLDUSDT",
+        "coingecko_id": "worldcoin-wld",
+        "content_hash": "0430a038bafa14ac2f4abcc0ccc214b7aef3801fd27d0e588ab4bf3d525ee6f3",
+        "dataset_path": "research/data/candles_v3/WLDUSDT_1h_0430a038bafa14ac.csv",
+        "market_cap_rank": 49,
+        "market_cap_usd": 2075657274,
+        "name": "Worldcoin",
+        "observed_candles": 26280,
+        "rank": 10,
+        "symbol": "WLD"
+      },
+      {
+        "binance_pair": "PEPEUSDT",
+        "coingecko_id": "pepe",
+        "content_hash": "30402a07c4c3729ed8eb8fb81b226942538ef34927e413730b0226ec70e3462a",
+        "dataset_path": "research/data/candles_v3/PEPEUSDT_1h_30402a07c4c3729e.csv",
+        "market_cap_rank": 56,
+        "market_cap_usd": 1771535971,
+        "name": "Pepe",
+        "observed_candles": 26280,
+        "rank": 14,
+        "symbol": "PEPE"
+      },
+      {
+        "binance_pair": "ICPUSDT",
+        "coingecko_id": "internet-computer",
+        "content_hash": "d4eea992d5e4fd113f8d508476e0c81b5740166024f16d4d92ff933df7f0a3a8",
+        "dataset_path": "research/data/candles_v3/ICPUSDT_1h_d4eea992d5e4fd11.csv",
+        "market_cap_rank": 64,
+        "market_cap_usd": 1572667216,
+        "name": "Internet Computer",
+        "observed_candles": 26280,
+        "rank": 19,
+        "symbol": "ICP"
+      }
+    ],
+    "rule": "the candidate set is the validated candidate set of the freeze amendment 1; the benchmark is not a candidate and does not join the set",
+    "unchanged_by_this_amendment": true
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed."
+  },
+  "manifest_hash": "41c5c10515bca609881484adc558481aadda30981ed25125119a235a562f9f1f",
+  "precedence": {
+    "resolution_rule": "a verifier that reads the v3 data-manifest identity resolves it through this amendment when the amendment is present and verified",
+    "rule": "the effective data-manifest identity of the frozen candidate set is the one recorded by this amendment; the base manifest's identity is superseded by reference only",
+    "superseded": [
+      "snapshot_identity.data_manifest_hash",
+      "frozen_candidate_set.data_manifest_hash"
+    ],
+    "unchanged": [
+      "frozen_candidate_set",
+      "snapshot_identity (except the data-manifest identity)",
+      "data_boundary",
+      "selection_remainder",
+      "execution_authorization",
+      "related_artifacts",
+      "durability"
+    ]
+  },
+  "problem": {
+    "affected_artifact_manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4",
+    "affected_artifact_path": "configs/research_v3_candidate_freeze.json",
+    "affected_artifact_sha256": "0477f5629dcc240d376c8c83c8d226532fea8568ce990941420044174de56f48",
+    "repair": "the frozen artifact is immutable and is not edited in place; the identity is re-bound by this amendment",
+    "statement": "the frozen candidate set binds the identity of research/data_manifest_v3.json. BRAIN-013 publishes the missing BTCUSDT benchmark entry by a versioned amendment, so the data-manifest identity of the frozen scope has to be re-bound to the effective data manifest."
+  },
+  "rebound_identity": {
+    "base_data_manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+    "base_data_manifest_path": "research/data_manifest_v3.json",
+    "base_data_manifest_sha256": "2507180ddd1c728852919f49c5341446babf1a37ee21f1cf3807b871db77d636",
+    "effective_data_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321",
+    "rule": "every reference to the v3 data-manifest identity inside the frozen candidate set resolves to the effective data manifest: the base manifest plus the benchmark entry published by the data-manifest amendment 1",
+    "superseded_data_manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5",
+    "superseded_fields": [
+      "snapshot_identity.data_manifest_hash",
+      "frozen_candidate_set.data_manifest_hash"
+    ]
+  },
+  "related_artifacts": {
+    "v1_anchors": {
+      "configs/research_v1.json": "558d60990af9310d5cedbc41a58dbf29eb4dc869f8e45dc1cb2baf644480490d",
+      "research/candidate_manifest.json": "87589f83f3bfe22517bb73257d285ec47d602c19a892f0971035e1523df4f1d6",
+      "research/candidate_manifest_v2.json": "a68b061a8c314828bf60478ef8f826ee9d532c6e5ff1545c8afaa2c8e03dfa49",
+      "research/data_manifest.json": "cf39de420cfc7328bd4a244c7f485e4b81c01dae108f17f2719d6ca6e7310580",
+      "research/universe_manifest.json": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd"
+    },
+    "v3_candidate_freeze": {
+      "manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4",
+      "path": "configs/research_v3_candidate_freeze.json"
+    },
+    "v3_candidate_freeze_amendment_1": {
+      "manifest_hash": "1f0f3d6535d2e7b16fce093177f8d7ca1048bc8597c8df1b0835208b29b54e55",
+      "path": "configs/research_v3_candidate_freeze_amendment_1.json"
+    },
+    "v3_data_manifest": {
+      "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "path": "research/data_manifest_v3.json"
+    },
+    "v3_data_manifest_amendment_1": {
+      "effective_data_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321",
+      "manifest_hash": "f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e",
+      "path": "configs/research_v3_data_manifest_amendment_1.json"
+    },
+    "v3_execution_protocol": {
+      "path": "configs/research_v3_execution.json",
+      "specification_hash": "9e92a35d3f0cc79db409c0e4ec60ba0d8f2d21df14b367e9dfddec50993b7480"
+    },
+    "v3_specification": {
+      "path": "configs/research_v3.json",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58"
+    },
+    "v3_universe_manifest": {
+      "manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+      "path": "research/universe_manifest_v3.json"
+    }
+  }
+}
