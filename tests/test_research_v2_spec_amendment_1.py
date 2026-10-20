@@ -59,7 +59,37 @@ def test_portability_decision_referenced():
     assert doc["portability_decision"]["reference"] == "configs/research_v2_code_hash_portability_decision.json"
 
 
-def test_no_v2_execution_artifacts():
-    for rel in ["research/shards_v2", "research/ledger_v2.json", "research/results_manifest_v2.json",
-                "research/results_v2.jsonl", "research_state/checkpoint_v2.json"]:
-        assert not (REPO_ROOT / rel).exists()
+CONFIRMATORY_EXECUTION_ARTIFACTS = (
+    "research/shards_v2_confirmatory",
+    "research/ledger_v2_confirmatory.json",
+    "research/results_manifest_v2_confirmatory.json",
+    "research/results_v2_confirmatory.jsonl",
+    "research_state/checkpoint_v2_confirmatory.json",
+    "research/confirmatory_window_v2",
+)
+
+
+def test_no_confirmatory_execution_artifacts():
+    """The amendment is a status record: it may not have produced a run.
+
+    The v2 *selection* run is a separate, separately authorized step that has
+    been executed, so its artifacts are expected to exist and are not checked
+    here.  What must not exist is any artifact of a confirmatory evaluation.
+    """
+    for rel in CONFIRMATORY_EXECUTION_ARTIFACTS:
+        assert not (REPO_ROOT / rel).exists(), rel
+
+
+def test_the_confirmatory_window_was_never_exposed():
+    """The v2 selection run must record zero confirmatory exposure."""
+    for rel in ("research/ledger_v2.json", "research_state/checkpoint_v2.json"):
+        document = json.loads((REPO_ROOT / rel).read_text())
+        assert document["holdout_exposed_count"] == 0, rel
+
+
+def test_the_referenced_portability_decision_self_hashes():
+    decision = json.loads(
+        (REPO_ROOT / "configs/research_v2_code_hash_portability_decision.json").read_text()
+    )
+    excluded = tuple(decision.get("hashing", {}).get("manifest_hash_excluded_keys") or ())
+    assert _manifest_hash(decision) == decision["manifest_hash"]

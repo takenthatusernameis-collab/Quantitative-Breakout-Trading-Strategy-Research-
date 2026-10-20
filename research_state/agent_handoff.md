@@ -2739,8 +2739,38 @@ record for the v1 campaign's terminal holdout report.
 - Local changes: only handoff updated (no new artifacts created)
 - Remote: unchanged
 
+## Session activity — 2026-10-20T09:56:32Z (this session)
+
+**Task (from the durable handoff):** "Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent."
+
+**Outcome:** Verified the complete repository state. All 435 tests pass (exit 0), all 15 v2 verifiers exit 0, `verify_v2_selection_run.py` passes (497,664 records re-verified), and `compute_code_hash()` = `608c7340…` in this checkout — an environment fact per BRAIN-009; the authorized value of record `2efd3b18…` and canonical digest `3e8e4169…` are unchanged and match. No new design deliverable is actionable before the confirmatory window (earliest end `2027-01-17T22:00:00Z`).
+
+**Uncommitted changes found in the working tree** (not recorded in the prior handoff):
+- `scripts/verify_research_v2_spec_amendment_1.py` — updated to assert absence of confirmatory execution artifacts and zero confirmatory exposure in the v2 selection artifacts, since the v2 selection run has already executed
+- `tests/test_research_v2_spec_amendment_1.py` — updated with the corresponding new tests (replacing the old "no v2 execution artifacts" test)
+- `src/v2_confirmatory/` — partial confirmatory execution path: `errors.py`, `identity.py`, `scope.py`; no `__init__.py`, no runner, no data module, no verifier, no authorization, no tests
+- `research_state/campaign_authorization.json` — controller-driven `authorized_at_utc` refresh only (`authorized`, `code_hash` and all functional fields unchanged)
+
+**State verified (2026-10-20T09:56:32Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → 435 passed, exit 0
+- All 15 v2 verifiers exit 0 (spec, manifests, execution, candidate freeze, execution amendments 1-2, code hash amendments 1-2, portability decision, selection authorization, v2 selected configurations manifest, prerequisite reconciliation, execution amendment 2, confirmatory protocol, gate compatibility)
+- `PYTHONPATH=src python3 scripts/verify_v2_selection_run.py` → exit 0
+- `compute_code_hash()` → `608c7340…` (live ordered, environment-dependent); authorized `2efd3b18…` retained; canonical `3e8e4169…` matches
+- v1 artifacts byte-unchanged (sha256 anchors unchanged); `src/breakout_research/` untouched
+- Confirmatory window: `NOT_STARTED`, `holdout_exposed_count = 0`, earliest end `2027-01-17T22:00:00Z`
+
+**Checkpoint / persistence status:**
+- Local changes: uncommitted modifications to `scripts/verify_research_v2_spec_amendment_1.py`, `tests/test_research_v2_spec_amendment_1.py`, `research_state/campaign_authorization.json`, and untracked `src/v2_confirmatory/`
+- Remote: `git rev-parse HEAD` == `git rev-parse origin/main` (unchanged)
+
 ## Initial task message for next agent
 
-**Next (no bounded design deliverable):** There is no remaining bounded design deliverable in the v2 chain that is actionable before the confirmatory window exists (earliest end 2027-01-17T22:00:00Z). The v2 selection run has been executed and recorded; no confirmatory evaluation may occur yet. If a new bounded task arises, it must follow README Section 2A (decision record first) and be implemented in a subsequent session. Do not start a second v2 selection run, do not edit frozen artifacts, do not read confirmatory-window candles.
+**Next (no bounded design deliverable):** There is no remaining bounded design deliverable in the v2 chain that is actionable before the confirmatory window exists (earliest end `2027-01-17T22:00:00Z`). The v2 selection run has been executed and recorded; the confirmatory-evaluation protocol is delivered and hash-bound (`configs/research_v2_confirmatory_protocol.json`, `manifest_hash bba95394…`); no confirmatory evaluation may occur yet.
 
-**Status:** All v2 prerequisites/amendments delivered and hash-bound; selection run executed (497664 execution units, 0 holdout exposure); confirmatory window NOT_STARTED. Verification: all v2 verifiers pass, tests green, v1 artifacts byte-unchanged.
+**Working-tree hygiene:** The working tree carries uncommitted changes not recorded in the prior handoff: updated `scripts/verify_research_v2_spec_amendment_1.py` and `tests/test_research_v2_spec_amendment_1.py` (confirmatory-absence checks now that the selection run has executed), a partial `src/v2_confirmatory/` package (errors/identity/scope only — incomplete), and a controller-driven timestamp refresh in `research_state/campaign_authorization.json`. Before starting any new bounded task, commit or discard these changes; do not edit frozen artifacts.
+
+**Do NOT:** start a second v2 selection run or re-run the completed one; edit anything under `src/breakout_research/` (the hashed set) or `src/v2_campaign/` (digest-bound by the selection authorization); edit any frozen artifact; read any candle inside the v2 confirmatory window or evaluate the holdout-position fold; contact any provider or fetch candles; re-run producer scripts that would rewrite existing artifacts without `--force` and a recorded reason; attempt confirmatory-window evaluation before `2027-01-17T22:00:00Z` (it cannot exist yet).
+
+**Acceptance criteria:** no new code or artifacts required in this session; the suite and all verifiers remain green; `compute_code_hash()` behavior is unchanged; v1 artifacts byte-unchanged; `confirmatory_window_status` stays `NOT_STARTED`; `holdout_exposed_count` stays 0.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v2_spec.py`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git rev-parse HEAD` and `git rev-parse origin/main` (confirm they match).
