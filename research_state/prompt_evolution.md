@@ -1094,3 +1094,86 @@ the commit that carries it is recorded in git history for this file.
 
 **Rollback instruction:** revert the commit that carries this entry and the added README paragraph;
 no research artifact is affected.
+
+## P11-2026-10-20-PRIMARY-EVIDENCE-DERIVATION
+
+**Revision ID:** P11-2026-10-20-PRIMARY-EVIDENCE-DERIVATION
+
+**Date / session / base commit:** 2026-10-20T15:35Z, session "read the prior agent task from the durable
+handoff and complete it", base commit `5d78f1f11179fbca670e3f08dacc683f3df7c99e`, code hash
+`2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (unchanged by this revision).
+
+**Triggering evidence:**
+
+* `scripts/publish_v2_selected_configurations.py:133-136` calls the preregistered selector
+  (`select_candidates(records, spec_v1, baselines, None)`) inside a `try`/`except` that swallows every
+  exception, and then publishes the per-asset selection **copied from the ledger**
+  (`ledger["selection"]["per_asset"]`) while the artifact's own `manifest_status` says
+  `PUBLISHED_FROM_VERIFIED_SHARDS` and its `description` says it is "derived from verified shards".
+  The producer therefore advertised a provenance its code path did not perform.
+* The same producer looked for the buy-and-hold baselines under `research/baselines/{campaign_id}.json`
+  and `research/baselines/{run_id}.json`; neither file exists (the stored baseline artifact is named
+  after a content hash), so the baseline lookup silently produced no baselines and the swallowed
+  `select_candidates` call could not have produced the published statuses either.
+* `scripts/verify_v2_selected_configurations_manifest.py` (before this session) compared the published
+  manifest with the ledger - two artifacts derived from the same evidence - so it could not detect a
+  divergence from the primary evidence. Measured this session: with the manifest **and** the ledger
+  tampered consistently (a configuration the shards do not support), the old verifier reported
+  `ok = true`; the same tampered tree is refused by the rewritten verifier with
+  `4: the selected configuration of ETHUSDT differs from the recomputation (cfg_0073 != cfg_1241)`.
+  The published outcome itself is correct: the selection re-derived from the 497,664 verified shard
+  records reproduces all 18 per-asset winners, statuses and economic statuses exactly.
+
+**Cause classification:** `PROMPT_GAP` for the producer path and for derived-vs-derived comparisons.
+P7 (`VERIFIER-INDEPENDENCE`) requires an *acceptance check* to recompute its expected value and rules
+out a constant copied out of the same artifact; it does not name (a) a *producer* that publishes
+another derived artifact's content under a provenance claim its code path does not perform, nor (b) an
+acceptance check that compares two artifacts that were derived from the same primary evidence. The
+proximate cause of the published artifact's weak provenance was still an `IMPLEMENTATION_DEFECT` of the
+session that wrote the producer and the verifier; this entry records the instruction gap that let the
+defect pass as "verified".
+
+**Revision summary - minimal instruction change:** one paragraph added to README Section 2A E, directly
+after the P7 paragraph: a derived artifact must be re-derived from the primary evidence it names, not
+compared with another artifact derived from the same evidence (two derived artifacts that agree can
+both disagree with the evidence they describe); a producer that cannot reproduce its own output from
+the primary evidence must fail loudly and record the failure, must not publish a fallback copy of
+another artifact's content, and must not claim a provenance its code path does not perform; the
+acceptance check for such an artifact must perturb the primary evidence and show that both the
+artifact and the check react. No other README text changed; the quantitative protocol, universe, grid,
+costs, folds, selection rule, holdout rules and thresholds are untouched.
+
+**Expected effect:** a producer cannot publish a fallback copy of a derived artifact under a false
+provenance claim, and a verifier that guards such an artifact re-derives it from the primary evidence
+instead of cross-checking two copies of it. This is a hypothesis, not a measured result.
+
+**Regression scenarios and status:**
+
+| Scenario | Required behavior | Status at revision |
+|---|---|---|
+| A producer cannot reproduce its own output from the primary evidence | It fails loudly and records the failure; no fallback copy is published | Not yet implemented: `scripts/publish_v2_selected_configurations.py` still swallows the selector's exception. The instruction now forbids it; the defect is listed in the handoff as an open item for the next session |
+| A producer advertises a provenance its code path does not perform | The claim is removed or the code path performs it | Not yet implemented; same open item |
+| An acceptance check guards a derived artifact | It re-derives the artifact from the primary evidence and compares the derivation | Implemented this session: `scripts/verify_v2_selected_configurations_manifest.py` re-derives the selection from the 497,664 verified shards under the unchanged v1 rule and compares every per-asset winner, status and economic status (`tests/test_v2_selected_configurations_manifest.py::test_the_published_selection_is_reproduced_from_the_shards`) |
+| The guard is not vacuous | Perturbing the primary evidence makes the guard fail | Implemented this session: a tamper test changes the manifest **and** the ledger consistently; the guard still fails (`::test_the_verifier_detects_a_selection_that_the_shards_do_not_support`), while the pre-session verifier passed the same tamper |
+| A control proves the tamper failures come from the tamper | The un-tampered mirror verifies cleanly | Implemented this session: `::test_the_mirrored_tree_verifies_cleanly` |
+| P7 (vacuous check) | Unchanged | Still enforced; the added paragraph extends it and does not replace it |
+| P8 (environment-dependent acceptance) | Unchanged | Still enforced; the digest comparisons are recomputed from the bytes on disk |
+| P10 (decision sweep) | Unchanged | Still enforced; this revision touches no decision record |
+| Section 2A G battery | No safeguard removed or weakened | Cases 1-10 untouched: the added paragraph constrains how evidence is produced and checked; it authorizes no action and relaxes no holdout, data, persistence or truthfulness rule |
+
+**Known trade-offs:** one added paragraph in Section 2A E. It obliges a producer to re-derive its
+output and to fail loudly; a producer that cannot yet re-derive must therefore be reported as blocked
+rather than published with a fallback. It adds no research gate and no authorization.
+
+**Reviewer/verifier status:** self-review in this session. Verified by
+`PYTHONPATH=src python3 -m pytest tests/ -q` (652 passed, exit 0), by
+`python3 scripts/verify_v2_selected_configurations_manifest.py` (exit 0) and by `git diff README.md`
+(one added paragraph inside Section 2A E). Behavioral effectiveness beyond this session is
+`NOT_YET_VERIFIED`.
+
+**Resulting prompt blob/commit SHA:** the README blob SHA after this revision is
+`c37a1b2a1994d2c02fee3104a018dc0e413409fc` (previous: `f7a4de97a035523ca550e450c7d9c8a8a89fa9b4`);
+the commit that carries it is recorded in git history for this file.
+
+**Rollback instruction:** revert the commit that carries this entry and the added README paragraph;
+no research artifact is affected.

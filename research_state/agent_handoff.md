@@ -4130,7 +4130,27 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 - `compute_code_hash()` = `2efd3b18…` unchanged; canonical digests unchanged
 - No v1 artifacts modified; no v2 result row in `research/results.jsonl`; `holdout_exposed_count = 0`, `confirmatory_window_status = NOT_STARTED`
 
-**Unresolved:** selection outcome is delivered but **no selected-configuration manifest exists yet** (it is `OUTSTANDING` per amendment). The v2 specification still records P2/P3 as `OUTSTANDING` (needs versioned amendment). The confirmatory window cannot be evaluated before `2027-01-17T22:00:00Z`. RL1 (v1 runtime gate ordered digest) and RL2 (result volume delivery) remain recorded.
+**Unresolved:** selection outcome is delivered but **no selected-configuration manifest exists yet** (it is `OUTSTANDING` per amendment).
+
+> **CORRECTED 2026-10-20T15:45Z (session at the end of this file).** Two claims of this entry are
+> **DISPROVEN** against the live repository and must not be carried forward:
+> 1. *"no selected-configuration manifest exists yet"* — **DISPROVEN.** The artifact was published at
+>    2026-10-20T07:00:00Z and committed at 07:38:39Z: `research/v2_selected_configurations_manifest.json`,
+>    `manifest_hash 7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862`, file sha256
+>    `529ef0d5…`, anchored by `configs/research_v2_confirmatory_authorization_1.json`
+>    (`bound_to_selected_configurations_hash` + `immutable_artifact_anchors`). It was frozen before any
+>    confirmatory-window read.
+> 2. The per-asset `config_id`s listed above — **DISPROVEN.** Re-deriving the selection from the
+>    497,664 verified shard records under the unchanged v1 rule reproduces the published winners:
+>    ADA cfg_0073, AVAX cfg_0246, BNB cfg_0089, DOGE cfg_0736, **ETH cfg_1241**, **HBAR cfg_0772**,
+>    LTC cfg_0084, **NEAR cfg_1564**, **SOL cfg_0732**, **SUI cfg_0507**, **UNI cfg_1570**,
+>    **XLM cfg_0124**, **XRP cfg_0041**, **ZEC cfg_0270**; no candidates for BCHUSDT, BTCUSDT,
+>    LINKUSDT, TRXUSDT. The nine bold ids above are wrong.
+>
+> The remaining "OUTSTANDING" wording inside `configs/research_v2_candidate_freeze.json`
+> (`selection_remainder.status`) is **STALE** for the same reason; that artifact is frozen and is not
+> edited in place — the reconciliation is carried by the published manifest and the confirmatory
+> authorization. The v2 specification still records P2/P3 as `OUTSTANDING` (needs versioned amendment). The confirmatory window cannot be evaluated before `2027-01-17T22:00:00Z`. RL1 (v1 runtime gate ordered digest) and RL2 (result volume delivery) remain recorded.
 
 
 ## Initial task message for next agent
@@ -4153,3 +4173,267 @@ confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
 **Do NOT:** run any grid/backtest/campaign/selection, read confirmatory-window candles, modify `src/`, edit frozen configs/manifests, or re-run the selection.
 
 **Acceptance:** new verifier exits 0, full suite green, code hash unchanged, no v2 execution artifacts added except the manifest/verifier/tests.
+
+## Session activity — 2026-10-20T15:45:00Z (this session)
+
+**Task (from the durable handoff at 14:56:00Z):** "produce the **v2 selected-configuration manifest** for the assets that have candidates (14 assets from the completed run), freeze it before any confirmatory-window read, and record it as a hash-bound artifact with a verifier and tests. Nothing runs in that session."
+
+**Why this task outranked the alternatives:** the v2 line is the only line whose next step is actionable
+today — the v2 confirmatory evaluation is time-blocked until 2027-01-17T22:00:00Z and the v3 line is
+blocked on the missing benchmark dataset (BRAIN-013, decided, not implemented). The task was therefore
+the highest-value bounded item; the v2 line had one unclosed deliverable (the artifact's own tests and
+an independent verification of its content).
+
+**Outcome:** **the task is now complete, and the published artifact is confirmed correct.** The
+artifact itself was already delivered at 2026-10-20T07:00:00Z (committed 07:38:39Z) — the 14:56:00Z
+entry's premise was wrong (see the correction note in that entry). This session closed the remaining
+gap and repaired the verification chain:
+
+1. **The published selection was independently re-derived from the primary evidence.** The
+   preregistered v1 selection rule was re-applied to the 497,664 verified shard records with the
+   buy-and-hold baselines recomputed from the hash-verified v2 datasets and the development boundary
+   enforced by the v2 loader. The re-derivation reproduces all 18 per-asset winners, statuses and
+   economic statuses, the 14/4 split and the outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`
+   exactly. Runtime ≈ 23 s.
+2. **The producer no longer copies the ledger.** `scripts/publish_v2_selected_configurations.py` used to
+   call the selector inside a `try/except` that swallowed every exception and then published the
+   per-asset selection **copied from the run ledger**, while the artifact advertised
+   `PUBLISHED_FROM_VERIFIED_SHARDS`. It now re-derives the selection from the shards and fails loudly
+   if it cannot. The rewritten producer reproduces the frozen artifact exactly
+   (`producer.build(REPO_ROOT) == published document`).
+3. **The verifier was rewritten** (`scripts/verify_v2_selected_configurations_manifest.py`): it resolves
+   every path from `--repo-root`, re-derives the selection from the shards, compares every per-asset
+   winner/status/economic status with the published artifact, checks the ledger agreement separately,
+   checks that the published scope is the frozen candidate set, that the excluded assets stay excluded,
+   that the confirmatory chain binds the artifact (self-hash **and** file digest), that the artifact
+   authorizes nothing (no confirmatory exposure, no confirmatory or v3 execution artifact) and that
+   every artifact the confirmatory authorization anchors is byte-unchanged.
+4. **A dedicated deterministic test module** was added: `tests/test_v2_selected_configurations_manifest.py`
+   (19 tests), including a mirror control, six tamper tests and the producer tests.
+
+**Why the old verification was not enough (measured, not asserted):** with the manifest **and** the
+ledger tampered consistently (a configuration the shards do not support), the pre-session verifier
+reported `ok = true`; the rewritten verifier refuses the same tree with
+`4: the selected configuration of ETHUSDT differs from the recomputation (cfg_0073 != cfg_1241)`.
+The same holds for a widened scope (`3: the published scope is not the frozen candidate set`).
+
+**State verified (2026-10-20T15:45:00Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **654 passed**, exit 0 (635 pre-existing + 19 new)
+- `python3 scripts/verify_v2_selected_configurations_manifest.py` → `{"ok": true, "failures": []}`, exit 0
+- `python3 scripts/verify_v2_selection_run.py` → exit 0; `verify_research_v2_confirmatory_protocol.py` → exit 0;
+  `verify_v2_confirmatory_path.py`, `verify_v2_confirmatory_runbook_1.py`, `verify_v2_confirmatory_code_hash_amendment_1.py`,
+  `verify_research_v2_selection_authorization_1.py`, `verify_research_v2_code_hash_amendment_1.py`, `verify_research_v2_code_hash_amendment_2.py`,
+  `verify_research_v2_execution.py`, `verify_research_v2_execution_amendment_1.py`, `verify_research_v2_execution_amendment_2.py`,
+  `verify_research_v2_spec_amendment_1.py`, `verify_research_v2_code_hash_portability.py`, `verify_research_v2_code_hash_portability_decision.py`,
+  `verify_v2_prerequisite_reconciliation_amendment_1.py` → all exit 0
+- `verify_research_v3_spec.py`, `verify_research_v3_manifests.py`, `verify_research_v3_candidate_freeze.py`,
+  `verify_v3_candidate_freeze_amendment_1.py`, `verify_v3_spec_amendment_1.py`, `verify_v3_universe_expansion_log.py`,
+  `verify_research_v3_execution.py` → all exit 0 (the v3 line is unchanged by this session)
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` == the authorized value of record (`src/` untouched)
+- canonical digests unchanged: hashed set `3e8e4169…`, v2 selection path `c69cc021…`, v2 confirmatory path `277a4bbe…`
+- frozen artifacts byte-unchanged (sha256 recomputed): `research/v2_selected_configurations_manifest.json` `529ef0d5…`,
+  `research/ledger_v2.json` `fb9f4cdf…`, `research/results_manifest_v2.json` `99c57a3d…`, `research/universe_manifest_v2.json` `68c973a0…`,
+  `research/data_manifest_v2.json` `0240be6f…`, `research_state/checkpoint_v2.json` `b11075d0…`, and the five v1 evidence files
+  (`configs/research_v1.json` `558d6099…`, `research/universe_manifest.json` `c8f367d2…`, `research/data_manifest.json` `cf39de42…`,
+  `research/candidate_manifest.json` `87589f83…`, `research/candidate_manifest_v2.json` `a68b061a…`)
+- no confirmatory exposure: `research/data_manifest_v2.json` → `confirmatory_window_status = NOT_STARTED`, `holdout_exposed_count = 0`;
+  `research_state/checkpoint_v2.json` → `holdout_exposed_count = 0`; no confirmatory or v3 execution artifact exists
+
+**Files changed (no frozen artifact, no file under `src/`):**
+- `scripts/publish_v2_selected_configurations.py` (rewritten producer: re-derives the selection from the shards, no ledger fallback, no swallowed exception)
+- `scripts/verify_v2_selected_configurations_manifest.py` (rewritten verifier: independent re-derivation, ledger cross-check, scope/anchors/exposure rules, `--repo-root`)
+- `tests/test_v2_selected_configurations_manifest.py` (new, 19 tests)
+- `README.md` (one paragraph added in Section 2A E — see the prompt review)
+- `research_state/prompt_evolution.md` (entry P11-2026-10-20-PRIMARY-EVIDENCE-DERIVATION)
+
+**Rule → code → test map** (no module under `src/` was added or changed, so `compute_code_hash()` is unchanged):
+
+| Rule | Implementation | Test |
+| --- | --- | --- |
+| the preregistered v1 selection rule is re-applied to the verified shards, unchanged | `scripts/publish_v2_selected_configurations.py:recompute_selection` (`select_candidates` from `src/breakout_research/selection.py`) | `tests/test_v2_selected_configurations_manifest.py::test_the_published_selection_is_reproduced_from_the_shards` |
+| every shard record's `experiment_id` recomputes and no holdout record is present | `scripts/publish_v2_selected_configurations.py:recompute_selection` | same test (all 497,664 records verified) |
+| the development boundary is enforced on every dataset read | `src/v2_campaign/data.py:load_development_candles`, called by `recompute_selection` | `tests/test_v2_campaign_execution_path.py::…ConfirmatoryWindowViolation…` (existing); `::test_the_published_selection_is_reproduced_from_the_shards` exercises the refusal path |
+| the producer publishes no fallback copy and fails loudly | `scripts/publish_v2_selected_configurations.py:recompute_selection` (no `try/except`) | `::test_the_producer_fails_loudly_when_the_selection_cannot_be_re_derived` |
+| the published artifact is reproducible from its producer | `scripts/publish_v2_selected_configurations.py:build` | `::test_the_published_artifact_is_reproducible_from_the_producer` |
+| the artifact is self-hashing | `scripts/verify_v2_selected_configurations_manifest.py:compute_manifest_hash` (rule 1) | `::test_manifest_hash_recomputes_from_the_document` |
+| the scope is exactly the frozen candidate set; the excluded assets stay excluded | verifier rules 3 | `::test_the_selection_covers_exactly_the_frozen_candidate_set`, `::test_the_excluded_assets_stay_excluded_with_their_reasons`, `::test_the_verifier_detects_a_widened_scope` |
+| the published selections are re-derived from the shards, not copied from the ledger | verifier rule 4 | `::test_the_published_selection_is_reproduced_from_the_shards`, `::test_the_verifier_detects_a_selection_that_the_shards_do_not_support` |
+| the confirmatory chain binds the artifact (self-hash and file digest) and its scope is the published selection | verifier rule 6 | `::test_the_confirmatory_chain_binds_this_manifest` |
+| the artifact authorizes nothing | verifier rule 7 | `::test_the_manifest_authorizes_nothing`, `::test_the_verifier_detects_a_self_reporting_exposure` |
+| every anchored artifact is byte-unchanged | verifier rule 8 | `::test_the_anchored_artifacts_are_byte_unchanged`, `::test_the_verifier_detects_a_changed_anchored_artifact` |
+| a tamper in the mirror is detected, the clean mirror is not | verifier `verify()` | `::test_the_mirrored_tree_verifies_cleanly` (control) and the six tamper tests |
+
+**Findings, classified**
+- `CONFIRMED` — the published selection is reproducible from the shards; the 14 selected configurations and
+  the 4 non-selections are exactly as published; the frozen artifact is byte-unchanged and still anchored.
+- `CONFIRMED` — the pre-session verifier could not detect a manifest and ledger that are wrong together
+  (measured, see above); the pre-session producer published a ledger copy under a shards provenance claim.
+- `DISPROVEN` — the 14:56:00Z entry's "no selected-configuration manifest exists yet" and its nine
+  per-asset `config_id`s (corrected in place; the authoritative list is in
+  `research/v2_selected_configurations_manifest.json`).
+- `STALE` — `configs/research_v2_candidate_freeze.json` → `selection_remainder.status = OUTSTANDING`
+  ("the per-asset selected-configuration manifest … does not exist") and `configs/research_v2.json`
+  → P2/P3 `OUTSTANDING`. Both artifacts are frozen and are **not** edited in place; the reconciliation is
+  carried by the published manifest and the confirmatory authorization. A versioned amendment for the
+  v2 specification remains queued.
+- `UNVERIFIED_CLAIM` — nothing new was asserted beyond the measurements above.
+- `SUPPORTED_HYPOTHESIS` — the P11 prompt revision will prevent a producer from publishing a derived
+  copy under a false provenance claim; behavioral effectiveness beyond this session is `NOT_YET_VERIFIED`.
+
+**Unsuccessful attempts and their retry conditions**
+- The first run of the new test module failed 4 tests: the mirror did not contain `configs/research_v2.json`,
+  so the verifier returned "missing artifact" before reaching the rule under test. Fixed by mirroring the
+  file and by adding the mirror control test; retry only if the verifier's required-artifact list changes.
+- The first old-vs-new verifier comparison was invalid: the old verifier was loaded from outside the
+  repository, so its module-level `REPO_ROOT` pointed at the temporary directory and it read 0 shard
+  records. Fixed by binding the module constants to the repository before the comparison; the corrected
+  comparison is the evidence quoted above.
+- No unchanged action was retried after a deterministic failure.
+
+**Prompt review:** `PROMPT_GAP` → one coherent revision, **P11-2026-10-20-PRIMARY-EVIDENCE-DERIVATION**,
+logged in `research_state/prompt_evolution.md`: one paragraph added to README Section 2A E stating that a
+derived artifact must be re-derived from the primary evidence it names (two derived artifacts that agree
+can both disagree with the evidence they describe), that a producer which cannot reproduce its own output
+must fail loudly instead of publishing a fallback copy, and that a producer must not claim a provenance its
+code path does not perform. The Section 2A G battery was reviewed case by case: cases 1–10 are untouched and
+no safeguard is weakened; P7, P8 and P10 remain in force. README blob after the revision
+`c37a1b2a1994d2c02fee3104a018dc0e413409fc` (previous `f7a4de97a035523ca550e450c7d9c8a8a89fa9b4`).
+
+**Commit / persistence:** branch `main`; base commit `5d78f1f11179fbca670e3f08dacc683f3df7c99e`
+(== `origin/main` == `git ls-remote origin main` at session start). **The agent did not create a commit**
+(no explicit user request to commit); the working tree carries the two scripts, the new test module, the
+README paragraph, the prompt-evolution entry and this handoff section. The harness checkpoint is
+responsible for the commit; a follow-up commit/push is required for durability. The only unrelated
+working-tree change is the controller-driven `authorized_at_utc` refresh in
+`research_state/campaign_authorization.json` (restored with `git checkout --` after the run).
+
+**Artifact / recovery:** every artifact of this session is reconstructible from the repository; the
+producer rebuilds the frozen manifest byte for byte and the verifier recomputes every fact it asserts.
+
+**Checkpoint reconciliation:** not applicable — no run, no shard, no result row and no ledger were produced
+by this session; `research_state/checkpoint_v2.json` is byte-unchanged (`b11075d0…`) and the v2 selection
+run remains `COMPLETED` with 497,664 records.
+
+**Unresolved blockers (ranked)**
+1. **The v3 benchmark dataset is missing** (CONFIRMED, decided as BRAIN-013, not yet implemented). The v3
+   selection run cannot be authorized until a hash-verified, index-aligned BTCUSDT dataset exists for the
+   v3 asset window. This is the next bounded task.
+2. **The v3 selection execution path does not exist** (`src/v3_campaign/` is absent). Implemented after (1)
+   so that the benchmark rule is built in rather than patched in.
+3. **The v2 confirmatory evaluation is time-blocked** until `2027-01-17T22:00:00Z` — a time constraint,
+   not a defect. Its path, protocol, amendments and authorization are delivered and verified.
+4. **The stale `OUTSTANDING` wording** in `configs/research_v2.json` (P2/P3) and in
+   `configs/research_v2_candidate_freeze.json` (`selection_remainder`) is reconciled by versioned
+   amendments, not by editing frozen artifacts; the amendment for the v2 specification is queued behind (1).
+5. **The v1/v2 BTC-alignment deviation is a disclosure obligation** for the final report (93,312 of 497,664
+   v2 records evaluated folds 1–3 against a BTC EMA from a different period); it is not repairable without
+   invalidating the v1 authorization.
+6. **The v2 specification's `P2/P3` reconciliation and the ledger's stale selection note** are cosmetic
+   relative to (1)–(3) and are queued, not urgent.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** implement **BRAIN-013** — publish the v3 benchmark dataset and build the
+benchmark rule into the v3 selection execution path. The decision record is in
+`research_state/brainstorming_queue.md` → "BRAIN-013" (stage 1 implemented, stage 2–4 outstanding); the
+evidence is recomputed by `scripts/report_v3_benchmark_dependency.py` and locked by
+`tests/test_v3_benchmark_dependency.py`.
+
+**Subject:** the v3 universe declares a benchmark constituent it does not contain; the v3 selection run is
+blocked until a hash-verified, index-aligned BTCUSDT dataset exists and the v3 path aligns it by UTC
+candle close.
+
+**Status (verified 2026-10-20T15:45:00Z):**
+- Full suite **654/654 green** (635 pre-existing + 19 added by the 15:45Z session); every v2 and v3
+  verifier exits 0; `compute_code_hash()` `2efd3b18…` (equal to the authorized value of record in this
+  checkout); canonical digests unchanged (`3e8e4169…` hashed set, `c69cc021…` v2 selection path,
+  `277a4bbe…` v2 confirmatory path); v1/v2/v3 frozen artifacts byte-unchanged.
+- **The v2 line is closed up to its time block.** The v2 selected-configurations manifest exists, is
+  hash-bound and frozen before any confirmatory read
+  (`research/v2_selected_configurations_manifest.json`, `manifest_hash 7acc7fe0…`, file sha256 `529ef0d5…`,
+  anchored by `configs/research_v2_confirmatory_authorization_1.json`). Its selection was **independently
+  re-derived from the 497,664 verified shard records** and reproduces the published winners exactly
+  (ADA cfg_0073, AVAX cfg_0246, BNB cfg_0089, DOGE cfg_0736, ETH cfg_1241, HBAR cfg_0772, LTC cfg_0084,
+  NEAR cfg_1564, SOL cfg_0732, SUI cfg_0507, UNI cfg_1570, XLM cfg_0124, XRP cfg_0041, ZEC cfg_0270; no
+  candidate for BCHUSDT, BTCUSDT, LINKUSDT, TRXUSDT). **Do not redo it.** The remaining v2 step is the
+  time-blocked confirmatory evaluation, earliest end `2027-01-17T22:00:00Z`.
+- The gap to close: `research/universe_manifest_v3.json` declares `BTCUSDT`
+  (`benchmark_asset.included_in_universe: true`) but `research/data_manifest_v3.json` has no `BTCUSDT`
+  entry; 576 of 2,304 configurations (25% of the grid) need the BTC series; the engine pairs it by index
+  (`src/breakout_research/signals/generator.py:90-92`) while `docs/research_protocol.md:101` requires
+  alignment "by UTC candle close"; the v2 BTC dataset is 17 hours out of index with the v3 asset window
+  (`2023-10-21T11:00:00Z` … `2026-10-20T10:00:00Z`).
+- BRAIN-013 decides: publish a v3-bound BTCUSDT dataset under the v3 window rule through the documented
+  primary → failover policy (one bounded read, raw bytes + sha256 + timestamp recorded), publish it by a
+  **versioned** v3 data-manifest amendment, and align it by UTC candle close in new code outside the
+  hashed set. `research/data_manifest_v3.json`, `research/universe_manifest_v3.json`,
+  `configs/research_v3_candidate_freeze.json`, `configs/research_v3_candidate_freeze_amendment_1.json`,
+  `configs/research_v3_spec_amendment_1.json`, `configs/research_v3_execution.json` and
+  `configs/research_v3.json` are **not** edited in place; the amendment cascade (data-manifest amendment →
+  freeze amendment 2 → execution amendment 1) re-binds the data-manifest identity.
+- Provider note (evidence, not a fresh probe): the v3 stage-1 retrieval of 2026-10-20 recorded the primary
+  host `https://api.binance.com/api/v3/klines` answering **HTTP 451** and the documented failover
+  `https://data-api.binance.vision/api/v3/klines` serving the six validated v3 datasets
+  (`research/v3_evidence/candle_verification.json`). If the single bounded BTC retrieval fails, record the
+  endpoint, the observed HTTP status, the probe timestamp and the exact command in a committed artifact and
+  classify the blocker as `DATA_OR_EXTERNAL_SERVICE` — a status copied from this note is `UNVERIFIED`.
+- Disclosed, not repaired: the completed v1/v2 runs evaluated the BTC filter against a BTC EMA from a
+  different period on 93,312 of 497,664 v2 records (folds 1–3); this belongs in the final report, not in a
+  frozen artifact.
+
+**One bounded task (in this order):**
+1. Retrieve BTCUSDT once under the v3 window rule — the same 26,280 closed hourly candles, the same
+   provider and failover policy, the same endpoint-status recording the v3 stage-1 retrieval used — and
+   write the dataset under `research/data/candles_v3/` with the canonical hourly CSV hash. Record the raw
+   response, its sha256 and the retrieval timestamp.
+2. Publish the benchmark entry in `configs/research_v3_data_manifest_amendment_1.json` (self-hashed,
+   immutable) and re-bind the data-manifest identity in `configs/research_v3_candidate_freeze_amendment_2.json`
+   and `configs/research_v3_execution_amendment_1.json`. The three immutable artifacts that name `6793d86c…`
+   stay byte-unchanged.
+3. Implement `src/v3_campaign/` (outside the hashed set) with the benchmark rule built in: the asset series
+   **and** the benchmark series are sliced to the same fold window before the frozen engine is called, the
+   path **fails closed** when the benchmark series is missing, shorter than the evaluated window or not
+   index-aligned, and the BTC-filter configurations are never dropped.
+4. Add a read-only offline verifier for every new artifact and deterministic tests for every rule,
+   following the repository's pattern.
+
+**Do NOT:** run any grid, backtest, campaign, selection or confirmatory evaluation; write any file under
+`src/breakout_research/` or `src/v2_campaign/` (the hashed set — canonical digest `3e8e4169…` must stay
+unchanged); edit `research/data_manifest_v3.json`, `research/universe_manifest_v3.json`,
+`configs/research_v3_candidate_freeze.json`, `configs/research_v3_candidate_freeze_amendment_1.json`,
+`configs/research_v3_spec_amendment_1.json`, `configs/research_v3_execution.json` or `configs/research_v3.json`
+in place (amend them instead); re-retrieve or re-time the market-cap snapshot; read any candle inside the
+v2 or v3 confirmatory window; reuse the v1 holdout; contact any provider beyond the single bounded BTC
+retrieval; write any v1 or v2-selection path; re-run a producer that would rewrite an existing artifact
+without `--force` and a recorded reason; reproduce or "re-verify" the v2 selected-configurations manifest
+(delivered, frozen and independently re-derived on 2026-10-20T15:45Z).
+
+**New in this repository (apply it):** README Section 2A E now states that a derived artifact must be
+re-derived from the primary evidence it names, that a producer which cannot reproduce its own output must
+fail loudly instead of publishing a fallback copy of another artifact's content, and that a producer must
+not claim a provenance its code path does not perform (prompt-evolution entry
+`P11-2026-10-20-PRIMARY-EVIDENCE-DERIVATION`).
+
+**Acceptance criteria:** the v3 benchmark dataset exists, is hash-verified and **index-aligned** with the
+six validated v3 assets (identical first and last candle timestamps and candle count, recomputed from the
+manifest, not copied); the amendment cascade is hash-bound, self-verifying and leaves every previously
+delivered artifact byte-unchanged; `src/v3_campaign/` exists outside the hashed set and refuses to run
+without an aligned benchmark; a read-only verifier and deterministic tests exist for every new artifact and
+rule, and every producer in the new path re-derives its output from the primary evidence instead of
+copying another artifact; the full suite exits 0 and all existing verifiers still exit 0;
+`compute_code_hash()` and the canonical digests are unchanged; **no v3 execution artifact exists**
+(`research/shards_v3/`, `research/ledger_v3.json`, `research/results_manifest_v3.json`,
+`research/results_v3.jsonl`, `research_state/checkpoint_v3.json` absent), no v3 selection authorization
+exists yet, and the v2 confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
+`python3 scripts/report_v3_benchmark_dependency.py` (its `status` must move off
+`BLOCKED_MISSING_BENCHMARK_DATASET` only when the dataset is genuinely index-aligned);
+`python3 scripts/verify_research_v3_spec.py`; `python3 scripts/verify_research_v3_manifests.py`;
+`python3 scripts/verify_research_v3_candidate_freeze.py`; `python3 scripts/verify_v3_candidate_freeze_amendment_1.py`;
+`python3 scripts/verify_v3_spec_amendment_1.py`; `python3 scripts/verify_v3_universe_expansion_log.py`;
+`python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_v2_selected_configurations_manifest.py`;
+`python3 scripts/verify_v2_selection_run.py`; `python3 scripts/verify_research_v2_spec.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm only new v3 files and `research_state/` — no
+`src/breakout_research/`, no `src/v2_campaign/`, no frozen artifact).
