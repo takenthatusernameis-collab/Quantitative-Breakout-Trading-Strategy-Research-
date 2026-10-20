@@ -2602,3 +2602,98 @@ outstanding as a separate bounded task).
 **Outstanding.** The amendment's commit is `PENDING_COMMIT`: the commit that carries it, the
 authorization and the runbook must exist before the first candle is read. The run itself remains
 blocked by the window.
+
+---
+
+## BRAIN-012 — Versioned, auditable market-cap expansion program (v3+)
+
+**Priority:** P1 — future-facing, not blocking the v2 confirmatory evaluation
+**Status:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (design record only; no implementation in this session)
+**Cause labels:** `SCOPE_DECISION`, `DATA_OR_EXTERNAL_SERVICE`, `PERMANENT_LIMIT`
+**Confidence:** high — the v2 chain is complete and immutable; the expansion must be strictly additive.
+
+### Evidence (revalidated against the live tree)
+
+- `configs/research_v2.json` is immutable and hash-bound (`49fb0814…`); its `snapshot_identity` records one in-window CoinGecko retrieval. Re-running or re-timing that snapshot is forbidden.
+- `research/universe_manifest_v2.json` (`4e927e52…`) holds 18 validated constituents; `research/data_manifest_v2.json` (`9f64d8d1…`) holds 18 hash-verified datasets; `configs/research_v2_candidate_freeze.json` (`5a56b3d8…`) freezes the candidate set at 2026-10-19T21:30:17Z.
+- The v2 selection run completed (`research/ledger_v2.json`, 497,664 units, `holdout_exposed_count = 0`, outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`, 14 candidates / 4 without).
+- The confirmatory window is `NOT_STARTED`, opens 2026-10-19T22:00:00Z, needs ≥ 2,160 closed hourly candles, earliest end `2027-01-17T22:00:00Z`; it is single-use and is never reused from v1 or read during selection.
+- `src/breakout_research/` is the hashed set (`canonical 3e8e4169…`, authorized ordered `2efd3b18…`); `src/v2_campaign/` is digest-bound (`c69cc021…`) by the selection authorization; `src/v2_confirmatory/` is digest-bound (`277a4bbe…`) by the authorization, protocol and runbook.
+- The v1 cohort is terminal (`research/campaign_cycles/terminal/exhausted_cohort_2.json`: `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`); the v2 cycle close-out recorded `current_cycle_id = v2-selection-run-2026-10-20`, `next_cohort_index = 3`, blocking dependency `CONFIRMATORY_WINDOW`.
+
+### Why this needs a design decision
+
+The user explicitly requested that the breakout research program keep adding new candidate assets by market capitalization once the current universe is exhausted. That cannot be done by appending to v1 or v2: every v2 artifact is hash-bound and the v2 confirmatory window is single-use. A naive append would silently widen a frozen candidate set, reuse an exposed holdout, or mix v3 records into v1/v2 ledgers — each of which voids the preregistration. The correct shape is a strictly additive, versioned v3+ path, and the decision between the viable shapes must be recorded before any code is written (README Section 2A C1).
+
+### Causal model
+
+- **Observed fact:** v1 and v2 are complete, frozen and immutable; their holdouts, ledgers and manifests are hash-bound.
+- **Inferred root cause of the need:** the program's candidate supply is finite per version; exhaustion is expected and is not a defect, but the *response* to it must be preregistered to remain a research result rather than an ad-hoc extension.
+- **Unknowns:** the cadence at which a fresh CoinGecko ranking yields genuinely new eligible names below the prior universe floor; the cost of a full ranking pass against the provider's rate limits; whether a v3 universe will contain enough assets to be worth a run.
+- **Downstream risks:** (a) silently widening a frozen set; (b) reusing the v1 or v2 holdout; (c) mixing records across ledgers; (d) reading the v2 confirmatory window early or for selection; (e) hiding a null result ("no new eligible names").
+
+### Alternatives to compare
+
+**Design A — Continuous in-place expansion of v2 (rejected).** Append new constituents to `research/universe_manifest_v2.json` and re-freeze. Rejected: the manifest hash (`4e927e52…`) and the candidate freeze (`5a56b3d8…`) are part of the identity of the already-executed selection run (497,664 units) and of the confirmatory protocol; editing them invalidates the run and the single-use window. Also violates the v2 `supersedes`/identity contract.
+
+**Design B — Versioned v3+ path (recommended).** A new version for each expansion pass: `configs/research_v3.json`, `research/universe_manifest_v3.json`, `research/data_manifest_v3.json`, `configs/research_v3_candidate_freeze.json`, `src/v3_campaign/`, separate shards/ledger/results/checkpoint, separate authorization and holdout accounting, and an append-only cross-version expansion log. The v1 and v2 artifacts are never edited; the v2 confirmatory window is never touched. This is the only design that preserves every frozen identity.
+
+**Design C — Manual, human-triggered expansion (rejected as primary).** A human runs a script on demand. Rejected as the *primary* mechanism because it is not auditable or reproducible and it cannot enforce the "no synthetic data / no threshold reduction / descending market-cap order" invariants; it remains available as a fallback trigger for Design B's bounded cadence.
+
+### Recommendation
+
+**Design B**, with Design C's manual trigger retained as a fallback. Concretely:
+
+1. **Preregister first.** Before any retrieval, produce a versioned `configs/research_v3.json` (immutable, self-hashed) that fixes the retrieval window, the ranking source, the asset-exclusion rules (carried verbatim from v1/v2), the history floor (≥ 26,280 closed hourly candles), the gap-recording rule, and the candidate-freeze precondition. No code under `src/breakout_research/` or `src/v2_campaign/` is touched; new code lives in `src/v3_campaign/`.
+2. **Retrieve once.** One bounded, read-only request to the frozen CoinGecko endpoint inside the pinned window, storing raw response bytes, sha256 and retrieval timestamp (the P2 pattern). The v2 snapshot is never re-retrieved or re-timed.
+3. **Validate every candidate.** Binance spot `<SYMBOL>USDT` verification through the documented failover, ≥ 26,280 closed hourly candles with coverage gaps recorded, hash-verified datasets, exclusion with a recorded reason for every failure (the P3 pattern). No synthetic data, no silent history-threshold reduction, no invented assets.
+4. **Freeze before selection.** `configs/research_v3_candidate_freeze.json` and `research/v3_selected_configurations_manifest.json`-path equivalents are committed and hash-bound before any selection or confirmatory-window candle is read.
+5. **Separate namespaces.** `research/shards_v3/`, `research/ledger_v3.json`, `research/results_manifest_v3.json`, `research/results_v3.jsonl`, `research_state/checkpoint_v3.json`, and a v3 holdout counter that starts at 0 and is counted on every read. No writes into v1/v2 paths.
+6. **Unchanged rules.** The strategy grid, costs, folds, selection rule and causal execution rules of `configs/research_v1.json` are inherited byte-equal by `configs/research_v3.json` unless a separate preregistered mutation is authorized.
+7. **Append-only cross-version expansion log.** A new artifact (e.g. `research/v_universe_expansion_log.json`) records, per version, the snapshot identity, the candidate set, the validation/exclusion results and the floor below which the next version's new names must fall. Later batches contain only genuinely new eligible names below the prior universe floor.
+8. **Cadence, not polling.** A full fresh ranking pass that yields no currently eligible new symbols records the observed endpoint, timestamp, ranking depth and validation/exclusion results, enters `AWAITING_NEW_CANDIDATES`, and schedules the next pass at a bounded cadence (not on every five-minute agent activation). The program is not called permanently complete because one snapshot contains no additional eligible names.
+9. **Routing.** Completion or exhaustion of one frozen version routes to preregistration of the next version, never to rewriting the finished snapshot.
+
+### Decision criteria (D-1 … D-9)
+
+- **D-1** Expansion is a new version, never an edit: no v1 or v2 artifact, manifest, ledger, shard or holdout record is modified; `src/breakout_research/` and `src/v2_campaign/` are untouched unless a separate explicit versioned decision demonstrates that this is unavoidable and addresses authorization/hash rotation.
+- **D-2** New code lives outside the hashed set (`src/v3_campaign/` or later), mirroring the `src/v2_campaign/` precedent; the v1 code hash `2efd3b18…` and the v2 execution-path digest `277a4bbe…` stay unchanged.
+- **D-3** The v2 confirmatory window is never read, re-timed, reused or extended by an expansion pass; a v3 expansion does not touch it.
+- **D-4** The market-cap snapshot is retrieved once per version, inside its pinned window, with raw bytes + sha256 + timestamp stored; no re-retrieval of the v2 snapshot.
+- **D-5** Every candidate is validated against real provider data with the P3 rules; excluded assets carry a reason; no synthetic data, no silent history-threshold reduction, no invented assets.
+- **D-6** The candidate set is frozen and hash-bound before any selection or confirmatory read; the scope is never widened, narrowed or re-ranked after the freeze.
+- **D-7** Each version has its own authorization (`at most one` logical run), verifier, tests, holdout accounting and report; the authorization records the code identity under the canonical digest rule.
+- **D-8** A null result (no new eligible names) is reported and recorded, not hidden; the program enters `AWAITING_NEW_CANDIDATES` and re-checks at a bounded cadence.
+- **D-9** Before any v3 execution: hash-verified specification, manifest verifier, deterministic tests, explicit scoped run authorization, distinct result namespace, independently verifiable holdout-exposure controls, rollback and negative-result handling.
+
+### Falsifying evidence
+
+- A v3 run whose `holdout_exposed_count` is non-zero, or whose records appear in `research/results.jsonl` or `research/results_v2.jsonl`.
+- A v3 candidate set that contains an asset already present in v1 or v2, or one that re-ranks the v2 selection.
+- A v3 artifact whose `supersedes`/identity chain does not point at the immediately preceding version's manifest identity.
+- A v3 run that edits `src/breakout_research/` or `src/v2_campaign/` without a recorded authorization/hash-rotation decision.
+- A v3 selection that uses the v2 confirmatory window or the v1 holdout.
+
+### Rollback
+
+- A v3 version is abandoned by deleting its `src/v3_campaign/` package, its `configs/research_v3*.json`, its `research/*_v3*` artifacts and its test/verifier modules; the v1 and v2 artifacts, ledgers, shards and holdouts are untouched by construction (separate namespaces). The append-only expansion log records the abandoned attempt and its reason.
+- No rollback of v1 or v2 is ever required or permitted.
+
+### Staged acceptance tests (for the later implementation session)
+
+1. `configs/research_v3.json` is self-hashed and immutable; its `snapshot_identity` is complete and self-consistent; it inherits the v1 grid/costs/folds/selection byte-equal.
+2. The v3 universe/data manifests carry the v3 snapshot-identity tuple and `supersedes` referencing the v2 manifest identity.
+3. The v3 candidate freeze is hash-bound and matches the validated v3 constituents exactly; excluded assets carry reasons.
+4. `src/v3_campaign/` is outside the hashed set; `compute_code_hash()` and the canonical digests are unchanged.
+5. All v3 verifiers exit 0; the full suite stays green; no v1/v2 artifact sha256 changes.
+6. No v3 result row, shard, ledger, result manifest, checkpoint or holdout exposure exists until an authorized run.
+7. The expansion log is append-only and records the prior floor and the new candidates.
+8. A null result (no new eligible names) is recorded and enters `AWAITING_NEW_CANDIDATES` with a bounded next-pass cadence.
+9. A v3 run (when later authorized) writes only to v3 paths and never to v1/v2 paths.
+10. The v2 confirmatory window remains `NOT_STARTED` with `holdout_exposed_count = 0` throughout.
+
+### Implementation note
+
+**Not implemented in this session** (README Section 2A C1): this is a decision record only. The first implementation session delivers the v3 specification, snapshot retrieval, validation, candidate freeze and verifier — nothing runs, no provider is contacted beyond the single bounded retrieval, no v1/v2 artifact is edited, and no `src/breakout_research/` or `src/v2_campaign/` file is touched. The confirmatory evaluation of v2 remains blocked until `2027-01-17T22:00:00Z` and is unaffected by this record.
+
+**Marked:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`.
