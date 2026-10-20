@@ -2639,7 +2639,7 @@ v3 line delivered by BRAIN-012 stage 1 is decided in one respect by a new item, 
 - The v2 selection run completed (`research/ledger_v2.json`, 497,664 units, `holdout_exposed_count = 0`, outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`, 14 candidates / 4 without).
 - The confirmatory window is `NOT_STARTED`, opens 2026-10-19T22:00:00Z, needs ≥ 2,160 closed hourly candles, earliest end `2027-01-17T22:00:00Z`; it is single-use and is never reused from v1 or read during selection.
 - `src/breakout_research/` is the hashed set (`canonical 3e8e4169…`, authorized ordered `2efd3b18…`); `src/v2_campaign/` is digest-bound (`c69cc021…`) by the selection authorization; `src/v2_confirmatory/` is digest-bound (`277a4bbe…`) by the authorization, protocol and runbook.
-- The v1 cohort is terminal (`research/campaign_cycles/terminal/exhausted_cohort_2.json`: `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`); the v2 cycle close-out recorded `current_cycle_id = v2-selection-run-2026-10-20`, `next_cohort_index = 3`, blocking dependency `CONFIRMATORY_WINDOW`.
+- The v1 cohort is terminal (`research/campaign_cycles/terminal/exhausted_cohort_2.json`: `AWAITING_NEW_CANDIDATES` / `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`); the v2 cycle close-out recorded `current_cycle_id = v2-selection-run-2026-10-20`, `next_cohort_index = 3`, blocking dependency `CONFIRMATORY_WINDOW`. **Superseded (2026-10-20T22:29Z):** that cycle id was a label that occurs nowhere else in the repository; the state now records the published v2 selection run id `v2-selection-20261019` — see "v3 cycle close-out correction" at the end of this file. The other two values on this line are unchanged.
 
 ### Why this needs a design decision
 
@@ -3598,3 +3598,84 @@ report, neither of which may start before the v3 confirmatory window can end
 (`2027-01-18T13:00:00Z`); and the v2 confirmatory evaluation, which may not start before
 `2027-01-17T22:00:00Z`. The next continuous-universe cohort (index 4) is queued behind the same
 confirmatory gate and is discovery-only until that gate clears.
+
+---
+
+## v3 cycle close-out correction — the campaign state's candidate count and v2 cycle id (2026-10-20T22:29Z)
+
+**Task:** complete the campaign-level close-out of the v3 cycle that the 22:55Z session recorded, by
+re-deriving every number in `research_state/continuous_universe_state.json` from the hash-bound
+artifacts. Bookkeeping only: no evaluation, no grid, no backtest, no selection re-run, no candle
+read, no provider contact, no edit under any `src/` path.
+
+**Defect 1 (CONFIRMED) — `v3_candidates` counted the cohort, not the candidates.**
+The close-out wrote `"v3_candidates": 6`. Six is the number of **validated constituents**
+(`research/universe_manifest_v3.json#validation_summary.validated_count = 6`), not the number of
+constituents **with** a selected configuration. Three independent pieces of evidence show the field
+must be 4:
+- the v2 close-out, in the same file and the same `schema_version`, wrote `"v2_candidates": 14` for a
+  cohort of 18 — 14 is `len(research/v2_selected_configurations_manifest.json#assets_with_candidate)`,
+  and 14 + 4 = 18 = the cohort size. The field's meaning is fixed by that precedent;
+- `research/v3_selected_configurations_manifest.json#assets_with_candidate` has 4 entries
+  (`ICPUSDT`, `PEPEUSDT`, `SHIBUSDT`, `WLDUSDT`) and `#assets_without_candidate` has 2
+  (`AAVEUSDT`, `QNTUSDT`) — the same 4/2 split the close-out itself recorded in the same file and
+  in `configs/research_v3_confirmatory_runbook_1.json` ("4 in scope, 2 out of scope");
+- the file contradicted itself: `v3_candidates = 6` with `v3_without_candidate` of 2 gives 8, not
+  the 6 assets in `current_cohort.assets`.
+
+**Defect 2 (CONFIRMED) — the v2 cycle id was not re-derivable from any artifact.**
+`completed_cycle_ids` contained `"v2-selection-run-2026-10-20"`. That string occurs nowhere else in
+the repository (only in the state file and in one prose line of this record's evidence section,
+below). The published v2 selection run id is `v2-selection-20261019`, recorded identically by
+`research/ledger_v2.json#run_id` and
+`research/v2_selected_configurations_manifest.json#run_identity.run_id`; the v3 close-out had already
+used the manifest's `run_id` (`v3-selection-20261020`) for the v3 cycle id, so the two version
+blocks were built on two different conventions.
+
+**Correction (two fields, `schema_version` unchanged, everything else byte-identical):**
+- `v3_candidates`: `6` → `4` (the number of constituents with a selected configuration);
+- `completed_cycle_ids[2]`: `v2-selection-run-2026-10-20` → `v2-selection-20261019` (the published
+  run id).
+The v2 history's substance is untouched: `v2_selection_outcome`, `v2_candidates = 14`,
+`v2_without_candidate` (4 assets) and the v2 snapshot id are unchanged, and the v3 cohort, the v3
+snapshot id, the 4/2 split, the blocking dependency and `next_cohort_index = 4` are unchanged.
+
+**Re-derivation of every other field (all verified against the artifacts, not copied):**
+- `current_cycle_id = v3-selection-20261020` = `research/v3_selected_configurations_manifest.json#
+  run_identity.run_id`;
+- `current_cohort.assets` = the 6 validated constituents of `research/universe_manifest_v3.json`
+  (`eligible_assets` filtered on `validated == true`, in the manifest's own order, paired as
+  `<SYMBOL>USDT`), and `current_cohort.excluded` = the 14 excluded constituents with the manifest's
+  own reasons (`binance_spot_unavailable` ×6, `insufficient_hourly_history` ×8);
+- `current_snapshot.snapshot_id = 54f9516c…` **recomputes** with
+  `compute_snapshot_id(<stored snapshot manifest>, configs/research_v1.json#specification_hash,
+  research_state/campaign_authorization.json#code_hash)` — the same helper the coordinator used, not
+  a copied constant; the v2 snapshot id `c4772c58…` is the sha256 of the stored
+  `research/v2_evidence/raw_market_cap_response.json`;
+- `blocking_dependency` names the v3 confirmatory window's earliest possible end
+  (`2027-01-18T13:00:00Z`, from `configs/research_v3_confirmatory_protocol.json#
+  window_definition.earliest_possible_end_utc`), which is later than the v2 window's
+  `2027-01-17T22:00:00Z` — the campaign is blocked on the later gate;
+- `holdout_exposed_count = 0` and `confirmatory_window_status = NOT_STARTED` in both the v2 and the
+  v3 data manifest; no confirmatory output path exists.
+
+**Guard added (the missing check that let both defects survive):** `tests/test_continuous_universe_state.py`
+— 17 deterministic tests that re-derive the state from the hash-bound artifacts, plus tamper
+controls that feed a mutated **copy** of the state to the same checks. The checks are not vacuous:
+against the pre-correction state they report exactly the four failures
+`v3_candidates is 6, 4 constituents have a selected configuration` / `v3_candidates and
+v3_candidates_with_candidate disagree` / `the candidate split and the cohort size disagree: 6 + 2 != 6`
+/ `the completed cycle id 'v2-selection-20261019' is not recorded`, and against the corrected state
+they report none. No test writes into the working tree, reads a candle or contacts a provider.
+
+**Cause classification:** `TEST_GAP` — nothing in the repository checked the campaign state file, so
+a hand-set count and a hand-set identifier survived. The prompt already required re-derivation
+(README Section 2A E); the gap was the absent check, so the fix is a check, not a prompt edit
+(see the prompt review in the handoff).
+
+**Next bounded task (not for this session):** the BRAIN-012 routing rule (D-9 / recommendation 9 —
+"completion or exhaustion of one frozen version routes to preregistration of the next version") —
+preregister the next expansion version (v4) as a **design record** in this queue: where cohort 4's
+constituents come from, the data boundary relative to the open v3 confirmatory window, the v4
+namespace and identity chain, the floor rule and the `AWAITING_NEW_CANDIDATES` cadence. Design only:
+no provider contact, no candle read, no artifact written, no implementation in the same session.

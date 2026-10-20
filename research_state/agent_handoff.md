@@ -1,3 +1,205 @@
+## Session activity — 2026-10-20T22:29:31Z (this session)
+
+**Task (from the durable handoff at 22:55Z):** the **campaign-level close-out of the v3
+continuous-universe cycle** — record the completed v3 cohort in
+`research_state/continuous_universe_state.json` and record the close-out in
+`research_state/brainstorming_queue.md` and in this file. Bookkeeping and documentation only: no
+evaluation, no grid, no backtest, no selection re-run, no candle read, no provider contact, no edit
+under any `src/` path.
+
+**Outcome:** **The close-out is complete, and two defects in the state file the 22:55Z session
+wrote are found and corrected.** The v3 cohort was recorded, but `v3_candidates` was set to `6` —
+the **cohort size**, not the number of constituents **with** a selected configuration — and the v2
+cycle id was set to a string that exists nowhere else in the repository. Both are corrected, every
+other field of the file is byte-identical, and the mechanical check that was missing (and that let
+both defects through) is now in place as `tests/test_continuous_universe_state.py`. **No
+evaluation, no grid, no backtest, no selection re-run, no candle read, no provider contact, no
+frozen artifact touched, no `src/` file touched.**
+
+**Branch / commits:** branch `main`; base commit `32c4e03b1544da6950f4645e27b9b88830ee51a5`
+(== `origin/main` at session start); no workflow run was triggered in this session (the schedule in
+`.github/workflows/main.yml` is unchanged and was not dispatched). **No commit was created by the
+agent** (no explicit user request) — the working tree carries the two `research_state/` edits, the
+new test module and the brainstorming-queue record. HEAD is still `32c4e03b…` == `origin/main`.
+
+**Files changed**
+- `research_state/continuous_universe_state.json` — two fields corrected (2-line diff):
+  `v3_candidates` `6` → `4`; `completed_cycle_ids[2]` `v2-selection-run-2026-10-20` →
+  `v2-selection-20261019`; `updated_utc` refreshed to `2026-10-20T22:26:35+00:00`.
+- `research_state/brainstorming_queue.md` — appended the correction record ("v3 cycle close-out
+  correction — the campaign state's candidate count and v2 cycle id") and added a one-line
+  supersession note next to the BRAIN-012 evidence line that still names the old v2 cycle id (the
+  decision record's evidence was not rewritten).
+- `tests/test_continuous_universe_state.py` — **new**, 17 deterministic tests (7 tamper controls).
+- `research_state/agent_handoff.md` — this report and the new task message below.
+- `research_state/campaign_authorization.json` — **controller-driven only** (`authorized_at_utc`
+  refresh written by the v1 test suite on every run); `authorized`, `code_hash` and every functional
+  field unchanged, and the file was restored to its committed value after the last test run.
+
+**Defect 1 (CONFIRMED) — `v3_candidates` counted the cohort instead of the candidates.**
+`"v3_candidates": 6` is `research/universe_manifest_v3.json#validation_summary.validated_count`
+(the 6 validated constituents), but the field's meaning is fixed by the v2 close-out **in the same
+file and the same `schema_version`**: `"v2_candidates": 14` for a cohort of 18, where 14 is
+`len(research/v2_selected_configurations_manifest.json#assets_with_candidate)` and 14 + 4 = 18 =
+the cohort size. For v3 the published split is 4 with a candidate (`ICPUSDT`, `PEPEUSDT`, `SHIBUSDT`,
+`WLDUSDT`) and 2 without (`AAVEUSDT`, `QNTUSDT`) —
+`research/v3_selected_configurations_manifest.json#assets_with_candidate` /
+`#assets_without_candidate` — and the delivered runbook states the same 4-in/2-out scope. The file
+also contradicted itself: 6 + 2 ≠ 6 = `len(current_cohort.assets)`. Corrected to `4`.
+
+**Defect 2 (CONFIRMED) — the v2 cycle id was not re-derivable from any artifact.**
+`completed_cycle_ids` contained `"v2-selection-run-2026-10-20"`, a string that occurs nowhere else
+in the repository (only in the state file and in one prose line of the brainstorming queue's
+BRAIN-012 evidence). The published v2 selection run id is `v2-selection-20261019`, recorded
+identically by `research/ledger_v2.json#run_id` and
+`research/v2_selected_configurations_manifest.json#run_identity.run_id`; the v3 close-out had already
+used the manifest's `run_id` (`v3-selection-20261020`) for the v3 cycle id, so the two version
+blocks were built on two different conventions. Corrected to `v2-selection-20261019`. The v2
+history's substance is untouched: `v2_selection_outcome`, `v2_candidates = 14`,
+`v2_without_candidate` (4 assets) and the v2 snapshot id are unchanged.
+
+**Every other field re-derived from the artifacts (not copied by hand):**
+- `current_cycle_id = v3-selection-20261020` =
+  `research/v3_selected_configurations_manifest.json#run_identity.run_id`; `v3_selection_outcome` =
+  the manifest's `#outcome`;
+- `current_cohort.assets` = the 6 validated constituents of `research/universe_manifest_v3.json`
+  (`eligible_assets` filtered on `validated == true`, manifest order, paired as `<SYMBOL>USDT`),
+  and `current_cohort.excluded` = the 14 excluded constituents with the manifest's own reasons
+  (`binance_spot_unavailable` ×6, `insufficient_hourly_history` ×8);
+- `current_snapshot.snapshot_id = 54f9516c…` **recomputes** with
+  `compute_snapshot_id(<stored snapshot manifest>, configs/research_v1.json#specification_hash,
+  research_state/campaign_authorization.json#code_hash)` — the same helper the coordinator used;
+  the v2 snapshot id `c4772c58…` is the sha256 of the stored
+  `research/v2_evidence/raw_market_cap_response.json`;
+- `blocking_dependency` = `CONFIRMATORY_WINDOW (earliest end 2027-01-18T13:00:00Z)`, the v3
+  window's `configs/research_v3_confirmatory_protocol.json#window_definition.
+  earliest_possible_end_utc`, which is later than the v2 window's `2027-01-17T22:00:00Z` — the
+  campaign is blocked on the later gate;
+- `next_cohort_index = 4` = `current_cohort.cohort_index` (3) + 1; `schema_version` stays 1.
+
+**State verified (2026-10-20T22:29Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **966 passed** in 248.78s, exit 0 (949 pre-existing
+  + 17 added by this session)
+- `PYTHONPATH=src python3 -m pytest tests/test_continuous_universe_state.py -q` → **17 passed**,
+  exit 0
+- **the new checks are not vacuous**: against the pre-correction state (`git show
+  HEAD:research_state/continuous_universe_state.json`) the same check function reports exactly the
+  four failures `v3_candidates is 6, 4 constituents have a selected configuration` /
+  `v3_candidates and v3_candidates_with_candidate disagree` / `the candidate split and the cohort
+  size disagree: 6 + 2 != 6` / `the completed cycle id 'v2-selection-20261019' is not recorded`;
+  against the corrected state it reports none
+- every `scripts/verify_*.py` exits 0 (`scripts/verify_cycle_results.py` needs a `cycle_dir`
+  argument and is not a repository-wide gate)
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` —
+  unchanged, equal to the authorized value of record in `research_state/campaign_authorization.json`
+- canonical digests unchanged: hashed set `3e8e4169…`, v2 selection path `c69cc021…`, v2
+  confirmatory path `277a4bbe…`, v3 selection path `29cd064e…`, v3 confirmatory path `747c2387…`
+- frozen artifacts unchanged (internal self-hashes, all recomputed by their verifiers): v2 universe
+  `4e927e52…`, v2 data `9f64d8d1…`, v3 universe `e53db5ed…`, v3 data `6793d86c…`, v3 candidate
+  freeze `12a981b1…`, v3 spec `d6a5f8bb…`, v3 selection authorization `fd91cc4d…`, v3 selected
+  configurations `3d24a278…`, v3 confirmatory protocol `f008876b…`, v3 confirmatory authorization
+  `0383eee1…`, v3 confirmatory runbook `f2aaac6f…`; v1 artifacts byte-unchanged (file sha256
+  `558d6099…`, `c8f367d2…`, `cf39de42…`, `87589f83…`, `a68b061a…`)
+- both confirmatory windows are unexposed: `holdout_exposed_count = 0` and
+  `confirmatory_window_status = NOT_STARTED` in `research/data_manifest_v2.json` and
+  `research/data_manifest_v3.json`; **no v3 confirmatory output path exists** (shards, ledger,
+  results manifest, result stream, checkpoint and both reports all absent); no confirmatory-window
+  candle was read
+- `git diff --stat` shows only `research_state/` changed plus the new test module; no `src/`, no
+  `configs/`, no `research/`, no `reports/`
+
+**Rule → code → test map** (this session added no module under `src/`; the state file is
+`research_state/` bookkeeping, so `compute_code_hash()` is unchanged)
+
+| State rule | Implementation (the check) | Test |
+| --- | --- | --- |
+| the current cycle is the v3 selection cycle, with the published outcome | `tests/test_continuous_universe_state.py:_state_failures` | `::test_the_campaign_state_is_consistent_with_the_hash_bound_artifacts`, `::test_the_checks_detect_a_wrong_cycle_id` |
+| `<version>_candidates` counts the constituents **with** a selected configuration | same | `::test_the_candidate_count_is_the_number_of_constituents_with_a_candidate`, `::test_the_checks_detect_a_wrong_candidate_count` |
+| the candidate split covers the cohort exactly once | same | `::test_the_candidate_split_covers_the_cohort_exactly_once`, `::test_the_checks_detect_a_widened_candidate_split` |
+| the cohort and its exclusions are the v3 manifest's validated / excluded constituents | same | `::test_the_cohort_is_the_validated_constituents_of_the_v3_universe`, `::test_the_checks_detect_a_widened_cohort`, `::test_the_checks_detect_a_swapped_exclusion_reason` |
+| the next cohort index advances by one | same | `::test_the_checks_detect_a_next_cohort_index_that_does_not_advance` |
+| the v2 history is preserved and agrees with the v2 selection manifest | same | `::test_the_v2_history_is_preserved_and_still_agrees_with_its_manifest` |
+| the snapshot ids are re-derivable (v3 canonical, v2 raw-response sha256) | same | `::test_the_snapshot_id_is_recomputed_from_the_stored_snapshot` |
+| the blocking dependency names the later of the two open confirmatory gates | same | `::test_the_blocking_dependency_names_the_later_confirmatory_gate`, `::test_the_checks_detect_a_stale_blocking_dependency` |
+| neither confirmatory window is exposed | `::_exposure_failures` | `::test_no_confirmatory_window_is_exposed`, `::test_the_checks_detect_an_exposed_confirmatory_window` |
+| the schema version is frozen | same | `::test_the_state_file_is_valid_json_with_the_frozen_schema_version` |
+
+**CONFIRMED**
+- Both defects above: reproduced against the pre-correction bytes, fixed, and re-verified.
+- The v3 snapshot id is recomputable from the stored snapshot manifest with the coordinator's own
+  helper, so the state's snapshot identity is derived, not copied.
+- The v3 eligible pool is **exhausted**: `research/universe_manifest_v3.json` has exactly 20
+  `eligible_assets` (6 validated + 14 excluded after validation) and 79 rule-excluded assets, so
+  cohort 4 cannot be drawn from the frozen v3 snapshot — a new version and a new pinned-window
+  market-cap retrieval are required. The next floor would be the minimum `market_cap_usd` over the
+  v3 eligible assets (`HTXUSDT`, 1,468,004,153 USD, `market_cap_rank` 65), by the same recompute
+  rule the v3 specification states for the v2 floor.
+- The v3 confirmatory window is **open** (it opened 2026-10-20T13:00:00Z) and cannot end before
+  `2027-01-18T13:00:00Z`; the v2 window cannot end before `2027-01-17T22:00:00Z`.
+
+**UNVERIFIED / STALE**
+- The v2 close-out's own prose record of `current_cycle_id = v2-selection-run-2026-10-20` (the
+  BRAIN-012 evidence line in `research_state/brainstorming_queue.md`) was **STALE** as a description
+  of the state file: it remains true as a statement about what the v2 close-out wrote at that time,
+  and the id itself is superseded by the published `v2-selection-20261019`. A one-line supersession
+  note was added next to that evidence line in this session (the decision record's evidence was not
+  rewritten), and the same correction is recorded in the "v3 cycle close-out correction" section at
+  the end of the queue.
+- STALE (marked in this file): the 22:55Z task message (the v3 close-out — completed and corrected
+  by this session).
+- The 22:55Z entry's phrasing "snapshot id = sha256 of `research/universe_snapshots/<id>/
+  universe_manifest.json` (`baadddfc…`)" is **imprecise**: `baadddfc…` is that file's own sha256, and
+  the snapshot **id** (`54f9516c…`) is the canonical `compute_snapshot_id` over the snapshot
+  manifest, the v1 specification hash and the code hash — the derivation stated in this session's
+  entry and proved by `tests/test_continuous_universe_state.py::test_the_snapshot_id_is_recomputed_
+  from_the_stored_snapshot`. No artifact is affected; only the prose.
+- No commit was created by this agent; the changes are in the working tree only.
+
+**Unsuccessful attempts (and the condition that would justify a retry)**
+- The first run of the new test module failed with
+  `the completed cycle id 'v2-selection-20261019' is not recorded`: the check compared the state's
+  cycle id with the v2 selection manifest's `run_id`, which exposed defect 2 above. The failure was
+  the finding; the fix was in the state file, not in the check. No retry of the unchanged action is
+  warranted.
+- No other attempt failed in this session.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The cause is `TEST_GAP` (nothing in the repository
+checked the campaign state file, so a hand-set count and a hand-set identifier survived) plus an
+implementation-side field-meaning error in the close-out session. README Section 2A E already
+requires every acceptance check to recompute its expectation from repository state, and Section 2A D
+requires the plan to state the expected correct behavior before the change — both were within
+reach, so the fix is the missing check (now added) and the corrected artifact, not a new prompt
+rule. A prompt edit that merely restated "re-derive every number" would duplicate Section 2A E.
+`research_state/prompt_evolution.md` is untouched.
+
+**Checkpoint / persistence status**
+- Local commit: **not created by the agent** (no explicit user request). The working tree carries
+  the corrected state file, the new test module, the brainstorming-queue record and this report.
+- Remote persistence: `git rev-parse HEAD` == `git ls-remote origin main` == `32c4e03b…` at the end
+  of this session — the corrections are **not yet committed or pushed**; a follow-up commit (or the
+  session checkpoint) is required.
+- Artifact/recovery: the corrected state file is fully re-derivable from the hash-bound artifacts
+  by `tests/test_continuous_universe_state.py`, so it is recoverable from the repository without a
+  commit; the pre-correction bytes are recoverable from `git show
+  HEAD:research_state/continuous_universe_state.json`.
+- Checkpoint reconciliation: not applicable — no run, no result row, no shard and no ledger were
+  produced; `research_state/checkpoint.json`, `checkpoint_v2.json` and `checkpoint_v3.json` are
+  untouched.
+
+**Unresolved blockers (ranked)**
+1. **Both confirmatory evaluations are time-blocked** — the v2 evaluation may not start before
+   `2027-01-17T22:00:00Z` and the v3 evaluation (and the final report) may not start before
+   `2027-01-18T13:00:00Z`. No action is possible or needed before those instants.
+2. **The next expansion version is not designed** — the v3 eligible pool is exhausted (20 assets,
+   all used in cohort 3), so cohort 4 needs a new version with a new pinned-window retrieval, a new
+   floor rule and a new namespace. That design is the next bounded task.
+3. `configs/research_v3_confirmatory_code_hash_amendment_1.json` does not exist; it is needed only
+   if a deliberate rotation of the v3 confirmatory execution-path digest is chosen, and the
+   delivered authorization and runbook bind the current digest.
+4. The stale `OUTSTANDING` wording of `configs/research_v2.json` (P2/P3) is already reconciled by
+   reference in `configs/research_v2_spec_amendment_1.json` and
+   `configs/research_v2_prerequisite_reconciliation_amendment_1.json` — closed.
+
 ## Session activity — 2026-10-20T22:55:00Z (this session)
 
 **Task:** Campaign-level close-out of the v3 continuous-universe cycle — state bookkeeping only, per the
@@ -6272,100 +6474,121 @@ through the versioned amendment
 
 ## Initial task message for next agent
 
-**Next (one bounded task):** the **campaign-level close-out of the v3 cycle** — record the completed
-v3 market-cap-expansion cohort in the durable campaign state
-`research_state/continuous_universe_state.json`, following the v2 close-out precedent (the v2 cycle
-was closed out in the 2026-10-20T20:53:55Z session). The v3 selection cycle is complete
-(`v3-selection-20261020`, campaign `v3-campaign`, 6 validated constituents, **4 candidates**,
-**2 without** — AAVEUSDT `NO_CANDIDATE`, QNTUSDT `INSUFFICIENT_EVIDENCE`), but the campaign state
-still describes the v2 cycle as the current one (`current_cycle_id = v2-selection-run-2026-10-20`,
-`next_cohort_index = 3`, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end
-2027-01-17T22:00:00Z)`). The close-out must record cohort 3 (the 6 validated constituents of
-`research/universe_manifest_v3.json`), `current_cycle_id = v3-selection-20261020`,
-`next_cohort_index = 4`, the v3 selection outcome and candidate counts, the new blocking dependency
-(the **v3** confirmatory window, earliest end `2027-01-18T13:00:00Z`) and the fact that both the v2
-and the v3 confirmatory windows are single-use and unexposed (`holdout_exposed_count = 0`). Then
-append the corresponding record to `research_state/brainstorming_queue.md` and update
-`research_state/agent_handoff.md`. **Bookkeeping and documentation only: no evaluation, no grid, no
-backtest, no selection re-run, no candle read, no provider contact.** Read
-`research_state/continuous_universe_campaign_spec.md` first and follow the state schema it fixes;
-keep the file's existing shape and version (`schema_version`) intact, and derive every number from
-the hash-bound artifacts rather than copying a value by hand.
+**Next (one bounded task):** produce the **v4 preregistration design record** — the decision record
+for the *next* expansion version, written into `research_state/brainstorming_queue.md`. This is the
+campaign's own routing rule (BRAIN-012 recommendation 9 and D-9: "completion or exhaustion of one
+frozen version routes to preregistration of the next version"), and it is now the only campaign work
+that is not time-blocked: the v2 and the v3 confirmatory evaluations may not start before
+`2027-01-17T22:00:00Z` and `2027-01-18T13:00:00Z` respectively. **Design deliverable only: no
+provider contact, no candle read, no code, no artifact written, and — per README Section 2A C1 — no
+implementation of the same item in the same session.**
 
-**Subject:** the v3 cycle campaign-level close-out is **complete and verified** (state bookkeeping
-only); the next bounded task is the v3 confirmatory evaluation itself, which is time-blocked until
-`2027-01-18T13:00:00Z` (see "Queued after this task").
+**Subject:** the v3 cycle close-out is complete **and corrected** (two state defects fixed and the
+missing check added); the next bounded task is the v4 preregistration design record (design only)
 
-**Status (verified 2026-10-20T22:55Z):**
-- `src/v3_confirmatory/` (canonical digest `747c2387…`),
-  `configs/research_v3_confirmatory_authorization_1.json` (`0383eee1…`),
-  `configs/research_v3_confirmatory_protocol.json` (`f008876b…`) and
-  `configs/research_v3_confirmatory_runbook_1.json` (`f2aaac6f…`) are delivered, hash-bound to each
-  other and to the four published candidates (`3d24a278…`), and proved by three read-only offline
-  verifiers and 112 tests.
-- Full suite **949/949 green**; every `scripts/verify_*.py` exits 0; `compute_code_hash()` =
-  `2efd3b18…` (value of record); the canonical digests of the hashed set, the v2 selection path, the
-  v2 confirmatory path, the v3 selection path and the v3 confirmatory path are unchanged; no frozen
-  v1/v2/v3 artifact changed.
-- The v3 confirmatory window is `NOT_STARTED` with `holdout_exposed_count = 0`; no v3 confirmatory
-  output path exists; the v2 and v3 confirmatory evaluations remain time-blocked (earliest ends
-  `2027-01-17T22:00:00Z` and `2027-01-18T13:00:00Z`).
-- **Campaign close-out done:** `research_state/continuous_universe_state.json` records the completed
-  v3 cohort (cohort index 3, the 6 validated constituents `SHIBUSDT`, `QNTUSDT`, `AAVEUSDT`,
-  `WLDUSDT`, `PEPEUSDT`, `ICPUSDT`, `current_cycle_id = v3-selection-20261020`,
-  `next_cohort_index = 4`, the v3 selection outcome and the 4/2 candidate split, the blocking
-  dependency with the v3 confirmatory window's earliest end `2027-01-18T13:00:00Z`) while keeping
-  the v2 history intact and `schema_version` unchanged; `research_state/brainstorming_queue.md` and
-  `research_state/agent_handoff.md` record the close-out and the next bounded task.
+**Status (verified 2026-10-20T22:29Z):**
+- `research_state/continuous_universe_state.json` records the completed v3 cohort: cohort index **3**
+  (the 6 validated constituents `SHIBUSDT`, `QNTUSDT`, `AAVEUSDT`, `WLDUSDT`, `PEPEUSDT`, `ICPUSDT`,
+  `completed: true`), `current_cycle_id = v3-selection-20261020` (=
+  `research/v3_selected_configurations_manifest.json#run_identity.run_id`), `next_cohort_index = 4`,
+  the v3 snapshot id `54f9516c…` (**recomputes** from the stored snapshot manifest with
+  `compute_snapshot_id(…, configs/research_v1.json#specification_hash,
+  research_state/campaign_authorization.json#code_hash)`), the v3 selection outcome
+  `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`, the 4/2 split (`v3_candidates = 4` with
+  `ICPUSDT`, `PEPEUSDT`, `SHIBUSDT`, `WLDUSDT`; `v3_without_candidate` = `AAVEUSDT`, `QNTUSDT`) and
+  the blocking dependency `CONFIRMATORY_WINDOW (earliest end 2027-01-18T13:00:00Z)`; `schema_version`
+  is still 1.
+- The v2 history is preserved and now agrees with its own manifest: `v2-selection-20261019` (the
+  published run id from `research/ledger_v2.json#run_id` and
+  `research/v2_selected_configurations_manifest.json#run_identity.run_id`), `v2_candidates = 14`,
+  `v2_without_candidate` (4 assets), the v2 snapshot id `c4772c58…` (the sha256 of the stored raw
+  market-cap response).
+- **Two defects found and corrected in this session**, both now mechanically checked by the new
+  `tests/test_continuous_universe_state.py` (17 tests, 7 of them tamper controls): `v3_candidates`
+  counted the cohort (6) instead of the constituents with a selected configuration (4), and the v2
+  cycle id was a label that occurs nowhere else in the repository. The same check function reports
+  exactly those four failures against the pre-correction bytes and none against the corrected file.
+- The v3 **eligible pool is exhausted**: `research/universe_manifest_v3.json` has exactly 20
+  `eligible_assets` (6 validated + 14 excluded after validation) and 79 rule-excluded assets, so
+  cohort 4 **cannot** be drawn from the frozen v3 snapshot — a new version with a new pinned-window
+  retrieval is required. The next floor would be the minimum `market_cap_usd` over the v3 eligible
+  assets (`HTXUSDT`, 1,468,004,153 USD, `market_cap_rank` 65), by the same recompute rule the v3
+  specification states for the v2 floor.
+- Full suite **966/966 green**; every `scripts/verify_*.py` exits 0 (`scripts/verify_cycle_results.py`
+  needs a `cycle_dir` argument and is not a repository-wide gate); `compute_code_hash()` =
+  `2efd3b18…` (value of record); the canonical digests are unchanged (`3e8e4169…` hashed set,
+  `c69cc021…` v2 selection, `277a4bbe…` v2 confirmatory, `29cd064e…` v3 selection, `747c2387…`
+  v3 confirmatory path); the frozen v1/v2/v3 artifact anchors are unchanged; no frozen artifact was
+  edited and no `src/` file was touched.
+- Both confirmatory windows are unexposed: `holdout_exposed_count = 0` and
+  `confirmatory_window_status = NOT_STARTED` in `research/data_manifest_v2.json` and
+  `research/data_manifest_v3.json`; **no v3 confirmatory output path exists**; the v3 confirmatory
+  window is **open** (it opened 2026-10-20T13:00:00Z) and cannot end before `2027-01-18T13:00:00Z`;
+  the v2 one cannot end before `2027-01-17T22:00:00Z`.
 
-**Do NOT:** write/edit/delete under `src/breakout_research/`, `src/v2_campaign/`,
-`src/v2_confirmatory/`, `src/v3_campaign/` or `src/v3_confirmatory/` (the v3 confirmatory path is
-hash-bound by the delivered authorization and the delivered runbook — an edit invalidates both
-until both producers are re-run with `--force`); edit any frozen artifact (in particular
-`configs/research_v3_confirmatory_protocol.json`,
-`configs/research_v3_confirmatory_authorization_1.json`,
-`configs/research_v3_confirmatory_runbook_1.json`, `configs/research_v3.json`,
-`research/v3_selected_configurations_manifest.json`, `research/data_manifest_v3.json`,
-`research/universe_manifest_v3.json`); write to any v1 path, any v2 path or any v3 **selection**
-output path; read any confirmatory-window candle; fetch candles or contact any provider; run any
-evaluation, grid, backtest, campaign or selection; re-run a producer that would rewrite an existing
-artifact; change the decision rule, the grid, the costs, the folds, the thresholds, the single
-confirmatory criterion or the window rules; mark the v3 confirmatory window as started or
-`holdout_exposed_count` as non-zero.
+**One bounded task — the design record must decide, in rules only:**
+1. **Where cohort 4's constituents come from.** The v3 eligible pool is exhausted, so the record must
+   compare (a) a new version with one new pinned-window market-cap retrieval against (b) any reuse of
+   the v3 snapshot, and choose one. It must fix the v4 floor rule (strictly below the v3 floor, with
+   the recompute rule the v3 specification already states) and extend the prior-universe asset
+   identity rule to v1, v2 **and** v3, so no v4 asset repeats a v1/v2/v3 constituent.
+2. **The data boundary relative to the open v3 confirmatory window.** The v3 window opened
+   `2026-10-20T13:00:00Z` and is still open, so any v4 development data read at or after that
+   instant is a read inside the v3 confirmatory window. The record must state whether v4's
+   development data is bounded at `2026-10-20T13:00:00Z` (and what that costs — e.g. a shortened
+   development window for newly listed assets) or whether v4 waits for the window to close on
+   `2027-01-18T13:00:00Z`.
+3. **The sequencing rule against the two pending confirmatory evaluations** (v2 `2027-01-17T22:00:00Z`,
+   v3 `2027-01-18T13:00:00Z`): what may be done before, between and after those gates, that a
+   confirmatory evaluation is never re-run and never re-tuned on, and that the two windows are never
+   read for selection.
+4. **The v4 namespace and identity chain**: the v4 specification, universe/data manifests, candidate
+   freeze, shards, ledger, result stream, results manifest, checkpoint, authorizations and reports;
+   the `supersedes` chain from the v3 manifest identities (`e53db5ed…` universe, `6793d86c…` data);
+   the code-identity rule (the canonical digest, the hashed set `src/breakout_research/` untouched);
+   and a holdout counter that starts at 0 and is counted on every confirmatory read.
+5. **The null-result path**: a pass that yields no eligible new name records
+   `AWAITING_NEW_CANDIDATES` with the observed endpoint, HTTP status, probe timestamp, the exact
+   command, the ranking depth and the exclusion reasons, and schedules the next pass at a bounded
+   cadence; the campaign is never declared complete because one snapshot was empty.
+6. **Falsifying evidence, rollback and staged acceptance tests** for the record itself.
 
-**Acceptance criteria:** `research_state/continuous_universe_state.json` records the completed v3
-cohort (cohort index 3, the 6 validated constituents, `current_cycle_id = v3-selection-20261020`,
-`next_cohort_index = 4`, the v3 selection outcome and the 4/2 candidate split, the new blocking
-dependency with the v3 confirmatory window's earliest end `2027-01-18T13:00:00Z`) while keeping the
-v2 history intact and `schema_version` unchanged; every number in it is derived from the
-hash-bound artifacts and can be re-derived by a reader; the file is valid JSON and the campaign
-spec's state schema is respected; `research_state/brainstorming_queue.md` and
-`research_state/agent_handoff.md` record the close-out and the next bounded task; the full suite
-still exits 0 and every verifier still exits 0; `compute_code_hash()` is still `2efd3b18…` and the
-canonical digests are still `3e8e4169…` (hashed set), `c69cc021…` (v2 selection), `277a4bbe…`
-(v2 confirmatory), `29cd064e…` (v3 selection) and `747c2387…` (v3 confirmatory path); the v1/v2/v3
-artifact sha256 anchors above are unchanged; **no v3 confirmatory output path exists**, no
-confirmatory-window candle was read and `holdout_exposed_count` stays 0.
+**Do NOT:** contact any provider (no market-cap retrieval, no candle fetch, no Binance call); read
+any candle inside the v2 or the v3 confirmatory window; run any evaluation, grid, backtest,
+campaign, selection or pilot; create or edit any file under `configs/`, `research/`, `reports/` or
+`src/`; edit `research_state/continuous_universe_state.json`; edit any frozen v1/v2/v3 artifact;
+re-run any producer (`scripts/build_*.py`, `scripts/v2_constituent_validation.py`,
+`scripts/v3_constituent_validation.py`) that would rewrite an artifact; re-retrieve or re-time the v2
+or the v3 market-cap snapshot; mark a confirmatory window as started or `holdout_exposed_count` as
+non-zero; change the 2,304-configuration grid, the costs, the folds, the thresholds, the selection
+rule or the single confirmatory criterion.
+
+**Acceptance criteria:** the design record exists in `research_state/brainstorming_queue.md` with
+evidence revalidated against the live artifacts (every claim about a frozen artifact recomputed
+from it), at least two materially different designs for each of the six points, one recommendation
+per point, falsifying evidence, rollback and staged acceptance tests; `research_state/agent_handoff.md`
+records the decision and the next bounded task; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0
+with no new failures; every `scripts/verify_*.py` still exits 0; `compute_code_hash()` is still
+`2efd3b18…` and the five canonical digests are unchanged; `research_state/continuous_universe_state.json`
+is unchanged; **no new or changed file exists under `configs/`, `research/`, `reports/` or `src/`**;
+no confirmatory-window candle was read and `holdout_exposed_count` stays 0.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
-`python3 scripts/verify_v3_confirmatory_runbook_1.py`; `python3 scripts/verify_v3_confirmatory_path.py`;
-`python3 scripts/verify_v3_confirmatory_protocol.py`;
+`PYTHONPATH=src python3 -m pytest tests/test_continuous_universe_state.py -q`;
+`python3 scripts/verify_v3_confirmatory_runbook_1.py`;
+`python3 scripts/verify_v3_confirmatory_path.py`; `python3 scripts/verify_v3_confirmatory_protocol.py`;
 `python3 scripts/verify_v3_selected_configurations_manifest.py`; `python3 scripts/verify_v3_selection_run.py`;
 `python3 scripts/verify_v3_selection_authorization_1.py`; `python3 scripts/verify_research_v3_spec.py`;
 `python3 scripts/verify_research_v3_manifests.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`;
-`python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_v3_data_manifest_amendment_1.py`;
-`python3 scripts/verify_v3_candidate_freeze_amendment_2.py`; `python3 scripts/verify_v3_execution_amendment_1.py`;
-`python3 scripts/verify_v2_confirmatory_runbook_1.py`; `python3 scripts/verify_v2_confirmatory_path.py`;
-`python3 scripts/verify_v2_confirmatory_protocol.py`; `python3 scripts/verify_v2_selection_run.py`;
+`python3 scripts/verify_v3_universe_expansion_log.py`; `python3 scripts/verify_v2_confirmatory_runbook_1.py`;
+`python3 scripts/verify_v2_confirmatory_path.py`; `python3 scripts/verify_v2_confirmatory_protocol.py`;
+`python3 scripts/verify_v2_selection_run.py`; `python3 scripts/verify_v2_selected_configurations_manifest.py`;
 `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
 `git status --short`; `git diff --stat` (confirm only `research_state/` changed — no `src/`, no
-frozen artifact, no manifest change).
+`configs/`, no `research/`, no `reports/`).
 
-**Queued after this task (not for that session):** the v3 confirmatory evaluation itself and the
-final report, neither of which may start before the v3 confirmatory window can end
-(`2027-01-18T13:00:00Z`), and the v2 confirmatory evaluation, which may not start before
-`2027-01-17T22:00:00Z`. The stale `OUTSTANDING` wording of `configs/research_v2.json` (P2/P3) is
-already reconciled by reference in `configs/research_v2_spec_amendment_1.json` and
-`configs/research_v2_prerequisite_reconciliation_amendment_1.json` — that item is closed. The next
-continuous-universe cohort (index 4) is queued behind the same confirmatory gate and is
-discovery-only until that gate clears.
+**Queued after this task (not for that session):** the v4 preregistration *implementation* (the
+versioned `configs/research_v4.json` and, only if the design says so, one bounded market-cap
+retrieval inside its pinned window); the v3 confirmatory evaluation and the final report, which may
+not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start
+before `2027-01-17T22:00:00Z`.

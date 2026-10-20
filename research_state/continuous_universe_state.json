@@ -2,7 +2,7 @@
   "completed_cycle_ids": [
     "0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d",
     "be4223dcef25aaa0043a466fcd9044b4e6a7387eff7efd487561b9c1f873c1ae",
-    "v2-selection-run-2026-10-20",
+    "v2-selection-20261019",
     "v3-selection-20261020"
   ],
   "completed_snapshot_ids": [
@@ -86,10 +86,10 @@
   },
   "next_cohort_index": 4,
   "schema_version": 1,
-  "updated_utc": "2026-10-20T22:55:00+00:00",
+  "updated_utc": "2026-10-20T22:26:35+00:00",
   "blocking_dependency": "CONFIRMATORY_WINDOW (earliest end 2027-01-18T13:00:00Z)",
   "v3_selection_outcome": "CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE",
-  "v3_candidates": 6,
+  "v3_candidates": 4,
   "v3_without_candidate": [
     "AAVEUSDT",
     "QNTUSDT"
