@@ -34,6 +34,7 @@ if str(REPO_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "src"))
 
 RUNBOOK_RELATIVE = "configs/research_v2_confirmatory_runbook_1.json"
+CODE_HASH_AMENDMENT_RELATIVE = "configs/research_v2_confirmatory_code_hash_amendment_1.json"
 PRODUCER = "scripts/build_v2_confirmatory_runbook_1.py"
 VERIFIER = "scripts/verify_v2_confirmatory_runbook_1.py"
 
@@ -131,6 +132,7 @@ MIRROR_FILES = (
     "configs/research_v2.json",
     "configs/research_v2_candidate_freeze.json",
     "configs/research_v2_code_hash_amendment_1.json",
+    "configs/research_v2_confirmatory_code_hash_amendment_1.json",
     "configs/research_v2_confirmatory_authorization_1.json",
     "configs/research_v2_confirmatory_protocol.json",
     "configs/research_v2_confirmatory_protocol_amendment_1.json",
@@ -155,6 +157,38 @@ MIRROR_TREES = ("src/breakout_research", "src/v2_confirmatory")
 
 def _canonical(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def _canonical_source_digest(root: Path) -> str:
+    """The portable canonical digest of a ``*.py`` tree, under BRAIN-009's rule."""
+    base = Path(root)
+    digest = hashlib.sha256()
+    for relative in sorted(path.relative_to(base).as_posix() for path in base.rglob("*.py")):
+        digest.update(relative.encode("utf-8") + b"\n")
+        digest.update(hashlib.sha256((base / relative).read_bytes()).hexdigest().encode("ascii") + b"\n")
+    return digest.hexdigest()
+
+
+def _live_hashed_set_digest() -> str:
+    return _canonical_source_digest(REPO_ROOT / "src" / "breakout_research")
+
+
+def _live_execution_path_digest() -> str:
+    return _canonical_source_digest(REPO_ROOT / "src" / "v2_confirmatory")
+
+
+def _live_run_code_identity() -> str:
+    return hashlib.sha256(
+        _canonical(
+            {
+                "algorithm": "canonical_source_digest_v1",
+                "hashed_set_root": "src/breakout_research",
+                "hashed_set_digest": _live_hashed_set_digest(),
+                "execution_path_root": "src/v2_confirmatory",
+                "execution_path_digest": _live_execution_path_digest(),
+            }
+        ).encode("utf-8")
+    ).hexdigest()
 
 
 def _manifest_hash(document: Dict[str, Any]) -> str:
@@ -316,6 +350,31 @@ def test_the_binding_identities_are_the_live_ones() -> None:
     assert code_identity["run_code_identity"] == RUN_CODE_IDENTITY
     assert code_identity["algorithm"] == "canonical_source_digest_v1"
     assert code_identity["portable"] is True
+
+
+def test_the_code_hash_amendment_rotates_the_runbook_binding() -> None:
+    """The runbook binds the frozen identity; the amendment carries the rotation.
+
+    The runbook is immutable and is not edited: a versioned code-hash amendment
+    rotates the execution path's digest to the digest of the live tree and
+    names the runbook's superseded field.
+    """
+    document = _runbook()
+    code_identity = document["binding_identities"]["code_identity"]
+    amendment = _load(REPO_ROOT / CODE_HASH_AMENDMENT_RELATIVE)
+    rotation = amendment["code_hash_rotation"]
+
+    assert rotation["previous_execution_path_digest"] == code_identity["execution_path_digest"]
+    assert rotation["previous_run_code_identity"] == code_identity["run_code_identity"]
+    assert rotation["execution_path_digest"] == _live_execution_path_digest()
+    assert rotation["run_code_identity"] == _live_run_code_identity()
+    assert rotation["hashed_set_digest"] == _live_hashed_set_digest()
+
+    amended = amendment["amends"]["confirmatory_runbook_1"]
+    assert amended["path"] == RUNBOOK_RELATIVE
+    assert amended["manifest_hash"] == document["manifest_hash"]
+    assert amended["edited"] is False
+    assert amended["superseded_code_identity_field"] == "binding_identities.code_identity"
 
 
 def test_the_runbook_binds_the_authorization_and_not_a_copy_of_it() -> None:
@@ -573,7 +632,9 @@ def test_the_verifier_passes_on_the_delivered_tree() -> None:
     assert report["write_order"] == list(EXPECTED_WRITE_ORDER)
     assert report["failure_modes"] == list(EXPECTED_FAILURE_MODES)
     assert report["confirmatory_artifacts_present"] == []
-    assert report["run_code_identity"] == RUN_CODE_IDENTITY
+    # The verifier reports the *effective* identity of the live tree: the
+    # runbook binds the frozen one and the code-hash amendment rotates it.
+    assert report["run_code_identity"] == _live_run_code_identity()
 
 
 def test_the_verifier_detects_a_tampered_manifest_hash(tmp_path: Path) -> None:

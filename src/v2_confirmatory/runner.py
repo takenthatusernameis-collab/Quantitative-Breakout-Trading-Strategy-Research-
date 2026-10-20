@@ -367,7 +367,7 @@ def build_plan(workspace: Workspace) -> Plan:
         "the authorization is not bound to the selected-configurations manifest",
     )
 
-    code_identity = dict(run.get("code_identity") or {})
+    code_identity = identity.resolve_code_identity(root, dict(run.get("code_identity") or {}))
     live_hashed_set = identity.hashed_set_digest(root)
     live_execution_path = identity.execution_path_digest(root)
     _require(
@@ -1029,13 +1029,6 @@ def run_confirmatory(
                 ),
             )
             raise
-        for path in created_files:
-            if path.exists():
-                path.unlink()
-        for path in created_dirs:
-            shutil.rmtree(path, ignore_errors=True)
-        raise
-
         for path in created_files:
             if path.exists():
                 path.unlink()

@@ -885,6 +885,9 @@ confirmatory evaluation, which the preregistration left without an executable, a
   Python AST. **Nothing ran**: no candle was read, no provider was contacted, no confirmatory artifact exists,
   and the confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`. The run itself may not
   start before `2027-01-17T22:00:00Z` and it then consumes the single use of the window.
+  **The P0 code defect the independent audit (§12) found — the unreachable duplicate rollback block in
+  `src/v2_confirmatory/runner.py` — is remediated by the versioned code-hash amendment
+  `configs/research_v2_confirmatory_code_hash_amendment_1.json` (`a2a54927…`); see §13.**
 
 ---
 
@@ -2520,3 +2523,82 @@ user-authorized BRAIN-012 market-cap expansion design is queued behind them.
 6. **P2 — Campaign-level status not updated.** `research_state/continuous_universe_state.json` and `research/campaign_cycles/terminal/` still describe v1 cohort; v2 selection completed but campaign close-out not done. **Remedy:** separate bounded task (documented as next after audit). No change made.
 
 **Conclusion:** The delivered path is correctly preregistered, bound, and verifiably not executed. The only code-level issue is the unreachable duplicate rollback block (P0) which cannot be edited in place due to bound digests — requires a versioned amendment rotating the execution-path digest. All other checks pass; no confirmatory artifacts exist; window remains `NOT_STARTED` with `holdout_exposed_count=0`. The path is ready for independent verification but must not be run before `2027-01-17T22:00:00Z`.
+
+
+### §13 — The P0 code defect of §12 is remediated by a versioned code-hash amendment (2026-10-20)
+
+**Scope:** implemented the remedy §12 proposed for its finding 1 (the unreachable duplicate rollback
+block in `src/v2_confirmatory/runner.py`) as a versioned amendment: the dead code was removed, the
+confirmatory execution path's canonical digest was rotated, and the two artifacts that bind that
+digest (the authorization and the runbook) carry the rotation **by reference** — neither was edited.
+**No confirmatory run was executed:** no candle was read, no provider was contacted, no confirmatory
+artifact exists, and the confirmatory window stays `NOT_STARTED` with `holdout_exposed_count = 0`.
+
+**The change (behaviour-preserving).** The removed block was a byte-identical copy of the live
+rollback statements, placed after the `raise` of the same `except Exception:` handler, so no control
+path reached it. Removing it deletes no reachable statement: the abort-before-the-first-payload-read
+rollback, the abort-after-a-payload-read `EXPOSED_ABORTED` checkpoint and the exposure accounting are
+byte-for-byte unchanged. The invariant is now machine-checked: the delivered runner (and every module
+of `src/v2_confirmatory/`) holds **no statement after a `raise`** in any handler, checked with the
+Python AST.
+
+| | before | after |
+|---|---|---|
+| execution-path canonical digest | `fd748860acec6bd5c583bfdc1dc5421409b2e1eecabcc0e00996597d13bfaf10` | `277a4bbec286b581ccb415fd88bb362ca2151e1b67745df23ad6802cee0ed4c9` |
+| composite `run_code_identity` | `fcf8ba956d2def013af3af157c63ec08c95e851e42037a80c3f67d32c2e7f0e8` | `d6e6bdbf74c8155eb537cdb8b19277f76e5229dc52959ff7ea74fdb8e8f3e5fd` |
+| `src/v2_confirmatory/runner.py` sha256 | `6341979babe8fbdc112f883bede4a1c67cc8a1c100e12d5e9749eb050ab4084d` | `e268607e2b77eeec5ccbac470124d804bb34874ec9bcef29bcb30dce0f605136` |
+| hashed-set canonical digest | `3e8e4169…` | `3e8e4169…` (**unchanged**) |
+
+**The amendment.** `configs/research_v2_confirmatory_code_hash_amendment_1.json`
+(`manifest_hash a2a5492711ffeeb1284469c0ffcecbce5bf32e58ef6e20ee6a182f91041127b1`) records:
+
+* the **rotation** — the previous and the current execution-path digest, the previous and the current
+  composite identity, the unchanged hashed-set digest, and the authorized ordered code hash
+  `2efd3b18…` (an environment fact, never an identity);
+* the **change** — the file, the removed block verbatim (with its digest), its line range in the
+  pre-rotation file (1039–1044), the fact that it was unreachable and that the removal has **no
+  behavioural effect**;
+* the **amended artifacts** — `configs/research_v2_confirmatory_authorization_1.json`
+  (`f411aba9…`) and `configs/research_v2_confirmatory_runbook_1.json` (`d81d9197…`) with their
+  manifest hashes and file sha256s, the superseded field of each
+  (`authorized_run.code_identity`, `binding_identities.code_identity`) and `edited: false`;
+* the **precedence** — where an amended artifact's code identity differs from the amendment, the
+  amendment governs the code-identity fields only; every other field of the amended artifacts stands,
+  and the authorization still permits **at most one logical run**;
+* the **resolution rule** — the effective digest is the authorization's when the tree is still the
+  frozen tree, and otherwise the amendment's, and only when the amendment hash-verifies and binds
+  this very tree; a canonical-digest mismatch is never treated as an environment fact;
+* the **correction of the audit's attribution** — §12 claimed that the confirmatory protocol and its
+  criterion amendment bind the execution-path digest. **They do not**: neither records an
+  execution-path digest, and their code-hash constraint covers the hashed set only. The artifacts
+  that bind the digest are the authorization and the runbook. No protocol amendment was needed, and
+  no artifact was edited;
+* **nothing is authorized** — no candle read, no evaluation, no second run, no code change; the
+  commit-before-the-first-read rule stands and `durability.amendment_commit_status` is
+  `PENDING_COMMIT`.
+
+**Where the rule lives.** `src/v2_confirmatory/identity.py:resolve_code_identity` is the single
+implementation of the resolution; the runner calls it in `build_plan`, and the run's artifacts record
+the *effective* identity. The verifiers resolve the same way
+(`scripts/verify_v2_confirmatory_path.py`, `scripts/verify_v2_confirmatory_runbook_1.py`), and the
+runbook's producer now accepts the rotated state — so the frozen runbook is still reproduced
+**byte-for-byte** by its producer, as the frozen authorization is by its own.
+
+**State verified (2026-10-20).** `PYTHONPATH=src python3 -m pytest tests/ -q` → **545 passed**, exit 0
+(516 pre-existing + 29 new). `python3 scripts/verify_v2_confirmatory_code_hash_amendment_1.py` →
+`"ok": true, "failures": []`, exit 0. All 20 repository-wide verifiers exit 0
+(`verify_cycle_results.py` is a per-cycle tool and is not a repository-wide verifier). The hashed
+set's canonical digest is still `3e8e4169…`, the execution path's is `277a4bbe…` and the composite
+run identity is `d6e6bdbf…`; `compute_code_hash()` still returns `608c7340…`, an environment fact of
+this checkout, never an identity. The v1 artifact sha256 anchors are unchanged and the frozen v2
+artifacts are byte-unchanged. **No confirmatory artifact exists** and the confirmatory window stays
+`NOT_STARTED` with `holdout_exposed_count = 0`.
+
+**Not done, on purpose.** No confirmatory run (it may not start before `2027-01-17T22:00:00Z` and it
+then consumes the single use of the window); no second authorization and no reset of the attempt
+budget; no edit of any frozen artifact; no campaign-level close-out (§12 finding 6, P2 — still
+outstanding as a separate bounded task).
+
+**Outstanding.** The amendment's commit is `PENDING_COMMIT`: the commit that carries it, the
+authorization and the runbook must exist before the first candle is read. The run itself remains
+blocked by the window.

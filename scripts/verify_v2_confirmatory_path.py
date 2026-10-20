@@ -54,6 +54,7 @@ SELECTED_CONFIGURATIONS_RELATIVE = "research/v2_selected_configurations_manifest
 SELECTION_AUTHORIZATION_RELATIVE = "configs/research_v2_selection_authorization_1.json"
 DATA_MANIFEST_RELATIVE = "research/data_manifest_v2.json"
 CODE_HASH_AMENDMENT_RELATIVE = "configs/research_v2_code_hash_amendment_1.json"
+CODE_HASH_AMENDMENT_1_RELATIVE = "configs/research_v2_confirmatory_code_hash_amendment_1.json"
 
 #: The modules the confirmatory execution path must carry.
 EXPECTED_EXECUTION_MODULES = (
@@ -170,6 +171,48 @@ def _load(path: Path) -> Dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _code_hash_amendment(root: Path, failures: List[str]) -> Optional[Dict[str, Any]]:
+    """The versioned code-hash amendment, if it exists and verifies.
+
+    The amendment is the only artifact that may rotate the execution path's
+    digest after the authorization was frozen (BRAIN-011 §12, finding 1).
+    """
+    path = root / CODE_HASH_AMENDMENT_1_RELATIVE
+    if not path.exists():
+        return None
+    document = _load(path)
+    excluded = tuple((document.get("hashing") or {}).get("manifest_hash_excluded_keys") or ())
+    if not excluded:
+        failures.append("the code-hash amendment does not declare its manifest_hash_excluded_keys")
+        return None
+    if document.get("manifest_hash") != compute_manifest_hash(document, excluded):
+        failures.append("the code-hash amendment manifest hash does not recompute")
+        return None
+    return document
+
+
+def _effective_execution_path_digest(
+    root: Path, recorded_digest: Optional[str], amendment: Optional[Dict[str, Any]]
+) -> Tuple[Optional[str], Optional[Dict[str, Any]]]:
+    """The digest the run is bound to, and the amendment that authorises it.
+
+    The recorded digest is the identity of the execution path as it was frozen.
+    When the path was corrected afterwards, only a versioned code-hash
+    amendment may rotate the binding, and only when it rotates exactly that
+    digest to the digest of the live tree.
+    """
+    live = canonical_source_digest(root / EXECUTION_PATH_ROOT)
+    if recorded_digest == live:
+        return live, None
+    rotation = (amendment or {}).get("code_hash_rotation") or {}
+    if (
+        rotation.get("previous_execution_path_digest") == recorded_digest
+        and rotation.get("execution_path_digest") == live
+    ):
+        return live, amendment
+    return None, None
+
+
 def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     failures: List[str] = []
     root = Path(repo_root)
@@ -236,8 +279,15 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     code_identity = (authorization.get("authorized_run") or {}).get("code_identity") or {}
     if code_identity.get("hashed_set_digest") != live_hashed_set:
         failures.append("the authorization does not record the live hashed-set digest")
-    if code_identity.get("execution_path_digest") != live_execution_path:
-        failures.append("the authorization does not record the live execution-path digest")
+    rotation_amendment = _code_hash_amendment(root, failures)
+    effective_digest, rotation = _effective_execution_path_digest(
+        root, code_identity.get("execution_path_digest"), rotation_amendment
+    )
+    if effective_digest is None:
+        failures.append(
+            "the authorization does not record the live execution-path digest and no "
+            "versioned code-hash amendment authorises the rotation"
+        )
     expected_identity = sha256_bytes(
         canonical(
             {
@@ -249,8 +299,18 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             }
         ).encode("utf-8")
     )
-    if code_identity.get("run_code_identity") != expected_identity:
-        failures.append("the recorded run code identity is not the composite of the two digests")
+    recorded_identity = code_identity.get("run_code_identity")
+    if recorded_identity != expected_identity:
+        # The recorded composite may be the one of the frozen tree, but only
+        # when a verified amendment rotates it to the composite of the live one.
+        if not (
+            rotation
+            and (rotation.get("code_hash_rotation") or {}).get("previous_run_code_identity")
+            == recorded_identity
+            and (rotation.get("code_hash_rotation") or {}).get("run_code_identity")
+            == expected_identity
+        ):
+            failures.append("the recorded run code identity is not the composite of the two digests")
 
     # 3. The evaluation scope.
     selections = selected.get("selections") or {}
@@ -529,7 +589,9 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "authorization_manifest_hash": declared_authorization,
         "canonical_source_digest": live_hashed_set,
         "execution_path_digest": live_execution_path,
-        "run_code_identity": code_identity.get("run_code_identity"),
+        "run_code_identity": expected_identity,
+        "recorded_run_code_identity": recorded_identity,
+        "code_hash_rotation_applied": bool(rotation),
         "in_scope_assets": len(assets_with_candidate),
         "out_of_scope_assets": assets_without_candidate,
         "window_opens_utc": window.get("window_start_utc"),

@@ -44,9 +44,12 @@ from .exposure import (
 )
 from .identity import (
     canonical_source_digest,
+    code_hash_amendment_path,
     code_identity_document,
     execution_path_digest,
     hashed_set_digest,
+    load_code_hash_amendment,
+    resolve_code_identity,
     run_code_identity,
 )
 from .report import (
@@ -102,6 +105,7 @@ __all__ = [
     "build_results_manifest",
     "build_window_manifest",
     "canonical_source_digest",
+    "code_hash_amendment_path",
     "code_identity_document",
     "criteria_agreement",
     "default_workspace",
@@ -112,6 +116,7 @@ __all__ = [
     "execution_path_digest",
     "hashed_set_digest",
     "inside_window",
+    "load_code_hash_amendment",
     "metadata_probe",
     "parse_dataset_csv",
     "parse_utc_ms",
@@ -120,6 +125,7 @@ __all__ = [
     "render_dataset_csv",
     "render_report_markdown",
     "report_outcome",
+    "resolve_code_identity",
     "retrieve_window_candles",
     "run_code_identity",
     "run_confirmatory",

@@ -54,6 +54,7 @@ SPEC_V2_RELATIVE = "configs/research_v2.json"
 SPEC_V1_RELATIVE = "configs/research_v1.json"
 FREEZE_RELATIVE = "configs/research_v2_candidate_freeze.json"
 RUNNER_RELATIVE = "src/v2_confirmatory/runner.py"
+CODE_HASH_AMENDMENT_RELATIVE = "configs/research_v2_confirmatory_code_hash_amendment_1.json"
 
 HASHED_SET_ROOT = "src/breakout_research"
 EXECUTION_PATH_ROOT = "src/v2_confirmatory"
@@ -219,6 +220,42 @@ def _load(path: Path) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def _code_hash_amendment(root: Path, failures: List[str]) -> Optional[Dict[str, Any]]:
+    """The versioned code-hash amendment, if it exists and verifies.
+
+    The amendment is the only artifact that may rotate the execution path's
+    digest after the runbook was frozen (BRAIN-011 §12, finding 1).
+    """
+    path = root / CODE_HASH_AMENDMENT_RELATIVE
+    if not path.exists():
+        return None
+    document = _load(path)
+    excluded = tuple((document.get("hashing") or {}).get("manifest_hash_excluded_keys") or ())
+    if not excluded:
+        failures.append("the code-hash amendment does not declare its manifest_hash_excluded_keys")
+        return None
+    if document.get("manifest_hash") != compute_manifest_hash(document, excluded):
+        failures.append("the code-hash amendment manifest hash does not recompute")
+        return None
+    return document
+
+
+def _effective_execution_path_digest(
+    root: Path, recorded_digest: Optional[str], amendment: Optional[Dict[str, Any]]
+) -> Tuple[Optional[str], Optional[Dict[str, Any]]]:
+    """The digest the run is bound to, and the amendment that authorises it."""
+    live = canonical_source_digest(root / EXECUTION_PATH_ROOT)
+    if recorded_digest == live:
+        return live, None
+    rotation = (amendment or {}).get("code_hash_rotation") or {}
+    if (
+        rotation.get("previous_execution_path_digest") == recorded_digest
+        and rotation.get("execution_path_digest") == live
+    ):
+        return live, amendment
+    return None, None
+
+
 def _assigned_value(tree: ast.Module, name: str) -> Optional[ast.AST]:
     """The value node of a module-level assignment, annotated or not."""
     for node in tree.body:
@@ -360,16 +397,28 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     code_identity = identities.get("code_identity") or {}
     if code_identity.get("hashed_set_digest") != live_hashed_set:
         failures.append("the runbook does not bind the live hashed-set digest")
-    if code_identity.get("execution_path_digest") != live_execution_path:
-        failures.append("the runbook does not bind the live execution-path digest")
-    if code_identity.get("run_code_identity") != live_identity:
-        failures.append("the runbook does not bind the composite run identity of the live tree")
+    rotation_amendment = _code_hash_amendment(root, failures)
+    effective_digest, rotation = _effective_execution_path_digest(
+        root, code_identity.get("execution_path_digest"), rotation_amendment
+    )
+    if effective_digest is None:
+        failures.append(
+            "the runbook does not bind the live execution-path digest and no versioned "
+            "code-hash amendment authorises the rotation"
+        )
+    recorded_run_identity = code_identity.get("run_code_identity")
+    if recorded_run_identity != live_identity:
+        rotation_block = (rotation or {}).get("code_hash_rotation") or {}
+        if not (
+            rotation
+            and rotation_block.get("previous_run_code_identity") == recorded_run_identity
+            and rotation_block.get("run_code_identity") == live_identity
+        ):
+            failures.append("the runbook does not bind the composite run identity of the live tree")
     recorded_authorization_identity = (authorization.get("authorized_run") or {}).get(
         "code_identity"
     ) or {}
-    if code_identity.get("run_code_identity") != recorded_authorization_identity.get(
-        "run_code_identity"
-    ):
+    if recorded_run_identity != recorded_authorization_identity.get("run_code_identity"):
         failures.append("the runbook's run identity differs from the authorized one")
 
     # 3. The scope is the frozen 14 in / 4 out scope.

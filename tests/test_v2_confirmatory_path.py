@@ -94,6 +94,7 @@ MIRROR_FILES = (
     "configs/research_v2.json",
     "configs/research_v2_candidate_freeze.json",
     "configs/research_v2_code_hash_amendment_1.json",
+    "configs/research_v2_confirmatory_code_hash_amendment_1.json",
     "configs/research_v2_confirmatory_protocol.json",
     "configs/research_v2_confirmatory_protocol_amendment_1.json",
     "configs/research_v2_confirmatory_authorization_1.json",

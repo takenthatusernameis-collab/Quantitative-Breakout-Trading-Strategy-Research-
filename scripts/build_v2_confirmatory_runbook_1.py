@@ -70,6 +70,9 @@ SPEC_V2_RELATIVE = "configs/research_v2.json"
 SPEC_V1_RELATIVE = "configs/research_v1.json"
 FREEZE_RELATIVE = "configs/research_v2_candidate_freeze.json"
 CODE_HASH_AMENDMENT_RELATIVE = "configs/research_v2_code_hash_amendment_1.json"
+CONFIRMATORY_CODE_HASH_AMENDMENT_RELATIVE = (
+    "configs/research_v2_confirmatory_code_hash_amendment_1.json"
+)
 CAMPAIGN_AUTHORIZATION_RELATIVE = "research_state/campaign_authorization.json"
 RUNNER_RELATIVE = "src/v2_confirmatory/runner.py"
 
@@ -105,6 +108,25 @@ def canonical_source_digest(root: Path) -> str:
 
 def _load(path: Path) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _code_hash_amendment_rotation(root: Path) -> Dict[str, Any]:
+    """The rotation a verified code-hash amendment records, if there is one.
+
+    The amendment is the only artifact that may rotate the confirmatory
+    execution path's digest after the authorization was frozen (BRAIN-011 §12,
+    finding 1). An amendment that does not verify authorises nothing.
+    """
+    path = root / CONFIRMATORY_CODE_HASH_AMENDMENT_RELATIVE
+    if not path.exists():
+        return {}
+    document = _load(path)
+    excluded = tuple((document.get("hashing") or {}).get("manifest_hash_excluded_keys") or ())
+    if not excluded:
+        return {}
+    if document.get("manifest_hash") != compute_manifest_hash(document, excluded):
+        return {}
+    return dict(document.get("code_hash_rotation") or {})
 
 
 def _path_key(node: ast.AST) -> Optional[str]:
@@ -219,10 +241,26 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     )
     recorded_identity = run.get("code_identity") or {}
     if recorded_identity.get("run_code_identity") != run_code_identity:
-        raise SystemExit(
-            "the delivered execution path does not match the identity the authorization "
-            "records; refusing to write a runbook for a different path"
-        )
+        # A versioned code-hash amendment may rotate the binding after the
+        # authorization was frozen (BRAIN-011 §12, finding 1). The runbook
+        # keeps binding the identity the authorization froze, and the amendment
+        # carries the rotation; a tree that matches neither is refused.
+        rotation = _code_hash_amendment_rotation(root)
+        if not (
+            rotation.get("previous_run_code_identity")
+            == recorded_identity.get("run_code_identity")
+            and rotation.get("run_code_identity") == run_code_identity
+            and rotation.get("hashed_set_digest") == live_hashed_set
+        ):
+            raise SystemExit(
+                "the delivered execution path does not match the identity the authorization "
+                "records, and no versioned code-hash amendment authorises the rotation; "
+                "refusing to write a runbook for a different path"
+            )
+    # The runbook binds the identity the authorization froze.
+    bound_execution_path = str(recorded_identity.get("execution_path_digest"))
+    bound_run_code_identity = str(recorded_identity.get("run_code_identity"))
+    bound_hashed_set = str(recorded_identity.get("hashed_set_digest"))
 
     in_scope = list(scope.get("assets") or [])
     out_of_scope = list(scope.get("out_of_scope_assets_without_candidate") or [])
@@ -669,10 +707,10 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 "algorithm": "canonical_source_digest_v1",
                 "portable": True,
                 "hashed_set_root": HASHED_SET_ROOT,
-                "hashed_set_digest": live_hashed_set,
+                "hashed_set_digest": bound_hashed_set,
                 "execution_path_root": EXECUTION_PATH_ROOT,
-                "execution_path_digest": live_execution_path,
-                "run_code_identity": run_code_identity,
+                "execution_path_digest": bound_execution_path,
+                "run_code_identity": bound_run_code_identity,
                 "authorized_ordered_code_hash": campaign_authorization.get("code_hash"),
                 "note": (
                     "The identity of the run is the composite of the canonical digest of the "
@@ -818,7 +856,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             },
             "confirmatory_execution_path": {
                 "path": EXECUTION_PATH_ROOT,
-                "canonical_source_digest": live_execution_path,
+                "canonical_source_digest": bound_execution_path,
             },
         },
         "authorizes_a_candle_read": False,

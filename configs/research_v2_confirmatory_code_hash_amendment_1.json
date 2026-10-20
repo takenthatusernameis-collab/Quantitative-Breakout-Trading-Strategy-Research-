@@ -1,0 +1,153 @@
+{
+  "artifact": "research_v2_confirmatory_code_hash_amendment_1",
+  "artifact_version": 1,
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-20T11:20:00Z",
+  "amendment_status": "DELIVERED_PENDING_COMMIT",
+  "specification_purpose": "Rotate the confirmatory execution path's canonical digest after the unreachable duplicate rollback block of src/v2_confirmatory/runner.py was removed, and carry the rotation by reference so that no frozen artifact is edited.",
+  "amends": {
+    "confirmatory_authorization_1": {
+      "path": "configs/research_v2_confirmatory_authorization_1.json",
+      "manifest_hash": "f411aba94231e36a4dd711376df8a182a979f20d0a248076db0d5eacfaeef943",
+      "file_sha256": "57e10a0cfcb25ffe1f53ab6474d7168163f7e3721deb0219338a1009f0ed1009",
+      "superseded_code_identity_field": "authorized_run.code_identity",
+      "recorded_execution_path_digest": "fd748860acec6bd5c583bfdc1dc5421409b2e1eecabcc0e00996597d13bfaf10",
+      "recorded_run_code_identity": "fcf8ba956d2def013af3af157c63ec08c95e851e42037a80c3f67d32c2e7f0e8",
+      "edited": false
+    },
+    "confirmatory_runbook_1": {
+      "path": "configs/research_v2_confirmatory_runbook_1.json",
+      "manifest_hash": "d81d919718f2f100f2e091eed8b43a4a228213313dc1dab0fc1a512e929f2a6a",
+      "file_sha256": "769fd1effcb7b829002e4513a8a52b81733cb7e45890f002230370fe973f0aa4",
+      "superseded_code_identity_field": "binding_identities.code_identity",
+      "recorded_execution_path_digest": "fd748860acec6bd5c583bfdc1dc5421409b2e1eecabcc0e00996597d13bfaf10",
+      "recorded_run_code_identity": "fcf8ba956d2def013af3af157c63ec08c95e851e42037a80c3f67d32c2e7f0e8",
+      "edited": false
+    }
+  },
+  "code_hash_rotation": {
+    "algorithm": "canonical_source_digest_v1",
+    "hashed_set_root": "src/breakout_research",
+    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "hashed_set_unchanged": true,
+    "execution_path_root": "src/v2_confirmatory",
+    "previous_execution_path_digest": "fd748860acec6bd5c583bfdc1dc5421409b2e1eecabcc0e00996597d13bfaf10",
+    "execution_path_digest": "277a4bbec286b581ccb415fd88bb362ca2151e1b67745df23ad6802cee0ed4c9",
+    "previous_run_code_identity": "fcf8ba956d2def013af3af157c63ec08c95e851e42037a80c3f67d32c2e7f0e8",
+    "run_code_identity": "d6e6bdbf74c8155eb537cdb8b19277f76e5229dc52959ff7ea74fdb8e8f3e5fd",
+    "authorized_ordered_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "ordered_code_hash_is_an_environment_fact": true,
+    "the_only_binding_that_changes": "the confirmatory execution path's digest"
+  },
+  "change": {
+    "audit_finding": "BRAIN-011 §12, finding 1 (severity P0)",
+    "file": "src/v2_confirmatory/runner.py",
+    "kind": "REMOVAL_OF_UNREACHABLE_DEAD_CODE",
+    "removed_line_range_in_the_pre_rotation_file": [
+      1039,
+      1044
+    ],
+    "removed_block_text": "        for path in created_files:\n            if path.exists():\n                path.unlink()\n        for path in created_dirs:\n            shutil.rmtree(path, ignore_errors=True)\n        raise\n",
+    "removed_block_sha256": "85bc0100132a54e147cfb493346029f710c0d42ae3c704999592431345788dc5",
+    "pre_rotation_file_sha256": "6341979babe8fbdc112f883bede4a1c67cc8a1c100e12d5e9749eb050ab4084d",
+    "post_rotation_file_sha256": "e268607e2b77eeec5ccbac470124d804bb34874ec9bcef29bcb30dce0f605136",
+    "the_removed_block_was_unreachable": true,
+    "unreachability_proof": "The block followed the raise statement of the same except handler, so no control path reaches it; it duplicated the rollback statements that run before that raise.",
+    "behavioural_change": false,
+    "behavioural_change_proof": "Only unreachable statements were removed, so every reachable statement, every write, every abort path and every exposure rule is unchanged.",
+    "reason": "The audit found the block and refused an in-place edit, because the execution path's digest is bound by the authorization and the runbook."
+  },
+  "precedence": {
+    "rule": "Where an amended artifact records a code identity that differs from this amendment, this amendment governs the code-identity fields only; every other field of the amended artifacts stands unchanged.",
+    "overridden_fields": [
+      "authorized_run.code_identity",
+      "binding_identities.code_identity"
+    ],
+    "every_other_field_of_the_amended_artifacts_stands": true,
+    "the_amended_artifacts_are_edited_in_place": false,
+    "the_amended_artifacts_remain_byte_identical": true,
+    "the_authorization_still_permits_at_most_one_logical_run": true
+  },
+  "corrections": [
+    {
+      "claim": "the confirmatory protocol and its criterion amendment bind the confirmatory execution path's digest",
+      "verdict": "FALSE",
+      "evidence": "Neither configs/research_v2_confirmatory_protocol.json nor configs/research_v2_confirmatory_protocol_amendment_1.json records an execution-path digest: their code-hash constraint covers the hashed set src/breakout_research only. The audit's attribution was one file too wide; the artifacts that bind the execution-path digest are the authorization and the runbook.",
+      "affected_artifacts": [
+        "configs/research_v2_confirmatory_protocol.json",
+        "configs/research_v2_confirmatory_protocol_amendment_1.json"
+      ],
+      "corrected_by": "this amendment; neither artifact is edited"
+    }
+  ],
+  "resolution_rule": {
+    "where_the_rule_lives": "src/v2_confirmatory/identity.py:resolve_code_identity",
+    "rule": "The effective execution-path digest is the digest the authorization records when the tree is still the tree the authorization froze; otherwise it is the digest this amendment records, and only when this amendment hash-verifies and binds the current tree.",
+    "checks": [
+      "the hashed set's canonical digest equals the recorded one; the hashed set may never change",
+      "the recorded execution-path digest equals the live one, or this amendment rotates exactly that digest to the live one",
+      "the recorded composite run identity equals the composite of the two live digests",
+      "the amendment's own manifest hash recomputes"
+    ],
+    "a_mismatch_is_never_an_environment_fact": "The checkout-dependent ordered digest compute_code_hash() is an environment fact and is never an identity; a canonical-digest mismatch is a real drift and refuses the run."
+  },
+  "authorizes_a_candle_read": false,
+  "authorizes_an_evaluation": false,
+  "authorizes_a_second_run": false,
+  "authorizes_a_code_change": false,
+  "authorizes_anything": false,
+  "related_artifacts": {
+    "confirmatory_authorization_1": {
+      "path": "configs/research_v2_confirmatory_authorization_1.json",
+      "manifest_hash": "f411aba94231e36a4dd711376df8a182a979f20d0a248076db0d5eacfaeef943"
+    },
+    "confirmatory_runbook_1": {
+      "path": "configs/research_v2_confirmatory_runbook_1.json",
+      "manifest_hash": "d81d919718f2f100f2e091eed8b43a4a228213313dc1dab0fc1a512e929f2a6a"
+    },
+    "confirmatory_protocol": {
+      "path": "configs/research_v2_confirmatory_protocol.json",
+      "manifest_hash": "bba9539442c92e7e7f51f72ab51e9f9e82bb4c354639be79b7db0baf4b043be3"
+    },
+    "confirmatory_protocol_amendment_1": {
+      "path": "configs/research_v2_confirmatory_protocol_amendment_1.json",
+      "manifest_hash": "2701c63456e080b1a8a0cbcd478d1bf4dc04d35212f4f270ea88d7460f56f377"
+    },
+    "code_hash_amendment_1": {
+      "path": "configs/research_v2_code_hash_amendment_1.json",
+      "manifest_hash": "4409b6af54acb2982e1f286f9c6ebd1ce1b7628a90c476dede6da3c04d8762c1"
+    },
+    "v2_specification": {
+      "path": "configs/research_v2.json",
+      "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+    },
+    "v2_data_manifest": {
+      "path": "research/data_manifest_v2.json",
+      "manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e"
+    },
+    "selected_configurations_manifest": {
+      "path": "research/v2_selected_configurations_manifest.json",
+      "manifest_hash": "7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862"
+    }
+  },
+  "durability": {
+    "rule": "The amendment takes effect when this artifact is committed. No confirmatory-window candle may be read before the commit that carries this artifact, the authorization and the runbook exists.",
+    "amendment_commit": null,
+    "amendment_commit_status": "PENDING_COMMIT",
+    "note": "The commit hash is recorded by the committing session. This artifact is not rewritten after that commit, because its manifest_hash must not change."
+  },
+  "producer": {
+    "path": "scripts/build_v2_confirmatory_code_hash_amendment_1.py",
+    "verify_command": "python3 scripts/verify_v2_confirmatory_code_hash_amendment_1.py"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
+  },
+  "manifest_hash": "a2a5492711ffeeb1284469c0ffcecbce5bf32e58ef6e20ee6a182f91041127b1"
+}
