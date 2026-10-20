@@ -1297,3 +1297,95 @@ which this decision explicitly rejects; the limitation is recorded as `RL1` in t
 **Verification:** `PYTHONPATH=src python3 -m pytest tests/ -q` → 284 passed, exit 0 (252 pre-existing
 + 32 new); all six v2 verifiers exit 0; `src/breakout_research/` untouched; every frozen artifact
 byte-identical; no v2 result row, shard, ledger, result manifest or checkpoint exists.
+
+---
+
+## BRAIN-008 §15 implementation record — the v2 selection execution path and the versioned selection authorization 1 (2026-10-20T00:10Z, separate session)
+
+**Task.** Deliver the v2 selection execution path (the code) and, after it, the versioned artifact that
+authorizes exactly one bounded v2 selection run over the frozen candidate set. Deliver them in that order
+and run nothing: no grid, no backtest, no campaign, no selection, no pilot, no confirmatory-window read.
+
+**Delivered**
+
+- `src/v2_campaign/` — the v2 execution path, **outside** the hashed source set: `__init__.py`, `errors.py`,
+  `identity.py`, `scope.py`, `data.py`, `units.py`, `runner.py`. Canonical source digest
+  `c69cc02188d95def8a9c2e24f717ccc20c36035d5049a3216451e841dfe42cba`. The hashed set stays
+  `3e8e4169…` and the ordered code hash stays `2efd3b18…`; `src/breakout_research/` was not touched.
+- `configs/research_v2_selection_authorization_1.json` — the versioned, self-hashed authorization
+  (`manifest_hash 76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918`).
+- `scripts/build_v2_selection_authorization_1.py` — deterministic producer (pinned creation instant, every
+  other field derived from hash-bound artifacts).
+- `scripts/verify_research_v2_selection_authorization_1.py` — read-only offline verifier, 12 rule groups.
+- `tests/test_v2_campaign_execution_path.py` — 20 deterministic tests, all against **synthetic fixtures in a
+  temporary directory**; the real universe, the real datasets and the repository's own v2 paths are never
+  touched.
+- `tests/test_research_v2_selection_authorization_1.py` — 32 deterministic tests, 15 of them tamper tests.
+
+**What the execution path enforces, and where it is proved**
+
+| Rule | Code | Test |
+| --- | --- | --- |
+| the candidate set is exactly the frozen set, never re-ranked, widened or narrowed | `scope.frozen_scope`, `runner.build_plan` (cross-check against the validated constituents of `research/universe_manifest_v2.json`) | `test_the_run_refuses_a_widened_candidate_set`, `test_the_frozen_candidate_set_is_the_validated_v2_universe` |
+| development data only; the confirmatory window is never read | `data.load_development_candles` (boundary checked before *and* after the read; a dataset that reaches into the window is refused, never trimmed) | `test_the_run_refuses_a_dataset_that_reaches_into_the_confirmatory_window`, `test_the_development_loader_refuses_a_dataset_that_declares_a_later_candle` |
+| the unchanged v1 selection rule | `scope.selection_rule` (v1 block, byte-equal to the inherited v2 block), `runner._selection_summary` calls the v1 selector | `test_the_selection_rule_of_the_fixture_is_the_repository_v1_rule`, `test_the_run_reports_an_asset_without_a_candidate` |
+| the holdout-position fold is never evaluated; `holdout_exposed_count` stays 0 | `units.validation_folds` | `test_the_run_never_evaluates_the_holdout_fold` |
+| only the v2 paths are written | `scope.assert_no_forbidden_output`, `runner._guard_path` | `test_the_run_writes_only_the_v2_paths` |
+| the bounds of execution amendment 1 hold | `runner.build_plan` | `test_the_run_is_bounded_by_the_authorized_asset_count` |
+| one attempt | `runner.claim_attempt` (the attempt is recorded in the ledger before the first result row) | `test_the_run_consumes_its_single_run`, `test_the_number_of_resumes_is_bounded` |
+| an interrupted run is resumed, not restarted | `runner.claim_attempt` (resume from the verified shards), `runner._append_result_stream` (the stream is a projection of the promoted shards) | `test_a_technical_failure_keeps_the_partial_state_for_a_resume` |
+| a boundary abort rolls back | `runner._rollback` | `test_a_boundary_abort_rolls_back_and_releases_the_run`, `test_an_abort_rolls_back_the_artifacts_the_run_created` |
+| the run contacts no provider | the loader reads only the local, hash-verified datasets | `test_the_run_makes_no_provider_request` |
+| the run identity is portable | `identity.run_code_identity` (composite canonical digest) | `test_the_records_are_bound_to_the_run_identity` |
+
+**Decisions this session had to make because the frozen artifacts do not fix them**
+
+1. *Fold structure in v2.* The inherited `folds` block is unchanged, but in v2 the holdout is not the tail of
+   the dataset: the confirmatory window is fresh data read only after the selected-configuration manifest is
+   committed. The selection run therefore reproduces the v1 validation structure over the development dataset
+   and skips the holdout-position fold, exactly as the v1 validation campaign skips it. The rule is proved by
+   a differential test against the v1 `_get_fold_bounds`, not by a re-implementation of it.
+2. *Asset key.* The run keys its assets by the Binance pair (as v1 did), not by the base symbol of the freeze.
+3. *Run identity.* The experiment IDs bind the composite canonical digest of the hashed engine and of the
+   execution path (BRAIN-009 rule). The ordered digest stays the authorized value of record and is never used
+   as an identity.
+4. *Where the selection outcome goes.* The amendment allows five v2 paths; the per-asset outcome, the
+   "no candidate survived" report and the run counters are written into `research/ledger_v2.json`. No new
+   output path was invented.
+5. *The confirmatory boundary is enforced twice*, because a manifest may understate a dataset: once against
+   the declared last candle before the file is read, once against every candle after it is read.
+6. *One logical run, resumable.* A killed process leaves the run `RUNNING` in the ledger. The next
+   process **resumes** it from the verified shards instead of starting a second run, so an interruption
+   cannot burn the single authorization; the number of resumes is bounded by the already recorded
+   `max_retries_on_technical_failure`. A completed run is never re-run. A *boundary* abort (scope,
+   boundary, bounds or integrity violation) rolls every created v2 artifact back and releases the run,
+   while a *technical* failure keeps the verified shards so that the resume can continue. The result
+   stream is a projection of the promoted shards, so a resume cannot duplicate a row.
+
+**Operational rule discovered in this session.** The authorization binds the canonical digest of the
+execution path, so the package must be frozen *before* the authorization is built: every later edit under
+`src/v2_campaign/` invalidates the authorization until the producer is re-run, and the re-run changes the
+artifact's `manifest_hash`. Two edits made during this session each had this effect and were resolved by
+rebuilding the artifact; the committed value is the one above.
+
+**Falsifiers for this delivery.** If the authorization's `manifest_hash` does not recompute, the delivery is
+invalid. If the authorized scope stops matching the frozen candidate set or the validated v2 universe, it is
+invalid. If the bounds stop matching execution amendment 1, or the planned run stops fitting inside them, it
+is invalid. If the data boundary stops being the frozen confirmatory-window start, or the confirmatory window,
+the v1 holdout or the v1 cycle-0 units stop being excluded, it is invalid. If the selection rule stops being
+the byte-equal v1 rule, it is invalid. If the canonical digests of the hashed set or of the execution path
+stop recomputing from the tree, the tree changed and the authorization is invalid. If an output path points at
+a v1 path, the run would violate the protocol. If a v2 shard, ledger, result manifest, result stream or
+checkpoint appears, or a v2 result row is written, the nothing-runs state is violated.
+
+**Residual limitation (recorded, not fixed).** The bounded run writes 497,664 execution units; at the v1
+record size that is of the order of 1.3 GB of shards and of the order of 300 MB of result stream. The v1
+shards are bounded to 4 MiB per file and were pushed as many small files; the single-file v1 result stream
+was the artefact that could not be pushed. The authorization records this as `RL2`: the shards are the
+authoritative record set and are committed as bounded files, the single-file result stream is a projection
+of the shards and is regenerated from them rather than committed as one blob, and the v1 shards, ledger and
+result stream stay untouched either way. The delivery decision itself is not made here.
+
+**Verification.** `PYTHONPATH=src python3 -m pytest tests/ -q` → 339 passed, exit 0 (284 pre-existing +
+55 new); all seven v2 verifiers exit 0; `src/breakout_research/` untouched; every frozen v1 and v2 artifact
+byte-identical; no v2 result row, shard, ledger, result manifest or checkpoint exists.

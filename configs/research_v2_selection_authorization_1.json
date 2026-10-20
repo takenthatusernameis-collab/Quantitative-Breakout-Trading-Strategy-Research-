@@ -1,0 +1,303 @@
+{
+  "artifact": "v2_selection_authorization",
+  "artifact_version": "v2-selection-authorization-1",
+  "version": 1,
+  "protocol_version": "v2",
+  "universe_version": "v2",
+  "created_utc": "2026-10-20T00:10:00Z",
+  "authorization_status": "PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN",
+  "specification_purpose": "Authorize exactly one bounded v2 selection grid run over the frozen candidate set, under the unchanged v1 selection rule, on development data only, writing only to the v2 paths. This artifact names the execution path, the bounds, the stopping conditions, the rollback rule and the falsifiers of that run. Building it executes nothing: no grid is run, no candle is read, no result exists.",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-008",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-008 sections 1, 3, 4 and 6",
+    "prerequisites_delivered": [
+      "P1 configs/research_v2.json",
+      "P2 research/universe_manifest_v2.json",
+      "P3 research/data_manifest_v2.json",
+      "P4 configs/research_v2_execution.json",
+      "the v2 candidate manifest freeze",
+      "the v2 execution amendment 1",
+      "the v2 code-hash amendment 1"
+    ],
+    "execution_path_outside_hashed_set": "The v2 execution code lives in src/v2_campaign, outside the hashed source set src/breakout_research. It imports the v1 engine unchanged; it adds, edits and removes no file under src/breakout_research, so the v1 campaign authorization and the v2 identity tuples stay valid."
+  },
+  "authorized_run": {
+    "authorized": true,
+    "max_runs": 1,
+    "run_id": "v2-selection-20261019",
+    "campaign_id": "v2-campaign",
+    "run_phase": "selection_grid",
+    "authorization_note": "The run is recorded in the ledger before the first result is written. The authorization permits one logical run: a completed run is never re-run, and an interrupted run is resumed from the verified shards, with the number of resumes bounded by max_retries_on_technical_failure. A boundary abort rolls the ledger back and releases the run, so that a defect can be fixed and the run started again.",
+    "resume_semantics": {
+      "one_logical_run": true,
+      "completed_run_is_never_re_run": true,
+      "interrupted_run_is_resumed": true,
+      "resumes_bounded_by": "max_retries_on_technical_failure",
+      "resume_source_of_truth": "the verified shards under research/shards_v2",
+      "result_stream_is_a_projection_of_the_shards": true,
+      "note": "A process that is killed leaves the run in the ledger as RUNNING. The next process resumes it from the verified shards instead of starting a second run, so an interruption cannot burn the single authorized run."
+    },
+    "scope": {
+      "constituents": [
+        "ADA",
+        "AVAX",
+        "BCH",
+        "BNB",
+        "BTC",
+        "DOGE",
+        "ETH",
+        "HBAR",
+        "LINK",
+        "LTC",
+        "NEAR",
+        "SOL",
+        "SUI",
+        "TRX",
+        "UNI",
+        "XLM",
+        "XRP",
+        "ZEC"
+      ],
+      "binance_pairs": [
+        "ADAUSDT",
+        "AVAXUSDT",
+        "BCHUSDT",
+        "BNBUSDT",
+        "BTCUSDT",
+        "DOGEUSDT",
+        "ETHUSDT",
+        "HBARUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "NEARUSDT",
+        "SOLUSDT",
+        "SUIUSDT",
+        "TRXUSDT",
+        "UNIUSDT",
+        "XLMUSDT",
+        "XRPUSDT",
+        "ZECUSDT"
+      ],
+      "count": 18,
+      "candidate_manifest_path": "configs/research_v2_candidate_freeze.json",
+      "bound_to_universe_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+      "bound_to_data_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+      "bound_to_freeze_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f",
+      "membership_rule": "Exactly the constituents marked validated in research/universe_manifest_v2.json. The run may not re-rank, widen or narrow the frozen set.",
+      "widening_by_reranking_forbidden": true,
+      "excluded_assets_stay_excluded": true,
+      "excluded_after_validation": {
+        "HYPEUSDT": "insufficient_hourly_history",
+        "XMRUSDT": "binance_spot_unavailable"
+      },
+      "excluded_by_rule": {
+        "USDT": "stablecoin_excluded",
+        "USDC": "stablecoin_excluded",
+        "FIGR_HELOC": "exchange_token_excluded",
+        "USDS": "stablecoin_excluded",
+        "WBT": "exchange_token_excluded",
+        "LEO": "exchange_token_excluded",
+        "RAIN": "exchange_token_excluded",
+        "USDE": "stablecoin_excluded",
+        "DAI": "stablecoin_excluded",
+        "CC": "exchange_token_excluded",
+        "USD1": "stablecoin_excluded",
+        "GRAM": "exchange_token_excluded"
+      }
+    },
+    "execution_path": {
+      "package": "src/v2_campaign",
+      "entry_point": "src/v2_campaign/runner.py:run_selection",
+      "modules": [
+        "__init__.py",
+        "data.py",
+        "errors.py",
+        "identity.py",
+        "runner.py",
+        "scope.py",
+        "units.py"
+      ],
+      "engine_imports": [
+        "breakout_research.backtest.backtester.run_fold_backtest",
+        "breakout_research.backtest.shards.ResultStore",
+        "breakout_research.backtest.shards.compute_experiment_id",
+        "breakout_research.backtest.checkpoint.CheckpointManager",
+        "breakout_research.baselines.load_verified_candles",
+        "breakout_research.baselines.buyhold_baseline",
+        "breakout_research.selection.select_candidates",
+        "breakout_research.config.get_configurations"
+      ],
+      "engine_is_reused_unchanged": true,
+      "hashed_set_untouched": true,
+      "hashed_set_root": "src/breakout_research",
+      "note": "The execution path reuses the v1 indicators, signals, backtester, verified candle loader, shard writer, checkpoint manager and candidate selector without modification. It adds no parameter, threshold, fold, cost or selection criterion of its own."
+    },
+    "code_identity": {
+      "algorithm": "canonical_source_digest_v1",
+      "algorithm_description": "sha256 over the concatenation, for every *.py file under the root in ascending POSIX relative-path order, of the relative path, a newline, the sha256 hex digest of the file bytes, and a newline.",
+      "portable": true,
+      "hashed_set_root": "src/breakout_research",
+      "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "execution_path_root": "src/v2_campaign",
+      "execution_path_digest": "c69cc02188d95def8a9c2e24f717ccc20c36035d5049a3216451e841dfe42cba",
+      "run_code_identity": "08658436f54156282b6eda57330bc81158394447c6a0d89227297408dca14a87",
+      "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
+      "ordered_code_hash_is_portable": false,
+      "note": "The identity of a v2 run is the composite of the canonical digest of the hashed v1 engine and the canonical digest of the v2 execution path. The checkout-dependent ordered digest compute_code_hash() stays the authorized value of record and is never used as an identity."
+    },
+    "data_boundary": {
+      "development_data_only": true,
+      "candles_before_utc": "2026-10-19T22:00:00Z",
+      "candles_before_utc_rule": "Only candles that close at or before the confirmatory-window start recorded by the candidate freeze may be read during the selection run. A dataset that reaches into the confirmatory window is refused before it is read.",
+      "confirmatory_window_never_read_during_selection": true,
+      "v1_holdout_never_reused": true,
+      "v1_cycle0_units_never_mixed": true,
+      "v1_cycle0_units": 497664,
+      "holdout_exposed_count_stays_zero_during_selection": true,
+      "holdout_position_fold_never_evaluated_during_selection": true,
+      "provider_requests": 0,
+      "provider_requests_note": "The run reads the immutable local datasets that research/data_manifest_v2.json already binds and verifies. It performs no provider request, so it cannot re-retrieve, re-time or refresh any market data."
+    },
+    "selection_rule": {
+      "unchanged_from_v1": true,
+      "reference": "configs/research_v1.json",
+      "block": "selection",
+      "selection_block_sha256": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e",
+      "v2_block_is_byte_equal": true,
+      "max_candidates_per_asset": 1,
+      "selector": "breakout_research.selection.select_candidates",
+      "grid_reference": "the strategy_grid of configs/research_v1.json, inherited unchanged by configs/research_v2.json: 2,304 configurations per asset",
+      "grid_configuration_count": 2304,
+      "no_criterion_may_be_added_tightened_or_loosened": true
+    },
+    "paths": {
+      "shards_dir": "research/shards_v2",
+      "ledger": "research/ledger_v2.json",
+      "results_manifest": "research/results_manifest_v2.json",
+      "results_stream": "research/results_v2.jsonl",
+      "checkpoint": "research_state/checkpoint_v2.json",
+      "never_use_v1_paths": true,
+      "v1_paths_forbidden": [
+        "research/results_shards/",
+        "research/results_manifest.json",
+        "research/results.jsonl",
+        "research_state/checkpoint.json",
+        "research/universe_manifest.json",
+        "research/data_manifest.json",
+        "research/candidate_manifest.json",
+        "research/candidate_manifest_v2.json",
+        "configs/research_v1.json"
+      ]
+    },
+    "bounds": {
+      "max_assets": 18,
+      "max_configs_per_asset": 2304,
+      "max_total_config_units": 41472,
+      "attempts": 1,
+      "max_retries_on_technical_failure": 3,
+      "planned_config_units": 41472,
+      "planned_execution_units": 497664,
+      "planned_execution_units_note": "The bounded run holds 18 assets x 2,304 configurations x 4 validation folds x 3 cost scenarios execution units. The bound that the authorization enforces is max_total_config_units, the number of asset-configuration pairs; the fold and cost multipliers follow the inherited, unchanged fold and cost blocks.",
+      "resource_limits": "Provider requests obey the unchanged v2 data block: max_retries 3, backoff_seconds 5, rate_limit_per_minute 1200, warmup_bars 720. A run that would exceed any of these bounds, or that would touch a path listed under paths.v1_paths_forbidden, aborts and rolls back."
+    },
+    "stopping_conditions": [
+      "Normal completion within the recorded bounds",
+      "No candidate survives the unchanged v1 selection rule -> report the outcome (do not hide it)",
+      "Any boundary violation -> abort and rollback",
+      "A technical interruption -> keep the verified shards and resume the same run"
+    ],
+    "rollback_rule": "Do not write to v1 artifacts; remove any newly created v2 artifact if the execution is aborted; do not alter research_state/checkpoint.json or the v1 campaign state.",
+    "falsifiers": [
+      "Any modification to src/breakout_research/ (would change the code hash)",
+      "Reading any candle in the v2 confirmatory window during selection",
+      "Writing into v1 shards, ledger, tallies or result streams",
+      "Reusing the v1 holdout",
+      "Mixing v1 cycle-0 units with v2 results",
+      "Widening or narrowing the frozen candidate set",
+      "A second run attempt under this authorization"
+    ],
+    "no_execution_in_this_session": true
+  },
+  "not_authorized": {
+    "confirmatory_evaluation_authorized": false,
+    "candle_fetch_authorized": false,
+    "v1_reauthorization_authorized": false,
+    "source_tree_change_authorized": false,
+    "statement": "This artifact authorizes one bounded selection run and nothing else. It does not authorize a confirmatory-window evaluation, a candle fetch, a change to the hashed source set or a v1 re-authorization. The selected-configuration manifest that the confirmatory window requires must be committed and hash-bound before the first confirmatory-window candle is read."
+  },
+  "related_artifacts": {
+    "v2_specification": {
+      "path": "configs/research_v2.json",
+      "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+    },
+    "v1_specification": {
+      "path": "configs/research_v1.json",
+      "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+    },
+    "v2_candidate_freeze": {
+      "path": "configs/research_v2_candidate_freeze.json",
+      "manifest_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f",
+      "frozen_at_utc": "2026-10-19T21:30:17Z"
+    },
+    "v2_universe_manifest": {
+      "path": "research/universe_manifest_v2.json",
+      "manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88"
+    },
+    "v2_data_manifest": {
+      "path": "research/data_manifest_v2.json",
+      "manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e"
+    },
+    "v2_execution_protocol": {
+      "path": "configs/research_v2_execution.json",
+      "specification_hash": "aa902aa9e6ddfd7f0536765411e78d718f720b7a473a8f621bf64444355f2d38"
+    },
+    "v2_execution_amendment_1": {
+      "path": "configs/research_v2_execution_amendment_1.json",
+      "manifest_hash": "1149d9cb3ee9ea35f16512502c43c4cf0ee13b0ae2fb91e2dc691663b99195db"
+    },
+    "v2_code_hash_amendment_1": {
+      "path": "configs/research_v2_code_hash_amendment_1.json",
+      "manifest_hash": "4409b6af54acb2982e1f286f9c6ebd1ce1b7628a90c476dede6da3c04d8762c1",
+      "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff"
+    },
+    "v1_campaign_authorization": {
+      "path": "research_state/campaign_authorization.json",
+      "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "authorized": true,
+      "note": "The functional field of the authorization is recorded, not the digest of its bytes: the controller refreshes the authorized_at_utc timestamp, so the file digest changes without the authorization changing."
+    },
+    "configuration_manifest": {
+      "path": "research/config_manifest.json",
+      "total_configurations": 2304
+    }
+  },
+  "residual_limitations": [
+    {
+      "id": "RL2",
+      "location": "the v2 selection run's result volume",
+      "limitation": "The bounded run writes 497,664 execution units. At the v1 record size this is of the order of 1.3 GB of shards and of the order of 300 MB of result stream. The v1 shards are bounded to 4 MiB per file and were pushed as many small files; the v1 result stream was a single file of 50 MB that the campaign could not push as one blob.",
+      "consequence": "The shards under research/shards_v2 are the authoritative record set and are committed as bounded files of at most 4 MiB each, as the v1 campaign did. The single-file result stream research/results_v2.jsonl is expected to exceed the 100 MB per-file push limit and is therefore not committed as one file: it is a projection of the verified shards and is regenerated from them. The ledger, the results manifest and the checkpoint are small and are committed. The v1 shards, ledger and result stream stay untouched either way."
+    }
+  ],
+  "verification": {
+    "verifier_script": "scripts/verify_research_v2_selection_authorization_1.py",
+    "tests_module": "tests/test_research_v2_selection_authorization_1.py",
+    "verify_command": "python3 scripts/verify_research_v2_selection_authorization_1.py",
+    "execution_path_tests": "tests/test_v2_campaign_execution_path.py"
+  },
+  "durability": {
+    "commit": null,
+    "pushed": false,
+    "note": "Becomes durable when the commit that carries this artifact exists. The artifact is not rewritten after that commit, because its manifest_hash must not change."
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 artifacts."
+  },
+  "manifest_hash": "76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918"
+}

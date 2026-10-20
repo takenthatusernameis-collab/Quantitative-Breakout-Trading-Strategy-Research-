@@ -899,3 +899,292 @@ the suite cannot run at all and must be reported as `NOT_RUN`.
 delivered prerequisite list, and a recorded decision on residual limitation `RL1` (the v1 campaign
 runtime gate compares the live ordered digest). The confirmatory window itself cannot be evaluated
 before `2027-01-17T22:00:00Z`.
+
+## Session activity — 2026-10-20T00:10:00Z (this session)
+
+**Task (from the durable handoff at 23:37:19Z):** deliver the **v2 selection execution path outside the
+hashed set** and the **versioned artifact that authorizes exactly one bounded v2 selection run** over the
+frozen candidate set, in that order, **without running it**.
+
+**Outcome:** **Delivered and verified.** The execution path exists as a new top-level package
+`src/v2_campaign/` — outside the hashed set, importing the v1 engine unchanged — and
+`configs/research_v2_selection_authorization_1.json` (`manifest_hash
+76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918`) authorizes exactly one bounded run over
+the 18 frozen constituents. **No grid, backtest, campaign, selection or pilot ran**; no confirmatory-window
+candle was read; no v1 artifact changed; `src/breakout_research/` was not touched; the market-cap snapshot
+was not re-retrieved.
+
+**Files added**
+- `src/v2_campaign/` — the execution path: `__init__.py`, `errors.py`, `identity.py`, `scope.py`, `data.py`,
+  `units.py`, `runner.py`. Canonical source digest
+  `c69cc02188d95def8a9c2e24f717ccc20c36035d5049a3216451e841dfe42cba`.
+- `configs/research_v2_selection_authorization_1.json` — the versioned authorization (hash above)
+- `scripts/build_v2_selection_authorization_1.py` — deterministic producer (creation instant pinned; refuses
+  to overwrite without `--force`; `--print` writes nothing)
+- `scripts/verify_research_v2_selection_authorization_1.py` — read-only offline verifier (12 rule groups,
+  exit 0/1, JSON report)
+- `tests/test_v2_campaign_execution_path.py` — 23 tests against **synthetic fixtures in a temporary
+  directory**; the real universe, the real datasets and the repository's own v2 paths are never touched
+- `tests/test_research_v2_selection_authorization_1.py` — 32 tests, 15 of them tamper tests
+
+**Files modified**
+- `research_state/brainstorming_queue.md` — BRAIN-008 §15 implementation record
+- `research_state/agent_handoff.md` — this report and the next task message
+- `research_state/campaign_authorization.json` — **controller-driven only** (`authorized_at_utc` refresh);
+  `authorized`, `code_hash` and every functional field unchanged
+
+**State verified (2026-10-20T00:10Z)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **339 passed**, exit 0 (284 pre-existing + 55 new:
+  23 in the execution-path module, 32 in the authorization module)
+- all **seven** v2 verifiers exit 0: `verify_research_v2_spec.py`, `verify_research_v2_manifests.py`,
+  `verify_research_v2_execution.py`, `verify_research_v2_candidate_freeze.py`,
+  `verify_research_v2_execution_amendment_1.py`, `verify_research_v2_code_hash_amendment_1.py` and the new
+  `verify_research_v2_selection_authorization_1.py`
+- `compute_code_hash()` → `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` —
+  **unchanged**, equal to `research_state/campaign_authorization.json` `code_hash`
+- canonical digests: hashed set `3e8e4169…` (unchanged), execution path `c69cc021…`
+- v1 artifacts byte-unchanged (sha256): `configs/research_v1.json` `558d6099…`,
+  `research/universe_manifest.json` `c8f367d2…`, `research/data_manifest.json` `cf39de42…`,
+  `research/candidate_manifest.json` `87589f83…`, `research/candidate_manifest_v2.json` `a68b061a…`
+- v2 artifacts unchanged: `research/universe_manifest_v2.json` `4e927e52…`, `research/data_manifest_v2.json`
+  `9f64d8d1…`, `configs/research_v2.json` `49fb0814…`, `configs/research_v2_execution.json` `aa902aa9…`,
+  `configs/research_v2_candidate_freeze.json` `5a56b3d8…`, `configs/research_v2_execution_amendment_1.json`
+  `1149d9cb…`, `configs/research_v2_code_hash_amendment_1.json` `4409b6af…`
+- `src/breakout_research/` untouched (`git status --short src/breakout_research` empty; the last `src/`
+  commit is still `ea5da766`)
+- **no v2 execution artifact exists** (`research/shards_v2`, `research/ledger_v2.json`,
+  `research/results_manifest_v2.json`, `research/results_v2.jsonl`, `research_state/checkpoint_v2.json`),
+  no `v2-campaign` row in `research/results.jsonl`, `holdout_exposed_count = 0`,
+  `confirmatory_window_status = NOT_STARTED`
+- campaign terminal state unchanged: `AWAITING_NEW_CANDIDATES` /
+  `NEW_CANDIDATES_PENDING_PREREGISTERED_UNIVERSE_VERSION` / `UNIVERSE_VERSION_DECISION`
+
+**CONFIRMED findings**
+1. **The execution path can be built outside the hashed set without touching it.** `src/v2_campaign/`
+   imports the v1 engine (`run_fold_backtest`, `ResultStore`, `CheckpointManager`, `load_verified_candles`,
+   `buyhold_baseline`, `select_candidates`, `get_configurations`) and adds no file under
+   `src/breakout_research/`; the ordered code hash and the canonical hashed-set digest are unchanged.
+2. **The unchanged v1 rule can be reused rather than re-implemented, and the reuse is testable.** The fold
+   structure is proved against the v1 `_get_fold_bounds` and the per-unit data hash against the v1
+   `_unit_data_hash` by differential tests, so a drift between the v2 path and the v1 rule fails a test
+   instead of silently changing the protocol.
+3. **The confirmatory-window boundary can be enforced fail-closed twice.** The dataset is refused before it
+   is read (against the declared last candle) and again after it is read (against every candle). A dataset
+   that reaches into the window is never trimmed silently, so a manifest that understates a dataset cannot
+   buy a read.
+4. **The v2 selection run performs no provider request at all.** It reads only the immutable local datasets
+   that `research/data_manifest_v2.json` binds and verifies. It therefore cannot re-retrieve, re-time or
+   refresh market data — a test patches `requests.Session.request` to fail and the run still completes.
+5. **A killed process would have burned the single authorized run** (defect found and fixed in this
+   session). The first implementation refused any start while the ledger held a `RUNNING` entry, so a
+   session that was cut off mid-run could never continue it. The rule is now: one *logical* run — a
+   completed run is never re-run, an interrupted run is **resumed** from the verified shards with the number
+   of resumes bounded by the already recorded `max_retries_on_technical_failure` (3), a boundary abort
+   rolls everything back and releases the run, and the result stream is a projection of the promoted shards
+   so that a resume cannot duplicate a row.
+6. **The output volume of the bounded run is a platform problem, not a research problem.** 18 × 2,304 × 4 ×
+   3 = 497,664 execution units; at the v1 record size that is of the order of half a gigabyte of shards,
+   which the v1 campaign could not push to the remote branch. It is recorded as residual limitation `RL2`
+   in the authorization, which requires the run to be delivered as a bounded artifact or a recovery bundle
+   rather than as one commit.
+
+**Rule → code → test map** (this session added a module under `src/`; it is **outside** the hashed set, so
+`compute_code_hash()` is unchanged)
+
+| Frozen rule | Implementation | Test |
+| --- | --- | --- |
+| the candidate set is the frozen set, never re-ranked, widened or narrowed | `src/v2_campaign/scope.py:frozen_scope`, `src/v2_campaign/runner.py:build_plan` | `tests/test_v2_campaign_execution_path.py::test_the_run_refuses_a_widened_candidate_set`, `::test_the_frozen_candidate_set_is_the_validated_v2_universe` |
+| development data only; the confirmatory window is never read | `src/v2_campaign/data.py:load_development_candles` | `::test_the_run_refuses_a_dataset_that_reaches_into_the_confirmatory_window`, `::test_the_development_loader_refuses_a_dataset_that_declares_a_later_candle` |
+| the unchanged v1 selection rule | `src/v2_campaign/scope.py:selection_rule`, `src/v2_campaign/runner.py:_selection_summary` | `::test_the_selection_rule_of_the_fixture_is_the_repository_v1_rule`, `::test_the_run_reports_an_asset_without_a_candidate` |
+| the fold structure and the per-unit data hash are the v1 rules | `src/v2_campaign/units.py:fold_bounds`, `::unit_data_hash` | `::test_the_fold_structure_is_the_unchanged_v1_rule`, `::test_the_unit_data_hash_is_the_unchanged_v1_rule` |
+| the holdout-position fold is never evaluated; `holdout_exposed_count` stays 0 | `src/v2_campaign/units.py:validation_folds` | `::test_the_run_never_evaluates_the_holdout_fold` |
+| only the v2 paths are written, never a v1 path | `src/v2_campaign/scope.py:assert_no_forbidden_output`, `src/v2_campaign/runner.py:_guard_path` | `::test_the_run_writes_only_the_v2_paths` |
+| the bounds of execution amendment 1 hold | `src/v2_campaign/runner.py:build_plan` | `::test_the_run_is_bounded_by_the_authorized_asset_count` |
+| one logical run; an interrupted run is resumed; a completed run is not re-run | `src/v2_campaign/runner.py:claim_attempt` | `::test_the_run_consumes_its_single_run`, `::test_the_number_of_resumes_is_bounded`, `::test_a_technical_failure_keeps_the_partial_state_for_a_resume` |
+| a boundary abort rolls back and releases the run | `src/v2_campaign/runner.py:_rollback` | `::test_a_boundary_abort_rolls_back_and_releases_the_run`, `::test_an_abort_rolls_back_the_artifacts_the_run_created` |
+| the run contacts no provider | `src/v2_campaign/data.py:load_development_candles` (local, hash-verified datasets only) | `::test_the_run_makes_no_provider_request` |
+| the run identity is the portable composite digest (BRAIN-009 rule) | `src/v2_campaign/identity.py:run_code_identity` | `::test_the_records_are_bound_to_the_run_identity` |
+| the authorization is self-hashing, reproducible and non-vacuous | `scripts/verify_research_v2_selection_authorization_1.py` | `tests/test_research_v2_selection_authorization_1.py::test_the_authorization_is_self_hashing`, `::test_the_authorization_is_reproducible_from_its_producer`, and the 15 tamper tests |
+
+**UNVERIFIED / STALE**
+- STALE (marked in this file): the 19:07Z, 21:05Z, 21:38Z, 22:07Z and 23:27Z task messages (all delivered);
+  the 23:37Z task message (delivered by this session).
+- The 22:07Z handoff's "6 of 120 permutations" is DISPROVEN (corrected to 1 of 120 in the 23:37Z session).
+- `configs/research_v2.json` still records P2/P3 as `OUTSTANDING` although both are delivered; the file is
+  immutable and hash-verified, so the correction is a versioned amendment, not an edit.
+- **The v2 selection run has not been performed.** The authorization permits one logical run; the run
+  itself, its cost and its delivery are the next task.
+
+**Unsuccessful attempts (and the condition that would justify a retry)**
+- The first authorization build recorded the execution-path digest of a package that was still being
+  edited; each later edit under `src/v2_campaign/` invalidated the artifact until the producer was re-run
+  (three times in this session). **Operational rule: freeze the execution path before building the
+  authorization, or re-run `scripts/build_v2_selection_authorization_1.py --force` afterwards and record
+  the new `manifest_hash`.** A stale digest is detected by the verifier and by the tamper tests.
+- The first implementation of the attempt rule refused a resumed run (finding 5 above). Fixed before the
+  artifact was finalized; the fix is covered by three new tests.
+- The first result-stream implementation appended each record immediately, which could duplicate a row
+  after a resume (the uncommitted shard buffer was lost while the stream kept the row). Fixed by making
+  the stream a projection of the promoted shards; covered by
+  `test_a_technical_failure_keeps_the_partial_state_for_a_resume`.
+- The first tamper test read a file after unlinking it (`FileNotFoundError`). Fixed by reading before
+  unlinking; implementation-side, no retry of the unchanged action is warranted.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The failure modes of this session were implementation
+defects (the attempt rule, the result-stream projection), not instruction gaps: README Section 2A already
+requires a rule→code→test map for a module under `src/`, forbids a check that compares an artifact with a
+constant copied out of it, and requires the rollback and falsifier rules to be recorded. The one
+instruction that would have helped — "an irreversible one-shot authorization needs a resume path, not
+only a rollback path" — is a property of this protocol, not a reusable prompt rule, and it is now recorded
+in the authorization artifact itself (`resume_semantics`) and in the brainstorming record. No prompt or
+research-protocol text was changed.
+
+**Checkpoint / persistence status**
+- Local commit: **not created by the agent** (no explicit user request). The working tree carries the new
+  package, the new authorization and its producer/verifier, the two new test modules, the
+  brainstorming-queue record and this report.
+- Remote persistence: `git rev-parse HEAD` and `git ls-remote origin main` are unchanged from the
+  23:37Z session — i.e. **the new artifacts are not yet committed or pushed**. A follow-up commit/push (or
+  the session checkpoint) is required.
+- Artifact/recovery: every new artifact is reproducible from the repository — the producer rebuilds the
+  authorization deterministically and the verifiers recompute every expectation from the repository.
+- Checkpoint reconciliation: not applicable — no run, no result row, no shard, no ledger was produced;
+  `research_state/checkpoint.json` and the v1 campaign state are untouched.
+
+**Unresolved blockers (ranked)**
+1. **The v2 selection run has not been performed**, and its cost is unmeasured. The bounded run is
+   497,664 execution units; the per-unit cost against the real v2 datasets is unknown, and the output
+   volume (`RL2`) cannot be committed as one push. This is the next bounded task.
+2. **Residual limitation `RL2`** — the run's result volume (≈ 0.5 GB of shards) needs a delivery
+   decision: a bounded artifact or a recovery bundle, never a single commit. Recorded in the
+   authorization; undecided.
+3. **Residual limitation `RL1`** — the v1 campaign runtime gate compares the live ordered digest, so a
+   v1 resume is only possible on a checkout with the authorized enumeration order. Undecided by design;
+   BRAIN-009 rejects the rotation. Nothing runs today.
+4. **`configs/research_v2.json` still records P2/P3 as `OUTSTANDING`** although both are delivered; the
+   file is immutable and hash-verified, so the correction is a versioned amendment, not an edit.
+5. The confirmatory window cannot exist before `2027-01-17T22:00:00Z` — no action possible or needed.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** perform the **single authorized v2 selection run** over the 18 frozen
+constituents and deliver its selection outcome. The execution path and the authorization exist; the run
+does not.
+
+**Subject:** the v2 selection execution path and its authorization are delivered and verified; the next
+bounded task is the one authorized v2 selection run over the frozen candidate set
+
+**Status (verified 2026-10-20T00:10Z):**
+- Delivered and verified: `configs/research_v2.json` `49fb0814…` (P1),
+  `research/universe_manifest_v2.json` `4e927e52…` (P2), `research/data_manifest_v2.json` `9f64d8d1…`
+  (P3), `configs/research_v2_execution.json` `aa902aa9…` (P4),
+  `configs/research_v2_candidate_freeze.json` `5a56b3d8…` (frozen candidate set),
+  `configs/research_v2_execution_amendment_1.json` `1149d9cb…` (bounded v2 selection parameters),
+  `configs/research_v2_code_hash_amendment_1.json` `4409b6af…` (portable tree identity),
+  `configs/research_v2_selection_authorization_1.json` `76be0d3b…` (the authorization for **one**
+  bounded v2 selection run) and the execution path `src/v2_campaign/`.
+- Seven v2 verifiers exit 0; the full suite is 339/339 green; `compute_code_hash()` is still
+  `2efd3b18…`; the canonical digests are the hashed set `3e8e4169…` and the execution path
+  `c69cc021…`.
+- Frozen candidate set: **18 validated constituents** (ADA AVAX BCH BNB BTC DOGE ETH HBAR LINK LTC NEAR
+  SOL SUI TRX UNI XLM XRP ZEC), frozen at 2026-10-19T21:30:17Z. HYPEUSDT
+  (`insufficient_hourly_history`) and XMRUSDT (`binance_spot_unavailable`) stay excluded with reasons.
+- Confirmatory window: opens `2026-10-19T22:00:00Z`, needs ≥ 2,160 closed hourly candles, single-use,
+  never reused from v1, **never read during the selection run** — earliest possible end
+  `2027-01-17T22:00:00Z`.
+- Nothing has run: no v2 shard, ledger, result manifest, result stream or checkpoint exists, no v2 result
+  row exists, `holdout_exposed_count = 0`, `confirmatory_window_status = NOT_STARTED`; v1 artifacts are
+  byte-unchanged.
+
+**The task.** The authorization permits **one logical run** of the v2 selection grid: 18 assets × 2,304
+configurations × 4 validation folds × 3 cost scenarios = **497,664 execution units** (41,472 configuration
+units, the authorized bound). It runs through `src/v2_campaign/runner.py:run_selection` with
+`default_workspace(repo_root)`.
+
+1. **First, a bounded rehearsal (mandatory, cheap, consumes nothing).** Run **2 units** — for example one
+   asset × one configuration × one validation fold × one cost scenario — against the **real** v2 datasets
+   through the same code path, but with the outputs redirected to a **temporary directory outside the
+   repository** (do not use `research/ledger_v2.json`, so the authorized run is not claimed and no attempt
+   is consumed). Record the measured wall-clock per unit and the measured record size. They decide whether
+   the full run fits in a session and how large the shard volume is. If the rehearsal exposes a defect in
+   the execution path, **stop and report it** — do not start the authorized run.
+2. **Then perform the authorized run** (the single logical run). It is resumable: if the session ends or
+   the process is killed, the next process **resumes** it from the verified shards; a completed run is never
+   re-run; the number of resumes is bounded by `max_retries_on_technical_failure` (3). A boundary violation
+   aborts, rolls back and releases the run; a technical failure keeps the verified shards for the resume.
+3. **Report the selection outcome honestly.** The ledger `research/ledger_v2.json` carries the per-asset
+   outcome: the selected configuration per asset, and **explicitly the assets for which no configuration
+   survived the unchanged v1 selection rule** (`assets_without_candidate`, `outcome`). An asset with no
+   candidate is reported, never hidden, and `NO_CANDIDATE` is a legitimate result of this run.
+4. **Decide and record the delivery of the result volume** (residual limitation `RL2`). The shards under
+   `research/shards_v2/` are the authoritative record set and are bounded to 4 MiB per file — commit them
+   as many small files, as the v1 campaign did. The single-file result stream `research/results_v2.jsonl`
+   is expected to exceed the 100 MB per-file push limit: it is a projection of the verified shards and is
+   regenerated from them rather than committed as one blob. Record the decision and the reasoning in the
+   handoff; the v1 shards, ledger and result stream stay untouched either way.
+
+**Do NOT:**
+- edit, add or delete any file under `src/breakout_research/` (the hashed set; the v1 campaign
+  authorization depends on `code_hash 2efd3b18…`);
+- **edit any file under `src/v2_campaign/`** — the authorization binds the execution path's canonical digest
+  `c69cc021…`, so an edit invalidates the authorization and the verifier and two tests fail. If a fix is
+  unavoidable, re-run `python3 scripts/build_v2_selection_authorization_1.py --force`, record the **new**
+  `manifest_hash` in the handoff, and state why the edit was necessary;
+- edit `research_state/campaign_authorization.json` or `research_state/checkpoint.json`;
+- edit any frozen artifact in place (`configs/research_v1.json`, `configs/research_v2.json`,
+  `configs/research_v2_execution.json`, `configs/research_v2_candidate_freeze.json`,
+  `configs/research_v2_execution_amendment_1.json`, `configs/research_v2_code_hash_amendment_1.json`,
+  `configs/research_v2_selection_authorization_1.json`, `research/universe_manifest.json`,
+  `research/data_manifest.json`, `research/candidate_manifest.json`, `research/candidate_manifest_v2.json`,
+  `research/universe_manifest_v2.json`, `research/data_manifest_v2.json`);
+- write to any v1 path (`research/results_shards/`, `research/results_manifest.json`,
+  `research/results.jsonl`, `research_state/checkpoint.json`) or to the v1 campaign-cycle directories;
+- read any candle inside the v2 confirmatory window, or evaluate the holdout-position fold;
+- fetch candles, re-retrieve or re-time the market-cap snapshot, or contact any provider;
+- re-run `scripts/v2_constituent_validation.py`, `scripts/build_v2_candidate_freeze.py` or
+  `scripts/build_v2_code_hash_amendment_1.py` (they would rewrite their artifacts and change their hashes);
+- start a **second** authorized run after the first completes;
+- evaluate the confirmatory window or produce the selected-configuration manifest: the confirmatory window
+  is a separate, later, separately authorized step.
+
+**Acceptance criteria:**
+- the rehearsal is measured and recorded (per-unit wall clock, per-record size, projected shard volume);
+- the authorized run either completes or is left **resumably** in the ledger with its verified shards, the
+  checkpoint and the result stream in agreement;
+- `research/ledger_v2.json` records the per-asset selection outcome, the counts (`executed`,
+  `skipped_already_complete`, `records_written`), the bounds, the run identity and
+  `assets_without_candidate` — including the case where no asset has a candidate;
+- `holdout_exposed_count` is 0 in `research_state/checkpoint_v2.json`, `confirmatory_window_status` is still
+  `NOT_STARTED` and `holdout_exposed_count` is still 0 in `research/data_manifest_v2.json`;
+- the v1 artifacts are byte-unchanged (the sha256 list above), `compute_code_hash()` is still `2efd3b18…`,
+  the canonical digests are still `3e8e4169…` (hashed set) and `c69cc021…` (execution path);
+- **the authorization verifier's nothing-runs rule must be replaced, not deleted**: rule 12 currently
+  asserts that no v2 execution artifact exists. Once the run has happened that assertion is false by
+  design. Replace it with an **executed-state check that is at least as strict** — the ledger's `run_id`
+  must be the authorized run, the recorded counts must stay inside the authorized bounds,
+  `holdout_exposed_count` must be 0, the v1 artifacts must stay byte-identical, and no v2 row may appear
+  in `research/results.jsonl` — and keep a tamper test for the new check;
+- `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0, and all seven v2 verifiers exit 0;
+- the handoff records the measured cost, the delivery decision, the selection outcome per asset, and the
+  exact commands with their exit statuses.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v2_spec.py`;
+`python3 scripts/verify_research_v2_manifests.py`; `python3 scripts/verify_research_v2_execution.py`;
+`python3 scripts/verify_research_v2_candidate_freeze.py`;
+`python3 scripts/verify_research_v2_execution_amendment_1.py`;
+`python3 scripts/verify_research_v2_code_hash_amendment_1.py`;
+`python3 scripts/verify_research_v2_selection_authorization_1.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm no `src/breakout_research/` change, no frozen-artifact
+change, and that only the v2 paths and the new run artifacts were added).
+
+**Environment note:** the container has no `pytest` and no `numpy` by default. Install them before running
+the suite (`python3 -m pip install pytest numpy requests` → pytest 9.1.1, numpy 2.5.4), otherwise the suite
+cannot run at all and must be reported as `NOT_RUN`.
+
+**Queued after this task (not for that session):** the versioned amendment that reconciles
+`configs/research_v2.json` (P2/P3 still read `OUTSTANDING` although both are delivered) with the delivered
+prerequisite list; a recorded decision on residual limitation `RL1` (the v1 campaign runtime gate compares
+the live ordered digest); and, only after the selected-configuration manifest is committed and hash-bound
+and the confirmatory window exists, the separately authorized confirmatory evaluation — which cannot
+happen before `2027-01-17T22:00:00Z`.
