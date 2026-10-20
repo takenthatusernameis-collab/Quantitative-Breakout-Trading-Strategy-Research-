@@ -5505,3 +5505,332 @@ outside the hashed set) and the v3 confirmatory authorization; then the versione
 `configs/research_v2.json` (P2/P3 still read `OUTSTANDING` although both are delivered) and the final report once
 the confirmatory windows close. The v3 confirmatory evaluation itself cannot be performed before
 `2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not before `2027-01-17T22:00:00Z`.
+
+## Session activity — 2026-10-20T20:05:00Z (this session)
+
+**Task (from the durable handoff at 19:30:00Z):** produce the **preregistered v3
+confirmatory-evaluation protocol** — a versioned, self-hashed, immutable design deliverable that fixes
+how the v3 confirmatory evaluation will be performed once the window exists: exactly the four
+published v3 candidates with their configuration ids; the window definition; the data path
+**including the window benchmark series**; the unchanged evaluation rule; **exactly one**
+pass/fail/inconclusive criterion; the reporting and falsifiers; and the authorization boundary and
+code identity. Nothing runs, no candle is read, no code under `src/` is added in that session.
+
+**Outcome:** **Delivered and verified.** The v3 confirmatory evaluation is now preregistered in
+rules as `configs/research_v3_confirmatory_protocol.json` (`manifest_hash f008876b…`, file sha256
+`fba2b60c…`), with a deterministic producer, a read-only offline verifier and 37 deterministic tests
+(13 of them tamper controls). The protocol states the scope, the window, the data path with the
+window benchmark, the unchanged evaluation rule, **one** decision criterion (the preregistered v3
+promotion rule, copied verbatim), the reporting obligations with the v1/v2 BTC-alignment deviation
+carried as an unrepaired disclosure, and an authorization boundary that authorizes nothing.
+**No grid, backtest, campaign, selection or confirmatory evaluation ran**, no candle was read, no
+provider was contacted, no v1/v2/v3 frozen artifact changed, `src/` was not touched, and the v3
+selection run was not repeated.
+
+**Files added**
+- `configs/research_v3_confirmatory_protocol.json` — the preregistered protocol (hash above)
+- `scripts/build_v3_confirmatory_protocol.py` — deterministic producer (freeze instant pinned; every
+  field re-derived from the hash-bound artifacts; refuses to publish against a modified source tree,
+  a moved window or a benchmark disagreement; refuses to overwrite without `--force`)
+- `scripts/verify_v3_confirmatory_protocol.py` — read-only offline verifier (13 numbered rule
+  groups, exit 0/1, JSON report)
+- `tests/test_v3_confirmatory_protocol.py` — 37 deterministic tests, 13 tamper controls
+- `scripts/regenerate_v3_result_stream.py` — the v3 counterpart of the v2 stream regenerator (see
+  CONFIRMED finding 3)
+
+**Files modified**
+- `research_state/brainstorming_queue.md` — BRAIN-012 implementation record for this step
+- `research_state/agent_handoff.md` — this report
+- `research_state/campaign_authorization.json` — **controller-driven only** (`authorized_at_utc`
+  19:19:00Z → 19:49:54Z); `authorized`, `code_hash` and every functional field unchanged
+
+**State verified (2026-10-20T20:05:00Z)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **837 passed**, exit 0 (800 pre-existing + 37 new)
+- every `scripts/verify_*.py` and `scripts/report_*.py` exits 0 (`scripts/verify_cycle_results.py`
+  requires a `cycle_dir` argument and is not a repository-wide gate); the new verifier reports
+  `{"ok": true, "failures": []}`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+  → `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` — **unchanged**, equal to
+  `research_state/campaign_authorization.json` `code_hash` (`authorized: true`, `reasons: []`); in this
+  checkout the live ordered digest happens to equal the authorized value
+- canonical digests unchanged: hashed set `3e8e4169…`, v2 selection path `c69cc021…`, v2
+  confirmatory path `277a4bbe…`, v3 path `29cd064e…`; **no file under `src/breakout_research/`,
+  `src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/` was touched**
+  (`git status --short src/` is empty)
+- v1 artifacts byte-unchanged (sha256): `configs/research_v1.json` `558d6099…`,
+  `research/universe_manifest.json` `c8f367d2…`, `research/data_manifest.json` `cf39de42…`,
+  `research/candidate_manifest.json` `87589f83…`, `research/candidate_manifest_v2.json` `a68b061a…`
+- no frozen v2 or v3 artifact changed: `configs/research_v2.json` `9f23e233…`,
+  `configs/research_v2_execution.json` `dd45f840…`, `configs/research_v3.json` `2c903a29…`,
+  `configs/research_v3_execution.json` `ac936a1d…`, `configs/research_v3_candidate_freeze.json`
+  `0477f562…`, `configs/research_v3_candidate_freeze_amendment_1.json` `e20e277d…`,
+  `configs/research_v3_candidate_freeze_amendment_2.json` `ebb85d4a…`,
+  `configs/research_v3_data_manifest_amendment_1.json` `80856d0d…`,
+  `configs/research_v3_execution_amendment_1.json` `133afd2d…`,
+  `configs/research_v3_execution_amendment_2.json` `964e82c7…`,
+  `configs/research_v3_selection_authorization_1.json` `bc4e6ed5…`,
+  `research/v3_selected_configurations_manifest.json` `e39b0eb1…` (file) / `3d24a278…` (manifest hash)
+- no v3 confirmatory output path exists (`research/shards_v3_confirmatory/`,
+  `research/ledger_v3_confirmatory.json`, `research/results_manifest_v3_confirmatory.json`,
+  `research/results_v3_confirmatory.jsonl`, `research_state/checkpoint_v3_confirmatory.json`), the v3
+  confirmatory window is `NOT_STARTED` and `holdout_exposed_count = 0` in the data manifest, the
+  ledger and the checkpoint; the v2 confirmatory window is `NOT_STARTED` with
+  `holdout_exposed_count = 0`
+
+**Rule → code → test map** (this session added no module under `src/`; the protocol's rules are
+implemented in `scripts/`, so `compute_code_hash()` is unchanged)
+
+| Rule | Implementation | Test |
+| --- | --- | --- |
+| the protocol is self-hashing | `scripts/verify_v3_confirmatory_protocol.py:compute_manifest_hash` | `tests/test_v3_confirmatory_protocol.py::test_manifest_hash_recomputes_from_the_document` |
+| the protocol is reproducible from its producer | `scripts/build_v3_confirmatory_protocol.py:build` | `::test_protocol_is_reproducible_from_the_producer` |
+| the scope is exactly the four published candidates, with their configuration ids | `scripts/verify_v3_confirmatory_protocol.py` §2 | `::test_evaluation_scope_is_exactly_the_published_candidates`, `::test_verifier_detects_a_tampered_evaluation_scope`, `::test_verifier_detects_a_changed_configuration_id`, `::test_verifier_detects_a_widened_scope` |
+| the two assets without a candidate are out of scope and keep their reason | same, §2 | `::test_evaluation_scope_is_exactly_the_published_candidates` |
+| the scope is bound to the published manifest, the authorization, the v3 spec, the effective and base data-manifest identities and the universe manifest | same, §2 | `::test_evaluation_scope_is_exactly_the_published_candidates` |
+| the window opens at the frozen start and the freeze amendments did not move it | same, §3 | `::test_confirmatory_window_opens_at_the_frozen_start_and_needs_2160_hours`, `::test_the_freeze_amendments_did_not_move_the_window`, `::test_verifier_detects_a_confirmatory_window_that_starts_before_the_freeze` |
+| the window needs ≥ 2,160 closed hourly candles and the earliest end recomputes from the start | same, §3 | `::test_confirmatory_window_opens_at_the_frozen_start_and_needs_2160_hours`, `::test_verifier_detects_a_confirmatory_window_that_requires_fewer_hours` |
+| the window is single-use, never overlaps the v1 holdout or the v2 window, never reused, never used for selection, never ranked or re-tuned on | same, §3 | `::test_confirmatory_window_rules_forbid_reuse_overlap_and_retuning` |
+| the data path retrieves once after the readiness test, counts every read and hashes against the v3 manifest | same, §4 | `::test_data_path_records_single_retrieval_and_exposure_counting` |
+| a window benchmark series is required, does not exist yet and may not be substituted by the development benchmark | same, §4 | `::test_the_window_benchmark_series_is_required_and_cannot_be_substituted`, `::test_verifier_detects_a_substitutable_window_benchmark` |
+| the benchmark is aligned by UTC candle close, never forward-filled, fails closed and never drops the 576 BTC configurations per asset | same, §4 | `::test_the_benchmark_alignment_rule_is_the_frozen_methodology`, `::test_verifier_detects_dropped_btc_configurations` |
+| the evaluation rule is the unchanged v1 metric and cost scenarios, with no re-tuning, re-ranking or grid extension | same, §5 | `::test_evaluation_rule_records_unchanged_v1_rule_and_costs` |
+| **exactly one** confirmatory decision criterion, the preregistered v3 promotion rule, copied verbatim | same, §6 (`collect_criterion_keys`) | `::test_exactly_one_confirmatory_decision_criterion`, `::test_verifier_detects_a_second_decision_criterion`, `::test_verifier_detects_a_tampered_promotion_rule` |
+| the reporting block names the assets without a candidate, discards nothing and re-opens neither the v1 holdout nor the v2 window | same, §7 | `::test_reporting_and_falsifiers_define_outcomes_and_falsifiers` |
+| the v1/v2 BTC-alignment deviation is carried into the final report and not repaired | same, §7 | `::test_the_deviation_disclosure_is_carried_and_not_repaired` |
+| the protocol authorizes no evaluation, no window read and no benchmark retrieval | same, §8 | `::test_protocol_status_records_no_evaluation`, `::test_authorization_boundary_authorizes_nothing`, `::test_verifier_detects_a_self_authorizing_protocol` |
+| the code identity is the portable canonical digest, and only genuinely-outside paths are named | same, §9 | `::test_code_hash_constraint_records_canonical_and_authorized_digests`, `::test_verifier_detects_a_modified_hashed_source_tree` |
+| nothing has been executed under the protocol | same, §10 | `::test_nothing_has_been_executed_under_this_protocol`, `::test_verifier_detects_confirmatory_exposure`, `::test_verifier_detects_a_v3_confirmatory_output_path` |
+| the v1 evidence is byte-identical and the v2 window is untouched | same, §11 | `::test_v1_artifacts_are_unchanged`, `::test_verifier_detects_a_missing_v1_artifact` |
+| the related artifacts are the recorded ones | same, §12 | `::test_related_artifacts_point_at_the_recorded_artifacts` |
+| the protocol supersedes the selection authorization without reusing the v1 holdout or the v2 window | same, §13 | `::test_supersedes_the_selection_authorization` |
+
+**CONFIRMED findings**
+1. **The v3 line had no preregistered confirmatory protocol, and the v2 line shows why one must
+   exist.** The v2 line needed `configs/research_v2_confirmatory_protocol_amendment_1.json` only
+   because two frozen artifacts stated *different* confirmatory decision criteria (the v2
+   specification's promotion rule and the v2 protocol's buy-and-hold comparison), and a single-use
+   window cannot be re-graded after it has been burned. The v3 protocol therefore states exactly
+   one criterion — the v3 specification's `holdout.promotion_rule`, copied verbatim — and the
+   verifier scans the whole document for criterion-bearing keys and requires exactly one
+   (`criterion_paths == ["decision_rule.criteria"]`), so a competing criterion cannot be added
+   without being detected.
+2. **The v3 confirmatory evaluation needs a BTC series that does not exist and cannot exist yet.**
+   The published candidates include the `btc_ema_168` family (576 of 2,304 configurations per
+   asset), and the frozen methodology aligns BTC and the asset by UTC candle close
+   (`docs/research_protocol.md:101`). The published development benchmark
+   (`research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv`, content hash `50d357b0…`) covers
+   `2023-10-21T11:00:00Z … 2026-10-20T10:00:00Z` and therefore **does not cover** the confirmatory
+   window that opens `2026-10-20T13:00:00Z`; the protocol requires a *window* benchmark series,
+   retrieved once, hash-verified, index-aligned and fail-closed, and it explicitly forbids
+   substituting the development benchmark.
+3. **A pre-existing checkout condition was found and repaired (recorded, not hidden).** In this
+   checkout the gitignored projection `research/results_v3.jsonl` (199 MB; listed in `.gitignore`
+   because it exceeds the per-file push limit — residual limitation RL2) was **absent**, so 4 tests
+   and 5 fixture errors failed in `tests/test_v3_selection_run.py` and
+   `tests/test_research_v3_manifests.py` with "the run left no result stream". The failure was
+   reproduced **with this session's new files removed**, so it is not caused by this session: the
+   shards (`research/shards_v3/v3-campaign/`, 3,323 files) are the authoritative record set and the
+   stream is their projection. The v3 line had no counterpart of
+   `scripts/regenerate_v2_result_stream.py`, so one was written
+   (`scripts/regenerate_v3_result_stream.py`: it re-verifies every experiment id while it writes and
+   renames the projection into place atomically). The rebuilt file hashes to
+   `63860a7143b79ebc73edbbadfae14629b902862ab51cfbffffdced29ddf466d6` — **byte-identical to the
+   digest the 19:30Z session recorded for the same stream** — and `scripts/verify_v3_selection_run.py`
+   independently confirms that it is the projection of the verified shards. **No grid unit was
+   evaluated, no engine was called, no shard was written and no ledger was touched: this is a
+   projection rebuild from the authoritative shards, not a re-run.**
+4. **The v3 confirmatory evaluation is time-blocked, not blocked by a missing artifact.** The window
+   opens `2026-10-20T13:00:00Z` and needs ≥ 2,160 closed hourly candles, so the earliest possible
+   end is `2027-01-18T13:00:00Z`; the v2 confirmatory window is time-blocked until
+   `2027-01-17T22:00:00Z`. Both lines' remaining work is therefore preregistration, not execution.
+
+**UNVERIFIED / STALE**
+- `UNVERIFIED_CLAIM`: the *economic* outcome of the four v3 candidates is unknown. The published
+  manifest records the selection outcome, not a result; the confirmatory evaluation cannot run
+  before `2027-01-18T13:00:00Z`.
+- The v3 confirmatory **execution path** (`src/v3_confirmatory/`) and the v3 confirmatory
+  **authorization** do not exist. The protocol names the planned path
+  (`outside_hashed_set_examples: src/v3_confirmatory/`) but the package has not been written; the
+  authorization must bind its canonical digest.
+- `STALE`: `configs/research_v2.json` (P2/P3) and `configs/research_v2_candidate_freeze.json`
+  (`selection_remainder`) still read `OUTSTANDING` although both are delivered; they are frozen and
+  are reconciled by versioned amendments, not by edits. The v2-specification reconciliation is
+  queued behind the v3 line and is cosmetic.
+- `STALE` (marked in this file): the 19:00Z task message ("no bounded implementation task is
+  actionable") — the v3 published outcome was missing and was delivered in the 19:30Z session; the
+  19:30Z task message (the v3 confirmatory protocol) is delivered by this session.
+
+**Unsuccessful attempts (and the condition that would justify a retry)**
+- The first full-suite run reported 4 failures and 5 errors. The cause was diagnosed by
+  re-running `tests/test_v3_selection_run.py` **with this session's new files moved out of the
+  tree**: the same failures appeared, which proved they were pre-existing (the missing gitignored
+  projection). The remedy was applied to the *cause* — the projection was rebuilt from the
+  authoritative shards — not to the tests. No unchanged action was retried after a deterministic
+  failure.
+- The container had neither `pytest` nor `numpy`; `python3 -m pip install pytest numpy requests`
+  → pytest 9.1.1, numpy 2.5.4. This is an environment gap, not a code defect.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The task message was complete and unambiguous:
+it named the artifact path, the six rule groups, the pattern to follow, the "do not" list, the
+acceptance criteria and the verification commands, and it named the specific v2 lesson the v3
+protocol must avoid (the two-criteria conflict). The two defects found this session were
+implementation-side (the missing gitignored projection — an environment condition — and the
+absence of a v3 stream regenerator, a repository capability gap that the v2 line had and the v3
+line did not). Neither is an instruction gap, so no prompt revision is proposed and
+`research_state/prompt_evolution.md` is untouched.
+
+**Checkpoint / persistence status**
+- Local commit: **not created by the agent** (no explicit user request). The working tree carries
+  the five new files, the brainstorming-queue record and this report. The harness checkpoint is
+  responsible for the commit.
+- Remote persistence: `git rev-parse HEAD` == `git ls-remote origin main` == `2753e187…` at the
+  end of this session — i.e. **the new artifacts are not yet committed or pushed**.
+- Artifact/recovery: the protocol is reproducible byte for byte from
+  `scripts/build_v3_confirmatory_protocol.py` (which re-derives every fact from the hash-bound
+  artifacts), and the verifier recomputes every expectation from the repository. The result-stream
+  projection is recoverable from the committed shards with
+  `scripts/regenerate_v3_result_stream.py`.
+- Checkpoint reconciliation: not applicable — no run, no result row, no shard and no ledger was
+  produced or modified by this session; `research_state/checkpoint_v3.json`, `research/ledger_v3.json`
+  and the v1 campaign state are untouched.
+
+**Unresolved blockers (ranked)**
+1. **The v3 confirmatory execution path and its authorization do not exist.** The protocol is
+   preregistered, so the scope, the window, the data path and the decision rule are fixed, but
+   nothing can perform the evaluation and no artifact authorizes it. This is the next bounded task.
+2. **The v3 selection run has no final report.** The four selected configurations are pending the
+   confirmatory evaluation; the final report (with the v1/v2 BTC-alignment deviation disclosure
+   and the v2 and v3 outcomes) cannot be written before the windows close. Not actionable now.
+3. **The v2 confirmatory evaluation is time-blocked** until `2027-01-17T22:00:00Z` — a time
+   constraint, not a defect. Its path, protocol, amendments and authorization are delivered and
+   verified.
+4. **The stale `OUTSTANDING` wording** in `configs/research_v2.json` (P2/P3) and in
+   `configs/research_v2_candidate_freeze.json` (`selection_remainder`) is reconciled by a versioned
+   amendment for the v2 specification, which is queued behind (1) and is cosmetic.
+5. **The v1/v2 BTC-alignment deviation** is a disclosure obligation for the final report — quantified
+   exactly (124,416 of 497,664 v2 records, all four validation folds) and carried by the published
+   v3 manifest's `deviation_disclosure` block and by the new protocol's `deviation_disclosure`
+   block; it is not repairable without invalidating the v1 authorization.
+6. The confirmatory windows cannot exist before `2027-01-18T13:00:00Z` (v3) and
+   `2027-01-17T22:00:00Z` (v2) — no action possible or needed.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** deliver the **v3 confirmatory-evaluation execution path (outside the
+hashed set) and the versioned artifact that authorizes exactly one bounded confirmatory
+evaluation run** over the four published v3 candidates. Design deliverables only: nothing is
+evaluated, no candle inside the confirmatory window is read (it cannot exist before
+`2027-01-18T13:00:00Z`).
+
+**Subject:** the v3 confirmatory-evaluation protocol is delivered and verified; the next bounded
+task is the confirmatory execution path and its authorization (design only)
+
+**Status (verified 2026-10-20T20:05:00Z):**
+- Full suite **837/837 green** (800 pre-existing + 37 added by the last session); every
+  `scripts/verify_*.py` and `scripts/report_*.py` exits 0; `compute_code_hash()` = `2efd3b18…`
+  (unchanged, equal to the authorized value of record in `research_state/campaign_authorization.json`,
+  `authorized: true`); canonical digests unchanged (`3e8e4169…` hashed set, `c69cc021…` v2
+  selection path, `277a4bbe…` v2 confirmatory path, `29cd064e…` v3 path); no file under `src/`
+  was touched; no v1/v2/v3 frozen artifact changed.
+- The v3 selection run is **complete and verified**: `research/ledger_v3.json` `status: COMPLETED`,
+  6 assets, 13,824 config units, 165,888 execution units, `holdout_exposed_count = 0`, outcome
+  `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`.
+- The published outcome exists: `research/v3_selected_configurations_manifest.json` (`manifest_hash
+  3d24a278…`) — **4 candidates** (ICPUSDT `cfg_0444`, PEPEUSDT `cfg_1804`, SHIBUSDT `cfg_0544`,
+  WLDUSDT `cfg_1380`) and **2 assets without a candidate** (AAVEUSDT `NO_CANDIDATE`, QNTUSDT
+  `INSUFFICIENT_EVIDENCE`); the selection is re-derivable from the verified shards under the
+  unchanged v1 rule. `configs/research_v3_execution_amendment_2.json` (`manifest_hash 7c2f5d2d…`)
+  authorizes that path and nothing else.
+- The confirmatory protocol now exists: `configs/research_v3_confirmatory_protocol.json`
+  (`manifest_hash f008876b…`) — scope, window (`2026-10-20T13:00:00Z`, ≥ 2,160 h, earliest end
+  `2027-01-18T13:00:00Z`), data path **including the window benchmark series** (required, does not
+  exist yet, may not be replaced by the development benchmark `50d357b0…`, aligned by UTC candle
+  close, no forward fill, fail closed on missing/short/misaligned, 576 `btc_ema_168` configurations
+  per asset never dropped), the unchanged v1 metric and costs (1.0/2.0/3.0), **exactly one**
+  confirmatory criterion (the v3 `holdout.promotion_rule`, verbatim), the reporting obligations with
+  the v1/v2 deviation disclosure, and an authorization boundary that authorizes nothing.
+- The v2 confirmatory window is time-blocked until `2027-01-17T22:00:00Z`; the v3 window is
+  single-use and cannot be read before `2027-01-18T13:00:00Z`.
+
+**One bounded task, in this order:**
+1. **The execution path, outside the hashed set.** Add a **new** package — `src/v3_confirmatory/`
+   — and **not** inside `src/v3_campaign/` (the selection authorization binds that package's
+   canonical digest `29cd064e…`) and **not** inside `src/breakout_research/` (the hashed set,
+   canonical digest `3e8e4169…`; editing it invalidates the v1 campaign authorization and every
+   v2/v3 identity tuple). It must read the four selected configurations from
+   `research/v3_selected_configurations_manifest.json` (`3d24a278…`); read the confirmatory window
+   **once** after a readiness test proving ≥ 2,160 closed hourly candles exist; retrieve and
+   hash-verify the **window benchmark series** and align it with the asset series by UTC candle
+   close, **failing closed** when the benchmark is missing, short or misaligned; apply the
+   **unchanged v1 evaluation metric and cost scenarios**; apply the **single** decision rule of
+   `configs/research_v3.json#holdout.promotion_rule` (no second criterion); write only to **new**
+   v3 confirmatory paths (`research/shards_v3_confirmatory/`,
+   `research/ledger_v3_confirmatory.json`, `research/results_manifest_v3_confirmatory.json`,
+   `research/results_v3_confirmatory.jsonl`, `research_state/checkpoint_v3_confirmatory.json`);
+   enforce the single-use rule and count every window read in `holdout_exposed_count`; and be
+   exercised in tests against **synthetic fixtures in a temporary directory** — no real candle, no
+   provider request.
+2. **The authorization**, as a versioned hash-bound design artifact (e.g.
+   `configs/research_v3_confirmatory_authorization_1.json`) with a deterministic producer, a
+   read-only offline verifier and deterministic tests, following the
+   `configs/research_v2_selection_authorization_1.json` / `configs/research_v2_confirmatory_authorization_1.json`
+   pattern. It authorizes **at most one** logical run, binds the protocol's `manifest_hash`, the
+   published manifest's hash and the canonical digest of the new `src/v3_confirmatory/` package, and
+   authorizes **no** evaluation before the window exists.
+3. **Do not evaluate anything.** The artifact authorizes a run; a later session performs it, only
+   after `2027-01-18T13:00:00Z`.
+
+**Do NOT:** write/edit/delete under `src/breakout_research/`, `src/v2_campaign/`,
+`src/v2_confirmatory/` or `src/v3_campaign/`; edit `research_state/campaign_authorization.json`,
+`research_state/checkpoint.json`, `research_state/checkpoint_v3.json` or
+`research_state/pilot_evidence.json`; edit any frozen artifact (in particular
+`configs/research_v3_confirmatory_protocol.json`, `configs/research_v3.json`,
+`configs/research_v3_execution.json`, `configs/research_v3_selection_authorization_1.json`,
+`research/v3_selected_configurations_manifest.json`, `research/data_manifest_v3.json`,
+`research/universe_manifest_v3.json` or any v1/v2 manifest); write to any v1 path, any v2 path or
+any v3 **selection** output path; read any confirmatory-window candle; fetch candles or contact any
+provider; re-run producer scripts that would rewrite existing artifacts (the new protocol producer
+would rewrite the protocol and change its hash); start a second v3 selection run; change the
+selection rule, grid, costs, folds, thresholds, the single confirmatory criterion or the
+confirmatory-window rules.
+
+**Acceptance criteria:** the new execution path and the authorization are hash-bound,
+self-verifying, and produced by deterministic producers that refuse to overwrite without `--force`;
+every rule is enforced by at least one test, including tamper tests for "authorizes nothing",
+single-use, the readiness test and the benchmark fail-closed behaviour; all existing verifiers still
+exit 0 and the new ones exit 0; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0;
+`compute_code_hash()` is still `2efd3b18…` and the canonical digests are still `3e8e4169…` (hashed
+set) and `29cd064e…` (v3 selection path); the v1/v2/v3 artifact sha256 anchors above are
+unchanged; **no v3 confirmatory output path exists** and no confirmatory-window candle was read;
+`holdout_exposed_count` stays 0.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
+`python3 scripts/verify_v3_confirmatory_protocol.py`;
+`python3 scripts/verify_v3_selected_configurations_manifest.py`;
+`python3 scripts/verify_v3_execution_amendment_2.py`; `python3 scripts/verify_v3_selection_run.py`;
+`python3 scripts/verify_v3_selection_authorization_1.py`; `python3 scripts/verify_research_v3_spec.py`;
+`python3 scripts/verify_research_v3_manifests.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`;
+`python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_v3_data_manifest_amendment_1.py`;
+`python3 scripts/verify_v3_candidate_freeze_amendment_2.py`; `python3 scripts/verify_v3_execution_amendment_1.py`;
+`python3 scripts/report_v3_benchmark_dependency.py`; `python3 scripts/verify_v2_confirmatory_protocol.py`;
+`python3 scripts/verify_v2_confirmatory_path.py`; `python3 scripts/verify_v2_selection_run.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm only the new package, the new authorization and its
+verifier/tests and `research_state/` — no `src/breakout_research/`, no `src/v2_campaign/`, no
+`src/v3_campaign/`, no frozen artifact, no manifest change).
+
+**Environment note:** the container has no `pytest` and no `numpy` by default. Install them before
+running the suite (`python3 -m pip install pytest numpy requests` → pytest 9.1.1, numpy 2.5.4),
+otherwise the suite cannot run at all and must be reported as `NOT_RUN`. Note that
+`research/results_v3.jsonl` is gitignored and is a *projection* of the committed shards: if a
+checkout does not have it, rebuild it with `python3 scripts/regenerate_v3_result_stream.py` (the
+expected sha256 is `63860a7143b79ebc73edbbadfae14629b902862ab51cfbffffdced29ddf466d6`); without it
+4 tests and 5 fixture errors fail in `tests/test_v3_selection_run.py` and
+`tests/test_research_v3_manifests.py` for a reason that has nothing to do with the change under
+test.
+
+**Queued after this task (not for that session):** the versioned amendment that reconciles
+`configs/research_v2.json` (P2/P3 still read `OUTSTANDING` although both are delivered) and the
+final report once the confirmatory windows close. The v3 confirmatory evaluation itself cannot be
+performed before `2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not before
+`2027-01-17T22:00:00Z`.

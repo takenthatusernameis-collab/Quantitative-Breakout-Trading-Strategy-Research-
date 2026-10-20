@@ -3264,3 +3264,119 @@ evaluation protocol (a design deliverable), the v3 confirmatory execution path
 (`src/v3_confirmatory/`, outside the hashed set) and the v3 confirmatory authorization. The
 evaluation itself cannot be performed before `2027-01-18T13:00:00Z`, because the v3 confirmatory
 window opens `2026-10-20T13:00:00Z` and needs at least 2,160 closed hourly candles.
+
+---
+
+## BRAIN-012 implementation record — the preregistered v3 confirmatory-evaluation protocol (2026-10-20T20:0xZ, separate session)
+
+**Marked:** `IMPLEMENTED_AND_VERIFIED` — the v3 confirmatory evaluation is now preregistered in
+rules; the evaluation itself remains time-blocked until `2027-01-18T13:00:00Z`.
+
+**Why this step, and why it was not optional.** The v3 line had a completed and verified
+selection run and a published, hash-bound selection outcome, but **no preregistered
+confirmatory protocol** — the artifact that fixes, before any window candle is read, what will be
+evaluated, on which window, from which data, under which single decision criterion, and with
+which reporting obligation. The v2 line learned this the hard way: it needed
+`configs/research_v2_confirmatory_protocol_amendment_1.json` only because two frozen artifacts
+(the v2 specification's promotion rule and the v2 protocol's buy-and-hold criterion) stated
+**different** confirmatory decision criteria, and a single-use window cannot be re-graded after
+it has been burned. The v3 protocol must not repeat that conflict, so it states exactly one
+criterion and its verifier proves it.
+
+**Delivered and verified (all digests recomputed from the files on disk):**
+
+- `configs/research_v3_confirmatory_protocol.json` (`manifest_hash f008876b…`, file sha256
+  `fba2b60c…`) — the preregistered protocol, self-hashed and immutable. It fixes, in rules only:
+  1. **Evaluation scope** — exactly the four published candidates (ICPUSDT `cfg_0444`, PEPEUSDT
+     `cfg_1804`, SHIBUSDT `cfg_0544`, WLDUSDT `cfg_1380`), bound to
+     `research/v3_selected_configurations_manifest.json` `3d24a278…`, the selection authorization
+     `fd91cc4d…`, the v3 specification `d6a5f8bb…`, the effective v3 data-manifest identity
+     `88e90960…` and the base identity `6793d86c…`, and the v3 universe manifest `e53db5ed…`.
+     The two assets without a candidate are named out of scope **with their reason**
+     (AAVEUSDT `NO_CANDIDATE`, QNTUSDT `INSUFFICIENT_EVIDENCE`); the scope may not be widened,
+     narrowed or re-ranked.
+  2. **Window definition** — opens `2026-10-20T13:00:00Z` (the frozen start; both freeze
+     amendments are checked to have left it unmoved), needs ≥ 2,160 closed hourly candles,
+     earliest possible end `2027-01-18T13:00:00Z` (recomputed from the start and the length),
+     single use, never overlapping the v1 holdout or the v2 confirmatory window, never reused
+     from v1 or v2, never used for selection, never ranked or re-tuned on, and never populated
+     with data predating the candidate freeze.
+  3. **Data path — including the benchmark the v2 protocol never had to name.** The published
+     configurations include the `btc_ema_168` family, so the evaluation needs a **BTC series
+     covering the window**; it does not exist and cannot exist before the window closes. The
+     protocol requires the window's asset candles **and** the window's benchmark series to be
+     retrieved **once**, after a readiness test, hash-verified, and index-aligned by UTC candle
+     close (the BRAIN-013 rule, `docs/research_protocol.md:101`, no forward fill); it **fails
+     closed** when the benchmark is missing, short or misaligned; the 576 `btc_ema_168`
+     configurations per asset are never dropped; the development benchmark
+     (`50d357b0…`, which does not cover the window) may **not** be substituted for the window
+     benchmark; every window read is counted in `holdout_exposed_count`.
+  4. **Evaluation rule** — the unchanged v1 evaluation metric, the unchanged cost scenarios
+     (1.0 / 2.0 / 3.0, copied from `configs/research_v1.json`), no re-tuning, no re-ranking and no
+     grid extension on the window.
+  5. **Decision rule — exactly one criterion.** The single preregistered v3 promotion rule,
+     copied verbatim from `configs/research_v3.json#holdout.promotion_rule`, with its status
+     vocabulary; the verdicts map that one rule onto the vocabulary
+     (`PROVISIONAL_HISTORICAL_SURVIVAL` / `REJECTED_ON_HOLDOUT` / `INCONCLUSIVE`, zero trades
+     being `INCONCLUSIVE` and never a failure). The verifier scans the whole document for
+     criterion-bearing keys and requires **exactly one** — a second criterion anywhere is
+     detected.
+  6. **Reporting and falsifiers** — every evaluated asset and candidate is reported, the assets
+     without a candidate are named, a null result is reported, negative and inconclusive results
+     are never discarded, the v1 holdout is never re-opened and the v2 confirmatory window is
+     never read; the v1/v2 BTC-alignment deviation (124,416 of 497,664 v2 records, all four
+     validation folds) is carried into the final report as a disclosure and is **not** repaired.
+  7. **Authorization boundary and code identity** — the protocol authorizes **nothing**: no
+     evaluation, no candle read before the window exists, no window-benchmark retrieval. The
+     code-identity rule is the portable canonical digest of BRAIN-009
+     (`3e8e4169…`), never the checkout-dependent ordered digest; the confirmatory execution code
+     must live outside the hashed set; v1 and v2 paths are forbidden and new v3 paths require a
+     new versioned amendment.
+- `scripts/build_v3_confirmatory_protocol.py` — the deterministic producer. Every field is
+  re-derived from the hash-bound artifacts (it refuses to publish against a modified source
+  tree, against a moved window and against a benchmark disagreement), the freeze instant is
+  pinned, and it refuses to overwrite without `--force`.
+- `scripts/verify_v3_confirmatory_protocol.py` — the read-only offline verifier (13 numbered
+  rule groups, exit 0/1, JSON report). It recomputes every expectation from the repository: the
+  manifest hash, the scope, the window arithmetic, the benchmark rules, the single-criterion
+  property, the reporting obligations, the code-hash constraint, the absence of every v3
+  confirmatory output path and the v1 artifact digests.
+- `tests/test_v3_confirmatory_protocol.py` — 37 deterministic tests, 13 of them tamper controls
+  (a tampered scope, a changed configuration id, a widened scope, a second decision criterion, a
+  tampered promotion rule, a shortened window, a moved window, a substitutable benchmark, dropped
+  BTC configurations, a self-authorizing protocol, a forged manifest hash, a modified hashed
+  source tree, a missing v1 artifact, a recorded exposure, an existing confirmatory output path).
+
+**State verified (2026-10-20T20:0xZ):** full suite **837/837 green** (800 pre-existing + 37 new);
+every `scripts/verify_*.py` and `scripts/report_*.py` exits 0 (`scripts/verify_cycle_results.py`
+requires a `cycle_dir` argument and is not a repository-wide gate); `compute_code_hash()` is
+`2efd3b18…` (the authorized value of record, `authorized: true`, `reasons: []`); the canonical
+digests are unchanged (`3e8e4169…` hashed set, `c69cc021…` v2 selection path, `277a4bbe…` v2
+confirmatory path, `29cd064e…` v3 path); no file under `src/breakout_research/`,
+`src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/` was touched; no frozen v1/v2/v3
+artifact changed; the v2 and v3 confirmatory windows stay `NOT_STARTED` with
+`holdout_exposed_count = 0`; no v3 confirmatory output path exists; no confirmatory-window
+candle was read; the v3 selection run was not repeated.
+
+**A pre-existing checkout condition was found and repaired (recorded, not hidden).** In this
+checkout the gitignored result-stream projection `research/results_v3.jsonl` (199 MB, listed in
+`.gitignore` because it exceeds the per-file push limit — residual limitation RL2) was **absent**,
+so 4 tests and 5 fixture errors failed in `tests/test_v3_selection_run.py` and
+`tests/test_research_v3_manifests.py` with "the run left no result stream". The failure was
+reproduced with this session's new files removed, so it is **not** caused by this session: the
+shards (`research/shards_v3/v3-campaign/`, 3,323 files) are the authoritative record set and the
+stream is their projection. The v3 line had no counterpart of the v2 `scripts/regenerate_v2_result_stream.py`,
+so one was written (`scripts/regenerate_v3_result_stream.py`, a faithful v3 counterpart that
+re-verifies every experiment id while it writes and renames the projection into place
+atomically). The rebuilt file hashes to `63860a7143b79ebc73edbbadfae14629b902862ab51cfbffffdced29ddf466d6`
+— **byte-identical to the digest the earlier session recorded for the same stream** — and
+`scripts/verify_v3_selection_run.py` independently confirms that it is the projection of the
+verified shards. **No grid unit was evaluated, no engine was called and no shard was written:
+this is a projection rebuild from the authoritative shards, not a re-run.**
+
+**Still outstanding on the v3 line (queued, not for this session):** the v3 confirmatory
+execution path (`src/v3_confirmatory/`, outside the hashed set) and the v3 confirmatory
+authorization; then the versioned amendment that reconciles `configs/research_v2.json` (P2/P3
+still read `OUTSTANDING` although both are delivered) and the final report once the confirmatory
+windows close. The v3 confirmatory evaluation itself cannot be performed before
+`2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not before `2027-01-17T22:00:00Z`.
