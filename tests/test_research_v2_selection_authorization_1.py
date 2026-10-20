@@ -37,6 +37,8 @@ import pytest
 
 from breakout_research.config import compute_code_hash
 
+from code_identity_helpers import ordered_digest_variants
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 AUTHORIZATION_PATH = REPO_ROOT / "configs" / "research_v2_selection_authorization_1.json"
 FREEZE_PATH = REPO_ROOT / "configs" / "research_v2_candidate_freeze.json"
@@ -226,10 +228,21 @@ def test_the_code_identity_recomputes_from_the_source_tree() -> None:
 def test_the_hashed_source_set_is_byte_unchanged() -> None:
     authorization = _load(AUTHORIZATION_PATH)
     campaign_authorization = _load(REPO_ROOT / "research_state" / "campaign_authorization.json")
-    assert compute_code_hash() == campaign_authorization["code_hash"]
+    # The identity of the hashed set is the portable canonical digest (BRAIN-009).
+    assert verifier.canonical_source_digest(REPO_ROOT / HASHED_SET_ROOT) == (
+        "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff"
+    )
+    # The authorized value of record is cross-checked against the v1 campaign
+    # authorization; it is never compared with the live ordered digest.
     assert authorization["authorized_run"]["code_identity"]["authorized_code_hash"] == (
         campaign_authorization["code_hash"]
     )
+    # The live ordered digest is an environment fact: it still identifies this
+    # tree under the checkout's own enumeration order, and the authorized digest
+    # is one of the digests that this tree produces.
+    variants = ordered_digest_variants(REPO_ROOT / HASHED_SET_ROOT)
+    assert compute_code_hash() in variants
+    assert campaign_authorization["code_hash"] in variants
 
 
 def test_the_output_paths_are_the_v2_paths_and_not_v1_paths() -> None:

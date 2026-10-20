@@ -13,6 +13,7 @@ binds are the real ones; the code under test is the installed package.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import sys
 from datetime import datetime, timedelta, timezone
@@ -42,6 +43,20 @@ from v2_campaign.errors import (  # noqa: E402
     BoundsError,
     ConfirmatoryWindowViolation,
     ScopeError,
+)
+
+from code_identity_helpers import (  # noqa: E402
+    live_enumeration_order,
+    ordered_digest_for_order,
+    ordered_digest_variants,
+)
+
+HASHED_SET_ROOT = "src/breakout_research"
+CANONICAL_HASHED_SET_DIGEST = (
+    "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff"
+)
+AUTHORIZED_ORDERED_CODE_HASH = (
+    "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
 )
 
 FIXTURE_SYMBOLS = ("AAAUSDT", "BBBUSDT", "BTCUSDT")
@@ -84,6 +99,23 @@ def _synthetic_candles(symbol: str, count: int = FIXTURE_CANDLES) -> List[Candle
 def _write_json(path: Path, payload: Dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _reverse_directory_enumeration(monkeypatch) -> None:
+    """Make ``os.walk`` visit the directories of a tree in the opposite order.
+
+    ``compute_code_hash()`` sorts the files inside each directory but visits the
+    directories in filesystem enumeration order, so reversing that order changes
+    the digest it returns even though no file changed.
+    """
+    real_walk = os.walk
+
+    def patched(top, *args, **kwargs):
+        for root, dirs, files in real_walk(top, *args, **kwargs):
+            dirs.sort(reverse=True)
+            yield root, dirs, files
+
+    monkeypatch.setattr(os, "walk", patched)
 
 
 def _build_fixture(root: Path, boundary_ms: int = FIXTURE_BOUNDARY,
@@ -352,11 +384,50 @@ def test_the_execution_path_lives_outside_the_hashed_set() -> None:
 
 
 def test_importing_the_execution_path_does_not_change_the_code_hash() -> None:
-    before = compute_code_hash()
-    assert identity.hashed_set_digest(REPO_ROOT) == (
-        "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff"
-    )
-    assert before == "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
+    """The hashed set is identified by the portable canonical digest (BRAIN-009).
+
+    The ordered digest that ``compute_code_hash()`` returns follows the directory
+    enumeration order of the checkout, so it is an environment fact and never an
+    identity: it must still identify this tree under the checkout's own order,
+    and the authorized value of record must still be one of the digests this
+    tree produces.  An edit of the tree changes every one of them, so real
+    drift is still detected.
+    """
+    hashed_set = REPO_ROOT / HASHED_SET_ROOT
+    assert identity.hashed_set_digest(REPO_ROOT) == CANONICAL_HASHED_SET_DIGEST
+    variants = ordered_digest_variants(hashed_set)
+    assert compute_code_hash() in variants
+    assert AUTHORIZED_ORDERED_CODE_HASH in variants
+
+
+def test_the_tree_identity_checks_survive_a_perturbed_enumeration_order(monkeypatch) -> None:
+    """The tree-identity checks do not depend on the directory order.
+
+    ``compute_code_hash()`` visits the directories of the tree in filesystem
+    enumeration order, so reversing that order changes the digest it returns
+    even though no file changed.  The canonical digest does not change, and the
+    ordered digest stays one of the digests that this tree produces, so the
+    assertions above hold in every checkout.
+    """
+    hashed_set = REPO_ROOT / HASHED_SET_ROOT
+    canonical_before = identity.hashed_set_digest(REPO_ROOT)
+    ordered_before = compute_code_hash()
+    assert ordered_before in ordered_digest_variants(hashed_set)
+
+    _reverse_directory_enumeration(monkeypatch)
+
+    ordered_after = compute_code_hash()
+    assert ordered_after != ordered_before, "the ordered digest ignored the enumeration order"
+    assert identity.hashed_set_digest(REPO_ROOT) == canonical_before
+    assert ordered_after in ordered_digest_variants(hashed_set)
+    assert AUTHORIZED_ORDERED_CODE_HASH in ordered_digest_variants(hashed_set)
+
+
+def test_the_replica_of_the_ordered_digest_reproduces_the_live_digest() -> None:
+    """A replica must reproduce the live digest before it is used as evidence."""
+    hashed_set = REPO_ROOT / HASHED_SET_ROOT
+    order = live_enumeration_order(hashed_set)
+    assert ordered_digest_for_order(hashed_set, order) == compute_code_hash()
 
 
 def test_the_fold_structure_is_the_unchanged_v1_rule() -> None:
@@ -672,7 +743,6 @@ def test_the_development_loader_refuses_a_dataset_that_declares_a_later_candle(
 
 
 def test_the_hashed_set_is_byte_unchanged_by_the_execution_path() -> None:
-    assert compute_code_hash() == "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
     recorded = json.loads(
         (REPO_ROOT / "configs" / "research_v2_code_hash_amendment_1.json").read_text(
             encoding="utf-8"
@@ -681,3 +751,6 @@ def test_the_hashed_set_is_byte_unchanged_by_the_execution_path() -> None:
     assert recorded["code_hash_constraint"]["canonical_source_digest"] == identity.hashed_set_digest(
         REPO_ROOT
     )
+    variants = ordered_digest_variants(REPO_ROOT / HASHED_SET_ROOT)
+    assert compute_code_hash() in variants
+    assert recorded["code_hash_constraint"]["authorized_code_hash"] in variants

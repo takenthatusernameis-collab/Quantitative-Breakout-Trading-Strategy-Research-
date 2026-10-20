@@ -1006,3 +1006,91 @@ recorded in `research_state/agent_handoff.md`. Behavioral effectiveness beyond t
 
 **Rollback instruction:** revert the commit that carries this entry and the added handoff paragraph;
 no research artifact is affected.
+
+## P10-2026-10-20-DECISION-SWEEP-OVER-SUPERSEDED-RULES
+
+### Triggering evidence
+
+BRAIN-009 decided (2026-10-19T23:27Z) that the checkout-dependent ordered digest
+`compute_code_hash()` is not the identity of the hashed source set: the portable identity is the
+canonical digest `3e8e4169…`, and a live ordered-digest mismatch is an environment fact, never a
+source-drift signal. The 23:37Z session implemented that decision in the files the decision record
+named (`scripts/verify_research_v2_manifests.py`, `scripts/verify_research_v2_candidate_freeze.py`,
+`scripts/build_v2_candidate_freeze.py`, `tests/test_research_v2_manifests.py`,
+`tests/test_research_v2_candidate_freeze.py`, `tests/test_research_v2_spec.py`).
+
+The 00:10Z session then created two **new** test modules that enforced the superseded rule:
+`tests/test_v2_campaign_execution_path.py` and `tests/test_research_v2_selection_authorization_1.py`
+compared the live ordered digest with the authorized value of record (`2efd3b18…`) directly. In the
+checkout that wrote them the enumeration order happened to reproduce the authorized digest, so the
+suite was green; in this checkout the same git-clean tree enumerates differently and the same three
+assertions fail with a **false** source-drift message:
+
+- `PYTHONPATH=src python3 -m pytest tests/ -q` before any change in this session → **348 passed, 3
+  failed**, exit 1 (`test_the_hashed_source_set_is_byte_unchanged`,
+  `test_importing_the_execution_path_does_not_change_the_code_hash`,
+  `test_the_hashed_set_is_byte_unchanged_by_the_execution_path`), against the "351 passed, exit 0"
+  recorded in the 07:39Z handoff.
+- The live ordered digest in this checkout is `608c7340…`; the authorized value of record in
+  `research_state/campaign_authorization.json` is `2efd3b18…`; the canonical digest is `3e8e4169…`.
+- All ten v2 verifiers already exited 0 in this checkout, because they had been converted to the
+  canonical rule -- the defect was confined to the two late-created test modules.
+
+The harm is not the red test but the false signal it carries: the failure reads as "the hashed source
+set drifted", and the tempting repair is to edit `src/breakout_research/`, which changes the hashed
+set and invalidates the v1 campaign authorization. Nothing in the instructions required the
+implementing session to sweep the repository for the superseded pattern, nor required a later session
+that adds a check in the governed area to assert the rule the decision established.
+
+### Cause classification
+
+`PROMPT_GAP`: the instructions did not require a repository-wide sweep when a decision record changes
+a rule that checks enforce, and did not oblige a later session that adds a check in the governed area
+to assert the established rule. This is distinct from P7 (`VERIFIER-INDEPENDENCE`, the expected value
+must be recomputed) and from P8 (`ENVIRONMENT-DEPENDENT-ACCEPTANCE`, an environment-specific check
+must be paired with a perturbation): here the *rule* itself was reinstated outside the swept scope.
+The proximate cause of the red tests is still an `IMPLEMENTATION_DEFECT` of the 00:10Z session; the
+prompt gap is the missing sweep obligation that would have caught it.
+
+### Revision summary — minimal instruction change
+
+One paragraph added to README Section 2A E: when a decision record changes a rule that checks in this
+repository enforce, the implementing session must sweep the whole repository for every site that
+still enforces the superseded rule — not only the files the decision record names — and record the
+swept sites in the decision record's implementation note; a later session that adds a check in the
+governed area must assert the established rule and must not reintroduce the superseded one, with a
+repository-wide search for the superseded pattern as acceptance evidence. No other README text
+changed; the quantitative protocol, the universe, grid, costs, folds, selection rule, holdout rules
+and thresholds are untouched.
+
+### Expected effect
+
+A decision record is implemented as a repository-wide rule rather than as a patch over the files it
+happened to name, and a later module cannot silently reinstate the superseded rule. This is a
+hypothesis, not a measured result.
+
+### Regression scenarios and status
+
+| Scenario | Required behavior | Status at revision |
+|---|---|---|
+| A decision record changes a rule that checks enforce | The implementing session sweeps the whole repository and records the swept sites | Implemented this session: the BRAIN-009 implementation note in `research_state/brainstorming_queue.md` records the sweep and the two sites that had to be corrected |
+| A later session adds a check in the governed area | The check asserts the established rule; the superseded pattern does not reappear | Implemented this session: `tests/test_v2_campaign_execution_path.py` and `tests/test_research_v2_selection_authorization_1.py` now assert the canonical digest and the ordered-digest variant set; a repository-wide search for the superseded pattern (`compute_code_hash() ==` against the authorized value) returns no check |
+| The corrected check still detects a real edit of the hashed set | The check is not vacuous | Implemented this session: a drift probe added to a copy of `src/breakout_research` makes the authorized digest unreproducible and changes the canonical digest, so both assertions fail on real drift; the probe is recorded in `research_state/agent_handoff.md` |
+| Environment-specific acceptance (P8) | Unchanged | Still enforced; the new perturbation test reverses the `os.walk` order and shows the ordered digest changes while the canonical digest and the assertions do not |
+| Vacuous-check rule (P7) | Unchanged | Still enforced; every expected value is recomputed from the tree |
+| Section 2A G battery | No safeguard removed or weakened | Cases 1-10 untouched: the added paragraph constrains how a rule is implemented and evidenced; it authorizes no action and relaxes no holdout, data, persistence or truthfulness rule |
+
+**Known trade-offs:** one added paragraph in Section 2A E. It asks for one extra repository-wide
+search per decision implementation; it adds no research gate and no authorization.
+
+**Reviewer/verifier status:** self-review in this session. Verified by
+`PYTHONPATH=src python3 -m pytest tests/ -q` (353 passed, exit 0), by all ten v2 verifiers (exit 0)
+and by `git diff README.md` (one added paragraph inside Section 2A E). Behavioral effectiveness beyond
+this session is `NOT_YET_VERIFIED`.
+
+**Resulting prompt blob/commit SHA:** the README blob SHA after this revision is
+`f7a4de97a035523ca550e450c7d9c8a8a89fa9b4` (previous: `3c584bec644088c3d99ed0ccac03b5771b687665`);
+the commit that carries it is recorded in git history for this file.
+
+**Rollback instruction:** revert the commit that carries this entry and the added README paragraph;
+no research artifact is affected.

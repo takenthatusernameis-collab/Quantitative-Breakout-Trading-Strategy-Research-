@@ -1485,3 +1485,64 @@ byte-identical, or a v2 row appears in the v1 result stream, it is invalid.
 push limit, but the count is high because the run flushes the shard writer every 50 records
 (`checkpointing.batch_size` of the frozen v1 specification). The flush cadence is inside the hashed set and
 inside the frozen specification, so it was not changed.
+
+---
+
+## BRAIN-009 implementation record — part 2 (repository-wide sweep, 2026-10-20T07:5xZ)
+
+**Task.** The 23:37Z session implemented the BRAIN-009 decision in the files the decision record named.
+The 00:10Z session then created two **new** test modules that enforced the superseded rule again. In
+the checkout that wrote them the directory enumeration order happened to reproduce the authorized
+digest, so the suite was green; in a checkout with a different enumeration order the same assertions
+fail with a false source-drift message. This record closes the implementation by sweeping the whole
+repository for every site that still enforces the superseded rule.
+
+**The sweep and its result.** The superseded pattern is a check that compares the live ordered digest
+`compute_code_hash()` with the authorized value of record `2efd3b18…` and treats a mismatch as a
+failure. A repository-wide search found **two sites** that enforce it, both in test modules created
+after the decision:
+
+| Site | Before | After |
+| --- | --- | --- |
+| `tests/test_v2_campaign_execution_path.py::test_importing_the_execution_path_does_not_change_the_code_hash` | `compute_code_hash() == "2efd3b18…"` | canonical digest equals the recorded `3e8e4169…`; the live ordered digest is one of the 120 digests this tree produces; the authorized digest is one of them |
+| `tests/test_v2_campaign_execution_path.py::test_the_hashed_set_is_byte_unchanged_by_the_execution_path` | `compute_code_hash() == "2efd3b18…"` | same three assertions |
+| `tests/test_research_v2_selection_authorization_1.py::test_the_hashed_source_set_is_byte_unchanged` | `compute_code_hash() == campaign_authorization["code_hash"]` | canonical digest equals the recorded `3e8e4169…`; the authorized value of record is cross-checked against `research_state/campaign_authorization.json`; the live ordered digest is one of the 120 digests this tree produces |
+
+No production code enforced the superseded rule: all ten v2 verifiers had already been converted to
+the canonical rule by the 23:37Z session and exit 0 in a checkout with a foreign enumeration order.
+
+**The replacement rule is stronger than the rejected one.** The rejected check asked "does the live
+ordered digest equal the authorized digest?", which fails on a foreign enumeration order. The
+replacement asks two questions that hold in every checkout and still detect a real edit of the tree:
+
+1. is the live ordered digest one of the digests that **this** tree produces under the 120 orders of
+   its directory blocks (it is a digest of this tree, under the checkout's own order)? and
+2. is the authorized value of record still one of those 120 digests (the tree has not drifted from the
+   state the v1 campaign was authorized against)?
+
+A drift probe added to a copy of `src/breakout_research` makes the authorized digest unreproducible
+and changes the canonical digest, so both assertions fail on a real edit. The probe is recorded in
+`research_state/agent_handoff.md`.
+
+**Support files.** `tests/code_identity_helpers.py` (new) holds the shared helpers: a faithful
+replica of the ordered digest for a given block order, the set of the 120 order variants and the
+live enumeration order of a checkout. The replica is validated against the live digest before it is
+used as evidence
+(`tests/test_v2_campaign_execution_path.py::test_the_replica_of_the_ordered_digest_reproduces_the_live_digest`).
+
+**New tests.** `test_the_tree_identity_checks_survive_a_perturbed_enumeration_order` reverses the
+`os.walk` order and shows that the ordered digest changes while the canonical digest and every
+assertion above do not; `test_the_replica_of_the_ordered_digest_reproduces_the_live_digest` pins
+the replica to the live digest.
+
+**Unchanged by this record.** `src/breakout_research/` and `src/v2_campaign/` were not touched; no
+frozen artifact was edited; `research_state/campaign_authorization.json` and
+`research_state/checkpoint.json` were not edited; no v2 grid, backtest, campaign, selection or pilot
+ran; no candle inside the confirmatory window was read; the market-cap snapshot was not re-retrieved.
+
+**Residual limitation `RL1` is unchanged.** The v1 campaign runtime gate
+(`src/breakout_research/campaign.py::_verify_pilot_gate` and
+`src/breakout_research/pilot_gate_validator.py`) still compares the live ordered digest with the
+authorized one. It is inside the hashed set and BRAIN-009 rejects the rotation, so it stays recorded
+as a limitation: a v1 resume is only possible on a checkout whose enumeration order reproduces the
+authorized digest. Nothing runs today — the v1 campaign is in a terminal state.
