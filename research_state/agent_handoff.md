@@ -2631,3 +2631,75 @@ otherwise the suite cannot run at all and must be reported as `NOT_RUN`.
 **Queued after this task (not for that session):** the separately authorized confirmatory evaluation,
 which cannot happen before `2027-01-17T22:00:00Z`; and, if it is ever judged necessary, a decision
 record for the v1 campaign's terminal holdout report.
+
+## Session activity — 2026-10-20T09:09:25Z (this session)
+
+**Task (from the durable handoff at 22:07:09Z):** "produce the code-hash portability decision record — a design artifact that decides how the campaign keeps the code-hash binding honest on a checkout whose directory enumeration order differs from the machine that froze the v2 artifacts. Nothing is implemented in that session."
+
+**Outcome:** **Delivered and verified.** Decision record `configs/research_v2_code_hash_portability_decision.json` (manifest_hash `106670aa…`) finalized as a design-only, hash-bound artifact. Chose **option B**: keep the authorized code hash unchanged (`2efd3b18…`), treat `compute_code_hash()` as order-dependent, treat tree identity as portable via `canonical_source_digest` (`3e8e4169…`), and do **not** edit `src/breakout_research/`. Added read-only offline verifier and 6 deterministic tests; no grid, backtest, campaign, selection, pilot or confirmatory-window read happened; no `src/` changes; v1 artifacts unchanged; market-cap snapshot not re-retrieved.
+
+**Files added**
+- `configs/research_v2_code_hash_portability_decision.json` — decision record (manifest_hash `106670aa696bbe241d18a43b4620876ec53b852c4b28c614de2e2d36b8d24e47`)
+- `scripts/verify_research_v2_code_hash_portability_decision.py` — read-only offline verifier
+- `tests/test_research_v2_code_hash_portability_decision.py` — 6 deterministic tests
+
+**Files modified**
+- `research_state/agent_handoff.md` — this report
+
+**State verified (2026-10-20T09:09:25Z)**
+- `python3 scripts/verify_research_v2_code_hash_portability_decision.py` → `"ok": true, "failures": []`, exit 0
+- `PYTHONPATH=src python3 -m pytest tests/test_research_v2_code_hash_portability_decision.py -q` → **6 passed**, exit 0
+- `python3 scripts/verify_research_v2_execution_amendment_1.py` → exit 0
+- `python3 scripts/verify_research_v2_candidate_freeze.py` → exit 0 (restored context)
+- `python3 scripts/verify_research_v2_execution.py` → exit 0
+- `python3 scripts/verify_research_v2_spec.py` → exit 0
+- `python3 scripts/verify_research_v2_manifests.py` → exit 0
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `608c7340…` (order-dependent; canonical `3e8e4169…` matches; authorized `2efd3b18…` preserved)
+- v1 artifacts byte-unchanged (sha256): `configs/research_v1.json` `558d6099…`, `research/universe_manifest.json` `c8f367d2…`, `research/data_manifest.json` `cf39de42…`, `research/candidate_manifest.json` `87589f83…`, `research/candidate_manifest_v2.json` `a68b061a…`
+- v2 artifacts unchanged: `research/universe_manifest_v2.json` `4e927e52…`, `research/data_manifest_v2.json` `9f64d8d1…`, `configs/research_v2.json` `49fb0814…`, `configs/research_v2_execution.json` `aa902aa9…`, `configs/research_v2_candidate_freeze.json` `5a56b3d8…`, `configs/research_v2_execution_amendment_1.json` `1149d9cb…`
+- no v2 execution artifact exists; no `v2-campaign` row; terminal state unchanged
+
+**Rule → code → test map**
+| Rule | Implementation | Test |
+| --- | --- | --- |
+| Decision is self-hashing | `scripts/verify_research_v2_code_hash_portability_decision.py` | `tests/test_research_v2_code_hash_portability_decision.py::test_manifest_hash_recomputes` |
+| Option B chosen; portable identity via canonical digest | decision artifact | `::test_decision_choice_b_preserves_binding` |
+| No src changes; no re-authorization without recorded decision | forbidden rules | `::test_forbidden_rules` |
+| Canonical digest matches amendment 1 | refs | `::test_canonical_digest_matches_amendment` |
+| Authorized hash preserved; auth still true | refs | `::test_authorized_hash_unchanged` |
+| Design-only, no execution | constraints | `::test_no_execution_or_src_changes_stated` |
+
+**CONFIRMED findings**
+- The portability defect is resolved by decision D1 (design-only). No code changes to `src/` are made; verification must prefer `canonical_source_digest` when live ordered hash differs due to enumeration order.
+
+**Unresolved blockers (ranked)**
+1. **v2 selection run still unauthorized** — amendment records bounded params, not a decision to run; selected-configuration manifest still `OUTSTANDING`. Not urgent (confirmatory window earliest end 2027-01-17T22:00:00Z).
+2. **`configs/research_v2.json` still records P2/P3 as `OUTSTANDING`** — immutable, needs versioned amendment if corrected.
+3. **v2 execution path** not implemented (must live outside hashed set) — after selection authorization.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. Decision is design-only and follows existing patterns.
+
+**Checkpoint / persistence status**
+- Local commit: not created (no explicit request). Working tree has 3 new files + this handoff update.
+- Remote: unchanged from before session.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** produce a **versioned v2 spec/status amendment** that flips `configs/research_v2.json` P2/P3 from `OUTSTANDING` to `DELIVERED` with evidence references, without editing immutable artifacts' other fields inappropriately and without running anything. Design deliverable only.
+
+**Subject:** Code-hash portability decided (D1); next bounded task is a v2 spec/status amendment to reflect delivered P2/P3
+
+**Status (verified 2026-10-20T09:09:25Z):**
+- P1–P4 delivered and verified; candidate freeze delivered; amendment 1 delivered; portability decision delivered (all hash-bound). Full suite green for new artifacts; live ordered code hash differs by enumeration order but canonical matches and authorized hash preserved.
+- Frozen candidate set: 18 constituents, freeze 2026-10-19T21:30:17Z, confirmatory window opens 2026-10-19T22:00:00Z (earliest end 2027-01-17T22:00:00Z).
+- No v2 execution artifacts/results exist.
+
+**One bounded task:** deliver `configs/research_v2_spec_amendment_1.json` (self-hashed, immutable) with verifier and tests. It must:
+1. Reference delivered P2 (`research/universe_manifest_v2.json` `4e927e52…`), P3 (`research/data_manifest_v2.json` `9f64d8d1…`), and the candidate freeze.
+2. Update BRAIN-008 §6 status to reflect P2/P3 delivered without changing immutable manifest hashes or snapshot identity.
+3. Record the portability decision reference.
+4. Authorize nothing; no execution.
+
+**Do NOT:** run grid/backtest/campaign/selection/confirmatory read; modify `src/`, `research_state/campaign_authorization.json`, any v1/v2 manifests or `configs/research_v2_execution*.json`/freeze; re-retrieve snapshot.
+
+**Acceptance:** all v2 verifiers exit 0; new amendment verifier exits 0; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; code hashes unchanged as recorded; no v2 results.

@@ -1,0 +1,83 @@
+{
+  "artifact": "code_hash_portability_decision",
+  "artifact_version": "code-hash-portability-decision-1",
+  "version": 1,
+  "created_utc": "2026-10-20T09:09:25Z",
+  "status": "PREREGISTERED_DECISION_DESIGN_ONLY",
+  "description": "Versioned decision record for handling the directory-enumeration order dependence of compute_code_hash() while keeping the v1 campaign authorization binding honest. Design deliverable only: no implementation changes, no execution.",
+  "problem": {
+    "summary": "compute_code_hash() hashes .py files under each directory in sorted order but visits directories under src/breakout_research in filesystem enumeration order, so the live digest differs between checkouts of the same git-clean tree (e.g. authorized 2efd3b18... vs fresh checkout 608c7340...). This is a false source-drift signal, not a modified tree.",
+    "evidence": {
+      "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "live_ordered_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
+      "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "source": "research_state/campaign_authorization.json and analysis recorded in v2_execution_amendment_1 (C2)"
+    },
+    "constraint": "The hashed set is src/breakout_research/ and compute_code_hash() lives there; editing src/breakout_research/ would change the code hash and invalidate the v1 campaign authorization. Therefore the correction cannot be to change compute_code_hash()'s algorithm alone in the hashed set without rotating the authorization."
+  },
+  "decision": {
+    "id": "D1",
+    "name": "record_portability_and_preserve_authorized_binding",
+    "choice": "B. Keep the authorized code hash unchanged. Treat compute_code_hash() as order-dependent in value but treat the tree identity as portable via canonical_source_digest. Any verification that claims 'source modified' must require both (a) the live ordered hash equals the authorized hash OR the canonical digest equals the recorded canonical digest AND (b) the set of files and their content digests match the canonical form. Do not change src/breakout_research/.",
+    "rationale": "Preserves v1 campaign authorization (no change to src/), makes verification portable and reproducible, and records the defect explicitly for audit."
+  },
+  "implementation_rules": {
+    "verification_semantics": {
+      "rule_1": "The v1 campaign authorization remains bound to the authorized_code_hash recorded in research_state/campaign_authorization.json (2efd3b18...). No file under src/breakout_research/ is created, edited, or removed.",
+      "rule_2": "A false positive from enumeration order is distinguished by comparing canonical_source_digest against the recorded value (3e8e4169...). If they match but the live ordered hash differs, the tree is considered unchanged.",
+      "rule_3": "Verifiers that compare against the live ordered code hash must also accept the 'unchanged-by-canonical' case when canonical matches and the tree set is identical.",
+      "rule_4": "New verifiers must prefer canonical_source_digest for source identity, while preserving the authorized hash binding."
+    },
+    "forbidden": [
+      "Editing src/breakout_research/ to fix enumeration order",
+      "Recomputing or rewriting the authorized code hash in campaign_authorization.json without a recorded v1 re-authorization decision"
+    ],
+    "allowed": [
+      "Recording canonical_source_digest in design artifacts",
+      "Updating verifiers to be order-independent"
+    ]
+  },
+  "references": {
+    "campaign_authorization": {
+      "file": "research_state/campaign_authorization.json",
+      "authorized": true,
+      "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
+    },
+    "amendment_1": {
+      "file": "configs/research_v2_execution_amendment_1.json",
+      "manifest_hash": "1149d9cb3ee9ea35f16512502c43c4cf0ee13b0ae2fb91e2dc691663b99195db",
+      "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff"
+    },
+    "immutable_artifacts_affected": [
+      "configs/research_v2.json",
+      "research/universe_manifest_v2.json",
+      "research/data_manifest_v2.json",
+      "configs/research_v2_candidate_freeze.json",
+      "configs/research_v2_execution.json",
+      "configs/research_v2_execution_amendment_1.json"
+    ]
+  },
+  "acceptance": {
+    "verifier_script": "scripts/verify_research_v2_code_hash_portability_decision.py",
+    "tests_module": "tests/test_research_v2_code_hash_portability_decision.py",
+    "constraints": {
+      "no_src_changes": true,
+      "no_execution": true,
+      "design_only": true,
+      "v1_artifacts_unchanged": true
+    }
+  },
+  "durability": {
+    "commit": null,
+    "pushed": false,
+    "note": "Becomes durable when committed; artifact not rewritten after commit."
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  },
+  "manifest_hash": "106670aa696bbe241d18a43b4620876ec53b852c4b28c614de2e2d36b8d24e47"
+}
