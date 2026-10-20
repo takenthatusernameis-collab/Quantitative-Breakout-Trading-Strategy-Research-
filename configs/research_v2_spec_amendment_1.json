@@ -1,0 +1,33 @@
+{
+  "amendment_status": "PREREGISTERED_AMENDMENT_DESIGN_ONLY",
+  "artifact": "v2_spec_amendment",
+  "artifact_version": "v2-spec-amendment-1",
+  "created_utc": "2026-10-20T09:15:18Z",
+  "description": "Versioned amendment recording that BRAIN-008 section 6 prerequisites P2 and P3 are delivered, with evidence references, without editing immutable configs/research_v2.json.",
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  },
+  "manifest_hash": "8a9a7290cf4aa3cac10809dbad4929e3aab72de24042ec53debbe3e0255744ae",
+  "portability_decision": {
+    "decision": "option B - retain authorized code hash, canonical digest as portable identity",
+    "reference": "configs/research_v2_code_hash_portability_decision.json"
+  },
+  "reconciliation": {
+    "candidate_freeze": "configs/research_v2_candidate_freeze.json",
+    "candidate_freeze_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f",
+    "configs_research_v2": "configs/research_v2.json",
+    "note": "configs/research_v2.json is immutable and hash-verified; its P2/P3 fields remain OUTSTANDING in the file. This amendment records the delivered status by reference only.",
+    "p2_evidence": "research/universe_manifest_v2.json",
+    "p2_manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+    "p2_status_recorded": "DELIVERED",
+    "p3_evidence": "research/data_manifest_v2.json",
+    "p3_manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
+    "p3_status_recorded": "DELIVERED",
+    "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721"
+  },
+  "version": 1
+}

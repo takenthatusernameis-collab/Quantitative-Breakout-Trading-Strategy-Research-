@@ -2703,3 +2703,17 @@ record for the v1 campaign's terminal holdout report.
 **Do NOT:** run grid/backtest/campaign/selection/confirmatory read; modify `src/`, `research_state/campaign_authorization.json`, any v1/v2 manifests or `configs/research_v2_execution*.json`/freeze; re-retrieve snapshot.
 
 **Acceptance:** all v2 verifiers exit 0; new amendment verifier exits 0; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; code hashes unchanged as recorded; no v2 results.
+
+## Session activity — 2026-10-20T09:15:18Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it (produce the versioned v2 spec/status amendment that records P2/P3 as DELIVERED by reference), then update the handoff and write the initial task message for the next agent.
+
+**Outcome:** Delivered `configs/research_v2_spec_amendment_1.json` (manifest_hash `8a9a7290cf4aa3cac10809dbad4929e3aab72de24042ec53debbe3e0255744ae`), a versioned, self-hashed design artifact recording P2 (`research/universe_manifest_v2.json` `4e927e52…`) and P3 (`research/data_manifest_v2.json` `9f64d8d1…`) as DELIVERED by reference, plus the portability decision reference. No frozen artifact edited, no `src/` change, no run.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** there is no remaining bounded design deliverable in the v2 chain that is actionable before the confirmatory window exists (not before `2027-01-17T22:00:00Z`). The confirmatory evaluation is the only queued step and cannot be scheduled yet. If a new bounded task is identified, it must be recorded in `research_state/brainstorming_queue.md` as a decision record first (README Section 2A C1) and implemented only in a subsequent session. Do not start a second v2 selection run, do not edit frozen artifacts, and do not read confirmatory-window candles.
+
+**Status:** all v2 prerequisites and amendments delivered and hash-bound; 14 candidates selected, 4 without; confirmatory window `NOT_STARTED`, `holdout_exposed_count = 0`; `compute_code_hash()` unchanged; v1/v2 artifacts byte-unchanged.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_v2_selection_run.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`.
