@@ -9,7 +9,7 @@
     "selected_configurations_manifest": "research/v2_selected_configurations_manifest.json",
     "selected_configurations_manifest_hash": "7acc7fe07ba4b151ee232eb70fd0a187966400005054892c184bfdd754d6d862",
     "selection_authorization_manifest_hash": "76be0d3b31aa8682f3c93056aca2c46ac77a875dbe4a53d557645bf58e15c918",
-    "v2_specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d2f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+    "v2_specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
     "v2_data_manifest_hash": "9f64d8d140c0ccc2f521296ec86d320e29b665b622034cbee8e8f878a3d6924e",
     "in_scope_assets": 14,
     "out_of_scope_assets_without_candidate": ["BCHUSDT", "BTCUSDT", "LINKUSDT", "TRXUSDT"],
@@ -45,5 +45,5 @@
     "v1_paths_forbidden": true,
     "new_v2_paths_require_new_versioned_amendment": true
   },
-  "manifest_hash": null
+  "manifest_hash": "9ef8f3026f29936efba25eaf48b6649ce5f9c1d5ed72cd796e782570a8e38fcf"
 }

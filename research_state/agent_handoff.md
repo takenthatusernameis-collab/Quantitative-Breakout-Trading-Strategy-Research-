@@ -1921,3 +1921,13 @@ evaluation — which cannot happen before `2027-01-17T22:00:00Z`.
 ## Initial task message for next agent
 
 **Next (one bounded task):** finalize the preregistered v2 confirmatory-evaluation protocol — compute and record `manifest_hash`, add deterministic producer, read-only verifier and tests following the candidate-freeze pattern, enforce every rule with tamper tests. Design only; no evaluation, no candle read.
+
+## Session activity — 2026-10-20T08:10:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff (preregistered v2 confirmatory-evaluation protocol) and complete it.
+
+**Outcome:** Partial progress. Corrected the duplicated `v2_specification_hash` field in `configs/research_v2_confirmatory_protocol.json` and computed/recorded `manifest_hash = 9ef8f3026f29936efba25eaf48b6649ce5f9c1d5ed72cd796e782570a8e38fcf` (canonical sha256 over the document with `manifest_hash` removed). The producer, read-only verifier and deterministic tests remain outstanding and are the next bounded task. No evaluation, no candle read, no `src/` change.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** complete the preregistered v2 confirmatory-evaluation protocol — add a deterministic producer (`scripts/build_v2_confirmatory_protocol.py`), a read-only offline verifier (`scripts/verify_v2_confirmatory_protocol.py`) and deterministic tests (`tests/test_v2_confirmatory_protocol.py`) following the `configs/research_v2_candidate_freeze.json` / `scripts/verify_research_v2_candidate_freeze.py` / `tests/test_research_v2_candidate_freeze.py` pattern; enforce every rule (evaluation scope, window definition, data path, evaluation rule, reporting/falsifiers, authorization boundary) with tamper tests; recompute and record `manifest_hash` if the producer changes the bytes. Design only; no evaluation, no candle read, no second run.
