@@ -1,0 +1,695 @@
+{
+  "artifact": "v3_confirmatory_runbook",
+  "artifact_version": "v3-confirmatory-runbook-1",
+  "protocol_version": "v3",
+  "universe_version": "v3",
+  "created_utc": "2026-10-20T22:10:00Z",
+  "runbook_status": "PREREGISTERED_OPERATOR_PROCEDURE_NOT_EXECUTED",
+  "specification_purpose": "Fix the operator procedure of the single authorized v3 confirmatory run, so that the session that executes it follows a preregistered procedure instead of improvising one after the single-use confirmatory window has been burned. The runbook records rules only; it authorizes nothing, fetches nothing, reads no candle and writes no confirmatory artifact.",
+  "applies_to": {
+    "run_id": "v3-confirmatory-20270118",
+    "campaign_id": "v3-confirmatory-campaign",
+    "run_phase": "confirmatory_window_evaluation",
+    "window_start_utc": "2026-10-20T13:00:00Z",
+    "window_end_utc": "2027-01-18T13:00:00Z",
+    "minimum_closed_hourly_candles": 2160,
+    "evaluation_window_rule": "The evaluated window is exactly the first minimum_closed_hourly_candles closed hourly candles at or after the window start, so it ends at the earliest instant the frozen boundary allows. The evaluated window's length does not depend on when the run happens, and the window may not be extended, shortened or re-based at run time.",
+    "in_scope_assets": [
+      "ICPUSDT",
+      "PEPEUSDT",
+      "SHIBUSDT",
+      "WLDUSDT"
+    ],
+    "in_scope_count": 4,
+    "in_scope_configurations": {
+      "ICPUSDT": "cfg_0444",
+      "PEPEUSDT": "cfg_1804",
+      "SHIBUSDT": "cfg_0544",
+      "WLDUSDT": "cfg_1380"
+    },
+    "out_of_scope_assets_without_candidate": [
+      "AAVEUSDT",
+      "QNTUSDT"
+    ],
+    "out_of_scope_count": 2,
+    "out_of_scope_reasons": {
+      "AAVEUSDT": "NO_CANDIDATE",
+      "QNTUSDT": "INSUFFICIENT_EVIDENCE"
+    },
+    "single_use_window": true,
+    "benchmark_symbol": "BTCUSDT",
+    "benchmark_is_not_a_candidate": true,
+    "benchmark_is_counted_as_an_exposed_asset": true
+  },
+  "binding_identities": {
+    "authorization": {
+      "path": "configs/research_v3_confirmatory_authorization_1.json",
+      "manifest_hash": "0383eee19cdc835ab8cba94b479d6b232281e95a62ee9ed4d15febb14e90fb54"
+    },
+    "confirmatory_protocol": {
+      "path": "configs/research_v3_confirmatory_protocol.json",
+      "manifest_hash": "f008876ba5b85f33c8cb9a4c647f6db71ec8bc067d4635e99905ea323d2bf95e"
+    },
+    "selected_configurations_manifest": {
+      "path": "research/v3_selected_configurations_manifest.json",
+      "manifest_hash": "3d24a278f13f8c6878905d45be25d0c0cbd84c0c1138d44c0db41b8d56fb5b53"
+    },
+    "selection_authorization_1": {
+      "path": "configs/research_v3_selection_authorization_1.json",
+      "manifest_hash": "fd91cc4dc907780fc66ffd9c020e53f3c224a5ae8bb688e30cd7bfec04762dcd"
+    },
+    "v3_data_manifest": {
+      "path": "research/data_manifest_v3.json",
+      "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "effective_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321",
+      "base_manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "amendment_path": "configs/research_v3_data_manifest_amendment_1.json",
+      "amendment_manifest_hash": "f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e"
+    },
+    "v3_specification": {
+      "path": "configs/research_v3.json",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58"
+    },
+    "v1_specification": {
+      "path": "configs/research_v1.json",
+      "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+    },
+    "code_identity": {
+      "algorithm": "canonical_source_digest_v1",
+      "portable": true,
+      "hashed_set_root": "src/breakout_research",
+      "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "execution_path_root": "src/v3_confirmatory",
+      "execution_path_digest": "747c2387ff85b73240d89f744a70e69f25c3af2e723a6d6191fda80e80c94aba",
+      "run_code_identity": "0b1605be59c4d2d4485b8973a950a4e07593d0a56c6e113a21fb4be470f793fe",
+      "authorized_ordered_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "note": "The identity of the run is the composite of the canonical digest of the hashed v1 engine and the canonical digest of the confirmatory execution path. The checkout-dependent ordered digest compute_code_hash() is an environment fact and is never used as an identity."
+    },
+    "immutable_artifact_anchors": {
+      "v1_evidence": {
+        "configs/research_v1.json": "558d60990af9310d5cedbc41a58dbf29eb4dc869f8e45dc1cb2baf644480490d",
+        "research/universe_manifest.json": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd",
+        "research/data_manifest.json": "cf39de420cfc7328bd4a244c7f485e4b81c01dae108f17f2719d6ca6e7310580",
+        "research/candidate_manifest.json": "87589f83f3bfe22517bb73257d285ec47d602c19a892f0971035e1523df4f1d6",
+        "research/candidate_manifest_v2.json": "a68b061a8c314828bf60478ef8f826ee9d532c6e5ff1545c8afaa2c8e03dfa49"
+      },
+      "v2_selection_outputs": {
+        "research/universe_manifest_v2.json": "68c973a0a07bd6808a18433a1cce5351d56f03800653d5c64f401d72c0769f42",
+        "research/data_manifest_v2.json": "0240be6f0f1e8c53b60cff0e9a1e3ccad8879e9282b1d0ff4f118b0168227eb8",
+        "research/ledger_v2.json": "fb9f4cdf44397ddbd66c78218fe31e151017ffa72cf3280737ef4e106ce0526f",
+        "research/results_manifest_v2.json": "99c57a3dcbe23b1e29b9bf6c2cb226022ed6d831243b1814291e1eb51dbf3a1d",
+        "research/v2_selected_configurations_manifest.json": "529ef0d532a0024db139107312303761ab0b27fb8e7d024eaba6a67916d7f258",
+        "research_state/checkpoint_v2.json": "b11075d0ff1fc37351c6175e1d1a6974139e0cc24b42382938bce7e6ee469b25"
+      },
+      "v3_selection_outputs": {
+        "research/universe_manifest_v3.json": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63",
+        "research/data_manifest_v3.json": "2507180ddd1c728852919f49c5341446babf1a37ee21f1cf3807b871db77d636",
+        "research/ledger_v3.json": "92cbc0ea70a89cf8940f0a61dd9884726d4024a8d61341c4c33e4c90fa898a03",
+        "research/results_manifest_v3.json": "1cf4499f02130818f10fda453468dadded836655bc75b3c28dc915cd671d61a5",
+        "research/v3_selected_configurations_manifest.json": "e39b0eb1fcbbe03f5e362d0cb443eeb7e2efae927a8a7091dce3056713ef0ec7",
+        "research_state/checkpoint_v3.json": "506a72532ad2c8eac84051256d217d20bf56394dd82dcdf2106afa4679bc5ecc"
+      }
+    },
+    "decision_rule": {
+      "criterion_count": 1,
+      "authoritative_source": "configs/research_v3.json#holdout.promotion_rule",
+      "exactly_one_criterion": true,
+      "no_competing_criterion": true,
+      "secondary_source": null,
+      "secondary_field": null,
+      "protocol_path": "configs/research_v3_confirmatory_protocol.json",
+      "protocol_manifest_hash": "f008876ba5b85f33c8cb9a4c647f6db71ec8bc067d4635e99905ea323d2bf95e",
+      "criteria": [
+        "net_total_return > 0 at baseline costs (1x) over the confirmatory window",
+        "net_total_return > 0 at 2x costs over the confirmatory window",
+        "closed_trades >= 30 over the confirmatory window",
+        "the evaluated parameters are byte-identical to the frozen v2 candidate manifest entry"
+      ],
+      "status_vocabulary": [
+        "CANDIDATE_PENDING_HOLDOUT",
+        "PROVISIONAL_HISTORICAL_SURVIVAL",
+        "REJECTED_ON_HOLDOUT",
+        "INCONCLUSIVE"
+      ],
+      "note": "The v3 line states exactly one confirmatory criterion. The v2 line had to amend two frozen artifacts that disagreed about it; the v3 protocol and this authorization state one criterion and the execution path applies no second one."
+    },
+    "evaluation_rule": {
+      "unchanged_v1_evaluation_metric": true,
+      "unchanged_cost_scenarios": true,
+      "cost_scenarios": [
+        1.0,
+        2.0,
+        3.0
+      ],
+      "no_retuning_reranking_or_grid_extension_on_window": true,
+      "evaluated_parameters_are_byte_identical_to_the_frozen_manifest_entry": true,
+      "selection_rule_reference": "configs/research_v1.json#selection"
+    },
+    "bounds": {
+      "max_assets": 4,
+      "max_configurations": 4,
+      "max_cost_scenarios": 3,
+      "attempts": 1,
+      "max_retries_on_technical_failure": 3,
+      "retries_before_the_first_payload_read": 3
+    },
+    "deviation_disclosure": {
+      "scope": "the completed v1 and v2 runs",
+      "statement": "The completed v1 and v2 runs evaluated the BTC trend filter against a BTC EMA taken from a different period; the deviation is a disclosure for the final report and is not repaired here.",
+      "records_with_btc_filter": 124416,
+      "total_v2_records": 497664,
+      "misaligned_validation_folds": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "evidence_path": "research/v3_evidence/v1_v2_btc_alignment_deviation.json",
+      "v3_run_alignment": "the v3 run evaluated the BTC trend filter against the index-aligned v3 benchmark dataset",
+      "carried_into_the_final_report": true,
+      "not_repaired": true
+    }
+  },
+  "operator_procedure": {
+    "global_rules": [
+      "the run is a single logical run: it may be resumed, never restarted",
+      "every step is fail-closed: a step that cannot prove its precondition stops the run",
+      "nothing is repaired: a mismatch is reported, not corrected",
+      "every read of the window is counted in holdout_exposed_count",
+      "no step contacts a provider except the readiness probe and the single retrieval",
+      "the window benchmark series is retrieved with the window, never substituted"
+    ],
+    "ordered_steps": [
+      {
+        "step": 1,
+        "name": "PREFLIGHT",
+        "action": "Confirm, before anything else, that the commit carrying this runbook, the authorization and the confirmatory protocol exists; that the live code identity equals the recorded composite identity; that the five v1 evidence files, the six v2 selection outputs and the six v3 selection outputs are byte-unchanged against their recorded sha256 anchors; that the evaluation scope equals the frozen selected-configurations manifest (4 in scope, 2 out of scope); and that holdout_exposed_count is 0, or that this process is the resume of the same run_id.",
+        "may_not": [
+          "read a candle",
+          "contact the provider",
+          "write any confirmatory artifact"
+        ],
+        "on_failure": "stop and report; the run is refused by the authorization's preconditions and no attempt is consumed"
+      },
+      {
+        "step": 2,
+        "name": "READINESS_PROBE",
+        "action": "Run the metadata-only readiness probe: one bounded request per metadata endpoint, the primary host first and the documented failover host only when the primary host fails, with both statuses and their timestamps recorded. The probe returns the provider server time and the spot trading status of the in-scope pairs and of the benchmark pair. It fetches no candle and it does not increment holdout_exposed_count.",
+        "may_not": [
+          "fetch a candle or any kline payload",
+          "read the window to count its candles",
+          "increment holdout_exposed_count"
+        ],
+        "on_failure": "the readiness test refuses the run (WindowNotReadyError): the window cannot end before the earliest possible end, or an in-scope pair or the benchmark pair is not trading. Abort before the first payload read; the attempt is released and the window is untouched."
+      },
+      {
+        "step": 3,
+        "name": "SINGLE_RETRIEVAL",
+        "action": "Retrieve the window once: for every in-scope asset and for the benchmark series, in ascending symbol order, one klines request over the fixed window bounds. The window is the first minimum_closed_hourly_candles closed hourly candles at or after the window start, so its length does not depend on when the run happens. Each dataset is filtered to the closed candles that open and close inside the window; the coverage gaps are recorded; nothing is interpolated and no malformed row is repaired.",
+        "may_not": [
+          "read the window twice",
+          "extend, shorten or re-base the window at run time",
+          "interpolate a missing candle",
+          "read a candle outside the window",
+          "read the v1 holdout or the v2 confirmatory window"
+        ],
+        "on_failure": "a provider or rate-limit failure is retried within the frozen retry budget and then resumed; an abort after a payload read leaves the window spent"
+      },
+      {
+        "step": 4,
+        "name": "DATASET_PERSISTENCE_AND_EXPOSURE",
+        "action": "Persist every retrieved dataset in the canonical hourly CSV of the frozen sha256-canonical-hourly-csv-v1 scheme, next to a record that binds it to (run_id, asset, window bounds) and to its content hash. Recompute the content hash of every persisted dataset and compare it with the recorded one. Register the exposure event for the asset exactly once -- the benchmark series is an exposed asset like every other -- and check that the exposure counter never decreases.",
+        "may_not": [
+          "increment the exposure counter twice for the same event",
+          "reset the exposure counter",
+          "repair a dataset whose hash does not match"
+        ],
+        "on_failure": "a hash mismatch is refused and reported; the window is not re-read, because a re-read would be a second read of a single-use window"
+      },
+      {
+        "step": 5,
+        "name": "WINDOW_MANIFEST",
+        "action": "Build the window manifest: the window bounds, the retrieval timestamp, the per-asset dataset hashes, the closed-candle count per asset, the coverage gaps, the exposure events, the readiness record and the window benchmark record, bound to the frozen v3 data manifest and to the selected-configurations manifest. The frozen v3 data manifest is extended by reference and never edited.",
+        "may_not": [
+          "edit the v3 data manifest",
+          "omit an asset of the scope from the manifest"
+        ],
+        "on_failure": "abort; the window manifest is the evidence of the read"
+      },
+      {
+        "step": 6,
+        "name": "PRECONDITION_RECHECK",
+        "action": "Re-evaluate the authorization's preconditions with the readiness record, the window manifest and the exposure state in hand. The run stops if any precondition fails.",
+        "may_not": [
+          "continue with a failed precondition"
+        ],
+        "on_failure": "raise AuthorizationError; the rollback rule of the failure table applies"
+      },
+      {
+        "step": 7,
+        "name": "EVALUATION",
+        "action": "Evaluate every in-scope asset's frozen configuration over the window with the unchanged v1 evaluation metric and the unchanged cost scenarios. The evaluated parameters are byte-identical to the frozen candidate manifest entry. The window benchmark series is sliced to the same window as the asset series and must carry identical timestamps, so that the engine's index pairing is the UTC-candle-close alignment; a missing, a short or a misaligned benchmark aborts the run before the engine is called. The 576 btc_ema_168 configurations per asset are evaluated, never dropped.",
+        "may_not": [
+          "re-tune, re-rank or extend the grid on the window",
+          "evaluate a configuration that is not the frozen one",
+          "evaluate the two assets without a candidate",
+          "drop the btc_ema_168 configurations",
+          "substitute the published development benchmark for the window benchmark",
+          "forward-fill a missing benchmark observation"
+        ],
+        "on_failure": "report the asset as INCONCLUSIVE or REJECTED_ON_HOLDOUT, never hide it"
+      },
+      {
+        "step": 8,
+        "name": "VERDICT",
+        "action": "Grade every asset with the single preregistered promotion rule of configs/research_v3.json#holdout.promotion_rule, which governs. No second confirmatory criterion exists in the v3 line and none may be applied. The status vocabulary is not extended: PROVISIONAL_HISTORICAL_SURVIVAL, REJECTED_ON_HOLDOUT, INCONCLUSIVE and CANDIDATE_PENDING_HOLDOUT only. A configuration with zero closed trades is INCONCLUSIVE and never REJECTED_ON_HOLDOUT.",
+        "may_not": [
+          "apply a second confirmatory criterion",
+          "extend the frozen status vocabulary",
+          "hide an asset, a disagreement or a null result"
+        ],
+        "on_failure": "the null result is reported as NO_CANDIDATE_SURVIVED_THE_CONFIRMATORY_RULE"
+      },
+      {
+        "step": 9,
+        "name": "WRITE_OUTPUT_LAYOUT",
+        "action": "Write the eight authorized output paths in the fixed order, atomically, so that a partial write is never observable as a complete artifact.",
+        "may_not": [
+          "write a v1 path",
+          "write a v2 selection path",
+          "write a v2 confirmatory path",
+          "write a v3 selection path",
+          "write the output layout in another order"
+        ],
+        "on_failure": "the rollback rule of the failure table applies"
+      },
+      {
+        "step": 10,
+        "name": "ACCEPTANCE",
+        "action": "Run the acceptance checks of this runbook and the verification commands below, and record their exit statuses in the handoff before the result is accepted.",
+        "may_not": [
+          "accept the output without running the acceptance checks"
+        ],
+        "on_failure": "the output is not accepted; the failure is reported"
+      }
+    ],
+    "readiness_probe": {
+      "primary_host": "https://api.binance.com",
+      "failover_host": "https://data-api.binance.vision",
+      "endpoints": [
+        {
+          "purpose": "provider server time",
+          "path": "/api/v3/time"
+        },
+        {
+          "purpose": "spot trading status of the in-scope pairs and of the benchmark pair",
+          "path": "/api/v3/exchangeInfo"
+        }
+      ],
+      "endpoint_order": [
+        "https://api.binance.com/api/v3/time",
+        "https://api.binance.com/api/v3/exchangeInfo"
+      ],
+      "failover_order": [
+        "https://data-api.binance.vision/api/v3/time",
+        "https://data-api.binance.vision/api/v3/exchangeInfo"
+      ],
+      "one_bounded_request_per_endpoint": true,
+      "a_host_failure_is_failed_over_not_retried": true,
+      "both_statuses_are_recorded_with_timestamps": true,
+      "fetches_no_candle": true,
+      "increments_holdout_exposed_count": false,
+      "max_retries": 3,
+      "backoff_seconds": 5,
+      "rate_limit_per_minute": 1200,
+      "failover_policy": "One bounded request to the primary host. If it fails (for example HTTP 451), use the documented failover host and record both statuses with timestamps. The primary host is failed over, not blindly retried. max_retries applies to transient failures on the active endpoint only.",
+      "source_of_truth": "src/v3_confirmatory/window.py"
+    },
+    "retrieval": {
+      "provider": "binance",
+      "endpoint": "https://api.binance.com/api/v3/klines",
+      "failover_endpoints": [
+        "https://data-api.binance.vision/api/v3/klines"
+      ],
+      "interval": "1h",
+      "closed_candles_only": true,
+      "retrieval_happens_once": true,
+      "one_request_per_asset": true,
+      "asset_order": "ascending symbol order",
+      "retrieved_series": [
+        "BTCUSDT",
+        "ICPUSDT",
+        "PEPEUSDT",
+        "SHIBUSDT",
+        "WLDUSDT"
+      ],
+      "window_bounds": {
+        "window_start_utc": "2026-10-20T13:00:00Z",
+        "window_end_utc": "2027-01-18T13:00:00Z",
+        "minimum_closed_hourly_candles": 2160
+      },
+      "dataset_hash_algorithm": "sha256-canonical-hourly-csv-v1",
+      "dataset_persistence": "the canonical hourly CSV next to a record that binds it to (run_id, asset, window bounds) and to its content hash, under the shard directory of the run",
+      "gaps_are_recorded": true,
+      "interpolation_is_forbidden": true
+    },
+    "benchmark": {
+      "symbol": "BTCUSDT",
+      "role": "trend_filter_and_benchmark",
+      "benchmark_is_not_a_candidate": true,
+      "window_benchmark_series_required": true,
+      "window_benchmark_retrieval_happens_once": true,
+      "window_benchmark_is_hash_verified": true,
+      "development_benchmark_may_be_reused": false,
+      "development_benchmark_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+      "development_benchmark_content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+      "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+      "alignment_reference": "docs/research_protocol.md:101",
+      "no_forward_fill": true,
+      "fail_closed": [
+        "the benchmark series is missing",
+        "the benchmark series is shorter than the evaluated window",
+        "the benchmark series is not index-aligned with the asset series"
+      ],
+      "btc_configurations_dropped": false,
+      "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+      "source_of_truth": "src/v3_confirmatory/benchmark.py"
+    },
+    "evaluation": {
+      "unchanged_v1_evaluation_metric": true,
+      "unchanged_cost_scenarios": true,
+      "cost_scenarios": [
+        1.0,
+        2.0,
+        3.0
+      ],
+      "baseline_costs": {
+        "taker_fee_bps": 10,
+        "slippage_bps": 5
+      },
+      "evaluated_parameters_are_byte_identical_to_the_frozen_manifest_entry": true,
+      "no_retuning_reranking_or_grid_extension_on_window": true,
+      "authoritative_criterion": "configs/research_v3.json#holdout.promotion_rule: the single preregistered v3 confirmatory criterion",
+      "no_secondary_criterion_is_applied": true,
+      "status_vocabulary": [
+        "CANDIDATE_PENDING_HOLDOUT",
+        "PROVISIONAL_HISTORICAL_SURVIVAL",
+        "REJECTED_ON_HOLDOUT",
+        "INCONCLUSIVE"
+      ],
+      "outcomes": [
+        "CANDIDATES_SURVIVED_THE_CONFIRMATORY_WINDOW",
+        "NO_CANDIDATE_SURVIVED_THE_CONFIRMATORY_RULE"
+      ],
+      "assets_without_candidate_status": "NO_CANDIDATE_NOT_EVALUATED"
+    },
+    "write_order": [
+      {
+        "order": 1,
+        "artifact": "window_manifest",
+        "path": "research/v3_confirmatory_window_manifest.json",
+        "content": "the window bounds, the retrieval timestamp, the per-asset dataset hashes, the closed-candle counts, the coverage gaps, the exposure events, the readiness record and the window benchmark record"
+      },
+      {
+        "order": 2,
+        "artifact": "shards_dir",
+        "path": "research/shards_v3_confirmatory/v3-confirmatory-campaign/shard_000000.jsonl",
+        "content": "the per-asset result rows, one shard file of the confirmatory campaign"
+      },
+      {
+        "order": 3,
+        "artifact": "results_stream",
+        "path": "research/results_v3_confirmatory.jsonl",
+        "content": "the result rows as a single JSONL stream, the projection of the shard"
+      },
+      {
+        "order": 4,
+        "artifact": "ledger",
+        "path": "research/ledger_v3_confirmatory.json",
+        "content": "the run identity, the scope, the per-asset outcomes, the exposure state and the counts"
+      },
+      {
+        "order": 5,
+        "artifact": "results_manifest",
+        "path": "research/results_manifest_v3_confirmatory.json",
+        "content": "the shard list with their sha256, the code identity and the window-manifest hash"
+      },
+      {
+        "order": 6,
+        "artifact": "checkpoint",
+        "path": "research_state/checkpoint_v3_confirmatory.json",
+        "content": "the run status and the exposure counter, which must never be reset"
+      },
+      {
+        "order": 7,
+        "artifact": "report",
+        "path": "reports/confirmatory_evaluation_v3.json",
+        "content": "the confirmatory report: the required fields, every per-asset outcome, the benchmark alignment and the deviation disclosure"
+      },
+      {
+        "order": 8,
+        "artifact": "report_markdown",
+        "path": "reports/confirmatory_report_v3.md",
+        "content": "the human-readable rendering of the report"
+      }
+    ]
+  },
+  "failure_decision_table": [
+    {
+      "failure_mode": "ABORT_BEFORE_THE_FIRST_PAYLOAD_READ",
+      "detection": "the pre-flight, the readiness probe or the precondition re-check fails",
+      "response": "roll back every artifact the run created, leave holdout_exposed_count at 0 and release the attempt",
+      "exposure_effect": "none: the window was never read",
+      "artifact_state": "no confirmatory artifact remains",
+      "resumable": "the single authorized attempt is still available",
+      "reported_as": "the abort reason in the handoff"
+    },
+    {
+      "failure_mode": "ABORT_AFTER_A_PAYLOAD_READ",
+      "detection": "the run fails after the first dataset has been read",
+      "response": "record the run as EXPOSED_ABORTED, keep the exposure in place, keep the already retrieved and hash-verified datasets, and resume the same run from them; never read the window again",
+      "exposure_effect": "the exposure stays: the window is spent",
+      "artifact_state": "the confirmatory checkpoint records EXPOSED_ABORTED and the exposure events; no report is produced",
+      "resumable": "yes, as a resume of the same run, bounded by max_retries_on_technical_failure",
+      "reported_as": "the report must state that the window was consumed without a completed evaluation"
+    },
+    {
+      "failure_mode": "PROVIDER_OR_RATE_LIMIT_FAILURE",
+      "detection": "a transport error, a timeout, HTTP 429 or another retryable status",
+      "response": "fail over a host failure to the documented failover host and record both statuses; retry a transient failure on the active endpoint within the frozen retry budget with the frozen backoff, then resume the run",
+      "exposure_effect": "a read that returned a payload is counted; a failed request is not",
+      "artifact_state": "the verified datasets of the completed assets are kept for the resume",
+      "resumable": "yes, within the frozen retry budget",
+      "reported_as": "the provider statuses with their timestamps in the handoff"
+    },
+    {
+      "failure_mode": "DATASET_HASH_MISMATCH",
+      "detection": "the recomputed content hash of a persisted dataset differs from the recorded one",
+      "response": "refuse the dataset; do not repair it, do not re-fetch it and do not re-read the window, because a re-read would be a second read of a single-use window",
+      "exposure_effect": "the read is counted: the window is spent",
+      "artifact_state": "the run is recorded as EXPOSED_ABORTED and the mismatch is reported",
+      "resumable": "no: the resume may only reuse a hash-verified dataset",
+      "reported_as": "the mismatch, the asset and the two digests"
+    },
+    {
+      "failure_mode": "PAIR_NOT_TRADING_OR_INSUFFICIENT_DATA",
+      "detection": "the readiness probe reports a pair that is not trading, or a retrieved dataset holds fewer closed candles than the window requires",
+      "response": "a pair that is not trading refuses the whole run in the readiness step, before any candle is read; an insufficient dataset is refused for its asset, recorded with its gaps and never interpolated",
+      "exposure_effect": "the readiness refusal exposes nothing; an insufficient dataset is a read",
+      "artifact_state": "the asset is reported as INCONCLUSIVE with its gap record",
+      "resumable": "a readiness refusal is retryable; a spent window is not",
+      "reported_as": "the pair status or the gap record, per asset"
+    },
+    {
+      "failure_mode": "WINDOW_BENCHMARK_MISSING_SHORT_OR_MISALIGNED",
+      "detection": "the window benchmark series is missing, is shorter than the evaluated window or is not index-aligned with the asset series",
+      "response": "abort before the engine is called (BenchmarkAlignmentError); the evaluation does not proceed on a missing, a short or a misaligned benchmark, and the benchmark is never forward-filled to make it fit",
+      "exposure_effect": "the window is spent: the benchmark was read with the window",
+      "artifact_state": "the run is recorded as EXPOSED_ABORTED and the alignment error is reported; no report is produced",
+      "resumable": "no: the window is single-use and the benchmark cannot be re-read",
+      "reported_as": "the alignment error, the asset and the two timestamp series"
+    },
+    {
+      "failure_mode": "DEVELOPMENT_BENCHMARK_SUBSTITUTION",
+      "detection": "the series offered as the window benchmark carries the content hash of the published development benchmark, or starts before the window start",
+      "response": "refuse the substitution (BenchmarkAlignmentError); the published development benchmark does not cover the window and may never stand in for the window benchmark series",
+      "exposure_effect": "the window is spent: the benchmark was read with the window",
+      "artifact_state": "the run is recorded as EXPOSED_ABORTED and the refusal is reported",
+      "resumable": "no: the window is single-use",
+      "reported_as": "the offered content hash, the development content hash and the asset"
+    },
+    {
+      "failure_mode": "ZERO_TRADE_OR_FAILING_ASSET",
+      "detection": "the evaluation yields no closed trade, or the promotion rule does not hold",
+      "response": "grade the asset with the frozen status vocabulary: INCONCLUSIVE for the zero-trade case, REJECTED_ON_HOLDOUT for a failing asset. Report it.",
+      "exposure_effect": "none",
+      "artifact_state": "the asset appears in the report with its verdict and its reason",
+      "resumable": "not applicable: the evaluation completed",
+      "reported_as": "the per-asset outcome in the report and in the ledger"
+    },
+    {
+      "failure_mode": "NO_CONFIGURATION_SURVIVES",
+      "detection": "no asset of the frozen scope reaches PROVISIONAL_HISTORICAL_SURVIVAL",
+      "response": "report the null result as NO_CANDIDATE_SURVIVED_THE_CONFIRMATORY_RULE; it is a legitimate outcome of the run and is never hidden or re-run",
+      "exposure_effect": "none",
+      "artifact_state": "the report carries the null outcome and every per-asset verdict",
+      "resumable": "not applicable: the evaluation completed",
+      "reported_as": "the report's outcome field"
+    }
+  ],
+  "acceptance_checks": {
+    "checks": [
+      {
+        "check": "the run's exit status and the handoff record the executed command and its exit status",
+        "how": "operator records the command line and the exit status in the session handoff"
+      },
+      {
+        "check": "the confirmatory path verifier passes on the delivered tree",
+        "how": "python3 scripts/verify_v3_confirmatory_path.py exits 0"
+      },
+      {
+        "check": "the full test suite is green",
+        "how": "PYTHONPATH=src python3 -m pytest tests/ -q exits 0"
+      },
+      {
+        "check": "the exposure count reconciles across the three records",
+        "how": "the window manifest, the confirmatory checkpoint and the report carry the same holdout_exposed_count, and it equals the number of exposure events"
+      },
+      {
+        "check": "the window manifest's self-hash recomputes and every dataset hash verifies",
+        "how": "recompute the manifest hash over the document body and the content hash of every persisted dataset"
+      },
+      {
+        "check": "the result stream is the projection of the shard",
+        "how": "the sha256 of the shard bytes equals the sha256 of the result stream"
+      },
+      {
+        "check": "the ledger, the results manifest and the report agree with the run identity",
+        "how": "the run_code_identity, the authorization manifest hash, the window-manifest hash and the per-asset outcomes are identical in the three records"
+      },
+      {
+        "check": "the v1 evidence, the v2 selection outputs and the v3 selection outputs are byte-unchanged",
+        "how": "recompute the sha256 of the five v1 evidence files, the six v2 selection outputs and the six v3 selection outputs and compare them with the authorization's recorded anchors"
+      },
+      {
+        "check": "no v1, v2 or v3 selection path was written and no confirmatory row entered the v1 result stream",
+        "how": "git status over the forbidden paths and a scan of research/results.jsonl"
+      },
+      {
+        "check": "every asset of the frozen scope appears in the report, including the two without a candidate",
+        "how": "the report's per_asset_outcomes and assets_without_candidate fields"
+      },
+      {
+        "check": "the window benchmark series is hash-verified, index-aligned with every asset series and is not the published development benchmark",
+        "how": "the window manifest's window benchmark record and the alignment report of every asset in the ledger"
+      },
+      {
+        "check": "the single preregistered criterion is the only criterion that was applied",
+        "how": "the report states the authoritative source configs/research_v3.json#holdout.promotion_rule and names no second criterion"
+      },
+      {
+        "check": "the v1/v2 BTC-alignment deviation is disclosed and not repaired",
+        "how": "the report's deviation disclosure names the v1/v2 evidence path and the records affected"
+      }
+    ],
+    "verification_commands": [
+      "python3 scripts/verify_v3_confirmatory_path.py",
+      "python3 scripts/verify_v3_confirmatory_protocol.py",
+      "python3 scripts/verify_v3_confirmatory_runbook_1.py",
+      "PYTHONPATH=src python3 -m pytest tests/ -q",
+      "PYTHONPATH=src python3 -c \"from breakout_research import config; print(config.compute_code_hash())\""
+    ],
+    "the_output_is_accepted_only_when": [
+      "every acceptance check above passes",
+      "every verification command exits 0",
+      "the handoff records the commands, their exit statuses and the per-asset outcome"
+    ]
+  },
+  "prohibitions": [
+    "the run may not read the confirmatory window twice",
+    "the run may not rank, re-rank, re-tune or select anything on the confirmatory window",
+    "the run may not extend, shorten or re-base the grid, the window or the cost scenarios",
+    "the run may not write a v1 path",
+    "the run may not write a v2 selection path",
+    "the run may not write a v2 confirmatory path",
+    "the run may not write a v3 selection path",
+    "the run may not mix the 497,664 v2 selection units with the confirmatory results, and the two are never tallied with",
+    "the run may not mix the v3 selection results with the confirmatory results, and the two are never tallied with",
+    "the run may not grade the outcome with a rule other than the single preregistered v3 promotion rule, and no second confirmatory criterion may be applied",
+    "the run may not open the v1 holdout",
+    "the run may not read the v2 confirmatory window",
+    "the run may not reset or decrease holdout_exposed_count",
+    "the run may not evaluate an asset outside the frozen scope, nor re-evaluate an asset that has no candidate",
+    "the run may not substitute the published development benchmark for the window benchmark series",
+    "the run may not drop the 576 btc_ema_168 configurations per asset",
+    "the run may not repair the v1/v2 BTC-alignment deviation; it is disclosed in the final report",
+    "the run may not be started before the commit that carries the runbook and the authorization exists",
+    "the run may not be started before the confirmatory window can end",
+    "a completed run is never re-run; an interrupted run is resumed, never restarted"
+  ],
+  "related_artifacts": {
+    "confirmatory_authorization_1": {
+      "path": "configs/research_v3_confirmatory_authorization_1.json",
+      "manifest_hash": "0383eee19cdc835ab8cba94b479d6b232281e95a62ee9ed4d15febb14e90fb54"
+    },
+    "confirmatory_protocol": {
+      "path": "configs/research_v3_confirmatory_protocol.json",
+      "manifest_hash": "f008876ba5b85f33c8cb9a4c647f6db71ec8bc067d4635e99905ea323d2bf95e"
+    },
+    "selected_configurations_manifest": {
+      "path": "research/v3_selected_configurations_manifest.json",
+      "manifest_hash": "3d24a278f13f8c6878905d45be25d0c0cbd84c0c1138d44c0db41b8d56fb5b53"
+    },
+    "selection_authorization_1": {
+      "path": "configs/research_v3_selection_authorization_1.json",
+      "manifest_hash": "fd91cc4dc907780fc66ffd9c020e53f3c224a5ae8bb688e30cd7bfec04762dcd"
+    },
+    "v3_candidate_freeze": {
+      "path": "configs/research_v3_candidate_freeze.json",
+      "manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4"
+    },
+    "v3_specification": {
+      "path": "configs/research_v3.json",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58"
+    },
+    "v3_data_manifest": {
+      "path": "research/data_manifest_v3.json",
+      "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "effective_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321"
+    },
+    "v3_data_manifest_amendment_1": {
+      "path": "configs/research_v3_data_manifest_amendment_1.json",
+      "manifest_hash": "f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e"
+    },
+    "v1_specification": {
+      "path": "configs/research_v1.json",
+      "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+    },
+    "confirmatory_execution_path": {
+      "path": "src/v3_confirmatory",
+      "canonical_source_digest": "747c2387ff85b73240d89f744a70e69f25c3af2e723a6d6191fda80e80c94aba"
+    }
+  },
+  "authorizes_a_candle_read": false,
+  "authorizes_an_evaluation": false,
+  "authorizes_a_second_run": false,
+  "durability": {
+    "rule": "The runbook is preregistered by being committed. The confirmatory run may not start before the commit that carries this runbook and the authorization exists, and it may not start before the window can end.",
+    "runbook_commit": null,
+    "runbook_commit_status": "PENDING_COMMIT",
+    "note": "The commit hash is recorded by the committing session. This artifact is not rewritten after that commit, because its manifest_hash must not change."
+  },
+  "producer": {
+    "path": "scripts/build_v3_confirmatory_runbook_1.py",
+    "verify_command": "python3 scripts/verify_v3_confirmatory_runbook_1.py"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
+  },
+  "manifest_hash": "f2aaac6f1146933e04fdb05726d5f1899d0335c07ce74ce2f0a53893893b7179"
+}

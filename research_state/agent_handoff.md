@@ -6108,3 +6108,211 @@ the confirmatory windows close (v3 earliest end `2027-01-18T13:00:00Z`, v2 earli
 `2027-01-18T13:00:00Z`. The stale `OUTSTANDING` wording of `configs/research_v2.json` (P2/P3) is
 already reconciled by reference in `configs/research_v2_spec_amendment_1.json` and
 `configs/research_v2_prerequisite_reconciliation_amendment_1.json` — that item is closed.
+
+## Session activity — 2026-10-20T22:55:00Z (this session)
+
+**Task (from the durable handoff at 21:29Z):** deliver the **v3 confirmatory runbook** — the
+preregistered *operator procedure* of the single authorized v3 confirmatory run, as a versioned,
+hash-bound design artifact (`configs/research_v3_confirmatory_runbook_1.json`) with a deterministic
+producer, a read-only offline verifier and deterministic tests, following the v2 precedent
+(`configs/research_v2_confirmatory_runbook_1.json` `manifest_hash d81d9197…` /
+`scripts/build_v2_confirmatory_runbook_1.py` / `scripts/verify_v2_confirmatory_runbook_1.py` /
+`tests/test_v2_confirmatory_runbook_1.py`). **Rules only: nothing is evaluated, no candle is read,
+no provider is contacted, and the runbook authorizes nothing.**
+
+**Outcome:** **Delivered and verified.** The v3 confirmatory line is now complete on the design
+side: protocol → execution path → authorization → **runbook**, every step hash-bound to the next
+and proved by read-only offline verifiers and deterministic tests. **Nothing was evaluated, no
+candle was read, no provider was contacted, no file under `src/breakout_research/`,
+`src/v2_campaign/`, `src/v2_confirmatory/`, `src/v3_campaign/` or `src/v3_confirmatory/` was
+touched, and no frozen v1/v2/v3 artifact was edited.**
+
+**What was delivered**
+
+- `configs/research_v3_confirmatory_runbook_1.json` (`manifest_hash
+  f2aaac6f1146933e04fdb05726d5f1899d0335c07ce74ce2f0a53893893b7179`) — the preregistered operator
+  procedure, **rules only**:
+  - the run identity (`v3-confirmatory-20270118`, campaign `v3-confirmatory-campaign`), the scope
+    (4 in scope — ICPUSDT/`cfg_0444`, PEPEUSDT/`cfg_1804`, SHIBUSDT/`cfg_0544`, WLDUSDT/`cfg_1380`;
+    2 out of scope **with their reason** — AAVEUSDT `NO_CANDIDATE`, QNTUSDT
+    `INSUFFICIENT_EVIDENCE`), the single-use window (`2026-10-20T13:00:00Z` →
+    `2027-01-18T13:00:00Z`, 2160 closed hourly candles) and the benchmark symbol `BTCUSDT`;
+  - the binding identities: the authorization (`0383eee1…`), the protocol (`f008876b…`), the
+    selected-configurations manifest (`3d24a278…`), the selection authorization (`fd91cc4d…`), the
+    v3 data manifest (base `6793d86c…` / effective `88e90960…`), the v3 and v1 specifications, the
+    immutable sha256 anchors of the 5 v1 evidence files, the 6 v2 selection outputs and the 6 v3
+    selection outputs, and the composite code identity (`3e8e4169…` hashed set, `747c2387…`
+    execution path, `0b1605be…` run identity);
+  - the **single** decision rule (`configs/research_v3.json#holdout.promotion_rule`,
+    `criterion_count = 1`, `secondary_source = null`): the v2 second-criterion surface is absent and
+    the runbook forbids a second criterion explicitly;
+  - the ten **ordered operator steps** (PREFLIGHT → READINESS_PROBE → SINGLE_RETRIEVAL →
+    DATASET_PERSISTENCE_AND_EXPOSURE → WINDOW_MANIFEST → PRECONDITION_RECHECK → EVALUATION →
+    VERDICT → WRITE_OUTPUT_LAYOUT → ACCEPTANCE), each with its `may_not` list and its `on_failure`;
+  - the readiness probe **read from the delivered `src/v3_confirmatory/window.py`**, the single
+    retrieval of the four asset series **and the window benchmark**, the **window-benchmark rule
+    read from the delivered `src/v3_confirmatory/benchmark.py`** (alignment by UTC candle close, no
+    forward fill, fail-closed on missing/short/misaligned, the published development benchmark
+    `50d357b0…` may not be substituted, the 576 `btc_ema_168` configurations per asset are never
+    dropped), and the eight authorized output paths in the order the delivered runner writes them
+    (read from the runner's source with the Python AST, so the runbook cannot drift from the
+    implementation);
+  - the **failure decision table** with nine modes: abort before the first payload read (roll back,
+    `holdout_exposed_count` stays 0, the attempt is released), abort after a payload read
+    (`EXPOSED_ABORTED`, the exposure stays, the run resumes from the persisted, hash-verified
+    datasets), provider or rate-limit failure, dataset hash mismatch (refused, never repaired,
+    never re-read), a non-trading pair or an insufficient dataset, **a missing, short or misaligned
+    window benchmark** (abort before the engine is called), **a substituted development benchmark**
+    (refused), a zero-trade or failing asset, and the null result
+    (`NO_CANDIDATE_SURVIVED_THE_CONFIRMATORY_RULE`, reported, never hidden);
+  - the **acceptance checks** (13, with the exact verification commands) and the **prohibitions**
+    (20, including no second read of the window, no re-ranking or re-tuning on the window, no
+    v1/v2/v3-selection or v2-confirmatory path write, never tallied with the 497,664 v2 selection
+    units, no second confirmatory criterion, no opening of the v1 holdout, no read of the v2
+    confirmatory window, no reset of `holdout_exposed_count`, no development-benchmark
+    substitution, no dropped `btc_ema_168` configuration, no repair of the v1/v2 BTC-alignment
+    deviation, no start before the commit or before the window can end, and "a completed run is
+    never re-run");
+  - `authorizes_a_candle_read: false`, `authorizes_an_evaluation: false`,
+    `authorizes_a_second_run: false`, `durability.runbook_commit_status: PENDING_COMMIT`.
+- `scripts/build_v3_confirmatory_runbook_1.py` — the deterministic producer (every field re-derived
+  from the hash-bound artifacts and from the delivered path, the creation instant pinned, the scope
+  cross-checked against the selected-configurations manifest, the write order read from the
+  runner's AST, the probe and the benchmark rule read from the delivered modules, refuses to
+  overwrite without `--force`, `--print` writes nothing).
+- `scripts/verify_v3_confirmatory_runbook_1.py` — the read-only offline verifier (13 numbered rule
+  groups, exit 0/1, JSON report). It re-derives every expectation from the repository, recomputes
+  the self-hash, compares the probe and the benchmark rule with the delivered source, compares the
+  write order with the delivered runner's AST, requires the nine failure modes and their six
+  answers each, and proves that the runbook authorizes nothing (no confirmatory artifact exists,
+  the window is `NOT_STARTED`, `holdout_exposed_count` is 0).
+- `tests/test_v3_confirmatory_runbook_1.py` — 40 deterministic tests, 15 of them tamper controls,
+  exercised against a synthetic mirror of the repository in a temporary directory (no provider
+  request, no real candle, no confirmatory artifact written inside the repository).
+- `research_state/brainstorming_queue.md` — a BRAIN-012 implementation record for the runbook.
+
+**State verified (2026-10-20T22:55Z):**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **949 passed** in 252.74s, exit 0 (909
+  pre-existing + 40 added by this session)
+- `python3 scripts/verify_v3_confirmatory_runbook_1.py` → `"ok": true, "failures": []`, exit 0
+  (`runbook_manifest_hash f2aaac6f…`, `canonical_source_digest 3e8e4169…`,
+  `execution_path_digest 747c2387ff85b73240d89f744a70e69f25c3af2e723a6d6191fda80e80c94aba`,
+  `run_code_identity 0b1605be59c4d2d4485b8973a950a4e07593d0a56c6e113a21fb4be470f793fe`,
+  `confirmatory_artifacts_present: []`)
+- `python3 scripts/verify_v3_confirmatory_path.py` → exit 0; `python3
+  scripts/verify_v3_confirmatory_protocol.py` → exit 0; the v2 runbook/path/protocol verifiers still
+  exit 0
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` —
+  unchanged, equal to the authorized value of record in `research_state/campaign_authorization.json`
+- canonical digests unchanged: hashed set `3e8e4169…`, v2 selection path `c69cc021…`, v2
+  confirmatory path `277a4bbe…`, v3 selection path `29cd064e…`, v3 confirmatory path `747c2387…`
+  (the runbook binds the digest the delivered authorization froze, and the live tree still matches)
+- frozen artifacts unchanged: authorization `0383eee1…`, protocol `f008876b…`, v3
+  selected-configurations manifest `3d24a278…`, v3 candidate freeze `12a981b1…`, v3 spec
+  `d6a5f8bb…`, v3 data manifest base `6793d86c…` / effective `88e90960…`, v3 selection
+  authorization `fd91cc4d…`
+- the v3 confirmatory window is still `NOT_STARTED` with `holdout_exposed_count = 0`; **no v3
+  confirmatory output path exists**; the v2 confirmatory window is untouched
+- `git status --short` carries only the new runbook, its producer, its verifier, its test module and
+  the two `research_state/` documents. The controller-driven `authorized_at_utc` refresh in
+  `research_state/campaign_authorization.json` that the v1 test suite writes on every run was
+  restored to its committed value. **No commit was created by the agent** (no explicit user
+  request); HEAD is `59b5eb19…` == `origin/main`.
+
+**One operational note for whoever touches `src/v3_confirmatory/` next:** the authorization *and*
+the runbook bind the **live** execution-path digest, so any edit under that package changes the
+digest and invalidates both until the producers are re-run
+(`python3 scripts/build_v3_confirmatory_authorization_1.py --force` and
+`python3 scripts/build_v3_confirmatory_runbook_1.py --force`). A deliberate rotation must go
+through the versioned amendment
+(`configs/research_v3_confirmatory_code_hash_amendment_1.json`, which does not exist yet).
+
+## Initial task message for next agent
+
+**Next (one bounded task):** the **campaign-level close-out of the v3 cycle** — record the completed
+v3 market-cap-expansion cohort in the durable campaign state
+`research_state/continuous_universe_state.json`, following the v2 close-out precedent (the v2 cycle
+was closed out in the 2026-10-20T20:53:55Z session). The v3 selection cycle is complete
+(`v3-selection-20261020`, campaign `v3-campaign`, 6 validated constituents, **4 candidates**,
+**2 without** — AAVEUSDT `NO_CANDIDATE`, QNTUSDT `INSUFFICIENT_EVIDENCE`), but the campaign state
+still describes the v2 cycle as the current one (`current_cycle_id = v2-selection-run-2026-10-20`,
+`next_cohort_index = 3`, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end
+2027-01-17T22:00:00Z)`). The close-out must record cohort 3 (the 6 validated constituents of
+`research/universe_manifest_v3.json`), `current_cycle_id = v3-selection-20261020`,
+`next_cohort_index = 4`, the v3 selection outcome and candidate counts, the new blocking dependency
+(the **v3** confirmatory window, earliest end `2027-01-18T13:00:00Z`) and the fact that both the v2
+and the v3 confirmatory windows are single-use and unexposed (`holdout_exposed_count = 0`). Then
+append the corresponding record to `research_state/brainstorming_queue.md` and update
+`research_state/agent_handoff.md`. **Bookkeeping and documentation only: no evaluation, no grid, no
+backtest, no selection re-run, no candle read, no provider contact.** Read
+`research_state/continuous_universe_campaign_spec.md` first and follow the state schema it fixes;
+keep the file's existing shape and version (`schema_version`) intact, and derive every number from
+the hash-bound artifacts rather than copying a value by hand.
+
+**Subject:** the v3 confirmatory line is complete and verified (path, authorization, runbook); the
+next bounded task is the campaign-level close-out of the v3 cycle (state bookkeeping only)
+
+**Status (verified 2026-10-20T22:55Z):**
+- `src/v3_confirmatory/` (canonical digest `747c2387…`),
+  `configs/research_v3_confirmatory_authorization_1.json` (`0383eee1…`),
+  `configs/research_v3_confirmatory_protocol.json` (`f008876b…`) and
+  `configs/research_v3_confirmatory_runbook_1.json` (`f2aaac6f…`) are delivered, hash-bound to each
+  other and to the four published candidates (`3d24a278…`), and proved by three read-only offline
+  verifiers and 112 tests.
+- Full suite **949/949 green**; every `scripts/verify_*.py` exits 0; `compute_code_hash()` =
+  `2efd3b18…` (value of record); the canonical digests of the hashed set, the v2 selection path, the
+  v2 confirmatory path, the v3 selection path and the v3 confirmatory path are unchanged; no frozen
+  v1/v2/v3 artifact changed.
+- The v3 confirmatory window is `NOT_STARTED` with `holdout_exposed_count = 0`; no v3 confirmatory
+  output path exists; the v2 and v3 confirmatory evaluations remain time-blocked (earliest ends
+  `2027-01-17T22:00:00Z` and `2027-01-18T13:00:00Z`).
+
+**Do NOT:** write/edit/delete under `src/breakout_research/`, `src/v2_campaign/`,
+`src/v2_confirmatory/`, `src/v3_campaign/` or `src/v3_confirmatory/` (the v3 confirmatory path is
+hash-bound by the delivered authorization and the delivered runbook — an edit invalidates both
+until both producers are re-run with `--force`); edit any frozen artifact (in particular
+`configs/research_v3_confirmatory_protocol.json`,
+`configs/research_v3_confirmatory_authorization_1.json`,
+`configs/research_v3_confirmatory_runbook_1.json`, `configs/research_v3.json`,
+`research/v3_selected_configurations_manifest.json`, `research/data_manifest_v3.json`,
+`research/universe_manifest_v3.json`); write to any v1 path, any v2 path or any v3 **selection**
+output path; read any confirmatory-window candle; fetch candles or contact any provider; run any
+evaluation, grid, backtest, campaign or selection; re-run a producer that would rewrite an existing
+artifact; change the decision rule, the grid, the costs, the folds, the thresholds, the single
+confirmatory criterion or the window rules; mark the v3 confirmatory window as started or
+`holdout_exposed_count` as non-zero.
+
+**Acceptance criteria:** `research_state/continuous_universe_state.json` records the completed v3
+cohort (cohort index 3, the 6 validated constituents, `current_cycle_id = v3-selection-20261020`,
+`next_cohort_index = 4`, the v3 selection outcome and the 4/2 candidate split, the new blocking
+dependency with the v3 confirmatory window's earliest end `2027-01-18T13:00:00Z`) while keeping the
+v2 history intact and `schema_version` unchanged; every number in it is derived from the
+hash-bound artifacts and can be re-derived by a reader; the file is valid JSON and the campaign
+spec's state schema is respected; `research_state/brainstorming_queue.md` and
+`research_state/agent_handoff.md` record the close-out and the next bounded task; the full suite
+still exits 0 and every verifier still exits 0; `compute_code_hash()` is still `2efd3b18…` and the
+canonical digests are still `3e8e4169…` (hashed set), `c69cc021…` (v2 selection), `277a4bbe…`
+(v2 confirmatory), `29cd064e…` (v3 selection) and `747c2387…` (v3 confirmatory path); the v1/v2/v3
+artifact sha256 anchors above are unchanged; **no v3 confirmatory output path exists**, no
+confirmatory-window candle was read and `holdout_exposed_count` stays 0.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
+`python3 scripts/verify_v3_confirmatory_runbook_1.py`; `python3 scripts/verify_v3_confirmatory_path.py`;
+`python3 scripts/verify_v3_confirmatory_protocol.py`;
+`python3 scripts/verify_v3_selected_configurations_manifest.py`; `python3 scripts/verify_v3_selection_run.py`;
+`python3 scripts/verify_v3_selection_authorization_1.py`; `python3 scripts/verify_research_v3_spec.py`;
+`python3 scripts/verify_research_v3_manifests.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`;
+`python3 scripts/verify_research_v3_execution.py`; `python3 scripts/verify_v3_data_manifest_amendment_1.py`;
+`python3 scripts/verify_v3_candidate_freeze_amendment_2.py`; `python3 scripts/verify_v3_execution_amendment_1.py`;
+`python3 scripts/verify_v2_confirmatory_runbook_1.py`; `python3 scripts/verify_v2_confirmatory_path.py`;
+`python3 scripts/verify_v2_confirmatory_protocol.py`; `python3 scripts/verify_v2_selection_run.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm only `research_state/` changed — no `src/`, no
+frozen artifact, no manifest change).
+
+**Queued after this task (not for that session):** the v3 confirmatory evaluation itself and the
+final report, neither of which may start before the v3 confirmatory window can end
+(`2027-01-18T13:00:00Z`), and the v2 confirmatory evaluation, which may not start before
+`2027-01-17T22:00:00Z`. The stale `OUTSTANDING` wording of `configs/research_v2.json` (P2/P3) is
+already reconciled by reference in `configs/research_v2_spec_amendment_1.json` and
+`configs/research_v2_prerequisite_reconciliation_amendment_1.json` — that item is closed.

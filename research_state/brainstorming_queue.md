@@ -3450,3 +3450,108 @@ execution-path digest, so any edit under `src/v3_confirmatory/` invalidates it u
 `python3 scripts/build_v3_confirmatory_authorization_1.py --force` is re-run. A deliberate digest
 rotation must go through the versioned amendment
 (`configs/research_v3_confirmatory_code_hash_amendment_1.json`, which does not exist yet).
+
+## BRAIN-012 implementation record — the preregistered v3 confirmatory runbook (2026-10-20T22:55Z, separate session)
+
+**Marked:** `IMPLEMENTED_AND_VERIFIED` — the v3 confirmatory evaluation now has a preregistered
+*operator procedure*; the evaluation itself remains time-blocked until `2027-01-18T13:00:00Z`.
+
+**Why this step, and why it was not optional.** The v3 line had an executable path and an
+authorization that said *what* may be done, but nothing that said *in which order*. The confirmatory
+window is single-use: once it is burned it cannot be re-graded, and a run improvised after the fact
+cannot be told apart from one that was planned. The runbook fixes the order in advance — the
+pre-flight, the metadata-only readiness probe, the one retrieval of the four asset series **and the
+window benchmark**, the hash verification, the alignment check, the unchanged v1 metric and cost
+scenarios, the single promotion rule and the write order — together with the decision table for
+every failure mode, the acceptance checks the executing session must run and the prohibitions the
+run may never break. **It records rules only: it authorizes nothing, reads no candle, contacts no
+provider and writes no confirmatory artifact.**
+
+**Delivered and verified (all digests recomputed from the files on disk):**
+
+- `configs/research_v3_confirmatory_runbook_1.json` (`manifest_hash
+  f2aaac6f1146933e04fdb05726d5f1899d0335c07ce74ce2f0a53893893b7179`) — the runbook:
+  - the run identity (`v3-confirmatory-20270118`, campaign `v3-confirmatory-campaign`), the scope
+    (4 in scope — ICPUSDT/`cfg_0444`, PEPEUSDT/`cfg_1804`, SHIBUSDT/`cfg_0544`, WLDUSDT/`cfg_1380`;
+    2 out of scope **with their reason** — AAVEUSDT `NO_CANDIDATE`, QNTUSDT
+    `INSUFFICIENT_EVIDENCE`), the window (`2026-10-20T13:00:00Z` → `2027-01-18T13:00:00Z`, 2160
+    closed hourly candles, single-use) and the benchmark symbol `BTCUSDT`;
+  - the binding identities: the authorization (`0383eee1…`), the protocol (`f008876b…`), the
+    selected-configurations manifest (`3d24a278…`), the selection authorization (`fd91cc4d…`), the
+    v3 data manifest (base `6793d86c…` / effective `88e90960…`), the v3 and v1 specifications
+    (`d6a5f8bb…`, `2d22e702…`), the immutable sha256 anchors of the 5 v1 evidence files, the 6 v2
+    selection outputs and the 6 v3 selection outputs, and the composite code identity
+    (`3e8e4169…` hashed set, `747c2387…` execution path, `0b1605be…` run identity);
+  - the **single** decision rule (`configs/research_v3.json#holdout.promotion_rule`,
+    `criterion_count = 1`, `secondary_source = null`) — the v2 second-criterion surface is absent;
+  - the ten **ordered operator steps**, the readiness probe read from the delivered
+    `src/v3_confirmatory/window.py`, the single retrieval, the **window-benchmark rule** read from
+    the delivered `src/v3_confirmatory/benchmark.py` (alignment by UTC candle close, no forward fill,
+    fail-closed on missing/short/misaligned, the development benchmark `50d357b0…` may not be
+    substituted, the 576 `btc_ema_168` configurations per asset are never dropped), the eight
+    **authorized output paths** in the order the delivered runner writes them (read from its source
+    with the Python AST, so the runbook cannot drift from the implementation);
+  - the **failure decision table** with nine modes — abort before the first payload read (roll back,
+    `holdout_exposed_count` stays 0, the attempt is released), abort after a payload read
+    (`EXPOSED_ABORTED`, the exposure stays, the run resumes from the persisted datasets), provider
+    or rate-limit failure, dataset hash mismatch (refused, never repaired, never re-read), a
+    non-trading pair or an insufficient dataset, **a missing, short or misaligned window benchmark**
+    (abort before the engine is called), **a substituted development benchmark** (refused), a
+    zero-trade or failing asset, and the null result
+    (`NO_CANDIDATE_SURVIVED_THE_CONFIRMATORY_RULE`, reported, never hidden);
+  - the **acceptance checks** (13, with the exact verification commands) and the **prohibitions**
+    (20, including: no second read of the window, no re-ranking or re-tuning on the window, no
+    v1/v2/v3-selection or v2-confirmatory path write, never tallied with the 497,664 v2 selection
+    units, no second confirmatory criterion, no opening of the v1 holdout, no read of the v2
+    confirmatory window, no reset of `holdout_exposed_count`, no development-benchmark
+    substitution, no dropped `btc_ema_168` configuration, no repair of the v1/v2 BTC-alignment
+    deviation, no start before the commit or before the window can end, and "a completed run is
+    never re-run");
+  - `authorizes_a_candle_read: false`, `authorizes_an_evaluation: false`,
+    `authorizes_a_second_run: false`, and a `durability` block with
+    `runbook_commit_status: PENDING_COMMIT`.
+- `scripts/build_v3_confirmatory_runbook_1.py` — the deterministic producer: every field is
+  re-derived from the hash-bound artifacts and from the delivered execution path, the creation
+  instant is pinned, the scope is cross-checked against the selected-configurations manifest, the
+  write order is read from the runner's AST, the probe and the benchmark rule are read from the
+  delivered modules, and it refuses to overwrite an existing artifact without `--force` (`--print`
+  writes nothing).
+- `scripts/verify_v3_confirmatory_runbook_1.py` — the read-only offline verifier (13 numbered rule
+  groups, exit 0/1, JSON report): it re-derives every expectation from the repository, recomputes
+  the runbook's self-hash, re-computes the live canonical digests, compares the probe and the
+  benchmark rule with the delivered source, compares the write order with the delivered runner's
+  AST, requires the nine failure modes and their six answers each, and proves that the runbook
+  authorizes nothing (no confirmatory artifact exists, the window is `NOT_STARTED` and
+  `holdout_exposed_count` is 0). It never writes, never contacts a provider and never reads a
+  candle.
+- `tests/test_v3_confirmatory_runbook_1.py` — 40 deterministic tests, 15 of them tamper controls
+  (tampered self-hash, changed code identity, changed authorization binding, a dropped failure
+  mode, a reordered write order, a changed readiness endpoint, a changed retry budget, a widened
+  scope, a re-ranked configuration, a second decision criterion, a dropped benchmark fail-closed
+  reason, a self-authorizing runbook, a dropped prohibition, a dropped acceptance check and a
+  runbook that claims to be committed), exercised against a synthetic mirror of the repository in a
+  temporary directory: no provider request, no real candle, no confirmatory artifact written
+  inside the repository.
+
+**State verified (2026-10-20T22:55Z):** full suite **949/949 green** (909 pre-existing + 40 new);
+`scripts/verify_v3_confirmatory_runbook_1.py` → `"ok": true, "failures": []`, exit 0
+(`runbook_manifest_hash f2aaac6f…`, `canonical_source_digest 3e8e4169…`,
+`execution_path_digest 747c2387…`, `run_code_identity 0b1605be…`,
+`confirmatory_artifacts_present: []`); `scripts/verify_v3_confirmatory_path.py` and
+`scripts/verify_v3_confirmatory_protocol.py` still exit 0; `compute_code_hash()` =
+`2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (the authorized value of
+record); the canonical digests of the hashed set (`3e8e4169…`), the v2 selection path
+(`c69cc021…`), the v2 confirmatory path (`277a4bbe…`) and the v3 selection path (`29cd064e…`) are
+unchanged; the v3 confirmatory path digest (`747c2387…`) is unchanged, so the delivered
+authorization is still valid; no file under `src/breakout_research/`, `src/v2_campaign/`,
+`src/v2_confirmatory/`, `src/v3_campaign/` or `src/v3_confirmatory/` was touched; no frozen v1/v2/v3
+artifact changed; the v3 confirmatory window is `NOT_STARTED` with `holdout_exposed_count = 0`; no
+v3 confirmatory output path exists; no confirmatory-window candle was read.
+
+**Operational consequence recorded for the next session:** the runbook binds the **live** execution
+path digest, and the delivered authorization binds the same digest. Any edit under
+`src/v3_confirmatory/` therefore invalidates both until
+`python3 scripts/build_v3_confirmatory_authorization_1.py --force` and
+`python3 scripts/build_v3_confirmatory_runbook_1.py --force` are re-run. A deliberate digest
+rotation must go through the versioned amendment
+(`configs/research_v3_confirmatory_code_hash_amendment_1.json`, which does not exist yet).
