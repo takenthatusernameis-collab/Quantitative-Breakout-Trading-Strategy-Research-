@@ -3194,3 +3194,73 @@ refusal is still a test and no run is ever started by the suite.
   `NOT_STARTED` with `holdout_exposed_count = 0`
 
 **Marked:** `IMPLEMENTED_STAGE_1_AND_AUTHORIZATION_COMPLETE_RUN_OUTSTANDING`.
+
+---
+
+## BRAIN-012 implementation record — the published v3 selected-configurations manifest and the v3 execution amendment 2 (2026-10-20T19:2xZ, separate session)
+
+**Marked:** `IMPLEMENTED_AND_VERIFIED` — the v3 line now publishes the outcome of its completed
+selection run as a hash-bound, independently re-derivable artifact; the v3 confirmatory
+evaluation remains time-blocked.
+
+**Why this step, and why it was not optional.** BRAIN-012 §4 (design point 4) requires that the
+candidate set be frozen **and** that a `research/v3_selected_configurations_manifest.json`-path
+equivalent be committed and hash-bound before any selection or confirmatory-window candle is
+read. The v3 selection run has been performed and verified (`research/ledger_v3.json`,
+`status: COMPLETED`, 165,888 execution units, `holdout_exposed_count = 0`), but the published
+outcome of that run did not exist: the v2 line had `research/v2_selected_configurations_manifest.json`
+and the v3 line had nothing. Every downstream v3 artifact — the confirmatory protocol, the
+confirmatory path, the confirmatory authorization — takes its evaluation scope from that
+manifest, so its absence blocked the whole remaining v3 line.
+
+**Delivered and verified (all digests recomputed from the files on disk):**
+
+- `research/v3_selected_configurations_manifest.json` (`manifest_hash 3d24a278…`) — the published
+  outcome of the authorized v3 selection run over the frozen v3 candidate set. The selection is
+  **re-derived** from the 165,888 verified shard records (every `experiment_id` recomputed and
+  checked) with the buy-and-hold baselines recomputed from the hash-verified v3 datasets under
+  the benchmark rule and the development boundary enforced by the v3 loader; the producer never
+  copies the selection out of the run ledger and fails loudly when the re-derivation fails. The
+  outcome: `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE` — **4 candidates** (ICPUSDT `cfg_0444`,
+  PEPEUSDT `cfg_1804`, SHIBUSDT `cfg_0544`, WLDUSDT `cfg_1380`) and **2 assets without a
+  candidate** (AAVEUSDT `NO_CANDIDATE`, QNTUSDT `INSUFFICIENT_EVIDENCE`), each reported with an
+  explicit reason. The 14 excluded constituents stay excluded with their recorded reasons.
+- `scripts/publish_v3_selected_configurations.py` — the deterministic producer (refuses to
+  overwrite without `--force`).
+- `scripts/verify_v3_selected_configurations_manifest.py` — the read-only offline verifier
+  (nine numbered rule groups, exit 0/1, JSON report), including a contamination check that the
+  v1 and v2 lines are untouched by the v3 line.
+- `configs/research_v3_execution_amendment_2.json` (`manifest_hash 7c2f5d2d…`) — the versioned
+  amendment that adds the published manifest path to the v3 result layout and binds its hash. It
+  authorizes **nothing** else: no second run, no confirmatory evaluation, no candle fetch. The
+  v3 execution protocol is not edited; its file digest and its own `specification_hash` are
+  recorded in the amendment.
+- `scripts/build_v3_execution_amendment_2.py` — the deterministic producer of the amendment
+  (recomputes every fact it records; refuses to overwrite without `--force`).
+- `scripts/verify_v3_execution_amendment_2.py` — the read-only offline verifier of the amendment.
+- `tests/test_v3_selected_configurations_manifest.py` (22 tests) and
+  `tests/test_v3_execution_amendment_2.py` (19 tests) — deterministic tests, including 12 tamper
+  controls that rebuild the artifacts in a mirrored tree and prove that the verifiers refuse them.
+
+**State verified (2026-10-20T19:2xZ):** full suite **800/800 green** (759 pre-existing + 41 new);
+every `scripts/verify_*.py` and `scripts/report_*.py` exits 0; `compute_code_hash()` is still
+`2efd3b18…`; the canonical digests are unchanged (`3e8e4169…` hashed set, `c69cc021…` v2
+selection path, `277a4bbe…` v2 confirmatory path, `29cd064e…` v3 path); no file under
+`src/breakout_research/`, `src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/` was
+touched; no frozen v1/v2/v3 artifact changed; the v2 and v3 confirmatory windows stay
+`NOT_STARTED` with `holdout_exposed_count = 0`; the v3 run was not repeated and no
+confirmatory-window candle was read.
+
+**Staged acceptance tests (BRAIN-012 §"Staged acceptance tests", status after this session):**
+5 satisfied (all verifiers exit 0; the full suite is green; no v1/v2 artifact sha256 changed);
+9 satisfied (the v3 run wrote only to the v3 paths, and the v1/v2 lines are verified uncontaminated
+by the v3 line); 10 satisfied (the v2 confirmatory window remains `NOT_STARTED` with
+`holdout_exposed_count = 0`). Points 4, 6 and 7 changed state earlier and are recorded in the
+BRAIN-013 implementation records: the candidate set was frozen and hash-bound before the run, the
+run artifacts exist and are hash-verified, and the expansion log records the v3 entry.
+
+**Still outstanding on the v3 line (queued, not for this session):** the v3 confirmatory
+evaluation protocol (a design deliverable), the v3 confirmatory execution path
+(`src/v3_confirmatory/`, outside the hashed set) and the v3 confirmatory authorization. The
+evaluation itself cannot be performed before `2027-01-18T13:00:00Z`, because the v3 confirmatory
+window opens `2026-10-20T13:00:00Z` and needs at least 2,160 closed hourly candles.

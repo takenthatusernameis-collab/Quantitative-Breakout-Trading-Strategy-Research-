@@ -1,0 +1,103 @@
+{
+  "artifact": "v3_execution_amendment",
+  "artifact_version": "v3-execution-amendment-2",
+  "version": 2,
+  "amendment_number": 2,
+  "protocol_version": "v3",
+  "universe_version": "v3",
+  "created_utc": "2026-10-20T19:20:00Z",
+  "amendment_status": "PREREGISTERED_AMENDMENT_DESIGN_ONLY",
+  "description": "Versioned amendment to configs/research_v3_execution.json adding the authorized path for the published v3 selected-configuration manifest derived from the completed v3 selection run.",
+  "amends": {
+    "file": "configs/research_v3_execution.json",
+    "file_sha256": "ac936a1dd02587006ee73681a83036ce28f82c6d9fdcb5683999a2a3b796daea",
+    "protocol_specification_hash": "9e92a35d3f0cc79db409c0e4ec60ba0d8f2d21df14b367e9dfddec50993b7480",
+    "note": "The execution protocol is immutable and was not edited. Its file digest and its own specification_hash are recorded here unchanged; the amendment authorizes an additional published artifact path."
+  },
+  "references": {
+    "configs_research_v3": {
+      "file": "configs/research_v3.json",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58"
+    },
+    "configs_research_v1": {
+      "file": "configs/research_v1.json",
+      "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+    },
+    "universe_manifest_v3": {
+      "file": "research/universe_manifest_v3.json",
+      "manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf"
+    },
+    "data_manifest_v3": {
+      "file": "research/data_manifest_v3.json",
+      "manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df"
+    },
+    "data_manifest_amendment_1": {
+      "file": "configs/research_v3_data_manifest_amendment_1.json",
+      "manifest_hash": "f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e"
+    },
+    "candidate_freeze_v3": {
+      "file": "configs/research_v3_candidate_freeze.json",
+      "manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4"
+    },
+    "candidate_freeze_amendment_1": {
+      "file": "configs/research_v3_candidate_freeze_amendment_1.json",
+      "manifest_hash": "1f0f3d6535d2e7b16fce093177f8d7ca1048bc8597c8df1b0835208b29b54e55"
+    },
+    "candidate_freeze_amendment_2": {
+      "file": "configs/research_v3_candidate_freeze_amendment_2.json",
+      "manifest_hash": "41c5c10515bca609881484adc558481aadda30981ed25125119a235a562f9f1f"
+    },
+    "v3_execution_amendment_1": {
+      "file": "configs/research_v3_execution_amendment_1.json",
+      "manifest_hash": "bbd7617835243692a5f3630a39a5b3fbc47e6ed33a0cf4c16aaa3f77b9986816"
+    },
+    "v3_selection_authorization_1": {
+      "file": "configs/research_v3_selection_authorization_1.json",
+      "manifest_hash": "fd91cc4dc907780fc66ffd9c020e53f3c224a5ae8bb688e30cd7bfec04762dcd"
+    },
+    "v3_selection_ledger": {
+      "file": "research/ledger_v3.json",
+      "run_id": "v3-selection-20261020",
+      "campaign_id": "v3-campaign",
+      "status": "COMPLETED",
+      "holdout_exposed_count": 0
+    },
+    "v1_campaign_authorization": {
+      "file": "research_state/campaign_authorization.json",
+      "protocol_version": "v1",
+      "authorized": true,
+      "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
+    }
+  },
+  "v3_result_layout_amendment": {
+    "description": "Add the published selected-configuration manifest path to the v3 result layout. The path is not research/candidate_manifest.json nor research/candidate_manifest_v2.json.",
+    "campaign_id": "v3-campaign",
+    "paths": {
+      "shard_directory": "research/shards_v3",
+      "ledger_path": "research/ledger_v3.json",
+      "results_manifest_path": "research/results_manifest_v3.json",
+      "results_stream_path": "research/results_v3.jsonl",
+      "checkpoint_path": "research_state/checkpoint_v3.json",
+      "selected_configurations_manifest_path": "research/v3_selected_configurations_manifest.json",
+      "selected_configurations_manifest_hash": "3d24a278f13f8c6878905d45be25d0c0cbd84c0c1138d44c0db41b8d56fb5b53"
+    },
+    "writes_into_v1_forbidden": true,
+    "writes_into_v2_forbidden": true,
+    "authorization_rules": [
+      "Only the published outcome of the completed authorized run may be written; no second run is authorized",
+      "No confirmatory-window evaluation is authorized by this amendment",
+      "No candle fetch is authorized by this amendment",
+      "The manifest must list all 6 assets of the frozen scope with explicit reasons for assets without a candidate",
+      "The published manifest must be re-derivable from the verified shards under the unchanged v1 selection rule"
+    ]
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "verify_command": "python3 scripts/verify_v3_execution_amendment_2.py"
+  },
+  "manifest_hash": "7c2f5d2ddf7e7c09be55739870e3e9f59caf4b0e6731c4cafc9837cf742001da"
+}

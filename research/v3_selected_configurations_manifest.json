@@ -1,0 +1,228 @@
+{
+  "artifact": "v3_selected_configurations_manifest",
+  "artifact_version": "v3-selected-configurations-manifest-1",
+  "version": 1,
+  "protocol_version": "v3",
+  "universe_version": "v3",
+  "created_utc": "2026-10-20T19:15:00Z",
+  "manifest_status": "PUBLISHED_FROM_VERIFIED_SHARDS",
+  "description": "Published outcome of the authorized v3 selection run over the frozen v3 candidate set, derived from verified shards under the unchanged v1 selection rule.",
+  "run_identity": {
+    "run_id": "v3-selection-20261020",
+    "campaign_id": "v3-campaign",
+    "run_phase": "selection_grid",
+    "authorization_manifest_hash": "fd91cc4dc907780fc66ffd9c020e53f3c224a5ae8bb688e30cd7bfec04762dcd",
+    "run_code_identity": "adbb9b760ac652d4de8fb8764eb85315d8dd5d3d9a419e97d65f97662f3c8fd7",
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "execution_path_digest": "29cd064e3f67e6bb66b052978bba61290adc97d4b3f8f7989fe2a01e1990cd55",
+    "code_identity_algorithm": "canonical_source_digest_v1"
+  },
+  "specification_identities": {
+    "spec_v1_document_sha256": "09c79d0ba225a7e53dc432a16cb8669a823972bf19408a3f16be3d12f895464d",
+    "spec_v1_self_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+    "spec_v3_document_sha256": "094490d6eb85fc58dd870bb0e2a8e19fd10b902b5248f71c65de29a05cef706c",
+    "spec_v3_self_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+    "run_specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+    "selection_rule_digest": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e",
+    "selection_rule_reference": "configs/research_v1.json#selection"
+  },
+  "data_identities": {
+    "universe_manifest_v3_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+    "effective_data_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321",
+    "base_data_manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+    "data_manifest_amendment_1_hash": "f47380c13d1b3de48c76fa00412e4f291cdc573323a064f80da261f647bf582e",
+    "candidate_freeze_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4",
+    "candidate_freeze_amendment_1_hash": "1f0f3d6535d2e7b16fce093177f8d7ca1048bc8597c8df1b0835208b29b54e55",
+    "candidate_freeze_amendment_2_hash": "41c5c10515bca609881484adc558481aadda30981ed25125119a235a562f9f1f"
+  },
+  "scope": {
+    "frozen_candidate_set": {
+      "count": 6,
+      "binance_pairs": [
+        "SHIBUSDT",
+        "QNTUSDT",
+        "AAVEUSDT",
+        "WLDUSDT",
+        "PEPEUSDT",
+        "ICPUSDT"
+      ],
+      "membership_rule": "Exactly the validated candidate set of configs/research_v3_candidate_freeze_amendment_1.json, re-derived from the validated constituents of research/universe_manifest_v3.json. Membership is not re-derived, re-ranked, widened or narrowed by this artifact.",
+      "universe_manifest_path": "research/universe_manifest_v3.json",
+      "universe_manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+      "base_data_manifest_path": "research/data_manifest_v3.json",
+      "base_data_manifest_hash": "6793d86c37f8fcbe48824ef0d5833d75df7b3d407c8406e37c50dbd9559415df",
+      "effective_data_manifest_hash": "88e90960034718e067cebdabce6aef02e1c1942cd0ebfbd7a6934fc2fc5ac321",
+      "excluded_after_validation": {
+        "TAOUSDT": "insufficient_hourly_history",
+        "CROUSDT": "binance_spot_unavailable",
+        "BTWUSDT": "binance_spot_unavailable",
+        "ENAUSDT": "insufficient_hourly_history",
+        "OKBUSDT": "binance_spot_unavailable",
+        "ONDOUSDT": "insufficient_hourly_history",
+        "PUMPUSDT": "insufficient_hourly_history",
+        "ASTERUSDT": "insufficient_hourly_history",
+        "MUSDT": "binance_spot_unavailable",
+        "MNTUSDT": "binance_spot_unavailable",
+        "WLFIUSDT": "insufficient_hourly_history",
+        "MORPHOUSDT": "insufficient_hourly_history",
+        "SKYUSDT": "insufficient_hourly_history",
+        "HTXUSDT": "binance_spot_unavailable"
+      },
+      "widening_by_reranking_forbidden": true,
+      "excluded_assets_stay_excluded": true
+    },
+    "assets_evaluated": 6,
+    "confirmatory_window_start_utc": "2026-10-20T13:00:00Z",
+    "min_confirmatory_window_hours": 2160
+  },
+  "benchmark": {
+    "symbol": "BTCUSDT",
+    "dataset_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+    "content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+    "alignment_rule": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called, so that the engine's index pairing equals the UTC-candle-close alignment of docs/research_protocol.md:101",
+    "role": "trend_filter_and_benchmark",
+    "btc_configurations_dropped": false,
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked"
+  },
+  "derived_from": {
+    "records_read": 165888,
+    "shard_directory": "research/shards_v3/v3-campaign",
+    "results_manifest_path": "research/results_manifest_v3.json",
+    "ledger_path": "research/ledger_v3.json",
+    "experiment_ids_verified": true,
+    "all_grid_units_present": true
+  },
+  "exposure": {
+    "holdout_exposed_count": 0,
+    "confirmatory_window_status": "NOT_STARTED",
+    "confirmatory_candles_read": 0,
+    "v1_holdout_reuse": "forbidden",
+    "v2_confirmatory_window_reuse": "forbidden"
+  },
+  "authorizes": {
+    "selection_run": false,
+    "second_run": false,
+    "confirmatory_evaluation": false,
+    "candle_fetch": false,
+    "note": "This artifact publishes the outcome of the completed authorized run. It authorizes no run, no evaluation and no candle read."
+  },
+  "deviation_disclosure": {
+    "scope": "the completed v1 and v2 runs",
+    "statement": "The completed v1 and v2 runs evaluated the BTC trend filter against a BTC EMA taken from a different period; the deviation is a disclosure for the final report and is not repaired here.",
+    "records_with_btc_filter": 124416,
+    "total_v2_records": 497664,
+    "misaligned_validation_folds": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "evidence_path": "research/v3_evidence/v1_v2_btc_alignment_deviation.json",
+    "v3_run_alignment": "the v3 run evaluated the BTC trend filter against the index-aligned v3 benchmark dataset"
+  },
+  "selections": {
+    "AAVEUSDT": {
+      "asset": "AAVEUSDT",
+      "status": "NO_CANDIDATE",
+      "economic_status": "NO_CANDIDATE",
+      "config_id": null,
+      "selected": false,
+      "reason": "NO_CANDIDATE",
+      "candidate_status": "NO_CANDIDATE",
+      "counts": {
+        "configs_passing_all_gates": 0,
+        "configs_passing_evaluable_gates": 0,
+        "configs_failing_only_sample_floor": 0,
+        "configs_failing_only_economic_gates": 1071
+      }
+    },
+    "ICPUSDT": {
+      "asset": "ICPUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0444",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+      "counts": {
+        "configs_passing_all_gates": 83,
+        "configs_passing_evaluable_gates": 83,
+        "configs_failing_only_sample_floor": 59,
+        "configs_failing_only_economic_gates": 921
+      }
+    },
+    "PEPEUSDT": {
+      "asset": "PEPEUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_1804",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+      "counts": {
+        "configs_passing_all_gates": 63,
+        "configs_passing_evaluable_gates": 63,
+        "configs_failing_only_sample_floor": 253,
+        "configs_failing_only_economic_gates": 798
+      }
+    },
+    "QNTUSDT": {
+      "asset": "QNTUSDT",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "economic_status": "INSUFFICIENT_EVIDENCE",
+      "config_id": null,
+      "selected": false,
+      "reason": "INSUFFICIENT_EVIDENCE",
+      "candidate_status": "INSUFFICIENT_EVIDENCE",
+      "counts": {
+        "configs_passing_all_gates": 0,
+        "configs_passing_evaluable_gates": 0,
+        "configs_failing_only_sample_floor": 4,
+        "configs_failing_only_economic_gates": 1006
+      }
+    },
+    "SHIBUSDT": {
+      "asset": "SHIBUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0544",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+      "counts": {
+        "configs_passing_all_gates": 15,
+        "configs_passing_evaluable_gates": 15,
+        "configs_failing_only_sample_floor": 19,
+        "configs_failing_only_economic_gates": 981
+      }
+    },
+    "WLDUSDT": {
+      "asset": "WLDUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_1380",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+      "counts": {
+        "configs_passing_all_gates": 1,
+        "configs_passing_evaluable_gates": 1,
+        "configs_failing_only_sample_floor": 43,
+        "configs_failing_only_economic_gates": 857
+      }
+    }
+  },
+  "outcome": "CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE",
+  "assets_with_candidate": [
+    "ICPUSDT",
+    "PEPEUSDT",
+    "SHIBUSDT",
+    "WLDUSDT"
+  ],
+  "assets_without_candidate": [
+    "AAVEUSDT",
+    "QNTUSDT"
+  ],
+  "assets_without_candidate_reported": true,
+  "manifest_hash_excluded_keys": [
+    "manifest_hash"
+  ],
+  "manifest_hash": "3d24a278f13f8c6878905d45be25d0c0cbd84c0c1138d44c0db41b8d56fb5b53"
+}
