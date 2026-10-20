@@ -1,0 +1,28 @@
+{
+  "artifact": "v2_prerequisite_reconciliation_amendment",
+  "artifact_version": "v2-prerequisite-reconciliation-amendment-1",
+  "version": 1,
+  "created_utc": "2026-10-20T07:40:00Z",
+  "amendment_status": "PREREGISTERED_AMENDMENT_DESIGN_ONLY",
+  "description": "Versioned amendment recording that P2 and P3 are delivered (immutable configs/research_v2.json untouched) and recording the RL1 decision.",
+  "reconciliation": {
+    "configs_research_v2": "configs/research_v2.json",
+    "specification_hash": "49fb08142f482e8c098ce096b876e3e12bd1644aa31b8ee6849d283ac1380721",
+    "p2_status_recorded": "DELIVERED",
+    "p3_status_recorded": "DELIVERED",
+    "note": "configs/research_v2.json is immutable and hash-verified; its P2/P3 fields remain OUTSTANDING in the file. This amendment records the delivered status by reference only."
+  },
+  "rl1_decision": {
+    "decision": "retain_ordered_digest_as_value_of_record",
+    "rationale": "BRAIN-009 rejects rotating compute_code_hash(); the v1 campaign runtime gate is unchanged and a v1 resume requires the authorized enumeration order. Nothing runs today.",
+    "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  },
+  "manifest_hash": "0fd0712c4d5766c73465fb81d300dd4d14401571d482b4bcb2c889d6a7d375b2"
+}

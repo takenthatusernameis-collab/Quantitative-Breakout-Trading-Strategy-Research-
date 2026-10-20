@@ -1544,9 +1544,15 @@ separately authorized confirmatory evaluation.
 
 **Amendment 2:** authorizes only the new path; does not authorize confirmatory evaluation, no candle fetch, no second run. Protocol file not edited (digest recorded).
 
+## Session activity — 2026-10-20T07:40:00Z (this session)
+
+**Task:** Read prior agent task, complete it (reconcile P2/P3 via versioned amendment + RL1 decision), update handoff, write initial task message for next agent.
+
+**Outcome:** Delivered `configs/research_v2_prerequisite_reconciliation_amendment_1.json` (versioned, self-hashed) with a read-only offline verifier. Records P2/P3 delivered by reference (immutable `configs/research_v2.json` untouched) and records RL1 decision (retain ordered digest as value of record). No frozen artifacts edited, `src/` untouched, no run artifacts modified.
+
 ## Initial task message for next agent
 
-**Next:** reconcile `configs/research_v2.json` (P2/P3 still read `OUTSTANDING` although delivered) with the delivered prerequisite list via a versioned amendment, record a decision on residual limitation `RL1` (v1 campaign runtime gate compares live ordered digest), and only after the selected-configuration manifest is committed and hash-bound *and* the confirmatory window exists (earliest `2027-01-17T22:00:00Z`), proceed to the separately authorized confirmatory evaluation. No changes to frozen artifacts that would affect the completed run unless strictly necessary and version-amended.
+**Next:** Decide residual limitation RL2 delivery follow-up and confirmatory-window readiness (no action before 2027-01-17T22:00:00Z). Design-only; no execution.
 
 **Status (verified 2026-10-20T07:10Z):**
 - v2 selected-configuration manifest published and verified (`research/v2_selected_configurations_manifest.json`, manifest_hash `7acc7fe0…`), matching the ledger exactly; derived from 497,664 verified shards with experiment IDs re-verified.
