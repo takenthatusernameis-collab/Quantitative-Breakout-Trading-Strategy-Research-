@@ -1,0 +1,256 @@
+{
+  "candidate_freeze": null,
+  "code_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
+  "created_utc": "2026-10-20T11:45:59Z",
+  "eligible_assets": [
+    {
+      "binance_pair": "TAOUSDT",
+      "coingecko_id": "bittensor",
+      "exclusion_reason": null,
+      "market_cap_rank": 35,
+      "market_cap_usd": 2993154302,
+      "name": "Bittensor",
+      "rank": 1,
+      "symbol": "TAO",
+      "validated": false
+    },
+    {
+      "binance_pair": "SHIBUSDT",
+      "coingecko_id": "shiba-inu",
+      "exclusion_reason": null,
+      "market_cap_rank": 36,
+      "market_cap_usd": 2929625048,
+      "name": "Shiba Inu",
+      "rank": 2,
+      "symbol": "SHIB",
+      "validated": false
+    },
+    {
+      "binance_pair": "CROUSDT",
+      "coingecko_id": "crypto-com-chain",
+      "exclusion_reason": null,
+      "market_cap_rank": 37,
+      "market_cap_usd": 2864236907,
+      "name": "Cronos",
+      "rank": 3,
+      "symbol": "CRO",
+      "validated": false
+    },
+    {
+      "binance_pair": "QNTUSDT",
+      "coingecko_id": "quant-network",
+      "exclusion_reason": null,
+      "market_cap_rank": 39,
+      "market_cap_usd": 2821606025,
+      "name": "Quant",
+      "rank": 4,
+      "symbol": "QNT",
+      "validated": false
+    },
+    {
+      "binance_pair": "BTWUSDT",
+      "coingecko_id": "bitway",
+      "exclusion_reason": null,
+      "market_cap_rank": 40,
+      "market_cap_usd": 2632769019,
+      "name": "Bitway",
+      "rank": 5,
+      "symbol": "BTW",
+      "validated": false
+    },
+    {
+      "binance_pair": "ENAUSDT",
+      "coingecko_id": "ethena",
+      "exclusion_reason": null,
+      "market_cap_rank": 41,
+      "market_cap_usd": 2506212713,
+      "name": "Ethena",
+      "rank": 6,
+      "symbol": "ENA",
+      "validated": false
+    },
+    {
+      "binance_pair": "OKBUSDT",
+      "coingecko_id": "okb",
+      "exclusion_reason": null,
+      "market_cap_rank": 44,
+      "market_cap_usd": 2387414683,
+      "name": "OKB",
+      "rank": 7,
+      "symbol": "OKB",
+      "validated": false
+    },
+    {
+      "binance_pair": "AAVEUSDT",
+      "coingecko_id": "aave",
+      "exclusion_reason": null,
+      "market_cap_rank": 46,
+      "market_cap_usd": 2288549533,
+      "name": "Aave",
+      "rank": 8,
+      "symbol": "AAVE",
+      "validated": false
+    },
+    {
+      "binance_pair": "ONDOUSDT",
+      "coingecko_id": "ondo-finance",
+      "exclusion_reason": null,
+      "market_cap_rank": 48,
+      "market_cap_usd": 2114214158,
+      "name": "Ondo",
+      "rank": 9,
+      "symbol": "ONDO",
+      "validated": false
+    },
+    {
+      "binance_pair": "WLDUSDT",
+      "coingecko_id": "worldcoin-wld",
+      "exclusion_reason": null,
+      "market_cap_rank": 49,
+      "market_cap_usd": 2075657274,
+      "name": "Worldcoin",
+      "rank": 10,
+      "symbol": "WLD",
+      "validated": false
+    },
+    {
+      "binance_pair": "PUMPUSDT",
+      "coingecko_id": "pump-fun",
+      "exclusion_reason": null,
+      "market_cap_rank": 50,
+      "market_cap_usd": 2052975001,
+      "name": "Pump.fun",
+      "rank": 11,
+      "symbol": "PUMP",
+      "validated": false
+    },
+    {
+      "binance_pair": "ASTERUSDT",
+      "coingecko_id": "aster-2",
+      "exclusion_reason": null,
+      "market_cap_rank": 52,
+      "market_cap_usd": 1903142098,
+      "name": "Aster",
+      "rank": 12,
+      "symbol": "ASTER",
+      "validated": false
+    },
+    {
+      "binance_pair": "MUSDT",
+      "coingecko_id": "memecore",
+      "exclusion_reason": null,
+      "market_cap_rank": 54,
+      "market_cap_usd": 1853798672,
+      "name": "MemeCore",
+      "rank": 13,
+      "symbol": "M",
+      "validated": false
+    },
+    {
+      "binance_pair": "PEPEUSDT",
+      "coingecko_id": "pepe",
+      "exclusion_reason": null,
+      "market_cap_rank": 56,
+      "market_cap_usd": 1771535971,
+      "name": "Pepe",
+      "rank": 14,
+      "symbol": "PEPE",
+      "validated": false
+    },
+    {
+      "binance_pair": "MNTUSDT",
+      "coingecko_id": "mantle",
+      "exclusion_reason": null,
+      "market_cap_rank": 58,
+      "market_cap_usd": 1743605666,
+      "name": "Mantle",
+      "rank": 15,
+      "symbol": "MNT",
+      "validated": false
+    },
+    {
+      "binance_pair": "WLFIUSDT",
+      "coingecko_id": "world-liberty-financial",
+      "exclusion_reason": null,
+      "market_cap_rank": 60,
+      "market_cap_usd": 1702491896,
+      "name": "World Liberty Financial",
+      "rank": 16,
+      "symbol": "WLFI",
+      "validated": false
+    },
+    {
+      "binance_pair": "MORPHOUSDT",
+      "coingecko_id": "morpho",
+      "exclusion_reason": null,
+      "market_cap_rank": 61,
+      "market_cap_usd": 1697252225,
+      "name": "Morpho",
+      "rank": 17,
+      "symbol": "MORPHO",
+      "validated": false
+    },
+    {
+      "binance_pair": "SKYUSDT",
+      "coingecko_id": "sky",
+      "exclusion_reason": null,
+      "market_cap_rank": 62,
+      "market_cap_usd": 1686355448,
+      "name": "Sky",
+      "rank": 18,
+      "symbol": "SKY",
+      "validated": false
+    },
+    {
+      "binance_pair": "ICPUSDT",
+      "coingecko_id": "internet-computer",
+      "exclusion_reason": null,
+      "market_cap_rank": 64,
+      "market_cap_usd": 1572667216,
+      "name": "Internet Computer",
+      "rank": 19,
+      "symbol": "ICP",
+      "validated": false
+    },
+    {
+      "binance_pair": "HTXUSDT",
+      "coingecko_id": "htx-dao",
+      "exclusion_reason": null,
+      "market_cap_rank": 65,
+      "market_cap_usd": 1468004153,
+      "name": "HTX DAO",
+      "rank": 20,
+      "symbol": "HTX",
+      "validated": false
+    }
+  ],
+  "excluded_assets": [],
+  "hashing": {
+    "algorithm": "sha256",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  },
+  "manifest_hash": "7c176de0e23411f2ba5f9692fecfc27e2a5471fbded312d54c246c83c5a6e5f0",
+  "market_cap_source": {
+    "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+    "provider": "coingecko",
+    "raw_response_bytes": 198897,
+    "raw_response_hash": "013845766d1e84d02122bcfac97a7f8f0cf598ae14f6a2adcaba380726f8b1d9",
+    "raw_response_path": "research/v3_evidence/raw_market_cap_response.json",
+    "retrieval_timestamp_utc": "2026-10-20T11:45:59Z"
+  },
+  "protocol_version": "v3",
+  "snapshot_identity": {
+    "candidate_manifest_hash": null,
+    "code_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
+    "data_manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5",
+    "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+    "market_cap_source_retrieval_timestamp_utc": "2026-10-20T11:45:59Z",
+    "protocol_version": "v3",
+    "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+    "universe_version": "v3"
+  },
+  "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+  "universe_version": "v3"
+}

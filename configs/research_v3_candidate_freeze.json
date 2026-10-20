@@ -1,0 +1,408 @@
+{
+  "artifact": "v3_candidate_freeze",
+  "artifact_version": "v3-candidate-freeze-1",
+  "protocol_version": "v3",
+  "universe_version": "v3",
+  "created_utc": "2026-10-20T12:00:00Z",
+  "candidate_freeze_timestamp_utc": "2026-10-20T12:00:00Z",
+  "freeze_status": "CANDIDATE_SET_FROZEN_NO_EXECUTION",
+  "specification_purpose": "Freeze the v3 candidate set and data boundary before any v3 grid run, candidate selection or confirmatory-window evaluation happens. This artifact records what is frozen; it authorizes nothing, runs nothing and reads no candle.",
+  "scope": {
+    "what_is_frozen": [
+      "the v3 candidate set: exactly the constituents of the derived batch",
+      "the development / confirmatory data boundary and the window rules",
+      "the snapshot identity tuple of universe version v3"
+    ],
+    "what_is_not_frozen": [
+      "the per-asset selected configuration of any candidate; that selection is outstanding",
+      "any v3 result, metric, status or economic conclusion"
+    ],
+    "candidate_manifest_version": 1,
+    "note": "This artifact is the v3 candidate manifest at version 1. The selected-configuration manifest must be committed and hash-bound before the first confirmatory-window candle is read."
+  },
+  "design_basis": {
+    "brainstorming_item": "BRAIN-012",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-012 (DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION)",
+    "prerequisites_delivered_before_this_freeze": [
+      "P1_v3_spec",
+      "P2_v3_universe",
+      "P3_v3_data"
+    ],
+    "prerequisite_note": "configs/research_v3.json, research/universe_manifest_v3.json and research/data_manifest_v3.json are delivered and hash-verified. This freeze uses the published v3 exclusion amendment.",
+    "sections_implemented_here": [
+      "BRAIN-012: versioned v3 universe with separate namespaces",
+      "Application of inherited fixed lists plus published classifier",
+      "Prior-universe exclusion with rename handling",
+      "Floor-based expansion below v2"
+    ],
+    "sections_deliberately_not_implemented_here": [
+      "the v3 grid run and candidate selection (no recorded decision authorizes a run)",
+      "the v3 confirmatory-window evaluation"
+    ]
+  },
+  "frozen_candidate_set": {
+    "count": 20,
+    "constituents": [
+      {
+        "binance_pair": "TAOUSDT",
+        "coingecko_id": "bittensor",
+        "market_cap_usd": 2993154302,
+        "market_cap_rank": 35,
+        "name": "Bittensor",
+        "symbol": "TAO",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "SHIBUSDT",
+        "coingecko_id": "shiba-inu",
+        "market_cap_usd": 2929625048,
+        "market_cap_rank": 36,
+        "name": "Shiba Inu",
+        "symbol": "SHIB",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "CROUSDT",
+        "coingecko_id": "crypto-com-chain",
+        "market_cap_usd": 2864236907,
+        "market_cap_rank": 37,
+        "name": "Cronos",
+        "symbol": "CRO",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "QNTUSDT",
+        "coingecko_id": "quant-network",
+        "market_cap_usd": 2821606025,
+        "market_cap_rank": 39,
+        "name": "Quant",
+        "symbol": "QNT",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "BTWUSDT",
+        "coingecko_id": "bitway",
+        "market_cap_usd": 2632769019,
+        "market_cap_rank": 40,
+        "name": "Bitway",
+        "symbol": "BTW",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "ENAUSDT",
+        "coingecko_id": "ethena",
+        "market_cap_usd": 2506212713,
+        "market_cap_rank": 41,
+        "name": "Ethena",
+        "symbol": "ENA",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "OKBUSDT",
+        "coingecko_id": "okb",
+        "market_cap_usd": 2387414683,
+        "market_cap_rank": 44,
+        "name": "OKB",
+        "symbol": "OKB",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "AAVEUSDT",
+        "coingecko_id": "aave",
+        "market_cap_usd": 2288549533,
+        "market_cap_rank": 46,
+        "name": "Aave",
+        "symbol": "AAVE",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "ONDOUSDT",
+        "coingecko_id": "ondo-finance",
+        "market_cap_usd": 2114214158,
+        "market_cap_rank": 48,
+        "name": "Ondo",
+        "symbol": "ONDO",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "WLDUSDT",
+        "coingecko_id": "worldcoin-wld",
+        "market_cap_usd": 2075657274,
+        "market_cap_rank": 49,
+        "name": "Worldcoin",
+        "symbol": "WLD",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "PUMPUSDT",
+        "coingecko_id": "pump-fun",
+        "market_cap_usd": 2052975001,
+        "market_cap_rank": 50,
+        "name": "Pump.fun",
+        "symbol": "PUMP",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "ASTERUSDT",
+        "coingecko_id": "aster-2",
+        "market_cap_usd": 1903142098,
+        "market_cap_rank": 52,
+        "name": "Aster",
+        "symbol": "ASTER",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "MUSDT",
+        "coingecko_id": "memecore",
+        "market_cap_usd": 1853798672,
+        "market_cap_rank": 54,
+        "name": "MemeCore",
+        "symbol": "M",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "PEPEUSDT",
+        "coingecko_id": "pepe",
+        "market_cap_usd": 1771535971,
+        "market_cap_rank": 56,
+        "name": "Pepe",
+        "symbol": "PEPE",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "MNTUSDT",
+        "coingecko_id": "mantle",
+        "market_cap_usd": 1743605666,
+        "market_cap_rank": 58,
+        "name": "Mantle",
+        "symbol": "MNT",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "WLFIUSDT",
+        "coingecko_id": "world-liberty-financial",
+        "market_cap_usd": 1702491896,
+        "market_cap_rank": 60,
+        "name": "World Liberty Financial",
+        "symbol": "WLFI",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "MORPHOUSDT",
+        "coingecko_id": "morpho",
+        "market_cap_usd": 1697252225,
+        "market_cap_rank": 61,
+        "name": "Morpho",
+        "symbol": "MORPHO",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "SKYUSDT",
+        "coingecko_id": "sky",
+        "market_cap_usd": 1686355448,
+        "market_cap_rank": 62,
+        "name": "Sky",
+        "symbol": "SKY",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "ICPUSDT",
+        "coingecko_id": "internet-computer",
+        "market_cap_usd": 1572667216,
+        "market_cap_rank": 64,
+        "name": "Internet Computer",
+        "symbol": "ICP",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      },
+      {
+        "binance_pair": "HTXUSDT",
+        "coingecko_id": "htx-dao",
+        "market_cap_usd": 1468004153,
+        "market_cap_rank": 65,
+        "name": "HTX DAO",
+        "symbol": "HTX",
+        "validated": true,
+        "exclusion_reason": null,
+        "validation_notes": []
+      }
+    ],
+    "binance_pairs": [
+      "TAOUSDT",
+      "SHIBUSDT",
+      "CROUSDT",
+      "QNTUSDT",
+      "BTWUSDT",
+      "ENAUSDT",
+      "OKBUSDT",
+      "AAVEUSDT",
+      "ONDOUSDT",
+      "WLDUSDT",
+      "PUMPUSDT",
+      "ASTERUSDT",
+      "MUSDT",
+      "PEPEUSDT",
+      "MNTUSDT",
+      "WLFIUSDT",
+      "MORPHOUSDT",
+      "SKYUSDT",
+      "ICPUSDT",
+      "HTXUSDT"
+    ],
+    "membership_rule": "Exactly the batch members from configs/research_v3_exclusion_amendment_1.json after applying the inherited fixed lists, the published classifier, and the prior-universe rules (including coingecko_name_rename). Membership is not re-derived, re-ranked, widened or narrowed.",
+    "universe_manifest_path": "research/universe_manifest_v3.json",
+    "universe_manifest_hash": "7c176de0e23411f2ba5f9692fecfc27e2a5471fbded312d54c246c83c5a6e5f0",
+    "data_manifest_path": "research/data_manifest_v3.json",
+    "data_manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5",
+    "exclusion_amendment_path": "configs/research_v3_exclusion_amendment_1.json",
+    "exclusion_amendment_hash": "f26848d86527cb096a1cad9f4d3d6e810eeea64921505ad582d77d110c1658de",
+    "excluded_assets_stay_excluded": true,
+    "excluded_after_validation": {
+      "excluded_by_rule": 56,
+      "excluded_as_prior_universe": 23,
+      "above_floor": 0,
+      "eligible": 171
+    },
+    "exclusion_note": "The amendment records the complete classification of every snapshot entry. Stablecoins/funds and other disqualified instruments are excluded by published rules."
+  },
+  "snapshot_identity": {
+    "protocol_version": "v3",
+    "universe_version": "v3",
+    "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+    "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+    "market_cap_source_retrieval_timestamp_utc": "2026-10-20T11:45:59Z",
+    "code_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
+    "data_manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5",
+    "candidate_manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4"
+  },
+  "snapshot_identity_note": "BRAIN-012 identity tuple carried forward. The candidate_manifest_hash of this artifact is the manifest_hash of this document.",
+  "data_boundary": {
+    "development_data_rule": "Candles that close at or before confirmatory_window_start_utc are development data and may inform selection. No candle inside the confirmatory window may be read during selection.",
+    "confirmatory_window_start_utc": "2026-10-20T13:00:00Z",
+    "confirmatory_window_start_rule": "the first UTC hour boundary strictly after candidate_freeze_timestamp_utc",
+    "min_confirmatory_window_hours": 2160,
+    "min_confirmatory_window_rationale": "90 days of closed hourly candles after the freeze",
+    "earliest_possible_confirmatory_window_end_utc": "2027-01-18T13:00:00Z",
+    "window_overlap_with_v1_holdout": "forbidden",
+    "window_overlap_with_v2_confirmatory_window": "forbidden",
+    "v1_holdout_reuse": "forbidden",
+    "v2_confirmatory_window_reuse": "forbidden",
+    "single_use": true,
+    "no_ranking_or_retuning_on_holdout": true,
+    "data_used_for_candidate_selection": "excluded",
+    "access_counting": "Every read of a candle inside the confirmatory window increments holdout_exposed_count in the v3 checkpoint and is recorded in the v3 holdout report.",
+    "evaluation_only_after": "the selected-configuration v3 candidate manifest is committed and hash-bound"
+  },
+  "selection_remainder": {
+    "status": "OUTSTANDING",
+    "requirement": "The per-asset selected-configuration manifest does not exist. It may be produced only by a v3 grid run that a separate recorded decision authorizes.",
+    "rule_binding": "the selection block of configs/research_v1.json, inherited byte-equal by configs/research_v3.json",
+    "max_candidates_per_asset": 1,
+    "may_not_change_the_frozen_candidate_set": true,
+    "must_be_hash_bound_before_first_confirmatory_read": true,
+    "grid_run_authorized": false
+  },
+  "execution_authorization": {
+    "execution_authorized": false,
+    "scope": "This freeze authorizes nothing. It records the frozen set and boundary only.",
+    "code_hash_constraint": {
+      "current_code_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
+      "hashed_set_root": "src/breakout_research",
+      "note": "compute_code_hash() hashes every .py file under src/breakout_research recursively. Any v3 execution code must live outside that hashed set.",
+      "v3_execution_code_must_live_outside_the_hashed_set": true,
+      "outside_hashed_set_examples": [
+        "scripts/",
+        "src/v3_campaign/"
+      ],
+      "inside_hashed_set_examples": [
+        "src/breakout_research/"
+      ]
+    }
+  },
+  "supersedes": {
+    "protocol_version": "v2",
+    "candidate_manifest_path": "configs/research_v2_candidate_freeze.json",
+    "candidate_manifest_sha256": "90db47d9b625dcc98f6f22e4862ea8c6205e958f63dff15dcef473c79e20b030",
+    "candidate_manifest_hash": "5a56b3d801519bbda0ed534cd031d0cb4204c1c015e5accb6fbc4e9bd0ec123f",
+    "reason": "The v2 candidate set is frozen for the v2 cycle. The v3 batch is a strictly additional universe below the v2 floor with separate namespaces.",
+    "v1_and_v2_artifacts_are_immutable": true
+  },
+  "related_artifacts": {
+    "v3_specification": {
+      "path": "configs/research_v3.json",
+      "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58"
+    },
+    "v3_exclusion_amendment": {
+      "path": "configs/research_v3_exclusion_amendment_1.json",
+      "amendment_hash": "f26848d86527cb096a1cad9f4d3d6e810eeea64921505ad582d77d110c1658de"
+    },
+    "v3_universe_manifest": {
+      "path": "research/universe_manifest_v3.json",
+      "manifest_hash": "7c176de0e23411f2ba5f9692fecfc27e2a5471fbded312d54c246c83c5a6e5f0"
+    },
+    "v3_data_manifest": {
+      "path": "research/data_manifest_v3.json",
+      "manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5"
+    },
+    "v3_raw_snapshot": {
+      "path": "research/v3_evidence/raw_market_cap_response.json",
+      "sha256": "013845766d1e84d02122bcfac97a7f8f0cf598ae14f6a2adcaba380726f8b1d9"
+    }
+  },
+  "durability": {
+    "rule": "No confirmatory-window candle may be read before the commit that carries this artifact exists.",
+    "freeze_commit": null,
+    "freeze_commit_status": "PENDING_COMMIT"
+  },
+  "producer": {
+    "path": "scripts/build_v3_candidate_freeze.py",
+    "verify_command": "python3 scripts/verify_research_v3_candidate_freeze.py"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash",
+      "snapshot_identity.candidate_manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash and snapshot_identity.candidate_manifest_hash removed, so that the snapshot-identity tuple can name the candidate-manifest hash of this very artifact without hashing itself into a cycle."
+  },
+  "manifest_hash": "12a981b13c657b51bf2023fbfdb22f531d16c656af5eef0d8242f8c202c154e4"
+}

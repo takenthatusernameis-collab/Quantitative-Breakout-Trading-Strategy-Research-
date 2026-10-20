@@ -1,0 +1,325 @@
+{
+  "assets": {
+    "AAVEUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/AAVE_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "AAVEUSDT",
+      "validated": false
+    },
+    "ASTERUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/ASTER_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "ASTERUSDT",
+      "validated": false
+    },
+    "BTWUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/BTW_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "BTWUSDT",
+      "validated": false
+    },
+    "CROUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/CRO_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "CROUSDT",
+      "validated": false
+    },
+    "ENAUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/ENA_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "ENAUSDT",
+      "validated": false
+    },
+    "HTXUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/HTX_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "HTXUSDT",
+      "validated": false
+    },
+    "ICPUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/ICP_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "ICPUSDT",
+      "validated": false
+    },
+    "MNTUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/MNT_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "MNTUSDT",
+      "validated": false
+    },
+    "MORPHOUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/MORPHO_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "MORPHOUSDT",
+      "validated": false
+    },
+    "MUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/M_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "MUSDT",
+      "validated": false
+    },
+    "OKBUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/OKB_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "OKBUSDT",
+      "validated": false
+    },
+    "ONDOUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/ONDO_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "ONDOUSDT",
+      "validated": false
+    },
+    "PEPEUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/PEPE_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "PEPEUSDT",
+      "validated": false
+    },
+    "PUMPUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/PUMP_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "PUMPUSDT",
+      "validated": false
+    },
+    "QNTUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/QNT_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "QNTUSDT",
+      "validated": false
+    },
+    "SHIBUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/SHIB_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "SHIBUSDT",
+      "validated": false
+    },
+    "SKYUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/SKY_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "SKYUSDT",
+      "validated": false
+    },
+    "TAOUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/TAO_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "TAOUSDT",
+      "validated": false
+    },
+    "WLDUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/WLD_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "WLDUSDT",
+      "validated": false
+    },
+    "WLFIUSDT": {
+      "content_hash": null,
+      "dataset_path": "research/data/candles_v3/WLFI_1h.csv",
+      "observed_candle_count": 0,
+      "symbol": "WLFIUSDT",
+      "validated": false
+    }
+  },
+  "binance_spot_verification": {},
+  "candles_verified": false,
+  "code_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
+  "confirmatory_window": {
+    "confirmatory_window_status": "NOT_STARTED",
+    "holdout_exposed_count": 0
+  },
+  "content_hashes": {},
+  "created_utc": "2026-10-20T11:45:59Z",
+  "hashing": {
+    "algorithm": "sha256",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash",
+      "snapshot_identity.data_manifest_hash"
+    ]
+  },
+  "manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5",
+  "market_cap_source": {
+    "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+    "provider": "coingecko",
+    "raw_response_bytes": 198897,
+    "raw_response_hash": "013845766d1e84d02122bcfac97a7f8f0cf598ae14f6a2adcaba380726f8b1d9",
+    "raw_response_path": "research/v3_evidence/raw_market_cap_response.json",
+    "retrieval_timestamp_utc": "2026-10-20T11:45:59Z"
+  },
+  "protocol_version": "v3",
+  "retrieval_timestamp_utc": "2026-10-20T11:45:59Z",
+  "snapshot_identity": {
+    "candidate_manifest_hash": null,
+    "code_hash": "608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925",
+    "data_manifest_hash": "c8679832e9f25c0a178f67f9266a5966193653bf5bdc30f2b6dca0c5a237f9e5",
+    "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+    "market_cap_source_retrieval_timestamp_utc": "2026-10-20T11:45:59Z",
+    "protocol_version": "v3",
+    "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+    "universe_version": "v3"
+  },
+  "specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+  "universe_version": "v3",
+  "validation_results": {
+    "AAVEUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "ASTERUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "BTWUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "CROUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "ENAUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "HTXUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "ICPUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "MNTUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "MORPHOUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "MUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "OKBUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "ONDOUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "PEPEUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "PUMPUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "QNTUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "SHIBUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "SKYUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "TAOUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "WLDUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    },
+    "WLFIUSDT": {
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "exclusion_reason": null,
+      "observed_candles": null,
+      "validated": false
+    }
+  }
+}
