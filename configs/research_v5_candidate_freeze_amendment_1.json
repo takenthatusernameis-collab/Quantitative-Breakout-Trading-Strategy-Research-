@@ -1,0 +1,133 @@
+{
+  "amendment_status": "PUBLISHED_CORRECTION_NO_AUTHORIZATION",
+  "artifact": "v5_candidate_freeze_amendment_1",
+  "artifact_version": 1,
+  "authorization": {
+    "candle_fetch_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "this amendment records the effective overlap rule and the effective v5 evaluation gate; it authorizes no run, no evaluation, no candle fetch and no confirmatory-window read",
+    "selection_authorized": false
+  },
+  "corrected_rule": {
+    "evaluation_may_not_start_before_rule": "the later of the v2, the v3, the v4 and the v5 gates, each recomputed from the freeze that owns the window; the v5 gate is the v5 window's own earliest end",
+    "evaluation_may_not_start_before_utc": "2027-01-19T13:00:00Z",
+    "gates": [
+      {
+        "earliest_possible_end_utc": "2027-01-17T22:00:00Z",
+        "min_hours": 2160,
+        "source_key": "data_boundary",
+        "source_path": "configs/research_v2_candidate_freeze.json",
+        "version": "v2",
+        "window_start_utc": "2026-10-19T22:00:00Z"
+      },
+      {
+        "earliest_possible_end_utc": "2027-01-18T13:00:00Z",
+        "min_hours": 2160,
+        "source_key": "data_boundary",
+        "source_path": "configs/research_v3_candidate_freeze.json",
+        "version": "v3",
+        "window_start_utc": "2026-10-20T13:00:00Z"
+      },
+      {
+        "earliest_possible_end_utc": "2027-01-19T01:00:00Z",
+        "min_hours": 2160,
+        "source_key": "confirmatory_window",
+        "source_path": "configs/research_v4_candidate_freeze.json",
+        "version": "v4",
+        "window_start_utc": "2026-10-21T01:00:00Z"
+      },
+      {
+        "earliest_possible_end_utc": "2027-01-19T13:00:00Z",
+        "min_hours": 2160,
+        "source_key": "confirmatory_window",
+        "source_path": "configs/research_v5_candidate_freeze.json",
+        "version": "v5",
+        "window_start_utc": "2026-10-21T13:00:00Z"
+      }
+    ],
+    "no_shared_asset": true,
+    "no_shared_asset_evidence": "the v5 validated candidate set is disjoint from the v2, v3 and v4 validated candidate sets, recomputed from the four freezes",
+    "overlap_rule": "the v5 confirmatory window opens inside the still-open v2, v3 and v4 confirmatory windows in time, because a 90-day window that opens later cannot end later than the 90-day window that opened before it; the time overlap is not a violation, because the two evaluations share no asset (the v5 candidate set is disjoint from the v1, v2, v3 and v4 candidate sets) and because the v5 confirmatory evaluation may not start before the later of the v4 confirmatory gate and the v5 window's own earliest end, and never before the v2 and the v3 gates; the v5 window is never populated with data that predates the v5 candidate freeze, is never a re-opening of the v1 holdout or of the v2, v3 or v4 confirmatory windows, and is never read for selection",
+    "time_overlap_evidence": [
+      {
+        "earlier_window_earliest_end_utc": "2027-01-17T22:00:00Z",
+        "earlier_window_start_utc": "2026-10-19T22:00:00Z",
+        "v5_window_earliest_end_utc": "2027-01-19T13:00:00Z",
+        "v5_window_opens_inside_the_earlier_window": true,
+        "v5_window_start_utc": "2026-10-21T13:00:00Z",
+        "version": "v2",
+        "windows_overlap_in_time": true
+      },
+      {
+        "earlier_window_earliest_end_utc": "2027-01-18T13:00:00Z",
+        "earlier_window_start_utc": "2026-10-20T13:00:00Z",
+        "v5_window_earliest_end_utc": "2027-01-19T13:00:00Z",
+        "v5_window_opens_inside_the_earlier_window": true,
+        "v5_window_start_utc": "2026-10-21T13:00:00Z",
+        "version": "v3",
+        "windows_overlap_in_time": true
+      },
+      {
+        "earlier_window_earliest_end_utc": "2027-01-19T01:00:00Z",
+        "earlier_window_start_utc": "2026-10-21T01:00:00Z",
+        "v5_window_earliest_end_utc": "2027-01-19T13:00:00Z",
+        "v5_window_opens_inside_the_earlier_window": true,
+        "v5_window_start_utc": "2026-10-21T13:00:00Z",
+        "version": "v4",
+        "windows_overlap_in_time": true
+      }
+    ],
+    "time_overlap_is_inevitable": true,
+    "version_isolation": "the v5 window is never populated with data that predates the v5 candidate freeze, is never a re-opening of the v1 holdout or of the v2, v3 or v4 confirmatory windows, and is never read for selection"
+  },
+  "created_utc": "2026-10-21T14:05:00Z",
+  "effective_rule": {
+    "description": "The amendment wins over the frozen block in configs/research_v5_candidate_freeze.json for the effective overlap rule; the frozen block stays on disk unchanged and visible.",
+    "precedence": "amendment_overrides_frozen_block"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  },
+  "manifest_hash": "43a374284df1c5f933f565c0e882d6c721302e5b1897c02ceb39344b1effa49d",
+  "problem": {
+    "affected_artifact_manifest_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4",
+    "affected_artifact_path": "configs/research_v5_candidate_freeze.json",
+    "affected_artifact_sha256": "b04cf873c9a24b235bf810ce32a043544524ba9d5ac2cfd9ec707b1680e4c3fd",
+    "field_path": "confirmatory_window.overlap_rule",
+    "repair": "the freeze is hash-bound and is not edited in place; the effective overlap rule is recorded by this amendment",
+    "statement": "the frozen freeze states that the v5 confirmatory window must not overlap the v1-v4 holdouts and windows, but the v5 window runs from 2026-10-21T13:00:00Z to 2027-01-19T13:00:00Z and therefore opens inside the still-open v2, v3 and v4 confirmatory windows: the statement is false on the freeze's own dates"
+  },
+  "producer": {
+    "path": "scripts/build_v5_candidate_freeze_amendment_1.py",
+    "reproduce_command": "python3 scripts/build_v5_candidate_freeze_amendment_1.py --force"
+  },
+  "protocol_version": "v5",
+  "related_artifacts": {
+    "v5_candidate_freeze": {
+      "manifest_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4",
+      "path": "configs/research_v5_candidate_freeze.json",
+      "sha256": "b04cf873c9a24b235bf810ce32a043544524ba9d5ac2cfd9ec707b1680e4c3fd"
+    },
+    "v5_specification": {
+      "path": "configs/research_v5.json",
+      "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2"
+    },
+    "v5_specification_amendment_1": {
+      "manifest_hash": "e130fa5ea4a01fabbfe1e102a4cff8b8495382268eec9e1e7eafe466eae94138",
+      "path": "configs/research_v5_specification_amendment_1.json"
+    }
+  },
+  "specification_purpose": "Correct the confirmatory-window overlap rule of the frozen v5 candidate freeze and record the effective v5 evaluation gate. This artifact authorizes nothing.",
+  "supersedes": {
+    "artifact_manifest_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4",
+    "artifact_path": "configs/research_v5_candidate_freeze.json",
+    "artifact_sha256": "b04cf873c9a24b235bf810ce32a043544524ba9d5ac2cfd9ec707b1680e4c3fd",
+    "block_path": "confirmatory_window.overlap_rule"
+  },
+  "universe_version": "v5"
+}

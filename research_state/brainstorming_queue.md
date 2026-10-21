@@ -4383,3 +4383,112 @@ The 7-of-20 yield is the v4 band's yield (7 of 20) and is what the v5 design rec
 - The full suite and every `scripts/verify_*.py` were run after the implementation; the results are in the handoff entry of the same session.
 
 **Queued after this task:** the v5 candidate freeze and the v5 execution protocol (prerequisite `p4`), the expansion-log entries (the derived v4 entry plus the v5 entry, prerequisite `p5`), **the versioned amendment that corrects the start-inclusivity defect of §6** (with the matching change to `scripts/verify_research_v5_spec.py` and to the specification producer), the v5 selection authorization and the single authorized v5 selection run; then the preregistered v4 confirmatory protocol and runbook; the v3 confirmatory evaluation and the final report, which may not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start before `2027-01-17T22:00:00Z`.
+
+## BRAIN-023 — the v5 amendment, the v5 candidate freeze and the v5 execution protocol are delivered and verified; the freeze's confirmatory-window overlap rule was false on its own dates and is corrected by a versioned amendment (2026-10-21T14:2xZ)
+
+**Status:** `DELIVERED_AND_VERIFIED` (the three deliverables the durable handoff named, with their producers, their read-only offline verifiers and their test modules), with **one CONFIRMED defect in `configs/research_v5_candidate_freeze.json`** — its `confirmatory_window.overlap_rule` states a prohibition that the artifact's own dates violate — which a versioned amendment corrects (the freeze is hash-bound and was **not** edited).
+**Type:** audit-and-repair record. The three deliverables were produced by a session (or two) that wrote **no** record: when this session started, the artifacts were already committed (checkpoint commits `f8be8a95` and `b6d50eac`) but neither this queue nor the handoff mentioned them. This session therefore audited the delivery end to end, repaired the defect it found and wrote the record.
+**Routing:** the durable handoff's task message (the 10:5xZ entry) named three deliverables in order: the versioned amendment that corrects the confirmatory-window **membership** rule, the v5 candidate freeze and the v5 execution protocol. All three are present; a fourth artifact (the v5 **execution** amendment 1) was added by the same delivery, and it is audited here too.
+
+### 1. What was delivered (audited, not assumed)
+
+| artifact | what it is |
+| --- | --- |
+| `configs/research_v5_specification_amendment_1.json` | the versioned amendment that owns the **effective** confirmatory-window membership rule; `manifest_hash e130fa5ea4a01fabbfe1e102a4cff8b8495382268eec9e1e7eafe466eae94138` |
+| `scripts/build_research_v5_specification_amendment_1.py` | its deterministic producer (pinned creation instant, refuses to overwrite without `--force`) |
+| `configs/research_v5_candidate_freeze.json` | the v5 candidate freeze: the 20 candidates with their validation outcomes and exclusion reasons, the data boundary, the v5 confirmatory window, the `supersedes` chain onto the v4 freeze; `manifest_hash afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4` |
+| `configs/research_v5_execution.json` | the v5 execution protocol: the evaluation scope, the benchmark rule, the code-hash constraint, the result layout; `manifest_hash 516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f` |
+| `configs/research_v5_execution_amendment_1.json` | the versioned amendment that supplies the bindings the first protocol publication did not carry (the inherited v1 rules, the benchmark identity, the execution-authorization block, the deviation disclosure, the `supersedes` chain onto the v4 protocol); `manifest_hash a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988` |
+| `scripts/build_v5_candidate_freeze.py`, `scripts/build_v5_execution.py`, `scripts/build_v5_execution_amendment_1.py` | the deterministic producers; each refuses to overwrite without `--force` and each reproduces its artifact byte for byte |
+| `scripts/verify_v5_candidate_freeze.py`, `scripts/verify_v5_execution.py` | the read-only, offline, **clock-free** verifiers; every identity is recomputed from the artifact that owns it (the BRAIN-018 lesson) |
+| `tests/test_v5_candidate_freeze.py` (28), `tests/test_v5_execution.py` (30) and the 14 amendment tests added to `tests/test_research_v5_spec.py` | the deterministic tests, with the tamper controls the task message required: a candidate that is not in the universe manifest, a candidate above the floor, a window that is not a new window, a benchmark that is the v3 dataset, a `supersedes` chain that names an older artifact |
+
+### 2. The audit: every identity recomputed from the artifact that owns it
+
+- `configs/research_v5.json` is **unchanged**: its `specification_hash 55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2` recomputes over the body without the key, and the frozen `holdout.confirmatory_window_membership.interval_start_inclusive` is still `true` — visible, not edited.
+- The membership amendment recomputes its own `manifest_hash`, names the frozen specification and the block it corrects, states the precedence (`amendment_overrides_frozen_block`) and quotes the two window-owning rules **verbatim** from `configs/research_v2_candidate_freeze.json#data_boundary.development_data_rule` and `configs/research_v3_candidate_freeze.json#data_boundary.development_data_rule` ("Candles that close at or before `confirmatory_window_start_utc` are development data"). The effective rule is start-**exclusive**: a candle that closes exactly at a window's start is development data.
+- The freeze binds the v5 universe manifest (`ed6ade73…`) and the v5 data manifest (`f2bd448f…`) — both recomputed from the files; the v4 freeze's `manifest_hash` and its file sha256 — both recomputed; the membership amendment's `manifest_hash`; and the code hash of record `2efd3b18…`. The window opens at the first UTC hour boundary **strictly after** the freeze instant (`2026-10-21T12:14:36Z` → `13:00:00Z`) and its earliest end follows from its start and its 2,160 hours (`2027-01-19T13:00:00Z`).
+- The execution protocol and its amendment: the first publication's `supersedes.specification_hash` was `null` — the defect the execution amendment 1 repairs. The amendment names the protocol's `manifest_hash` **and** its file sha256 (both recomputed), the v4 protocol's `manifest_hash` and file sha256 (both recomputed), the v5 freeze, the v5 manifests, the v5 specification and the specification amendment.
+- The inherited v1 rules: the blocks digest `0d131954…` recomputes from `configs/research_v1.json` over the eleven inherited blocks, and the grid still enumerates **2,304** combinations.
+- The **benchmark** (the v5-specific trap): `research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv`, file digest `626e639b02e54bc1…`, **26,280** candles, first open 2023-10-20T22:00:00Z, last open 2026-10-19T21:00:00Z (closing **exactly** at the v5 cutoff) and **0** candles closing after the cutoff. The v4 chain's benchmark `research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv` has **13** candles closing after the v5 cutoff, inside the open v2 window, and the v5 chain does not reuse it.
+- The v5 namespace is still empty of run artifacts (`research/shards_v5/`, `research/ledger_v5.json`, `research/results_manifest_v5.json`, `research/results_v5.jsonl`, `research_state/checkpoint_v5.json` are all absent), every version's `holdout_exposed_count` is **0**, no holdout index exists, and the campaign state still records the **v4** cycle (`current_cycle_id v4-selection-20261021`, `next_cohort_index 5`).
+
+### 3. The CONFIRMED defect (repaired by a versioned amendment, not in place)
+
+**`configs/research_v5_candidate_freeze.json#confirmatory_window.overlap_rule` states a prohibition that the freeze's own dates violate.** The frozen text is *"v5 confirmatory window must not overlap v1-v4 holdouts/windows; evaluation only after v4 gate clears and window elapses"*. The v5 window runs from `2026-10-21T13:00:00Z` to `2027-01-19T13:00:00Z`, so it opens **inside** the still-open v2 (`2026-10-19T22:00:00Z` → `2027-01-17T22:00:00Z`), v3 (`2026-10-20T13:00:00Z` → `2027-01-18T13:00:00Z`) and v4 (`2026-10-21T01:00:00Z` → `2027-01-19T01:00:00Z`) confirmatory windows: the first clause is false on the artifact's own dates. A 90-day window that opens later cannot end later than the 90-day window that opened before it, so the time overlap is **inevitable**, not a violation — and the two facts that make it safe are the ones the sentence omits: the two evaluations share no asset (the v5 candidate set is disjoint from the v1–v4 candidate sets) and the v5 evaluation may not start before the later of the v4 gate and the v5 window's own end.
+
+**The v4 chain's own freeze states this honestly** — *"the v4 confirmatory window opens inside the open v3 confirmatory window in time; the two evaluations share no asset, because the v4 candidate set is disjoint from the v1, v2 and v3 candidate sets, and the v4 evaluation may only start after the v3 confirmatory gate clears (BRAIN-013 phase gates)"* — and the v5 **specification** carries the matching clarification (`not_a_prior_holdout`: *"This is a new protocol object, not a re-opening of the v1 final holdout or of the v2, v3 or v4 confirmatory windows"*). The v5 freeze carried neither.
+
+**The repair.** The freeze is hash-bound and was **not** edited. `configs/research_v5_candidate_freeze_amendment_1.json` (new, `manifest_hash 43a374284df1c5f933f565c0e882d6c721302e5b1897c02ceb39344b1effa49d`, produced by `scripts/build_v5_candidate_freeze_amendment_1.py`) records the **effective** rule: the time overlap is inevitable and is not a violation; the evaluations share no asset; the v5 confirmatory evaluation may not start before the later of the v2, v3, v4 and v5 gates — **`2027-01-19T13:00:00Z`**, recomputed from the freezes that own the windows — and never before the v2 and the v3 gates; the v5 window is never populated with data that predates the v5 candidate freeze, is never a re-opening of an earlier holdout or window and is never read for selection. It authorizes nothing. The freeze's own block stays on disk, unchanged and visible.
+
+**Why this matters mechanically.** Until the repair, the v5 evaluation's earliest start was recorded only as prose in the execution protocol and as the window's own earliest end in the freeze; nothing stated the **effective** gate, and the v5 specification's `phase_gates` list carries only the v2, v3 and v4 gates (the v5 window did not exist at preregistration). The amendment now states the effective gate as a recomputed value, and `scripts/verify_v5_candidate_freeze.py` refuses an amendment whose gate is not the later of the four.
+
+### 4. A correction to BRAIN-022 §6's own instruction
+
+BRAIN-022 §6 queued the start-inclusivity correction "with the matching change to `scripts/verify_research_v5_spec.py:386` **and to the producer `scripts/build_research_v5_spec.py:582`**". **The producer must not change.** `configs/research_v5.json` is frozen and its hash must stay reproducible from its producer; a producer change would change the specification's hash. The delivered correction therefore leaves `scripts/build_research_v5_spec.py:582` exactly as it was (it still writes `interval_start_inclusive: true`), and the **effective** rule is carried by the amendment, which the specification verifier reads first. The frozen block remains visible, as the campaign's amendment pattern requires. This session verified that the specification is still reproduced byte for byte by its producer.
+
+### 5. Verification
+
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **1275 passed, 2 skipped** before this session's repair (the delivery was green) and **1284 passed, 2 skipped** after it, exit 0. The 2 skips are the stream-projection tests that correctly skip when the gitignored projection is absent.
+- `python3 scripts/verify_v5_candidate_freeze.py` → `"ok": true`, `"failures": []`; `python3 scripts/verify_v5_execution.py` → exit 0; `python3 scripts/verify_research_v5_spec.py` → exit 0; `python3 scripts/verify_research_v5_manifests.py` → exit 0; **every** `scripts/verify_*.py` exits 0 (`verify_cycle_results.py` needs a `cycle_dir` and is not a repository-wide gate).
+- The new checks are **not vacuous**: the five new tamper controls each fail against a mirror of the repository and pass against the untouched mirror — a missing freeze amendment, an amendment naming another freeze hash, an amendment whose rule drops the overlap fact, an amendment with a wrong effective gate and an amendment that claims a shared asset.
+- The code identities are unchanged: the canonical digest of `src/breakout_research` is `3e8e4169…` (`canonical_matches_recorded: true`), the authorized value of record `2efd3b18…` is unchanged, and the live ordered digest `608c7340…` is the documented D1 environment fact, not source drift. No file under `src/` was created, changed or deleted.
+- No file under `research/`, `reports/` or the frozen v1–v4 artifacts was created, changed or deleted; `research_state/continuous_universe_state.json` is unchanged; no confirmatory-window candle was read and every `holdout_exposed_count` is 0.
+
+### 6. Rule → code → test map (this session's repair)
+
+| Rule | Implementation (the check) | Test |
+| --- | --- | --- |
+| the effective overlap rule is the amendment's, and the frozen block stays visible | `scripts/verify_v5_candidate_freeze.py:verify` §6b (`overlap_clauses`) | `tests/test_v5_candidate_freeze.py::test_the_effective_overlap_rule_is_the_amendment_rule` |
+| the effective overlap rule states the time overlap, the no-shared-asset fact, the gate-bound evaluation and the no-selection-read rule | same | same, and `::test_the_verifier_detects_a_freeze_amendment_that_drops_the_overlap_fact` |
+| the effective v5 evaluation start is the later of the v2, v3, v4 and v5 gates, each recomputed from the freeze that owns the window | same (`PRIOR_GATE_OWNERS`) | `::test_the_effective_evaluation_start_is_the_later_of_the_four_gates`, `::test_the_verifier_detects_a_freeze_amendment_with_a_wrong_effective_gate` |
+| the amendment names the freeze it amends, with its recomputed manifest hash and file digest, and states the precedence | same | `::test_the_verifier_detects_a_stale_freeze_amendment` |
+| the time overlap is recorded for every earlier window | same | `::test_the_effective_overlap_rule_is_the_amendment_rule` |
+| the evaluations share no asset | same | `::test_the_verifier_detects_a_freeze_amendment_that_claims_a_shared_asset` |
+| the amendment is derived, not hand-written | `scripts/build_v5_candidate_freeze_amendment_1.py:build` | `::test_the_amendment_is_reproduced_byte_for_byte_by_its_producer` |
+| the amendment authorizes nothing | the same verifier | `::test_the_amendment_authorizes_nothing` |
+| the effective rule is present at all | the same verifier | `::test_the_verifier_detects_a_missing_freeze_amendment` |
+
+### 7. CONFIRMED
+
+- The three deliverables of the prior task are present, hash-bound, reproducible from their producers and mechanically verified; the whole v5 chain up to the selection run is now in place.
+- The v5 specification is unchanged and still reproducible; the membership rule's effective form is the amendment's, and the frozen block is visible.
+- The v5 candidate freeze binds every identity it names to the artifact that owns it, and its window opens at the first hour boundary after the freeze and ends 2,160 hours later.
+- The v5 execution protocol's effective form is the execution amendment's; the inherited v1 rules and the v5-cutoff-bounded benchmark are bound; the protocol authorizes nothing.
+- The v5 benchmark closes **exactly** at the v5 cutoff and has no candle after it; the v4 chain's benchmark has 13 such candles and is not reused.
+- **The freeze's `overlap_rule` was false on its own dates** and is corrected by `configs/research_v5_candidate_freeze_amendment_1.json`; the effective v5 evaluation gate is `2027-01-19T13:00:00Z`, recomputed as the later of the four gates.
+- The v5 namespace holds no run artifact, every exposure counter is 0, and the campaign state still records the v4 cycle.
+
+### 8. UNVERIFIED / STALE
+
+- The v5 specification's `prerequisites` block still reads `p2`/`p3`/`p4` as `OUTSTANDING` although all three are delivered. The specification is hash-bound and was not edited; the data manifest records the delivery in its own `prerequisite_status` block, and the mechanism for the block's own wording is a versioned amendment.
+- The v4 specification's `prerequisites` block still reads P2/P3/P4 as `OUTSTANDING` although all four are delivered (pre-existing).
+- `NOT_RUN`: no v5 evaluation, grid, backtest, campaign or selection exists, so no v5 rule about *evaluation* is exercised by any test — by design.
+- The expansion log `research/v_universe_expansion_log.json` still holds `entry_count: 1` (the v3 entry only): the **v4 entry is still missing** and the v5 entry is outstanding (prerequisite `p5`).
+- No commit was created by this agent; the changes are in the working tree only.
+
+### 9. Unsuccessful attempts (and the condition that would justify a retry)
+
+- None in this session. The first run of the extended `tests/test_v5_candidate_freeze.py` passed (37 passed) and the verifier sweep was green on the first run; the repair needed no iteration.
+
+### 10. Prompt review
+
+`NO_PROMPT_CHANGE_JUSTIFIED`. The defect this session found is a class the repository already names: README Section 2A E requires that every acceptance check recompute its expectation from repository state, and BRAIN-018 established that a published artifact must not contain a statement the artifacts do not support. The overlap rule was found by recomputing the window bounds from the four freezes — the same recompute rule the freeze already used for its own window — and the repair is a versioned amendment, the mechanism the campaign already has. The prompt was not missing, ambiguous or contradicted, so no prompt revision is proposed and `research_state/prompt_evolution.md` is untouched.
+
+### 11. Checkpoint / persistence status
+
+- Local commit: **not created by the agent** (no explicit user request). The working tree carries the new amendment, its producer, the extended verifier and test module, this record and the handoff entry.
+- Remote persistence: `git rev-parse HEAD` == `git ls-remote origin main` == `2c8988c9…`; the new artifacts are **not yet committed or pushed**. A follow-up commit (or the session checkpoint) is required.
+- Artifact/recovery: the amendment is reproducible byte for byte from `scripts/build_v5_candidate_freeze_amendment_1.py` and every value in it is re-derivable from the hash-bound artifacts; the pre-session bytes are recoverable from `git show HEAD:research_state/brainstorming_queue.md`.
+- Checkpoint reconciliation: not applicable — no run, no result row, no shard and no ledger were produced; `research_state/checkpoint*.json` are untouched and no `research_state/checkpoint_v5.json` exists.
+
+### 12. Unresolved blockers (ranked)
+
+1. **The v5 selection is not authorized and the v5 execution path does not exist** — `src/v5_campaign/` is absent, and no `configs/research_v5_selection_authorization_1.json` exists. The v5 chain cannot be run without them. This is the next bounded task.
+2. **The expansion log is incomplete** — the derived v4 entry and the v5 entry are outstanding (prerequisite `p5`); the v5 specification states that the derived v4 entry must be appended before the v5 entry.
+3. **The v2 exposure-counter question is open for the coordinator** — whether the 13 (v3) and 15 (v4) candles per asset that close inside the open v2 confirmatory window and are part of the v3 and v4 development data must increment the v2 `holdout_exposed_count`, or are recorded as disclosed development reads of a disjoint asset set. It is due before the v2 gate clears on **2027-01-17T22:00:00Z**; BRAIN-014's v3 counterpart is due before 2027-01-18T13:00:00Z. The v5 rule is chosen so that neither question can arise for v5.
+4. **Three pending confirmatory evaluations are time-blocked** — the v2 evaluation may not start before `2027-01-17T22:00:00Z`, the v3 evaluation (and the final report) before `2027-01-18T13:00:00Z`, and the v4 evaluation not before the v3 gate clears (its own earliest end is `2027-01-19T01:00:00Z`); the v5 evaluation may not start before **`2027-01-19T13:00:00Z`** (BRAIN-023 §3). No action is possible or needed before those instants.
+5. The v4 confirmatory **protocol and runbook do not exist** (the v4 window exists only in the v4 candidate freeze); the v3 chain has both.
+6. `configs/research_v3_confirmatory_code_hash_amendment_1.json` does not exist; it is needed only if a deliberate rotation of the v3 confirmatory execution-path digest is chosen, and the delivered authorization and runbook bind the current digest.
+
+**Queued after this task:** the v5 selection authorization and the v5 selection execution path (`src/v5_campaign/`, outside the hashed set), the expansion-log entries (the derived v4 entry plus the v5 entry, prerequisite `p5`), the single authorized v5 selection run and the publication of the v5 selected-configurations manifest with the v5 cycle recorded in `research_state/continuous_universe_state.json`; then the preregistered v4 confirmatory protocol and runbook; the v3 confirmatory evaluation and the final report, which may not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start before `2027-01-17T22:00:00Z`.

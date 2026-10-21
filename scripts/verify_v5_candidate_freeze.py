@@ -65,6 +65,19 @@ DATA_RELATIVE = "research/data_manifest_v5.json"
 AMENDMENT_RELATIVE = "configs/research_v5_specification_amendment_1.json"
 V4_FREEZE_RELATIVE = "configs/research_v4_candidate_freeze.json"
 
+#: The versioned amendment that owns the effective confirmatory-window
+#: **overlap** rule of the frozen freeze. The frozen block stays on disk
+#: unchanged and visible; the amendment carries the effective rule.
+FREEZE_AMENDMENT_RELATIVE = "configs/research_v5_candidate_freeze_amendment_1.json"
+
+#: The freezes that own the v2, v3 and v4 confirmatory windows, and the key each
+#: one keeps its window bounds under.
+PRIOR_GATE_OWNERS: Tuple[Tuple[str, str, str], ...] = (
+    ("v2", "configs/research_v2_candidate_freeze.json", "data_boundary"),
+    ("v3", "configs/research_v3_candidate_freeze.json", "data_boundary"),
+    ("v4", V4_FREEZE_RELATIVE, "confirmatory_window"),
+)
+
 #: The freezes that own the v1-v4 confirmatory windows, and the key each one
 #: keeps its window start under.
 PRIOR_WINDOW_OWNERS: Tuple[Tuple[str, str, str], ...] = (
@@ -129,6 +142,24 @@ def membership_clauses(text: str) -> Dict[str, bool]:
     }
 
 
+def overlap_clauses(text: str) -> Dict[str, bool]:
+    """The operative clauses of a confirmatory-window overlap rule.
+
+    The frozen v5 freeze states a prohibition that its own dates violate (the
+    v5 window opens inside the still-open v2, v3 and v4 windows), so the
+    effective rule is carried by a versioned amendment. The agreement check
+    compares the clauses that decide the outcome, not the sentence.
+    """
+    lowered = " ".join(str(text or "").lower().split())
+    return {
+        "opens_inside_earlier_windows": "opens inside" in lowered,
+        "overlap_is_not_a_violation": "not a violation" in lowered,
+        "no_shared_asset": "share no asset" in lowered or "shares no asset" in lowered,
+        "evaluation_is_gate_bound": "may not start before" in lowered,
+        "never_read_for_selection": "never read for selection" in lowered,
+    }
+
+
 def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     failures: List[str] = []
     root = Path(repo_root)
@@ -144,6 +175,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         DATA_RELATIVE,
         AMENDMENT_RELATIVE,
         V4_FREEZE_RELATIVE,
+        FREEZE_AMENDMENT_RELATIVE,
     ):
         if not (root / relative).exists():
             return {
@@ -158,6 +190,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     data = read_json(root / DATA_RELATIVE)
     amendment = read_json(root / AMENDMENT_RELATIVE)
     v4_freeze = read_json(root / V4_FREEZE_RELATIVE)
+    freeze_amendment = read_json(root / FREEZE_AMENDMENT_RELATIVE)
 
     # 1. the document itself ------------------------------------------------
     if freeze.get("artifact") != "v5_candidate_freeze":
@@ -370,6 +403,78 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 f"the v5 validated candidate set shares {sorted(overlap)} with the {version} "
                 "candidate set"
             )
+
+    # 6b. the effective overlap rule -----------------------------------------
+    # The frozen freeze states that the v5 window "must not overlap the v1-v4
+    # holdouts/windows", which its own dates violate: the v5 window opens
+    # inside the still-open v2, v3 and v4 windows. The effective rule is
+    # carried by a versioned amendment; the frozen block stays visible.
+    if freeze_amendment.get("manifest_hash") != compute_manifest_hash(
+        freeze_amendment, ("manifest_hash",)
+    ):
+        fail("the v5 candidate-freeze amendment does not recompute its manifest_hash")
+    supersedes_freeze = freeze_amendment.get("supersedes") or {}
+    if supersedes_freeze.get("artifact_path") != FREEZE_RELATIVE:
+        fail("the v5 candidate-freeze amendment does not name the freeze it amends")
+    if supersedes_freeze.get("artifact_manifest_hash") != freeze.get("manifest_hash"):
+        fail("the v5 candidate-freeze amendment names another manifest hash for the freeze")
+    if supersedes_freeze.get("artifact_sha256") != sha256_file(root / FREEZE_RELATIVE):
+        fail("the v5 candidate-freeze amendment names another file digest for the freeze")
+    if (freeze_amendment.get("effective_rule") or {}).get(
+        "precedence"
+    ) != "amendment_overrides_frozen_block":
+        fail("the v5 candidate-freeze amendment does not state the precedence rule")
+    effective_clauses = overlap_clauses(
+        str((freeze_amendment.get("corrected_rule") or {}).get("overlap_rule") or "")
+    )
+    computed["effective_overlap_clauses"] = effective_clauses
+    for clause, present in effective_clauses.items():
+        if not present:
+            fail(f"the effective overlap rule does not state the clause {clause}")
+    # The effective evaluation start: the later of the v2, v3, v4 and v5 gates.
+    gates: List[Tuple[str, str]] = []
+    for version, relative, block_key in PRIOR_GATE_OWNERS:
+        owner = read_json(root / relative)
+        block = owner.get(block_key) or {}
+        end = block.get("earliest_possible_confirmatory_window_end_utc") or block.get(
+            "earliest_possible_end_utc"
+        )
+        if not end:
+            fail(f"the {version} candidate freeze carries no earliest window end")
+            continue
+        gates.append((version, str(end)))
+    v5_end = window.get("earliest_possible_end_utc")
+    if v5_end:
+        gates.append(("v5", str(v5_end)))
+    if gates:
+        expected_start = max(end for _, end in gates)
+        computed["evaluation_may_not_start_before_utc"] = expected_start
+        recorded = (freeze_amendment.get("corrected_rule") or {}).get(
+            "evaluation_may_not_start_before_utc"
+        )
+        if recorded != expected_start:
+            fail(
+                f"the effective v5 evaluation start is {recorded}, but the later of the "
+                f"v2, v3, v4 and v5 gates is {expected_start}"
+            )
+    for entry in (freeze_amendment.get("corrected_rule") or {}).get(
+        "time_overlap_evidence"
+    ) or []:
+        version = str(entry.get("version") or "")
+        opens_inside = entry.get("v5_window_opens_inside_the_earlier_window")
+        overlaps = entry.get("windows_overlap_in_time")
+        if opens_inside is not True:
+            fail(
+                f"the effective overlap rule does not record that the v5 window opens inside "
+                f"the open {version} window"
+            )
+        if overlaps is not True:
+            fail(
+                f"the effective overlap rule does not record the time overlap with the "
+                f"{version} window"
+            )
+    if (freeze_amendment.get("corrected_rule") or {}).get("no_shared_asset") is not True:
+        fail("the effective overlap rule does not record that the evaluations share no asset")
 
     # 7. the supersedes chain ------------------------------------------------
     supersedes = freeze.get("supersedes") or {}

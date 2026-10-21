@@ -43,6 +43,9 @@ SPEC_PATH = REPO_ROOT / "configs" / "research_v5.json"
 UNIVERSE_PATH = REPO_ROOT / "research" / "universe_manifest_v5.json"
 DATA_PATH = REPO_ROOT / "research" / "data_manifest_v5.json"
 AMENDMENT_PATH = REPO_ROOT / "configs" / "research_v5_specification_amendment_1.json"
+FREEZE_AMENDMENT_PATH = (
+    REPO_ROOT / "configs" / "research_v5_candidate_freeze_amendment_1.json"
+)
 V4_FREEZE_PATH = REPO_ROOT / "configs" / "research_v4_candidate_freeze.json"
 
 
@@ -57,6 +60,10 @@ def _load_module(name: str, relative: str):
 
 verifier = _load_module("verify_v5_candidate_freeze", "scripts/verify_v5_candidate_freeze.py")
 producer = _load_module("build_v5_candidate_freeze", "scripts/build_v5_candidate_freeze.py")
+amendment_producer = _load_module(
+    "build_v5_candidate_freeze_amendment_1",
+    "scripts/build_v5_candidate_freeze_amendment_1.py",
+)
 rules = _load_module("v5_universe_rules", "scripts/v5_universe_rules.py")
 
 
@@ -280,6 +287,63 @@ def test_the_freeze_authorizes_nothing() -> None:
     assert "authorizes nothing" in freeze["specification_purpose"]
 
 
+def test_the_effective_overlap_rule_is_the_amendment_rule() -> None:
+    """The frozen rule is false on its own dates; the amendment owns the rule.
+
+    The v5 window runs from 2026-10-21T13:00:00Z to 2027-01-19T13:00:00Z, so
+    it opens inside the still-open v2, v3 and v4 windows: the frozen
+    "must not overlap" prohibition is false, and the effective rule is carried
+    by a versioned amendment while the frozen block stays visible.
+    """
+    amendment = _load(FREEZE_AMENDMENT_PATH)
+    freeze = _load(FREEZE_PATH)
+    assert verifier.compute_manifest_hash(amendment, ("manifest_hash",)) == amendment[
+        "manifest_hash"
+    ]
+    assert amendment["supersedes"]["artifact_path"] == "configs/research_v5_candidate_freeze.json"
+    assert amendment["supersedes"]["artifact_manifest_hash"] == freeze["manifest_hash"]
+    assert amendment["supersedes"]["artifact_sha256"] == verifier.sha256_file(FREEZE_PATH)
+    assert amendment["effective_rule"]["precedence"] == "amendment_overrides_frozen_block"
+    clauses = verifier.overlap_clauses(amendment["corrected_rule"]["overlap_rule"])
+    assert all(clauses.values()), clauses
+    # the frozen block is still on disk, unchanged and visible
+    assert "must not overlap" in freeze["confirmatory_window"]["overlap_rule"]
+
+
+def test_the_effective_evaluation_start_is_the_later_of_the_four_gates() -> None:
+    amendment = _load(FREEZE_AMENDMENT_PATH)
+    freeze = _load(FREEZE_PATH)
+    gates = []
+    for relative, block_key in (
+        ("configs/research_v2_candidate_freeze.json", "data_boundary"),
+        ("configs/research_v3_candidate_freeze.json", "data_boundary"),
+        ("configs/research_v4_candidate_freeze.json", "confirmatory_window"),
+    ):
+        owner = _load(REPO_ROOT / relative)
+        block = owner[block_key]
+        gates.append(
+            block.get("earliest_possible_confirmatory_window_end_utc")
+            or block["earliest_possible_end_utc"]
+        )
+    gates.append(freeze["confirmatory_window"]["earliest_possible_end_utc"])
+    assert amendment["corrected_rule"]["evaluation_may_not_start_before_utc"] == max(gates)
+    assert max(gates) == "2027-01-19T13:00:00Z"
+
+
+def test_the_amendment_is_reproduced_byte_for_byte_by_its_producer() -> None:
+    built = amendment_producer.build(REPO_ROOT)
+    on_disk = _load(FREEZE_AMENDMENT_PATH)
+    assert built == on_disk
+
+
+def test_the_amendment_authorizes_nothing() -> None:
+    amendment = _load(FREEZE_AMENDMENT_PATH)
+    for key, value in amendment["authorization"].items():
+        if key != "scope":
+            assert value is False, key
+    assert "authorizes no run" in amendment["authorization"]["scope"]
+
+
 # --------------------------------------------------------------------------
 # the tamper controls
 # --------------------------------------------------------------------------
@@ -441,3 +505,80 @@ def test_the_verifier_detects_a_v5_run_artifact(tmp_path: Path) -> None:
     (root / "research" / "ledger_v5.json").write_text("{}\n", encoding="utf-8")
     failures = _failures(root)
     assert any("v5 run artifact" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_missing_freeze_amendment(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    (root / "configs" / "research_v5_candidate_freeze_amendment_1.json").unlink()
+    failures = _failures(root)
+    assert any("research_v5_candidate_freeze_amendment_1.json" in f for f in failures), failures
+
+
+def test_the_verifier_detects_a_stale_freeze_amendment(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["supersedes"]["artifact_manifest_hash"] = "0" * 64
+
+    _tamper(
+        root,
+        mutate,
+        relative="configs/research_v5_candidate_freeze_amendment_1.json",
+    )
+    failures = _failures(root)
+    assert any("another manifest hash for the freeze" in f for f in failures), failures
+
+
+def test_the_verifier_detects_a_freeze_amendment_that_drops_the_overlap_fact(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["corrected_rule"]["overlap_rule"] = (
+            "the v5 confirmatory window may not overlap any other window"
+        )
+
+    _tamper(
+        root,
+        mutate,
+        relative="configs/research_v5_candidate_freeze_amendment_1.json",
+    )
+    failures = _failures(root)
+    assert any("does not state the clause" in f for f in failures), failures
+
+
+def test_the_verifier_detects_a_freeze_amendment_with_a_wrong_effective_gate(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["corrected_rule"]["evaluation_may_not_start_before_utc"] = (
+            "2026-10-21T13:00:00Z"
+        )
+
+    _tamper(
+        root,
+        mutate,
+        relative="configs/research_v5_candidate_freeze_amendment_1.json",
+    )
+    failures = _failures(root)
+    assert any("effective v5 evaluation start" in f for f in failures), failures
+
+
+def test_the_verifier_detects_a_freeze_amendment_that_claims_a_shared_asset(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["corrected_rule"]["no_shared_asset"] = False
+
+    _tamper(
+        root,
+        mutate,
+        relative="configs/research_v5_candidate_freeze_amendment_1.json",
+    )
+    failures = _failures(root)
+    assert any("share no asset" in f for f in failures), failures
