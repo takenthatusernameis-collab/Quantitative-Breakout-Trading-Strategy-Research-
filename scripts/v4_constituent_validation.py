@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""BRAIN-012 P2 and P3: validate the v4 candidate batch and build the v3 manifests.
+"""BRAIN-012 P2 and P3: validate the v4 candidate batch and build the v4 manifests.
 
 The preregistered v3 specification (``configs/research_v4.json``) and the
 published v4 exclusion amendment (``configs/research_v4_exclusion_amendment_1.json``)
@@ -61,7 +61,9 @@ from v3_exclusion_classifier import (  # noqa: E402
 SPEC_V3_PATH = REPO_ROOT / "configs" / "research_v4.json"
 V1_UNIVERSE_PATH = REPO_ROOT / "research" / "universe_manifest.json"
 V2_UNIVERSE_PATH = REPO_ROOT / "research" / "universe_manifest_v2.json"
-AMENDMENT_PATH = REPO_ROOT / "configs" / "research_v4_exclusion_amendment_1.json"
+V3_UNIVERSE_PATH = REPO_ROOT / "research" / "universe_manifest_v3.json"
+V3_DATA_PATH = REPO_ROOT / "research" / "data_manifest_v3.json"
+AMENDMENT_GLOB = "research_v4_exclusion_amendment_*.json"
 EVIDENCE_DIR = REPO_ROOT / "research" / "v4_evidence"
 SNAPSHOT_RAW_PATH = EVIDENCE_DIR / "raw_market_cap_response.json"
 SNAPSHOT_OBSERVATION_PATH = EVIDENCE_DIR / "snapshot_observation.json"
@@ -236,11 +238,17 @@ def load_snapshot(spec: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], Dict[str,
     return markets, observation
 
 
-def recompute_floor(v2_universe: Dict[str, Any]) -> Tuple[str, int]:
-    """Recompute the v2 floor from the v2 universe manifest."""
-    assets = v2_universe.get("eligible_assets") or []
+def recompute_floor(source_universe: Dict[str, Any]) -> Tuple[str, int]:
+    """Recompute the floor from the universe manifest the specification names.
+
+    The v4 specification names the **v3** universe manifest as the source of
+    the floor (``universe.expansion_scope.prior_universe_floor``); the floor is
+    the minimum ``market_cap_usd`` over that manifest's eligible assets and is
+    recomputed here, never trusted from a recorded value.
+    """
+    assets = source_universe.get("eligible_assets") or []
     if not assets:
-        raise SystemExit("the v2 universe manifest has no eligible assets")
+        raise SystemExit("the source universe manifest has no eligible assets")
     lowest = min(assets, key=lambda entry: int(entry.get("market_cap_usd") or 0))
     return str(lowest.get("symbol")), int(lowest.get("market_cap_usd") or 0)
 
@@ -265,17 +273,27 @@ def prior_universe_assets(*universes: Dict[str, Any]) -> Tuple[Dict[str, str], D
 
 def derive_batch(spec: Dict[str, Any], amendment: Dict[str, Any],
                  markets: List[Dict[str, Any]], v1_universe: Dict[str, Any],
-                 v2_universe: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+                 v2_universe: Dict[str, Any],
+                 v3_universe: Dict[str, Any],
+                 check_published_batch: bool = True) -> Tuple[List[Dict[str, Any]],
+                                                               List[Dict[str, Any]],
+                                                               List[Dict[str, Any]]]:
     """Re-derive the candidate batch from the stored snapshot and the published rules.
 
     The batch is the ``top_n`` eligible assets in strictly descending
-    market-capitalization order, where eligible means: below the recomputed v2
-    floor, not an asset of the v1 or v2 universe and not excluded by the
-    inherited fixed lists or by the published v3 classifier.
+    market-capitalization order, where eligible means: strictly below the
+    recomputed **v3** floor, not an asset of the v1, v2 or v3 universe and not
+    excluded by the inherited fixed lists or by the published v4 classifier.
+
+    The rules are the ones the preregistered v4 specification freezes
+    (``configs/research_v4.json#universe.expansion_scope``): the floor source
+    is ``research/universe_manifest_v3.json`` and the prior-universe identity
+    rule covers the eligible assets of the v1, the v2 **and** the v3 universe
+    manifest.
     """
     universe_spec = spec["universe"]
     top_n = int(universe_spec["top_n"])
-    floor_symbol, floor_market_cap = recompute_floor(v2_universe)
+    floor_symbol, floor_market_cap = recompute_floor(v3_universe)
 
     fixed_lists = {
         str(group): list(symbols or [])
@@ -283,10 +301,11 @@ def derive_batch(spec: Dict[str, Any], amendment: Dict[str, Any],
     }
     classifier = amendment.get("classifier") or {}
     classification = classify_snapshot(markets, classifier, fixed_lists)
-    prior_symbols, prior_ids = prior_universe_assets(v1_universe, v2_universe)
+    prior_symbols, prior_ids = prior_universe_assets(v1_universe, v2_universe, v3_universe)
 
     eligible: List[Dict[str, Any]] = []
     excluded: List[Dict[str, Any]] = []
+    records: List[Dict[str, Any]] = []
     for position, market in enumerate(markets, start=1):
         symbol = entry_symbol(market)
         identifier = str(market.get("id") or "")
@@ -310,6 +329,7 @@ def derive_batch(spec: Dict[str, Any], amendment: Dict[str, Any],
                 "rule_source": outcome["rule_source"],
             })
             excluded.append(record)
+            records.append(record)
             continue
         identity = prior_universe_match(market, prior_symbols, prior_ids)
         if identity is not None:
@@ -322,6 +342,7 @@ def derive_batch(spec: Dict[str, Any], amendment: Dict[str, Any],
                 "rule_source": "specification_expansion_scope",
             })
             excluded.append(record)
+            records.append(record)
             continue
         if market_cap_usd is None or market_cap_usd >= floor_market_cap:
             record.update({
@@ -332,9 +353,15 @@ def derive_batch(spec: Dict[str, Any], amendment: Dict[str, Any],
                 "rule_source": "specification_expansion_scope",
             })
             excluded.append(record)
+            records.append(record)
             continue
         record["excluded"] = False
+        record["exclusion_group"] = None
+        record["exclusion_reason"] = None
+        record["matched_markers"] = []
+        record["rule_source"] = None
         eligible.append(record)
+        records.append(record)
 
     eligible.sort(key=lambda record: (-int(record["market_cap_usd"] or 0), record["snapshot_position"]))
     batch = eligible[:top_n]
@@ -344,13 +371,14 @@ def derive_batch(spec: Dict[str, Any], amendment: Dict[str, Any],
 
     published = amendment.get("derived_candidate_batch", {}).get("members") or []
     derived_pairs = [record["binance_pair"] for record in batch]
-    published_pairs = [str(member.get("binance_pair")) for member in published]
-    if derived_pairs != published_pairs:
-        raise SystemExit(
-            "the re-derived candidate batch does not match the published derived batch: "
-            f"{derived_pairs} != {published_pairs}"
-        )
-    return batch, excluded
+    if check_published_batch:
+        published_pairs = [str(member.get("binance_pair")) for member in published]
+        if derived_pairs != published_pairs:
+            raise SystemExit(
+                "the re-derived candidate batch does not match the published derived batch: "
+                f"{derived_pairs} != {published_pairs}"
+            )
+    return batch, excluded, records
 
 
 def probe_exchange_info(host: str, pair: str, timeout_s: float) -> Dict[str, Any]:
@@ -421,13 +449,16 @@ def verify_binance_spot(pair: str, timeout_s: float) -> Dict[str, Any]:
 
 
 def fetch_candles(pair: str, min_candles: int, as_of_ms: int) -> Dict[str, Any]:
-    """Fetch the complete closed-hour window that ends at the snapshot time.
+    """Fetch the complete closed-hour window that ends at the development cutoff.
 
-    The window is bound to the market-cap snapshot timestamp rather than to the
-    wall clock, so the v3 dataset is reproducible: re-running the validation
-    reproduces byte-identical datasets instead of silently sliding the window
-    forward. The window holds exactly ``min_candles`` closed hourly candles and
-    is serialized as ``sha256-canonical-hourly-csv-v1``.
+    The window is bound to the preregistered development cutoff
+    (``configs/research_v4.json#holdout.development_cutoff_utc``) rather than to
+    the wall clock and rather than to the market-cap snapshot timestamp, so that
+    no v4 development dataset contains a candle that closes inside the open v3
+    confirmatory window and so that the dataset is reproducible: re-running the
+    validation reproduces byte-identical datasets instead of silently sliding
+    the window forward. The window holds exactly ``min_candles`` closed hourly
+    candles and is serialized as ``sha256-canonical-hourly-csv-v1``.
     """
     latest_closed_open = (as_of_ms // HOUR_MS - 1) * HOUR_MS
     first_open = latest_closed_open - (min_candles - 1) * HOUR_MS
@@ -523,7 +554,8 @@ def build_snapshot_identity(spec: Dict[str, Any], observation: Dict[str, Any],
 
 
 def build_universe_manifest(spec: Dict[str, Any], v1_universe: Dict[str, Any],
-                            v2_universe: Dict[str, Any], observation: Dict[str, Any],
+                            v2_universe: Dict[str, Any], v3_universe: Dict[str, Any],
+                            observation: Dict[str, Any],
                             batch: List[Dict[str, Any]], excluded_assets: List[Dict[str, Any]],
                             validation: Dict[str, Dict[str, Any]], spot_evidence: Dict[str, Any],
                             data_manifest_hash: str, code_hash: Optional[str],
@@ -597,13 +629,14 @@ def build_universe_manifest(spec: Dict[str, Any], v1_universe: Dict[str, Any],
         "snapshot_identity": build_snapshot_identity(spec, observation, data_manifest_hash, code_hash),
         "specification_hash": spec["specification_hash"],
         "supersedes": {
-            "universe_manifest_path": V2_UNIVERSE_PATH.relative_to(REPO_ROOT).as_posix(),
-            "universe_manifest_sha256": sha256_file(V2_UNIVERSE_PATH),
-            "universe_manifest_hash": v2_universe.get("manifest_hash"),
-            "universe_version": v2_universe.get("universe_version"),
+            "universe_manifest_path": V3_UNIVERSE_PATH.relative_to(REPO_ROOT).as_posix(),
+            "universe_manifest_sha256": sha256_file(V3_UNIVERSE_PATH),
+            "universe_manifest_hash": v3_universe.get("manifest_hash"),
+            "universe_version": v3_universe.get("universe_version"),
             "note": (
-                "The v2 universe manifest is immutable and is not edited by this version; the "
-                "v4 universe is the next batch below the recomputed v2 floor."
+                "The v3 universe manifest is immutable and is not edited by this version; the "
+                "v4 universe is the next batch below the recomputed v3 floor, and no v4 "
+                "constituent is an asset of the v1, v2 or v3 universe."
             ),
         },
         "survivorship_disclaimer": (
@@ -633,7 +666,7 @@ def build_universe_manifest(spec: Dict[str, Any], v1_universe: Dict[str, Any],
                 "is referenced by it, not the other way round. A freeze amendment records the "
                 "validated subset once the validation outcome is known."
             ),
-            "status": "FROZEN_BY_CONFIGS_RESEARCH_V3_CANDIDATE_FREEZE_JSON",
+            "status": "FROZEN_BY_CONFIGS_RESEARCH_V4_CANDIDATE_FREEZE_JSON",
         },
         "prerequisite_status": {
             "P2": "DELIVERED_BY_THIS_ARTIFACT",
@@ -658,7 +691,7 @@ def build_universe_manifest(spec: Dict[str, Any], v1_universe: Dict[str, Any],
     return manifest
 
 
-def build_data_manifest(spec: Dict[str, Any], v2_data: Dict[str, Any],
+def build_data_manifest(spec: Dict[str, Any], v3_data: Dict[str, Any],
                         observation: Dict[str, Any], validation: Dict[str, Dict[str, Any]],
                         candle_records: Dict[str, Dict[str, Any]], spot_evidence: Dict[str, Any],
                         code_hash: Optional[str], canonical_digest: str,
@@ -741,20 +774,24 @@ def build_data_manifest(spec: Dict[str, Any], v2_data: Dict[str, Any],
             "v4 data manifest. Every accepted asset references an immutable canonical hourly CSV "
             "dataset under research/data/candles_v4. Synthetic records are never permitted. "
             "Nothing here is a research result: no grid, backtest, campaign or candidate "
-            "selection has been run under v3."
+            "selection has been run under v4."
         ),
         "window_policy": {
-            "bound_to": "market_cap_source_retrieval_timestamp_utc",
+            "bound_to": "holdout.development_cutoff_utc",
             "candle_count": int(spec["universe"]["min_candles"]),
             "closed_candles_only": True,
+            "development_cutoff_utc": spec["holdout"]["development_cutoff_utc"],
             "interval": "1h",
             "last_closed_open_timestamp_ms": (
-                int(parse_iso_utc(observation["retrieval_timestamp_utc"]).timestamp() * 1000) // HOUR_MS - 1
+                int(parse_iso_utc(spec["holdout"]["development_cutoff_utc"]).timestamp() * 1000)
+                // HOUR_MS - 1
             ) * HOUR_MS,
             "note": (
-                "The candle window ends at the last fully closed hour at the snapshot retrieval "
-                "timestamp, so the dataset is bound to the same snapshot as the universe and "
-                "re-running the validation reproduces byte-identical datasets."
+                "The candle window ends at the last fully closed hour at the preregistered "
+                "development cutoff (configs/research_v4.json#holdout.development_cutoff_utc), "
+                "so no v4 development dataset contains a candle that closes inside the open v3 "
+                "confirmatory window, and re-running the validation reproduces byte-identical "
+                "datasets."
             ),
         },
         "protocol_version": spec["protocol_version"],
@@ -775,14 +812,15 @@ def build_data_manifest(spec: Dict[str, Any], v2_data: Dict[str, Any],
         "snapshot_identity": build_snapshot_identity(spec, observation, data_manifest_hash, code_hash),
         "specification_hash": spec["specification_hash"],
         "supersedes": {
-            "data_manifest_path": V2_UNIVERSE_PATH.relative_to(REPO_ROOT).as_posix().replace(
-                "universe_manifest_v2.json", "data_manifest_v2.json"
+            "data_manifest_path": V3_DATA_PATH.relative_to(REPO_ROOT).as_posix(),
+            "data_manifest_sha256": sha256_file(V3_DATA_PATH),
+            "data_manifest_hash": v3_data.get("manifest_hash"),
+            "protocol_version": v3_data.get("protocol_version"),
+            "universe_version": v3_data.get("universe_version"),
+            "note": (
+                "The v3 data manifest is immutable and is not edited by this version; the v4 "
+                "data manifest is the next batch below the recomputed v3 floor."
             ),
-            "data_manifest_sha256": sha256_file(
-                REPO_ROOT / "research" / "data_manifest_v2.json"
-            ),
-            "protocol_version": v2_data.get("protocol_version"),
-            "universe_version": v2_data.get("universe_version"),
         },
         "universe_version": spec["universe_version"],
         "validation_results": {
@@ -801,18 +839,41 @@ def build_data_manifest(spec: Dict[str, Any], v2_data: Dict[str, Any],
             "confirmatory_window_status": "NOT_STARTED",
             "holdout_exposed_count": 0,
             "note": (
-                "No confirmatory-window candle has been read. The v3 confirmatory window starts "
+                "No confirmatory-window candle has been read. The v4 confirmatory window starts "
                 "after the v4 candidate freeze and needs at least "
-                f"{spec['holdout']['v3_confirmatory_window']['min_hours']} closed hourly candles, "
-                "so it cannot be evaluated in this session. Neither the v1 holdout nor the v2 "
-                "confirmatory window is reused."
+                f"{spec['holdout']['v4_confirmatory_window']['min_hours']} closed hourly candles, "
+                "so it cannot be evaluated in this session. Neither the v1 holdout, the v2 "
+                "confirmatory window nor the open v3 confirmatory window is reused, and no "
+                "development candle closes at or after the preregistered development cutoff."
             ),
             "v1_holdout_reuse": spec["holdout"]["v1_holdout_reuse"],
             "v2_confirmatory_window_reuse": spec["holdout"]["v2_confirmatory_window"]["reuse_by_v3"],
+            "v3_confirmatory_window_reuse": "forbidden",
+            "development_cutoff_utc": spec["holdout"]["development_cutoff_utc"],
         },
     }
     manifest["manifest_hash"] = compute_manifest_hash(manifest, DATA_MANIFEST_HASH_EXCLUDED_KEYS)
     return manifest
+
+
+def resolve_effective_amendment(repo_root: Path = REPO_ROOT) -> Tuple[Path, Dict[str, Any]]:
+    """The effective v4 exclusion amendment: the highest-numbered one on disk.
+
+    The amendments form a versioned chain. The effective amendment is the one
+    with the highest numeric suffix; it carries the rules the manifests are
+    built from and it names the amendment it supersedes.
+    """
+    candidates = sorted(repo_root.joinpath("configs").glob(AMENDMENT_GLOB))
+    if not candidates:
+        raise SystemExit(f"no v4 exclusion amendment found in configs/{AMENDMENT_GLOB}")
+
+    def suffix(path: Path) -> int:
+        stem = path.stem.rsplit("_", 1)[-1]
+        return int(stem) if stem.isdigit() else -1
+
+    path = max(candidates, key=suffix)
+    document = json.loads(path.read_text(encoding="utf-8"))
+    return path, document
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -827,17 +888,18 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     repo_root = Path(args.repo_root)
     spec = json.loads((repo_root / "configs" / "research_v4.json").read_text(encoding="utf-8"))
-    amendment = json.loads(
-        (repo_root / "configs" / "research_v4_exclusion_amendment_1.json").read_text(encoding="utf-8")
-    )
+    amendment_path, amendment = resolve_effective_amendment(repo_root)
     v1_universe = json.loads((repo_root / "research" / "universe_manifest.json").read_text(encoding="utf-8"))
     v2_universe = json.loads(
         (repo_root / "research" / "universe_manifest_v2.json").read_text(encoding="utf-8")
     )
-    v2_data = json.loads((repo_root / "research" / "data_manifest_v2.json").read_text(encoding="utf-8"))
+    v3_universe = json.loads(
+        (repo_root / "research" / "universe_manifest_v3.json").read_text(encoding="utf-8")
+    )
+    v3_data = json.loads((repo_root / "research" / "data_manifest_v3.json").read_text(encoding="utf-8"))
 
     markets, observation = load_snapshot(spec)
-    as_of_ms = int(parse_iso_utc(observation["retrieval_timestamp_utc"]).timestamp() * 1000)
+    as_of_ms = int(parse_iso_utc(spec["holdout"]["development_cutoff_utc"]).timestamp() * 1000)
     code_hash = authorized_code_hash(repo_root)
     canonical_digest = canonical_source_digest(repo_root)
 
@@ -849,14 +911,15 @@ def main(argv: Optional[List[str]] = None) -> int:
                 "ok": True,
                 "rewritten": False,
                 "note": (
-                    "the v3 manifests already record this snapshot; re-running would only "
+                    "the v4 manifests already record this snapshot; re-running would only "
                     "refresh validation timestamps. Use --force to rewrite them."
                 ),
                 "universe_manifest_hash": existing.get("manifest_hash"),
             }, indent=2, sort_keys=True))
             return 0
 
-    batch, excluded_assets = derive_batch(spec, amendment, markets, v1_universe, v2_universe)
+    batch, excluded_assets, _records = derive_batch(spec, amendment, markets, v1_universe,
+                                                     v2_universe, v3_universe)
     print(f"derived candidate batch: {len(batch)} assets", flush=True)
 
     validation: Dict[str, Dict[str, Any]] = {}
@@ -918,22 +981,24 @@ def main(argv: Optional[List[str]] = None) -> int:
             "interval": "1h",
             "min_candles": int(spec["universe"]["min_candles"]),
             "policy": (
-                "the most recent complete closed-hour window of exactly min_candles candles, "
-                "bound to the market-cap snapshot timestamp; gaps and rejected rows are "
-                "recorded; nothing is interpolated"
+                "the complete closed-hour window of exactly min_candles candles that ends at "
+                "the preregistered development cutoff; gaps and rejected rows are "
+                "recorded; nothing is interpolated; no candle closes inside the open v3 "
+                "confirmatory window"
             ),
             "protocol_version": spec["protocol_version"],
             "records": candle_records,
             "snapshot_raw_response_hash": observation.get("raw_response_hash"),
         })
 
-    data_manifest = build_data_manifest(spec, v2_data, observation, validation, candle_records,
+    data_manifest = build_data_manifest(spec, v3_data, observation, validation, candle_records,
                                          spot_evidence, code_hash, canonical_digest)
     data_manifest_hash = data_manifest["manifest_hash"]
     data_manifest["snapshot_identity"]["data_manifest_hash"] = data_manifest_hash
-    universe_manifest = build_universe_manifest(spec, v1_universe, v2_universe, observation, batch,
-                                                 excluded_assets, validation, spot_evidence,
-                                                 data_manifest_hash, code_hash, canonical_digest)
+    universe_manifest = build_universe_manifest(spec, v1_universe, v2_universe, v3_universe,
+                                                 observation, batch, excluded_assets, validation,
+                                                 spot_evidence, data_manifest_hash, code_hash,
+                                                 canonical_digest)
 
     atomic_write_json(DATA_V4_PATH, data_manifest)
     atomic_write_json(UNIVERSE_V4_PATH, universe_manifest)

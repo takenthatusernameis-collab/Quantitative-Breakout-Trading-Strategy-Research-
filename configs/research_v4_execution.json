@@ -3,13 +3,17 @@
   "artifact_version": "v4-execution-protocol-1",
   "candidate_freeze_and_confirmatory_window": {
     "candidate_manifest_committed_and_hash_bound_before_first_confirmatory_candle": true,
-    "confirmatory_window_opens_utc": "2026-10-21T00:08:26Z",
+    "confirmatory_window_opens_utc": "2026-10-21T01:00:00Z",
+    "development_cutoff_utc": "2026-10-20T13:00:00Z",
+    "development_data_boundary_utc": "2026-10-20T13:00:00Z",
+    "development_data_boundary_rule": "the effective development boundary is the earlier of the v4 confirmatory-window start and the preregistered development cutoff; no development candle that closes at or after that instant may be read, so no candle inside the open v3 confirmatory window is ever read by a v4 run",
     "min_confirmatory_window_hours": 2160,
     "min_confirmatory_window_rationale": "90 days of closed hourly candles after freeze",
     "no_ranking_or_retuning_on_holdout": true,
     "single_use": true,
     "window_overlap_with_v1_or_v2_holdout_forbidden": true,
-    "window_overlap_with_v3_confirmatory_window_forbidden": true
+    "window_overlap_with_v3_confirmatory_window_rule": "the v4 confirmatory window opens inside the open v3 confirmatory window in time; the two share no evaluated asset, because the v4 candidate set is disjoint from the v1, v2 and v3 candidate sets, and the v4 evaluation may start only after the v3 confirmatory gate clears (BRAIN-013 phase gates)",
+    "v4_candidate_set_disjoint_from_v1_v2_v3_candidate_sets": true
   },
   "code_hash_constraint": {
     "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
@@ -24,7 +28,7 @@
     "v4_execution_root": "src/v4_campaign",
     "v4_execution_namespace": "src/v4_campaign/"
   },
-  "created_utc": "2026-10-21T00:16:00Z",
+  "created_utc": "2026-10-21T01:02:00Z",
   "deviation_disclosure": {
     "evidence_path": null,
     "records_with_btc_filter": 0,
@@ -33,21 +37,22 @@
     "not_applicable": true
   },
   "evaluation_scope": {
-    "candidate_freeze_hash": "01110ad44ff59d67dad9fe953739b5025f698fdfe0f8b98aa551bb17384c60a4",
+    "candidate_freeze_hash": "9f0511189b6f742b6e6682ccf3c5607d68db8fce8d595c389ce6329f5357fb15",
     "candidate_freeze_path": "configs/research_v4_candidate_freeze.json",
     "constituents": [
-      "AAVEUSDT",
-      "ICPUSDT",
-      "PEPEUSDT",
-      "QNTUSDT",
-      "SHIBUSDT",
-      "WLDUSDT"
+      "ALGOUSDT",
+      "ARBUSDT",
+      "ETCUSDT",
+      "FILUSDT",
+      "INJUSDT",
+      "JSTUSDT",
+      "NEXOUSDT"
     ],
-    "count": 6,
-    "data_manifest_hash": "4f33b928f2e7b14253fbd1412813e5e0d9ac5de89694d018ae9acda6579fe232",
+    "count": 7,
+    "data_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
     "data_manifest_path": "research/data_manifest_v4.json",
     "excluded_assets_stay_excluded": true,
-    "universe_manifest_hash": "5e670ba0e7226d2ff54b8d57cc25b727efca247609003daa51173380b379793f",
+    "universe_manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
     "universe_manifest_path": "research/universe_manifest_v4.json",
     "widening_by_reranking_forbidden": true
   },
@@ -84,5 +89,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 and v3 artifacts."
   },
-  "manifest_hash": "e03b10f7dbe265c898677db144e24ffc98418e9026883c3918cd9a9fd469fb47"
+  "manifest_hash": "57fce7c794dd74b0b77f971af6669734e062e271a3199f7668065eac71dbb9ac"
 }

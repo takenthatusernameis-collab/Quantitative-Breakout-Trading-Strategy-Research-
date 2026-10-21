@@ -1,0 +1,4232 @@
+{
+  "amendment_hash": "2d95673e9dd589441623b60e504c1600bd62835ed2ff4ce5bf10a33c7ba7ef9b",
+  "amendment_id": "research_v4_exclusion_amendment_2",
+  "amendment_status": "PUBLISHED_CORRECTION_OF_AMENDMENT_1",
+  "amendment_timestamp_utc": "2026-10-21T00:55:13Z",
+  "amendment_version": 2,
+  "application_order": [
+    "1. the inherited fixed lists (v1 exclusion_rules), symbol by symbol",
+    "2. the v4 classifier groups, in the published group_order",
+    "3. the prior-universe identity rules (Binance symbol, CoinGecko id, rename marker in the name) against the v1, the v2 and the v3 universe",
+    "4. the prior-universe market-capitalization floor, recomputed from the v3 universe manifest",
+    "5. descending market capitalization, truncated to top_n"
+  ],
+  "applies_to": {
+    "specification_hash": "f0f1be0e8c6e71a81be0618bf12081a77fefa4061975c9103dcf3302152b8d84",
+    "specification_path": "configs/research_v4.json",
+    "universe_version": "v4"
+  },
+  "binding": {
+    "snapshot_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+    "snapshot_raw_response_path": "research/v4_evidence/raw_market_cap_response.json",
+    "snapshot_raw_response_sha256": "1057956c4f605f19636e13fc247b5644c5e3474db4ae50f4e3ddc423155099ca",
+    "snapshot_retrieval_timestamp_utc": "2026-10-20T23:50:06Z",
+    "specification_hash": "f0f1be0e8c6e71a81be0618bf12081a77fefa4061975c9103dcf3302152b8d84",
+    "v1_universe_manifest_sha256": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd",
+    "v2_universe_manifest_sha256": "68c973a0a07bd6808a18433a1cce5351d56f03800653d5c64f401d72c0769f42",
+    "v3_universe_manifest_sha256": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63"
+  },
+  "classifier": {
+    "classifier_version": "v4-exclusion-classifier-1",
+    "group_order": [
+      "stablecoins",
+      "wrapped_bridged",
+      "leveraged_synthetic",
+      "synthetic_tokens",
+      "derivative_tokens"
+    ],
+    "groups": {
+      "derivative_tokens": {
+        "exclusion_reason": "derivative_token_excluded",
+        "rationale": "A token that is a derivative of another instrument inherits that instrument's price path and is not an independent asset.",
+        "spec_category": "derivative_tokens",
+        "symbol_exact": [],
+        "text_markers": [
+          "xstock",
+          "tokenized derivative"
+        ]
+      },
+      "leveraged_synthetic": {
+        "exclusion_reason": "leveraged_or_synthetic_excluded",
+        "rationale": "Leveraged and hedged tokens carry a path-dependent payoff and a decaying premium, so their candles are not a breakout asset.",
+        "spec_category": "leveraged_tokens",
+        "symbol_exact": [],
+        "text_markers": [
+          "leveraged",
+          "2x",
+          "3x",
+          "5x",
+          "hedge"
+        ]
+      },
+      "stablecoins": {
+        "exclusion_reason": "stablecoin_excluded",
+        "rationale": "Fiat-pegged stablecoins, cash-management and money-market funds, short-duration treasury funds, tokenized gold and every other instrument that a marker names. A stablecoin has no breakout structure, so admitting one would dilute the batch with assets that cannot produce the event the study measures.",
+        "spec_category": "stablecoins",
+        "symbol_exact": [],
+        "text_markers": [
+          "usd",
+          "usds",
+          "usde",
+          "usd1",
+          "usyc",
+          "usdf",
+          "usdd",
+          "usdy",
+          "usdg",
+          "usdgo",
+          "dollar",
+          "euro",
+          "eur",
+          "jpy",
+          "gbp",
+          "sterling",
+          "yen",
+          "chf",
+          "stable",
+          "gold",
+          "fund",
+          "money market",
+          "t-bill",
+          "treasury",
+          "government securities",
+          "yield",
+          "clo fund",
+          "sofusd",
+          "reusd"
+        ]
+      },
+      "synthetic_tokens": {
+        "exclusion_reason": "synthetic_token_excluded",
+        "rationale": "Tokenized claims on a real-world equity are synthetic instruments: they track an equity market, not a crypto market, and their candles contain no crypto breakout.",
+        "spec_category": "synthetic_tokens",
+        "symbol_exact": [],
+        "text_markers": [
+          "tokenized stock",
+          "bstock",
+          "tokenized equity"
+        ]
+      },
+      "wrapped_bridged": {
+        "exclusion_reason": "wrapped_or_bridged_excluded",
+        "rationale": "Wrapped, bridged and staked representations of another asset are not independent assets: their price tracks the underlying and their history duplicates it.",
+        "spec_category": "wrapped_tokens,bridged_tokens",
+        "symbol_exact": [],
+        "text_markers": [
+          "wrapped",
+          "bridged",
+          "staked"
+        ]
+      }
+    },
+    "match_semantics": {
+      "application_scope": "the classifier is applied to every entry of the frozen snapshot, not only to the entries that reach the batch, so the derived exclusion set is complete and the same rule applies to every asset",
+      "group_precedence": "the inherited fixed lists are evaluated first, then the classifier groups in the published group_order; the first group that matches an entry is the recorded exclusion group",
+      "symbol_exact": "case-insensitive exact equality with the upper-cased snapshot entry's 'symbol' field",
+      "text_marker": "case-insensitive substring of the lower-cased concatenation of the snapshot entry's 'name' and 'id' fields"
+    }
+  },
+  "corrections_to_amendment_1": [
+    {
+      "amendment_1_text": "the floor is the minimum market_cap_usd over the eligible_assets of research/universe_manifest_v2.json",
+      "amendment_path": "configs/research_v4_exclusion_amendment_1.json",
+      "block": "floor",
+      "correction": "The floor block above is the operative one: it is the v3 floor.",
+      "problem": "The v4 specification names the v3 universe manifest as the floor source, so the v2 floor admitted the whole v3 batch a second time."
+    },
+    {
+      "amendment_1_text": "An asset is already in a prior universe when it occurs in the eligible assets of the v1 or the v2 universe manifest.",
+      "amendment_path": "configs/research_v4_exclusion_amendment_1.json",
+      "block": "prior_universe",
+      "correction": "The prior_universe block above is the operative one: the identity rule covers the v1, the v2 and the v3 universe.",
+      "problem": "The v4 specification names the v1, the v2 and the v3 universe manifests, so the v3 batch was admitted again."
+    },
+    {
+      "amendment_1_text": "the v3 specification hash and the v3 market-cap snapshot hash and retrieval timestamp",
+      "amendment_path": "configs/research_v4_exclusion_amendment_1.json",
+      "block": "binding and related_artifacts",
+      "correction": "The binding block below names the v4 specification and the v4 snapshot.",
+      "problem": "The bindings named artifacts of another version, so the amendment was not bound to the v4 specification or to the v4 snapshot it governs."
+    },
+    {
+      "amendment_1_text": "scripts/build_research_v4_exclusion_amendment.py, scripts/v4_exclusion_classifier.py, scripts/verify_research_v4_manifests.py",
+      "amendment_path": "configs/research_v4_exclusion_amendment_1.json",
+      "block": "producer",
+      "correction": "The producer block below names the scripts that exist: this script, the shared classifier module and the v4 manifests verifier.",
+      "problem": "None of the three paths exists in the tree."
+    }
+  ],
+  "decision": {
+    "rule": "The floor is recomputed from the universe manifest the specification names (research/universe_manifest_v3.json) and the prior-universe identity rule covers the eligible assets of the v1, the v2 and the v3 universe manifest. The classifier and the inherited fixed lists of amendment 1 are applied unchanged.",
+    "what_is_deliberately_not_changed": [
+      "the inherited fixed lists are applied unchanged",
+      "the classifier markers are applied unchanged",
+      "the derived classification of the frozen snapshot is unchanged",
+      "no v1, v2 or v3 artifact is modified",
+      "the market-cap snapshot is not re-retrieved and its retrieval timestamp is not re-timed"
+    ]
+  },
+  "derived_candidate_batch": {
+    "count": 20,
+    "derivation": "re-derived by scripts/build_research_v4_exclusion_amendment_2.py from the frozen snapshot and the rules above; the validation producer re-derives it again and refuses to write the manifests when the two disagree",
+    "members": [
+      {
+        "binance_pair": "BGBUSDT",
+        "coingecko_id": "bitget-token",
+        "market_cap_rank": 66,
+        "market_cap_usd": 1334509447,
+        "name": "Bitget Token",
+        "rank": 1,
+        "symbol": "BGB"
+      },
+      {
+        "binance_pair": "ARBUSDT",
+        "coingecko_id": "arbitrum",
+        "market_cap_rank": 69,
+        "market_cap_usd": 1288592154,
+        "name": "Arbitrum",
+        "rank": 2,
+        "symbol": "ARB"
+      },
+      {
+        "binance_pair": "ETCUSDT",
+        "coingecko_id": "ethereum-classic",
+        "market_cap_rank": 70,
+        "market_cap_usd": 1259927757,
+        "name": "Ethereum Classic",
+        "rank": 3,
+        "symbol": "ETC"
+      },
+      {
+        "binance_pair": "VVVUSDT",
+        "coingecko_id": "venice-token",
+        "market_cap_rank": 71,
+        "market_cap_usd": 1238059557,
+        "name": "Venice Token",
+        "rank": 4,
+        "symbol": "VVV"
+      },
+      {
+        "binance_pair": "JSTUSDT",
+        "coingecko_id": "just",
+        "market_cap_rank": 72,
+        "market_cap_usd": 1122394021,
+        "name": "JUST",
+        "rank": 5,
+        "symbol": "JST"
+      },
+      {
+        "binance_pair": "GTUSDT",
+        "coingecko_id": "gatechain-token",
+        "market_cap_rank": 73,
+        "market_cap_usd": 1065879584,
+        "name": "Gate",
+        "rank": 6,
+        "symbol": "GT"
+      },
+      {
+        "binance_pair": "JUPUSDT",
+        "coingecko_id": "jupiter-exchange-solana",
+        "market_cap_rank": 74,
+        "market_cap_usd": 1043151466,
+        "name": "Jupiter",
+        "rank": 7,
+        "symbol": "JUP"
+      },
+      {
+        "binance_pair": "KASUSDT",
+        "coingecko_id": "kaspa",
+        "market_cap_rank": 75,
+        "market_cap_usd": 1039601135,
+        "name": "Kaspa",
+        "rank": 8,
+        "symbol": "KAS"
+      },
+      {
+        "binance_pair": "KCSUSDT",
+        "coingecko_id": "kucoin-shares",
+        "market_cap_rank": 77,
+        "market_cap_usd": 1029212979,
+        "name": "KuCoin",
+        "rank": 9,
+        "symbol": "KCS"
+      },
+      {
+        "binance_pair": "ALGOUSDT",
+        "coingecko_id": "algorand",
+        "market_cap_rank": 76,
+        "market_cap_usd": 1029063174,
+        "name": "Algorand",
+        "rank": 10,
+        "symbol": "ALGO"
+      },
+      {
+        "binance_pair": "RENDERUSDT",
+        "coingecko_id": "render-token",
+        "market_cap_rank": 79,
+        "market_cap_usd": 961714490,
+        "name": "Render",
+        "rank": 11,
+        "symbol": "RENDER"
+      },
+      {
+        "binance_pair": "INJUSDT",
+        "coingecko_id": "injective-protocol",
+        "market_cap_rank": 81,
+        "market_cap_usd": 892115300,
+        "name": "Injective",
+        "rank": 12,
+        "symbol": "INJ"
+      },
+      {
+        "binance_pair": "PIUSDT",
+        "coingecko_id": "pi-network",
+        "market_cap_rank": 82,
+        "market_cap_usd": 889396883,
+        "name": "Pi Network",
+        "rank": 13,
+        "symbol": "PI"
+      },
+      {
+        "binance_pair": "AEROUSDT",
+        "coingecko_id": "aerodrome-finance",
+        "market_cap_rank": 83,
+        "market_cap_usd": 868266543,
+        "name": "Aerodrome Finance",
+        "rank": 14,
+        "symbol": "AERO"
+      },
+      {
+        "binance_pair": "FILUSDT",
+        "coingecko_id": "filecoin",
+        "market_cap_rank": 84,
+        "market_cap_usd": 861322238,
+        "name": "Filecoin",
+        "rank": 15,
+        "symbol": "FIL"
+      },
+      {
+        "binance_pair": "LITUSDT",
+        "coingecko_id": "lighter",
+        "market_cap_rank": 85,
+        "market_cap_usd": 847642225,
+        "name": "Lighter",
+        "rank": 16,
+        "symbol": "LIT"
+      },
+      {
+        "binance_pair": "NEXOUSDT",
+        "coingecko_id": "nexo",
+        "market_cap_rank": 87,
+        "market_cap_usd": 814674470,
+        "name": "NEXO",
+        "rank": 17,
+        "symbol": "NEXO"
+      },
+      {
+        "binance_pair": "ZROUSDT",
+        "coingecko_id": "layerzero",
+        "market_cap_rank": 88,
+        "market_cap_usd": 805342471,
+        "name": "LayerZero",
+        "rank": 18,
+        "symbol": "ZRO"
+      },
+      {
+        "binance_pair": "PEARLUSDT",
+        "coingecko_id": "pearl-2",
+        "market_cap_rank": 90,
+        "market_cap_usd": 753727960,
+        "name": "Pearl",
+        "rank": 19,
+        "symbol": "PEARL"
+      },
+      {
+        "binance_pair": "AKEUSDT",
+        "coingecko_id": "akedo",
+        "market_cap_rank": 91,
+        "market_cap_usd": 739186726,
+        "name": "Akedo",
+        "rank": 20,
+        "symbol": "AKE"
+      }
+    ],
+    "rule": "the top_n assets of the frozen snapshot, in strictly descending market capitalization, that are strictly below the v3 floor, are not an asset of the v1, the v2 or the v3 universe and are not excluded by the inherited fixed lists or by the published classifier",
+    "top_n": 20
+  },
+  "derived_classification": {
+    "counts": {
+      "above_floor": 0,
+      "eligible": 150,
+      "excluded_as_prior_universe": 43,
+      "excluded_by_rule": 57
+    },
+    "counts_by_exclusion_group": {
+      "derivative_tokens": 2,
+      "exchange_tokens": 6,
+      "stablecoins": 47,
+      "synthetic_tokens": 2
+    },
+    "note": "The classification of every entry of the frozen v4 snapshot under the corrected rules: the inherited fixed lists and the published markers first, then the prior-universe identity rule against the v1, the v2 and the v3 universe, then the v3 market-capitalization floor, then the descending order truncated to top_n.",
+    "records": [
+      {
+        "coingecko_id": "bitcoin",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 1,
+        "market_cap_usd": 1667624154006,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Bitcoin",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 1,
+        "symbol": "BTC"
+      },
+      {
+        "coingecko_id": "ethereum",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 2,
+        "market_cap_usd": 299029204233,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Ethereum",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 2,
+        "symbol": "ETH"
+      },
+      {
+        "coingecko_id": "tether",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 3,
+        "market_cap_usd": 183040295640,
+        "matched_markers": [],
+        "name": "Tether",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 3,
+        "symbol": "USDT"
+      },
+      {
+        "coingecko_id": "binancecoin",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 4,
+        "market_cap_usd": 97421462312,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "BNB",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 4,
+        "symbol": "BNB"
+      },
+      {
+        "coingecko_id": "ripple",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 5,
+        "market_cap_usd": 84239945664,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "XRP",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 5,
+        "symbol": "XRP"
+      },
+      {
+        "coingecko_id": "usd-coin",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 6,
+        "market_cap_usd": 72155231158,
+        "matched_markers": [],
+        "name": "USDC",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 6,
+        "symbol": "USDC"
+      },
+      {
+        "coingecko_id": "solana",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 7,
+        "market_cap_usd": 62777512450,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Solana",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 7,
+        "symbol": "SOL"
+      },
+      {
+        "coingecko_id": "tron",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 8,
+        "market_cap_usd": 31450375483,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "TRON",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 8,
+        "symbol": "TRX"
+      },
+      {
+        "coingecko_id": "figure-heloc",
+        "excluded": true,
+        "exclusion_group": "exchange_tokens",
+        "exclusion_reason": "exchange_token_excluded",
+        "market_cap_rank": 9,
+        "market_cap_usd": 24702394518,
+        "matched_markers": [],
+        "name": "Figure Heloc",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 9,
+        "symbol": "FIGR_HELOC"
+      },
+      {
+        "coingecko_id": "zcash",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 10,
+        "market_cap_usd": 21447234707,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Zcash",
+        "prior_universe_versions": [
+          "v2"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 10,
+        "symbol": "ZEC"
+      },
+      {
+        "coingecko_id": "hyperliquid",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 11,
+        "market_cap_usd": 17878015399,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Hyperliquid",
+        "prior_universe_versions": [
+          "v2"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 11,
+        "symbol": "HYPE"
+      },
+      {
+        "coingecko_id": "dogecoin",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 12,
+        "market_cap_usd": 12788321933,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Dogecoin",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 12,
+        "symbol": "DOGE"
+      },
+      {
+        "coingecko_id": "monero",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 13,
+        "market_cap_usd": 11339585986,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Monero",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 13,
+        "symbol": "XMR"
+      },
+      {
+        "coingecko_id": "usds",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 14,
+        "market_cap_usd": 10025435718,
+        "matched_markers": [],
+        "name": "USDS",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 14,
+        "symbol": "USDS"
+      },
+      {
+        "coingecko_id": "whitebit",
+        "excluded": true,
+        "exclusion_group": "exchange_tokens",
+        "exclusion_reason": "exchange_token_excluded",
+        "market_cap_rank": 15,
+        "market_cap_usd": 9630064646,
+        "matched_markers": [],
+        "name": "WhiteBIT Coin",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 15,
+        "symbol": "WBT"
+      },
+      {
+        "coingecko_id": "chainlink",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 16,
+        "market_cap_usd": 9453360686,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Chainlink",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 16,
+        "symbol": "LINK"
+      },
+      {
+        "coingecko_id": "cardano",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 17,
+        "market_cap_usd": 8413041516,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Cardano",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 17,
+        "symbol": "ADA"
+      },
+      {
+        "coingecko_id": "leo-token",
+        "excluded": true,
+        "exclusion_group": "exchange_tokens",
+        "exclusion_reason": "exchange_token_excluded",
+        "market_cap_rank": 18,
+        "market_cap_usd": 8320309845,
+        "matched_markers": [],
+        "name": "LEO Token",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 18,
+        "symbol": "LEO"
+      },
+      {
+        "coingecko_id": "rain",
+        "excluded": true,
+        "exclusion_group": "exchange_tokens",
+        "exclusion_reason": "exchange_token_excluded",
+        "market_cap_rank": 19,
+        "market_cap_usd": 6770061926,
+        "matched_markers": [],
+        "name": "Rain",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 19,
+        "symbol": "RAIN"
+      },
+      {
+        "coingecko_id": "near",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 20,
+        "market_cap_usd": 6440853833,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "NEAR Protocol",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 20,
+        "symbol": "NEAR"
+      },
+      {
+        "coingecko_id": "stellar",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 21,
+        "market_cap_usd": 6405703734,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Stellar",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 21,
+        "symbol": "XLM"
+      },
+      {
+        "coingecko_id": "bitcoin-cash",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 22,
+        "market_cap_usd": 5691812329,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Bitcoin Cash",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 22,
+        "symbol": "BCH"
+      },
+      {
+        "coingecko_id": "litecoin",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 23,
+        "market_cap_usd": 4780346498,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Litecoin",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 23,
+        "symbol": "LTC"
+      },
+      {
+        "coingecko_id": "ethena-usde",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 24,
+        "market_cap_usd": 4668733185,
+        "matched_markers": [],
+        "name": "Ethena USDe",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 24,
+        "symbol": "USDE"
+      },
+      {
+        "coingecko_id": "uniswap",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 25,
+        "market_cap_usd": 4648446014,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Uniswap",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 25,
+        "symbol": "UNI"
+      },
+      {
+        "coingecko_id": "dai",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 26,
+        "market_cap_usd": 4525131987,
+        "matched_markers": [],
+        "name": "Dai",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 26,
+        "symbol": "DAI"
+      },
+      {
+        "coingecko_id": "avalanche-2",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 27,
+        "market_cap_usd": 4324110439,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Avalanche",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 27,
+        "symbol": "AVAX"
+      },
+      {
+        "coingecko_id": "sui",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 28,
+        "market_cap_usd": 4241115033,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Sui",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 28,
+        "symbol": "SUI"
+      },
+      {
+        "coingecko_id": "canton-network",
+        "excluded": true,
+        "exclusion_group": "exchange_tokens",
+        "exclusion_reason": "exchange_token_excluded",
+        "market_cap_rank": 29,
+        "market_cap_usd": 4174475040,
+        "matched_markers": [],
+        "name": "Canton",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 29,
+        "symbol": "CC"
+      },
+      {
+        "coingecko_id": "usd1-wlfi",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 30,
+        "market_cap_usd": 3995416686,
+        "matched_markers": [],
+        "name": "USD1",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 30,
+        "symbol": "USD1"
+      },
+      {
+        "coingecko_id": "the-open-network",
+        "excluded": true,
+        "exclusion_group": "exchange_tokens",
+        "exclusion_reason": "exchange_token_excluded",
+        "market_cap_rank": 31,
+        "market_cap_usd": 3817962896,
+        "matched_markers": [],
+        "name": "Gram (prev. Toncoin)",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 31,
+        "symbol": "GRAM"
+      },
+      {
+        "coingecko_id": "hedera-hashgraph",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 32,
+        "market_cap_usd": 3707336156,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Hedera",
+        "prior_universe_versions": [
+          "v2"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 32,
+        "symbol": "HBAR"
+      },
+      {
+        "coingecko_id": "tether-gold",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 33,
+        "market_cap_usd": 3328986640,
+        "matched_markers": [
+          "gold"
+        ],
+        "name": "Tether Gold",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 33,
+        "symbol": "XAUT"
+      },
+      {
+        "coingecko_id": "global-dollar",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 34,
+        "market_cap_usd": 3130464682,
+        "matched_markers": [
+          "dollar"
+        ],
+        "name": "Global Dollar",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 34,
+        "symbol": "USDG"
+      },
+      {
+        "coingecko_id": "bittensor",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 35,
+        "market_cap_usd": 3103519400,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Bittensor",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 35,
+        "symbol": "TAO"
+      },
+      {
+        "coingecko_id": "shiba-inu",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 36,
+        "market_cap_usd": 3024234557,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Shiba Inu",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 36,
+        "symbol": "SHIB"
+      },
+      {
+        "coingecko_id": "bitway",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 37,
+        "market_cap_usd": 3000228879,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Bitway",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 37,
+        "symbol": "BTW"
+      },
+      {
+        "coingecko_id": "crypto-com-chain",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 38,
+        "market_cap_usd": 2923142984,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Cronos",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 38,
+        "symbol": "CRO"
+      },
+      {
+        "coingecko_id": "paypal-usd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 39,
+        "market_cap_usd": 2888684634,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "PayPal USD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 39,
+        "symbol": "PYUSD"
+      },
+      {
+        "coingecko_id": "quant-network",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 40,
+        "market_cap_usd": 2830890218,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Quant",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 40,
+        "symbol": "QNT"
+      },
+      {
+        "coingecko_id": "ethena",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 41,
+        "market_cap_usd": 2633665401,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Ethena",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 41,
+        "symbol": "ENA"
+      },
+      {
+        "coingecko_id": "okb",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 42,
+        "market_cap_usd": 2423254382,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "OKB",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 42,
+        "symbol": "OKB"
+      },
+      {
+        "coingecko_id": "ripple-usd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 43,
+        "market_cap_usd": 2404898685,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "Ripple USD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 43,
+        "symbol": "RLUSD"
+      },
+      {
+        "coingecko_id": "hashnote-usyc",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 44,
+        "market_cap_usd": 2387789172,
+        "matched_markers": [
+          "usyc"
+        ],
+        "name": "Circle USYC",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 44,
+        "symbol": "USYC"
+      },
+      {
+        "coingecko_id": "aave",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 45,
+        "market_cap_usd": 2385431031,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Aave",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 45,
+        "symbol": "AAVE"
+      },
+      {
+        "coingecko_id": "ondo-us-dollar-yield",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 46,
+        "market_cap_usd": 2356341752,
+        "matched_markers": [
+          "dollar",
+          "yield"
+        ],
+        "name": "Ondo US Dollar Yield",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 46,
+        "symbol": "USDY"
+      },
+      {
+        "coingecko_id": "worldcoin-wld",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 47,
+        "market_cap_usd": 2245074744,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Worldcoin",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 47,
+        "symbol": "WLD"
+      },
+      {
+        "coingecko_id": "pump-fun",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 48,
+        "market_cap_usd": 2228146431,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Pump.fun",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 48,
+        "symbol": "PUMP"
+      },
+      {
+        "coingecko_id": "ondo-finance",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 49,
+        "market_cap_usd": 2211942882,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Ondo",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 49,
+        "symbol": "ONDO"
+      },
+      {
+        "coingecko_id": "blackrock-usd-institutional-digital-liquidity-fund",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 50,
+        "market_cap_usd": 2203363384,
+        "matched_markers": [
+          "fund",
+          "usd"
+        ],
+        "name": "BlackRock USD Institutional Digital Liquidity Fund",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 50,
+        "symbol": "BUIDL"
+      },
+      {
+        "coingecko_id": "polkadot",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 51,
+        "market_cap_usd": 1964646260,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Polkadot",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 51,
+        "symbol": "DOT"
+      },
+      {
+        "coingecko_id": "aster-2",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 52,
+        "market_cap_usd": 1945648192,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Aster",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 52,
+        "symbol": "ASTER"
+      },
+      {
+        "coingecko_id": "pepe",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 53,
+        "market_cap_usd": 1922654507,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Pepe",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 53,
+        "symbol": "PEPE"
+      },
+      {
+        "coingecko_id": "falcon-finance",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 54,
+        "market_cap_usd": 1881926607,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "Falcon USD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 54,
+        "symbol": "USDF"
+      },
+      {
+        "coingecko_id": "pax-gold",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 55,
+        "market_cap_usd": 1820431667,
+        "matched_markers": [
+          "gold"
+        ],
+        "name": "PAX Gold",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 55,
+        "symbol": "PAXG"
+      },
+      {
+        "coingecko_id": "sky",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 56,
+        "market_cap_usd": 1780973038,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Sky",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 56,
+        "symbol": "SKY"
+      },
+      {
+        "coingecko_id": "memecore",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 57,
+        "market_cap_usd": 1771536422,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "MemeCore",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 57,
+        "symbol": "M"
+      },
+      {
+        "coingecko_id": "usdd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 58,
+        "market_cap_usd": 1767711708,
+        "matched_markers": [
+          "usd",
+          "usdd"
+        ],
+        "name": "USDD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 58,
+        "symbol": "USDD"
+      },
+      {
+        "coingecko_id": "mantle",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 59,
+        "market_cap_usd": 1766774512,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Mantle",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 59,
+        "symbol": "MNT"
+      },
+      {
+        "coingecko_id": "world-liberty-financial",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 60,
+        "market_cap_usd": 1766193710,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "World Liberty Financial",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 60,
+        "symbol": "WLFI"
+      },
+      {
+        "coingecko_id": "spiko-amundi-overnight-swap-fund-eur",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 61,
+        "market_cap_usd": 1719888600,
+        "matched_markers": [
+          "eur",
+          "fund"
+        ],
+        "name": "Spiko Amundi Overnight Swap Fund (EUR)",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 61,
+        "symbol": "EURSAFO"
+      },
+      {
+        "coingecko_id": "morpho",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 62,
+        "market_cap_usd": 1689265063,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Morpho",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 62,
+        "symbol": "MORPHO"
+      },
+      {
+        "coingecko_id": "internet-computer",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 63,
+        "market_cap_usd": 1624255665,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Internet Computer",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 63,
+        "symbol": "ICP"
+      },
+      {
+        "coingecko_id": "united-stables",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 64,
+        "market_cap_usd": 1586429963,
+        "matched_markers": [
+          "stable"
+        ],
+        "name": "United Stables",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 64,
+        "symbol": "U"
+      },
+      {
+        "coingecko_id": "htx-dao",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 65,
+        "market_cap_usd": 1469710991,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "HTX DAO",
+        "prior_universe_versions": [
+          "v3"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 65,
+        "symbol": "HTX"
+      },
+      {
+        "batch_rank": 1,
+        "binance_pair": "BGBUSDT",
+        "coingecko_id": "bitget-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 66,
+        "market_cap_usd": 1334509447,
+        "matched_markers": [],
+        "name": "Bitget Token",
+        "rank": 1,
+        "rule_source": null,
+        "snapshot_position": 66,
+        "symbol": "BGB"
+      },
+      {
+        "coingecko_id": "bfusd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 67,
+        "market_cap_usd": 1318626644,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "BFUSD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 67,
+        "symbol": "BFUSD"
+      },
+      {
+        "coingecko_id": "usdgo",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 68,
+        "market_cap_usd": 1290708034,
+        "matched_markers": [
+          "usd",
+          "usdg",
+          "usdgo"
+        ],
+        "name": "USDGO",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 68,
+        "symbol": "USDGO"
+      },
+      {
+        "batch_rank": 2,
+        "binance_pair": "ARBUSDT",
+        "coingecko_id": "arbitrum",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 69,
+        "market_cap_usd": 1288592154,
+        "matched_markers": [],
+        "name": "Arbitrum",
+        "rank": 2,
+        "rule_source": null,
+        "snapshot_position": 69,
+        "symbol": "ARB"
+      },
+      {
+        "batch_rank": 3,
+        "binance_pair": "ETCUSDT",
+        "coingecko_id": "ethereum-classic",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 70,
+        "market_cap_usd": 1259927757,
+        "matched_markers": [],
+        "name": "Ethereum Classic",
+        "rank": 3,
+        "rule_source": null,
+        "snapshot_position": 70,
+        "symbol": "ETC"
+      },
+      {
+        "batch_rank": 4,
+        "binance_pair": "VVVUSDT",
+        "coingecko_id": "venice-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 71,
+        "market_cap_usd": 1238059557,
+        "matched_markers": [],
+        "name": "Venice Token",
+        "rank": 4,
+        "rule_source": null,
+        "snapshot_position": 71,
+        "symbol": "VVV"
+      },
+      {
+        "batch_rank": 5,
+        "binance_pair": "JSTUSDT",
+        "coingecko_id": "just",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 72,
+        "market_cap_usd": 1122394021,
+        "matched_markers": [],
+        "name": "JUST",
+        "rank": 5,
+        "rule_source": null,
+        "snapshot_position": 72,
+        "symbol": "JST"
+      },
+      {
+        "batch_rank": 6,
+        "binance_pair": "GTUSDT",
+        "coingecko_id": "gatechain-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 73,
+        "market_cap_usd": 1065879584,
+        "matched_markers": [],
+        "name": "Gate",
+        "rank": 6,
+        "rule_source": null,
+        "snapshot_position": 73,
+        "symbol": "GT"
+      },
+      {
+        "batch_rank": 7,
+        "binance_pair": "JUPUSDT",
+        "coingecko_id": "jupiter-exchange-solana",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 74,
+        "market_cap_usd": 1043151466,
+        "matched_markers": [],
+        "name": "Jupiter",
+        "rank": 7,
+        "rule_source": null,
+        "snapshot_position": 74,
+        "symbol": "JUP"
+      },
+      {
+        "batch_rank": 8,
+        "binance_pair": "KASUSDT",
+        "coingecko_id": "kaspa",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 75,
+        "market_cap_usd": 1039601135,
+        "matched_markers": [],
+        "name": "Kaspa",
+        "rank": 8,
+        "rule_source": null,
+        "snapshot_position": 75,
+        "symbol": "KAS"
+      },
+      {
+        "batch_rank": 9,
+        "binance_pair": "KCSUSDT",
+        "coingecko_id": "kucoin-shares",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 77,
+        "market_cap_usd": 1029212979,
+        "matched_markers": [],
+        "name": "KuCoin",
+        "rank": 9,
+        "rule_source": null,
+        "snapshot_position": 76,
+        "symbol": "KCS"
+      },
+      {
+        "batch_rank": 10,
+        "binance_pair": "ALGOUSDT",
+        "coingecko_id": "algorand",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 76,
+        "market_cap_usd": 1029063174,
+        "matched_markers": [],
+        "name": "Algorand",
+        "rank": 10,
+        "rule_source": null,
+        "snapshot_position": 77,
+        "symbol": "ALGO"
+      },
+      {
+        "coingecko_id": "polygon-ecosystem-token",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 78,
+        "market_cap_usd": 1007451436,
+        "matched_markers": [
+          "coingecko_name_rename:ex-MATIC"
+        ],
+        "name": "POL (ex-MATIC)",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 78,
+        "symbol": "POL"
+      },
+      {
+        "batch_rank": 11,
+        "binance_pair": "RENDERUSDT",
+        "coingecko_id": "render-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 79,
+        "market_cap_usd": 961714490,
+        "matched_markers": [],
+        "name": "Render",
+        "rank": 11,
+        "rule_source": null,
+        "snapshot_position": 79,
+        "symbol": "RENDER"
+      },
+      {
+        "coingecko_id": "cosmos",
+        "excluded": true,
+        "exclusion_group": "prior_universe",
+        "exclusion_reason": "already_in_prior_universe",
+        "market_cap_rank": 80,
+        "market_cap_usd": 939793879,
+        "matched_markers": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "name": "Cosmos Hub",
+        "prior_universe_versions": [
+          "v1"
+        ],
+        "rule_source": "specification_expansion_scope",
+        "snapshot_position": 80,
+        "symbol": "ATOM"
+      },
+      {
+        "batch_rank": 12,
+        "binance_pair": "INJUSDT",
+        "coingecko_id": "injective-protocol",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 81,
+        "market_cap_usd": 892115300,
+        "matched_markers": [],
+        "name": "Injective",
+        "rank": 12,
+        "rule_source": null,
+        "snapshot_position": 81,
+        "symbol": "INJ"
+      },
+      {
+        "batch_rank": 13,
+        "binance_pair": "PIUSDT",
+        "coingecko_id": "pi-network",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 82,
+        "market_cap_usd": 889396883,
+        "matched_markers": [],
+        "name": "Pi Network",
+        "rank": 13,
+        "rule_source": null,
+        "snapshot_position": 82,
+        "symbol": "PI"
+      },
+      {
+        "batch_rank": 14,
+        "binance_pair": "AEROUSDT",
+        "coingecko_id": "aerodrome-finance",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 83,
+        "market_cap_usd": 868266543,
+        "matched_markers": [],
+        "name": "Aerodrome Finance",
+        "rank": 14,
+        "rule_source": null,
+        "snapshot_position": 83,
+        "symbol": "AERO"
+      },
+      {
+        "batch_rank": 15,
+        "binance_pair": "FILUSDT",
+        "coingecko_id": "filecoin",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 84,
+        "market_cap_usd": 861322238,
+        "matched_markers": [],
+        "name": "Filecoin",
+        "rank": 15,
+        "rule_source": null,
+        "snapshot_position": 84,
+        "symbol": "FIL"
+      },
+      {
+        "batch_rank": 16,
+        "binance_pair": "LITUSDT",
+        "coingecko_id": "lighter",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 85,
+        "market_cap_usd": 847642225,
+        "matched_markers": [],
+        "name": "Lighter",
+        "rank": 16,
+        "rule_source": null,
+        "snapshot_position": 85,
+        "symbol": "LIT"
+      },
+      {
+        "coingecko_id": "open-usd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 86,
+        "market_cap_usd": 829506685,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "Open USD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 86,
+        "symbol": "OUSD"
+      },
+      {
+        "batch_rank": 17,
+        "binance_pair": "NEXOUSDT",
+        "coingecko_id": "nexo",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 87,
+        "market_cap_usd": 814674470,
+        "matched_markers": [],
+        "name": "NEXO",
+        "rank": 17,
+        "rule_source": null,
+        "snapshot_position": 87,
+        "symbol": "NEXO"
+      },
+      {
+        "batch_rank": 18,
+        "binance_pair": "ZROUSDT",
+        "coingecko_id": "layerzero",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 88,
+        "market_cap_usd": 805342471,
+        "matched_markers": [],
+        "name": "LayerZero",
+        "rank": 18,
+        "rule_source": null,
+        "snapshot_position": 88,
+        "symbol": "ZRO"
+      },
+      {
+        "coingecko_id": "superstate-short-duration-us-government-securities-fund-ustb",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 89,
+        "market_cap_usd": 780496410,
+        "matched_markers": [
+          "fund",
+          "government securities"
+        ],
+        "name": "Invesco Short Duration US Government Securities Fund",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 89,
+        "symbol": "USTB"
+      },
+      {
+        "batch_rank": 19,
+        "binance_pair": "PEARLUSDT",
+        "coingecko_id": "pearl-2",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 90,
+        "market_cap_usd": 753727960,
+        "matched_markers": [],
+        "name": "Pearl",
+        "rank": 19,
+        "rule_source": null,
+        "snapshot_position": 90,
+        "symbol": "PEARL"
+      },
+      {
+        "batch_rank": 20,
+        "binance_pair": "AKEUSDT",
+        "coingecko_id": "akedo",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 91,
+        "market_cap_usd": 739186726,
+        "matched_markers": [],
+        "name": "Akedo",
+        "rank": 20,
+        "rule_source": null,
+        "snapshot_position": 91,
+        "symbol": "AKE"
+      },
+      {
+        "coingecko_id": "aptos",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 92,
+        "market_cap_usd": 728823592,
+        "matched_markers": [],
+        "name": "Aptos",
+        "rule_source": null,
+        "snapshot_position": 92,
+        "symbol": "APT"
+      },
+      {
+        "coingecko_id": "pancakeswap-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 93,
+        "market_cap_usd": 705666984,
+        "matched_markers": [],
+        "name": "PancakeSwap",
+        "rule_source": null,
+        "snapshot_position": 93,
+        "symbol": "CAKE"
+      },
+      {
+        "coingecko_id": "gho",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 94,
+        "market_cap_usd": 697856112,
+        "matched_markers": [],
+        "name": "GHO",
+        "rule_source": null,
+        "snapshot_position": 94,
+        "symbol": "GHO"
+      },
+      {
+        "coingecko_id": "ether-fi",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 95,
+        "market_cap_usd": 689072880,
+        "matched_markers": [],
+        "name": "Ether.fi",
+        "rule_source": null,
+        "snapshot_position": 95,
+        "symbol": "ETHFI"
+      },
+      {
+        "coingecko_id": "blockstack",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 96,
+        "market_cap_usd": 667926213,
+        "matched_markers": [],
+        "name": "Stacks",
+        "rule_source": null,
+        "snapshot_position": 96,
+        "symbol": "STX"
+      },
+      {
+        "coingecko_id": "midnight-3",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 97,
+        "market_cap_usd": 658110912,
+        "matched_markers": [],
+        "name": "Midnight",
+        "rule_source": null,
+        "snapshot_position": 97,
+        "symbol": "NIGHT"
+      },
+      {
+        "coingecko_id": "dash",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 98,
+        "market_cap_usd": 649009074,
+        "matched_markers": [],
+        "name": "Dash",
+        "rule_source": null,
+        "snapshot_position": 98,
+        "symbol": "DASH"
+      },
+      {
+        "coingecko_id": "xdce-crowd-sale",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 99,
+        "market_cap_usd": 643540497,
+        "matched_markers": [],
+        "name": "XDC Network",
+        "rule_source": null,
+        "snapshot_position": 99,
+        "symbol": "XDC"
+      },
+      {
+        "coingecko_id": "pyth-network",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 100,
+        "market_cap_usd": 628386176,
+        "matched_markers": [],
+        "name": "Pyth Network",
+        "rule_source": null,
+        "snapshot_position": 100,
+        "symbol": "PYTH"
+      },
+      {
+        "coingecko_id": "curve-dao-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 101,
+        "market_cap_usd": 618046189,
+        "matched_markers": [],
+        "name": "Curve DAO",
+        "rule_source": null,
+        "snapshot_position": 101,
+        "symbol": "CRV"
+      },
+      {
+        "coingecko_id": "vechain",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 102,
+        "market_cap_usd": 616944772,
+        "matched_markers": [],
+        "name": "VeChain",
+        "rule_source": null,
+        "snapshot_position": 102,
+        "symbol": "VET"
+      },
+      {
+        "coingecko_id": "celestia",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 103,
+        "market_cap_usd": 610489512,
+        "matched_markers": [],
+        "name": "Celestia",
+        "rule_source": null,
+        "snapshot_position": 103,
+        "symbol": "TIA"
+      },
+      {
+        "coingecko_id": "janus-henderson-anemoy-aaa-clo-fund",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 104,
+        "market_cap_usd": 580712767,
+        "matched_markers": [
+          "clo fund",
+          "fund"
+        ],
+        "name": "Janus Henderson Anemoy AAA CLO Fund",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 104,
+        "symbol": "JAAA"
+      },
+      {
+        "coingecko_id": "beldex",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 106,
+        "market_cap_usd": 579055176,
+        "matched_markers": [],
+        "name": "Beldex",
+        "rule_source": null,
+        "snapshot_position": 105,
+        "symbol": "BDX"
+      },
+      {
+        "coingecko_id": "quack-ai",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 105,
+        "market_cap_usd": 578998265,
+        "matched_markers": [],
+        "name": "Quack AI",
+        "rule_source": null,
+        "snapshot_position": 106,
+        "symbol": "Q"
+      },
+      {
+        "coingecko_id": "flare-networks",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 107,
+        "market_cap_usd": 561606542,
+        "matched_markers": [],
+        "name": "Flare",
+        "rule_source": null,
+        "snapshot_position": 107,
+        "symbol": "FLR"
+      },
+      {
+        "coingecko_id": "raydium",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 108,
+        "market_cap_usd": 542432248,
+        "matched_markers": [],
+        "name": "Raydium",
+        "rule_source": null,
+        "snapshot_position": 108,
+        "symbol": "RAY"
+      },
+      {
+        "coingecko_id": "usual-usd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 109,
+        "market_cap_usd": 541358199,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "Usual USD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 109,
+        "symbol": "USD0"
+      },
+      {
+        "coingecko_id": "kinesis-gold",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 110,
+        "market_cap_usd": 527683931,
+        "matched_markers": [
+          "gold"
+        ],
+        "name": "Kinesis Gold",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 110,
+        "symbol": "KAU"
+      },
+      {
+        "coingecko_id": "eutbl",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 111,
+        "market_cap_usd": 524195316,
+        "matched_markers": [
+          "fund",
+          "money market",
+          "t-bill"
+        ],
+        "name": "Spiko EU T-Bills Money Market Fund",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 111,
+        "symbol": "EUTBL"
+      },
+      {
+        "coingecko_id": "ylds",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 112,
+        "market_cap_usd": 506757313,
+        "matched_markers": [],
+        "name": "YLDS",
+        "rule_source": null,
+        "snapshot_position": 112,
+        "symbol": "YLDS"
+      },
+      {
+        "coingecko_id": "euro-coin",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 113,
+        "market_cap_usd": 503080951,
+        "matched_markers": [],
+        "name": "EURC",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 113,
+        "symbol": "EURC"
+      },
+      {
+        "coingecko_id": "official-trump",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 114,
+        "market_cap_usd": 502283008,
+        "matched_markers": [],
+        "name": "Official Trump",
+        "rule_source": null,
+        "snapshot_position": 114,
+        "symbol": "TRUMP"
+      },
+      {
+        "coingecko_id": "pudgy-penguins",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 115,
+        "market_cap_usd": 501439307,
+        "matched_markers": [],
+        "name": "Pudgy Penguins",
+        "rule_source": null,
+        "snapshot_position": 115,
+        "symbol": "PENGU"
+      },
+      {
+        "coingecko_id": "bianrensheng",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 116,
+        "market_cap_usd": 497960186,
+        "matched_markers": [],
+        "name": "\u5e01\u5b89\u4eba\u751f (BinanceLife)",
+        "rule_source": null,
+        "snapshot_position": 116,
+        "symbol": "\u5e01\u5b89\u4eba\u751f"
+      },
+      {
+        "coingecko_id": "true-usd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 117,
+        "market_cap_usd": 493933927,
+        "matched_markers": [],
+        "name": "TrueUSD",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 117,
+        "symbol": "TUSD"
+      },
+      {
+        "coingecko_id": "stable-2",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 118,
+        "market_cap_usd": 473762424,
+        "matched_markers": [
+          "stable"
+        ],
+        "name": "\u200b\u200bStable",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 118,
+        "symbol": "STABLE"
+      },
+      {
+        "coingecko_id": "a7a5",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 119,
+        "market_cap_usd": 459489326,
+        "matched_markers": [],
+        "name": "A7A5",
+        "rule_source": null,
+        "snapshot_position": 119,
+        "symbol": "A7A5"
+      },
+      {
+        "coingecko_id": "fetch-ai",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 120,
+        "market_cap_usd": 454427711,
+        "matched_markers": [],
+        "name": "Artificial Superintelligence Alliance",
+        "rule_source": null,
+        "snapshot_position": 120,
+        "symbol": "FET"
+      },
+      {
+        "coingecko_id": "virtual-protocol",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 121,
+        "market_cap_usd": 447430004,
+        "matched_markers": [],
+        "name": "Virtuals Protocol",
+        "rule_source": null,
+        "snapshot_position": 121,
+        "symbol": "VIRTUAL"
+      },
+      {
+        "coingecko_id": "hash-2",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 122,
+        "market_cap_usd": 443666289,
+        "matched_markers": [],
+        "name": "Provenance Blockchain",
+        "rule_source": null,
+        "snapshot_position": 122,
+        "symbol": "HASH"
+      },
+      {
+        "coingecko_id": "grass",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 123,
+        "market_cap_usd": 442937102,
+        "matched_markers": [],
+        "name": "Grass",
+        "rule_source": null,
+        "snapshot_position": 123,
+        "symbol": "GRASS"
+      },
+      {
+        "coingecko_id": "starknet",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 124,
+        "market_cap_usd": 431299254,
+        "matched_markers": [],
+        "name": "Starknet",
+        "rule_source": null,
+        "snapshot_position": 124,
+        "symbol": "STRK"
+      },
+      {
+        "coingecko_id": "sei-network",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 125,
+        "market_cap_usd": 412153880,
+        "matched_markers": [],
+        "name": "Sei",
+        "rule_source": null,
+        "snapshot_position": 125,
+        "symbol": "SEI"
+      },
+      {
+        "coingecko_id": "derive",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 126,
+        "market_cap_usd": 398924187,
+        "matched_markers": [],
+        "name": "Derive",
+        "rule_source": null,
+        "snapshot_position": 126,
+        "symbol": "DRV"
+      },
+      {
+        "coingecko_id": "pendle",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 127,
+        "market_cap_usd": 375081512,
+        "matched_markers": [],
+        "name": "Pendle",
+        "rule_source": null,
+        "snapshot_position": 127,
+        "symbol": "PENDLE"
+      },
+      {
+        "coingecko_id": "falcon-finance-ff",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 128,
+        "market_cap_usd": 372611515,
+        "matched_markers": [],
+        "name": "Falcon Finance",
+        "rule_source": null,
+        "snapshot_position": 128,
+        "symbol": "FF"
+      },
+      {
+        "coingecko_id": "bitcoin-cash-sv",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 129,
+        "market_cap_usd": 362724499,
+        "matched_markers": [],
+        "name": "Bitcoin SV",
+        "rule_source": null,
+        "snapshot_position": 129,
+        "symbol": "BSV"
+      },
+      {
+        "coingecko_id": "bittorrent",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 130,
+        "market_cap_usd": 355893049,
+        "matched_markers": [],
+        "name": "BitTorrent",
+        "rule_source": null,
+        "snapshot_position": 130,
+        "symbol": "BTT"
+      },
+      {
+        "coingecko_id": "plasma",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 131,
+        "market_cap_usd": 354517202,
+        "matched_markers": [],
+        "name": "Plasma",
+        "rule_source": null,
+        "snapshot_position": 131,
+        "symbol": "XPL"
+      },
+      {
+        "coingecko_id": "spx6900",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 132,
+        "market_cap_usd": 353201097,
+        "matched_markers": [],
+        "name": "SPX6900",
+        "rule_source": null,
+        "snapshot_position": 132,
+        "symbol": "SPX"
+      },
+      {
+        "coingecko_id": "sofiusd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 133,
+        "market_cap_usd": 346474002,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "SoFiUSD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 133,
+        "symbol": "SOFID"
+      },
+      {
+        "coingecko_id": "tezos",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 134,
+        "market_cap_usd": 344229879,
+        "matched_markers": [],
+        "name": "Tezos",
+        "rule_source": null,
+        "snapshot_position": 134,
+        "symbol": "XTZ"
+      },
+      {
+        "coingecko_id": "re-protocol-reusd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 135,
+        "market_cap_usd": 343575195,
+        "matched_markers": [
+          "reusd",
+          "usd"
+        ],
+        "name": "Re Protocol reUSD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 135,
+        "symbol": "REUSD"
+      },
+      {
+        "coingecko_id": "lido-dao",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 136,
+        "market_cap_usd": 340709046,
+        "matched_markers": [],
+        "name": "Lido DAO",
+        "rule_source": null,
+        "snapshot_position": 136,
+        "symbol": "LDO"
+      },
+      {
+        "coingecko_id": "janus-henderson-anemoy-treasury-fund",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 137,
+        "market_cap_usd": 326723387,
+        "matched_markers": [
+          "fund",
+          "treasury"
+        ],
+        "name": "Janus Henderson Anemoy Treasury Fund",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 137,
+        "symbol": "JTRSY"
+      },
+      {
+        "coingecko_id": "ousg",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 138,
+        "market_cap_usd": 320131694,
+        "matched_markers": [
+          "fund"
+        ],
+        "name": "Ondo Short-Term U.S. Government Bond Fund",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 138,
+        "symbol": "OUSG"
+      },
+      {
+        "coingecko_id": "sun-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 139,
+        "market_cap_usd": 318417716,
+        "matched_markers": [],
+        "name": "Sun Token",
+        "rule_source": null,
+        "snapshot_position": 139,
+        "symbol": "SUN"
+      },
+      {
+        "coingecko_id": "unibase",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 140,
+        "market_cap_usd": 316547994,
+        "matched_markers": [],
+        "name": "Unibase",
+        "rule_source": null,
+        "snapshot_position": 140,
+        "symbol": "UB"
+      },
+      {
+        "coingecko_id": "collector-crypt",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 141,
+        "market_cap_usd": 308682802,
+        "matched_markers": [],
+        "name": "Collector Crypt",
+        "rule_source": null,
+        "snapshot_position": 141,
+        "symbol": "CARDS"
+      },
+      {
+        "coingecko_id": "apxusd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 142,
+        "market_cap_usd": 306127138,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "apxUSD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 142,
+        "symbol": "APXUSD"
+      },
+      {
+        "coingecko_id": "first-digital-usd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 143,
+        "market_cap_usd": 304044519,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "First Digital USD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 143,
+        "symbol": "FDUSD"
+      },
+      {
+        "coingecko_id": "gnosis",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 144,
+        "market_cap_usd": 301417972,
+        "matched_markers": [],
+        "name": "Gnosis",
+        "rule_source": null,
+        "snapshot_position": 144,
+        "symbol": "GNO"
+      },
+      {
+        "coingecko_id": "optimism",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 145,
+        "market_cap_usd": 297557406,
+        "matched_markers": [],
+        "name": "Optimism",
+        "rule_source": null,
+        "snapshot_position": 145,
+        "symbol": "OP"
+      },
+      {
+        "coingecko_id": "olympus",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 146,
+        "market_cap_usd": 295414898,
+        "matched_markers": [],
+        "name": "Olympus",
+        "rule_source": null,
+        "snapshot_position": 146,
+        "symbol": "OHM"
+      },
+      {
+        "coingecko_id": "basic-attention-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 147,
+        "market_cap_usd": 290879769,
+        "matched_markers": [],
+        "name": "Basic Attention",
+        "rule_source": null,
+        "snapshot_position": 147,
+        "symbol": "BAT"
+      },
+      {
+        "coingecko_id": "kite-2",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 148,
+        "market_cap_usd": 290127094,
+        "matched_markers": [],
+        "name": "Kite",
+        "rule_source": null,
+        "snapshot_position": 148,
+        "symbol": "KITE"
+      },
+      {
+        "coingecko_id": "pieverse",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 149,
+        "market_cap_usd": 289122699,
+        "matched_markers": [],
+        "name": "Pieverse",
+        "rule_source": null,
+        "snapshot_position": 149,
+        "symbol": "PIEVERSE"
+      },
+      {
+        "coingecko_id": "conflux-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 150,
+        "market_cap_usd": 288147101,
+        "matched_markers": [],
+        "name": "Conflux",
+        "rule_source": null,
+        "snapshot_position": 150,
+        "symbol": "CFX"
+      },
+      {
+        "coingecko_id": "backpack",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 151,
+        "market_cap_usd": 274238088,
+        "matched_markers": [],
+        "name": "Backpack",
+        "rule_source": null,
+        "snapshot_position": 151,
+        "symbol": "BP"
+      },
+      {
+        "coingecko_id": "bonk",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 152,
+        "market_cap_usd": 270253779,
+        "matched_markers": [],
+        "name": "Bonk",
+        "rule_source": null,
+        "snapshot_position": 152,
+        "symbol": "BONK"
+      },
+      {
+        "coingecko_id": "the-graph",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 153,
+        "market_cap_usd": 269841134,
+        "matched_markers": [],
+        "name": "The Graph",
+        "rule_source": null,
+        "snapshot_position": 153,
+        "symbol": "GRT"
+      },
+      {
+        "coingecko_id": "kaia",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 154,
+        "market_cap_usd": 268647175,
+        "matched_markers": [],
+        "name": "Kaia",
+        "rule_source": null,
+        "snapshot_position": 154,
+        "symbol": "KAIA"
+      },
+      {
+        "coingecko_id": "monad",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 155,
+        "market_cap_usd": 262211291,
+        "matched_markers": [],
+        "name": "Monad",
+        "rule_source": null,
+        "snapshot_position": 155,
+        "symbol": "MON"
+      },
+      {
+        "coingecko_id": "usdai",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 156,
+        "market_cap_usd": 261969201,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "USDai",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 156,
+        "symbol": "USDAI"
+      },
+      {
+        "coingecko_id": "decred",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 157,
+        "market_cap_usd": 260605945,
+        "matched_markers": [],
+        "name": "Decred",
+        "rule_source": null,
+        "snapshot_position": 157,
+        "symbol": "DCR"
+      },
+      {
+        "coingecko_id": "terra-luna",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 158,
+        "market_cap_usd": 258599864,
+        "matched_markers": [],
+        "name": "Terra Luna Classic",
+        "rule_source": null,
+        "snapshot_position": 158,
+        "symbol": "LUNC"
+      },
+      {
+        "coingecko_id": "compound-governance-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 159,
+        "market_cap_usd": 257715730,
+        "matched_markers": [],
+        "name": "Compound",
+        "rule_source": null,
+        "snapshot_position": 159,
+        "symbol": "COMP"
+      },
+      {
+        "coingecko_id": "jito-governance-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 160,
+        "market_cap_usd": 257479214,
+        "matched_markers": [],
+        "name": "Jito",
+        "rule_source": null,
+        "snapshot_position": 160,
+        "symbol": "JTO"
+      },
+      {
+        "coingecko_id": "arweave",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 161,
+        "market_cap_usd": 252646065,
+        "matched_markers": [],
+        "name": "Arweave",
+        "rule_source": null,
+        "snapshot_position": 161,
+        "symbol": "AR"
+      },
+      {
+        "coingecko_id": "ape-and-pepe",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 162,
+        "market_cap_usd": 246705659,
+        "matched_markers": [],
+        "name": "Ape and Pepe",
+        "rule_source": null,
+        "snapshot_position": 162,
+        "symbol": "APEPE"
+      },
+      {
+        "coingecko_id": "shuffle-2",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 163,
+        "market_cap_usd": 246012584,
+        "matched_markers": [],
+        "name": "Shuffle",
+        "rule_source": null,
+        "snapshot_position": 163,
+        "symbol": "SHFL"
+      },
+      {
+        "coingecko_id": "jasmycoin",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 164,
+        "market_cap_usd": 240907074,
+        "matched_markers": [],
+        "name": "JasmyCoin",
+        "rule_source": null,
+        "snapshot_position": 164,
+        "symbol": "JASMY"
+      },
+      {
+        "coingecko_id": "floki",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 165,
+        "market_cap_usd": 237267948,
+        "matched_markers": [],
+        "name": "FLOKI",
+        "rule_source": null,
+        "snapshot_position": 165,
+        "symbol": "FLOKI"
+      },
+      {
+        "coingecko_id": "apenft",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 168,
+        "market_cap_usd": 236666270,
+        "matched_markers": [],
+        "name": "AINFT",
+        "rule_source": null,
+        "snapshot_position": 166,
+        "symbol": "NFT"
+      },
+      {
+        "coingecko_id": "safo",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 166,
+        "market_cap_usd": 236586790,
+        "matched_markers": [
+          "fund"
+        ],
+        "name": "Spiko Amundi Overnight Swap Fund",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 167,
+        "symbol": "SAFO"
+      },
+      {
+        "coingecko_id": "ethereum-name-service",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 167,
+        "market_cap_usd": 236536932,
+        "matched_markers": [],
+        "name": "Ethereum Name Service",
+        "rule_source": null,
+        "snapshot_position": 168,
+        "symbol": "ENS"
+      },
+      {
+        "coingecko_id": "syrup",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 169,
+        "market_cap_usd": 235442070,
+        "matched_markers": [],
+        "name": "Maple Finance",
+        "rule_source": null,
+        "snapshot_position": 169,
+        "symbol": "SYRUP"
+      },
+      {
+        "coingecko_id": "eigenlayer",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 170,
+        "market_cap_usd": 229701398,
+        "matched_markers": [],
+        "name": "EigenCloud (prev. EigenLayer)",
+        "rule_source": null,
+        "snapshot_position": 170,
+        "symbol": "EIGEN"
+      },
+      {
+        "coingecko_id": "kamino",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 171,
+        "market_cap_usd": 228653387,
+        "matched_markers": [],
+        "name": "Kamino",
+        "rule_source": null,
+        "snapshot_position": 171,
+        "symbol": "KMNO"
+      },
+      {
+        "coingecko_id": "tradable-na-rent-financing-platform-sstn",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 172,
+        "market_cap_usd": 227500000,
+        "matched_markers": [],
+        "name": "Tradable NA Rent Financing Platform SSTN",
+        "rule_source": null,
+        "snapshot_position": 172,
+        "symbol": "PC0000031"
+      },
+      {
+        "coingecko_id": "sonic-3",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 173,
+        "market_cap_usd": 222526970,
+        "matched_markers": [],
+        "name": "Sonic",
+        "rule_source": null,
+        "snapshot_position": 173,
+        "symbol": "S"
+      },
+      {
+        "coingecko_id": "convex-finance",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 174,
+        "market_cap_usd": 222008483,
+        "matched_markers": [],
+        "name": "Convex Finance",
+        "rule_source": null,
+        "snapshot_position": 174,
+        "symbol": "CVX"
+      },
+      {
+        "coingecko_id": "thorchain",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 175,
+        "market_cap_usd": 220957983,
+        "matched_markers": [],
+        "name": "THORChain",
+        "rule_source": null,
+        "snapshot_position": 175,
+        "symbol": "RUNE"
+      },
+      {
+        "coingecko_id": "iota",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 177,
+        "market_cap_usd": 218681995,
+        "matched_markers": [],
+        "name": "IOTA",
+        "rule_source": null,
+        "snapshot_position": 176,
+        "symbol": "IOTA"
+      },
+      {
+        "coingecko_id": "akash-network",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 176,
+        "market_cap_usd": 218582026,
+        "matched_markers": [],
+        "name": "Akash Network",
+        "rule_source": null,
+        "snapshot_position": 177,
+        "symbol": "AKT"
+      },
+      {
+        "coingecko_id": "frax",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 178,
+        "market_cap_usd": 217424935,
+        "matched_markers": [],
+        "name": "Legacy Frax Dollar",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 178,
+        "symbol": "FRAX"
+      },
+      {
+        "coingecko_id": "bnb48-club-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 179,
+        "market_cap_usd": 214250243,
+        "matched_markers": [],
+        "name": "KOGE",
+        "rule_source": null,
+        "snapshot_position": 179,
+        "symbol": "KOGE"
+      },
+      {
+        "coingecko_id": "crvusd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 180,
+        "market_cap_usd": 213529404,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "crvUSD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 180,
+        "symbol": "CRVUSD"
+      },
+      {
+        "coingecko_id": "zebec-network",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 181,
+        "market_cap_usd": 213501227,
+        "matched_markers": [],
+        "name": "Zebec Network",
+        "rule_source": null,
+        "snapshot_position": 181,
+        "symbol": "ZBCN"
+      },
+      {
+        "coingecko_id": "kinesis-silver",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 182,
+        "market_cap_usd": 212456749,
+        "matched_markers": [],
+        "name": "Kinesis Silver",
+        "rule_source": null,
+        "snapshot_position": 182,
+        "symbol": "KAG"
+      },
+      {
+        "coingecko_id": "usx",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 183,
+        "market_cap_usd": 209289821,
+        "matched_markers": [],
+        "name": "USX",
+        "rule_source": null,
+        "snapshot_position": 183,
+        "symbol": "USX"
+      },
+      {
+        "coingecko_id": "theta-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 184,
+        "market_cap_usd": 206961295,
+        "matched_markers": [],
+        "name": "Theta Network",
+        "rule_source": null,
+        "snapshot_position": 184,
+        "symbol": "THETA"
+      },
+      {
+        "coingecko_id": "dogwifcoin",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 185,
+        "market_cap_usd": 205656256,
+        "matched_markers": [],
+        "name": "dogwifhat",
+        "rule_source": null,
+        "snapshot_position": 185,
+        "symbol": "WIF"
+      },
+      {
+        "coingecko_id": "instadapp",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 186,
+        "market_cap_usd": 202116162,
+        "matched_markers": [],
+        "name": "Fluid",
+        "rule_source": null,
+        "snapshot_position": 186,
+        "symbol": "FLUID"
+      },
+      {
+        "coingecko_id": "trust-wallet-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 187,
+        "market_cap_usd": 194066724,
+        "matched_markers": [],
+        "name": "Trust Wallet",
+        "rule_source": null,
+        "snapshot_position": 187,
+        "symbol": "TWT"
+      },
+      {
+        "coingecko_id": "zama",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 188,
+        "market_cap_usd": 191806446,
+        "matched_markers": [],
+        "name": "Zama",
+        "rule_source": null,
+        "snapshot_position": 188,
+        "symbol": "ZAMA"
+      },
+      {
+        "coingecko_id": "societe-generale-forge-eurcv",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 189,
+        "market_cap_usd": 189816253,
+        "matched_markers": [
+          "eur"
+        ],
+        "name": "EUR CoinVertible",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 189,
+        "symbol": "EURCV"
+      },
+      {
+        "coingecko_id": "bedrock-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 190,
+        "market_cap_usd": 189489385,
+        "matched_markers": [],
+        "name": "Bedrock",
+        "rule_source": null,
+        "snapshot_position": 190,
+        "symbol": "BR"
+      },
+      {
+        "coingecko_id": "meteora",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 191,
+        "market_cap_usd": 189099227,
+        "matched_markers": [],
+        "name": "Meteora",
+        "rule_source": null,
+        "snapshot_position": 191,
+        "symbol": "MET"
+      },
+      {
+        "coingecko_id": "pons",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 192,
+        "market_cap_usd": 187004701,
+        "matched_markers": [],
+        "name": "Pons",
+        "rule_source": null,
+        "snapshot_position": 192,
+        "symbol": "PONS"
+      },
+      {
+        "coingecko_id": "axie-infinity",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 193,
+        "market_cap_usd": 183277585,
+        "matched_markers": [],
+        "name": "Axie Infinity",
+        "rule_source": null,
+        "snapshot_position": 193,
+        "symbol": "AXS"
+      },
+      {
+        "coingecko_id": "usa",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 194,
+        "market_cap_usd": 183106925,
+        "matched_markers": [],
+        "name": "USAT",
+        "rule_source": null,
+        "snapshot_position": 194,
+        "symbol": "USAT"
+      },
+      {
+        "coingecko_id": "agora-dollar",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 195,
+        "market_cap_usd": 180001841,
+        "matched_markers": [
+          "dollar",
+          "usd"
+        ],
+        "name": "AUSD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 195,
+        "symbol": "AUSD"
+      },
+      {
+        "coingecko_id": "origintrail",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 196,
+        "market_cap_usd": 176903972,
+        "matched_markers": [],
+        "name": "OriginTrail",
+        "rule_source": null,
+        "snapshot_position": 196,
+        "symbol": "TRAC"
+      },
+      {
+        "coingecko_id": "anvil",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 197,
+        "market_cap_usd": 174411889,
+        "matched_markers": [],
+        "name": "Anvil",
+        "rule_source": null,
+        "snapshot_position": 197,
+        "symbol": "ANVL"
+      },
+      {
+        "coingecko_id": "decentraland",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 198,
+        "market_cap_usd": 172992623,
+        "matched_markers": [],
+        "name": "Decentraland",
+        "rule_source": null,
+        "snapshot_position": 198,
+        "symbol": "MANA"
+      },
+      {
+        "coingecko_id": "the-sandbox",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 199,
+        "market_cap_usd": 171837475,
+        "matched_markers": [],
+        "name": "The Sandbox",
+        "rule_source": null,
+        "snapshot_position": 199,
+        "symbol": "SAND"
+      },
+      {
+        "coingecko_id": "btse-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 200,
+        "market_cap_usd": 170420621,
+        "matched_markers": [],
+        "name": "BTSE Token",
+        "rule_source": null,
+        "snapshot_position": 200,
+        "symbol": "BTSE"
+      },
+      {
+        "coingecko_id": "spiko-us-t-bills-money-market-fund",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 201,
+        "market_cap_usd": 166782460,
+        "matched_markers": [
+          "fund",
+          "money market",
+          "t-bill"
+        ],
+        "name": "Spiko US T-Bills Money Market Fund",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 201,
+        "symbol": "USTBL"
+      },
+      {
+        "coingecko_id": "beam-2",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 202,
+        "market_cap_usd": 163835146,
+        "matched_markers": [],
+        "name": "Beam",
+        "rule_source": null,
+        "snapshot_position": 202,
+        "symbol": "BEAM"
+      },
+      {
+        "coingecko_id": "vaulta",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 203,
+        "market_cap_usd": 163771410,
+        "matched_markers": [],
+        "name": "Vaulta",
+        "rule_source": null,
+        "snapshot_position": 203,
+        "symbol": "A"
+      },
+      {
+        "coingecko_id": "zksync",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 204,
+        "market_cap_usd": 162984320,
+        "matched_markers": [],
+        "name": "ZKsync",
+        "rule_source": null,
+        "snapshot_position": 204,
+        "symbol": "ZK"
+      },
+      {
+        "coingecko_id": "chain-2",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 205,
+        "market_cap_usd": 162120116,
+        "matched_markers": [],
+        "name": "Onyxcoin",
+        "rule_source": null,
+        "snapshot_position": 205,
+        "symbol": "XCN"
+      },
+      {
+        "coingecko_id": "circle-internet-group-bstock",
+        "excluded": true,
+        "exclusion_group": "synthetic_tokens",
+        "exclusion_reason": "synthetic_token_excluded",
+        "market_cap_rank": 206,
+        "market_cap_usd": 161000059,
+        "matched_markers": [
+          "bstock",
+          "tokenized stock"
+        ],
+        "name": "Circle Internet Group (bStocks Tokenized Stock)",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 206,
+        "symbol": "CRCLB"
+      },
+      {
+        "coingecko_id": "swissborg",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 207,
+        "market_cap_usd": 160676284,
+        "matched_markers": [],
+        "name": "SwissBorg",
+        "rule_source": null,
+        "snapshot_position": 207,
+        "symbol": "BORG"
+      },
+      {
+        "coingecko_id": "neo",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 208,
+        "market_cap_usd": 160515741,
+        "matched_markers": [],
+        "name": "NEO",
+        "rule_source": null,
+        "snapshot_position": 208,
+        "symbol": "NEO"
+      },
+      {
+        "coingecko_id": "strategy-pp-variable-xstock",
+        "excluded": true,
+        "exclusion_group": "derivative_tokens",
+        "exclusion_reason": "derivative_token_excluded",
+        "market_cap_rank": 209,
+        "market_cap_usd": 160443300,
+        "matched_markers": [
+          "xstock"
+        ],
+        "name": "Strategy PP Variable xStock",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 209,
+        "symbol": "STRCX"
+      },
+      {
+        "coingecko_id": "mx-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 210,
+        "market_cap_usd": 159632374,
+        "matched_markers": [],
+        "name": "MX",
+        "rule_source": null,
+        "snapshot_position": 210,
+        "symbol": "MX"
+      },
+      {
+        "coingecko_id": "apyusd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 211,
+        "market_cap_usd": 157454446,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "apyUSD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 211,
+        "symbol": "APYUSD"
+      },
+      {
+        "coingecko_id": "useless-3",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 212,
+        "market_cap_usd": 157021970,
+        "matched_markers": [],
+        "name": "Useless Coin",
+        "rule_source": null,
+        "snapshot_position": 212,
+        "symbol": "USELESS"
+      },
+      {
+        "coingecko_id": "sentient",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 213,
+        "market_cap_usd": 156529213,
+        "matched_markers": [],
+        "name": "Sentient",
+        "rule_source": null,
+        "snapshot_position": 213,
+        "symbol": "SENT"
+      },
+      {
+        "coingecko_id": "doublezero",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 214,
+        "market_cap_usd": 156493037,
+        "matched_markers": [],
+        "name": "DoubleZero",
+        "rule_source": null,
+        "snapshot_position": 214,
+        "symbol": "2Z"
+      },
+      {
+        "coingecko_id": "coco-2",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 215,
+        "market_cap_usd": 155529193,
+        "matched_markers": [],
+        "name": "coco",
+        "rule_source": null,
+        "snapshot_position": 215,
+        "symbol": "COCO"
+      },
+      {
+        "coingecko_id": "non-playable-coin",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 216,
+        "market_cap_usd": 152956363,
+        "matched_markers": [],
+        "name": "Non-Playable Coin",
+        "rule_source": null,
+        "snapshot_position": 216,
+        "symbol": "NPC"
+      },
+      {
+        "coingecko_id": "vision-3",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 217,
+        "market_cap_usd": 151704243,
+        "matched_markers": [],
+        "name": "Vision",
+        "rule_source": null,
+        "snapshot_position": 217,
+        "symbol": "VSN"
+      },
+      {
+        "coingecko_id": "grx-chain",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 218,
+        "market_cap_usd": 151667043,
+        "matched_markers": [],
+        "name": "GRX Chain",
+        "rule_source": null,
+        "snapshot_position": 218,
+        "symbol": "GRX"
+      },
+      {
+        "coingecko_id": "spacex-bstocks-tokenized-stock",
+        "excluded": true,
+        "exclusion_group": "synthetic_tokens",
+        "exclusion_reason": "synthetic_token_excluded",
+        "market_cap_rank": 219,
+        "market_cap_usd": 150621882,
+        "matched_markers": [
+          "bstock",
+          "tokenized stock"
+        ],
+        "name": "SpaceX (bStocks Tokenized Stock)",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 219,
+        "symbol": "SPCXB"
+      },
+      {
+        "coingecko_id": "gusd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 220,
+        "market_cap_usd": 149448767,
+        "matched_markers": [],
+        "name": "GUSD",
+        "rule_source": "inherited_fixed_list",
+        "snapshot_position": 220,
+        "symbol": "GUSD"
+      },
+      {
+        "coingecko_id": "gmt-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 221,
+        "market_cap_usd": 148573626,
+        "matched_markers": [],
+        "name": "GoMining Token",
+        "rule_source": null,
+        "snapshot_position": 221,
+        "symbol": "GOMINING"
+      },
+      {
+        "coingecko_id": "celium",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 222,
+        "market_cap_usd": 148175754,
+        "matched_markers": [],
+        "name": "lium",
+        "rule_source": null,
+        "snapshot_position": 222,
+        "symbol": "SN51"
+      },
+      {
+        "coingecko_id": "fartcoin",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 223,
+        "market_cap_usd": 146916432,
+        "matched_markers": [],
+        "name": "Fartcoin",
+        "rule_source": null,
+        "snapshot_position": 223,
+        "symbol": "FARTCOIN"
+      },
+      {
+        "coingecko_id": "chiliz",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 224,
+        "market_cap_usd": 146455667,
+        "matched_markers": [],
+        "name": "Chiliz",
+        "rule_source": null,
+        "snapshot_position": 224,
+        "symbol": "CHZ"
+      },
+      {
+        "coingecko_id": "apecoin",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 225,
+        "market_cap_usd": 146109675,
+        "matched_markers": [],
+        "name": "ApeCoin",
+        "rule_source": null,
+        "snapshot_position": 225,
+        "symbol": "APE"
+      },
+      {
+        "coingecko_id": "railgun",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 226,
+        "market_cap_usd": 143856509,
+        "matched_markers": [],
+        "name": "Railgun",
+        "rule_source": null,
+        "snapshot_position": 226,
+        "symbol": "RAIL"
+      },
+      {
+        "coingecko_id": "zero-gravity",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 227,
+        "market_cap_usd": 142132466,
+        "matched_markers": [],
+        "name": "0G",
+        "rule_source": null,
+        "snapshot_position": 227,
+        "symbol": "0G"
+      },
+      {
+        "coingecko_id": "aioz-network",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 228,
+        "market_cap_usd": 138768159,
+        "matched_markers": [],
+        "name": "AIOZ Network",
+        "rule_source": null,
+        "snapshot_position": 228,
+        "symbol": "AIOZ"
+      },
+      {
+        "coingecko_id": "immutable-x",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 229,
+        "market_cap_usd": 138704220,
+        "matched_markers": [],
+        "name": "Immutable",
+        "rule_source": null,
+        "snapshot_position": 229,
+        "symbol": "IMX"
+      },
+      {
+        "coingecko_id": "dgrid-ai",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 230,
+        "market_cap_usd": 137921928,
+        "matched_markers": [],
+        "name": "DGrid AI",
+        "rule_source": null,
+        "snapshot_position": 230,
+        "symbol": "DGAI"
+      },
+      {
+        "coingecko_id": "jpycoin",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 232,
+        "market_cap_usd": 134185235,
+        "matched_markers": [
+          "jpy"
+        ],
+        "name": "JPY Coin",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 231,
+        "symbol": "JPYC"
+      },
+      {
+        "coingecko_id": "stp-network",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 231,
+        "market_cap_usd": 133953802,
+        "matched_markers": [],
+        "name": "AWE Network",
+        "rule_source": null,
+        "snapshot_position": 232,
+        "symbol": "AWE"
+      },
+      {
+        "coingecko_id": "build-on",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 233,
+        "market_cap_usd": 132901836,
+        "matched_markers": [],
+        "name": "BUILDon",
+        "rule_source": null,
+        "snapshot_position": 233,
+        "symbol": "B"
+      },
+      {
+        "coingecko_id": "ecash",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 234,
+        "market_cap_usd": 132637689,
+        "matched_markers": [],
+        "name": "eCash",
+        "rule_source": null,
+        "snapshot_position": 234,
+        "symbol": "XEC"
+      },
+      {
+        "coingecko_id": "1inch",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 235,
+        "market_cap_usd": 131803690,
+        "matched_markers": [],
+        "name": "1INCH",
+        "rule_source": null,
+        "snapshot_position": 235,
+        "symbol": "1INCH"
+      },
+      {
+        "coingecko_id": "havven",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 236,
+        "market_cap_usd": 129871318,
+        "matched_markers": [],
+        "name": "Synthetix",
+        "rule_source": null,
+        "snapshot_position": 236,
+        "symbol": "SNX"
+      },
+      {
+        "coingecko_id": "geodnet",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 237,
+        "market_cap_usd": 129825761,
+        "matched_markers": [],
+        "name": "Geodnet",
+        "rule_source": null,
+        "snapshot_position": 237,
+        "symbol": "GEOD"
+      },
+      {
+        "coingecko_id": "jpysc",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 238,
+        "market_cap_usd": 128581744,
+        "matched_markers": [
+          "jpy"
+        ],
+        "name": "JPYSC",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 238,
+        "symbol": "JPYSC"
+      },
+      {
+        "coingecko_id": "onyc",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 239,
+        "market_cap_usd": 127261905,
+        "matched_markers": [],
+        "name": "OnRe Tokenized Reinsurance",
+        "rule_source": null,
+        "snapshot_position": 239,
+        "symbol": "ONYC"
+      },
+      {
+        "coingecko_id": "cash-4",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 240,
+        "market_cap_usd": 126727134,
+        "matched_markers": [],
+        "name": "CASH",
+        "rule_source": null,
+        "snapshot_position": 240,
+        "symbol": "CASH"
+      },
+      {
+        "coingecko_id": "safepal",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 241,
+        "market_cap_usd": 126322641,
+        "matched_markers": [],
+        "name": "SafePal",
+        "rule_source": null,
+        "snapshot_position": 241,
+        "symbol": "SFP"
+      },
+      {
+        "coingecko_id": "superfarm",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 242,
+        "market_cap_usd": 125758556,
+        "matched_markers": [],
+        "name": "SuperVerse",
+        "rule_source": null,
+        "snapshot_position": 242,
+        "symbol": "SUPER"
+      },
+      {
+        "coingecko_id": "ozone-chain",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 243,
+        "market_cap_usd": 125463284,
+        "matched_markers": [],
+        "name": "Ozone Chain",
+        "rule_source": null,
+        "snapshot_position": 243,
+        "symbol": "OZO"
+      },
+      {
+        "coingecko_id": "microstrategy-xstock",
+        "excluded": true,
+        "exclusion_group": "derivative_tokens",
+        "exclusion_reason": "derivative_token_excluded",
+        "market_cap_rank": 244,
+        "market_cap_usd": 123562363,
+        "matched_markers": [
+          "xstock"
+        ],
+        "name": "MicroStrategy xStock",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 244,
+        "symbol": "MSTRX"
+      },
+      {
+        "coingecko_id": "ultima",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 245,
+        "market_cap_usd": 120999156,
+        "matched_markers": [],
+        "name": "Ultima",
+        "rule_source": null,
+        "snapshot_position": 245,
+        "symbol": "ULTIMA"
+      },
+      {
+        "coingecko_id": "plume",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 246,
+        "market_cap_usd": 120856665,
+        "matched_markers": [],
+        "name": "Plume",
+        "rule_source": null,
+        "snapshot_position": 246,
+        "symbol": "PLUME"
+      },
+      {
+        "coingecko_id": "humanity",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 247,
+        "market_cap_usd": 120436009,
+        "matched_markers": [],
+        "name": "Humanity",
+        "rule_source": null,
+        "snapshot_position": 247,
+        "symbol": "H"
+      },
+      {
+        "coingecko_id": "avant-usd",
+        "excluded": true,
+        "exclusion_group": "stablecoins",
+        "exclusion_reason": "stablecoin_excluded",
+        "market_cap_rank": 248,
+        "market_cap_usd": 120401467,
+        "matched_markers": [
+          "usd"
+        ],
+        "name": "Avant USD",
+        "rule_source": "v3_exclusion_classifier",
+        "snapshot_position": 248,
+        "symbol": "AVUSD"
+      },
+      {
+        "coingecko_id": "reserve-rights-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 249,
+        "market_cap_usd": 119378858,
+        "matched_markers": [],
+        "name": "Reserve Rights",
+        "rule_source": null,
+        "snapshot_position": 249,
+        "symbol": "RSR"
+      },
+      {
+        "coingecko_id": "bc-token",
+        "excluded": false,
+        "exclusion_group": null,
+        "exclusion_reason": null,
+        "market_cap_rank": 250,
+        "market_cap_usd": 119238593,
+        "matched_markers": [],
+        "name": "BCGame Coin",
+        "rule_source": null,
+        "snapshot_position": 250,
+        "symbol": "BC"
+      }
+    ],
+    "snapshot_entries": 250
+  },
+  "floor": {
+    "comparison": "strictly_less_than",
+    "floor_market_cap_usd": 1468004153,
+    "floor_symbol": "HTX",
+    "recompute_rule": "the floor is the minimum market_cap_usd over the eligible_assets of research/universe_manifest_v3.json; it is recomputed from that manifest and never trusted from the specification",
+    "source_manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+    "source_manifest_path": "research/universe_manifest_v3.json",
+    "source_manifest_sha256": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63",
+    "source_universe_version": "v3"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "amendment_hash_excluded_keys": [
+      "amendment_hash"
+    ],
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "note": "amendment_hash is the sha256 of the document body with the amendment_hash key removed. It binds the classifier, the derived classification and the derived candidate batch."
+  },
+  "inherited_fixed_lists": {
+    "groups": {
+      "exchange_tokens": [
+        "FIGR_HELOC",
+        "WBT",
+        "LEO",
+        "RAIN",
+        "CC",
+        "GRAM"
+      ],
+      "leveraged_synthetic": [
+        "BULL",
+        "BEAR",
+        "HEDGE",
+        "UP",
+        "DOWN",
+        "LONG",
+        "SHORT"
+      ],
+      "low_liquidity_or_new": [],
+      "stablecoins": [
+        "USDT",
+        "USDC",
+        "USDS",
+        "USDE",
+        "DAI",
+        "USD1",
+        "BUSD",
+        "TUSD",
+        "FRAX",
+        "LUSD",
+        "MIM",
+        "FEI",
+        "SUSD",
+        "USDP",
+        "GUSD",
+        "HUSD",
+        "USDN",
+        "CUSD",
+        "EURS",
+        "EURC",
+        "EURT"
+      ],
+      "wrapped_bridged": [
+        "WBTC",
+        "WETH",
+        "RETH",
+        "CBETH",
+        "ANKRETH",
+        "SWETH",
+        "OSETH",
+        "METH",
+        "RSETH",
+        "LSETH",
+        "EZETH",
+        "WEETH",
+        "RSWETH",
+        "KELP",
+        "RSELP",
+        "MSTETH",
+        "STETH",
+        "WSTETH",
+        "TBTC",
+        "SBTC",
+        "HBTC",
+        "RENBTC",
+        "BBTC",
+        "OBTC",
+        "PBTC",
+        "IBBTC"
+      ]
+    },
+    "note": "Applied verbatim, as the v4 specification's eligibility_validation.exclusion_rules requires. The v4 classifier is additional to these lists and never overrides them.",
+    "source_block": "exclusion_rules",
+    "source_manifest_sha256": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd",
+    "source_path": "research/universe_manifest.json"
+  },
+  "not_authorized_by_this_amendment": [
+    "no market-cap retrieval",
+    "no candle fetch",
+    "no evaluation, grid, backtest, campaign, selection or pilot",
+    "no confirmatory-window read",
+    "no change to the v1, v2 or v3 artifacts",
+    "no change to the hashed source set"
+  ],
+  "prior_universe": {
+    "excluded_asset_count": 43,
+    "identity_rules": [
+      {
+        "rule": "binance_symbol",
+        "statement": "the upper-cased ticker of the snapshot entry occurs in a prior universe"
+      },
+      {
+        "rule": "coingecko_id",
+        "statement": "the CoinGecko id of the snapshot entry occurs in a prior universe"
+      },
+      {
+        "rule": "coingecko_name_rename",
+        "statement": "the name carries a rename marker of the form '(ex-<TICKER>)' and <TICKER> occurs in a prior universe. A rename can come with a new provider id, so the id rule alone does not catch it: MATIC (CoinGecko id 'matic-network') is POL (CoinGecko id 'polygon-ecosystem-token') in the frozen v4 snapshot."
+      }
+    ],
+    "matched_on": [
+      "binance_symbol",
+      "coingecko_id",
+      "coingecko_name_rename"
+    ],
+    "rule": "An asset is already in a prior universe when its Binance symbol, its CoinGecko id or the old ticker of a rename marker in its name occurs in the eligible assets of the v1, the v2 or the v3 universe manifest.",
+    "v1_manifest_path": "research/universe_manifest.json",
+    "v1_manifest_sha256": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd",
+    "v2_manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+    "v2_manifest_path": "research/universe_manifest_v2.json",
+    "v2_manifest_sha256": "68c973a0a07bd6808a18433a1cce5351d56f03800653d5c64f401d72c0769f42",
+    "v3_manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+    "v3_manifest_path": "research/universe_manifest_v3.json",
+    "v3_manifest_sha256": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63"
+  },
+  "problem": {
+    "evidence": {
+      "amendment_1_floor_source_universe_version": "v2",
+      "amendment_1_prior_universe_manifest_paths": [
+        "research/universe_manifest.json",
+        "research/universe_manifest_v2.json"
+      ],
+      "amendment_1_related_v4_specification_hash": "d6a5f8bbbdcf360ff11c75a56e1857114389090e48f12144e35a7075b3189e58",
+      "specification_floor_source_universe_version": "v3",
+      "specification_hash_of_record": "f0f1be0e8c6e71a81be0618bf12081a77fefa4061975c9103dcf3302152b8d84"
+    },
+    "statement": "Amendment 1 applied the v2 floor and the v1/v2 identity rule to the v4 batch, so the v4 candidate batch was the v3 candidate batch again and no v4 asset was strictly below the v3 floor."
+  },
+  "producer": {
+    "classifier_module": "scripts/v3_exclusion_classifier.py",
+    "path": "scripts/build_research_v4_exclusion_amendment_2.py",
+    "reproduce_command": "python3 scripts/build_research_v4_exclusion_amendment_2.py --force",
+    "verify_command": "python3 scripts/verify_research_v4_manifests.py"
+  },
+  "provenance": {
+    "authored_after_snapshot_retrieval": true,
+    "authored_before_any_strategy_result": true,
+    "authored_before_any_v4_candle_fetch": false,
+    "authored_before_any_validation_outcome": false,
+    "statement": "Amendment 2 was authored after the market-cap snapshot was retrieved and after the first v4 validation attempt, whose outcome is recorded in the v3 cycle close-out and in research_state/agent_handoff.md: the first attempt applied the v2 floor and the v1/v2 identity rule and therefore re-derived the v3 batch. No marker, no floor and no identity rule was chosen from a validation outcome or a strategy result; no strategy result exists at all. The corrected batch is derived mechanically from the frozen snapshot and the published rules."
+  },
+  "purpose": "Correct the floor, the prior-universe identity rule and the snapshot bindings of the v4 exclusion amendment 1, which were carried over unchanged from the v3 exclusion amendment and contradicted the preregistered v4 specification.",
+  "related_artifacts": {
+    "v1_universe_manifest": {
+      "path": "research/universe_manifest.json",
+      "sha256": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd"
+    },
+    "v2_universe_manifest": {
+      "manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+      "path": "research/universe_manifest_v2.json",
+      "sha256": "68c973a0a07bd6808a18433a1cce5351d56f03800653d5c64f401d72c0769f42"
+    },
+    "v3_universe_manifest": {
+      "manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+      "path": "research/universe_manifest_v3.json",
+      "sha256": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63"
+    },
+    "v4_snapshot_observation": {
+      "path": "research/v4_evidence/snapshot_observation.json",
+      "raw_response_sha256": "1057956c4f605f19636e13fc247b5644c5e3474db4ae50f4e3ddc423155099ca",
+      "retrieval_timestamp_utc": "2026-10-20T23:50:06Z"
+    },
+    "v4_specification": {
+      "path": "configs/research_v4.json",
+      "specification_hash": "f0f1be0e8c6e71a81be0618bf12081a77fefa4061975c9103dcf3302152b8d84"
+    }
+  },
+  "supersedes": {
+    "amendment_hash": "75632346f12ab83bfcb5c367ca7a4bd92cf0fbbdbb8246b968e68927cf86fd37",
+    "amendment_path": "configs/research_v4_exclusion_amendment_1.json",
+    "reason": "Amendment 1 is a frozen, hash-bound artifact and is not edited. Amendment 2 carries the corrections: the floor is recomputed from the v3 universe manifest, the identity rule covers the v1, the v2 and the v3 universe, the bindings name the v4 specification and the v4 snapshot, and the published batch is re-derived with the corrected rules."
+  }
+}

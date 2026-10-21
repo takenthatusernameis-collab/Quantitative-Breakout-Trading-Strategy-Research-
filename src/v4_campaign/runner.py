@@ -149,6 +149,8 @@ class Plan:
     bounds: Dict[str, Any]
     boundary_ms: int
     confirmatory_window_start_utc: str
+    effective_data_boundary_utc: str
+    development_cutoff_utc: str
     assets: List[Dict[str, Any]]
     configs: List[Any]
     cost_multipliers: List[float]
@@ -228,9 +230,16 @@ def build_plan(workspace: Workspace) -> Plan:
 
     boundary = validated["data_boundary"]
     boundary_ms = parse_utc_ms(boundary["candles_before_utc"])
-    if boundary_ms != parse_utc_ms(scope["confirmatory_window_start_utc"]):
+    if boundary_ms != parse_utc_ms(scope["effective_data_boundary_utc"]):
         raise ScopeError(
-            "the authorized data boundary is not the confirmatory window start of the freeze"
+            "the authorized data boundary is not the effective development boundary of the "
+            "freeze, which is the earlier of the confirmatory-window start and the "
+            "preregistered development cutoff"
+        )
+    if boundary_ms > parse_utc_ms(scope["development_cutoff_utc"]):
+        raise ScopeError(
+            "the authorized data boundary is after the preregistered development cutoff, so "
+            "the run could read a candle inside the open v3 confirmatory window"
         )
 
     data_manifest, effective_hash, provenance = resolve_effective_data_manifest(root)
@@ -274,6 +283,8 @@ def build_plan(workspace: Workspace) -> Plan:
         bounds=bounds,
         boundary_ms=boundary_ms,
         confirmatory_window_start_utc=str(scope["confirmatory_window_start_utc"]),
+        effective_data_boundary_utc=str(scope["effective_data_boundary_utc"]),
+        development_cutoff_utc=str(scope["development_cutoff_utc"]),
         assets=assets,
         configs=configs,
         cost_multipliers=[float(value) for value in spec_v1["costs"]["scenarios"]],
@@ -365,7 +376,12 @@ def _ledger_document(plan: Plan) -> Dict[str, Any]:
             "excluded_after_validation": dict(plan.scope["excluded_after_validation"]),
         },
         "data_boundary": {
-            "candles_before_utc": plan.confirmatory_window_start_utc,
+            "candles_before_utc": plan.effective_data_boundary_utc,
+            "effective_data_boundary_rule": (
+                "the earlier of the v4 confirmatory-window start and the preregistered "
+                "development cutoff"
+            ),
+            "development_cutoff_utc": plan.development_cutoff_utc,
             "confirmatory_window_never_read_during_selection": True,
             "v1_holdout_never_reused": True,
             "v2_confirmatory_window_never_reused": True,

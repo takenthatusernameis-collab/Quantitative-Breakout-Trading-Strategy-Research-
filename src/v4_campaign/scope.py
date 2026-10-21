@@ -29,6 +29,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from .data import parse_utc_ms
 from .errors import ScopeError
 from .identity import canonical, canonical_source_digest, execution_path_digest, hashed_set_digest
 
@@ -184,6 +185,24 @@ def frozen_scope(freeze: Dict[str, Any], universe: Dict[str, Any]) -> Dict[str, 
 
     boundary = freeze.get("confirmatory_window") or {}
     confirmatory_start = boundary.get("opens_utc")
+    data_boundary = freeze.get("data_boundary") or {}
+    development_cutoff = data_boundary.get("development_cutoff_utc")
+    recorded_effective = data_boundary.get("effective_data_boundary_utc")
+    if not development_cutoff or not recorded_effective:
+        raise ScopeError(
+            "the v4 candidate freeze records no development cutoff and no effective data "
+            "boundary"
+        )
+    effective_boundary = min(
+        (parse_utc_ms(str(value)) for value in (confirmatory_start, development_cutoff)
+         if value),
+        default=0,
+    )
+    if effective_boundary != parse_utc_ms(str(recorded_effective)):
+        raise ScopeError(
+            "the effective data boundary recorded by the freeze is not the earlier of the "
+            "confirmatory-window start and the development cutoff"
+        )
 
     return {
         "binance_pairs": pairs,
@@ -192,6 +211,8 @@ def frozen_scope(freeze: Dict[str, Any], universe: Dict[str, Any]) -> Dict[str, 
         "universe_manifest_hash": universe.get("manifest_hash"),
         "data_manifest_hash": freeze.get("data_manifest_hash"),
         "confirmatory_window_start_utc": confirmatory_start,
+        "development_cutoff_utc": development_cutoff,
+        "effective_data_boundary_utc": recorded_effective,
         "min_confirmatory_window_hours": boundary.get("min_hours"),
         "candidate_freeze_timestamp_utc": freeze.get("candidate_freeze_utc"),
         "candidate_manifest_hash": freeze.get("manifest_hash"),

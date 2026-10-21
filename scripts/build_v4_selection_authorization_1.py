@@ -56,7 +56,7 @@ ARTIFACT_PATH = REPO_ROOT / ARTIFACT_RELATIVE
 #: The instant at which this authorization is created. It is pinned here so
 #: that the artifact is byte-reproducible; it must not be moved once the
 #: artifact has been committed.
-CREATED_UTC = "2026-10-21T00:16:00Z"
+CREATED_UTC = "2026-10-21T01:02:00Z"
 
 #: Keys removed from the document before the manifest hash is computed.
 MANIFEST_HASH_EXCLUDED_KEYS = ("manifest_hash",)
@@ -214,7 +214,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     # --- the output paths, taken from the execution path itself --------------
     paths = {key: str(v4_runner.DEFAULT_PATHS[key]) for key in OUTPUT_PATH_KEYS}
 
-    boundary = scope["confirmatory_window_start_utc"]
+    boundary = scope["effective_data_boundary_utc"]
 
     document: Dict[str, Any] = {
         "artifact": "v4_selection_authorization",
@@ -344,11 +344,20 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 "development_data_only": True,
                 "candles_before_utc": boundary,
                 "candles_before_utc_rule": (
-                    "Only candles that close at or before the confirmatory-window start "
-                    "recorded by the candidate freeze may be read during the selection run. A "
-                    "dataset that reaches into the confirmatory window is refused before it is "
-                    "read."
+                    "Only candles that close at or before the effective development boundary "
+                    "recorded by the candidate freeze may be read during the selection run. The "
+                    "effective boundary is the earlier of the v4 confirmatory-window start and "
+                    "the preregistered development cutoff, so no run can read a candle that "
+                    "closes inside the open v3 confirmatory window. A dataset that reaches "
+                    "past the boundary is refused before it is read."
                 ),
+                "development_cutoff_utc": scope["development_cutoff_utc"],
+                "development_cutoff_rule": (
+                    "configs/research_v4.json#holdout.development_cutoff_utc: any development "
+                    "data read at or after the v3 confirmatory-window open is inside that "
+                    "window, so the v4 development data ends at the cutoff"
+                ),
+                "v4_confirmatory_window_start_utc": scope["confirmatory_window_start_utc"],
                 "confirmatory_window_never_read_during_selection": True,
                 "v1_holdout_never_reused": True,
                 "v2_confirmatory_window_never_reused": True,

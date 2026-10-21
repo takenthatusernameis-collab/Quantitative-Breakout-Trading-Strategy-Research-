@@ -3803,3 +3803,51 @@ no provider contact, no candle read, no artifact written, no implementation in t
 Implement **Design A** across all points: new v4 pinned-window retrieval (A1), development cutoff at v3 window open `2026-10-20T13:00:00Z` (A2), strict phase gates vs v2/v3 confirmatory windows (A3), full isolated v4 namespace with supersedes from v3 (A4), explicit AWAITING_NEW_CANDIDATES path with evidence (A5). Enforce identity to v1,v2,v3; floor strictly below v3 floor via recompute rule; never mix versions/windows; never re-run/re-tune confirmatory evaluations.
 
 **Next bounded task (queued):** v4 preregistration implementation — versioned `configs/research_v4.json` and, only if design says so, one bounded market-cap retrieval inside its pinned window; respect cutoff and all constraints.
+
+
+## BRAIN-014 — v4 chain repair: the v4 batch had been re-derived with the v2 floor and the v1/v2 identity rule (2026-10-21T00:32:00Z)
+
+**Status:** REPAIRED_IN_THIS_SESSION; one item is open for the coordinator (the exposure counter of the v3 confirmatory window).
+**Type:** defect record and repair (the v4 chain was never run; no result depends on it).
+**Routing:** the durable handoff named the v4 execution protocol and the v4 selection authorization as the next bounded task. Both were delivered by the previous session; the audit of that delivery found that the whole v4 chain below them had been built with the wrong rules, so the repair of the chain was taken up first. The rule of record is the preregistered v4 specification and the BRAIN-013 design record.
+
+### The defect (recomputed from the live artifacts, not quoted)
+
+The v4 chain was a copy of the v3 chain in which three rule bindings were never updated, so **cohort 4 was cohort 3 again**:
+
+1. **The floor.** `scripts/v4_constituent_validation.py` recomputed the floor from `research/universe_manifest_v2.json` (the v2 floor, `HBARUSDT`, 3,627,324,049 USD), while `configs/research_v4.json#universe.expansion_scope.prior_universe_floor` names `research/universe_manifest_v3.json` (the v3 floor, `HTXUSDT`, 1,468,004,153 USD) and requires `strictly_less_than`.
+2. **The identity rule.** `prior_universe_assets(v1, v2)` covered only the v1 and the v2 universe, while the same specification block lists the v1, the v2 **and** the v3 universe as the identity sources.
+3. **The supersedes chain.** `research/universe_manifest_v4.json#supersedes` named the **v2** universe manifest, and its note said "the next batch below the recomputed v2 floor", while BRAIN-013 recommendation 4 asks for the chain from the v3 identities.
+
+Consequence, recomputed from the delivered artifacts: the v4 candidate batch was the v3 candidate batch (the same 20 symbols in the same order), the v4 validated cohort was the v3 validated cohort (`SHIBUSDT`, `QNTUSDT`, `AAVEUSDT`, `WLDUSDT`, `PEPEUSDT`, `ICPUSDT`), and **no** member of the v4 batch was strictly below the v3 floor (the smallest v4 market capitalization was 1,469,710,991 USD, above the floor).
+
+Two further bindings in `configs/research_v4_exclusion_amendment_1.json` were the v3 ones, carried over unchanged: it published the **v2** floor and the v1/v2 identity rule, its `related_artifacts` named the **v3** specification hash (`d6a5f8bb…`) and the **v3** snapshot digest (`01384576…`, retrieved 2026-10-20T11:45:59Z) instead of the v4 ones, its `derived_classification` described the **v3** snapshot (its market capitalizations are the v3 ones), and its `producer` block named three scripts that do not exist in the tree (`scripts/build_research_v4_exclusion_amendment.py`, `scripts/v4_exclusion_classifier.py`, `scripts/verify_research_v4_manifests.py`).
+
+### The second defect: the v4 development data reached into the open v3 confirmatory window
+
+The v4 candle window was bound to the market-cap snapshot timestamp (2026-10-21T00:07:34Z), so the first v4 validation wrote datasets whose last candle opened at 2026-10-20T22:00:00Z and closed at 23:00:00Z — **inside** the v3 confirmatory window, which opened at 2026-10-20T13:00:00Z and is still open. Ten hourly candles per asset, for the six assets that are exactly the v3 cohort, were read from the open v3 window. `configs/research_v4.json#holdout.development_cutoff_utc` (`2026-10-20T13:00:00Z`) and BRAIN-013 recommendation 2 forbid exactly this.
+
+The repair binds the candle window to the preregistered development cutoff instead: the last closed hour before the cutoff is the candle that opens at 2026-10-20T12:00:00Z and closes at 13:00:00Z, so no v4 development candle closes inside the v3 window.
+
+### The repair (all of it re-derived, nothing hand-written into an artifact)
+
+- `scripts/v4_constituent_validation.py`: the floor is recomputed from the **v3** universe manifest; the identity rule covers the **v1, the v2 and the v3** universe; the candle window is bound to `holdout.development_cutoff_utc`; the `supersedes` blocks name the v3 universe and the v3 data manifest; the effective amendment is the highest-numbered `configs/research_v4_exclusion_amendment_*.json`; the derived classification of every snapshot entry is now published.
+- `configs/research_v4_exclusion_amendment_2.json` (new, with producer `scripts/build_research_v4_exclusion_amendment_2.py`): the floor is the recomputed v3 floor, the identity rule covers v1/v2/v3, the bindings name the v4 specification and the v4 snapshot, the derived classification and the derived batch are recomputed from the frozen v4 snapshot. Amendment 1 is frozen and is not edited.
+- `research/universe_manifest_v4.json` and `research/data_manifest_v4.json`: rebuilt. The candidate batch is the top 20 assets of the frozen v4 snapshot strictly below the v3 floor and outside the v1/v2/v3 universe: `BGBUSDT`, `ARBUSDT`, `ETCUSDT`, `VVVUSDT`, `JSTUSDT`, `GTUSDT`, `JUPUSDT`, `KASUSDT`, `KCSUSDT`, `ALGOUSDT`, `RENDERUSDT`, `INJUSDT`, `PIUSDT`, `AEROUSDT`, `FILUSDT`, `LITUSDT`, `NEXOUSDT`, `ZROUSDT`, `PEARLUSDT`, `AKEUSDT`. Seven validate: `ALGOUSDT`, `ARBUSDT`, `ETCUSDT`, `FILUSDT`, `INJUSDT`, `JSTUSDT`, `NEXOUSDT` — no v4 asset is an asset of the v1, the v2 or the v3 universe.
+- `configs/research_v4_candidate_freeze.json`, `configs/research_v4_execution.json`, `configs/research_v4_selection_authorization_1.json`: rebuilt against the new manifests. The freeze records the **effective development boundary** (the earlier of the v4 confirmatory-window start and the preregistered cutoff, i.e. the cutoff) and computes the earliest possible confirmatory-window end from its own start; the selection authorization binds that boundary and the execution path enforces it (`src/v4_campaign/scope.py`, `src/v4_campaign/runner.py`).
+- The six datasets of the discarded batch were deleted; the seven datasets of the new batch replace them under `research/data/candles_v4/`.
+
+### The disclosure and the open item for the coordinator
+
+The market-cap snapshot of the v4 chain was retrieved at 2026-10-20T23:50:06Z, i.e. **after** the v3 confirmatory window opened, and `configs/research_v4.json#universe.snapshot_retrieval` pins that window (`not_before_utc 2026-10-20T23:16:00Z`). The snapshot is universe metadata — a market-capitalization ranking — and not price data; the v3 confirmatory evaluation consumes candles, not rankings. The first v4 validation additionally read ten hourly candles per asset inside the open v3 window, as a consequence of defect 1 (the v4 batch was the v3 batch), and those bytes were deleted in this session before any use: no candle inside the v3 window entered any decision, ranking, result or artifact that survives.
+
+**Open item (coordinator).** The v3 candidate freeze's `data_boundary.access_counting` says "Every read of a candle inside the confirmatory window increments `holdout_exposed_count`". Read literally, the discarded fetch of ten candles per v3-cohort asset is such a read, and the counter in `research/data_manifest_v3.json` and `research_state/checkpoint_v3.json` would have to become non-zero, which would make the v3 confirmatory evaluation unrunnable over a window that is 99.5% untouched. This session did **not** change that counter and did **not** edit any v3 artifact; the recommendation is to record the incident as a disclosed, discarded pre-use read (a separate disclosure, not an evaluation exposure) and to confirm that reading. The alternative — incrementing the counter and re-opening the v3 window — is a campaign-level decision that changes the v3 timeline and is not taken here.
+
+### The guards that keep the defect from coming back
+
+- `scripts/verify_research_v4_manifests.py` (new; it is the verifier the effective amendment names): it re-derives the batch from the frozen snapshot, recomputes the floor from the v3 universe manifest, refuses any member that is not strictly below that floor, refuses any member that is an asset of the v1, the v2 or the v3 universe, refuses any dataset that closes a candle at or after the cutoff, checks the `supersedes` chain and the hash-verified datasets.
+- `tests/test_v4_manifests.py` (new): the floor, the identity rule, the cutoff and the supersedes chain as live assertions plus five tamper controls that prove the verifier refuses a member above the floor, a member of a prior universe, a stale supersedes chain, a dataset that reaches past the cutoff and a batch that is not the re-derived one.
+- `tests/test_v4_campaign_benchmark_rule.py` (new; the authorization referenced it and it did not exist): the benchmark alignment rule, the fail-closed behaviour, the unchanged grid, the refusal of a run without the authorization and the new boundary rule.
+- `scripts/verify_v4_selection_authorization_1.py`: the data boundary is now checked against the effective development boundary, against the preregistered cutoff and against the last candle of every validated dataset.
+
+**Recommendation:** accept the repaired v4 chain; treat the exposure-counter question as the one open campaign decision; keep the v4 confirmatory window opening after the v3 gate clears (BRAIN-013 phase gates).

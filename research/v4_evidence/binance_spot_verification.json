@@ -1,687 +1,681 @@
 {
-  "created_utc": "2026-10-21T00:07:34.334525+00:00",
+  "created_utc": "2026-10-21T00:52:53.491360+00:00",
   "pairs": {
-    "AAVEUSDT": {
+    "AEROUSDT": {
       "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "AAVEUSDT",
+      "pair_symbol": "AEROUSDT",
       "probes": [
         {
           "elapsed_ms": 35,
           "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
           "error": "HTTP 451",
           "http_status": 451,
-          "pair_symbol": "AAVEUSDT",
-          "probed_at_utc": "2026-10-21T00:06:44.422085+00:00",
+          "pair_symbol": "AEROUSDT",
+          "probed_at_utc": "2026-10-21T00:52:30.068672+00:00",
           "reachable": false,
           "tradeable": false
         },
         {
-          "base_asset": "AAVE",
-          "elapsed_ms": 652,
+          "base_asset": "AERO",
+          "elapsed_ms": 718,
           "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
           "error": null,
           "exchange_status": "TRADING",
           "http_status": 200,
-          "pair_symbol": "AAVEUSDT",
-          "probed_at_utc": "2026-10-21T00:06:44.458086+00:00",
+          "pair_symbol": "AEROUSDT",
+          "probed_at_utc": "2026-10-21T00:52:30.104367+00:00",
           "quote_asset": "USDT",
           "reachable": true,
           "tradeable": true
         }
       ],
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:44.458086+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:30.104367+00:00"
     },
-    "ASTERUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "ASTERUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 30,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "ASTERUSDT",
-          "probed_at_utc": "2026-10-21T00:07:05.265020+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "ASTER",
-          "elapsed_ms": 655,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "ASTERUSDT",
-          "probed_at_utc": "2026-10-21T00:07:05.296336+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:05.296336+00:00"
-    },
-    "BTWUSDT": {
+    "AKEUSDT": {
       "endpoint_used": null,
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 400
       },
-      "pair_symbol": "BTWUSDT",
+      "pair_symbol": "AKEUSDT",
       "probes": [
         {
-          "elapsed_ms": 164,
+          "elapsed_ms": 112,
           "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
           "error": "HTTP 451",
           "http_status": 451,
-          "pair_symbol": "BTWUSDT",
-          "probed_at_utc": "2026-10-21T00:06:29.759679+00:00",
+          "pair_symbol": "AKEUSDT",
+          "probed_at_utc": "2026-10-21T00:52:52.725387+00:00",
           "reachable": false,
           "tradeable": false
         },
         {
-          "elapsed_ms": 694,
+          "elapsed_ms": 651,
           "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
           "error": "HTTP 400",
           "http_status": 400,
-          "pair_symbol": "BTWUSDT",
-          "probed_at_utc": "2026-10-21T00:06:29.924889+00:00",
+          "pair_symbol": "AKEUSDT",
+          "probed_at_utc": "2026-10-21T00:52:52.838738+00:00",
           "reachable": false,
           "tradeable": false
         }
       ],
       "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:06:29.924889+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:52.838738+00:00"
     },
-    "CROUSDT": {
-      "endpoint_used": null,
+    "ALGOUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "CROUSDT",
+      "pair_symbol": "ALGOUSDT",
       "probes": [
         {
           "elapsed_ms": 31,
           "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
           "error": "HTTP 451",
           "http_status": 451,
-          "pair_symbol": "CROUSDT",
-          "probed_at_utc": "2026-10-21T00:06:30.620641+00:00",
+          "pair_symbol": "ALGOUSDT",
+          "probed_at_utc": "2026-10-21T00:52:10.707203+00:00",
           "reachable": false,
           "tradeable": false
         },
         {
-          "elapsed_ms": 671,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": "HTTP 400",
-          "http_status": 400,
-          "pair_symbol": "CROUSDT",
-          "probed_at_utc": "2026-10-21T00:06:30.653238+00:00",
-          "reachable": false,
-          "tradeable": false
-        }
-      ],
-      "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:06:30.653238+00:00"
-    },
-    "ENAUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "ENAUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 30,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "ENAUSDT",
-          "probed_at_utc": "2026-10-21T00:06:37.939067+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "ENA",
-          "elapsed_ms": 653,
+          "base_asset": "ALGO",
+          "elapsed_ms": 652,
           "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
           "error": null,
           "exchange_status": "TRADING",
           "http_status": 200,
-          "pair_symbol": "ENAUSDT",
-          "probed_at_utc": "2026-10-21T00:06:37.970670+00:00",
+          "pair_symbol": "ALGOUSDT",
+          "probed_at_utc": "2026-10-21T00:52:10.739295+00:00",
           "quote_asset": "USDT",
           "reachable": true,
           "tradeable": true
         }
       ],
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:37.970670+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:10.739295+00:00"
     },
-    "HTXUSDT": {
-      "endpoint_used": null,
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
-      },
-      "pair_symbol": "HTXUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 100,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "HTXUSDT",
-          "probed_at_utc": "2026-10-21T00:07:33.514957+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "elapsed_ms": 717,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": "HTTP 400",
-          "http_status": 400,
-          "pair_symbol": "HTXUSDT",
-          "probed_at_utc": "2026-10-21T00:07:33.615780+00:00",
-          "reachable": false,
-          "tradeable": false
-        }
-      ],
-      "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:07:33.615780+00:00"
-    },
-    "ICPUSDT": {
+    "ARBUSDT": {
       "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "ICPUSDT",
+      "pair_symbol": "ARBUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 105,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "ARBUSDT",
+          "probed_at_utc": "2026-10-21T00:51:41.259949+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "ARB",
+          "elapsed_ms": 676,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "ARBUSDT",
+          "probed_at_utc": "2026-10-21T00:51:41.366203+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:51:41.366203+00:00"
+    },
+    "BGBUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "BGBUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 142,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "BGBUSDT",
+          "probed_at_utc": "2026-10-21T00:51:40.260567+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 854,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "BGBUSDT",
+          "probed_at_utc": "2026-10-21T00:51:40.404462+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:51:40.404462+00:00"
+    },
+    "ETCUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "ETCUSDT",
       "probes": [
         {
           "elapsed_ms": 36,
           "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
           "error": "HTTP 451",
           "http_status": 451,
-          "pair_symbol": "ICPUSDT",
-          "probed_at_utc": "2026-10-21T00:07:26.879999+00:00",
+          "pair_symbol": "ETCUSDT",
+          "probed_at_utc": "2026-10-21T00:51:48.054190+00:00",
           "reachable": false,
           "tradeable": false
         },
         {
-          "base_asset": "ICP",
-          "elapsed_ms": 651,
+          "base_asset": "ETC",
+          "elapsed_ms": 655,
           "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
           "error": null,
           "exchange_status": "TRADING",
           "http_status": 200,
-          "pair_symbol": "ICPUSDT",
-          "probed_at_utc": "2026-10-21T00:07:26.917129+00:00",
+          "pair_symbol": "ETCUSDT",
+          "probed_at_utc": "2026-10-21T00:51:48.091372+00:00",
           "quote_asset": "USDT",
           "reachable": true,
           "tradeable": true
         }
       ],
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:26.917129+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:51:48.091372+00:00"
     },
-    "MNTUSDT": {
-      "endpoint_used": null,
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
-      },
-      "pair_symbol": "MNTUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 35,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "MNTUSDT",
-          "probed_at_utc": "2026-10-21T00:07:19.490271+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "elapsed_ms": 651,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": "HTTP 400",
-          "http_status": 400,
-          "pair_symbol": "MNTUSDT",
-          "probed_at_utc": "2026-10-21T00:07:19.525771+00:00",
-          "reachable": false,
-          "tradeable": false
-        }
-      ],
-      "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:07:19.525771+00:00"
-    },
-    "MORPHOUSDT": {
+    "FILUSDT": {
       "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "MORPHOUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 49,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "MORPHOUSDT",
-          "probed_at_utc": "2026-10-21T00:07:23.536235+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "MORPHO",
-          "elapsed_ms": 651,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "MORPHOUSDT",
-          "probed_at_utc": "2026-10-21T00:07:23.585999+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:23.585999+00:00"
-    },
-    "MUSDT": {
-      "endpoint_used": null,
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
-      },
-      "pair_symbol": "MUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 170,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "MUSDT",
-          "probed_at_utc": "2026-10-21T00:07:18.665098+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "elapsed_ms": 653,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": "HTTP 400",
-          "http_status": 400,
-          "pair_symbol": "MUSDT",
-          "probed_at_utc": "2026-10-21T00:07:18.836275+00:00",
-          "reachable": false,
-          "tradeable": false
-        }
-      ],
-      "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:07:18.836275+00:00"
-    },
-    "OKBUSDT": {
-      "endpoint_used": null,
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
-      },
-      "pair_symbol": "OKBUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 34,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "OKBUSDT",
-          "probed_at_utc": "2026-10-21T00:06:43.731690+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "elapsed_ms": 654,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": "HTTP 400",
-          "http_status": 400,
-          "pair_symbol": "OKBUSDT",
-          "probed_at_utc": "2026-10-21T00:06:43.766446+00:00",
-          "reachable": false,
-          "tradeable": false
-        }
-      ],
-      "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:06:43.766446+00:00"
-    },
-    "ONDOUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "ONDOUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 58,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "ONDOUSDT",
-          "probed_at_utc": "2026-10-21T00:07:01.149960+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "ONDO",
-          "elapsed_ms": 652,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "ONDOUSDT",
-          "probed_at_utc": "2026-10-21T00:07:01.209634+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:01.209634+00:00"
-    },
-    "PEPEUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "PEPEUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 32,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "PEPEUSDT",
-          "probed_at_utc": "2026-10-21T00:07:08.600267+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "PEPE",
-          "elapsed_ms": 649,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "PEPEUSDT",
-          "probed_at_utc": "2026-10-21T00:07:08.633382+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:08.633382+00:00"
-    },
-    "PUMPUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "PUMPUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 52,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "PUMPUSDT",
-          "probed_at_utc": "2026-10-21T00:06:57.742807+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "PUMP",
-          "elapsed_ms": 686,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "PUMPUSDT",
-          "probed_at_utc": "2026-10-21T00:06:57.796323+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:57.796323+00:00"
-    },
-    "QNTUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "QNTUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 51,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "QNTUSDT",
-          "probed_at_utc": "2026-10-21T00:06:31.325158+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "QNT",
-          "elapsed_ms": 654,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "QNTUSDT",
-          "probed_at_utc": "2026-10-21T00:06:31.377564+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:31.377564+00:00"
-    },
-    "SHIBUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "SHIBUSDT",
+      "pair_symbol": "FILUSDT",
       "probes": [
         {
           "elapsed_ms": 103,
           "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
           "error": "HTTP 451",
           "http_status": 451,
-          "pair_symbol": "SHIBUSDT",
-          "probed_at_utc": "2026-10-21T00:06:22.958663+00:00",
+          "pair_symbol": "FILUSDT",
+          "probed_at_utc": "2026-10-21T00:52:32.199246+00:00",
           "reachable": false,
           "tradeable": false
         },
         {
-          "base_asset": "SHIB",
-          "elapsed_ms": 651,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "SHIBUSDT",
-          "probed_at_utc": "2026-10-21T00:06:23.063078+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:23.063078+00:00"
-    },
-    "SKYUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "SKYUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 31,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "SKYUSDT",
-          "probed_at_utc": "2026-10-21T00:07:15.325748+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "SKY",
-          "elapsed_ms": 648,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "SKYUSDT",
-          "probed_at_utc": "2026-10-21T00:07:15.357434+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:15.357434+00:00"
-    },
-    "TAOUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "TAOUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 95,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "TAOUSDT",
-          "probed_at_utc": "2026-10-21T00:06:17.166468+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "TAO",
-          "elapsed_ms": 656,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "TAOUSDT",
-          "probed_at_utc": "2026-10-21T00:06:17.262541+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:17.262541+00:00"
-    },
-    "WLDUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "WLDUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 122,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "WLDUSDT",
-          "probed_at_utc": "2026-10-21T00:06:51.008277+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "WLD",
-          "elapsed_ms": 660,
-          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
-          "error": null,
-          "exchange_status": "TRADING",
-          "http_status": 200,
-          "pair_symbol": "WLDUSDT",
-          "probed_at_utc": "2026-10-21T00:06:51.131395+00:00",
-          "quote_asset": "USDT",
-          "reachable": true,
-          "tradeable": true
-        }
-      ],
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:51.131395+00:00"
-    },
-    "WLFIUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "WLFIUSDT",
-      "probes": [
-        {
-          "elapsed_ms": 29,
-          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
-          "error": "HTTP 451",
-          "http_status": 451,
-          "pair_symbol": "WLFIUSDT",
-          "probed_at_utc": "2026-10-21T00:07:20.178480+00:00",
-          "reachable": false,
-          "tradeable": false
-        },
-        {
-          "base_asset": "WLFI",
+          "base_asset": "FIL",
           "elapsed_ms": 653,
           "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
           "error": null,
           "exchange_status": "TRADING",
           "http_status": 200,
-          "pair_symbol": "WLFIUSDT",
-          "probed_at_utc": "2026-10-21T00:07:20.208041+00:00",
+          "pair_symbol": "FILUSDT",
+          "probed_at_utc": "2026-10-21T00:52:32.303662+00:00",
           "quote_asset": "USDT",
           "reachable": true,
           "tradeable": true
         }
       ],
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:20.208041+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:32.303662+00:00"
+    },
+    "GTUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "GTUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 119,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "GTUSDT",
+          "probed_at_utc": "2026-10-21T00:52:02.128761+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 990,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "GTUSDT",
+          "probed_at_utc": "2026-10-21T00:52:02.249275+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:52:02.249275+00:00"
+    },
+    "INJUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "INJUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 69,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "INJUSDT",
+          "probed_at_utc": "2026-10-21T00:52:22.637292+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "INJ",
+          "elapsed_ms": 653,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "INJUSDT",
+          "probed_at_utc": "2026-10-21T00:52:22.707632+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:22.707632+00:00"
+    },
+    "JSTUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "JSTUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 55,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "JSTUSDT",
+          "probed_at_utc": "2026-10-21T00:51:55.435374+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "JST",
+          "elapsed_ms": 652,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "JSTUSDT",
+          "probed_at_utc": "2026-10-21T00:51:55.491827+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:51:55.491827+00:00"
+    },
+    "JUPUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "JUPUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 62,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "JUPUSDT",
+          "probed_at_utc": "2026-10-21T00:52:03.241209+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "JUP",
+          "elapsed_ms": 655,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "JUPUSDT",
+          "probed_at_utc": "2026-10-21T00:52:03.304122+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:03.304122+00:00"
+    },
+    "KASUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "KASUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 35,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "KASUSDT",
+          "probed_at_utc": "2026-10-21T00:52:09.217199+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 676,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "KASUSDT",
+          "probed_at_utc": "2026-10-21T00:52:09.253667+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:52:09.253667+00:00"
+    },
+    "KCSUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "KCSUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 120,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "KCSUSDT",
+          "probed_at_utc": "2026-10-21T00:52:09.931480+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 654,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "KCSUSDT",
+          "probed_at_utc": "2026-10-21T00:52:10.052048+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:52:10.052048+00:00"
+    },
+    "LITUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "LITUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 117,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "LITUSDT",
+          "probed_at_utc": "2026-10-21T00:52:38.884293+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "LIT",
+          "elapsed_ms": 1015,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "BREAK",
+          "http_status": 200,
+          "pair_symbol": "LITUSDT",
+          "probed_at_utc": "2026-10-21T00:52:39.002633+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:52:39.002633+00:00"
+    },
+    "NEXOUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "NEXOUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 30,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "NEXOUSDT",
+          "probed_at_utc": "2026-10-21T00:52:40.018734+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "NEXO",
+          "elapsed_ms": 653,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "NEXOUSDT",
+          "probed_at_utc": "2026-10-21T00:52:40.049322+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:40.049322+00:00"
+    },
+    "PEARLUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "PEARLUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 36,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "PEARLUSDT",
+          "probed_at_utc": "2026-10-21T00:52:52.034712+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 652,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "PEARLUSDT",
+          "probed_at_utc": "2026-10-21T00:52:52.071641+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:52:52.071641+00:00"
+    },
+    "PIUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "PIUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 32,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "PIUSDT",
+          "probed_at_utc": "2026-10-21T00:52:29.382744+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 651,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "PIUSDT",
+          "probed_at_utc": "2026-10-21T00:52:29.415889+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:52:29.415889+00:00"
+    },
+    "RENDERUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "RENDERUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 110,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "RENDERUSDT",
+          "probed_at_utc": "2026-10-21T00:52:17.347538+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "RENDER",
+          "elapsed_ms": 655,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "RENDERUSDT",
+          "probed_at_utc": "2026-10-21T00:52:17.458071+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:17.458071+00:00"
+    },
+    "VVVUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "VVVUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 32,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "VVVUSDT",
+          "probed_at_utc": "2026-10-21T00:51:54.748506+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "elapsed_ms": 652,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": "HTTP 400",
+          "http_status": 400,
+          "pair_symbol": "VVVUSDT",
+          "probed_at_utc": "2026-10-21T00:51:54.782049+00:00",
+          "reachable": false,
+          "tradeable": false
+        }
+      ],
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:51:54.782049+00:00"
+    },
+    "ZROUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "ZROUSDT",
+      "probes": [
+        {
+          "elapsed_ms": 33,
+          "endpoint": "https://api.binance.com/api/v3/exchangeInfo",
+          "error": "HTTP 451",
+          "http_status": 451,
+          "pair_symbol": "ZROUSDT",
+          "probed_at_utc": "2026-10-21T00:52:46.516832+00:00",
+          "reachable": false,
+          "tradeable": false
+        },
+        {
+          "base_asset": "ZRO",
+          "elapsed_ms": 686,
+          "endpoint": "https://data-api.binance.vision/api/v3/exchangeInfo",
+          "error": null,
+          "exchange_status": "TRADING",
+          "http_status": 200,
+          "pair_symbol": "ZROUSDT",
+          "probed_at_utc": "2026-10-21T00:52:46.551185+00:00",
+          "quote_asset": "USDT",
+          "reachable": true,
+          "tradeable": true
+        }
+      ],
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:46.551185+00:00"
     }
   },
   "policy": "one bounded read-only request to the primary host per pair; on failure one bounded request to the documented failover host; both statuses and timestamps are recorded",

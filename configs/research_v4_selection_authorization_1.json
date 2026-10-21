@@ -4,7 +4,7 @@
   "version": 1,
   "protocol_version": "v4",
   "universe_version": "v4",
-  "created_utc": "2026-10-21T00:16:00Z",
+  "created_utc": "2026-10-21T01:02:00Z",
   "authorization_status": "PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN",
   "specification_purpose": "Authorize exactly one bounded v4 selection grid run over the frozen v4 candidate set, under the unchanged v1 selection rule, on development data only, writing only to the v4 paths, with the BRAIN-013 benchmark rule built in. This artifact names the execution path, the bounds, the benchmark rule, the stopping conditions, the rollback rule and the falsifiers of that run. Building it executes nothing: no grid is run, no candle is read, no result exists.",
   "design_basis": {
@@ -38,37 +38,37 @@
     },
     "scope": {
       "binance_pairs": [
-        "SHIBUSDT",
-        "QNTUSDT",
-        "AAVEUSDT",
-        "WLDUSDT",
-        "PEPEUSDT",
-        "ICPUSDT"
+        "ARBUSDT",
+        "ETCUSDT",
+        "JSTUSDT",
+        "ALGOUSDT",
+        "INJUSDT",
+        "FILUSDT",
+        "NEXOUSDT"
       ],
-      "count": 6,
+      "count": 7,
       "candidate_manifest_path": "configs/research_v4_candidate_freeze.json",
-      "bound_to_universe_hash": "5e670ba0e7226d2ff54b8d57cc25b727efca247609003daa51173380b379793f",
-      "bound_to_data_hash": "4f33b928f2e7b14253fbd1412813e5e0d9ac5de89694d018ae9acda6579fe232",
-      "bound_to_base_data_hash": "4f33b928f2e7b14253fbd1412813e5e0d9ac5de89694d018ae9acda6579fe232",
-      "bound_to_freeze_hash": "01110ad44ff59d67dad9fe953739b5025f698fdfe0f8b98aa551bb17384c60a4",
+      "bound_to_universe_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
+      "bound_to_data_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+      "bound_to_base_data_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+      "bound_to_freeze_hash": "9f0511189b6f742b6e6682ccf3c5607d68db8fce8d595c389ce6329f5357fb15",
       "membership_rule": "Exactly the constituents marked validated in research/universe_manifest_v4.json. The run may not re-rank, widen or narrow the frozen set.",
       "widening_by_reranking_forbidden": true,
       "excluded_assets_stay_excluded": true,
       "excluded_after_validation": {
-        "TAOUSDT": "insufficient_hourly_history",
-        "BTWUSDT": "binance_spot_unavailable",
-        "CROUSDT": "binance_spot_unavailable",
-        "ENAUSDT": "insufficient_hourly_history",
-        "OKBUSDT": "binance_spot_unavailable",
-        "PUMPUSDT": "insufficient_hourly_history",
-        "ONDOUSDT": "insufficient_hourly_history",
-        "ASTERUSDT": "insufficient_hourly_history",
-        "SKYUSDT": "insufficient_hourly_history",
-        "MUSDT": "binance_spot_unavailable",
-        "MNTUSDT": "binance_spot_unavailable",
-        "WLFIUSDT": "insufficient_hourly_history",
-        "MORPHOUSDT": "insufficient_hourly_history",
-        "HTXUSDT": "binance_spot_unavailable"
+        "BGBUSDT": "binance_spot_unavailable",
+        "VVVUSDT": "binance_spot_unavailable",
+        "GTUSDT": "binance_spot_unavailable",
+        "JUPUSDT": "insufficient_hourly_history",
+        "KASUSDT": "binance_spot_unavailable",
+        "KCSUSDT": "binance_spot_unavailable",
+        "RENDERUSDT": "insufficient_hourly_history",
+        "PIUSDT": "binance_spot_unavailable",
+        "AEROUSDT": "insufficient_hourly_history",
+        "LITUSDT": "binance_spot_unavailable",
+        "ZROUSDT": "insufficient_hourly_history",
+        "PEARLUSDT": "binance_spot_unavailable",
+        "AKEUSDT": "binance_spot_unavailable"
       },
       "benchmark_is_not_a_candidate": true
     },
@@ -107,8 +107,8 @@
       "hashed_set_root": "src/breakout_research",
       "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
       "execution_path_root": "src/v4_campaign",
-      "execution_path_digest": "6f0c74ab196438f500acc3df277e7b72f1615377a59833bf16a3da1d612ba2ce",
-      "run_code_identity": "20b936911c9f266d300c410fbb86aef98832efae12e4e065812f55659daffebd",
+      "execution_path_digest": "4f81366e84d1ab24bd0fe41052449e9e604d4f14a9e0eef17ff52427923612fa",
+      "run_code_identity": "f7274c9624a91dba0fdfe1a96972e6069333a7e3cc23a145af494bb81b534c4b",
       "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
       "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
       "ordered_code_hash_is_portable": false,
@@ -116,8 +116,11 @@
     },
     "data_boundary": {
       "development_data_only": true,
-      "candles_before_utc": "2026-10-21T00:08:26Z",
-      "candles_before_utc_rule": "Only candles that close at or before the confirmatory-window start recorded by the candidate freeze may be read during the selection run. A dataset that reaches into the confirmatory window is refused before it is read.",
+      "candles_before_utc": "2026-10-20T13:00:00Z",
+      "candles_before_utc_rule": "Only candles that close at or before the effective development boundary recorded by the candidate freeze may be read during the selection run. The effective boundary is the earlier of the v4 confirmatory-window start and the preregistered development cutoff, so no run can read a candle that closes inside the open v3 confirmatory window. A dataset that reaches past the boundary is refused before it is read.",
+      "development_cutoff_utc": "2026-10-20T13:00:00Z",
+      "development_cutoff_rule": "configs/research_v4.json#holdout.development_cutoff_utc: any development data read at or after the v3 confirmatory-window open is inside that window, so the v4 development data ends at the cutoff",
+      "v4_confirmatory_window_start_utc": "2026-10-21T01:00:00Z",
       "confirmatory_window_never_read_during_selection": true,
       "v1_holdout_never_reused": true,
       "v2_confirmatory_window_never_reused": true,
@@ -150,14 +153,14 @@
       "never_use_v3_paths": true
     },
     "bounds": {
-      "max_assets": 6,
+      "max_assets": 7,
       "max_configs_per_asset": 2304,
-      "max_total_config_units": 13824,
+      "max_total_config_units": 16128,
       "attempts": 1,
       "max_retries_on_technical_failure": 3,
-      "planned_config_units": 13824,
-      "planned_execution_units": 165888,
-      "planned_execution_units_note": "The bounded run holds 6 assets x 2304 configurations x 4 validation folds x 3 cost scenarios execution units. The bound that the authorization enforces is max_total_config_units, the number of asset-configuration pairs; the fold and cost multipliers follow the inherited, unchanged fold and cost blocks.",
+      "planned_config_units": 16128,
+      "planned_execution_units": 193536,
+      "planned_execution_units_note": "The bounded run holds 7 assets x 2304 configurations x 4 validation folds x 3 cost scenarios execution units. The bound that the authorization enforces is max_total_config_units, the number of asset-configuration pairs; the fold and cost multipliers follow the inherited, unchanged fold and cost blocks.",
       "resource_limits": "the v4 execution protocol records max_logical_runs 1, max_shards_per_run 10000, max_wall_time_hours 6 and a retry policy of no unbounded retries"
     },
     "benchmark": {
@@ -185,9 +188,9 @@
       "note": "The v4 data manifest publishes no BTCUSDT entry. The benchmark dataset is referenced directly from the immutable v3 data area; it is external to the v4 data-manifest identity. It is hash-verified before every use and it is index-aligned with the six evaluated assets, so the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called."
     },
     "effective_data_manifest": {
-      "effective_data_manifest_hash": "4f33b928f2e7b14253fbd1412813e5e0d9ac5de89694d018ae9acda6579fe232",
+      "effective_data_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
       "base_manifest_path": "research/data_manifest_v4.json",
-      "base_manifest_hash": "4f33b928f2e7b14253fbd1412813e5e0d9ac5de89694d018ae9acda6579fe232",
+      "base_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
       "note": "The effective v4 data manifest is the base manifest alone; v4 publishes no data-manifest amendment. The benchmark dataset is referenced directly from the v3 data area and is external to this identity."
     },
     "stopping_conditions": [
@@ -230,20 +233,20 @@
     },
     "v4_candidate_freeze": {
       "path": "configs/research_v4_candidate_freeze.json",
-      "manifest_hash": "01110ad44ff59d67dad9fe953739b5025f698fdfe0f8b98aa551bb17384c60a4",
-      "frozen_at_utc": "2026-10-21T00:08:26Z"
+      "manifest_hash": "9f0511189b6f742b6e6682ccf3c5607d68db8fce8d595c389ce6329f5357fb15",
+      "frozen_at_utc": "2026-10-21T00:55:32Z"
     },
     "v4_universe_manifest": {
       "path": "research/universe_manifest_v4.json",
-      "manifest_hash": "5e670ba0e7226d2ff54b8d57cc25b727efca247609003daa51173380b379793f"
+      "manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4"
     },
     "v4_data_manifest": {
       "path": "research/data_manifest_v4.json",
-      "manifest_hash": "4f33b928f2e7b14253fbd1412813e5e0d9ac5de89694d018ae9acda6579fe232"
+      "manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129"
     },
     "v4_execution_protocol": {
       "path": "configs/research_v4_execution.json",
-      "specification_hash": "e03b10f7dbe265c898677db144e24ffc98418e9026883c3918cd9a9fd469fb47"
+      "specification_hash": "57fce7c794dd74b0b77f971af6669734e062e271a3199f7668065eac71dbb9ac"
     },
     "v1_campaign_authorization": {
       "path": "research_state/campaign_authorization.json",
@@ -260,7 +263,7 @@
     {
       "id": "RL1",
       "location": "the v4 selection run's result volume",
-      "limitation": "The bounded run writes 165888 execution units. At the v1 record size this is of the order of 0.5 GB of shards and of the order of 100 MB of result stream. The v1 shards are bounded to 4 MiB per file; the v1 result stream was a single file of 50 MB that the campaign could not push as one blob.",
+      "limitation": "The bounded run writes 193536 execution units. At the v1 record size this is of the order of 0.5 GB of shards and of the order of 100 MB of result stream. The v1 shards are bounded to 4 MiB per file; the v1 result stream was a single file of 50 MB that the campaign could not push as one blob.",
       "consequence": "The shards under research/shards_v4 are the authoritative record set and are committed as bounded files of at most 4 MiB each, as the v1 campaign did. The single-file result stream research/results_v4.jsonl is expected to be large and is a projection of the verified shards, regenerated from them. The ledger, the results manifest and the checkpoint are small and are committed. The v1, v2 and v3 artifacts stay untouched either way."
     },
     {
@@ -289,5 +292,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 and v3 artifacts."
   },
-  "manifest_hash": "de8366fe3752f95fd1148dc20875d3fdb30ee44d98b76f6a2bf485d381fecdae"
+  "manifest_hash": "0e1634ee763bd8389432eca9487c41ef384c886bfead397cebacea542e554d16"
 }

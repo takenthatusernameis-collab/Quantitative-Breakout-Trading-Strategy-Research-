@@ -43,6 +43,7 @@ import argparse
 import hashlib
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -376,11 +377,36 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     ):
         failures.append("the planned run exceeds the authorized configuration-unit bound")
 
-    # 4. The data boundary is the confirmatory window start of the freeze.
+    # 4. The data boundary is the effective development boundary of the freeze.
     boundary = run.get("data_boundary") or {}
     window_start = dig(freeze, "confirmatory_window.opens_utc")
-    if boundary.get("candles_before_utc") != window_start:
-        failures.append("the authorized data boundary is not the confirmatory window start")
+    development_cutoff = dig(freeze, "data_boundary.development_cutoff_utc")
+    recorded_effective = dig(freeze, "data_boundary.effective_data_boundary_utc")
+    if not development_cutoff or not recorded_effective:
+        failures.append("the frozen candidate set records no development cutoff")
+    else:
+        if dig(spec_v4, "holdout.development_cutoff_utc") != development_cutoff:
+            failures.append(
+                "the development cutoff of the freeze is not the cutoff the v4 specification "
+                "preregisters"
+            )
+        expected_effective = min(value for value in (window_start, development_cutoff) if value)
+        if recorded_effective != expected_effective:
+            failures.append(
+                "the effective data boundary of the freeze is not the earlier of the "
+                "confirmatory-window start and the development cutoff"
+            )
+        if boundary.get("candles_before_utc") != recorded_effective:
+            failures.append("the authorized data boundary is not the effective development boundary")
+        if boundary.get("development_cutoff_utc") != development_cutoff:
+            failures.append("the authorization does not record the development cutoff")
+        if boundary.get("v4_confirmatory_window_start_utc") != window_start:
+            failures.append("the authorization does not record the v4 confirmatory-window start")
+        if str(boundary.get("candles_before_utc")) > str(development_cutoff):
+            failures.append(
+                "the authorized data boundary is after the development cutoff, so the run "
+                "could read a candle inside the open v3 confirmatory window"
+            )
     for flag in (
         "development_data_only",
         "confirmatory_window_never_read_during_selection",
@@ -394,6 +420,23 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             failures.append(f"the data boundary does not record {flag}")
     if boundary.get("provider_requests") != 0:
         failures.append("the authorization does not record that the run makes no provider request")
+    cutoff_ms = 0
+    if boundary.get("candles_before_utc"):
+        cutoff_ms = int(
+            datetime.fromisoformat(
+                str(boundary["candles_before_utc"]).replace("Z", "+00:00")
+            ).timestamp() * 1000
+        )
+    for pair, entry in (data_manifest.get("assets") or {}).items():
+        if entry.get("validated") is not True:
+            continue
+        last = entry.get("last_candle_timestamp")
+        if last is None or not cutoff_ms:
+            continue
+        if int(last) + 3600000 > cutoff_ms:
+            failures.append(
+                f"the dataset of {pair} closes a candle after the authorized data boundary"
+            )
 
     # 5. The selection rule is the unchanged v1 rule.
     rule = run.get("selection_rule") or {}

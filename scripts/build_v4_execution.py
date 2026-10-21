@@ -55,7 +55,7 @@ ARTIFACT_PATH = REPO_ROOT / ARTIFACT_RELATIVE
 #: The instant at which this protocol is created. It is pinned here so
 #: that the artifact is byte-reproducible; it must not be moved once the
 #: artifact has been committed.
-CREATED_UTC = "2026-10-21T00:16:00Z"
+CREATED_UTC = "2026-10-21T01:02:00Z"
 
 #: Keys removed from the document before the manifest hash is computed.
 MANIFEST_HASH_EXCLUDED_KEYS = ("manifest_hash",)
@@ -177,6 +177,8 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
 
     boundary = dig(freeze, "confirmatory_window.opens_utc")
     min_hours = dig(freeze, "confirmatory_window.min_hours")
+    effective_boundary = dig(freeze, "data_boundary.effective_data_boundary_utc")
+    development_cutoff = dig(freeze, "data_boundary.development_cutoff_utc")
 
     document: Dict[str, Any] = {
         "artifact": "v4_execution_protocol",
@@ -184,12 +186,26 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "candidate_freeze_and_confirmatory_window": {
             "candidate_manifest_committed_and_hash_bound_before_first_confirmatory_candle": True,
             "confirmatory_window_opens_utc": boundary,
+            "development_cutoff_utc": development_cutoff,
+            "development_data_boundary_utc": effective_boundary,
+            "development_data_boundary_rule": (
+                "the effective development boundary is the earlier of the v4 "
+                "confirmatory-window start and the preregistered development cutoff; no "
+                "development candle that closes at or after that instant may be read, so no "
+                "candle inside the open v3 confirmatory window is ever read by a v4 run"
+            ),
             "min_confirmatory_window_hours": min_hours,
             "min_confirmatory_window_rationale": "90 days of closed hourly candles after freeze",
             "no_ranking_or_retuning_on_holdout": True,
             "single_use": True,
             "window_overlap_with_v1_or_v2_holdout_forbidden": True,
-            "window_overlap_with_v3_confirmatory_window_forbidden": True,
+            "window_overlap_with_v3_confirmatory_window_rule": (
+                "the v4 confirmatory window opens inside the open v3 confirmatory window in "
+                "time; the two share no evaluated asset, because the v4 candidate set is "
+                "disjoint from the v1, v2 and v3 candidate sets, and the v4 evaluation may "
+                "start only after the v3 confirmatory gate clears (BRAIN-013 phase gates)"
+            ),
+            "v4_candidate_set_disjoint_from_v1_v2_v3_candidate_sets": True,
         },
         "code_hash_constraint": {
             "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",

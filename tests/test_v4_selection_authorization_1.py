@@ -33,6 +33,7 @@ import importlib.util
 import json
 import os
 import shutil
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List
 
@@ -79,6 +80,10 @@ verifier = _load_module(
 producer = _load_module(
     "build_v4_selection_authorization_1", "scripts/build_v4_selection_authorization_1.py"
 )
+
+
+def _parse_utc_ms(value: str) -> int:
+    return int(datetime.fromisoformat(str(value).replace("Z", "+00:00")).timestamp() * 1000)
 
 
 def _load(path: Path) -> Dict[str, Any]:
@@ -208,7 +213,8 @@ def test_the_authorized_scope_is_the_frozen_candidate_set() -> None:
         if member.get("validated") is True
     ]
     assert scope["binance_pairs"] == pairs
-    assert scope["count"] == len(pairs) == 6
+    assert scope["count"] == len(pairs)
+    assert len(pairs) > 0
     assert scope["bound_to_freeze_hash"] == _load(FREEZE_PATH)["manifest_hash"]
     assert scope["bound_to_universe_hash"] == _load(UNIVERSE_PATH)["manifest_hash"]
     assert scope["benchmark_is_not_a_candidate"] is True
@@ -223,7 +229,7 @@ def test_the_frozen_candidate_set_is_the_validated_v4_universe() -> None:
     )
     authorization = _load(AUTHORIZATION_PATH)
     assert sorted(authorization["authorized_run"]["scope"]["binance_pairs"]) == validated
-    assert len(validated) == 6
+    assert len(validated) > 0
     assert "BTCUSDT" not in validated
 
 
@@ -236,21 +242,31 @@ def test_the_bounds_are_the_bounds_of_the_frozen_scope_and_the_grid() -> None:
     config_count = len(config_manifest["configurations"])
     assert bounds["max_assets"] == scope["count"]
     assert bounds["max_configs_per_asset"] == config_count == 2304
-    assert bounds["max_total_config_units"] == scope["count"] * config_count == 13824
+    assert bounds["max_total_config_units"] == scope["count"] * config_count
     assert bounds["attempts"] == 1
     assert 1 <= bounds["max_retries_on_technical_failure"] <= 3
-    assert bounds["planned_config_units"] == 13824
+    assert bounds["planned_config_units"] == scope["count"] * config_count
     assert bounds["planned_execution_units"] == (
-        13824 * len(spec_v1["folds"]["window_fractions"]) * len(spec_v1["costs"]["scenarios"])
+        scope["count"] * config_count
+        * len(spec_v1["folds"]["window_fractions"]) * len(spec_v1["costs"]["scenarios"])
     )
     assert bounds["planned_config_units"] <= bounds["max_total_config_units"]
 
 
-def test_the_data_boundary_is_the_confirmatory_window_start() -> None:
+def test_the_data_boundary_is_the_effective_development_boundary() -> None:
     authorization = _load(AUTHORIZATION_PATH)
     freeze = _load(FREEZE_PATH)
+    spec_v4 = _load(SPEC_V4_PATH)
     boundary = authorization["authorized_run"]["data_boundary"]
-    assert boundary["candles_before_utc"] == freeze["confirmatory_window"]["opens_utc"]
+    cutoff = spec_v4["holdout"]["development_cutoff_utc"]
+    assert freeze["data_boundary"]["development_cutoff_utc"] == cutoff
+    assert boundary["candles_before_utc"] == freeze["data_boundary"]["effective_data_boundary_utc"]
+    assert boundary["candles_before_utc"] == min(
+        freeze["confirmatory_window"]["opens_utc"], cutoff
+    )
+    assert boundary["development_cutoff_utc"] == cutoff
+    assert boundary["v4_confirmatory_window_start_utc"] == freeze["confirmatory_window"]["opens_utc"]
+    assert boundary["candles_before_utc"] <= cutoff
     for flag in (
         "development_data_only",
         "confirmatory_window_never_read_during_selection",
@@ -387,9 +403,17 @@ def test_the_execution_path_accepts_the_authorization_without_executing_it() -> 
     authorization = _load(AUTHORIZATION_PATH)
     assert plan.run_id == authorization["authorized_run"]["run_id"]
     assert plan.campaign_id == "v4-campaign"
-    assert plan.counts["config_units"] == 6 * 2304
+    config_count = len(_load(REPO_ROOT / "research" / "config_manifest.json")["configurations"])
+    assert plan.counts["config_units"] == len(plan.scope["binance_pairs"]) * config_count
     assert plan.boundary_ms > 0
-    assert plan.scope["binance_pairs"][0] == "SHIBUSDT"
+    freeze = _load(FREEZE_PATH)
+    assert plan.scope["binance_pairs"] == [
+        str(member["binance_pair"])
+        for member in (freeze.get("candidates") or [])
+        if member.get("validated") is True
+    ]
+    assert plan.effective_data_boundary_utc == plan.scope["effective_data_boundary_utc"]
+    assert plan.boundary_ms <= _parse_utc_ms(plan.development_cutoff_utc)
     #
     # Building the plan runs nothing: the v4 execution artifacts are exactly
     # what they were before the plan was built.
@@ -454,7 +478,11 @@ def test_verifier_detects_a_data_boundary_inside_the_confirmatory_window(
         ),
     )
     failures = _failures(root)
-    assert any("not the confirmatory window start" in failure for failure in failures)
+    assert any(
+        "not the effective development boundary" in failure
+        or "after the development cutoff" in failure
+        for failure in failures
+    )
 
 
 def test_verifier_detects_a_selection_rule_that_is_not_the_v1_rule(tmp_path: Path) -> None:

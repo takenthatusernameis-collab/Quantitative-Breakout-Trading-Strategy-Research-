@@ -5,216 +5,216 @@
     "symbol": "BTCUSDT"
   },
   "binance_spot_verification": {
-    "AAVEUSDT": {
+    "AEROUSDT": {
       "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "AAVEUSDT",
+      "pair_symbol": "AEROUSDT",
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:44.458086+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:30.104367+00:00"
     },
-    "ASTERUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "ASTERUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:05.296336+00:00"
-    },
-    "BTWUSDT": {
+    "AKEUSDT": {
       "endpoint_used": null,
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 400
       },
-      "pair_symbol": "BTWUSDT",
+      "pair_symbol": "AKEUSDT",
       "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:06:29.924889+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:52.838738+00:00"
     },
-    "CROUSDT": {
+    "ALGOUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "ALGOUSDT",
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:10.739295+00:00"
+    },
+    "ARBUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "ARBUSDT",
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:51:41.366203+00:00"
+    },
+    "BGBUSDT": {
       "endpoint_used": null,
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 400
       },
-      "pair_symbol": "CROUSDT",
+      "pair_symbol": "BGBUSDT",
       "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:06:30.653238+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:51:40.404462+00:00"
     },
-    "ENAUSDT": {
+    "ETCUSDT": {
       "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "ENAUSDT",
+      "pair_symbol": "ETCUSDT",
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:37.970670+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:51:48.091372+00:00"
     },
-    "HTXUSDT": {
+    "FILUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "FILUSDT",
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:32.303662+00:00"
+    },
+    "GTUSDT": {
       "endpoint_used": null,
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 400
       },
-      "pair_symbol": "HTXUSDT",
+      "pair_symbol": "GTUSDT",
       "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:07:33.615780+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:02.249275+00:00"
     },
-    "ICPUSDT": {
+    "INJUSDT": {
       "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "ICPUSDT",
+      "pair_symbol": "INJUSDT",
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:26.917129+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:22.707632+00:00"
     },
-    "MNTUSDT": {
+    "JSTUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "JSTUSDT",
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:51:55.491827+00:00"
+    },
+    "JUPUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "JUPUSDT",
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:03.304122+00:00"
+    },
+    "KASUSDT": {
       "endpoint_used": null,
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 400
       },
-      "pair_symbol": "MNTUSDT",
+      "pair_symbol": "KASUSDT",
       "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:07:19.525771+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:09.253667+00:00"
     },
-    "MORPHOUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "MORPHOUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:23.585999+00:00"
-    },
-    "MUSDT": {
+    "KCSUSDT": {
       "endpoint_used": null,
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 400
       },
-      "pair_symbol": "MUSDT",
+      "pair_symbol": "KCSUSDT",
       "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:07:18.836275+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:10.052048+00:00"
     },
-    "OKBUSDT": {
+    "LITUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "LITUSDT",
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:52:39.002633+00:00"
+    },
+    "NEXOUSDT": {
+      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
+      },
+      "pair_symbol": "NEXOUSDT",
+      "tradeable": true,
+      "verification_timestamp_utc": "2026-10-21T00:52:40.049322+00:00"
+    },
+    "PEARLUSDT": {
       "endpoint_used": null,
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 400
       },
-      "pair_symbol": "OKBUSDT",
+      "pair_symbol": "PEARLUSDT",
       "tradeable": false,
-      "verification_timestamp_utc": "2026-10-21T00:06:43.766446+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:52.071641+00:00"
     },
-    "ONDOUSDT": {
+    "PIUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "PIUSDT",
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:52:29.415889+00:00"
+    },
+    "RENDERUSDT": {
       "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "ONDOUSDT",
+      "pair_symbol": "RENDERUSDT",
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:01.209634+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:17.458071+00:00"
     },
-    "PEPEUSDT": {
+    "VVVUSDT": {
+      "endpoint_used": null,
+      "http_status_of_each_probed_host": {
+        "https://api.binance.com/api/v3/exchangeInfo": 451,
+        "https://data-api.binance.vision/api/v3/exchangeInfo": 400
+      },
+      "pair_symbol": "VVVUSDT",
+      "tradeable": false,
+      "verification_timestamp_utc": "2026-10-21T00:51:54.782049+00:00"
+    },
+    "ZROUSDT": {
       "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
       "http_status_of_each_probed_host": {
         "https://api.binance.com/api/v3/exchangeInfo": 451,
         "https://data-api.binance.vision/api/v3/exchangeInfo": 200
       },
-      "pair_symbol": "PEPEUSDT",
+      "pair_symbol": "ZROUSDT",
       "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:08.633382+00:00"
-    },
-    "PUMPUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "PUMPUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:57.796323+00:00"
-    },
-    "QNTUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "QNTUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:31.377564+00:00"
-    },
-    "SHIBUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "SHIBUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:23.063078+00:00"
-    },
-    "SKYUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "SKYUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:15.357434+00:00"
-    },
-    "TAOUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "TAOUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:17.262541+00:00"
-    },
-    "WLDUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "WLDUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:06:51.131395+00:00"
-    },
-    "WLFIUSDT": {
-      "endpoint_used": "https://data-api.binance.vision/api/v3/exchangeInfo",
-      "http_status_of_each_probed_host": {
-        "https://api.binance.com/api/v3/exchangeInfo": 451,
-        "https://data-api.binance.vision/api/v3/exchangeInfo": 200
-      },
-      "pair_symbol": "WLFIUSDT",
-      "tradeable": true,
-      "verification_timestamp_utc": "2026-10-21T00:07:20.208041+00:00"
+      "verification_timestamp_utc": "2026-10-21T00:52:46.551185+00:00"
     }
   },
   "candidate_freeze": {
     "candidate_manifest_hash": null,
     "note": "The v4 candidate freeze configs/research_v4_candidate_freeze.json is the artifact that freezes the candidate set; it is produced after this manifest and is referenced by it, not the other way round. A freeze amendment records the validated subset once the validation outcome is known.",
-    "status": "FROZEN_BY_CONFIGS_RESEARCH_V3_CANDIDATE_FREEZE_JSON"
+    "status": "FROZEN_BY_CONFIGS_RESEARCH_V4_CANDIDATE_FREEZE_JSON"
   },
   "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
   "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
   "code_hash_note": "code_hash is the authorized value of record for the hashed set, cross-checked against research_state/campaign_authorization.json. The ordered digest is checkout-dependent (BRAIN-009); canonical_source_digest is the portable identity of the tree and the live ordered digest is an environment fact, never an identity.",
-  "created_utc": "2026-10-21T00:07:34Z",
+  "created_utc": "2026-10-21T00:52:53Z",
   "data_requirements": {
     "endpoint": "https://api.binance.com/api/v3/klines",
     "failover_endpoints": [
@@ -227,283 +227,283 @@
   },
   "eligible_assets": [
     {
-      "binance_pair": "TAOUSDT",
-      "binance_spot_verified": true,
+      "binance_pair": "BGBUSDT",
+      "binance_spot_verified": false,
       "candle_history_verified": false,
-      "coingecko_id": "bittensor",
-      "exclusion_reason": "insufficient_hourly_history",
-      "market_cap_rank": 35,
-      "market_cap_usd": 3103519400,
-      "name": "Bittensor",
-      "observed_candles": 22139,
+      "coingecko_id": "bitget-token",
+      "exclusion_reason": "binance_spot_unavailable",
+      "market_cap_rank": 66,
+      "market_cap_usd": 1334509447,
+      "name": "Bitget Token",
+      "observed_candles": null,
       "rank": 1,
-      "symbol": "TAO",
+      "symbol": "BGB",
       "validated": false
     },
     {
-      "binance_pair": "SHIBUSDT",
+      "binance_pair": "ARBUSDT",
       "binance_spot_verified": true,
       "candle_history_verified": true,
-      "coingecko_id": "shiba-inu",
+      "coingecko_id": "arbitrum",
       "exclusion_reason": null,
-      "market_cap_rank": 36,
-      "market_cap_usd": 3024234557,
-      "name": "Shiba Inu",
+      "market_cap_rank": 69,
+      "market_cap_usd": 1288592154,
+      "name": "Arbitrum",
       "observed_candles": 26280,
       "rank": 2,
-      "symbol": "SHIB",
+      "symbol": "ARB",
       "validated": true
     },
     {
-      "binance_pair": "BTWUSDT",
-      "binance_spot_verified": false,
-      "candle_history_verified": false,
-      "coingecko_id": "bitway",
-      "exclusion_reason": "binance_spot_unavailable",
-      "market_cap_rank": 37,
-      "market_cap_usd": 3000228879,
-      "name": "Bitway",
-      "observed_candles": null,
+      "binance_pair": "ETCUSDT",
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
+      "coingecko_id": "ethereum-classic",
+      "exclusion_reason": null,
+      "market_cap_rank": 70,
+      "market_cap_usd": 1259927757,
+      "name": "Ethereum Classic",
+      "observed_candles": 26280,
       "rank": 3,
-      "symbol": "BTW",
-      "validated": false
+      "symbol": "ETC",
+      "validated": true
     },
     {
-      "binance_pair": "CROUSDT",
+      "binance_pair": "VVVUSDT",
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "coingecko_id": "crypto-com-chain",
+      "coingecko_id": "venice-token",
       "exclusion_reason": "binance_spot_unavailable",
-      "market_cap_rank": 38,
-      "market_cap_usd": 2923142984,
-      "name": "Cronos",
+      "market_cap_rank": 71,
+      "market_cap_usd": 1238059557,
+      "name": "Venice Token",
       "observed_candles": null,
       "rank": 4,
-      "symbol": "CRO",
+      "symbol": "VVV",
       "validated": false
     },
     {
-      "binance_pair": "QNTUSDT",
+      "binance_pair": "JSTUSDT",
       "binance_spot_verified": true,
       "candle_history_verified": true,
-      "coingecko_id": "quant-network",
+      "coingecko_id": "just",
       "exclusion_reason": null,
-      "market_cap_rank": 40,
-      "market_cap_usd": 2830890218,
-      "name": "Quant",
+      "market_cap_rank": 72,
+      "market_cap_usd": 1122394021,
+      "name": "JUST",
       "observed_candles": 26280,
       "rank": 5,
-      "symbol": "QNT",
+      "symbol": "JST",
       "validated": true
     },
     {
-      "binance_pair": "ENAUSDT",
-      "binance_spot_verified": true,
+      "binance_pair": "GTUSDT",
+      "binance_spot_verified": false,
       "candle_history_verified": false,
-      "coingecko_id": "ethena",
-      "exclusion_reason": "insufficient_hourly_history",
-      "market_cap_rank": 41,
-      "market_cap_usd": 2633665401,
-      "name": "Ethena",
-      "observed_candles": 22359,
+      "coingecko_id": "gatechain-token",
+      "exclusion_reason": "binance_spot_unavailable",
+      "market_cap_rank": 73,
+      "market_cap_usd": 1065879584,
+      "name": "Gate",
+      "observed_candles": null,
       "rank": 6,
-      "symbol": "ENA",
+      "symbol": "GT",
       "validated": false
     },
     {
-      "binance_pair": "OKBUSDT",
-      "binance_spot_verified": false,
+      "binance_pair": "JUPUSDT",
+      "binance_spot_verified": true,
       "candle_history_verified": false,
-      "coingecko_id": "okb",
-      "exclusion_reason": "binance_spot_unavailable",
-      "market_cap_rank": 42,
-      "market_cap_usd": 2423254382,
-      "name": "OKB",
-      "observed_candles": null,
+      "coingecko_id": "jupiter-exchange-solana",
+      "exclusion_reason": "insufficient_hourly_history",
+      "market_cap_rank": 74,
+      "market_cap_usd": 1043151466,
+      "name": "Jupiter",
+      "observed_candles": 23829,
       "rank": 7,
-      "symbol": "OKB",
+      "symbol": "JUP",
       "validated": false
     },
     {
-      "binance_pair": "AAVEUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": true,
-      "coingecko_id": "aave",
-      "exclusion_reason": null,
-      "market_cap_rank": 45,
-      "market_cap_usd": 2385431031,
-      "name": "Aave",
-      "observed_candles": 26280,
-      "rank": 8,
-      "symbol": "AAVE",
-      "validated": true
-    },
-    {
-      "binance_pair": "WLDUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": true,
-      "coingecko_id": "worldcoin-wld",
-      "exclusion_reason": null,
-      "market_cap_rank": 47,
-      "market_cap_usd": 2245074744,
-      "name": "Worldcoin",
-      "observed_candles": 26280,
-      "rank": 9,
-      "symbol": "WLD",
-      "validated": true
-    },
-    {
-      "binance_pair": "PUMPUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": false,
-      "coingecko_id": "pump-fun",
-      "exclusion_reason": "insufficient_hourly_history",
-      "market_cap_rank": 48,
-      "market_cap_usd": 2228146431,
-      "name": "Pump.fun",
-      "observed_candles": 9707,
-      "rank": 10,
-      "symbol": "PUMP",
-      "validated": false
-    },
-    {
-      "binance_pair": "ONDOUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": false,
-      "coingecko_id": "ondo-finance",
-      "exclusion_reason": "insufficient_hourly_history",
-      "market_cap_rank": 49,
-      "market_cap_usd": 2211942882,
-      "name": "Ondo",
-      "observed_candles": 13377,
-      "rank": 11,
-      "symbol": "ONDO",
-      "validated": false
-    },
-    {
-      "binance_pair": "ASTERUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": false,
-      "coingecko_id": "aster-2",
-      "exclusion_reason": "insufficient_hourly_history",
-      "market_cap_rank": 52,
-      "market_cap_usd": 1945648192,
-      "name": "Aster",
-      "observed_candles": 9107,
-      "rank": 12,
-      "symbol": "ASTER",
-      "validated": false
-    },
-    {
-      "binance_pair": "PEPEUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": true,
-      "coingecko_id": "pepe",
-      "exclusion_reason": null,
-      "market_cap_rank": 53,
-      "market_cap_usd": 1922654507,
-      "name": "Pepe",
-      "observed_candles": 26280,
-      "rank": 13,
-      "symbol": "PEPE",
-      "validated": true
-    },
-    {
-      "binance_pair": "SKYUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": false,
-      "coingecko_id": "sky",
-      "exclusion_reason": "insufficient_hourly_history",
-      "market_cap_rank": 56,
-      "market_cap_usd": 1780973038,
-      "name": "Sky",
-      "observed_candles": 9567,
-      "rank": 14,
-      "symbol": "SKY",
-      "validated": false
-    },
-    {
-      "binance_pair": "MUSDT",
+      "binance_pair": "KASUSDT",
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "coingecko_id": "memecore",
+      "coingecko_id": "kaspa",
       "exclusion_reason": "binance_spot_unavailable",
-      "market_cap_rank": 57,
-      "market_cap_usd": 1771536422,
-      "name": "MemeCore",
+      "market_cap_rank": 75,
+      "market_cap_usd": 1039601135,
+      "name": "Kaspa",
       "observed_candles": null,
-      "rank": 15,
-      "symbol": "M",
+      "rank": 8,
+      "symbol": "KAS",
       "validated": false
     },
     {
-      "binance_pair": "MNTUSDT",
+      "binance_pair": "KCSUSDT",
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "coingecko_id": "mantle",
+      "coingecko_id": "kucoin-shares",
       "exclusion_reason": "binance_spot_unavailable",
-      "market_cap_rank": 59,
-      "market_cap_usd": 1766774512,
-      "name": "Mantle",
+      "market_cap_rank": 77,
+      "market_cap_usd": 1029212979,
+      "name": "KuCoin",
+      "observed_candles": null,
+      "rank": 9,
+      "symbol": "KCS",
+      "validated": false
+    },
+    {
+      "binance_pair": "ALGOUSDT",
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
+      "coingecko_id": "algorand",
+      "exclusion_reason": null,
+      "market_cap_rank": 76,
+      "market_cap_usd": 1029063174,
+      "name": "Algorand",
+      "observed_candles": 26280,
+      "rank": 10,
+      "symbol": "ALGO",
+      "validated": true
+    },
+    {
+      "binance_pair": "RENDERUSDT",
+      "binance_spot_verified": true,
+      "candle_history_verified": false,
+      "coingecko_id": "render-token",
+      "exclusion_reason": "insufficient_hourly_history",
+      "market_cap_rank": 79,
+      "market_cap_usd": 961714490,
+      "name": "Render",
+      "observed_candles": 19589,
+      "rank": 11,
+      "symbol": "RENDER",
+      "validated": false
+    },
+    {
+      "binance_pair": "INJUSDT",
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
+      "coingecko_id": "injective-protocol",
+      "exclusion_reason": null,
+      "market_cap_rank": 81,
+      "market_cap_usd": 892115300,
+      "name": "Injective",
+      "observed_candles": 26280,
+      "rank": 12,
+      "symbol": "INJ",
+      "validated": true
+    },
+    {
+      "binance_pair": "PIUSDT",
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "pi-network",
+      "exclusion_reason": "binance_spot_unavailable",
+      "market_cap_rank": 82,
+      "market_cap_usd": 889396883,
+      "name": "Pi Network",
+      "observed_candles": null,
+      "rank": 13,
+      "symbol": "PI",
+      "validated": false
+    },
+    {
+      "binance_pair": "AEROUSDT",
+      "binance_spot_verified": true,
+      "candle_history_verified": false,
+      "coingecko_id": "aerodrome-finance",
+      "exclusion_reason": "insufficient_hourly_history",
+      "market_cap_rank": 83,
+      "market_cap_usd": 868266543,
+      "name": "Aerodrome Finance",
+      "observed_candles": 2277,
+      "rank": 14,
+      "symbol": "AERO",
+      "validated": false
+    },
+    {
+      "binance_pair": "FILUSDT",
+      "binance_spot_verified": true,
+      "candle_history_verified": true,
+      "coingecko_id": "filecoin",
+      "exclusion_reason": null,
+      "market_cap_rank": 84,
+      "market_cap_usd": 861322238,
+      "name": "Filecoin",
+      "observed_candles": 26280,
+      "rank": 15,
+      "symbol": "FIL",
+      "validated": true
+    },
+    {
+      "binance_pair": "LITUSDT",
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "lighter",
+      "exclusion_reason": "binance_spot_unavailable",
+      "market_cap_rank": 85,
+      "market_cap_usd": 847642225,
+      "name": "Lighter",
       "observed_candles": null,
       "rank": 16,
-      "symbol": "MNT",
+      "symbol": "LIT",
       "validated": false
     },
     {
-      "binance_pair": "WLFIUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": false,
-      "coingecko_id": "world-liberty-financial",
-      "exclusion_reason": "insufficient_hourly_history",
-      "market_cap_rank": 60,
-      "market_cap_usd": 1766193710,
-      "name": "World Liberty Financial",
-      "observed_candles": 9946,
-      "rank": 17,
-      "symbol": "WLFI",
-      "validated": false
-    },
-    {
-      "binance_pair": "MORPHOUSDT",
-      "binance_spot_verified": true,
-      "candle_history_verified": false,
-      "coingecko_id": "morpho",
-      "exclusion_reason": "insufficient_hourly_history",
-      "market_cap_rank": 62,
-      "market_cap_usd": 1689265063,
-      "name": "Morpho",
-      "observed_candles": 9176,
-      "rank": 18,
-      "symbol": "MORPHO",
-      "validated": false
-    },
-    {
-      "binance_pair": "ICPUSDT",
+      "binance_pair": "NEXOUSDT",
       "binance_spot_verified": true,
       "candle_history_verified": true,
-      "coingecko_id": "internet-computer",
+      "coingecko_id": "nexo",
       "exclusion_reason": null,
-      "market_cap_rank": 63,
-      "market_cap_usd": 1624255665,
-      "name": "Internet Computer",
+      "market_cap_rank": 87,
+      "market_cap_usd": 814674470,
+      "name": "NEXO",
       "observed_candles": 26280,
-      "rank": 19,
-      "symbol": "ICP",
+      "rank": 17,
+      "symbol": "NEXO",
       "validated": true
     },
     {
-      "binance_pair": "HTXUSDT",
+      "binance_pair": "ZROUSDT",
+      "binance_spot_verified": true,
+      "candle_history_verified": false,
+      "coingecko_id": "layerzero",
+      "exclusion_reason": "insufficient_hourly_history",
+      "market_cap_rank": 88,
+      "market_cap_usd": 805342471,
+      "name": "LayerZero",
+      "observed_candles": 20448,
+      "rank": 18,
+      "symbol": "ZRO",
+      "validated": false
+    },
+    {
+      "binance_pair": "PEARLUSDT",
       "binance_spot_verified": false,
       "candle_history_verified": false,
-      "coingecko_id": "htx-dao",
+      "coingecko_id": "pearl-2",
       "exclusion_reason": "binance_spot_unavailable",
-      "market_cap_rank": 65,
-      "market_cap_usd": 1469710991,
-      "name": "HTX DAO",
+      "market_cap_rank": 90,
+      "market_cap_usd": 753727960,
+      "name": "Pearl",
+      "observed_candles": null,
+      "rank": 19,
+      "symbol": "PEARL",
+      "validated": false
+    },
+    {
+      "binance_pair": "AKEUSDT",
+      "binance_spot_verified": false,
+      "candle_history_verified": false,
+      "coingecko_id": "akedo",
+      "exclusion_reason": "binance_spot_unavailable",
+      "market_cap_rank": 91,
+      "market_cap_usd": 739186726,
+      "name": "Akedo",
       "observed_candles": null,
       "rank": 20,
-      "symbol": "HTX",
+      "symbol": "AKE",
       "validated": false
     }
   ],
@@ -1075,6 +1075,82 @@
       "symbol": "USDG"
     },
     {
+      "coingecko_id": "bittensor",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 35,
+      "market_cap_usd": 3103519400,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Bittensor",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 35,
+      "symbol": "TAO"
+    },
+    {
+      "coingecko_id": "shiba-inu",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 36,
+      "market_cap_usd": 3024234557,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Shiba Inu",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 36,
+      "symbol": "SHIB"
+    },
+    {
+      "coingecko_id": "bitway",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 37,
+      "market_cap_usd": 3000228879,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Bitway",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 37,
+      "symbol": "BTW"
+    },
+    {
+      "coingecko_id": "crypto-com-chain",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 38,
+      "market_cap_usd": 2923142984,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Cronos",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 38,
+      "symbol": "CRO"
+    },
+    {
       "coingecko_id": "paypal-usd",
       "excluded": true,
       "exclusion_group": "stablecoins",
@@ -1088,6 +1164,63 @@
       "rule_source": "v3_exclusion_classifier",
       "snapshot_position": 39,
       "symbol": "PYUSD"
+    },
+    {
+      "coingecko_id": "quant-network",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 40,
+      "market_cap_usd": 2830890218,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Quant",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 40,
+      "symbol": "QNT"
+    },
+    {
+      "coingecko_id": "ethena",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 41,
+      "market_cap_usd": 2633665401,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Ethena",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 41,
+      "symbol": "ENA"
+    },
+    {
+      "coingecko_id": "okb",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 42,
+      "market_cap_usd": 2423254382,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "OKB",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 42,
+      "symbol": "OKB"
     },
     {
       "coingecko_id": "ripple-usd",
@@ -1120,6 +1253,25 @@
       "symbol": "USYC"
     },
     {
+      "coingecko_id": "aave",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 45,
+      "market_cap_usd": 2385431031,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Aave",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 45,
+      "symbol": "AAVE"
+    },
+    {
       "coingecko_id": "ondo-us-dollar-yield",
       "excluded": true,
       "exclusion_group": "stablecoins",
@@ -1134,6 +1286,63 @@
       "rule_source": "v3_exclusion_classifier",
       "snapshot_position": 46,
       "symbol": "USDY"
+    },
+    {
+      "coingecko_id": "worldcoin-wld",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 47,
+      "market_cap_usd": 2245074744,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Worldcoin",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 47,
+      "symbol": "WLD"
+    },
+    {
+      "coingecko_id": "pump-fun",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 48,
+      "market_cap_usd": 2228146431,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Pump.fun",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 48,
+      "symbol": "PUMP"
+    },
+    {
+      "coingecko_id": "ondo-finance",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 49,
+      "market_cap_usd": 2211942882,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Ondo",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 49,
+      "symbol": "ONDO"
     },
     {
       "coingecko_id": "blackrock-usd-institutional-digital-liquidity-fund",
@@ -1171,6 +1380,44 @@
       "symbol": "DOT"
     },
     {
+      "coingecko_id": "aster-2",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 52,
+      "market_cap_usd": 1945648192,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Aster",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 52,
+      "symbol": "ASTER"
+    },
+    {
+      "coingecko_id": "pepe",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 53,
+      "market_cap_usd": 1922654507,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Pepe",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 53,
+      "symbol": "PEPE"
+    },
+    {
       "coingecko_id": "falcon-finance",
       "excluded": true,
       "exclusion_group": "stablecoins",
@@ -1201,6 +1448,44 @@
       "symbol": "PAXG"
     },
     {
+      "coingecko_id": "sky",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 56,
+      "market_cap_usd": 1780973038,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Sky",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 56,
+      "symbol": "SKY"
+    },
+    {
+      "coingecko_id": "memecore",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 57,
+      "market_cap_usd": 1771536422,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "MemeCore",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 57,
+      "symbol": "M"
+    },
+    {
       "coingecko_id": "usdd",
       "excluded": true,
       "exclusion_group": "stablecoins",
@@ -1215,6 +1500,44 @@
       "rule_source": "v3_exclusion_classifier",
       "snapshot_position": 58,
       "symbol": "USDD"
+    },
+    {
+      "coingecko_id": "mantle",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 59,
+      "market_cap_usd": 1766774512,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Mantle",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 59,
+      "symbol": "MNT"
+    },
+    {
+      "coingecko_id": "world-liberty-financial",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 60,
+      "market_cap_usd": 1766193710,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "World Liberty Financial",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 60,
+      "symbol": "WLFI"
     },
     {
       "coingecko_id": "spiko-amundi-overnight-swap-fund-eur",
@@ -1233,6 +1556,44 @@
       "symbol": "EURSAFO"
     },
     {
+      "coingecko_id": "morpho",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 62,
+      "market_cap_usd": 1689265063,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Morpho",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 62,
+      "symbol": "MORPHO"
+    },
+    {
+      "coingecko_id": "internet-computer",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 63,
+      "market_cap_usd": 1624255665,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "Internet Computer",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 63,
+      "symbol": "ICP"
+    },
+    {
       "coingecko_id": "united-stables",
       "excluded": true,
       "exclusion_group": "stablecoins",
@@ -1246,6 +1607,25 @@
       "rule_source": "v3_exclusion_classifier",
       "snapshot_position": 64,
       "symbol": "U"
+    },
+    {
+      "coingecko_id": "htx-dao",
+      "excluded": true,
+      "exclusion_group": "prior_universe",
+      "exclusion_reason": "already_in_prior_universe",
+      "market_cap_rank": 65,
+      "market_cap_usd": 1469710991,
+      "matched_markers": [
+        "binance_symbol",
+        "coingecko_id"
+      ],
+      "name": "HTX DAO",
+      "prior_universe_versions": [
+        "v3"
+      ],
+      "rule_source": "specification_expansion_scope",
+      "snapshot_position": 65,
+      "symbol": "HTX"
     },
     {
       "coingecko_id": "bfusd",
@@ -1864,7 +2244,7 @@
     ],
     "note": "manifest_hash is the sha256 of the manifest body with the manifest_hash key removed. The snapshot_identity.data_manifest_hash is the manifest_hash of research/data_manifest_v4.json."
   },
-  "manifest_hash": "5e670ba0e7226d2ff54b8d57cc25b727efca247609003daa51173380b379793f",
+  "manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
   "market_cap_source": {
     "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
     "note": "Current-universe snapshot used; historical point-in-time ranks unavailable. Results have survivorship limitations.",
@@ -1887,7 +2267,7 @@
   "snapshot_identity": {
     "candidate_manifest_hash": null,
     "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
-    "data_manifest_hash": "4f33b928f2e7b14253fbd1412813e5e0d9ac5de89694d018ae9acda6579fe232",
+    "data_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
     "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
     "market_cap_source_retrieval_timestamp_utc": "2026-10-20T23:50:06Z",
     "protocol_version": "v4",
@@ -1896,18 +2276,18 @@
   },
   "specification_hash": "f0f1be0e8c6e71a81be0618bf12081a77fefa4061975c9103dcf3302152b8d84",
   "supersedes": {
-    "note": "The v2 universe manifest is immutable and is not edited by this version; the v4 universe is the next batch below the recomputed v2 floor.",
-    "universe_manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
-    "universe_manifest_path": "research/universe_manifest_v2.json",
-    "universe_manifest_sha256": "68c973a0a07bd6808a18433a1cce5351d56f03800653d5c64f401d72c0769f42",
-    "universe_version": "v2"
+    "note": "The v3 universe manifest is immutable and is not edited by this version; the v4 universe is the next batch below the recomputed v3 floor, and no v4 constituent is an asset of the v1, v2 or v3 universe.",
+    "universe_manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+    "universe_manifest_path": "research/universe_manifest_v3.json",
+    "universe_manifest_sha256": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63",
+    "universe_version": "v3"
   },
   "survivorship_disclaimer": "This universe uses one current market-cap snapshot (2026-10-20T23:50:06Z) from CoinGecko. Historical point-in-time market-cap data is not available from a verifiably free source. This universe has survivorship and selection bias limitations. Assets that have fallen out of the top 20 or delisted are excluded. Do not describe this as a historically point-in-time-selected market portfolio.",
   "universe_version": "v4",
   "validation_summary": {
     "candidate_count": 20,
-    "excluded_after_validation_count": 14,
-    "excluded_by_rule_count": 80,
-    "validated_count": 6
+    "excluded_after_validation_count": 13,
+    "excluded_by_rule_count": 100,
+    "validated_count": 7
   }
 }
