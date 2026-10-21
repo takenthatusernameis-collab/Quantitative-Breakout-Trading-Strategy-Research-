@@ -4,89 +4,91 @@
     "be4223dcef25aaa0043a466fcd9044b4e6a7387eff7efd487561b9c1f873c1ae",
     "v2-selection-20261019",
     "v3-selection-20261020",
-    "v4-selection-20261021"
+    "v4-selection-20261021",
+    "v5-selection-20261021"
   ],
   "completed_snapshot_ids": [
     "e004c6ff0c18a2db6948453bc1488138808563ddfa7138185d693c5bc741106a",
     "c4772c58d03c94df6ae98dc31bb3996de2c90c007a2ef7f72a0a92449fb1dbad",
     "54f9516cb74101c5c70a0e828d97633306ec816d0397a9fbd5bc263f6491d467",
-    "1057956c4f605f19636e13fc247b5644c5e3474db4ae50f4e3ddc423155099ca"
+    "1057956c4f605f19636e13fc247b5644c5e3474db4ae50f4e3ddc423155099ca",
+    "82644c308d39e671f8000516d718cf6548f2093d370488be1124749eb0149a75"
   ],
   "current_cohort": {
     "assets": [
-      "ARBUSDT",
-      "ETCUSDT",
-      "JSTUSDT",
-      "ALGOUSDT",
-      "INJUSDT",
-      "FILUSDT",
-      "NEXOUSDT"
+      "APTUSDT",
+      "CAKEUSDT",
+      "STXUSDT",
+      "DASHUSDT",
+      "VETUSDT",
+      "CRVUSDT",
+      "RAYUSDT"
     ],
-    "cohort_index": 4,
+    "cohort_index": 5,
     "completed": true,
     "excluded": [
       {
-        "symbol": "BGBUSDT",
+        "symbol": "GHOUSDT",
         "exclusion_reason": "binance_spot_unavailable"
       },
       {
-        "symbol": "VVVUSDT",
-        "exclusion_reason": "binance_spot_unavailable"
-      },
-      {
-        "symbol": "GTUSDT",
-        "exclusion_reason": "binance_spot_unavailable"
-      },
-      {
-        "symbol": "JUPUSDT",
+        "symbol": "ETHFIUSDT",
         "exclusion_reason": "insufficient_hourly_history"
       },
       {
-        "symbol": "KASUSDT",
+        "symbol": "XDCUSDT",
         "exclusion_reason": "binance_spot_unavailable"
       },
       {
-        "symbol": "KCSUSDT",
-        "exclusion_reason": "binance_spot_unavailable"
-      },
-      {
-        "symbol": "RENDERUSDT",
+        "symbol": "NIGHTUSDT",
         "exclusion_reason": "insufficient_hourly_history"
       },
       {
-        "symbol": "PIUSDT",
-        "exclusion_reason": "binance_spot_unavailable"
-      },
-      {
-        "symbol": "AEROUSDT",
+        "symbol": "PYTHUSDT",
         "exclusion_reason": "insufficient_hourly_history"
       },
       {
-        "symbol": "LITUSDT",
-        "exclusion_reason": "binance_spot_unavailable"
-      },
-      {
-        "symbol": "ZROUSDT",
+        "symbol": "TIAUSDT",
         "exclusion_reason": "insufficient_hourly_history"
       },
       {
-        "symbol": "PEARLUSDT",
+        "symbol": "BDXUSDT",
         "exclusion_reason": "binance_spot_unavailable"
       },
       {
-        "symbol": "AKEUSDT",
+        "symbol": "FLRUSDT",
+        "exclusion_reason": "binance_spot_unavailable"
+      },
+      {
+        "symbol": "QUSDT",
+        "exclusion_reason": "binance_spot_unavailable"
+      },
+      {
+        "symbol": "TRUMPUSDT",
+        "exclusion_reason": "insufficient_hourly_history"
+      },
+      {
+        "symbol": "PENGUUSDT",
+        "exclusion_reason": "insufficient_hourly_history"
+      },
+      {
+        "symbol": "币安人生USDT",
+        "exclusion_reason": "insufficient_hourly_history"
+      },
+      {
+        "symbol": "YLDSUSDT",
         "exclusion_reason": "binance_spot_unavailable"
       }
     ]
   },
-  "current_cycle_id": "v4-selection-20261021",
+  "current_cycle_id": "v5-selection-20261021",
   "current_snapshot": {
-    "snapshot_id": "1057956c4f605f19636e13fc247b5644c5e3474db4ae50f4e3ddc423155099ca"
+    "snapshot_id": "82644c308d39e671f8000516d718cf6548f2093d370488be1124749eb0149a75"
   },
-  "next_cohort_index": 5,
+  "next_cohort_index": 6,
   "schema_version": 1,
-  "updated_utc": "2026-10-21T07:45:00+00:00",
-  "blocking_dependency": "CONFIRMATORY_WINDOW (earliest end 2027-01-19T01:00:00Z)",
+  "updated_utc": "2026-10-21T21:45:00+00:00",
+  "blocking_dependency": "CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z)",
   "v4_selection_outcome": "CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE",
   "v4_candidates": 5,
   "v4_without_candidate": [
@@ -119,5 +121,18 @@
     "BTCUSDT",
     "LINKUSDT",
     "TRXUSDT"
+  ],
+  "v5_selection_outcome": "CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE",
+  "v5_candidates": 4,
+  "v5_without_candidate": [
+    "APTUSDT",
+    "CRVUSDT",
+    "RAYUSDT"
+  ],
+  "v5_candidates_with_candidate": [
+    "CAKEUSDT",
+    "DASHUSDT",
+    "STXUSDT",
+    "VETUSDT"
   ]
 }

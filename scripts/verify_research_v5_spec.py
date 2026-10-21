@@ -24,6 +24,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+
+from v5_run_state import v5_run_state_failures  # noqa: E402
 
 SPEC_V5_RELATIVE = "configs/research_v5.json"
 SPEC_V1_RELATIVE = "configs/research_v1.json"
@@ -82,7 +86,8 @@ EXECUTION_PATH_ROOTS = (
     "src/v4_campaign",
 )
 
-#: The v5 paths that must not exist before the v5 chain runs.
+#: The v5 paths that must not exist while the v5 confirmatory chain has not been
+#: delivered.
 #:
 #: The rule this list enforced ("no v5 artifact may exist while the v5 chain has
 #: not run") was a **preregistration** rule: the specification existed, was
@@ -92,18 +97,17 @@ EXECUTION_PATH_ROOTS = (
 #: manifest -- so the universe and the data manifests are legitimate
 #: deliverables and are listed in ``V5_DELIVERED_STAGE_ARTIFACTS`` below.
 #:
-#: The rule that still holds is the **run** rule: no v5 run artifact may exist
-#: while the chain has not run. The selection authorization is now
-#: preregistered for the single authorized selection run and is listed in
-#: ``V5_DELIVERED_STAGE_ARTIFACTS`` when present; the confirmatory protocol
-#: and runbook are not run artifacts of the selection run.
-V5_RUN_ARTIFACTS_THAT_MUST_NOT_EXIST = (
+#: The **run** rule was the other half of it: no v5 run artifact may exist while
+#: the chain has not run. The single authorized selection run has now been
+#: performed, so its outputs -- the ledger, the results manifest, the result
+#: stream and the checkpoint -- are legitimate deliverables too, and the rule
+#: that holds for them is the post-run one: the artifacts that exist must be the
+#: authorized run's outputs and no exposure may have occurred. That rule is
+#: checked by ``scripts/v5_run_state.py``; the confirmatory protocol and runbook
+#: below are not run artifacts of the selection run and still must not exist.
+V5_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST = (
     "configs/research_v5_confirmatory_protocol.json",
     "configs/research_v5_confirmatory_runbook_1.json",
-    "research/ledger_v5.json",
-    "research/results_manifest_v5.json",
-    "research/results_v5.jsonl",
-    "research_state/checkpoint_v5.json",
 )
 
 #: The v5 stage artifacts the retrieval stage delivers. When they exist they
@@ -595,9 +599,11 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     for foreign in FOREIGN_NAMESPACES:
         if foreign in v5_paths:
             fail(f"the v5 namespace collides with the frozen path {foreign}")
-    for relative in V5_RUN_ARTIFACTS_THAT_MUST_NOT_EXIST:
+    for relative in V5_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST:
         if (repo_root / relative).exists():
-            fail(f"the v5 run artifact {relative} exists, but the v5 chain has not run")
+            fail(f"the v5 confirmatory artifact {relative} exists, but the v5 confirmatory "
+                 "chain has not been delivered")
+    failures.extend(v5_run_state_failures(repo_root))
     for relative in V5_DELIVERED_STAGE_ARTIFACTS:
         stage_path = repo_root / relative
         if not stage_path.exists():

@@ -43,6 +43,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
+from v5_run_state import v5_run_state_failures  # noqa: E402
 from v5_universe_rules import (  # noqa: E402
     DATA_MANIFEST_HASH_EXCLUDED_KEYS,
     FLOOR_SOURCE_RELATIVE,
@@ -528,9 +529,15 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         failures.append("the v5 data manifest records a confirmatory exposure")
     if window_block.get("confirmatory_window_status") != "NOT_STARTED":
         failures.append("the v5 confirmatory window is not recorded as not started")
-    for relative in V5_EXECUTION_PATHS:
-        if (root / relative).exists():
-            failures.append(f"a v5 run artifact exists before the v5 candidate freeze: {relative}")
+
+    # 13b. The v5 run artifacts, when they exist, are the authorized run's outputs.
+    #
+    # The rule this section enforced before the run was a preregistration rule
+    # ("a v5 run artifact may not exist before the v5 candidate freeze"). The single
+    # authorized selection run has now been performed, so the rule that holds is the
+    # post-run one: the artifacts that exist must be the authorized run's outputs and
+    # no exposure may have occurred.
+    failures.extend(v5_run_state_failures(root))
 
     return {
         "ok": not failures,

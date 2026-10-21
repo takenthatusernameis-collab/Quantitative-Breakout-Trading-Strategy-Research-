@@ -500,11 +500,17 @@ def test_the_verifier_detects_a_tampered_amendment(tmp_path: Path) -> None:
     assert any("interval_start_inclusive" in failure for failure in failures), failures
 
 
-def test_the_verifier_detects_a_v5_run_artifact(tmp_path: Path) -> None:
+def test_the_verifier_detects_a_run_artifact_that_is_not_the_authorized_runs(
+    tmp_path: Path,
+) -> None:
+    """The pre-run prohibition is replaced by the post-run rule.
+
+    A run artifact that is not the authorized run's output is refused.
+    """
     root = _mirror_repo(tmp_path)
-    (root / "research" / "ledger_v5.json").write_text("{}\n", encoding="utf-8")
+    _replace(root, "research/ledger_v5.json", "{}")
     failures = _failures(root)
-    assert any("v5 run artifact" in failure for failure in failures), failures
+    assert any("v5 ledger" in failure for failure in failures), failures
 
 
 def test_the_verifier_detects_a_missing_freeze_amendment(tmp_path: Path) -> None:

@@ -60,6 +60,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
+from v5_run_state import v5_run_state_failures  # noqa: E402
+
 PROTOCOL_RELATIVE = "configs/research_v5_execution.json"
 AMENDMENT_RELATIVE = "configs/research_v5_execution_amendment_1.json"
 AMENDMENT_2_RELATIVE = "configs/research_v5_execution_amendment_2.json"
@@ -559,9 +561,14 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     for foreign in FROZEN_RESULT_PATHS:
         if foreign in layout_paths:
             fail(f"the v5 result layout collides with the frozen path {foreign}")
-    for relative in V5_EXECUTION_PATHS:
-        if (root / relative).exists():
-            fail(f"the v5 run artifact {relative} exists, but the v5 chain has not run")
+    # 9. The v5 run artifacts, when they exist, are the authorized run's outputs.
+    #
+    # The rule this section enforced before the run was a preregistration rule
+    # ("no v5 run artifact may exist while the chain has not run"). The single
+    # authorized selection run has now been performed, so the rule that holds is the
+    # post-run one: the artifacts that exist must be the authorized run's outputs and
+    # no exposure may have occurred.
+    failures.extend(v5_run_state_failures(root))
 
     return {
         "ok": not failures,

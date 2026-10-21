@@ -1,0 +1,264 @@
+{
+  "artifact": "v5_selected_configurations_manifest",
+  "artifact_version": "v5-selected-configurations-manifest-1",
+  "version": 1,
+  "protocol_version": "v5",
+  "universe_version": "v5",
+  "created_utc": "2026-10-21T21:40:00Z",
+  "manifest_status": "PUBLISHED_FROM_VERIFIED_SHARDS",
+  "description": "Published outcome of the authorized v5 selection run over the frozen v5 candidate set, derived from verified shards under the unchanged v1 selection rule.",
+  "run_identity": {
+    "run_id": "v5-selection-20261021",
+    "campaign_id": "v5-campaign",
+    "run_phase": "selection_grid",
+    "authorization_manifest_hash": "55827bd8e1b11311a2977232f236566ac8b3236e4dd10229aad269aab6c503c2",
+    "run_code_identity": "8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2",
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "execution_path_digest": "9c5f13ff86604e5b52776262d33828e6a071419a640d6343f6ff5997c7df06e8",
+    "code_identity_algorithm": "canonical_source_digest_v1"
+  },
+  "specification_identities": {
+    "spec_v1_document_sha256": "09c79d0ba225a7e53dc432a16cb8669a823972bf19408a3f16be3d12f895464d",
+    "spec_v1_self_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+    "spec_v5_document_sha256": "68ef46c7c5ff7bb87ec6d2b18b2d0bc640dc73215a4f41cc59d6406068d4ef4b",
+    "spec_v5_self_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2",
+    "run_specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2",
+    "selection_rule_digest": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e",
+    "selection_rule_reference": "configs/research_v1.json#selection"
+  },
+  "data_identities": {
+    "universe_manifest_v5_hash": "ed6ade73c31c687c141b492100bff9a1af85a6fccbb80bd65bbe924589abaa7f",
+    "effective_data_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+    "base_data_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+    "candidate_freeze_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4"
+  },
+  "scope": {
+    "frozen_candidate_set": {
+      "count": 7,
+      "binance_pairs": [
+        "APTUSDT",
+        "CAKEUSDT",
+        "STXUSDT",
+        "DASHUSDT",
+        "VETUSDT",
+        "CRVUSDT",
+        "RAYUSDT"
+      ],
+      "membership_rule": "Exactly the validated candidate set of configs/research_v5_candidate_freeze.json, re-derived from the validated constituents of research/universe_manifest_v5.json. Membership is not re-derived, re-ranked, widened or narrowed by this artifact.",
+      "universe_manifest_path": "research/universe_manifest_v5.json",
+      "universe_manifest_hash": "ed6ade73c31c687c141b492100bff9a1af85a6fccbb80bd65bbe924589abaa7f",
+      "base_data_manifest_path": "research/data_manifest_v5.json",
+      "base_data_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+      "effective_data_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+      "excluded_after_validation": {
+        "GHOUSDT": "binance_spot_unavailable",
+        "ETHFIUSDT": "insufficient_hourly_history",
+        "XDCUSDT": "binance_spot_unavailable",
+        "NIGHTUSDT": "insufficient_hourly_history",
+        "PYTHUSDT": "insufficient_hourly_history",
+        "TIAUSDT": "insufficient_hourly_history",
+        "BDXUSDT": "binance_spot_unavailable",
+        "FLRUSDT": "binance_spot_unavailable",
+        "QUSDT": "binance_spot_unavailable",
+        "TRUMPUSDT": "insufficient_hourly_history",
+        "PENGUUSDT": "insufficient_hourly_history",
+        "币安人生USDT": "insufficient_hourly_history",
+        "YLDSUSDT": "binance_spot_unavailable"
+      },
+      "widening_by_reranking_forbidden": true,
+      "excluded_assets_stay_excluded": true
+    },
+    "assets_evaluated": 7,
+    "confirmatory_window_start_utc": "2026-10-21T13:00:00Z",
+    "development_cutoff_utc": "2026-10-19T22:00:00Z",
+    "effective_data_boundary_utc": "2026-10-19T22:00:00Z",
+    "min_confirmatory_window_hours": 2160
+  },
+  "effective_rules": {
+    "membership": {
+      "path": "configs/research_v5_specification_amendment_1.json",
+      "manifest_hash": "e130fa5ea4a01fabbfe1e102a4cff8b8495382268eec9e1e7eafe466eae94138",
+      "rule": "a candle is inside a confirmatory window when its close falls strictly after that window's start and before its end, regardless of which asset it belongs to; a candle that closes exactly at a window's start is development data",
+      "interval_start_inclusive": false,
+      "interval_end_exclusive": true,
+      "precedence": "amendment_overrides_frozen_block"
+    },
+    "overlap": {
+      "path": "configs/research_v5_candidate_freeze_amendment_1.json",
+      "manifest_hash": "43a374284df1c5f933f565c0e882d6c721302e5b1897c02ceb39344b1effa49d",
+      "rule": "the v5 confirmatory window opens inside the still-open v2, v3 and v4 confirmatory windows in time, because a 90-day window that opens later cannot end later than the 90-day window that opened before it; the time overlap is not a violation, because the two evaluations share no asset (the v5 candidate set is disjoint from the v1, v2, v3 and v4 candidate sets) and because the v5 confirmatory evaluation may not start before the later of the v4 confirmatory gate and the v5 window's own earliest end, and never before the v2 and the v3 gates; the v5 window is never populated with data that predates the v5 candidate freeze, is never a re-opening of the v1 holdout or of the v2, v3 or v4 confirmatory windows, and is never read for selection",
+      "evaluation_may_not_start_before_utc": "2027-01-19T13:00:00Z",
+      "precedence": "amendment_overrides_frozen_block"
+    },
+    "execution": {
+      "path": "configs/research_v5_execution_amendment_1.json",
+      "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988",
+      "precedence": "the effective v5 execution protocol is this amendment for the blocks it restates, and configs/research_v5_execution.json for the blocks it does not; the protocol stays on disk unchanged and visible"
+    }
+  },
+  "benchmark": {
+    "symbol": "BTCUSDT",
+    "dataset_path": "research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv",
+    "content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+    "alignment_rule": "The v5 benchmark must be the v5-cutoff-bounded dataset from research/data/candles_v5 (ends at the v5 development cutoff). The v4 chain's research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv cannot be reused for v5 because it contains candles that close after the v5 cutoff inside the open v2 confirmatory window.",
+    "role": "trend_filter_and_benchmark",
+    "btc_configurations_dropped": false,
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked"
+  },
+  "derived_from": {
+    "records_read": 193536,
+    "shard_directory": "research/shards_v5/v5-campaign",
+    "results_manifest_path": "research/results_manifest_v5.json",
+    "ledger_path": "research/ledger_v5.json",
+    "experiment_ids_verified": true,
+    "all_grid_units_present": true
+  },
+  "exposure": {
+    "holdout_exposed_count": 0,
+    "confirmatory_window_status": "NOT_STARTED",
+    "confirmatory_candles_read": 0,
+    "v1_holdout_reuse": "forbidden",
+    "v2_confirmatory_window_reuse": "forbidden",
+    "v3_confirmatory_window_reuse": "forbidden",
+    "v4_confirmatory_window_reuse": "forbidden"
+  },
+  "authorizes": {
+    "selection_run": false,
+    "second_run": false,
+    "confirmatory_evaluation": false,
+    "candle_fetch": false,
+    "note": "This artifact publishes the outcome of the completed authorized run. It authorizes no run, no evaluation and no candle read."
+  },
+  "selections": {
+    "APTUSDT": {
+      "asset": "APTUSDT",
+      "status": "NO_CANDIDATE",
+      "economic_status": "NO_CANDIDATE",
+      "config_id": null,
+      "selected": false,
+      "reason": "NO_CANDIDATE",
+      "candidate_status": "NO_CANDIDATE",
+      "counts": {
+        "configs_passing_all_gates": 0,
+        "configs_passing_evaluable_gates": 0,
+        "configs_failing_only_sample_floor": 0,
+        "configs_failing_only_economic_gates": 990
+      }
+    },
+    "CAKEUSDT": {
+      "asset": "CAKEUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_0677",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+      "counts": {
+        "configs_passing_all_gates": 296,
+        "configs_passing_evaluable_gates": 296,
+        "configs_failing_only_sample_floor": 79,
+        "configs_failing_only_economic_gates": 803
+      }
+    },
+    "CRVUSDT": {
+      "asset": "CRVUSDT",
+      "status": "NO_CANDIDATE",
+      "economic_status": "NO_CANDIDATE",
+      "config_id": null,
+      "selected": false,
+      "reason": "NO_CANDIDATE",
+      "candidate_status": "NO_CANDIDATE",
+      "counts": {
+        "configs_passing_all_gates": 0,
+        "configs_passing_evaluable_gates": 0,
+        "configs_failing_only_sample_floor": 0,
+        "configs_failing_only_economic_gates": 1048
+      }
+    },
+    "DASHUSDT": {
+      "asset": "DASHUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_1272",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+      "counts": {
+        "configs_passing_all_gates": 52,
+        "configs_passing_evaluable_gates": 52,
+        "configs_failing_only_sample_floor": 31,
+        "configs_failing_only_economic_gates": 1055
+      }
+    },
+    "RAYUSDT": {
+      "asset": "RAYUSDT",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "economic_status": "INSUFFICIENT_EVIDENCE",
+      "config_id": null,
+      "selected": false,
+      "reason": "INSUFFICIENT_EVIDENCE",
+      "candidate_status": "INSUFFICIENT_EVIDENCE",
+      "counts": {
+        "configs_passing_all_gates": 0,
+        "configs_passing_evaluable_gates": 0,
+        "configs_failing_only_sample_floor": 3,
+        "configs_failing_only_economic_gates": 1019
+      }
+    },
+    "STXUSDT": {
+      "asset": "STXUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_1470",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+      "counts": {
+        "configs_passing_all_gates": 1,
+        "configs_passing_evaluable_gates": 1,
+        "configs_failing_only_sample_floor": 12,
+        "configs_failing_only_economic_gates": 957
+      }
+    },
+    "VETUSDT": {
+      "asset": "VETUSDT",
+      "status": "CANDIDATE_SELECTED",
+      "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+      "config_id": "cfg_1617",
+      "selected": true,
+      "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
+      "counts": {
+        "configs_passing_all_gates": 6,
+        "configs_passing_evaluable_gates": 6,
+        "configs_failing_only_sample_floor": 22,
+        "configs_failing_only_economic_gates": 932
+      }
+    }
+  },
+  "outcome": "CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE",
+  "assets_with_candidate": [
+    "CAKEUSDT",
+    "DASHUSDT",
+    "STXUSDT",
+    "VETUSDT"
+  ],
+  "assets_without_candidate": [
+    "APTUSDT",
+    "CRVUSDT",
+    "RAYUSDT"
+  ],
+  "assets_without_candidate_reported": true,
+  "effective_execution_authorization": {
+    "source": "configs/research_v5_execution_amendment_2.json",
+    "amendment_manifest_hash": "7bfbb85008eb670b738737469531322f8c7fee0a52af89ac7f8a369241bfc12e",
+    "selection_authorization_present": true,
+    "selection_authorization_path": "configs/research_v5_selection_authorization_1.json",
+    "selection_authorization_manifest_hash": "55827bd8e1b11311a2977232f236566ac8b3236e4dd10229aad269aab6c503c2",
+    "selection_authorization_sha256": "4e8985c21c03a9fe0a339630ae6b04fa9ca9de183d92aba94dd1e6018a47d0d6",
+    "selection_authorization_run_id": "v5-selection-20261021",
+    "selection_authorization_campaign_id": "v5-campaign",
+    "authorization_manifest_hash_matches": true
+  },
+  "manifest_hash_excluded_keys": [
+    "manifest_hash"
+  ],
+  "manifest_hash": "8c8632530166d28004c0eb5ee633f3c55a6598ca5f88ac417bc3664c5502ddbb"
+}

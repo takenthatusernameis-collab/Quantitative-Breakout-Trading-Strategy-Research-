@@ -26,6 +26,498 @@
     "role": "trend_filter_and_benchmark",
     "symbol": "BTCUSDT"
   },
+  "benchmark_alignment": {
+    "APTUSDT": {
+      "0": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "APTUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1735682400000,
+        "benchmark_last_candle_timestamp": 1745139600000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1735682400000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1745139600000,
+        "window_end_ms": 1745141400000,
+        "window_start_ms": 1735680960000
+      },
+      "1": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "APTUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1745143200000,
+        "benchmark_last_candle_timestamp": 1754600400000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1745143200000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1754600400000,
+        "window_end_ms": 1754601840000,
+        "window_start_ms": 1745141400000
+      },
+      "2": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "APTUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1754604000000,
+        "benchmark_last_candle_timestamp": 1764061200000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1754604000000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1764061200000,
+        "window_end_ms": 1764062279999,
+        "window_start_ms": 1754601840000
+      },
+      "3": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "APTUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1764064800000,
+        "benchmark_last_candle_timestamp": 1773522000000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1764064800000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1773522000000,
+        "window_end_ms": 1773522720000,
+        "window_start_ms": 1764062279999
+      }
+    },
+    "CAKEUSDT": {
+      "0": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "CAKEUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1735682400000,
+        "benchmark_last_candle_timestamp": 1745139600000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1735682400000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1745139600000,
+        "window_end_ms": 1745141400000,
+        "window_start_ms": 1735680960000
+      },
+      "1": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "CAKEUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1745143200000,
+        "benchmark_last_candle_timestamp": 1754600400000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1745143200000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1754600400000,
+        "window_end_ms": 1754601840000,
+        "window_start_ms": 1745141400000
+      },
+      "2": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "CAKEUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1754604000000,
+        "benchmark_last_candle_timestamp": 1764061200000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1754604000000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1764061200000,
+        "window_end_ms": 1764062279999,
+        "window_start_ms": 1754601840000
+      },
+      "3": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "CAKEUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1764064800000,
+        "benchmark_last_candle_timestamp": 1773522000000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1764064800000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1773522000000,
+        "window_end_ms": 1773522720000,
+        "window_start_ms": 1764062279999
+      }
+    },
+    "CRVUSDT": {
+      "0": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "CRVUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1735682400000,
+        "benchmark_last_candle_timestamp": 1745139600000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1735682400000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1745139600000,
+        "window_end_ms": 1745141400000,
+        "window_start_ms": 1735680960000
+      },
+      "1": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "CRVUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1745143200000,
+        "benchmark_last_candle_timestamp": 1754600400000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1745143200000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1754600400000,
+        "window_end_ms": 1754601840000,
+        "window_start_ms": 1745141400000
+      },
+      "2": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "CRVUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1754604000000,
+        "benchmark_last_candle_timestamp": 1764061200000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1754604000000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1764061200000,
+        "window_end_ms": 1764062279999,
+        "window_start_ms": 1754601840000
+      },
+      "3": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "CRVUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1764064800000,
+        "benchmark_last_candle_timestamp": 1773522000000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1764064800000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1773522000000,
+        "window_end_ms": 1773522720000,
+        "window_start_ms": 1764062279999
+      }
+    },
+    "DASHUSDT": {
+      "0": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "DASHUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1735682400000,
+        "benchmark_last_candle_timestamp": 1745139600000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1735682400000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1745139600000,
+        "window_end_ms": 1745141400000,
+        "window_start_ms": 1735680960000
+      },
+      "1": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "DASHUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1745143200000,
+        "benchmark_last_candle_timestamp": 1754600400000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1745143200000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1754600400000,
+        "window_end_ms": 1754601840000,
+        "window_start_ms": 1745141400000
+      },
+      "2": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "DASHUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1754604000000,
+        "benchmark_last_candle_timestamp": 1764061200000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1754604000000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1764061200000,
+        "window_end_ms": 1764062279999,
+        "window_start_ms": 1754601840000
+      },
+      "3": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "DASHUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1764064800000,
+        "benchmark_last_candle_timestamp": 1773522000000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1764064800000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1773522000000,
+        "window_end_ms": 1773522720000,
+        "window_start_ms": 1764062279999
+      }
+    },
+    "RAYUSDT": {
+      "0": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "RAYUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1735682400000,
+        "benchmark_last_candle_timestamp": 1745139600000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1735682400000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1745139600000,
+        "window_end_ms": 1745141400000,
+        "window_start_ms": 1735680960000
+      },
+      "1": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "RAYUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1745143200000,
+        "benchmark_last_candle_timestamp": 1754600400000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1745143200000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1754600400000,
+        "window_end_ms": 1754601840000,
+        "window_start_ms": 1745141400000
+      },
+      "2": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "RAYUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1754604000000,
+        "benchmark_last_candle_timestamp": 1764061200000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1754604000000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1764061200000,
+        "window_end_ms": 1764062279999,
+        "window_start_ms": 1754601840000
+      },
+      "3": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "RAYUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1764064800000,
+        "benchmark_last_candle_timestamp": 1773522000000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1764064800000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1773522000000,
+        "window_end_ms": 1773522720000,
+        "window_start_ms": 1764062279999
+      }
+    },
+    "STXUSDT": {
+      "0": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "STXUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1735682400000,
+        "benchmark_last_candle_timestamp": 1745139600000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1735682400000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1745139600000,
+        "window_end_ms": 1745141400000,
+        "window_start_ms": 1735680960000
+      },
+      "1": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "STXUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1745143200000,
+        "benchmark_last_candle_timestamp": 1754600400000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1745143200000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1754600400000,
+        "window_end_ms": 1754601840000,
+        "window_start_ms": 1745141400000
+      },
+      "2": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "STXUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1754604000000,
+        "benchmark_last_candle_timestamp": 1764061200000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1754604000000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1764061200000,
+        "window_end_ms": 1764062279999,
+        "window_start_ms": 1754601840000
+      },
+      "3": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "STXUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1764064800000,
+        "benchmark_last_candle_timestamp": 1773522000000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1764064800000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1773522000000,
+        "window_end_ms": 1773522720000,
+        "window_start_ms": 1764062279999
+      }
+    },
+    "VETUSDT": {
+      "0": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "VETUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1735682400000,
+        "benchmark_last_candle_timestamp": 1745139600000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1735682400000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1745139600000,
+        "window_end_ms": 1745141400000,
+        "window_start_ms": 1735680960000
+      },
+      "1": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "VETUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1745143200000,
+        "benchmark_last_candle_timestamp": 1754600400000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1745143200000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1754600400000,
+        "window_end_ms": 1754601840000,
+        "window_start_ms": 1745141400000
+      },
+      "2": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "VETUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1754604000000,
+        "benchmark_last_candle_timestamp": 1764061200000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1754604000000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1764061200000,
+        "window_end_ms": 1764062279999,
+        "window_start_ms": 1754601840000
+      },
+      "3": {
+        "alignment_reference": "docs/research_protocol.md:101",
+        "alignment_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+        "asset": "VETUSDT",
+        "asset_candles": 2628,
+        "benchmark_candles": 2628,
+        "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+        "benchmark_first_candle_timestamp": 1764064800000,
+        "benchmark_last_candle_timestamp": 1773522000000,
+        "benchmark_window_sliced": true,
+        "first_candle_timestamp": 1764064800000,
+        "forward_filled": false,
+        "index_aligned": true,
+        "last_candle_timestamp": 1773522000000,
+        "window_end_ms": 1773522720000,
+        "window_start_ms": 1764062279999
+      }
+    }
+  },
   "bounds": {
     "attempts": 1,
     "max_assets": 7,
@@ -52,10 +544,13 @@
     "portable": true,
     "run_code_identity": "8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2"
   },
-  "completed_utc": null,
+  "completed_utc": "2026-10-21T21:32:46.306178+00:00",
   "counts": {
     "config_units": 16128,
-    "execution_units": 193536
+    "executed": 190486,
+    "execution_units": 193536,
+    "records_written": 193536,
+    "skipped_already_complete": 3050
   },
   "data_boundary": {
     "candles_before_utc": "2026-10-19T22:00:00Z",
@@ -107,12 +602,16 @@
   "runs": [
     {
       "campaign_id": "v5-campaign",
-      "completed_utc": null,
-      "resume_events": [],
-      "resumes": 0,
+      "completed_utc": "2026-10-21T21:32:46.306178+00:00",
+      "resume_events": [
+        {
+          "resumed_utc": "2026-10-21T20:06:50.157549+00:00"
+        }
+      ],
+      "resumes": 1,
       "run_id": "v5-selection-20261021",
       "started_utc": "2026-10-21T19:56:30.281496+00:00",
-      "status": "RUNNING"
+      "status": "COMPLETED"
     }
   ],
   "scope": {
@@ -142,6 +641,103 @@
       "\u5e01\u5b89\u4eba\u751fUSDT": "insufficient_hourly_history"
     }
   },
+  "selection": {
+    "assets_evaluated": 7,
+    "assets_with_candidate": [
+      "CAKEUSDT",
+      "DASHUSDT",
+      "STXUSDT",
+      "VETUSDT"
+    ],
+    "assets_without_candidate": [
+      "APTUSDT",
+      "CRVUSDT",
+      "RAYUSDT"
+    ],
+    "assets_without_candidate_reported": true,
+    "outcome": "CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE",
+    "per_asset": {
+      "APTUSDT": {
+        "config_id": null,
+        "counts": {
+          "configs_failing_only_economic_gates": 990,
+          "configs_failing_only_sample_floor": 0,
+          "configs_passing_all_gates": 0,
+          "configs_passing_evaluable_gates": 0
+        },
+        "economic_status": "NO_CANDIDATE",
+        "status": "NO_CANDIDATE"
+      },
+      "CAKEUSDT": {
+        "config_id": "cfg_0677",
+        "counts": {
+          "configs_failing_only_economic_gates": 803,
+          "configs_failing_only_sample_floor": 79,
+          "configs_passing_all_gates": 296,
+          "configs_passing_evaluable_gates": 296
+        },
+        "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+        "status": "CANDIDATE_SELECTED"
+      },
+      "CRVUSDT": {
+        "config_id": null,
+        "counts": {
+          "configs_failing_only_economic_gates": 1048,
+          "configs_failing_only_sample_floor": 0,
+          "configs_passing_all_gates": 0,
+          "configs_passing_evaluable_gates": 0
+        },
+        "economic_status": "NO_CANDIDATE",
+        "status": "NO_CANDIDATE"
+      },
+      "DASHUSDT": {
+        "config_id": "cfg_1272",
+        "counts": {
+          "configs_failing_only_economic_gates": 1055,
+          "configs_failing_only_sample_floor": 31,
+          "configs_passing_all_gates": 52,
+          "configs_passing_evaluable_gates": 52
+        },
+        "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+        "status": "CANDIDATE_SELECTED"
+      },
+      "RAYUSDT": {
+        "config_id": null,
+        "counts": {
+          "configs_failing_only_economic_gates": 1019,
+          "configs_failing_only_sample_floor": 3,
+          "configs_passing_all_gates": 0,
+          "configs_passing_evaluable_gates": 0
+        },
+        "economic_status": "INSUFFICIENT_EVIDENCE",
+        "status": "INSUFFICIENT_EVIDENCE"
+      },
+      "STXUSDT": {
+        "config_id": "cfg_1470",
+        "counts": {
+          "configs_failing_only_economic_gates": 957,
+          "configs_failing_only_sample_floor": 12,
+          "configs_passing_all_gates": 1,
+          "configs_passing_evaluable_gates": 1
+        },
+        "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+        "status": "CANDIDATE_SELECTED"
+      },
+      "VETUSDT": {
+        "config_id": "cfg_1617",
+        "counts": {
+          "configs_failing_only_economic_gates": 932,
+          "configs_failing_only_sample_floor": 22,
+          "configs_passing_all_gates": 6,
+          "configs_passing_evaluable_gates": 6
+        },
+        "economic_status": "CANDIDATE_PENDING_HOLDOUT",
+        "status": "CANDIDATE_SELECTED"
+      }
+    },
+    "rule_reference": "configs/research_v1.json -> selection",
+    "selection_block_sha256": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e"
+  },
   "selection_rule": {
     "max_candidates_per_asset": 1,
     "reference": "configs/research_v1.json -> selection",
@@ -149,6 +745,6 @@
   },
   "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2",
   "started_utc": "2026-10-21T19:56:30.281496+00:00",
-  "status": "RUNNING",
+  "status": "COMPLETED",
   "v1_artifacts_touched": []
 }

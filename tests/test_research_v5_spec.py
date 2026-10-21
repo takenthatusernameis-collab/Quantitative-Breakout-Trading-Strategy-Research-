@@ -374,25 +374,25 @@ def test_the_v5_namespace_does_not_collide_with_the_frozen_paths():
     assert namespace["checkpoint"] == "research_state/checkpoint_v5.json"
 
 
-def test_no_v5_run_artifact_exists():
-    """The v5 **run** artifacts must not exist while the chain has not run.
+def test_the_v5_confirmatory_chain_has_not_been_delivered():
+    """The v5 confirmatory protocol and runbook are not run artifacts of the selection run.
 
-    The universe and the data manifests are the delivered retrieval stage and
-    do exist; the freeze and the execution protocol are the delivered
-    preregistration stage and also exist; the selection authorization is now
-    preregistered for the single authorized selection run and exists; the
-    confirmatory protocol and runbook, the ledger, the results and the
-    checkpoint are the run artifacts and must not.
+    The single authorized selection run has been performed, so its outputs -- the
+    ledger, the results manifest, the result stream and the checkpoint -- exist and
+    are legitimate deliverables. The confirmatory protocol and runbook are a later
+    stage and must still not exist.
     """
     for relative in (
         "configs/research_v5_confirmatory_protocol.json",
         "configs/research_v5_confirmatory_runbook_1.json",
-        "research/ledger_v5.json",
-        "research/results_manifest_v5.json",
-        "research/results_v5.jsonl",
-        "research_state/checkpoint_v5.json",
     ):
         assert not (REPO_ROOT / relative).exists(), relative
+
+
+def test_the_v5_run_artifacts_are_the_authorized_runs_outputs():
+    """The run artifacts that exist are the authorized run's outputs, and no exposure occurred."""
+    from v5_run_state import v5_run_state_failures
+    assert v5_run_state_failures(REPO_ROOT) == []
 
 
 def test_the_delivered_stage_artifacts_are_bound_to_the_specification():
@@ -683,13 +683,19 @@ def test_the_verifier_detects_a_self_authorizing_specification(tmp_path):
     assert any("execution_authorized" in failure for failure in failures), failures
 
 
-def test_the_verifier_detects_an_existing_v5_run_artifact(tmp_path):
+def test_the_verifier_detects_a_run_artifact_that_is_not_the_authorized_runs(tmp_path):
+    """A run artifact that is not the authorized run's output is refused.
+
+    The pre-run prohibition was replaced by the post-run rule: the run artifacts
+    that exist must be the authorized run's outputs. A ledger that names another
+    run is exactly what that rule refuses.
+    """
     root = _mirror_repo(tmp_path)
     path = root / "research" / "ledger_v5.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("{}\n", encoding="utf-8")
     failures = _failures(root)
-    assert any("v5 run artifact" in failure for failure in failures), failures
+    assert any("v5 ledger" in failure for failure in failures), failures
 
 
 def test_the_verifier_detects_a_broken_expansion_log_chain(tmp_path):

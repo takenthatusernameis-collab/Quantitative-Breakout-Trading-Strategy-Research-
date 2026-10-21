@@ -7,7 +7,7 @@ number in it that is wrong is a silent corruption of the campaign's control
 state, so every value is re-derived here from the hash-bound artifacts that
 produced it.
 
-The file is **version-aware**: every published selection cycle (v2, v3, v4)
+The file is **version-aware**: every published selection cycle (v2, v3, v4, v5)
 contributes one row to the table below, and the checks are written against
 that table rather than against one hard-coded version. A new cycle therefore
 extends the table instead of rewriting the checks, and a stale check that
@@ -32,7 +32,7 @@ For the **current** cycle the checks are:
   selection manifests;
 * the snapshot id is **recomputed** from the stored evidence with the rule
   that belongs to the current version -- the sha256 of the stored raw
-  market-cap response for the v2 and v4 cycles, the canonical
+  market-cap response for the v2, v4 and v5 cycles, the canonical
   ``compute_snapshot_id`` over the stored snapshot manifest for the v3 cycle;
 * the blocking dependency names the **latest** of the open confirmatory
   gates, re-derived from the confirmatory protocols and from the candidate
@@ -123,6 +123,17 @@ CYCLES: Tuple[Cycle, ...] = (
         gate_relative="configs/research_v4_candidate_freeze.json",
         gate_pointer=("confirmatory_window", "earliest_possible_end_utc"),
     ),
+    Cycle(
+        version="v5",
+        selection_relative="research/v5_selected_configurations_manifest.json",
+        universe_relative="research/universe_manifest_v5.json",
+        data_relative="research/data_manifest_v5.json",
+        cohort_index=5,
+        snapshot_rule="raw_response_sha256",
+        snapshot_evidence_relative="research/v5_evidence/raw_market_cap_response.json",
+        gate_relative="configs/research_v5_candidate_freeze.json",
+        gate_pointer=("confirmatory_window", "earliest_possible_end_utc"),
+    ),
 )
 
 
@@ -146,9 +157,9 @@ def _dig(document: Dict[str, Any], pointer: Tuple[str, ...]) -> Any:
 def _pairs(cycle: Cycle) -> Tuple[List[str], List[Dict[str, str]]]:
     """The validated and the excluded constituents of a cycle's universe.
 
-    The v2 and v3 manifests name a constituent with ``symbol`` and the v4
-    manifest with ``binance_pair``; both are accepted, and the manifest's own
-    order is preserved.
+    The v2 and v3 manifests name a constituent with ``symbol`` and the v4 and
+    v5 manifests with ``binance_pair``; both are accepted, and the manifest's
+    own order is preserved.
     """
     universe = _load(cycle.universe_relative)
     validated: List[str] = []
