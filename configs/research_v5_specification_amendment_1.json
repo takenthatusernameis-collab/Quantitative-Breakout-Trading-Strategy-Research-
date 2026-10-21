@@ -1,0 +1,49 @@
+{
+  "amendment_status": "PUBLISHED_CORRECTION",
+  "artifact": "v5_specification_amendment_1",
+  "artifact_version": 1,
+  "created_utc": "2026-10-21T11:15:00Z",
+  "description": "Versioned amendment correcting the v5 confirmatory-window membership rule to match the window-owning freezes (development data is candles that close at or before the window start).",
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  },
+  "manifest_hash": "e130fa5ea4a01fabbfe1e102a4cff8b8495382268eec9e1e7eafe466eae94138",
+  "supersedes": {
+    "specification_path": "configs/research_v5.json",
+    "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2",
+    "block_path": "holdout.confirmatory_window_membership"
+  },
+  "corrected_rule": {
+    "rule": "a candle is inside a confirmatory window when its close falls strictly after that window's start and before its end, regardless of which asset it belongs to; a candle that closes exactly at a window's start is development data",
+    "interval_start_inclusive": false,
+    "interval_end_exclusive": true,
+    "asset_scope": "any asset, including assets that are not candidates of the window's own version",
+    "consequence": "no v5 read may fall inside the v2, the v3 or the v4 confirmatory window, so the exposure question that is open for the v2, v3 and v4 chains cannot arise for v5"
+  },
+  "sources": {
+    "v2": {
+      "path": "configs/research_v2_candidate_freeze.json",
+      "key": "data_boundary.development_data_rule",
+      "quote": "Candles that close at or before confirmatory_window_start_utc are development data and may inform selection."
+    },
+    "v3": {
+      "path": "configs/research_v3_candidate_freeze.json",
+      "key": "data_boundary.development_data_rule",
+      "quote": "Candles that close at or before confirmatory_window_start_utc are development data and may inform selection."
+    }
+  },
+  "effective_rule": {
+    "description": "The amendment wins over the frozen block in configs/research_v5.json for the effective rule; the frozen block stays on disk unchanged and visible.",
+    "precedence": "amendment_overrides_frozen_block"
+  },
+  "defect_corrected": {
+    "path": "configs/research_v5.json#holdout.confirmatory_window_membership.interval_start_inclusive",
+    "value_was": true,
+    "value_becomes_effective": false,
+    "note": "the v5 development cutoff is the v2 window start and the last development candle closes exactly at it, so treating start as inclusive would make development data fall inside an open window"
+  }
+}

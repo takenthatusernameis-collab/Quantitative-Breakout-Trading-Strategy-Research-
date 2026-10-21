@@ -59,9 +59,12 @@ MIRRORED_FILES = (
     "configs/research_v3.json",
     "configs/research_v4.json",
     "configs/research_v5.json",
+    "configs/research_v5_specification_amendment_1.json",
     "configs/research_v2_candidate_freeze.json",
     "configs/research_v3_candidate_freeze.json",
     "configs/research_v4_candidate_freeze.json",
+    "configs/research_v5_candidate_freeze.json",
+    "configs/research_v5_execution.json",
     "research/universe_manifest.json",
     "research/universe_manifest_v2.json",
     "research/universe_manifest_v3.json",
@@ -371,13 +374,12 @@ def test_no_v5_run_artifact_exists():
     """The v5 **run** artifacts must not exist while the chain has not run.
 
     The universe and the data manifests are the delivered retrieval stage and
-    do exist; the freeze, the execution protocol, the authorization, the
-    confirmatory protocol and runbook, the ledger, the results and the
-    checkpoint are the run artifacts and must not.
+    do exist; the freeze and the execution protocol are the delivered
+    preregistration stage and also exist; the authorization, the confirmatory
+    protocol and runbook, the ledger, the results and the checkpoint are the
+    run artifacts and must not.
     """
     for relative in (
-        "configs/research_v5_candidate_freeze.json",
-        "configs/research_v5_execution.json",
         "configs/research_v5_selection_authorization_1.json",
         "configs/research_v5_confirmatory_protocol.json",
         "configs/research_v5_confirmatory_runbook_1.json",
@@ -395,6 +397,8 @@ def test_the_delivered_stage_artifacts_are_bound_to_the_specification():
     for relative in (
         "research/universe_manifest_v5.json",
         "research/data_manifest_v5.json",
+        "configs/research_v5_candidate_freeze.json",
+        "configs/research_v5_execution.json",
     ):
         path = REPO_ROOT / relative
         if not path.exists():
@@ -402,6 +406,34 @@ def test_the_delivered_stage_artifacts_are_bound_to_the_specification():
         stage = _load(path)
         assert stage["specification_hash"] == spec["specification_hash"], relative
         assert stage["universe_version"] == spec["universe_version"], relative
+
+
+def test_the_verifier_detects_a_stage_artifact_that_is_not_bound_to_the_specification(
+    tmp_path,
+):
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "universe_manifest_v5.json"
+    if not path.exists():
+        pytest.skip("the v5 universe manifest is not present in this checkout")
+    stage = json.loads(path.read_text(encoding="utf-8"))
+    stage["specification_hash"] = "0" * 64
+    path.write_text(json.dumps(stage, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("not bound to this specification" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_v5_candidate_freeze_that_is_not_bound_to_the_specification(
+    tmp_path,
+):
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v5_candidate_freeze.json"
+    if not path.exists():
+        pytest.skip("the v5 candidate freeze is not present in this checkout")
+    stage = json.loads(path.read_text(encoding="utf-8"))
+    stage["specification_hash"] = "0" * 64
+    path.write_text(json.dumps(stage, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("not bound to this specification" in failure for failure in failures), failures
 
 
 def test_the_expansion_log_chain_is_intact():
@@ -527,6 +559,37 @@ def test_the_verifier_detects_a_wrong_code_digest(tmp_path):
     assert any("hashed-set canonical digest" in failure for failure in failures), failures
 
 
+def test_the_verifier_detects_a_missing_v5_specification_amendment(tmp_path):
+    """The effective-rule check fails when the amendment is absent."""
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v5_specification_amendment_1.json"
+    path.unlink()
+    failures = _failures(root)
+    assert any("amendment" in failure and "missing" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_stale_v5_specification_amendment(tmp_path):
+    """The effective-rule check fails when the amendment names a different spec hash."""
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v5_specification_amendment_1.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["supersedes"]["specification_hash"] = "0" * 64
+    path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("does not supersede" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_contradicted_v5_specification_amendment(tmp_path):
+    """The effective-rule check fails when the amendment still says start-inclusive."""
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v5_specification_amendment_1.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["corrected_rule"]["interval_start_inclusive"] = True
+    path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("interval_start_inclusive" in failure for failure in failures), failures
+
+
 def test_the_verifier_detects_a_modified_hashed_source_tree(tmp_path):
     root = _mirror_repo(tmp_path)
     target = root / "src" / "breakout_research" / "config.py"
@@ -553,20 +616,6 @@ def test_the_verifier_detects_an_existing_v5_run_artifact(tmp_path):
     path.write_text("{}\n", encoding="utf-8")
     failures = _failures(root)
     assert any("v5 run artifact" in failure for failure in failures), failures
-
-
-def test_the_verifier_detects_a_stage_artifact_that_is_not_bound_to_the_specification(
-    tmp_path,
-):
-    root = _mirror_repo(tmp_path)
-    path = root / "research" / "universe_manifest_v5.json"
-    if not path.exists():
-        pytest.skip("the v5 universe manifest is not present in this checkout")
-    stage = json.loads(path.read_text(encoding="utf-8"))
-    stage["specification_hash"] = "0" * 64
-    path.write_text(json.dumps(stage, indent=2) + "\n", encoding="utf-8")
-    failures = _failures(root)
-    assert any("not bound to this specification" in failure for failure in failures), failures
 
 
 def test_the_verifier_detects_a_broken_expansion_log_chain(tmp_path):

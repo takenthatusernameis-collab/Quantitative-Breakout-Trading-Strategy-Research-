@@ -81,8 +81,6 @@ EXECUTION_PATH_ROOTS = (
 #: while the chain has not been authorized and has not run. That list is
 #: unchanged in substance; only the stage artifacts moved out of it.
 V5_RUN_ARTIFACTS_THAT_MUST_NOT_EXIST = (
-    "configs/research_v5_candidate_freeze.json",
-    "configs/research_v5_execution.json",
     "configs/research_v5_selection_authorization_1.json",
     "configs/research_v5_confirmatory_protocol.json",
     "configs/research_v5_confirmatory_runbook_1.json",
@@ -98,6 +96,8 @@ V5_RUN_ARTIFACTS_THAT_MUST_NOT_EXIST = (
 V5_DELIVERED_STAGE_ARTIFACTS = (
     "research/universe_manifest_v5.json",
     "research/data_manifest_v5.json",
+    "configs/research_v5_candidate_freeze.json",
+    "configs/research_v5_execution.json",
 )
 
 #: The v1-v4 paths a v5 artifact must never collide with.
@@ -401,8 +401,21 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     membership = holdout.get("confirmatory_window_membership", {})
     if "regardless of which asset" not in str(membership.get("rule") or ""):
         fail("the specification does not define confirmatory-window membership asset-wide")
-    if membership.get("interval_start_inclusive") is not True:
-        fail("the confirmatory-window membership rule is not start-inclusive")
+    # Effective rule may be corrected by a published amendment (BRAIN-022)
+    v5_amendment = _load_json(repo_root / "configs" / "research_v5_specification_amendment_1.json")
+    if v5_amendment is None:
+        fail("the v5 specification amendment correcting the confirmatory-window membership rule is missing")
+    else:
+        if v5_amendment.get("supersedes", {}).get("specification_hash") != spec.get("specification_hash"):
+            fail("the v5 specification amendment does not supersede this specification")
+        corrected = v5_amendment.get("corrected_rule") or {}
+        if corrected.get("interval_start_inclusive") is not False:
+            fail("the v5 specification amendment does not correct interval_start_inclusive to false")
+        if "closes exactly at" not in str(corrected.get("rule") or "") or "strictly after" not in str(corrected.get("rule") or ""):
+            fail("the v5 specification amendment does not state the corrected membership rule")
+        # The frozen block still remains on disk; report it, but enforce the effective rule
+        if membership.get("interval_start_inclusive") is not True:
+            fail("the frozen v5 specification block must remain visible as written (interval_start_inclusive true) until not required; amendment provides effective rule")
     window_block = holdout.get("development_window", {})
     if cutoff:
         expected_last_open = int((parse_utc(cutoff) - timedelta(hours=1)).timestamp() * 1000)
