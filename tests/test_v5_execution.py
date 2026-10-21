@@ -24,20 +24,26 @@ rules these tests pin are:
 * the execution authorization authorizes nothing and the deviation disclosure
   records that v5 has no prior deviation to disclose;
 * the ``supersedes`` chain names the v4 execution protocol with recomputed
-  identities, and no v5 run artifact exists.
+  identities, and the single authorized v5 run has been performed exactly
+  once: the ledger records one COMPLETED logical run within the authorized
+  bounds, and the run gate refuses a second start.
 
 The tamper controls mutate a copy of the repository and assert that the
 verifier refuses the mutated tree.
 """
 from __future__ import annotations
 
+import dataclasses
 import importlib.util
 import json
 import os
+import shutil
 from pathlib import Path
 from typing import Any, Dict, List
 
 import pytest
+
+from v5_campaign import runner as v5_runner
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -62,6 +68,7 @@ def _load_module(name: str, relative: str):
 
 
 verifier = _load_module("verify_v5_execution", "scripts/verify_v5_execution.py")
+run_state = _load_module("v5_run_state", "scripts/v5_run_state.py")
 producer = _load_module("build_v5_execution", "scripts/build_v5_execution.py")
 amendment_producer = _load_module(
     "build_v5_execution_amendment_1", "scripts/build_v5_execution_amendment_1.py"
@@ -473,9 +480,98 @@ def test_the_supersedes_chain_names_the_v4_protocol() -> None:
     assert supersedes["v1_v2_v3_v4_artifacts_are_immutable"] is True
 
 
-def test_no_v5_run_artifact_exists() -> None:
-    for relative in verifier.V5_EXECUTION_PATHS:
-        assert not (REPO_ROOT / relative).exists(), relative
+def _single_run_failures(root: Path) -> List[str]:
+    """The single-run bounds, re-derived from the artifacts that own them.
+
+    The post-run rule itself lives in ``scripts/v5_run_state.py`` and is
+    applied by ``test_the_v5_run_state_is_the_authorized_runs_output``.  The
+    checks below are the ones that rule does **not** make: the ledger records
+    exactly one logical run, that run is the authorized one and COMPLETED, and
+    its record counts equal the bounds the authorization preregistered.  Every
+    expectation is recomputed from the artifacts themselves; nothing is
+    compared with a constant copied out of them.
+    """
+    failures: List[str] = []
+    ledger_path = root / "research" / "ledger_v5.json"
+    authorization_path = root / "configs" / "research_v5_selection_authorization_1.json"
+    if not ledger_path.exists():
+        return ["the v5 ledger does not exist"]
+    if not authorization_path.exists():
+        return ["the v5 selection authorization does not exist"]
+    ledger = _load(ledger_path)
+    authorization = _load(authorization_path)
+    authorized = authorization["authorized_run"]
+    runs = list(ledger.get("runs") or [])
+    if len(runs) != 1:
+        failures.append(
+            f"the ledger records {len(runs)} logical runs; the authorization permits one")
+    else:
+        entry = runs[0]
+        if entry.get("status") != "COMPLETED":
+            failures.append(
+                f"the recorded run status is {entry.get('status')!r}, not COMPLETED")
+        if entry.get("run_id") != authorized["run_id"]:
+            failures.append("the recorded run id is not the authorized run id")
+    bounds = authorized["bounds"]
+    counts = ledger.get("counts") or {}
+    if counts.get("config_units") != bounds.get("planned_config_units"):
+        failures.append(
+            "the recorded configuration-unit count differs from the authorized bound")
+    if counts.get("execution_units") != bounds.get("planned_execution_units"):
+        failures.append(
+            "the recorded execution-unit count differs from the authorized bound")
+    if counts.get("records_written") != counts.get("execution_units"):
+        failures.append(
+            "the recorded written-record count differs from the recorded execution-unit count")
+    return failures
+
+
+def test_the_v5_run_state_is_the_authorized_runs_output() -> None:
+    """The post-run rule the chain itself states.
+
+    ``scripts/v5_run_state.py`` holds the post-run invariant: the v5 run
+    artifacts, when they exist, are the **authorized** run's outputs, the run
+    is in one of its three legal states and no exposure occurred.  The pre-run
+    guard this replaces asserted that the v5 namespace was empty, which the
+    authorized run made false.
+    """
+    present = run_state.v5_run_artifacts_present(REPO_ROOT)
+    assert present == list(run_state.V5_RUN_ARTIFACTS), present
+    assert run_state.v5_run_state_failures(REPO_ROOT) == []
+
+
+def test_the_authorized_v5_run_is_performed_exactly_once() -> None:
+    failures = _single_run_failures(REPO_ROOT)
+    assert failures == [], failures
+
+
+def test_the_single_run_check_detects_a_second_logical_run(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _load(REPO_ROOT / "research" / "ledger_v5.json")
+    ledger["runs"].append(json.loads(json.dumps(ledger["runs"][0])))
+    _replace(root, "research/ledger_v5.json", ledger)
+    failures = _single_run_failures(root)
+    assert any("the authorization permits one" in failure for failure in failures), failures
+
+
+def test_the_single_run_check_detects_a_short_record_count(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _load(REPO_ROOT / "research" / "ledger_v5.json")
+    ledger["counts"]["records_written"] = ledger["counts"]["records_written"] - 1
+    _replace(root, "research/ledger_v5.json", ledger)
+    failures = _single_run_failures(root)
+    assert any("written-record count" in failure for failure in failures), failures
+
+
+def test_the_run_gate_refuses_a_second_start_after_the_run_completed(tmp_path: Path) -> None:
+    """The authorization permits one logical run; a completed run is never re-run."""
+    workspace = v5_runner.default_workspace(REPO_ROOT)
+    plan = v5_runner.build_plan(workspace)
+    ledger_copy = tmp_path / "ledger_v5.json"
+    shutil.copyfile(workspace.ledger, ledger_copy)
+    plan.workspace = dataclasses.replace(workspace, ledger=ledger_copy)
+    with pytest.raises(v5_runner.AttemptBudgetError):
+        v5_runner.claim_attempt(plan)
 
 
 # --------------------------------------------------------------------------

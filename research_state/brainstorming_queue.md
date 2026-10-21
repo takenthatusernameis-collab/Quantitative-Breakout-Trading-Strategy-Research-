@@ -4610,3 +4610,323 @@ The log holds three chained entries. The **derived v4 entry** is computed by `sc
 6. `configs/research_v3_confirmatory_code_hash_amendment_1.json` does not exist; it is needed only if a deliberate rotation of the v3 confirmatory execution-path digest is chosen.
 
 **Queued after this task:** the single authorized v5 selection run and the publication of the v5 selected-configurations manifest with the v5 cycle recorded in `research_state/continuous_universe_state.json`; then the preregistered v4 confirmatory protocol and runbook; the v3 confirmatory evaluation and the final report, which may not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start before `2027-01-17T22:00:00Z`.
+
+## BRAIN-025 — the v5 selection cycle is complete: the single authorized run, the published outcome, the recorded cycle, and the two obsolete pre-run guards the completion invalidated (2026-10-21T22:2xZ–23:15Z)
+
+**Status:** `DELIVERED_AND_VERIFIED` (the v5 cycle — the single authorized run, the published
+selected-configurations manifest and the recorded v5 cycle — audited end to end by this session), with
+**two CONFIRMED defects in the acceptance checks** the delivery left behind: two pre-run guards in the
+v5 test modules asserted that the v5 namespace was empty, and the authorized run has since made that
+assertion false. Both are repaired by replacing the obsolete guard with the **positive** post-run
+invariant and by adding the missing test for the campaign's single-run rule. **No frozen artifact, no
+dataset, no result, no state file, no `src/` file and no workflow was changed.**
+
+**Type:** audit-and-repair record. The v5 run, the publication and the cycle record were produced by a
+session that wrote **no** record: when this session started, the artifacts were already committed
+(checkpoint commit `e5989185`) but neither this queue nor the handoff mentioned them, and the last
+entry in each (BRAIN-024 and the 21:53:49Z handoff entry) still said the run had **not** been
+performed. This session therefore audited the delivery, repaired the two guards it found, performed the
+user-authorized maintenance audit (`research_state/MAINTENANCE_EXECUTION_BRIEF_20261021.md`) and wrote
+this record.
+
+**Routing:** the durable handoff's task message (the 19:4xZ entry) named three deliverables in order:
+the single authorized v5 selection run, the published v5 selected-configurations manifest, and the v5
+cycle recorded in `research_state/continuous_universe_state.json`. All three are present and verified
+here. The user-authorized maintenance brief additionally required the read-only workflow/state/hash
+audit and the offline test and verifier run, which this session performed; the brief's own instruction
+("refresh that finding rather than assume it is still incomplete") is what exposed the two guards.
+
+### 1. What was delivered (audited, not assumed)
+
+| artifact | what it is |
+| --- | --- |
+| `research/shards_v5/v5-campaign/*.jsonl` | **3,877** shard files holding **193,536** result records with **193,536 distinct** `experiment_id`s (no duplicate, no gap) |
+| `research/ledger_v5.json` | the run ledger: `status COMPLETED`, one logical run, one resume, `holdout_exposed_count 0`, `v1_artifacts_touched []` |
+| `research/results_manifest_v5.json` | the results manifest: 3,877 shards, `total_records 193536`, `total_bytes 235712178` |
+| `research/results_v5.jsonl` | the result **stream**, a projection of the shards (193,536 lines); gitignored, like the v2/v3/v4 streams, because the shards are the evidence |
+| `research_state/checkpoint_v5.json` | the checkpoint: `completed_records 193536`, `holdout_exposed_count 0` |
+| `research/v5_selected_configurations_manifest.json` | the **published outcome**, `manifest_hash 8c8632530166d28004c0eb5ee633f3c55a6598ca5f88ac417bc3664c5502ddbb` |
+| `scripts/publish_v5_selected_configurations.py` | the producer, which **re-derives** the selection from the shards under the unchanged v1 rule |
+| `scripts/verify_v5_selected_configurations_manifest.py` | the read-only offline verifier (re-derives the selection, cross-checks the ledger, checks the exposure and the effective authorization) |
+| `scripts/record_v5_cycle.py` | the producer of the cycle record in `research_state/continuous_universe_state.json` |
+
+### 2. The audit: every identity recomputed from the artifact that owns it
+
+- **The run is one logical run within the authorized bound.** The ledger's `runs` array holds **one**
+  entry (`v5-selection-20261021`, `status COMPLETED`), started `2026-10-21T19:56:30.281496Z`, resumed
+  once at `20:06:50.157549Z` (`resumes 1`) and completed `21:32:46.306178Z`; `counts.execution_units`
+  = `counts.records_written` = **193,536** = `counts.config_units` (16,128) × 4 folds × 3 cost
+  scenarios, which is exactly the bound the authorization preregisters
+  (`planned_execution_units 193536`, `planned_config_units 16128`, and its own note: *"7 assets x 2304
+  configurations x 4 validation folds x 3 cost scenarios"*). `skipped_already_complete 3050` records
+  the resume: the run was **interrupted and resumed**, not re-run. The ledger binds the authorization
+  that permitted it (`authorization_manifest_hash 55827bd8…`).
+- **The records are complete and unique.** 3,877 shard files carry 193,536 records with 193,536
+  distinct `experiment_id`s; the results manifest lists the same 3,877 shards and sums to
+  `total_records 193536`; the result stream carries 193,536 lines whose rows are equal to the shard
+  rows.
+- **The published outcome is re-derivable from the primary evidence.** `python3
+  scripts/publish_v5_selected_configurations.py --print` reproduces the published manifest
+  **field for field**, including `manifest_hash 8c863253…`; the manifest's own `manifest_hash`
+  recomputes over its body; and the verifier re-derives the selection **from the shards** under the
+  unchanged v1 selection rule, cross-checks it against the ledger, and reports `{"ok": true,
+  "failures": []}`.
+- **The published selection.** Outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`; with a
+  candidate: `CAKEUSDT` (`cfg_0677`), `DASHUSDT` (`cfg_1272`), `STXUSDT` (`cfg_1470`), `VETUSDT`
+  (`cfg_1617`); without: `APTUSDT` (`NO_CANDIDATE`), `CRVUSDT` (`NO_CANDIDATE`), `RAYUSDT`
+  (`INSUFFICIENT_EVIDENCE`). The benchmark is `research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv`
+  (digest `626e639b…`), never the v4 chain's benchmark.
+- **The recorded cycle.** `research_state/continuous_universe_state.json` records cohort index **5**,
+  the seven validated constituents, the thirteen excluded candidates with their reasons
+  (`binance_spot_unavailable` ×6, `insufficient_hourly_history` ×7), `current_cycle_id
+  v5-selection-20261021` (the manifest's `run_identity.run_id`), `next_cohort_index 6`, the snapshot
+  id `82644c30…` — which **is** the sha256 of `research/v5_evidence/raw_market_cap_response.json`, the
+  v5 rule for a raw-response version — `v5_candidates 4` with the four candidates and the three
+  non-candidates, and the blocking dependency `CONFIRMATORY_WINDOW (earliest end
+  2027-01-19T13:00:00Z)`, the latest of the four open gates.
+- **The code identity.** The hashed set `src/breakout_research` is `3e8e4169…` (unchanged), the v5
+  execution path is `9c5f13ff…` and the composite run identity is `8a63085e…`; the authorized v1 code
+  hash of record stays `2efd3b18…` and the live ordered digest `608c7340…` is an environment fact
+  (`scripts/verify_v1_gate_compatibility.py` → `ok: true`, `canonical_matches_recorded: true`,
+  `gate_compatible: false`).
+- **Nothing is exposed.** `holdout_exposed_count` is **0** in the v2, v3, v4 and v5 data manifests, in
+  the v5 ledger, in the v5 checkpoint and in the published manifest, and every
+  `confirmatory_window_status` is `NOT_STARTED`. No confirmatory-window candle was read.
+
+### 3. The first CONFIRMED defect: two obsolete pre-run guards
+
+**The two guards asserted a transitional state as a permanent invariant.** `tests/test_v5_manifests.py`
+and `tests/test_v5_execution.py` each carried a test named `test_no_v5_run_artifact_exists`, which
+asserted that **none** of the five v5 run paths exists:
+
+```python
+for relative in verifier.V5_EXECUTION_PATHS:   # research/shards_v5, research/ledger_v5.json, ...
+    assert not (REPO_ROOT / relative).exists(), relative
+```
+
+Both guards were true when the v5 chain was delivered (the run had not happened) and **false** the
+moment the authorized run was performed. The v3 and the v4 chains have **no** such guard — their
+equivalents were retired when those chains ran — so the v5 guard was a pre-run invariant that outlived
+its truth. The delivery had already converted **the rule itself** to the post-run one
+(`scripts/v5_run_state.py` and `scripts/verify_v5_execution.py` §9, see below) and simply left the two
+guards behind. Cause: **`TEST_GAP`** (a check that encoded a transitional state as a permanent one).
+The failure is in the **check**, not in the artifacts: the run artifacts are authorized, verified and
+committed, and deleting them to make a check pass would destroy the evidence.
+
+**The repair.** The chain's own post-run rule already exists — `scripts/v5_run_state.py` (written by the
+delivery at 21:14Z) holds it, and `scripts/verify_v5_execution.py` §9 applies it, with the comment
+*"The rule this section enforced before the run was a preregistration rule ('no v5 run artifact may
+exist while the chain has not run'). The single authorized selection run has now been performed, so the
+rule that holds is the post-run one"*. **The two stale test guards were the only surviving carriers of
+the retired pre-run rule.** The repair therefore deletes no artifact and duplicates no rule: each guard
+is replaced by the post-run rule itself, and the checks that rule does **not** make are added, each
+with a tamper control that perturbs the primary evidence and shows the check reacting:
+
+- `tests/test_v5_execution.py` — `test_the_v5_run_state_is_the_authorized_runs_output` applies
+  `scripts/v5_run_state.py` to the repository: all five run paths exist, and the post-run invariant
+  (the artifacts are the **authorized** run's outputs, the run is in one of its three legal states, no
+  exposure, the shard directory holds only the v5 campaign, the ledger and the results manifest agree
+  on the record count) holds.
+- `tests/test_v5_execution.py` — `_single_run_failures()` adds the checks that rule does not make:
+  exactly **one** logical run in the ledger, `COMPLETED`, the authorized `run_id`, the
+  configuration-unit and execution-unit counts equal to the **authorized bounds** (not to constants),
+  and `records_written == execution_units`. Tamper controls: a second logical run in the ledger, and a
+  short record count.
+- `tests/test_v5_execution.py` — `test_the_run_gate_refuses_a_second_start_after_the_run_completed`
+  exercises the run gate (below).
+- `tests/test_v5_manifests.py` — `_run_binding_failures()` re-derives the binding of the run artifacts:
+  the five run paths exist, and the ledger, the results manifest and the checkpoint bind the v5 data
+  manifest (`f2bd448f…`) and the v5 specification (`55e839f7…`) by their recomputed identities. This
+  binding is not part of the post-run rule above, so it is added here. Tamper control: a ledger that
+  binds another data manifest.
+
+### 4. The second CONFIRMED defect: the single-run rule had no test
+
+`src/v5_campaign/runner.py:claim_attempt` refuses a second start of a completed run — *"the authorized
+run `v5-selection-20261021` has already completed; the authorization permits one run"* — and refuses a
+fourth technical retry. This is the campaign's central single-run invariant, and **no test executed
+it** (a repository-wide search for `claim_attempt` found no test reference). Cause: **`TEST_GAP`**. The
+new test builds the plan from the live repository (`v5_runner.build_plan`), points the workspace at a
+**copy** of the completed ledger and asserts that `claim_attempt` raises `AttemptBudgetError`; the
+real ledger is never written.
+
+### 5. The maintenance audit (the user-authorized brief of 2026-10-21)
+
+**A. Workflow wait-state (refreshed at 2026-10-21T22:0xZ, read-only).**
+
+| run | id | event | head SHA | status | conclusion | created → updated | evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| #71 | 39679751555 | schedule | `46ea11e7` | **pending** | — | 21:33:26Z → 21:33:27Z | queued behind the concurrency group `kilo-repository` (`cancel-in-progress: false`), which run #70 holds |
+| #70 | 39648718536 | schedule | `2219358d` | **in_progress** | — | 17:59:45Z → **18:55:06Z** | job `kilo` (119419831614) started 18:55:05Z; step 6 *"Run general-purpose Kilo agent loop"* in progress since 18:55:54Z; steps 7–9 and 18 pending; **no update for ~3 h 10 m** — a **stale heartbeat**, not evidence of live work; logs are **not yet available** (`run 39648718536 is still in progress; logs will be available when it is complete`); the job's `timeout-minutes: 360` still allows it to be running |
+| #69 | 39604794028 | schedule | `f8be8a95` | completed | **failure** | 13:04:24Z → 18:55:03Z | job `kilo` (119253871716) failed; step 6 was still `in_progress` with no `completedAt` when the job was marked failed; the **log archive is accessible** and ends at 18:48:26Z with the v5 chain's state; the run has **0 artifacts** (the "Upload recovery artifacts" step never ran) |
+
+The brief's start-of-audit observation ("run #70 was listed in progress and run #69 failed") is
+**CONFIRMED and unchanged**. The diagnostics ledger `research_state/workflow_run_diagnostics.jsonl`
+already carries run #69's capture (`captured_at_utc 2026-10-21T18:55:50Z`, `capture_status complete`,
+`log_capture_status scanned`); runs #70 and #71 are not yet captured because neither has completed. **No
+run was dispatched, cancelled, re-run or edited, and `.github/workflows/main.yml` was not touched**
+(schedule `*/5 * * * *`, concurrency group `kilo-repository`, `cancel-in-progress: false`).
+
+**B. Hash-bound campaign integrity.** Recomputed and compared: the canonical hashed-set digest
+`3e8e4169…` against the authorized value of record `2efd3b18…`; the v5 specification `55e839f7…`, the
+v5 universe manifest `ed6ade73…`, the v5 data manifest `f2bd448f…`, the v5 candidate freeze
+`afa35ad9…`, the v5 selection authorization `55827bd8…` and the published v5 manifest `8c863253…`
+against the artifacts that own them; the v5 cycle against the published manifest; the exposure counters
+against the v2–v5 data manifests. **No disagreement was found between the state, the manifests, the
+ledger and the published outcome.**
+
+**C. Offline validation.** See §6.
+
+### 6. Verification (exact commands, exit statuses)
+
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **1419 passed, 2 skipped** in 835.69s (exit 0)
+  **after** this session's repair. The 2 skips are named by `-rs`:
+  `tests/test_v3_selection_run.py:288` and `tests/test_v4_selection_run.py:293`, both *"the result
+  stream is not materialized in this checkout"* (`research/results_v3.jsonl` and
+  `research/results_v4.jsonl` are gitignored projections of the committed shards and are absent here;
+  the v5 projection is present).
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **2 failed, 1412 passed, 2 skipped** in 837.24s
+  (exit 1) **before** this session's repair; the two failures are the obsolete guards of §3
+  (`tests/test_v5_execution.py::test_no_v5_run_artifact_exists` and
+  `tests/test_v5_manifests.py::test_no_v5_run_artifact_exists`, both `AssertionError: research/shards_v5`).
+- `PYTHONPATH=src python3 -m pytest tests/test_v5_execution.py tests/test_v5_manifests.py -q` → **87
+  passed** in 361.82s (exit 0) — 46 in `tests/test_v5_execution.py` and 41 in
+  `tests/test_v5_manifests.py` (42 before this session in the first module, 40 in the second).
+- **Every `scripts/verify_*.py` exits 0** (51 verifiers). `scripts/verify_cycle_results.py` exits 2
+  because it requires a `cycle_dir` argument and is not a repository-wide gate.
+- `python3 scripts/verify_v5_selected_configurations_manifest.py` → `{"ok": true, "failures": []}`;
+  `python3 scripts/verify_v5_execution.py` → `{"ok": true, ...}`;
+  `python3 scripts/verify_v1_gate_compatibility.py` → `{"ok": true, "canonical_matches_recorded": true,
+  "gate_compatible": false}`.
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`
+  → `608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925` (the live ordered digest; the
+  authorized value of record is `2efd3b18…` and the portable identity is the canonical `3e8e4169…`).
+- `git status --short` → `M research_state/campaign_authorization.json` (the controller's
+  `authorized_at_utc` refresh; every functional field unchanged), `M tests/test_v5_execution.py`,
+  `M tests/test_v5_manifests.py`; **no change under `configs/`, `research/`, `reports/`,
+  `src/breakout_research/`, `src/v5_campaign/` or `.github/`**.
+
+### 7. Rule → code → test map (this session changed no module under `src/`, so `compute_code_hash()` is unchanged)
+
+| Rule | Implementation | Test |
+| --- | --- | --- |
+| the v5 run artifacts are the **authorized** run's outputs, the run is in a legal state and no exposure occurred (the chain's post-run rule) | `scripts/v5_run_state.py:v5_run_state_failures`, applied by `scripts/verify_v5_execution.py:verify` §9 | `::test_the_v5_run_state_is_the_authorized_runs_output` |
+| the authorized run is performed **exactly once** and within the authorized bound | `tests/test_v5_execution.py:_single_run_failures` | `::test_the_authorized_v5_run_is_performed_exactly_once` |
+| a second logical run is refused by the check | same | `::test_the_single_run_check_detects_a_second_logical_run` |
+| a short record count is refused by the check | same | `::test_the_single_run_check_detects_a_short_record_count` |
+| a **completed** run is never re-run (the run gate) | `src/v5_campaign/runner.py:claim_attempt` | `::test_the_run_gate_refuses_a_second_start_after_the_run_completed` |
+| the run artifacts bind the v5 data manifest and the v5 specification | `tests/test_v5_manifests.py:_run_binding_failures` | `::test_the_v5_run_artifacts_bind_the_v5_manifests_and_the_specification` |
+| a run artifact that binds another data manifest is refused | same | `::test_the_run_binding_check_detects_a_ledger_that_binds_another_data_manifest` |
+| the published selection is re-derived from the shards and cross-checked against the ledger | `scripts/verify_v5_selected_configurations_manifest.py:verify` §4–§4b | `tests/test_v5_selected_configurations_manifest.py` (29 tests, 12 tamper controls) |
+| the published manifest is reproduced by its producer | `scripts/publish_v5_selected_configurations.py:build` | `::test_the_published_artifact_is_reproducible_from_the_producer` |
+| the recorded cycle agrees with the hash-bound artifacts | `tests/test_continuous_universe_state.py:_state_failures` | `::test_the_campaign_state_is_consistent_with_the_hash_bound_artifacts` (19 tests, 7 tamper controls) |
+
+### 8. CONFIRMED
+
+- The v5 selection cycle is **complete**: one authorized logical run, 193,536 records, a published and
+  hash-bound outcome, and a recorded cycle. Every identity above was recomputed here, not copied.
+- The run was **interrupted and resumed** (`resumes 1`, `skipped_already_complete 3050`), not re-run;
+  the ledger records one logical run and the authorization permits one.
+- The published manifest is **reproducible field for field** from the shards by its producer, and the
+  verifier re-derives the selection independently.
+- The recorded cycle agrees with the published manifest on the cohort, the exclusions, the cycle id, the
+  snapshot id, the 4/3 split and the blocking gate.
+- Two obsolete pre-run guards and one untested single-run rule were found in the delivery's acceptance
+  checks; all three are repaired, and the two new checks are shown to react to a perturbed ledger.
+- The v5 eligible pool is **exhausted**: `research/universe_manifest_v5.json` holds exactly 20
+  `eligible_assets` (7 validated + 13 excluded after validation) and 119 rule-excluded assets, so
+  cohort 6 cannot be drawn from the frozen v5 snapshot. The next floor would be strictly below the v5
+  floor `498236520` USD (`YLDS`, `market_cap_rank` 116), recomputed by the same rule the v5
+  specification states for the v4 floor.
+- All four confirmatory gates are still closed: v2 `2027-01-17T22:00:00Z`, v3 `2027-01-18T13:00:00Z`,
+  v4 `2027-01-19T01:00:00Z`, v5 `2027-01-19T13:00:00Z`; no exposure anywhere.
+
+### 9. UNVERIFIED / STALE
+
+- **STALE:** BRAIN-024 and the handoff's 21:53:49Z entry both state that the v5 run "has **not** been
+  performed" and that "the v5 namespace is still empty". Both were true when written and are false now:
+  the run completed at `2026-10-21T21:32:46Z` and the artifacts are committed at `e5989185`. The
+  21:53:49Z handoff entry also claims the full suite is green; it was **not** (2 failures, §6).
+- **STALE / imprecise:** the 19:4xZ task message's phrase "7 assets × 2,304 configurations × 3 folds ×
+  2 costs (193,536 execution units)" is arithmetically wrong. The authorization's own bound note reads
+  "4 validation folds x 3 cost scenarios", and 7 × 2,304 × 4 × 3 = 193,536. The artifacts are correct;
+  the prose was not.
+- **STALE:** the 19:4xZ entry's "the v5 namespace is still empty of run artifacts" and "the v5
+  selected-configurations manifest does not exist" — both superseded by the delivery.
+- `research_state/campaign_authorization.json` shows a refreshed `authorized_at_utc` (the controller
+  refreshes that timestamp; it is an environment fact, not a source change).
+- The v5 specification's `prerequisites` block still reads `p5` as `OUTSTANDING` although the
+  expansion-log entries are delivered; the specification is hash-bound and was not edited (the mechanism
+  for such a wording is a versioned amendment). The same block still reads `p2`/`p3`/`p4` as
+  `OUTSTANDING` (pre-existing).
+- The **v3 and v4** execution protocols carry the same `selection_authorization_present: false` flag
+  and their run gates repeat the same category error; both chains have already run, so the question is
+  historical. Their artifacts are frozen and were not edited.
+- No commit was created by this agent (no explicit user request); the changes are in the working tree.
+
+### 10. Unsuccessful attempts (and the condition that would justify a retry)
+
+- The first full-suite run of this session **failed with two failures** — the obsolete guards of §3.
+  The failure was the finding; the fix was in the checks, not in the artifacts. No retry of the
+  unchanged action is warranted.
+- No other attempt failed in this session. Every `scripts/verify_*.py` exited 0 on the first run, and
+  the publisher's `--print` reproduction matched the published manifest on the first run.
+
+### 11. Prompt review
+
+`NO_PROMPT_CHANGE_JUSTIFIED`. The two defects are classes the repository already names: README
+Section 2A E requires that every acceptance check recompute its expectation from repository state
+(a check that asserts a *transitional* state is a check that was never recomputed), and BRAIN-018
+established that a published artifact must not contain a statement the artifacts do not support — the
+same rule read in the other direction, for a check rather than an artifact. The prompt was not missing,
+ambiguous or contradicted, so no prompt revision is proposed and `research_state/prompt_evolution.md` is
+untouched.
+
+### 12. Checkpoint / persistence status
+
+- Local commit: **not created by the agent** (no explicit user request). The working tree carries the
+  two repaired test modules, this record and the handoff entry.
+- Remote persistence: `git rev-parse HEAD` == `git ls-remote origin main` == `e59891859242fcbd6cd4f3e7863e1b96f7b74070`
+  at the end of this session — the v5 run artifacts are **committed and pushed**; this session's repair
+  is **not yet committed or pushed** and needs a follow-up commit (or the session checkpoint).
+- Artifact/recovery: the v5 run artifacts are recoverable from the repository; the result stream
+  `research/results_v5.jsonl` is gitignored by design (it is a projection of the committed shards) and
+  is reproducible from them.
+- Checkpoint reconciliation: the v5 checkpoint (`research_state/checkpoint_v5.json`) reconciles with
+  the ledger — `completed_records 193536` = `counts.records_written` = the number of shard records =
+  the number of stream lines; `research_state/checkpoint.json`, `checkpoint_v2.json`, `checkpoint_v3.json`
+  and `checkpoint_v4.json` are untouched.
+
+### 13. Unresolved blockers (ranked)
+
+1. **The v4 and the v5 confirmatory protocol and runbook do not exist.** The v3 chain has both
+   (`configs/research_v3_confirmatory_protocol.json`, `configs/research_v3_confirmatory_runbook_1.json`
+   and a confirmatory authorization); the v4 window exists only in
+   `configs/research_v4_candidate_freeze.json` and the v5 window only in
+   `configs/research_v5_candidate_freeze.json` (+ amendment 1). The evaluations are time-blocked until
+   `2027-01-19T01:00:00Z` (v4) and `2027-01-19T13:00:00Z` (v5), so the preregistration must exist
+   before those gates, and it is the only preregistration work that is not blocked by a date.
+2. **The v2 exposure-counter question is open for the coordinator** — whether the 13 (v3) and 15 (v4)
+   candles per asset that close inside the open v2 confirmatory window and are part of the v3 and v4
+   development data must increment the v2 `holdout_exposed_count`, or are recorded as disclosed
+   development reads of a disjoint asset set. Due before the v2 gate clears on **2027-01-17T22:00:00Z**;
+   BRAIN-014's v3 counterpart is due before 2027-01-18T13:00:00Z. The v5 rule is chosen so that neither
+   question can arise for v5.
+3. **Three pending confirmatory evaluations are time-blocked** — v2 may not start before
+   `2027-01-17T22:00:00Z`, v3 (and the final report) before `2027-01-18T13:00:00Z`, v4 not before
+   `2027-01-19T01:00:00Z`, v5 not before `2027-01-19T13:00:00Z`. No action is possible or needed before
+   those instants.
+4. **The next expansion version (v6) is not designed.** The v5 eligible pool is exhausted, so cohort 6
+   needs a new version with a new pinned-window retrieval, a new floor rule (strictly below
+   `498236520` USD) and the prior-universe identity rule extended to v1–v5. The frozen v5
+   specification's own routing rule
+   (`configs/research_v5.json#expansion_program.routing.on_exhaustion_or_completion_of_frozen_version =
+   preregister_next_version_via_design_record_before_implementation`) makes that design the next
+   campaign task.
+5. `configs/research_v3_confirmatory_code_hash_amendment_1.json` does not exist; it is needed only if a
+   deliberate rotation of the v3 confirmatory execution-path digest is chosen.
+
+**Queued after this task:** the v6 preregistration design record (design only, per the routing rule
+above); then the preregistered v4 and v5 confirmatory protocol and runbook; then the v3 confirmatory
+evaluation and the final report, which may not start before `2027-01-18T13:00:00Z`; and the v2
+confirmatory evaluation, which may not start before `2027-01-17T22:00:00Z`.

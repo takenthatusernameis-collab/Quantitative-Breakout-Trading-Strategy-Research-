@@ -19,7 +19,9 @@ rules these tests pin are therefore:
   v2, v3 or v4 confirmatory window;
 * the **benchmark rule**: the v5 benchmark series is a dataset bounded at the
   v5 cutoff and not the v4 chain's benchmark dataset, 13 of whose candles
-  close inside the open v2 confirmatory window.
+  close inside the open v2 confirmatory window;
+* the **run binding**: the artifacts of the single authorized v5 run bind the
+  v5 data manifest and the v5 specification by their recomputed identities.
 
 The tamper controls mutate a copy of the repository and assert that the
 verifier refuses the mutated tree.
@@ -315,9 +317,58 @@ def test_the_confirmatory_window_is_unexposed() -> None:
     assert not (REPO_ROOT / "research" / "data" / "holdout_v5").exists()
 
 
-def test_no_v5_run_artifact_exists() -> None:
+def _run_binding_failures(root: Path) -> List[str]:
+    """The run-artifact binding, re-derived from the artifacts themselves.
+
+    The authorized run has been performed, so the invariant is the positive
+    one: the run artifacts exist, and each of them binds the v5 data manifest
+    and the v5 specification by their recomputed identities.
+    """
+    failures: List[str] = []
     for relative in verifier.V5_EXECUTION_PATHS:
-        assert not (REPO_ROOT / relative).exists(), relative
+        if not (root / relative).exists():
+            failures.append(f"the v5 run artifact {relative} does not exist")
+    if failures:
+        return failures
+    data = _load(root / "research" / "data_manifest_v5.json")
+    spec = _load(root / "configs" / "research_v5.json")
+    data_hash = data["manifest_hash"]
+    spec_hash = spec["specification_hash"]
+    ledger = _load(root / "research" / "ledger_v5.json")
+    results = _load(root / "research" / "results_manifest_v5.json")
+    checkpoint = _load(root / "research_state" / "checkpoint_v5.json")
+    if ledger["data_manifest"]["base_manifest_hash"] != data_hash:
+        failures.append("the ledger does not bind the v5 data manifest")
+    if results["data_manifest_hash"] != data_hash:
+        failures.append("the results manifest does not bind the v5 data manifest")
+    if results["specification_hash"] != spec_hash:
+        failures.append("the results manifest does not bind the v5 specification")
+    if ledger["specification_hash"] != spec_hash:
+        failures.append("the ledger does not bind the v5 specification")
+    if checkpoint["protocol_hash"] != spec_hash:
+        failures.append("the checkpoint does not bind the v5 specification")
+    return failures
+
+
+def test_the_v5_run_artifacts_bind_the_v5_manifests_and_the_specification() -> None:
+    """The run artifacts are the ones the v5 chain's manifests bind.
+
+    This replaces the pre-run guard that asserted the v5 namespace was empty.
+    """
+    failures = _run_binding_failures(REPO_ROOT)
+    assert failures == [], failures
+
+
+def test_the_run_binding_check_detects_a_ledger_that_binds_another_data_manifest(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _load(REPO_ROOT / "research" / "ledger_v5.json")
+    ledger["data_manifest"]["base_manifest_hash"] = "0" * 64
+    _replace(root, "research/ledger_v5.json", ledger)
+    failures = _run_binding_failures(root)
+    assert any("the ledger does not bind the v5 data manifest" in failure
+               for failure in failures), failures
 
 
 def test_the_data_manifest_states_the_confirmatory_window_membership_rule() -> None:
