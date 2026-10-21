@@ -3967,3 +3967,65 @@ The alternative -- resuming the interrupted run -- was rejected because the surv
 - The engine's own `claim_attempt` already refuses a second logical run: a completed run raises `AttemptBudgetError`, and an interrupted run is resumed rather than restarted, with the resumes bounded by `max_retries_on_technical_failure`. What it cannot prevent is two *concurrent* processes on the same shard directory, which is what the wrapper's lock now covers.
 
 **Recommendation:** treat the delivered run as the one authorized run; keep this record as the disclosure of the discarded attempt. No v1, v2 or v3 artifact, no confirmatory window and no provider was touched at any point.
+
+## BRAIN-018 — the v4 selection-outcome publication shipped with an execution amendment that did not bind the performed run, without a verifier, and without the v4 cycle recorded (2026-10-21T07:5xZ)
+
+**Status:** REPAIRED_IN_THIS_SESSION; every finding below is reproduced against the pre-repair bytes and fixed.
+**Type:** defect record + completion of the publication task (the 04:25Z session delivered two of the three deliverables and left the third).
+**Routing:** the durable handoff named the publication of the v4 selection outcome as the next bounded task, with three parts — (a) `research/v4_selected_configurations_manifest.json`, (b) the v4 cycle in `research_state/continuous_universe_state.json`, (c) the v4 execution amendment — "with a producer, a verifier and tests". Part (a) and part (c) were delivered; part (b) was skipped, and the delivered amendment did not bind the performed run. This record states what was found, what was changed and what now guards each defect.
+
+### Finding 1 (CONFIRMED) — the execution amendment named a run identity that the run never had
+
+`configs/research_v4_execution_amendment_1.json#performed_run` recorded
+
+- `run_code_identity = 05a85ce1f9d3e814ecac07ac91d48d0f6228d31c30096f0628b1163f42aef165`
+- `execution_path_digest = 49adc05c3c7e332d9dbab86c21c648b03523b1a1df681028f43fa6825927b262`
+
+The first **eight** hex characters of both are the correct ones; the remainder is not. The run ledger `research/ledger_v4.json#code_identity` records `05a85ce104a564f1e478eda2126cb7981c011ec3a51d16846901703eda1a22a1` and `49adc05c785304f32bbf64ef990c6788b0e32c8a069224acf740ae791ccee22f`, and the **recomputed** canonical source digests of the two source trees agree with the ledger:
+
+- `src/breakout_research` → `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` (the hashed set, unchanged);
+- `src/v4_campaign` → `49adc05c785304f32bbf64ef990c6788b0e32c8a069224acf740ae791ccee22f`.
+
+The amendment's own `manifest_hash` **recomputed** over its own body, because the wrong digests were part of that body. The defect was therefore invisible to the artifact's self-hash: it is exactly the failure mode a self-hash cannot catch, and the reason the campaign's rule is that every identity in a published artifact is re-derived from the artifact that owns it. Consequence: the amendment did not bind the performed run, and the only mechanical link between the amendment and the run was the run id and the authorization hash.
+
+**Repaired.** `scripts/build_v4_execution_amendment_1.py` (new) produces the amendment from the repository: the run identity, the code identity and the record counters come from the ledger, the evaluation scope from the execution protocol and the candidate freeze, the benchmark rule and the code-hash constraint from the execution protocol, the published manifest's hash from the published manifest, and the authorization hash from the selection authorization, which the producer cross-checks against the ledger. No literal digest survives in the producer.
+
+### Finding 2 (CONFIRMED) — the amendment named no evaluation scope and did not say what it amends
+
+The delivered amendment carried `benchmark_rule`, `code_hash_constraint`, `performed_run`, `selection_manifest` and `execution_authorization`, but no `evaluation_scope` and no `amends` block. The task's acceptance criteria required the amendment to name "the authorization's manifest hash, the run code identity, the code-hash constraint, **the evaluation scope**, the benchmark rule" and to authorize nothing; three of the five were there. The v3 pattern (`configs/research_v3_execution_amendment_1.json`) carries both an `evaluation_scope` and a `problem`/`related_artifacts` block that states which artifact it amends and why.
+
+**Repaired.** The amendment now carries `amends` (the execution protocol, with its manifest hash), `problem` (what the protocol could not name and why the repair is an amendment rather than an edit), `evaluation_scope` (the frozen candidate set, the candidate freeze, the universe manifest, the data manifest), `related_artifacts` and `precedence`, and it still authorizes nothing: `execution_authorized`, `grid_run_authorized`, `second_run_authorized`, `confirmatory_evaluation_authorized` and `candle_fetch_authorized` are all `false`.
+
+### Finding 3 (CONFIRMED) — the publication had no verifier and no tests
+
+`scripts/verify_v4_selected_configurations_manifest.py` did not exist, and neither did a test module for the publication. The task required "a verifier that refuses a manifest whose numbers do not recompute". Without one, the published manifest was an unverified artifact: a tampered selection would have been undetectable except by reading it.
+
+**Repaired.** `scripts/verify_v4_selected_configurations_manifest.py` (new) is a read-only, offline verifier in the v3 pattern: the self-hash of the published manifest and of the amendment; the run identity against the ledger and the selection authorization; the code identity **recomputed from the source tree** (so a digest that merely resembles the recorded one is caught); the specification identities; the scope against the freeze and the universe manifest; the **independent re-derivation of the selection from the verified shards**; the outcome and the assets without a candidate; the benchmark rule and the hash of the dataset on disk; the exposure (zero, `NOT_STARTED`); the prior-line non-contamination and the byte anchors of the v1 artifacts; and the amendment's binding of the publication.
+
+### Finding 4 (CONFIRMED) — the published manifest was a projection of the ledger, not a re-derivation, and it did not bind the candidate freeze
+
+`scripts/publish_v4_selected_configurations.py` read the selection out of the run ledger with the comment "Use ledger's selection as ground truth (already verified by verifier)" and never re-applied the selection rule to the shards. The v3 pattern does the opposite: "The producer never copies the selection out of the run ledger and never falls back to it". Two further weaknesses: the published manifest did not bind the candidate-freeze hash, so the identity of the frozen candidate set was not hash-bound inside the publication; and the benchmark digest was the last term of a three-term `or` expression whose final fallback was a hard-coded literal.
+
+**Repaired.** The producer now **re-derives** the selection from the verified shards: the preregistered v1 selection rule is re-applied, the buy-and-hold baselines are recomputed from the hash-verified v4 datasets, the benchmark coverage rule is checked as the run checked it, and the development boundary is enforced by the v4 loader, so a dataset that reaches into the confirmatory window refuses to load. The ledger is used only as a cross-check, and a disagreement aborts the producer. The candidate-freeze hash is bound, and the benchmark digest is derived from the loaded dataset. The re-derivation reproduces the 04:25Z numbers **exactly** — every per-asset winner, status, economic status and gate count, the outcome and both asset lists — which is the independent confirmation that the published numbers were right even though the artifact around them was not.
+
+### Finding 5 (CONFIRMED) — the v4 cycle was not recorded in the campaign state
+
+`research_state/continuous_universe_state.json` still recorded the v3 cycle. The 04:25Z session skipped this part explicitly, "to avoid changing tests for continuous universe state which expect v3". The correct repair is to make the state check **version-aware** — a new cycle extends a table of published cycles instead of rewriting the checks — and not to skip the deliverable.
+
+**Repaired.** The state now records the v4 cycle: cohort index 4 (the 7 validated constituents `ARBUSDT`, `ETCUSDT`, `JSTUSDT`, `ALGOUSDT`, `INJUSDT`, `FILUSDT`, `NEXOUSDT` and the 13 excluded constituents with the universe manifest's own reasons), `current_cycle_id = v4-selection-20261021`, `next_cohort_index = 5`, the v4 snapshot `1057956c…` (the sha256 of the stored raw market-cap response `research/v4_evidence/raw_market_cap_response.json`, the same rule the v2 snapshot used), the 5/2 split and the blocking dependency `CONFIRMATORY_WINDOW (earliest end 2027-01-19T01:00:00Z)` — the v4 window's earliest end, re-derived from `configs/research_v4_candidate_freeze.json#confirmatory_window.earliest_possible_end_utc`, which is later than the v3 gate (2027-01-18T13:00:00Z) and the v2 gate (2027-01-17T22:00:00Z). The v2 and v3 history is preserved byte-for-byte.
+
+`tests/test_continuous_universe_state.py` was rewritten around a table of published cycles (v2, v3, v4). The current cycle is found by matching the state's `current_cycle_id` against the published run ids, so the checks no longer name a version; the snapshot id is re-derived by the rule that belongs to the current version (the raw-response sha256 for v2 and v4, the unique self-consistent snapshot directory for v3); and the blocking dependency must name the **latest** of the three gates and none of the earlier ones. Against the pre-repair state file the same check function reports exactly seven failures; against the repaired file it reports none.
+
+### The guards that keep the defects from coming back
+
+- `tests/test_v4_selected_configurations_manifest.py` (new, 30 tests): the publication and the amendment are reproduced byte-for-byte from their producers; the producer fails loudly when the selection cannot be re-derived (no fallback copy); and ten tamper controls — a tampered manifest hash, a selected configuration the shards do not support, a selection that the shards and the ledger agree on but the shards do not, a widened scope, an unbound candidate freeze, a self-reporting exposure, a changed v1 artifact, an unbound amendment, a self-authorizing amendment and the **exact defect the publication shipped with** (an amendment whose run code identity and execution-path digest have the right first eight hex characters and an invented remainder). The last one is the regression test for finding 1.
+- `scripts/verify_v4_selected_configurations_manifest.py` (new): the verifier recomputes the code identity from the source tree, so an identity that is merely plausible is refused.
+- `tests/test_continuous_universe_state.py` (rewritten, 19 tests): the version-aware campaign state.
+
+### What was **not** touched
+
+The five delivered v4 run artifacts are byte-unchanged: `research/ledger_v4.json` (`2b65fb45…`), `research/results_manifest_v4.json` (`66be37e4…`), `research/shards_v4/` (3,877 files), `research/results_v4.jsonl` (`bc521789…`, the sha256 of the shard projection) and `research_state/checkpoint_v4.json` (`2a3ec98f…`). No file under `src/` was touched, so `compute_code_hash()` is still `2efd3b18…` and the canonical digests are unchanged. The candidate freeze (`bae6a374…`), the universe manifest (`14d27d68…`), the data manifest (`9d5a3acb…`), the execution protocol (`4a559d93…`) and the selection authorization (`911bfeb0…`) are unchanged. No confirmatory window was read: `holdout_exposed_count = 0` and `confirmatory_window_status = NOT_STARTED` in the v2, v3 and v4 data manifests and checkpoints, and no holdout index exists for any version.
+
+New identities: the published manifest `fbf3103b…` (was `e2a8fa61…`) and the execution amendment `44f82055…` (was `dd89b349…`).
+
+**Recommendation:** accept the repaired publication. The v4 selection outcome is now durable, hash-bound, independently re-derivable and mechanically checked; the v4 cycle is recorded in the campaign state. The v3 exposure-counter question of BRAIN-014 stays open for the coordinator before the v3 confirmatory gate clears on 2027-01-18T13:00:00Z.

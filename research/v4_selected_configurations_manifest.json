@@ -30,7 +30,8 @@
   "data_identities": {
     "universe_manifest_v4_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
     "effective_data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
-    "base_data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158"
+    "base_data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
+    "candidate_freeze_hash": "bae6a374f17cd5c4df8a990591efc107945e74cb8b28a9f7d920a4c38e0b9e34"
   },
   "scope": {
     "frozen_candidate_set": {
@@ -44,7 +45,7 @@
         "FILUSDT",
         "NEXOUSDT"
       ],
-      "membership_rule": "Exactly the validated candidate set of configs/research_v4_candidate_freeze.json, re-derived from the validated constituents of research/universe_manifest_v4.json.",
+      "membership_rule": "Exactly the validated candidate set of configs/research_v4_candidate_freeze.json, re-derived from the validated constituents of research/universe_manifest_v4.json. Membership is not re-derived, re-ranked, widened or narrowed by this artifact.",
       "universe_manifest_path": "research/universe_manifest_v4.json",
       "universe_manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
       "base_data_manifest_path": "research/data_manifest_v4.json",
@@ -70,6 +71,8 @@
     },
     "assets_evaluated": 7,
     "confirmatory_window_start_utc": "2026-10-21T01:00:00Z",
+    "development_cutoff_utc": "2026-10-20T13:00:00Z",
+    "effective_data_boundary_utc": "2026-10-20T13:00:00Z",
     "min_confirmatory_window_hours": 2160
   },
   "benchmark": {
@@ -113,10 +116,10 @@
       "selected": true,
       "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
       "counts": {
-        "configs_failing_only_economic_gates": 957,
-        "configs_failing_only_sample_floor": 24,
         "configs_passing_all_gates": 4,
-        "configs_passing_evaluable_gates": 4
+        "configs_passing_evaluable_gates": 4,
+        "configs_failing_only_sample_floor": 24,
+        "configs_failing_only_economic_gates": 957
       }
     },
     "ARBUSDT": {
@@ -127,10 +130,10 @@
       "selected": true,
       "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
       "counts": {
-        "configs_failing_only_economic_gates": 1020,
-        "configs_failing_only_sample_floor": 0,
         "configs_passing_all_gates": 1,
-        "configs_passing_evaluable_gates": 1
+        "configs_passing_evaluable_gates": 1,
+        "configs_failing_only_sample_floor": 0,
+        "configs_failing_only_economic_gates": 1020
       }
     },
     "ETCUSDT": {
@@ -141,10 +144,10 @@
       "selected": true,
       "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
       "counts": {
-        "configs_failing_only_economic_gates": 976,
-        "configs_failing_only_sample_floor": 1,
         "configs_passing_all_gates": 2,
-        "configs_passing_evaluable_gates": 2
+        "configs_passing_evaluable_gates": 2,
+        "configs_failing_only_sample_floor": 1,
+        "configs_failing_only_economic_gates": 976
       }
     },
     "FILUSDT": {
@@ -155,10 +158,10 @@
       "selected": true,
       "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
       "counts": {
-        "configs_failing_only_economic_gates": 1040,
-        "configs_failing_only_sample_floor": 0,
         "configs_passing_all_gates": 3,
-        "configs_passing_evaluable_gates": 3
+        "configs_passing_evaluable_gates": 3,
+        "configs_failing_only_sample_floor": 0,
+        "configs_failing_only_economic_gates": 1040
       }
     },
     "INJUSDT": {
@@ -170,10 +173,10 @@
       "reason": "INSUFFICIENT_EVIDENCE",
       "candidate_status": "INSUFFICIENT_EVIDENCE",
       "counts": {
-        "configs_failing_only_economic_gates": 989,
-        "configs_failing_only_sample_floor": 5,
         "configs_passing_all_gates": 0,
-        "configs_passing_evaluable_gates": 0
+        "configs_passing_evaluable_gates": 0,
+        "configs_failing_only_sample_floor": 5,
+        "configs_failing_only_economic_gates": 989
       }
     },
     "JSTUSDT": {
@@ -184,10 +187,10 @@
       "selected": true,
       "candidate_status": "CANDIDATE_PENDING_HOLDOUT",
       "counts": {
-        "configs_failing_only_economic_gates": 1292,
-        "configs_failing_only_sample_floor": 0,
         "configs_passing_all_gates": 3,
-        "configs_passing_evaluable_gates": 3
+        "configs_passing_evaluable_gates": 3,
+        "configs_failing_only_sample_floor": 0,
+        "configs_failing_only_economic_gates": 1292
       }
     },
     "NEXOUSDT": {
@@ -199,10 +202,10 @@
       "reason": "NO_CANDIDATE",
       "candidate_status": "NO_CANDIDATE",
       "counts": {
-        "configs_failing_only_economic_gates": 740,
-        "configs_failing_only_sample_floor": 0,
         "configs_passing_all_gates": 0,
-        "configs_passing_evaluable_gates": 0
+        "configs_passing_evaluable_gates": 0,
+        "configs_failing_only_sample_floor": 0,
+        "configs_failing_only_economic_gates": 740
       }
     }
   },
@@ -222,5 +225,5 @@
   "manifest_hash_excluded_keys": [
     "manifest_hash"
   ],
-  "manifest_hash": "e2a8fa61bb090a45e4930ad79dce89fd2a10867ac6c91a8fa7d0869d505e6773"
+  "manifest_hash": "fbf3103ba7cc6d34d0dd9c30e8aaf8206f6411c052506975cb8f4a03bfd68e02"
 }

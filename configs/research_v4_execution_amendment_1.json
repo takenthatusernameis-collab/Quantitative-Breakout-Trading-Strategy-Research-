@@ -1,5 +1,10 @@
 {
-  "amendment_status": "PUBLISHED_BENCHMARK_RULE_NO_AUTHORIZATION",
+  "amendment_status": "PUBLISHED_PERFORMED_RUN_NO_AUTHORIZATION",
+  "amends": {
+    "file": "configs/research_v4_execution.json",
+    "manifest_hash": "4a559d93b5ff77976b50e0d859e444073c68aa578bb0b8ec0e79ecf486ecfe97",
+    "rule": "the v4 execution protocol is hash-bound and is not edited in place; this amendment records the performed run and the published selection outcome"
+  },
   "artifact": "v4_execution_amendment_1",
   "artifact_version": 1,
   "benchmark_rule": {
@@ -16,23 +21,59 @@
     "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
     "last_candle_timestamp": 1792490400000,
     "no_forward_fill": true,
+    "note": "The v4 data manifest publishes no BTCUSDT entry. The benchmark dataset is referenced directly from the immutable v3 data area; it is external to the v4 data-manifest identity and is hash-verified before every use. The benchmark covers every evaluated validation window: the v4 asset datasets span the 26,280-hour window that ends at the preregistered development cutoff, the benchmark dataset ends two hours earlier, and the difference falls entirely outside the evaluated windows -- the 0.4 to 0.8 fractions of the span -- and inside the holdout-position fold, which the selection run never evaluates.",
     "observed_candle_count": 26280,
     "role": "trend_filter_and_benchmark",
     "symbol": "BTCUSDT"
   },
   "code_hash_constraint": {
     "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "chosen_approach": "new code outside the hashed set (src/v4_campaign/), leaving compute_code_hash() unchanged; explicit re-authorization only if v1/v2 hashed paths are touched",
     "edit_under_src_breakout_research_forbidden_without_reauthorization": true,
     "hashed_source_root": "src/breakout_research",
-    "identity_rule": "the identity of a source tree is its canonical source digest -- the sha256 over the POSIX relative path and the content digest of every *.py file in ascending path order -- and never the checkout-dependent ordered digest compute_code_hash() (BRAIN-009)",
+    "v1_paths_hardcode_v1_spec": [
+      "src/breakout_research/campaign.py",
+      "src/breakout_research/pilot.py"
+    ],
     "v4_execution_must_live_outside_hashed_set": true,
+    "v4_execution_namespace": "src/v4_campaign/",
     "v4_execution_root": "src/v4_campaign"
   },
-  "created_utc": "2026-10-21T04:20:00Z",
+  "created_utc": "2026-10-21T07:40:00Z",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-018",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-018",
+    "stage": "stage 3 (the publication of the v4 selection outcome)"
+  },
+  "evaluation_scope": {
+    "candidate_freeze_hash": "bae6a374f17cd5c4df8a990591efc107945e74cb8b28a9f7d920a4c38e0b9e34",
+    "candidate_freeze_path": "configs/research_v4_candidate_freeze.json",
+    "constituents": [
+      "ALGOUSDT",
+      "ARBUSDT",
+      "ETCUSDT",
+      "FILUSDT",
+      "INJUSDT",
+      "JSTUSDT",
+      "NEXOUSDT"
+    ],
+    "count": 7,
+    "data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
+    "data_manifest_path": "research/data_manifest_v4.json",
+    "excluded_assets_stay_excluded": true,
+    "rule": "the evaluated scope is the frozen candidate set; the benchmark is not a candidate and does not widen the scope",
+    "unchanged_by_this_amendment": true,
+    "universe_manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
+    "universe_manifest_path": "research/universe_manifest_v4.json",
+    "widening_by_reranking_forbidden": true
+  },
   "execution_authorization": {
+    "candle_fetch_authorized": false,
+    "confirmatory_evaluation_authorized": false,
     "execution_authorized": false,
     "grid_run_authorized": false,
-    "scope": "this amendment records the benchmark rule and the executed run identity. It authorizes no run, no evaluation and no confirmatory-window read."
+    "scope": "this amendment records the performed run and its published outcome. It authorizes no run, no second run, no evaluation and no confirmatory-window read.",
+    "second_run_authorized": false
   },
   "hashing": {
     "algorithm": "sha256",
@@ -42,19 +83,93 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed."
   },
-  "manifest_hash": "dd89b349523165f466cb7094148858d2388e3b5d98992278f62a27cc25d2fc32",
+  "manifest_hash": "44f82055f63dc2476acc745239bc3d857eb6bdedf5de4cd78c5c4b1762acaee8",
   "performed_run": {
-    "run_id": "v4-selection-20261021",
+    "authorization_manifest_hash": "911bfeb0a68d91ea3453d698a2e18f9b760bc1ba76c0afe2da068b175346d681",
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
     "campaign_id": "v4-campaign",
+    "checkpoint_path": "research_state/checkpoint_v4.json",
+    "code_identity_algorithm": "canonical_source_digest_v1",
+    "completed_utc": "2026-10-21T04:07:05.313064+00:00",
+    "execution_path_digest": "49adc05c785304f32bbf64ef990c6788b0e32c8a069224acf740ae791ccee22f",
+    "execution_units": 193536,
+    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "holdout_exposed_count": 0,
     "ledger_path": "research/ledger_v4.json",
-    "shards_path": "research/shards_v4/v4-campaign",
+    "records_written": 193536,
     "results_manifest_path": "research/results_manifest_v4.json",
-    "run_code_identity": "05a85ce1f9d3e814ecac07ac91d48d0f6228d31c30096f0628b1163f42aef165",
-    "execution_path_digest": "49adc05c3c7e332d9dbab86c21c648b03523b1a1df681028f43fa6825927b262",
-    "authorization_manifest_hash": "911bfeb0a68d91ea3453d698a2e18f9b760bc1ba76c0afe2da068b175346d681"
+    "results_stream_path": "research/results_v4.jsonl",
+    "run_code_identity": "05a85ce104a564f1e478eda2126cb7981c011ec3a51d16846901703eda1a22a1",
+    "run_id": "v4-selection-20261021",
+    "selection_block_sha256": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e",
+    "shards_path": "research/shards_v4/v4-campaign",
+    "specification_hash": "f0f1be0e8c6e71a81be0618bf12081a77fefa4061975c9103dcf3302152b8d84",
+    "started_utc": "2026-10-21T02:59:49.805811+00:00",
+    "status": "COMPLETED"
+  },
+  "precedence": {
+    "resolution_rule": "a verifier that reads the v4 evaluation scope or the performed run resolves the identity through this amendment when the amendment is present and verified",
+    "rule": "the performed run and the published selection outcome of the v4 line are the ones recorded by this amendment; the execution protocol's own authorization flags stay false and are not superseded",
+    "superseded": [],
+    "unchanged": [
+      "evaluation_scope.constituents",
+      "evaluation_scope.count",
+      "candidate_freeze_and_confirmatory_window",
+      "benchmark_rule",
+      "code_hash_constraint"
+    ]
+  },
+  "problem": {
+    "affected_artifact_manifest_hash": "4a559d93b5ff77976b50e0d859e444073c68aa578bb0b8ec0e79ecf486ecfe97",
+    "affected_artifact_path": "configs/research_v4_execution.json",
+    "affected_artifact_sha256": "6907228c053e8ff8bd1f074f3129f7254503e58faf832f2ccf629cc9dc4b8f7e",
+    "repair": "the execution protocol is hash-bound and is not edited in place; the performed run's identity and the published selection outcome are recorded by this amendment",
+    "statement": "the v4 execution protocol was written before the run and names the evaluation scope and the benchmark rule, but it cannot name the identity of a run that had not happened yet."
+  },
+  "related_artifacts": {
+    "v1_specification": {
+      "path": "configs/research_v1.json",
+      "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+    },
+    "v4_candidate_freeze": {
+      "manifest_hash": "bae6a374f17cd5c4df8a990591efc107945e74cb8b28a9f7d920a4c38e0b9e34",
+      "path": "configs/research_v4_candidate_freeze.json"
+    },
+    "v4_data_manifest": {
+      "manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
+      "path": "research/data_manifest_v4.json"
+    },
+    "v4_execution_protocol": {
+      "manifest_hash": "4a559d93b5ff77976b50e0d859e444073c68aa578bb0b8ec0e79ecf486ecfe97",
+      "path": "configs/research_v4_execution.json"
+    },
+    "v4_selection_authorization": {
+      "manifest_hash": "911bfeb0a68d91ea3453d698a2e18f9b760bc1ba76c0afe2da068b175346d681",
+      "path": "configs/research_v4_selection_authorization_1.json"
+    },
+    "v4_specification": {
+      "path": "configs/research_v4.json",
+      "specification_hash": "f0f1be0e8c6e71a81be0618bf12081a77fefa4061975c9103dcf3302152b8d84"
+    },
+    "v4_universe_manifest": {
+      "manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
+      "path": "research/universe_manifest_v4.json"
+    }
   },
   "selection_manifest": {
-    "path": "research/v4_selected_configurations_manifest.json",
-    "manifest_hash": "e2a8fa61bb090a45e4930ad79dce89fd2a10867ac6c91a8fa7d0869d505e6773"
+    "assets_with_candidate": [
+      "ALGOUSDT",
+      "ARBUSDT",
+      "ETCUSDT",
+      "FILUSDT",
+      "JSTUSDT"
+    ],
+    "assets_without_candidate": [
+      "INJUSDT",
+      "NEXOUSDT"
+    ],
+    "manifest_hash": "fbf3103ba7cc6d34d0dd9c30e8aaf8206f6411c052506975cb8f4a03bfd68e02",
+    "outcome": "CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE",
+    "path": "research/v4_selected_configurations_manifest.json"
   }
 }
