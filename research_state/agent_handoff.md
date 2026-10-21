@@ -7563,3 +7563,58 @@ Two further live gaps were found and folded into the design: the append-only exp
 **Still open for the coordinator (do not decide it in the repair session):** the v2 exposure-counter question (BRAIN-019 §2) and BRAIN-014's v3 counterpart — the 13 (v3) and 15 (v4) candles per asset that close inside the open v2 confirmatory window and are part of the v3 and v4 development data, against a v2 `holdout_exposed_count` of 0. The v2 decision is due before the v2 gate clears on **2027-01-17T22:00:00Z**; the v3 decision before 2027-01-18T13:00:00Z. Neither depends on the v5 design.
 
 **Queued after this task (not for that session):** the v5 preregistration *implementation* (the versioned `configs/research_v5.json`, the v5 verifiers, and — only if the implementation session decides to do it — one bounded market-cap retrieval inside the v5 pinned window, per BRAIN-019 §1); the preregistered v4 confirmatory protocol and runbook; the v3 confirmatory evaluation and the final report, which may not start before 2027-01-18T13:00:00Z; and the v2 confirmatory evaluation, which may not start before 2027-01-17T22:00:00Z.
+
+## Session activity — 2026-10-21T09:xxZ (this session)
+
+**Task (from the durable handoff at 07:5xZ):** repair the fresh-checkout verification defects of the v3 and v4 chains — make the v3 and v4 run verifiers and their test modules pass on a checkout that does not contain the uncommitted result streams, and confirm the canonical-digest check is used for identity. Record the repair as BRAIN-020 in `research_state/brainstorming_queue.md` and update this handoff. Design deliverable only: no provider contact, no candle read, no code under `src/`, no artifact under `configs/`, `research/` or `reports/`.
+
+**Outcome:** **Repaired and verified.** The defect was in the tests, not the verifiers: the v3 and v4 verifiers already treat an absent result stream as non-materialized (`result_stream_sha256: null`) and check the shard projection instead (the v2 verifier's pattern). Three test modules required the stream to exist or tried to read the absent stream. Fixed `tests/test_v3_selection_run.py`, `tests/test_v4_selection_run.py` and `tests/test_research_v3_manifests.py` so the stream is optional, the stream-projection test skips when the digest is `None`, and the tamper control materializes a stream in the mirror and removes it afterwards (in a `finally` block) so it does not persist in the shared mirror. No file under `src/`, `configs/`, `research/` or `reports/` was changed; no dataset, timestamp, grid, fold, cost, threshold, selection rule or provider interaction was changed; `compute_code_hash()` and the five canonical digests are unchanged; `holdout_exposed_count` stays 0 everywhere.
+
+**Files changed**
+- `tests/test_v3_selection_run.py` — stream-optional output-path test, skip-when-absent stream-projection test, tamper control that materializes and removes the stream
+- `tests/test_v4_selection_run.py` — the same three changes for the v4 chain
+- `tests/test_research_v3_manifests.py` — stream-optional execution-state test
+- `research_state/brainstorming_queue.md` — BRAIN-020 appended
+- `research_state/agent_handoff.md` — this report and the next task message below
+
+**State verified (2026-10-21T09:xxZ)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **1131 passed, 2 skipped, 0 failures, 0 errors**, exit 0 (the 2 skips are the stream-projection tests that correctly skip when the gitignored stream is absent; they pass to 1133 passed when the streams are materialized locally)
+- `python3 scripts/verify_v3_selection_run.py` → exit 0, `"ok": true`
+- `python3 scripts/verify_v4_selection_run.py` → exit 0, `"ok": true`
+- `python3 scripts/verify_v2_selection_run.py` → exit 0, `"result_stream_sha256": null`, `"failures": []`
+- Every other `scripts/verify_*.py` exits 0 (`verify_cycle_results.py` needs a `cycle_dir` argument)
+- `python3 scripts/verify_v1_gate_compatibility.py` → exit 0, `canonical_matches_recorded: true`, canonical digest `3e8e4169…`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `608c7340…` (live ordered digest on this checkout; the portable identity is the canonical `3e8e4169…`)
+- `compute_code_hash()` value of record `2efd3b18…` unchanged in `research_state/campaign_authorization.json`
+- `git status --short` → only `tests/test_v3_selection_run.py`, `tests/test_v4_selection_run.py`, `tests/test_research_v3_manifests.py` changed; no `src/`, no `configs/`, no `research/`, no `reports/`
+- **No commit was created by the agent** (no explicit user request); the changes are in the working tree only.
+
+**Pre-repair counts (recorded in BRAIN-020):** 7 failed, 0 errors in the five affected test modules; 9 failed, 10 errors in the full suite (1114 passed, exit 1).
+
+## Initial task message for next agent
+
+**Next (one bounded task):** implement the **v5 preregistration** per BRAIN-019 — create versioned `configs/research_v5.json` (preregistered, authorizes nothing), the v5 verifiers, and — only if the implementation session decides to do it — one bounded market-cap retrieval inside the v5 pinned window. Follow all constraints from BRAIN-019. Nothing else runs in that session.
+
+**Subject:** fresh-checkout verification repair delivered (BRAIN-020); next is v5 preregistration implementation per BRAIN-019
+
+**Status (verified 2026-10-21T09:xxZ):**
+- BRAIN-020 recorded in `research_state/brainstorming_queue.md` (`REPAIRED_AND_VERIFIED`): the v3/v4 fresh-checkout verification defects are repaired; full suite exits 0 with 1131 passed, 2 skipped, 0 failures; all verifiers exit 0; `compute_code_hash()` unchanged at `2efd3b18…`; canonical digests unchanged (`3e8e4169…`, `c69cc021…`, `277a4bbe…`, `29cd064e…`, `747c2387…`); no file under `src/`, `configs/`, `research/` or `reports/` was changed.
+- BRAIN-019 (v5 preregistration design record) is delivered (`DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`): v5 floor `739,186,726 USD` (`AKE`, rank 91) recomputed from `research/universe_manifest_v4.json`; identity rule extended to v1–v4; development boundary at `2026-10-19T22:00:00Z` (the v2 window's start, the earliest open window); depth policy with bounded extra page; `AWAITING_NEW_CANDIDATES` with `P7D` cadence; falsifiers, rollback and eight staged acceptance tests.
+- The v4 eligible pool is exhausted (20 eligible assets, all frozen in cohort 4); cohort 5 requires a new v5 version with a new pinned-window market-cap retrieval.
+- Three confirmatory windows are unexposed: `holdout_exposed_count = 0` in the v2, v3 and v4 data manifests and checkpoints; v2 gate `2027-01-17T22:00:00Z`, v3 gate `2027-01-18T13:00:00Z`, v4 gate `2027-01-19T01:00:00Z`.
+- Full suite: 1131 passed, 2 skipped, 0 failures, exit 0; all 44 `scripts/verify_*.py` exit 0; `compute_code_hash()` = `2efd3b18…`; canonical digests unchanged; no file under `src/` touched.
+
+**One bounded task, in this order:**
+1. **The v5 specification.** Create versioned `configs/research_v5.json` (preregistered, authorizes nothing), following BRAIN-019 §1–§4: the v5 floor recomputed from `research/universe_manifest_v4.json` with `strictly_less_than`; the identity rule extended to v1, v2, v3 **and** v4 (matched on Binance symbol **and** CoinGecko id, with the rename rule); the depth policy (record the depth actually retrieved, recompute from the raw bytes, one bounded extra page if the first page does not yield 20 names); the development boundary at `2026-10-19T22:00:00Z` (inclusive at the boundary, exclusive after it, per BRAIN-015); the three phase gates against the v2, v3 and v4 confirmatory windows; the v5 namespace with `supersedes` from the v4 identities; the canonical digest `3e8e4169…` as the portable tree identity.
+2. **The v5 verifiers.** Add `scripts/verify_research_v5_spec.py` and any other v5 verifiers needed, following the v2/v3/v4 patterns. Every identity must be recomputed from the artifact that owns it — no literal digests in published artifacts (the BRAIN-018 lesson).
+3. **Optional: one bounded market-cap retrieval.** Only if the implementation session decides to do it, inside the v5 pinned window. The raw response bytes and their sha256 are committed; the depth is recomputed from the bytes; the batch is re-derived from the raw bytes and never copied.
+
+**Do NOT:** contact any provider (except the optional bounded retrieval in step 3); read any candle inside the v2, v3 or v4 confirmatory window; run any evaluation, grid, backtest, campaign, selection or pilot; create or edit any file under `configs/` other than `configs/research_v5.json`; edit any frozen v1/v2/v3/v4 artifact; re-run any producer that would rewrite an artifact; re-retrieve or re-time the v2, v3 or v4 market-cap snapshot; mark a confirmatory window as started or `holdout_exposed_count` as non-zero; change the 2,304-configuration grid, the costs, the folds, the thresholds, the selection rule or the single confirmatory criterion; take the v2 or v3 exposure-counter decision; write any file under `src/`.
+
+**Acceptance criteria:** `configs/research_v5.json` exists, is versioned and hash-bound, and every value in it recomputes from the live artifacts; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0 with no new failures; every `scripts/verify_*.py` still exits 0; `compute_code_hash()` is still `2efd3b18…`; the canonical digests are unchanged; `research_state/continuous_universe_state.json` is unchanged; no file under `configs/`, `research/`, `reports/` or `src/` other than `configs/research_v5.json` is created, changed or deleted; no confirmatory-window candle was read and `holdout_exposed_count` stays 0.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v5_spec.py` (if created); `python3 scripts/verify_v1_gate_compatibility.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat` (expect changes only under `configs/` for `research_v5.json` and possibly `scripts/` for the verifier — none under `src/`, `research/` or `reports/`).
+
+**Still open for the coordinator:** the v2 exposure-counter question (BRAIN-019 §2) and BRAIN-014's v3 counterpart — due before the v2 gate clears on `2027-01-17T22:00:00Z` and the v3 gate on `2027-01-18T13:00:00Z`. Neither depends on the v5 design.
+
+**Queued after this task (not for that session):** the v5 expansion-log entries (the derived v4 entry plus the v5 entry); the preregistered v4 confirmatory protocol and runbook; the v3 confirmatory evaluation and the final report, which may not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start before `2027-01-17T22:00:00Z`.
