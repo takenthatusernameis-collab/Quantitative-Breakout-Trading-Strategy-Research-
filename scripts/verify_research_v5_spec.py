@@ -67,10 +67,20 @@ EXECUTION_PATH_ROOTS = (
     "src/v4_campaign",
 )
 
-#: Every v5 path that must not exist before the v5 chain runs.
-V5_ARTIFACTS_THAT_MUST_NOT_EXIST = (
-    "research/universe_manifest_v5.json",
-    "research/data_manifest_v5.json",
+#: The v5 paths that must not exist before the v5 chain runs.
+#:
+#: The rule this list enforced ("no v5 artifact may exist while the v5 chain has
+#: not run") was a **preregistration** rule: the specification existed, was
+#: hash-bound, and nothing in the v5 namespace had been written yet. The v5
+#: retrieval stage has now been delivered -- the one bounded market-cap
+#: retrieval inside the pinned window, the v5 universe manifest and the v5 data
+#: manifest -- so the universe and the data manifests are legitimate
+#: deliverables and are listed in ``V5_DELIVERED_STAGE_ARTIFACTS`` below.
+#:
+#: The rule that still holds is the **run** rule: no v5 run artifact may exist
+#: while the chain has not been authorized and has not run. That list is
+#: unchanged in substance; only the stage artifacts moved out of it.
+V5_RUN_ARTIFACTS_THAT_MUST_NOT_EXIST = (
     "configs/research_v5_candidate_freeze.json",
     "configs/research_v5_execution.json",
     "configs/research_v5_selection_authorization_1.json",
@@ -80,6 +90,14 @@ V5_ARTIFACTS_THAT_MUST_NOT_EXIST = (
     "research/results_manifest_v5.json",
     "research/results_v5.jsonl",
     "research_state/checkpoint_v5.json",
+)
+
+#: The v5 stage artifacts the retrieval stage delivers. When they exist they
+#: must be bound to this specification; their content is verified by
+#: ``scripts/verify_research_v5_manifests.py``.
+V5_DELIVERED_STAGE_ARTIFACTS = (
+    "research/universe_manifest_v5.json",
+    "research/data_manifest_v5.json",
 )
 
 #: The v1-v4 paths a v5 artifact must never collide with.
@@ -499,9 +517,21 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     for foreign in FOREIGN_NAMESPACES:
         if foreign in v5_paths:
             fail(f"the v5 namespace collides with the frozen path {foreign}")
-    for relative in V5_ARTIFACTS_THAT_MUST_NOT_EXIST:
+    for relative in V5_RUN_ARTIFACTS_THAT_MUST_NOT_EXIST:
         if (repo_root / relative).exists():
-            fail(f"the v5 artifact {relative} exists, but the v5 chain has not run")
+            fail(f"the v5 run artifact {relative} exists, but the v5 chain has not run")
+    for relative in V5_DELIVERED_STAGE_ARTIFACTS:
+        stage_path = repo_root / relative
+        if not stage_path.exists():
+            continue
+        stage = _load_json(stage_path)
+        if stage is None:
+            fail(f"the v5 stage artifact {relative} is unreadable")
+            continue
+        if stage.get("specification_hash") != spec.get("specification_hash"):
+            fail(f"the v5 stage artifact {relative} is not bound to this specification")
+        if stage.get("universe_version") != spec.get("universe_version"):
+            fail(f"the v5 stage artifact {relative} is not a v5 artifact")
     for key in ("universe_manifest", "data_manifest", "candidate_freeze", "ledger", "results_manifest", "checkpoint"):
         if not namespace.get(key):
             fail(f"the v5 namespace does not name its {key}")

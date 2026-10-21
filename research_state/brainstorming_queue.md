@@ -4282,3 +4282,104 @@ The v5 specification records the **recomputed** counts (63 and 63) and the verif
 - The full suite and every `scripts/verify_*.py` were run after the implementation; the results are in the handoff entry of the same session.
 
 **Queued after this task:** the v5 universe and data manifests — the one bounded market-cap retrieval inside the v5 pinned window (`not_before 2026-10-21T09:40:00Z`, `deadline 2026-10-28T09:40:00Z`), the raw bytes and their sha256 committed, the depth recomputed from the bytes, the batch re-derived from the raw bytes and never copied, the v5 universe and data manifests with their validation results, and the verifier and test module that re-derive the batch (BRAIN-019 staged acceptance test 3); then the expansion-log entries (the derived v4 entry plus the v5 entry); the preregistered v4 confirmatory protocol and runbook; the v3 confirmatory evaluation and the final report, which may not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start before `2027-01-17T22:00:00Z`.
+
+---
+
+## BRAIN-022 — the v5 universe and data manifests: the one bounded retrieval, the re-derived batch, the boundary-bounded datasets, and a start-inclusivity defect in the v5 specification (2026-10-21T10:0xZ)
+
+**Status:** `DELIVERED_AND_VERIFIED` (the v5 universe manifest, the v5 data manifest, the v5 datasets, the v5 evidence, the offline verifier and the test module), with **one CONFIRMED defect in `configs/research_v5.json`** that a versioned amendment must correct (the specification is hash-bound and was **not** edited).
+**Type:** implementation record (a separate session from the BRAIN-019 decision record and from the BRAIN-021 specification implementation, per README Section 2A C1).
+**Routing:** the durable handoff named the v5 universe/data manifests as the next bounded task after the BRAIN-021 specification implementation. BRAIN-019 staged acceptance tests 3, 4, 5, 6 and 7 are the acceptance frame; tests 3 and 4 are executed here, test 5's expansion-log part and test 7's counter-increment part need the v5 execution path, and test 6's fresh-checkout part is satisfied by the mirror control.
+
+### 1. What was delivered
+
+| artifact | what it is |
+| --- | --- |
+| `research/v5_evidence/raw_market_cap_response.json` | the **raw bytes** of the one market-cap retrieval, verbatim (197,270 bytes, sha256 `82644c308d39e671f8000516d718cf6548f2093d370488be1124749eb0149a75`) |
+| `research/v5_evidence/snapshot_observation.json` | the retrieval observation: endpoint, per-page raw bytes/digest/timestamp, HTTP status, the depth **recomputed from the bytes**, and the depth-policy decision |
+| `research/v5_evidence/binance_spot_verification.json` | one bounded read-only request per host per candidate, with both HTTP statuses and the probe timestamps |
+| `research/v5_evidence/candle_verification.json` | the per-asset candle-read record: request count, endpoints used, endpoint failures, rejected rows, gaps, observed count, content hash, dataset path |
+| `research/v5_evidence/benchmark_retrieval.json` | the v5 benchmark series record |
+| `research/universe_manifest_v5.json` | the v5 universe: the batch re-derived from the raw bytes, every candidate validated or excluded with a reason, the `supersedes` chain onto the v4 manifest, manifest hash `ed6ade73c31c687c141b492100bff9a1af85a6fccbb80bd65bbe924589abaa7f` |
+| `research/data_manifest_v5.json` | the v5 data manifest: a record for **every** candidate, the window policy, the benchmark block and its rule, the confirmatory-window block, manifest hash `f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126` |
+| `research/data/candles_v5/*.csv` | eight content-addressed datasets (seven validated assets + the benchmark), 26,280 closed hourly candles each, 20 MB |
+| `scripts/v5_universe_rules.py` | the v5 rules as **pure, provider-free** functions: the floor, the identity rule, the exclusion rules, the batch derivation, the development window, the canonical hashing |
+| `scripts/v5_snapshot.py` | the bounded, evidence-recording retrieval that implements the depth policy in one run |
+| `scripts/v5_constituent_validation.py` | the producer: it re-derives the batch from the stored bytes, validates each candidate, fetches the boundary-bounded candles and the benchmark, and writes the two manifests |
+| `scripts/verify_research_v5_manifests.py` | the read-only, offline, **clock-free** verifier |
+| `tests/test_v5_manifests.py` | 36 deterministic tests: 21 rule tests, 13 tamper controls and 2 boundary-refusal tests |
+
+No file under `src/`, `configs/`, `reports/` or `research/` outside the v5 namespace was created, edited or deleted; no frozen v1–v4 artifact was touched; no confirmatory window was read; `holdout_exposed_count` is 0 in every version's counter.
+
+### 2. The retrieval (the one bounded pass, inside the pinned window)
+
+- The window was **open**: `not_before 2026-10-21T09:40:00Z`, `deadline 2026-10-28T09:40:00Z`; the request went out at **2026-10-21T09:55:28Z**, 15 minutes after the window opened. `scripts/v5_snapshot.py` refuses to retrieve outside the window and refuses to re-retrieve a snapshot that is already recorded ("a snapshot is retrieved exactly once per version and is never re-timed").
+- **One** read-only GET of the frozen endpoint, HTTP **200**, 197,270 bytes, 152 ms, sha256 `82644c30…`.
+- **The depth policy held**: the first page yielded **20** qualifying names, which is not fewer than `top_n = 20`, so **page 2 was not read** and there is no third page. The recorded depth (**250**) is the depth **recomputed from the bytes** (the raw response holds 250 rows), not a copied number; the verifier recomputes it again from the bytes.
+- The v1–v4 snapshots were **not** re-retrieved and **not** re-timed.
+
+### 3. The batch, re-derived from the raw bytes (never copied)
+
+The batch is the 20 highest-ranked assets that survive the rules, in strictly descending market-cap order. It occupies CoinGecko market-cap ranks **92–116**; the highest member is `APTUSDT` at 729,197,830 USD and the lowest is `YLDSUSDT` at 498,236,520 USD, a 1.48× margin below the floor.
+
+**The floor** is recomputed from `research/universe_manifest_v4.json#eligible_assets`: **739,186,726 USD** (`AKE`, rank 91), `strictly_less_than`. Every member is below it; the verifier recomputes the floor from that manifest on every run and refuses a stale one.
+
+**The identity rule** covers the v1, v2, v3 and v4 universes and matches on the base Binance symbol **or** the CoinGecko id. Of the 250 snapshot rows, **63** are excluded as `already_in_prior_universe`; no member of the v5 batch is an asset of the v1, v2, v3 or v4 universe, and the v5 *validated* cohort is disjoint from the v1–v4 validated cohorts.
+
+**The exclusion rules** — the decision this session had to make, recorded here in full. The v5 specification names the v1 `exclusion_rules` fixed lists ("copied unchanged from `research/universe_manifest.json`") and, separately, the six exclusion *categories* (`universe.exclusions`: stablecoins, wrapped_tokens, bridged_tokens, leveraged_tokens, synthetic_tokens, derivative_tokens). The fixed lists cannot express four of those six categories, which is why the v3 and v4 chains published a classifier. **This session therefore applies the v1 fixed lists first and then the published classifier of the effective v4 exclusion amendment** (`configs/research_v4_exclusion_amendment_2.json#classifier`, `classifier_version v4-exclusion-classifier-1`), **read-only** — the amendment is hash-bound (`90d6df9a…`) and is not edited by the v5 chain, and only its `classifier` block is used; its v4-specific derived classification and derived candidate batch are not. The reuse is recorded in the universe manifest's `exclusion_rules_application` block, so it is auditable and reversible. The classifier's five groups implement exactly the six categories the v5 specification names (its `spec_category` values are `stablecoins`, `wrapped_tokens`, `bridged_tokens`, `leveraged_tokens`, `synthetic_tokens`, `derivative_tokens`), which is why the reuse is a specification-consistent application rather than a widening of the rule.
+
+The exclusion breakdown of the 250 rows: `prior_universe` 63, `stablecoins` 46, `exchange_tokens` 6, `derivative_tokens` 2, `synthetic_tokens` 2 — 119 rows excluded, 131 qualifying, the top 20 taken. (The floor rule excluded no row: every row above the floor is already excluded by the identity rule or by a category.)
+
+### 4. The validation outcome
+
+| outcome | count | names |
+| --- | --- | --- |
+| validated (26,280 candles, boundary-bounded) | **7** | `APTUSDT`, `CAKEUSDT`, `CRVUSDT`, `DASHUSDT`, `RAYUSDT`, `STXUSDT`, `VETUSDT` |
+| `binance_spot_unavailable` | 6 | `BDXUSDT`, `FLRUSDT`, `GHOUSDT`, `QUSDT`, `XDCUSDT`, `YLDSUSDT` |
+| `insufficient_hourly_history` | 7 | `ETHFIUSDT` (22,690), `NIGHTUSDT` (5,335), `PYTHUSDT` (23,770), `TIAUSDT` (26,022), `TRUMPUSDT` (15,326), `PENGUUSDT` (16,112), `币安人生USDT` (6,848) |
+
+The 7-of-20 yield is the v4 band's yield (7 of 20) and is what the v5 design record predicted for a band one tier lower; no name was replaced because of its result. The six spot failures were confirmed against the provider itself (`exchangeInfo` returns HTTP 400 `Invalid symbol.` for each of the six on the failover host, and HTTP 451 on the primary host for every pair, which is the documented failover trigger).
+
+### 5. The boundary, the datasets and the benchmark
+
+- Every dataset holds **exactly 26,280** closed hourly candles and ends with the candle that **closes exactly at** the preregistered cutoff `2026-10-19T22:00:00Z` (the last candle opens 2026-10-19T21:00:00Z, the first opens 2023-10-20T22:00:00Z). The boundary is enforced **twice**: the request's end time is the last candle that closes at the cutoff, so the provider cannot return anything later (the frozen `DataFetcher` raises when it does), and the producer re-checks the last candle's close after the read. Two tests prove the refusal (the request window is the boundary window; a series that reaches one candle past the boundary is refused and no dataset is written).
+- The window is bound to the **cutoff**, not to the snapshot and not to the wall clock, so re-running the validation reproduces byte-identical datasets instead of silently sliding the window forward.
+- **The benchmark rule (a v5-specific rule, and it is honoured).** The v4 chain's benchmark dataset is `research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv`; recomputed from its bytes, **13** of its candles close after the v5 cutoff (its last candle closes 2026-10-20T11:00:00Z), and every one of them falls inside the open v2 confirmatory window. The v5 chain therefore does **not** reuse it: it fetched a **separate** BTCUSDT series bounded at the v5 cutoff (`research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv`, content hash `626e639b02e54bc1…`, 26,280 candles, last close 2026-10-19T22:00:00Z) and the rule is stated in the data manifest's `benchmark.rule` block and enforced by the verifier, which refuses a benchmark that is not bounded at the cutoff.
+
+### 6. The CONFIRMED defect in the v5 specification (not corrected in place)
+
+**`configs/research_v5.json#holdout.confirmatory_window_membership.interval_start_inclusive` is `true`, and that contradicts the artifact that owns the v2 window, the v5 specification's own purpose, and the v5 development boundary it preregisters.**
+
+- The v2 candidate freeze (`configs/research_v2_candidate_freeze.json#data_boundary.development_data_rule`) says: *"Candles that close **at or before** `confirmatory_window_start_utc` are development data and may inform selection. No candle inside the confirmatory window may be read during selection."* The v3 freeze states the same rule. The window's start is therefore **exclusive** for a candle's close.
+- The v5 specification's development cutoff **is** the v2 window's start (`2026-10-19T22:00:00Z` = `min(v2, v3, v4 window starts)`, recomputed), and its `development_cutoff_rule` puts the **last development candle's close exactly at** that instant.
+- So under the v5 specification's own membership rule (`interval_start_inclusive: true`, "the close timestamp of the candle falls in that window's time range") the v5 boundary candle is **inside** the open v2 confirmatory window — while the same specification's `development_cutoff_cost` and `confirmatory_window_membership.consequence` both assert that *"no v5 development read can fall inside any open confirmatory window"*. The specification contradicts itself, and the v5 specification verifier **enforces the wrong half** (`scripts/verify_research_v5_spec.py:386` fails the specification unless the membership rule is start-inclusive).
+
+**How this session resolved it, and why.** The v5 chain follows the **window-owning** rule: a candle is inside a confirmatory window only when its close is **strictly after** that window's start, so the v5 boundary candle is development data, no v5 read falls inside the v2, v3 or v4 window, and the v2 counter is not incremented. The evidence for that resolution, all recomputed from the live artifacts:
+
+1. the v2 and v3 freezes (the two artifacts that own those windows) state "at or before" = development data;
+2. the v2 freeze's own note says the candles between the materialization instant and the window start "are development data as well … reading them creates no confirmatory exposure";
+3. the v3 chain's data ends with a candle closing exactly at **its own** window's start and `research/data_manifest_v3.json` records `holdout_exposed_count = 0`; the v4 chain's data ends with a candle closing exactly at the **v3** window's start and the v3 counter is 0;
+4. the v5 specification's own two sentences state the intent the flag contradicts.
+
+**The defect is recorded, not fixed in place.** `configs/research_v5.json` is hash-bound (`55e839f7…`) and this session's task forbids creating or editing a file under `configs/` (the one exception, a versioned amendment for an expired pinned window, does not apply: the window is open and the retrieval succeeded). The correction — a versioned amendment that sets the membership rule to the window-owning convention, together with the matching change to `scripts/verify_research_v5_spec.py:386` and to the producer `scripts/build_research_v5_spec.py:582` — is **queued as the next bounded task**. Until it is published, this record and the v5 data manifest's `confirmatory_window` block state the rule this session applied.
+
+**The rule is now mechanically enforced either way**: the v5 manifests verifier fails when any validated v5 dataset closes a candle **strictly after** the start of any of the three open windows (and the benchmark with them), and a tamper control proves it.
+
+### 7. The other facts this session revalidated (nothing below is quoted from a previous record)
+
+- The v5 floor, recomputed from `research/universe_manifest_v4.json#eligible_assets`: **739,186,726 USD** (`AKE`, rank 91); the v5 batch's lowest member is at 498,236,520 USD.
+- The three windows, recomputed from the three freezes (`confirmatory_window_start_utc` / `opens_utc`): v2 `2026-10-19T22:00:00Z`, v3 `2026-10-20T13:00:00Z`, v4 `2026-10-21T01:00:00Z`; the minimum is the v5 development cutoff.
+- The v3 benchmark's 13 candles that close after the v5 cutoff, recomputed from the file's bytes.
+- The expansion log `research/v_universe_expansion_log.json` still holds `entry_count: 1` (the v3 entry only) — **the v4 entry is still missing**, so prerequisite `p5` is still outstanding.
+- The v5 namespace was empty before this session: no v5 universe or data manifest, no freeze, no ledger, no results manifest, no checkpoint, no shard directory.
+- The code identities are unchanged: the canonical digest of `src/breakout_research` is `3e8e4169…` and the authorized ordered value of record `2efd3b18…` is what the v5 manifests carry; the live ordered digest is an environment fact and is not an identity.
+- The v5 specification's own `holdout.development_window` bounds are self-consistent: `last_candle_open_timestamp_ms 1792443600000` (2026-10-19T21:00:00Z, closing at the cutoff) and `first_candle_open_timestamp_ms 1697839200000` (2023-10-20T22:00:00Z) are 26,279 hours apart, i.e. exactly 26,280 candles.
+
+### 8. Verification
+
+- `python3 scripts/verify_research_v5_manifests.py` → `"ok": true`, `"failures": []`, exit 0 (`ranking_depth_recomputed_from_bytes: 250`, `floor_market_cap_usd: 739186726`, `candidate_count: 20`, `validated_count: 7`).
+- `PYTHONPATH=src python3 -m pytest tests/test_v5_manifests.py -q` → **36 passed**, exit 0.
+- The tamper controls are not vacuous: a member above the floor, a stale floor, a member of a prior universe, a batch that is not the re-derived one, a wrong depth, a tampered snapshot page, a dataset that crosses the boundary, a dataset that closes inside an open window, a benchmark that is not bounded at the cutoff, an exposed confirmatory window, a supersedes chain that names an older version, and a missing dataset are each refused, while the untouched mirror reports nothing.
+- The full suite and every `scripts/verify_*.py` were run after the implementation; the results are in the handoff entry of the same session.
+
+**Queued after this task:** the v5 candidate freeze and the v5 execution protocol (prerequisite `p4`), the expansion-log entries (the derived v4 entry plus the v5 entry, prerequisite `p5`), **the versioned amendment that corrects the start-inclusivity defect of §6** (with the matching change to `scripts/verify_research_v5_spec.py` and to the specification producer), the v5 selection authorization and the single authorized v5 selection run; then the preregistered v4 confirmatory protocol and runbook; the v3 confirmatory evaluation and the final report, which may not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start before `2027-01-17T22:00:00Z`.

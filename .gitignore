@@ -28,3 +28,11 @@ research/results_v3.jsonl
 # configs/research_v4_selection_authorization_1.json). At the size of the
 # authorized run it exceeds the per-file push limit, so it is not committed.
 research/results_v4.jsonl
+
+# The v5 selection result stream is a projection of the verified shards under
+# research/shards_v5 and is regenerated from them, for the same reason as the
+# v2, the v3 and the v4 streams: at the size of the authorized run it exceeds
+# the per-file push limit, so it is not committed. A v5 verifier treats its
+# absence as "not materialized" and reports the shard projection's digest
+# instead of failing (the v5 specification's result_stream_durability).
+research/results_v5.jsonl

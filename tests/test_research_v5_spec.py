@@ -66,9 +66,11 @@ MIRRORED_FILES = (
     "research/universe_manifest_v2.json",
     "research/universe_manifest_v3.json",
     "research/universe_manifest_v4.json",
+    "research/universe_manifest_v5.json",
     "research/data_manifest_v2.json",
     "research/data_manifest_v3.json",
     "research/data_manifest_v4.json",
+    "research/data_manifest_v5.json",
     "research/v4_selected_configurations_manifest.json",
     "research/v_universe_expansion_log.json",
     "research_state/campaign_authorization.json",
@@ -366,15 +368,40 @@ def test_the_v5_namespace_does_not_collide_with_the_frozen_paths():
 
 
 def test_no_v5_run_artifact_exists():
+    """The v5 **run** artifacts must not exist while the chain has not run.
+
+    The universe and the data manifests are the delivered retrieval stage and
+    do exist; the freeze, the execution protocol, the authorization, the
+    confirmatory protocol and runbook, the ledger, the results and the
+    checkpoint are the run artifacts and must not.
+    """
     for relative in (
-        "research/universe_manifest_v5.json",
-        "research/data_manifest_v5.json",
         "configs/research_v5_candidate_freeze.json",
+        "configs/research_v5_execution.json",
+        "configs/research_v5_selection_authorization_1.json",
+        "configs/research_v5_confirmatory_protocol.json",
+        "configs/research_v5_confirmatory_runbook_1.json",
         "research/ledger_v5.json",
         "research/results_manifest_v5.json",
+        "research/results_v5.jsonl",
         "research_state/checkpoint_v5.json",
     ):
         assert not (REPO_ROOT / relative).exists(), relative
+
+
+def test_the_delivered_stage_artifacts_are_bound_to_the_specification():
+    """The delivered v5 stage artifacts carry this specification's identity."""
+    spec = _load(SPEC_V5)
+    for relative in (
+        "research/universe_manifest_v5.json",
+        "research/data_manifest_v5.json",
+    ):
+        path = REPO_ROOT / relative
+        if not path.exists():
+            pytest.skip(f"{relative} is not present in this checkout")
+        stage = _load(path)
+        assert stage["specification_hash"] == spec["specification_hash"], relative
+        assert stage["universe_version"] == spec["universe_version"], relative
 
 
 def test_the_expansion_log_chain_is_intact():
@@ -521,10 +548,25 @@ def test_the_verifier_detects_a_self_authorizing_specification(tmp_path):
 
 def test_the_verifier_detects_an_existing_v5_run_artifact(tmp_path):
     root = _mirror_repo(tmp_path)
-    path = root / "research" / "universe_manifest_v5.json"
+    path = root / "research" / "ledger_v5.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("{}\n", encoding="utf-8")
     failures = _failures(root)
-    assert any("v5 artifact" in failure for failure in failures), failures
+    assert any("v5 run artifact" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_stage_artifact_that_is_not_bound_to_the_specification(
+    tmp_path,
+):
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "universe_manifest_v5.json"
+    if not path.exists():
+        pytest.skip("the v5 universe manifest is not present in this checkout")
+    stage = json.loads(path.read_text(encoding="utf-8"))
+    stage["specification_hash"] = "0" * 64
+    path.write_text(json.dumps(stage, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("not bound to this specification" in failure for failure in failures), failures
 
 
 def test_the_verifier_detects_a_broken_expansion_log_chain(tmp_path):
