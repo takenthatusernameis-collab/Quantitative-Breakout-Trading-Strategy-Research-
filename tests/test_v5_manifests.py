@@ -605,3 +605,43 @@ def test_the_verifier_detects_a_dataset_that_closes_inside_an_open_window(
     _replace(root, "research/data_manifest_v5.json", data)
     failures = _failures(root)
     assert any("closes a candle inside the open" in failure for failure in failures)
+
+
+def test_the_data_manifest_states_the_membership_rule_the_amendment_owns() -> None:
+    """The published amendment is the effective rule; the manifest states it."""
+    data = _load(DATA_PATH)
+    amendment = _load(REPO_ROOT / "configs" / "research_v5_specification_amendment_1.json")
+    manifest_rule = data["window_policy"]["window_membership_rule"]["rule"]
+    assert verifier.membership_clauses(manifest_rule) == verifier.membership_clauses(
+        amendment["corrected_rule"]["rule"]
+    )
+    assert amendment["corrected_rule"]["interval_start_inclusive"] is False
+
+
+def test_the_verifier_detects_a_tampered_membership_amendment(tmp_path: Path) -> None:
+    """The manifests verifier honours the amendment, so an edited amendment is refused."""
+    root = _mirror_repo(tmp_path)
+    amendment = _load(REPO_ROOT / "configs" / "research_v5_specification_amendment_1.json")
+    amendment["corrected_rule"]["interval_start_inclusive"] = True
+    # ``_replace`` unlinks the symlink first: the mirror holds symlinks, so a
+    # plain write would edit the repository's own file.
+    _replace(root, "configs/research_v5_specification_amendment_1.json", amendment)
+    failures = _failures(root)
+    assert any("does not correct interval_start_inclusive" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_manifest_that_states_another_membership_rule(
+    tmp_path: Path,
+) -> None:
+    """The manifest and the amendment must state the same rule."""
+    root = _mirror_repo(tmp_path)
+    data = _load(DATA_PATH)
+    data["window_policy"]["window_membership_rule"]["rule"] = (
+        "a candle is inside a confirmatory window when its close falls in that window's time "
+        "range, regardless of which asset the candle belongs to"
+    )
+    excluded = tuple(data["hashing"]["manifest_hash_excluded_keys"])
+    _rehash(data, excluded)
+    _replace(root, "research/data_manifest_v5.json", data)
+    failures = _failures(root)
+    assert any("another membership rule" in failure for failure in failures), failures

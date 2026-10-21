@@ -67,6 +67,11 @@ V4_UNIVERSE_RELATIVE = "research/universe_manifest_v4.json"
 V4_DATA_RELATIVE = "research/data_manifest_v4.json"
 AUTHORIZATION_RELATIVE = "research_state/campaign_authorization.json"
 
+#: The versioned amendment that owns the effective confirmatory-window
+#: membership rule (BRAIN-022 §6).  The frozen specification keeps its block
+#: unchanged; this file is the effective rule.
+AMENDMENT_RELATIVE = "configs/research_v5_specification_amendment_1.json"
+
 #: The paths a v5 run creates. Before the authorized run none of them may exist.
 V5_EXECUTION_PATHS = (
     "research/shards_v5",
@@ -84,6 +89,28 @@ ALLOWED_VALIDATION_EXCLUSION_REASONS = (
 )
 
 HOUR_MS = 60 * 60 * 1000
+
+
+def membership_clauses(text: str) -> Dict[str, bool]:
+    """The operative clauses of a confirmatory-window membership rule.
+
+    Two documents may word the same rule differently, so the agreement check
+    compares the clauses that decide the outcome:
+
+    * ``start_exclusive`` -- a candle is inside a window only when its close
+      falls *strictly after* the window's start;
+    * ``end_exclusive`` -- a candle is inside a window only before its end;
+    * ``boundary_candle_is_development`` -- a candle that closes exactly at a
+      window's start is development data;
+    * ``asset_wide`` -- the rule holds for any asset.
+    """
+    lowered = " ".join(str(text or "").lower().split())
+    return {
+        "start_exclusive": "strictly after" in lowered,
+        "end_exclusive": "before its end" in lowered or "before that window's end" in lowered,
+        "boundary_candle_is_development": "closes exactly at" in lowered,
+        "asset_wide": "regardless of which asset" in lowered,
+    }
 
 
 def _snapshot_rows(repo_root: Path, observation: Dict[str, Any]) -> Tuple[List[Dict[str, Any]],
@@ -353,6 +380,46 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         failures.append(
             "the data manifest does not name the artifacts that own the membership rule"
         )
+
+    # 9a. the published amendment owns the effective membership rule.
+    #      The frozen specification keeps its block unchanged; the amendment is
+    #      the effective rule, and this manifest must state that same rule.
+    amendment_path = root / AMENDMENT_RELATIVE
+    if not amendment_path.exists():
+        failures.append(
+            f"the v5 specification amendment {AMENDMENT_RELATIVE} is missing, so the "
+            "effective membership rule is unknown"
+        )
+    else:
+        amendment = read_json(amendment_path)
+        if not isinstance(amendment, dict):
+            failures.append(f"the v5 specification amendment {AMENDMENT_RELATIVE} is unreadable")
+        else:
+            recomputed_amendment = compute_manifest_hash(amendment, ("manifest_hash",))
+            if amendment.get("manifest_hash") != recomputed_amendment:
+                failures.append("the v5 specification amendment does not recompute its manifest_hash")
+            if (amendment.get("supersedes") or {}).get("specification_hash") != spec.get(
+                "specification_hash"
+            ):
+                failures.append("the v5 specification amendment does not supersede this specification")
+            corrected = amendment.get("corrected_rule") or {}
+            if corrected.get("interval_start_inclusive") is not False:
+                failures.append(
+                    "the v5 specification amendment does not correct interval_start_inclusive to false"
+                )
+            effective_rule = str(corrected.get("rule") or "")
+            if effective_rule:
+                # The amendment and this manifest word the same rule slightly
+                # differently, so the check compares the operative clauses and
+                # not the sentence: the start is exclusive, the end is
+                # exclusive, the boundary candle is development data and the
+                # rule is asset-wide.
+                if membership_clauses(str(membership.get("rule") or "")) != membership_clauses(
+                    effective_rule
+                ):
+                    failures.append(
+                        "the data manifest states another membership rule than the published amendment"
+                    )
 
     # 9. the benchmark rule: the v5 benchmark is a dataset bounded at the cutoff.
     benchmark = data.get("benchmark") or {}

@@ -11,12 +11,14 @@ from typing import Any, Dict, Optional
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-SPEC_PATH = REPO_ROOT / "configs" / "research_v5.json"
-UNIVERSE_PATH = REPO_ROOT / "research" / "universe_manifest_v5.json"
-DATA_PATH = REPO_ROOT / "research" / "data_manifest_v5.json"
-ARTIFACT_PATH = REPO_ROOT / "configs" / "research_v5_candidate_freeze.json"
-V4_FREEZE_PATH = REPO_ROOT / "configs" / "research_v4_candidate_freeze.json"
-AMENDMENT_PATH = REPO_ROOT / "configs" / "research_v5_specification_amendment_1.json"
+#: The artifacts the freeze is bound to, relative to the repository root, so
+#: the producer can rebuild the freeze from any checkout.
+SPEC_RELATIVE = "configs/research_v5.json"
+UNIVERSE_RELATIVE = "research/universe_manifest_v5.json"
+DATA_RELATIVE = "research/data_manifest_v5.json"
+ARTIFACT_RELATIVE = "configs/research_v5_candidate_freeze.json"
+V4_FREEZE_RELATIVE = "configs/research_v4_candidate_freeze.json"
+AMENDMENT_RELATIVE = "configs/research_v5_specification_amendment_1.json"
 
 MANIFEST_HASH_EXCLUDED_KEYS = ["manifest_hash"]
 
@@ -61,11 +63,11 @@ def first_hour_boundary_after(value: datetime) -> datetime:
 
 
 def build(repo_root: Path = REPO_ROOT, freeze_utc: Optional[str] = None) -> Dict[str, Any]:
-    spec = json.loads((repo_root / SPEC_PATH).read_text(encoding="utf-8"))
-    universe = json.loads((repo_root / UNIVERSE_PATH).read_text(encoding="utf-8"))
-    data_manifest = json.loads((repo_root / DATA_PATH).read_text(encoding="utf-8"))
-    v4_freeze = json.loads((repo_root / V4_FREEZE_PATH).read_text(encoding="utf-8"))
-    amendment = json.loads((repo_root / AMENDMENT_PATH).read_text(encoding="utf-8"))
+    spec = json.loads((repo_root / SPEC_RELATIVE).read_text(encoding="utf-8"))
+    universe = json.loads((repo_root / UNIVERSE_RELATIVE).read_text(encoding="utf-8"))
+    data_manifest = json.loads((repo_root / DATA_RELATIVE).read_text(encoding="utf-8"))
+    v4_freeze = json.loads((repo_root / V4_FREEZE_RELATIVE).read_text(encoding="utf-8"))
+    amendment = json.loads((repo_root / AMENDMENT_RELATIVE).read_text(encoding="utf-8"))
 
     freeze_instant = parse_iso_utc(freeze_utc) if freeze_utc else datetime.now(timezone.utc)
     window_open = first_hour_boundary_after(freeze_instant)
@@ -84,9 +86,9 @@ def build(repo_root: Path = REPO_ROOT, freeze_utc: Optional[str] = None) -> Dict
         "specification_purpose": "Freeze the v5 candidate set and data boundary before any v5 evaluation runs. This artifact authorizes nothing.",
         "specification_hash": spec["specification_hash"],
         "universe_manifest_hash": universe["manifest_hash"],
-        "universe_manifest_path": str(UNIVERSE_PATH.relative_to(repo_root)),
+        "universe_manifest_path": UNIVERSE_RELATIVE,
         "data_manifest_hash": data_manifest["manifest_hash"],
-        "data_manifest_path": str(DATA_PATH.relative_to(repo_root)),
+        "data_manifest_path": DATA_RELATIVE,
         "snapshot_identity": data_manifest["snapshot_identity"],
         "candidates": universe["eligible_assets"],
         "exclusions": universe["excluded_assets"],
@@ -97,7 +99,7 @@ def build(repo_root: Path = REPO_ROOT, freeze_utc: Optional[str] = None) -> Dict
             "development_cutoff_utc": spec["holdout"]["development_cutoff_utc"],
             "development_cutoff_rule": spec["holdout"]["development_cutoff_rule"],
             "confirmatory_window_membership_rule": amendment["corrected_rule"]["rule"],
-            "confirmatory_window_membership_amendment_path": str(AMENDMENT_PATH.relative_to(repo_root)),
+            "confirmatory_window_membership_amendment_path": AMENDMENT_RELATIVE,
             "confirmatory_window_membership_amendment_hash": amendment["manifest_hash"],
             "v5_confirmatory_window_start_utc": format_utc(window_open),
             "v5_confirmatory_window_start_rule": "the first UTC hour boundary strictly after candidate_freeze_utc",
@@ -121,8 +123,8 @@ def build(repo_root: Path = REPO_ROOT, freeze_utc: Optional[str] = None) -> Dict
             "overlap_rule": "v5 confirmatory window must not overlap v1-v4 holdouts/windows; evaluation only after v4 gate clears and window elapses",
         },
         "supersedes": {
-            "v4_candidate_freeze_path": str(V4_FREEZE_PATH.relative_to(repo_root)),
-            "v4_candidate_freeze_sha256": sha256_file(repo_root / V4_FREEZE_PATH),
+            "v4_candidate_freeze_path": V4_FREEZE_RELATIVE,
+            "v4_candidate_freeze_sha256": sha256_file(repo_root / V4_FREEZE_RELATIVE),
             "v4_candidate_freeze_hash": v4_freeze.get("manifest_hash"),
             "reason": "The v4 candidate set is frozen for the v4 cycle. The v5 batch is a strictly additional universe below the v4 floor with separate namespaces.",
             "v1_v2_v3_v4_artifacts_are_immutable": True,
@@ -149,12 +151,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args(argv)
     repo_root = Path(args.repo_root)
-    if ARTIFACT_PATH.exists() and not args.force:
+    target = repo_root / ARTIFACT_RELATIVE
+    if target.exists() and not args.force:
         print(json.dumps({"ok": False, "error": "artifact exists; use --force to overwrite"}, indent=2))
         return 1
     document = build(repo_root, args.freeze_utc)
-    ARTIFACT_PATH.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"ok": True, "path": str(ARTIFACT_PATH.relative_to(repo_root)), "manifest_hash": document["manifest_hash"]}, indent=2))
+    target.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({"ok": True, "path": ARTIFACT_RELATIVE, "manifest_hash": document["manifest_hash"]}, indent=2))
     return 0
 
 

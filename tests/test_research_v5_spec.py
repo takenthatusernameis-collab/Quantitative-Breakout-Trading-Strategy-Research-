@@ -101,6 +101,10 @@ def _load_module(name: str, path: Path):
 
 verifier = _load_module("verify_research_v5_spec", REPO_ROOT / "scripts" / "verify_research_v5_spec.py")
 builder = _load_module("build_research_v5_spec", REPO_ROOT / "scripts" / "build_research_v5_spec.py")
+amendment_builder = _load_module(
+    "build_research_v5_specification_amendment_1",
+    REPO_ROOT / "scripts" / "build_research_v5_specification_amendment_1.py",
+)
 
 
 def _load(path: Path) -> Dict[str, Any]:
@@ -588,6 +592,75 @@ def test_the_verifier_detects_a_contradicted_v5_specification_amendment(tmp_path
     path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
     failures = _failures(root)
     assert any("interval_start_inclusive" in failure for failure in failures), failures
+
+
+def test_the_amendment_manifest_hash_recomputes():
+    """The amendment is hash-bound: its own digest recomputes from its body."""
+    amendment = _load(REPO_ROOT / "configs" / "research_v5_specification_amendment_1.json")
+    assert amendment["manifest_hash"] == verifier.compute_manifest_hash(amendment, ("manifest_hash",))
+
+
+def test_the_amendment_is_reproduced_byte_for_byte_by_its_producer():
+    """The amendment is a produced artifact, not a hand-written document."""
+    document = amendment_builder.build(REPO_ROOT)
+    on_disk = (REPO_ROOT / "configs" / "research_v5_specification_amendment_1.json").read_text(
+        encoding="utf-8"
+    )
+    assert json.dumps(document, indent=2, ensure_ascii=False) + "\n" == on_disk
+
+
+def test_the_effective_membership_rule_comes_from_the_amendment():
+    """The frozen block stays as published; the amendment carries the effective rule."""
+    report = verifier.verify(REPO_ROOT)
+    computed = report["computed"]
+    assert computed["frozen_interval_start_inclusive"] is True
+    assert computed["effective_interval_start_inclusive"] is False
+    spec = _load(SPEC_V5)
+    assert spec["holdout"]["confirmatory_window_membership"]["interval_start_inclusive"] is True
+
+
+def test_the_verifier_detects_a_tampered_amendment(tmp_path):
+    """The amendment's own hash is recomputed, so an edited amendment is refused."""
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v5_specification_amendment_1.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["created_utc"] = "2020-01-01T00:00:00Z"
+    path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("does not recompute its manifest_hash" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_an_amendment_that_names_another_specification(tmp_path):
+    """The amendment must name the frozen specification it corrects."""
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v5_specification_amendment_1.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["supersedes"]["specification_path"] = "configs/research_v4.json"
+    path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("does not name the frozen specification" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_an_invented_source_quote(tmp_path):
+    """A quote must be a verbatim source rule of the window-owning freeze."""
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v5_specification_amendment_1.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["sources"]["v2"]["quote"] = "Every candle is a development candle."
+    path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("not a verbatim source rule" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_an_amendment_without_a_precedence_rule(tmp_path):
+    """The effective-rule rule must say which document wins."""
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v5_specification_amendment_1.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    doc["effective_rule"]["precedence"] = "unknown"
+    path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("precedence rule" in failure for failure in failures), failures
 
 
 def test_the_verifier_detects_a_modified_hashed_source_tree(tmp_path):

@@ -31,6 +31,21 @@ SPEC_V2_RELATIVE = "configs/research_v2.json"
 SPEC_V3_RELATIVE = "configs/research_v3.json"
 SPEC_V4_RELATIVE = "configs/research_v4.json"
 
+#: The versioned amendment that corrects the membership rule of the frozen v5
+#: specification (BRAIN-022 §6).  The specification is hash-bound and is never
+#: edited in place; the amendment carries the effective rule.
+AMENDMENT_RELATIVE = "configs/research_v5_specification_amendment_1.json"
+
+#: The block of the frozen specification the amendment corrects.
+MEMBERSHIP_BLOCK_PATH = "holdout.confirmatory_window_membership"
+
+#: The window-owning freezes: the artifacts that own the v2 and the v3
+#: confirmatory windows and therefore own the membership rule.
+AMENDMENT_SOURCE_RULES: Tuple[Tuple[str, str, str], ...] = (
+    ("v2", "configs/research_v2_candidate_freeze.json", "data_boundary.development_data_rule"),
+    ("v3", "configs/research_v3_candidate_freeze.json", "data_boundary.development_data_rule"),
+)
+
 INHERITED_BLOCKS = (
     "strategy_grid",
     "costs",
@@ -159,6 +174,20 @@ def sha256_file(path: Path) -> Optional[str]:
 def compute_specification_hash(spec: Dict[str, Any]) -> str:
     body = {key: value for key, value in spec.items() if key != "specification_hash"}
     return sha256_bytes(canonical(body).encode("utf-8"))
+
+
+def compute_manifest_hash(document: Dict[str, Any], excluded_keys: Tuple[str, ...]) -> str:
+    body = {key: value for key, value in document.items() if key not in excluded_keys}
+    return sha256_bytes(canonical(body).encode("utf-8"))
+
+
+def _dig(document: Any, dotted: str) -> Any:
+    current = document
+    for key in dotted.split("."):
+        if not isinstance(current, dict) or key not in current:
+            return None
+        current = current[key]
+    return current
 
 
 def canonical_source_digest(root: Path) -> Optional[str]:
@@ -401,21 +430,55 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     membership = holdout.get("confirmatory_window_membership", {})
     if "regardless of which asset" not in str(membership.get("rule") or ""):
         fail("the specification does not define confirmatory-window membership asset-wide")
-    # Effective rule may be corrected by a published amendment (BRAIN-022)
-    v5_amendment = _load_json(repo_root / "configs" / "research_v5_specification_amendment_1.json")
+    # Effective rule may be corrected by a published amendment (BRAIN-022).
+    # The frozen block stays on disk unchanged and visible; the amendment is
+    # the effective rule, and both values are reported.
+    v5_amendment = _load_json(repo_root / AMENDMENT_RELATIVE)
     if v5_amendment is None:
         fail("the v5 specification amendment correcting the confirmatory-window membership rule is missing")
     else:
-        if v5_amendment.get("supersedes", {}).get("specification_hash") != spec.get("specification_hash"):
+        computed["frozen_interval_start_inclusive"] = membership.get("interval_start_inclusive")
+        computed["effective_interval_start_inclusive"] = (
+            v5_amendment.get("corrected_rule") or {}
+        ).get("interval_start_inclusive")
+        amendment_excluded = tuple(
+            (v5_amendment.get("hashing") or {}).get("manifest_hash_excluded_keys") or ("manifest_hash",)
+        )
+        recomputed_amendment = compute_manifest_hash(v5_amendment, amendment_excluded)
+        computed["amendment_manifest_hash"] = recomputed_amendment
+        if v5_amendment.get("manifest_hash") != recomputed_amendment:
+            fail("the v5 specification amendment does not recompute its manifest_hash")
+        supersedes_block = v5_amendment.get("supersedes") or {}
+        if supersedes_block.get("specification_path") != SPEC_V5_RELATIVE:
+            fail("the v5 specification amendment does not name the frozen specification it amends")
+        if supersedes_block.get("specification_hash") != spec.get("specification_hash"):
             fail("the v5 specification amendment does not supersede this specification")
+        if supersedes_block.get("block_path") != MEMBERSHIP_BLOCK_PATH:
+            fail("the v5 specification amendment does not name the block it corrects")
+        if (v5_amendment.get("effective_rule") or {}).get("precedence") != "amendment_overrides_frozen_block":
+            fail("the v5 specification amendment does not state the precedence rule")
         corrected = v5_amendment.get("corrected_rule") or {}
         if corrected.get("interval_start_inclusive") is not False:
             fail("the v5 specification amendment does not correct interval_start_inclusive to false")
         if "closes exactly at" not in str(corrected.get("rule") or "") or "strictly after" not in str(corrected.get("rule") or ""):
             fail("the v5 specification amendment does not state the corrected membership rule")
+        # Every quoted source rule is the first sentence of the rule the named
+        # window-owning freeze states: a quote can never be invented.
+        for version, relative, key in AMENDMENT_SOURCE_RULES:
+            source = _load_json(repo_root / relative)
+            rule = _dig(source, key) if source is not None else None
+            if not rule:
+                fail(f"the {version} candidate freeze does not state {key}, so the amendment's source is unknown")
+                continue
+            quote = ((v5_amendment.get("sources") or {}).get(version) or {}).get("quote")
+            if not quote:
+                fail(f"the v5 specification amendment quotes no {version} rule")
+                continue
+            if not str(rule).startswith(str(quote)):
+                fail(f"the v5 specification amendment's {version} quote is not a verbatim source rule")
         # The frozen block still remains on disk; report it, but enforce the effective rule
         if membership.get("interval_start_inclusive") is not True:
-            fail("the frozen v5 specification block must remain visible as written (interval_start_inclusive true) until not required; amendment provides effective rule")
+            fail("the frozen v5 specification block must remain visible as published (interval_start_inclusive true); the effective rule comes from the amendment")
     window_block = holdout.get("development_window", {})
     if cutoff:
         expected_last_open = int((parse_utc(cutoff) - timedelta(hours=1)).timestamp() * 1000)

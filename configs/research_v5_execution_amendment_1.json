@@ -1,0 +1,189 @@
+{
+  "amendment_status": "PUBLISHED_CORRECTION",
+  "artifact": "v5_execution_amendment_1",
+  "artifact_version": 1,
+  "created_utc": "2026-10-21T13:20:00Z",
+  "amends": {
+    "file": "configs/research_v5_execution.json",
+    "manifest_hash": "516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f",
+    "sha256": "a6c3a242c6727d98d5578e363e01bd70ce910ae251edd13e0113ca3f6f374218",
+    "rule": "the v5 execution protocol is hash-bound and is not edited in place; this amendment supplies the bindings the first publication did not carry"
+  },
+  "problem": {
+    "affected_artifact_path": "configs/research_v5_execution.json",
+    "affected_artifact_manifest_hash": "516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f",
+    "statement": "the first publication of the v5 execution protocol named the candidate scope, the code-hash constraint and the benchmark rule, but it did not bind the inherited v1 rules, the benchmark dataset's recomputed identity, the execution-authorization block, the deviation disclosure or the supersedes chain onto the v4 protocol, so a reader could not tell which grid, costs, folds, selection rule, pilot gate, metrics and confirmatory criterion the run would use, nor verify the benchmark it names",
+    "repair": "the protocol is hash-bound and is not edited in place; the effective blocks are recorded by this amendment"
+  },
+  "precedence": {
+    "rule": "the effective v5 execution protocol is this amendment for the blocks it restates, and configs/research_v5_execution.json for the blocks it does not; the protocol stays on disk unchanged and visible",
+    "resolution_rule": "a verifier that reads the v5 evaluation scope, the benchmark rule, the inherited rules or the execution authorization resolves them through this amendment when the amendment is present and verified",
+    "superseded": [
+      "evaluation_scope",
+      "candidate_freeze_and_confirmatory_window",
+      "benchmark_rule",
+      "code_hash_constraint"
+    ],
+    "unchanged": [
+      "authorization.execution_authorized",
+      "authorization.campaign_authorized",
+      "authorization.selection_authorized",
+      "authorization.confirmatory_authorized",
+      "selection_rule.inherit_from_v1_unchanged",
+      "resource_and_attempt_bounds",
+      "v5_result_layout"
+    ]
+  },
+  "candidate_freeze_and_confirmatory_window": {
+    "candidate_manifest_committed_and_hash_bound_before_first_confirmatory_candle": true,
+    "candidate_freeze_path": "configs/research_v5_candidate_freeze.json",
+    "candidate_freeze_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4",
+    "confirmatory_window_opens_utc": "2026-10-21T13:00:00Z",
+    "min_confirmatory_window_hours": 2160,
+    "min_confirmatory_window_rationale": "90 days of closed hourly candles after freeze",
+    "development_cutoff_utc": "2026-10-19T22:00:00Z",
+    "development_data_boundary_rule": "no v5 development candle may close inside any open confirmatory window; a candle that closes exactly at a window's start is development data, per the membership rule the published amendment owns",
+    "no_ranking_or_retuning_on_holdout": true,
+    "single_use": true,
+    "v5_candidate_set_disjoint_from_v1_v2_v3_v4_candidate_sets": true,
+    "evaluation_may_not_start_before": "the v4 confirmatory gate clears and the v5 window's own minimum of 2160 closed hourly candles has elapsed"
+  },
+  "code_hash_constraint": {
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "chosen_approach": "new code outside the hashed set (src/v5_campaign/), leaving compute_code_hash() unchanged; explicit re-authorization only if a v1/v2 hashed path is touched",
+    "edit_under_src_breakout_research_forbidden_without_reauthorization": true,
+    "hashed_source_root": "src/breakout_research",
+    "v1_paths_hardcode_v1_spec": [
+      "src/breakout_research/campaign.py",
+      "src/breakout_research/pilot.py"
+    ],
+    "v5_execution_must_live_outside_hashed_set": true,
+    "v5_execution_root": "src/v5_campaign",
+    "v5_execution_namespace": "src/v5_campaign/"
+  },
+  "deviation_disclosure": {
+    "evidence_path": null,
+    "records_with_btc_filter": 0,
+    "statement": "The v5 campaign has no prior completed runs and therefore no v1/v2/v3/v4 alignment deviation to disclose.",
+    "total_v2_records": 0,
+    "not_applicable": true
+  },
+  "evaluation_scope": {
+    "candidate_freeze_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4",
+    "candidate_freeze_path": "configs/research_v5_candidate_freeze.json",
+    "constituents": [
+      "APTUSDT",
+      "CAKEUSDT",
+      "CRVUSDT",
+      "DASHUSDT",
+      "RAYUSDT",
+      "STXUSDT",
+      "VETUSDT"
+    ],
+    "count": 7,
+    "data_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+    "data_manifest_path": "research/data_manifest_v5.json",
+    "excluded_assets_stay_excluded": true,
+    "rule": "the evaluated scope is the frozen candidate set; the benchmark is not a candidate and does not widen the scope",
+    "universe_manifest_hash": "ed6ade73c31c687c141b492100bff9a1af85a6fccbb80bd65bbe924589abaa7f",
+    "universe_manifest_path": "research/universe_manifest_v5.json",
+    "widening_by_reranking_forbidden": true
+  },
+  "execution_authorization": {
+    "candle_fetch_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "this protocol and this amendment record the benchmark rule, the inherited rules and the data-manifest identity. They authorize no run, no evaluation, no candle fetch and no confirmatory-window read.",
+    "second_run_authorized": false,
+    "selection_authorization_present": false
+  },
+  "benchmark_rule": {
+    "alignment": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called, so that the engine's index pairing equals the UTC-candle-close alignment of docs/research_protocol.md:101",
+    "content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+    "dataset_path": "research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv",
+    "exposure_rule": "the benchmark dataset is development data; it lies entirely before every open confirmatory window and no confirmatory-window candle is read",
+    "fail_closed": [
+      "the benchmark series is missing",
+      "the benchmark series does not cover an evaluated window of the asset series",
+      "the benchmark series carries a different timestamp than the asset series inside an evaluated window"
+    ],
+    "first_candle_timestamp": 1697839200000,
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+    "last_candle_timestamp": 1792443600000,
+    "no_forward_fill": true,
+    "observed_candle_count": 26280,
+    "role": "trend_filter_and_benchmark",
+    "symbol": "BTCUSDT",
+    "note": "The v5 benchmark is the v5-cutoff-bounded dataset the v5 data manifest publishes. The v4 chain's benchmark dataset (research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv) ends with a candle closing 2026-10-20T11:00:00Z and 13 of its candles close after the v5 development cutoff, inside the open v2 confirmatory window, so it is not reused unchanged by the v5 chain."
+  },
+  "inherited_rules": {
+    "inherited_from": "configs/research_v1.json",
+    "blocks": [
+      "strategy_grid",
+      "costs",
+      "execution",
+      "folds",
+      "selection",
+      "pilot",
+      "metrics",
+      "baselines",
+      "fixed_breakout_baseline",
+      "status",
+      "checkpointing"
+    ],
+    "blocks_digest": "0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433",
+    "v1_specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+    "grid_total_combinations": 2304,
+    "rule": "the v5 chain inherits the v1 strategy grid, costs, execution semantics, fold structure, selection rule, pilot gate, metrics, baselines, status vocabulary and checkpointing without modification, so that v5 differs from v4 in which assets are evaluated and not in how a strategy is measured",
+    "single_confirmatory_criterion": "the confirmatory evaluation applies the unchanged v1 selection rule to the single v5 confirmatory window: one criterion, never re-tuned, re-weighted or re-ranked, and its outcome is never used to select anything",
+    "change_requires": "a published, versioned amendment that names the changed block and the artifacts it supersedes"
+  },
+  "supersedes": {
+    "protocol_version": "v4",
+    "specification_path": "configs/research_v4_execution.json",
+    "specification_hash": "4a559d93b5ff77976b50e0d859e444073c68aa578bb0b8ec0e79ecf486ecfe97",
+    "specification_sha256": "6907228c053e8ff8bd1f074f3129f7254503e58faf832f2ccf629cc9dc4b8f7e",
+    "reason": "the v4 execution protocol governed the v4 cycle; the v5 protocol governs the v5 cycle, which is a strictly additional universe below the v4 floor with its own namespace",
+    "v1_v2_v3_v4_artifacts_are_immutable": true
+  },
+  "related_artifacts": {
+    "v1_specification": {
+      "path": "configs/research_v1.json",
+      "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+    },
+    "v4_execution_protocol": {
+      "manifest_hash": "4a559d93b5ff77976b50e0d859e444073c68aa578bb0b8ec0e79ecf486ecfe97",
+      "path": "configs/research_v4_execution.json"
+    },
+    "v5_candidate_freeze": {
+      "manifest_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4",
+      "path": "configs/research_v5_candidate_freeze.json"
+    },
+    "v5_data_manifest": {
+      "manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+      "path": "research/data_manifest_v5.json"
+    },
+    "v5_execution_protocol": {
+      "manifest_hash": "516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f",
+      "path": "configs/research_v5_execution.json"
+    },
+    "v5_specification": {
+      "path": "configs/research_v5.json",
+      "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2"
+    },
+    "v5_universe_manifest": {
+      "manifest_hash": "ed6ade73c31c687c141b492100bff9a1af85a6fccbb80bd65bbe924589abaa7f",
+      "path": "research/universe_manifest_v5.json"
+    }
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with the manifest_hash key removed, following the pattern of the other v2, v3 and v4 artifacts."
+  },
+  "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988"
+}
