@@ -8556,3 +8556,329 @@ inside its pinned window); the preregistered v4 and v5 confirmatory protocol and
 lack them today, and the v3 chain is the template); the v3 confirmatory evaluation and the final
 report, which may not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which
 may not start before `2027-01-17T22:00:00Z`.
+
+## Session activity — 2026-10-21T23:3xZ (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it; update the handoff and write the
+initial task message for the next agent. The prior task (the last section of the handoff, the 23:15Z entry)
+was the **v6 preregistration design record** — a design deliverable only: "the decision record for the *next*
+expansion version, written into `research_state/brainstorming_queue.md`", deciding six points in rules only,
+with at least two materially different designs per point, one recommendation per point, falsifying evidence,
+rollback and staged acceptance tests.
+
+**Outcome:** **The v6 preregistration design record is delivered** as `## BRAIN-026` in
+`research_state/brainstorming_queue.md` (`DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`), and **every claim
+in it was recomputed from the live artifacts in this session** rather than copied from an earlier record.
+**No provider contact, no candle read, no evaluation, no grid, no backtest, no selection run, no code and no
+artifact written** outside `research_state/`.
+
+**Branch / commits:** branch `main`; base commit `a4296fb95e7dcdd6c29c457556c8d60641d539ad` (== `origin/main`
+at session start); **no commit was created by the agent** (no explicit user request) — the working tree
+carries the design record and this report.
+
+**Files changed**
+- `research_state/brainstorming_queue.md` — the `## BRAIN-026` record (appended; 171 lines).
+- `research_state/agent_handoff.md` — this report and the next task message below (appended).
+- `research_state/campaign_authorization.json` — **controller-driven only** (`authorized_at_utc` refresh
+  written by the test suite on every run); `authorized`, `code_hash` and every functional field unchanged.
+
+**Not touched:** nothing under `src/` (neither `src/breakout_research/` nor the v2–v5 execution paths),
+nothing under `configs/`, `research/`, `reports/` or `.github/`; no frozen v1–v5 artifact; no dataset, result,
+shard, ledger or checkpoint; `research_state/continuous_universe_state.json`; every exposure counter.
+
+**The six decisions BRAIN-026 makes** (the full designs, pros/cons and rejections are in the record):
+
+1. **Source of cohort 6** — a new v6 version with one new pinned-window market-cap retrieval; the floor
+   recomputed from `research/universe_manifest_v5.json` = **498,236,520 USD** (`YLDS`, rank 116; the
+   validated-set floor `RAY` 533,189,068 is recorded for transparency only); the identity rule extended to
+   **v1–v5** (**83** distinct base symbols, **83** distinct CoinGecko ids); and the **band-width rule** — the
+   batch is exactly 20 names in strictly descending market-cap order, and the validated subset is a
+   *consequence* of the band, never its definition.
+2. **Data boundary** — the v6 development data ends at the last candle closing **2026-10-19T22:00:00Z** (the
+   earliest open window, the v2 window's start — the *same* instant the v5 chain used, so v6 differs from v5
+   in the universe and in nothing else, not even in the data window), 26,280 candles over the identical span,
+   with the explicit definition of "inside a confirmatory window" and the benchmark-binding rule.
+3. **Sequencing** — the four pending gates (v2 2027-01-17T22:00:00Z, v3 2027-01-18T13:00:00Z,
+   v4 2027-01-19T01:00:00Z, v5 2027-01-19T13:00:00Z) plus the v6 window's own earliest end as the last;
+   version isolation, never re-run, never re-tuned on, no window ever read for selection.
+4. **Namespace and identity** — a full v6 namespace (specification, universe/data manifests, datasets,
+   evidence, freeze, execution protocol, selection authorization, **confirmatory protocol and runbook**,
+   shards, ledger, results manifest, result stream, checkpoint); the `supersedes` chain from the five v5
+   identities; the canonical digest `3e8e4169…` as the portable tree identity; the expansion log's **pure
+   append** onto the v5 entry `092f10c4…`.
+5. **Null-result path** — `AWAITING_NEW_CANDIDATES` with the full evidence bundle and the `P7D` bounded
+   cadence, plus the two v6-specific cases: the **depth limit** (no third page) and an **empty validated set**
+   (a recorded outcome, never a reason to lower the floor or widen the band).
+6. **Falsifiers, rollback and staged acceptance tests** — 12 falsifiers, the rollback (this session wrote no
+   artifact; the v6 implementation's rollback is the v4/v5 pattern) and 8 staged tests for the implementation
+   session.
+
+**Evidence revalidated (recomputed here, not copied)**
+- The v5 cycle is complete: one logical run (`v5-selection-20261021`, `status COMPLETED`, started
+  2026-10-21T19:56:30Z, resumed once, completed 21:32:46Z), 3,877 shards, `total_records 193536`, the
+  published `manifest_hash 8c863253…`, and the recorded cohort index **5** with `next_cohort_index 6` and
+  snapshot `82644c30…` — recomputed here as the sha256 of `research/v5_evidence/raw_market_cap_response.json`.
+- The v5 pool is exhausted: 20 `eligible_assets` (7 validated + 13 excluded) and 119 rule-excluded.
+- The v6 floor is **498,236,520** (`YLDS`) — the minimum `market_cap_usd` over the v5 manifest's
+  `eligible_assets`, recomputed by the v5 specification's own recompute rule; the same value is independently
+  recorded by the expansion log's v5 entry.
+- Depth analysis on the frozen v5 snapshot (250 rows): **134** rows below the v6 floor, **23** rule-excluded
+  (19 stablecoins, 2 derivative, 2 synthetic), **0** prior-universe, **111** qualifying; the 20th is `GNO`
+  at 302,133,504 (rank 144) and the depth-250 pool reaches 121,118,217 (rank 250).
+- The four window ends recomputed as *window open + 2,160 h* from the four freezes; all four are open and
+  none may be evaluated before its earliest end.
+- Exposure: `holdout_exposed_count = 0` and `confirmatory_window_status = NOT_STARTED` in the v2–v5 data
+  manifests and checkpoints; the v5 ledger and the published v5 manifest record 0.
+- The v5 chain raised **no** new exposure question: all 14 of its candle-reading assets end at the last
+  candle closing exactly 2026-10-19T22:00:00Z.
+- Prior-universe identity sets: **83 / 83** across v1–v5 (cumulative 20 → 23 → 43 → 63 → 83).
+- Code identity: the canonical digest of `src/breakout_research` is `3e8e4169…` (equal to the recorded
+  value), the value of record stays `2efd3b18…`, the live ordered digest is `608c7340…`
+  (`scripts/verify_v1_gate_compatibility.py` → `canonical_matches_recorded: true`); the six execution-path
+  canonical digests (`c69cc021…`, `277a4bbe…`, `29cd064e…`, `747c2387…`, `49adc05c…`, `9c5f13ff…`) were
+  recomputed and equal the recorded ones.
+- The expansion log is now **complete** (`entry_count: 3`: v3 `02b36a25…` → v4 `e1f456ff…` → v5
+  `092f10c4…`), so the gap BRAIN-019 recorded has been closed by the v5 implementation and the v6 entry is a
+  pure append.
+
+**State verified (2026-10-21T23:3xZ)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q -rs` → **1419 passed, 2 skipped** in 890.75s, exit 0 — the same
+  count as the previous session. The 2 skips are the named ones: `tests/test_v3_selection_run.py:288` and
+  `tests/test_v4_selection_run.py:293`, both *"the result stream is not materialized in this checkout"*
+  (`research/results_v3.jsonl` and `research/results_v4.jsonl` are gitignored projections of the committed
+  shards).
+- **every `scripts/verify_*.py` exits 0** (51 verifiers). `scripts/verify_cycle_results.py` exits **2** because
+  it requires a `cycle_dir` argument and is not a repository-wide gate.
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` →
+  `608c7340fa8524921e9378626ac9cd0387f0fad0274e6fa0213a006f47487925` (the live ordered digest; the value of
+  record is `2efd3b18…`, the portable canonical identity `3e8e4169…`).
+- `git status --short` → only `research_state/brainstorming_queue.md` and
+  `research_state/campaign_authorization.json` (the controller's timestamp only); `git diff --stat` → 171
+  insertions in the queue; **no change under `configs/`, `research/`, `reports/`, `src/` or `.github/`**.
+
+**Rule → code → test map** (this session wrote no code, so the map is *design rule → the artifact that must
+encode it → the check that must prove it*; the staged tests are BRAIN-026 §6)
+
+| Design decision (BRAIN-026) | The artifact that must encode it (the v6 implementation) | The check that must prove it |
+| --- | --- | --- |
+| the v6 floor, the identity rule over v1–v5, the band-width rule, the depth policy | `configs/research_v6.json` (`universe.expansion_scope`, `universe.depth_policy`) + `scripts/verify_research_v6_spec.py` | staged test 2 (specification) and 3 (retrieval and batch) |
+| the development boundary, the window-membership definition, the benchmark rule | `configs/research_v6.json` (`holdout.development_cutoff_utc`, `holdout.confirmatory_window_membership`) and the v6 data manifest | staged test 4 (data boundary) |
+| the five gates and the version-isolation rules | `configs/research_v6.json` (`phase_gates`) and the v6 candidate freeze | staged test 2 and 7 (exposure) |
+| the v6 namespace, the `supersedes` chain, the canonical code identity, the log append | `configs/research_v6.json` (`namespace`, `supersedes`, `code_identity`), `research/universe_manifest_v6.json` (`supersedes`), the derived log entry | staged test 5 (namespace and identity) |
+| the null-result path and its two v6-specific cases | `configs/research_v6.json` (`null_result_path`) | staged test 3 (depth limit; empty validated set) |
+| the falsifiers themselves | the v6 verifier's failure list | staged tests 2–8, each with a tamper control |
+
+**CONFIRMED**
+- The v5 cycle is complete and the v5 eligible pool is exhausted, so the frozen routing rule fires and the v6
+  design is the next campaign task.
+- The v6 floor, the identity counts, the depth analysis, the four window ends, the exposure counters, the code
+  identities and the expansion-log state were all recomputed from the artifacts that own them.
+- The v5 chain added no new exposure question: its development data ends exactly at the preregistered cutoff.
+- The v6 band is findable at depth 250 on the v5 snapshot's density, and the validated yield is expected to
+  fall further (v3 6/20, v4 7/20, v5 7/20) — which is why the band-width rule exists.
+- The full suite is green and every applicable verifier exits 0; the campaign's frozen state is untouched.
+
+**UNVERIFIED / STALE**
+- The v5 specification's `prerequisites` block still reads `p2`/`p3`/`p4` (and `p5`) as `OUTSTANDING` although
+  all five are delivered; the specification is hash-bound and was not edited (the mechanism for such wording
+  is a versioned amendment). The same wording is in the v4 specification.
+- The **v4 and v5 confirmatory protocol and runbook do not exist** (BRAIN-025 blocker 1). The v6 design does
+  not depend on them, but they are due before their own gates.
+- The **v2 exposure-counter question** is open for the coordinator and is **not decided here** (13 v3 and 15 v4
+  candles per asset close inside the open v2 window while the v2 counter is 0); it is due before
+  2027-01-17T22:00:00Z.
+- `research_state/campaign_authorization.json` shows a refreshed `authorized_at_utc` (an environment fact, not
+  a source change).
+- No commit was created by this agent; the changes are in the working tree only.
+
+**Unsuccessful attempts (and the condition that would justify a retry)**
+- No attempt failed in this session: the full suite passed on the first run, every verifier exited 0 on the
+  first run, and every number in the record was recomputed from the artifact that owns it. One prose
+  correction was made before the record was finalized — the first draft's "1.65× market-cap margin" was
+  ambiguous between the floor/20th-name ratio and the 20th-name/pool-floor ratio; the record now states both
+  explicitly (1.65× and 2.49×). No retry of the unchanged action is warranted.
+
+**Prompt review:** `NO_PROMPT_CHANGE_JUSTIFIED`. The session's only finding class is one the repository already
+names: README Section 2A E requires every acceptance check to recompute its expectation from repository state,
+and BRAIN-018 requires a published record to contain no statement the artifacts do not support. Both were
+applied while writing the record — every number in it is recomputed, and the two margin ratios were made
+explicit rather than left ambiguous. The prompt was not missing, ambiguous or contradicted, so no prompt
+revision is proposed and `research_state/prompt_evolution.md` is untouched.
+
+**Checkpoint / persistence status**
+- Local commit: **not created by the agent** (no explicit user request). The working tree carries the design
+  record and this report.
+- Remote persistence: `git rev-parse HEAD` == `git ls-remote origin main` == `a4296fb95e7dcdd6c29c457556c8d60641d539ad`
+  at the end of this session — the v5 run artifacts and the previous session's repair are committed; **this
+  session's design record is not yet committed or pushed** and needs a follow-up commit (or the session
+  checkpoint).
+- Artifact/recovery: the design record is a narrative artifact; every number in it is re-derivable from the
+  hash-bound manifests it references, and the recomputation commands are named in the record.
+- Checkpoint reconciliation: not applicable — no run, no result row, no shard and no ledger were produced;
+  `research_state/checkpoint.json` and `checkpoint_v2.json` … `checkpoint_v5.json` are untouched.
+
+**Unresolved blockers (ranked)**
+1. **The v4 and the v5 confirmatory protocol and runbook do not exist.** The v3 chain has both
+   (`configs/research_v3_confirmatory_protocol.json`, `configs/research_v3_confirmatory_runbook_1.json`, a
+   confirmatory authorization and a code-hash amendment); the v4 window exists only in
+   `configs/research_v4_candidate_freeze.json` and the v5 window only in
+   `configs/research_v5_candidate_freeze.json` (+ amendment 1). The evaluations are time-blocked until
+   2027-01-19T01:00:00Z (v4) and 2027-01-19T13:00:00Z (v5), so the preregistration must exist before those
+   gates.
+2. **The v2 exposure-counter question is open for the coordinator** — whether the 13 (v3) and 15 (v4) candles
+   per asset that close inside the open v2 confirmatory window and that are part of the v3 and v4 *development*
+   data must increment the v2 `holdout_exposed_count`, or are recorded as disclosed development reads of a
+   disjoint asset set. Due before the v2 gate clears on **2027-01-17T22:00:00Z**; BRAIN-014's v3 counterpart
+   is due before 2027-01-18T13:00:00Z. The v6 rule is chosen so that neither question can arise for v6.
+3. **Four pending confirmatory evaluations are time-blocked** — v2 may not start before 2027-01-17T22:00:00Z,
+   v3 (and the final report) before 2027-01-18T13:00:00Z, v4 not before 2027-01-19T01:00:00Z, v5 not before
+   2027-01-19T13:00:00Z. No action is possible or needed before those instants.
+4. **The v6 preregistration is not implemented.** BRAIN-026 is `DESIGN_READY_FOR_DETERMINENTIC_IMPLEMENTATION`;
+   the v6 specification, the v6 universe and data manifests, the v6 freeze and execution protocol, the v6
+   selection authorization and the v6 run are all outstanding. The v6 **specification** is the next bounded
+   task.
+5. `configs/research_v3_confirmatory_code_hash_amendment_1.json` does not exist; it is needed only if a
+   deliberate rotation of the v3 confirmatory execution-path digest is chosen.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** implement the **v6 preregistration** — deliver the versioned, hash-bound
+`configs/research_v6.json` (the v6 specification) together with its deterministic producer
+(`scripts/build_research_v6_spec.py`), its read-only offline verifier (`scripts/verify_research_v6_spec.py`)
+and its deterministic test module (`tests/test_research_v6_spec.py`), following the
+`configs/research_v5.json` / `scripts/build_research_v5_spec.py` / `scripts/verify_research_v5_spec.py` /
+`tests/test_research_v5_spec.py` pattern. **The specification authorizes nothing**: no provider contact, no
+market-cap retrieval, no candle fetch, no grid, no selection, no confirmatory evaluation and no file under
+`research/` — the retrieval belongs to the **next** session (the v6 universe and data manifests), and the v6
+pinned retrieval window is set by the specification and left **open** for it (exactly as the v5 chain did;
+BRAIN-021). Per README Section 2A C1 the design record (BRAIN-026) is **not** implemented in the session
+that produced it — this is that separate session.
+
+**Subject:** the v6 preregistration design record is delivered (BRAIN-026, every claim recomputed from the live
+artifacts); the next bounded task is the v6 specification — a hash-bound design artifact that authorizes
+nothing
+
+**Status (verified 2026-10-21T23:3xZ):**
+- The v5 cycle is complete and audited: one authorized logical run (193,536 records, 3,877 shards, one
+  resume, `status COMPLETED`), the published `research/v5_selected_configurations_manifest.json`
+  (`manifest_hash 8c863253…`, selection re-derived from the shards under the unchanged v1 rule), and the v5
+  cycle recorded in `research_state/continuous_universe_state.json` (cohort index **5**, 7 validated
+  constituents, 13 exclusions with reasons, `current_cycle_id v5-selection-20261021`, `next_cohort_index 6`,
+  snapshot `82644c30…` = the sha256 of the v5 raw market-cap response, `v5_candidates 4` with
+  `CAKEUSDT`/`DASHUSDT`/`STXUSDT`/`VETUSDT` and without `APTUSDT`/`CRVUSDT`/`RAYUSDT`, blocking dependency
+  `CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z)`).
+- **The v5 eligible pool is exhausted**: 20 `eligible_assets` (7 validated + 13 excluded) and 119
+  rule-excluded assets — cohort 6 cannot be drawn from the frozen v5 snapshot.
+- **BRAIN-026 (`research_state/brainstorming_queue.md`) is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`**:
+  six points, ≥2 materially different designs each, one recommendation per point, 12 falsifiers, rollback and
+  8 staged acceptance tests. Its decisions: the **v6 floor 498,236,520 USD** (`YLDS`, rank 116) recomputed
+  from `research/universe_manifest_v5.json`; the identity rule over **v1–v5** (83 base symbols, 83 CoinGecko
+  ids); the **band-width rule** (20 names by market-cap rank, the validated subset is a consequence); the
+  **development cutoff 2026-10-19T22:00:00Z** (the earliest open window, the same instant the v5 chain used)
+  over 26,280 candles; the four pending gates plus the v6 window as the fifth; the isolated v6 namespace
+  with the `supersedes` chain from the five v5 identities, the canonical digest `3e8e4169…` as the portable
+  tree identity and the expansion log's pure append onto `092f10c4…`; and the `AWAITING_NEW_CANDIDATES` path
+  with the `P7D` cadence, the depth-limit case and the empty-validated-set case.
+- Full suite **1419 passed, 2 skipped**, exit 0; every `scripts/verify_*.py` exits 0 (51 verifiers;
+  `verify_cycle_results.py` needs a `cycle_dir` and is not a repository-wide gate);
+  `compute_code_hash()` = `608c7340…` (value of record `2efd3b18…`, canonical `3e8e4169…`); every exposure
+  counter is 0; `research_state/continuous_universe_state.json` untouched.
+
+**One bounded task — the v6 specification must encode these rules, each recomputed by the verifier from the
+artifact that owns it (never copied):**
+1. **The expansion scope.** `v6_floor_market_cap_usd` = the minimum `market_cap_usd` over the
+   `eligible_assets` of `research/universe_manifest_v5.json` (the verifier recomputes it; the recorded value
+   498,236,520 / `YLDS` / rank 116 is a copy that must be re-derived), `comparison strictly_less_than`; the
+   validated-set floor (`RAY` 533,189,068) recorded for transparency only; the identity rule over the **five**
+   manifests (v1 `research/universe_manifest.json`, v2 …_v2, v3 …_v3, v4 …_v4, v5 …_v5) matched on the Binance
+   base symbol and the CoinGecko id, with the `USDT`-stripping normalization, the rename rule and the counts
+   **83 / 83** recomputed by the verifier; the **band-width rule** (exactly `top_n` = 20 names in strictly
+   descending market-cap order; the validated subset is a consequence, never the definition of the band);
+   the **depth policy** inherited from v5 (page 1 = 250, one bounded extra page = 500 only when page 1
+   yields fewer than 20 qualifying names, the depth recomputed from the raw bytes, no third page, no repeated
+   page, no re-timing); the ordering rule and the shortfall rule.
+2. **The pinned retrieval window.** `not_before_utc` and `deadline_utc` set when the specification is written
+   (the v5 precedent: `not_before` = the specification's creation instant, `deadline` = +7 days), the
+   "first successful retrieval inside the window is the v6 snapshot" rule, `reuse_forbidden`,
+   `re_timing_forbidden`, the expired-window rule (a new window by versioned amendment) and the statement
+   that a market-cap retrieval is universe metadata, **not** a candle read.
+3. **The development boundary.** `development_cutoff_utc = 2026-10-19T22:00:00Z`, recomputed by the verifier as
+   the earliest confirmatory-window start among the windows that are open (recomputed from the v2, v3, v4 and
+   v5 candidate freezes); the inclusive convention of BRAIN-015; the 26,280-candle window
+   (2023-10-20T22:00:00Z → 2026-10-19T22:00:00Z) recomputed from the cutoff and the candle count; the
+   explicit definition of window membership (a candle is inside a confirmatory window when its close falls in
+   that window's time range, **regardless of the asset**); and the **benchmark rule** (the benchmark dataset
+   the v6 execution protocol binds must be bounded at the same cutoff and bound by its recomputed content
+   hash — the v5 chain's benchmark dataset already is, and may be reused only under that explicit binding).
+4. **The five gates.** v2 `2027-01-17T22:00:00Z`, v3 `2027-01-18T13:00:00Z`, v4 `2027-01-19T01:00:00Z`,
+   v5 `2027-01-19T13:00:00Z` — each recomputed by the verifier from the freeze that owns the window
+   (window start + 2,160 h) — plus the v6 gate (the later of the four and the v6 window's own earliest end,
+   the v6 window opening after the v6 candidate freeze with `min_hours` 2160); the version-isolation rule
+   (never re-run, never re-tuned on, never read for selection); the counter rule (the v6 checkpoint starts
+   `holdout_exposed_count` at 0 and increments it on every confirmatory read; the v1–v5 counters are never
+   reused or reset).
+5. **The namespace, the identity chain and the code identity.** The full v6 namespace (specification, universe
+   and data manifests, `research/data/candles_v6/`, `research/v6_evidence/`, candidate freeze, execution
+   protocol, selection authorization, **confirmatory protocol and runbook**, shards, ledger, results manifest,
+   result stream, checkpoint); the `supersedes` chain recomputed from the five v5 identities (the v5
+   specification `55e839f7…`/`f89231e2…`, the v5 universe manifest `ed6ade73…`/`2292d39d…`, the v5 data
+   manifest `f2bd448f…`/`935f4d0a…`, the v5 candidate freeze `afa35ad9…`/`b04cf873…`, the v5 selected
+   configurations manifest `8c863253…`/`edf2042c…`); the canonical digest `3e8e4169…` as the portable tree
+   identity with the authorized ordered value `2efd3b18…` carried unchanged and the live ordered digest
+   reported as an environment fact; the v2–v5 execution-path canonical digests named and recomputed; the rule
+   that a v6 execution path is a new directory outside the hashed set; the fresh-checkout verifiability rule
+   (an absent uncommitted projection is reported, not failed; every identity check uses the canonical digest);
+   and the expansion-log rule (one derived v6 entry, chained onto the v5 entry `092f10c4…`).
+6. **The null-result path and the authorization block.** `AWAITING_NEW_CANDIDATES` with the full evidence
+   bundle, the `P7D` cadence, the two v6-specific cases (the depth limit; an empty validated set), the
+   "the campaign is never declared complete because one snapshot was empty" rule — and the `authorization`
+   block stating that the specification authorizes nothing (`execution_authorized`, `campaign_authorized`,
+   `selection_authorized`, `confirmatory_authorized` all false).
+
+**Do NOT:** contact any provider (no market-cap retrieval, no candle fetch, no Binance call); read any candle;
+run any evaluation, grid, backtest, campaign, selection or pilot; create or edit any file under `research/`,
+`reports/` or `src/`; create or edit any file under `configs/` **other than** `configs/research_v6.json`;
+edit `research_state/continuous_universe_state.json`, any checkpoint or the expansion log; edit any frozen
+v1–v5 artifact; re-run any producer (`scripts/build_*.py`, `scripts/publish_v*.py`,
+`scripts/v5_constituent_validation.py`, `scripts/verify_*.py` that writes) that would rewrite an artifact;
+re-retrieve or re-time the v5 market-cap snapshot; mark a confirmatory window as started or
+`holdout_exposed_count` as non-zero; change the 2,304-configuration grid, the costs, the folds, the
+thresholds, the selection rule or the single confirmatory criterion; and take the v2 or the v3
+exposure-counter decision.
+
+**Acceptance criteria:** `configs/research_v6.json` exists, is hash-bound (the `specification_hash` recomputes
+over the document with the key removed) and **authorizes nothing**; `python3 scripts/verify_research_v6_spec.py`
+exits 0 and **recomputes every identity the specification records** (floor, identity counts, boundary, the
+four gate ends, the `supersedes` digests, the canonical digests) instead of comparing them with constants
+copied out of the artifact; `PYTHONPATH=src python3 -m pytest tests/test_research_v6_spec.py -q` exits 0 with
+at least 30 deterministic tests, at least 10 of them tamper controls, and a control that proves the mirror
+the tampers run against is itself clean; each tamper control must be shown to fail with the expected message
+(the v5 precedent reported its controls individually); `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0
+with no new failures; every `scripts/verify_*.py` still exits 0; `compute_code_hash()` is still `608c7340…`
+(value of record `2efd3b18…`, canonical `3e8e4169…`); **no new file exists under `research/`, `reports/` or
+`src/`** and no file under `configs/` other than `configs/research_v6.json`; no provider was contacted and no
+candle was read; `holdout_exposed_count` stays 0; and `research_state/continuous_universe_state.json` is
+unchanged.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
+`PYTHONPATH=src python3 -m pytest tests/test_research_v6_spec.py -q`;
+`python3 scripts/verify_research_v6_spec.py`; `python3 scripts/verify_v5_selected_configurations_manifest.py`;
+`python3 scripts/verify_v5_execution.py`; `python3 scripts/verify_v5_selection_authorization_1.py`;
+`python3 scripts/verify_v5_universe_expansion_log.py`; `python3 scripts/verify_research_v5_spec.py`;
+`python3 scripts/verify_research_v5_manifests.py`; `python3 scripts/verify_v5_candidate_freeze.py`;
+`python3 scripts/verify_v4_selected_configurations_manifest.py`; `python3 scripts/verify_v1_gate_compatibility.py`;
+`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat` (confirm only `configs/research_v6.json`, the new `scripts/`, the new
+`tests/` and `research_state/` changed — no `research/`, no `reports/`, no `src/`).
+
+**Queued after this task (not for that session):** the v6 **universe and data manifests** — the one bounded
+market-cap retrieval inside the v6 pinned window, the raw bytes and their sha256 committed, the depth
+recomputed from the bytes, the batch re-derived from the raw bytes and never copied, the per-candidate
+validation (Binance spot verification, ≥ 26,280 closed hourly candles, hash-verified datasets bounded at the
+v6 cutoff) and the offline verifier and test module that re-derive the batch (BRAIN-026 staged test 3);
+then the v6 candidate freeze, execution protocol and selection authorization and the v6 execution path
+(BRAIN-026 staged tests 4–6); then the v6 selection run, the published v6 selected-configurations manifest and
+the recorded v6 cycle; the preregistered **v4 and v5 confirmatory protocol and runbook** (both chains lack
+them today, and the v3 chain is the template) — due before their gates; the v3 confirmatory evaluation and the
+final report, which may not start before **2027-01-18T13:00:00Z**; and the v2 confirmatory evaluation, which
+may not start before **2027-01-17T22:00:00Z**.
