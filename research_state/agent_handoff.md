@@ -8164,3 +8164,12 @@ The sources are the window-owning freezes: `configs/research_v2_candidate_freeze
 **Still open for the coordinator (do not decide it in this session):** the v2 exposure-counter question (BRAIN-019 §2) and BRAIN-014's v3 counterpart — the 13 (v3) and 15 (v4) candles per asset that close inside the open v2 confirmatory window and are part of the v3 and v4 development data, against a v2 `holdout_exposed_count` of 0. The v2 decision is due before the v2 gate clears on **2027-01-17T22:00:00Z**; the v3 decision before **2027-01-18T13:00:00Z**. Neither depends on the v5 chain.
 
 **Queued after this task (not for that session):** the preregistered v4 confirmatory protocol and runbook; the v3 confirmatory evaluation and the final report, which may not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start before `2027-01-17T22:00:00Z`.
+
+
+## User-authorized maintenance task — 2026-10-21
+
+The user explicitly authorized a bounded maintenance and validation pass after prompt refinement and a completed 120-second terminal wait. The durable task brief is research_state/MAINTENANCE_EXECUTION_BRIEF_20261021.md. Read it before selecting any new maintenance work.
+
+Sequencing and safety: do not interrupt a hash-bound task already in progress. At the next safe task boundary, refresh current Actions status and the v5 task prerequisites, then perform the read-only workflow/state/hash audit and offline test/verifier checks specified in the brief. No Actions dispatch/cancel/rerun, workflow-file change, provider request, grid/backtest/selection run, holdout access, or mutation of frozen source/config/data/result/candidate/cycle artifacts is authorized by this maintenance brief. Record exact command outcomes and blockers; do not state that tests passed unless they were executed.
+
+This entry does not claim that the maintenance audit or the prescribed commands have run; it records the user's authorization and exact next-task acceptance criteria.
