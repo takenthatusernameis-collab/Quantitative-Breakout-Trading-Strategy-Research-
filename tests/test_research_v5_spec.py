@@ -379,12 +379,12 @@ def test_no_v5_run_artifact_exists():
 
     The universe and the data manifests are the delivered retrieval stage and
     do exist; the freeze and the execution protocol are the delivered
-    preregistration stage and also exist; the authorization, the confirmatory
-    protocol and runbook, the ledger, the results and the checkpoint are the
-    run artifacts and must not.
+    preregistration stage and also exist; the selection authorization is now
+    preregistered for the single authorized selection run and exists; the
+    confirmatory protocol and runbook, the ledger, the results and the
+    checkpoint are the run artifacts and must not.
     """
     for relative in (
-        "configs/research_v5_selection_authorization_1.json",
         "configs/research_v5_confirmatory_protocol.json",
         "configs/research_v5_confirmatory_runbook_1.json",
         "research/ledger_v5.json",
@@ -403,6 +403,7 @@ def test_the_delivered_stage_artifacts_are_bound_to_the_specification():
         "research/data_manifest_v5.json",
         "configs/research_v5_candidate_freeze.json",
         "configs/research_v5_execution.json",
+        "configs/research_v5_selection_authorization_1.json",
     ):
         path = REPO_ROOT / relative
         if not path.exists():

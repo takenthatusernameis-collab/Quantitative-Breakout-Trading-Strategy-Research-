@@ -25,6 +25,10 @@ ARTIFACT_PATH = REPO_ROOT / "configs" / "research_v5.json"
 CREATED_UTC = "2026-10-21T09:40:00Z"
 RETRIEVAL_WINDOW_DAYS = 7
 
+#: The universe version whose entry the expansion log held when this
+#: specification was preregistered.
+GENESIS_VERSION = "v3"
+
 MARKET_CAP_ENDPOINT = (
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
     "&order=market_cap_desc&per_page=250&page=1"
@@ -777,8 +781,12 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 "note."
             ),
             "log_state_at_preregistration": {
-                "entry_count": expansion_log.get("entry_count"),
-                "versions_present": [entry.get("universe_version") for entry in expansion_log.get("entries") or []],
+                # A historical statement, pinned: the log is append-only and has
+                # since grown, but this block records the log at the moment the
+                # specification was preregistered. The live state of the log is
+                # the log itself.
+                "entry_count": 1,
+                "versions_present": [GENESIS_VERSION],
                 "missing_entries": ["v4"],
                 "note": (
                     "a historical statement of the log at the time of preregistration: the v4 "

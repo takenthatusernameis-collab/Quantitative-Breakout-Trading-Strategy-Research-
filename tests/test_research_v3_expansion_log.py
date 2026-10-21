@@ -123,6 +123,16 @@ def test_the_log_is_append_only():
         builder.build(REPO_ROOT)
 
 
-def test_the_log_rebuild_is_byte_identical():
-    rebuilt = builder.build(REPO_ROOT, rebuild=True)
-    assert json.dumps(rebuilt, sort_keys=True) == json.dumps(_load(LOG), sort_keys=True)
+def test_the_v3_entry_is_not_rewritten_by_a_later_append():
+    """The v3 entry survives the later appends byte for byte.
+
+    The log is append-only: once a later universe version has appended its
+    entry, the v3 producer may no longer rebuild the log. What must stay true
+    is that the recorded v3 entry is the entry the v3 producer derives.
+    """
+    with pytest.raises(SystemExit):
+        builder.build(REPO_ROOT, rebuild=True)
+    log = _load(LOG)
+    recorded = [entry for entry in log["entries"] if entry["universe_version"] == "v3"]
+    assert len(recorded) == 1
+    assert recorded[0] == builder.build_entry(REPO_ROOT, None)

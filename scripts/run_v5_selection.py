@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+"""Perform the single authorized v5 selection run.
+
+The run is authorized by ``configs/research_v5_selection_authorization_1.json``
+and consumes its single logical attempt. It is **resumable**: an interrupted
+process leaves the verified shards in place and the next process continues the
+same logical run from them. A completed run is never re-run.
+
+The script is a thin wrapper around ``v5_campaign.runner.run_selection``. It
+adds a progress line (read from the checkpoint the run writes) and it prints
+the resulting ledger document as JSON. It never touches a v1, v2, v3 or v4
+path, never reads a confirmatory-window candle and never contacts a provider.
+
+It also holds an exclusive lock for the duration of the run, so that a second
+invocation cannot start a concurrent writer against the same shard directory.
+The lock file lives outside the repository, so the run leaves no footprint.
+"""
+
+from __future__ import annotations
+
+import argparse
+import fcntl
+import json
+import os
+import sys
+import threading
+import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT / "src"))
+
+from v5_campaign import runner  # noqa: E402
+
+#: The lock that keeps a second invocation from writing the same shards.
+LOCK_PATH = Path("/tmp") / "v5_selection_run.lock"
+
+
+def _progress_printer(workspace: runner.Workspace, interval: float, stop: threading.Event) -> None:
+    """Print the progress the run records in its checkpoint."""
+    while not stop.wait(interval):
+        try:
+            checkpoint = json.loads(Path(workspace.checkpoint).read_text(encoding="utf-8"))
+            shard_count = sum(
+                1 for path in Path(workspace.shards_dir).rglob("shard_*.jsonl")
+            )
+            print(
+                "progress: completed_records=%s shards=%s asset=%s config=%s fold=%s cost=%s"
+                % (
+                    checkpoint.get("completed_records"),
+                    shard_count,
+                    checkpoint.get("current_asset_index"),
+                    checkpoint.get("current_config_index"),
+                    checkpoint.get("current_fold_index"),
+                    checkpoint.get("current_cost_index"),
+                ),
+                flush=True,
+            )
+        except Exception:  # pragma: no cover - progress must never break the run
+            continue
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repo-root", default=str(REPO_ROOT))
+    parser.add_argument("--progress-interval", type=float, default=60.0)
+    args = parser.parse_args(argv)
+
+    repo_root = Path(args.repo_root).resolve()
+    workspace = runner.default_workspace(repo_root)
+
+    LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
+    lock = LOCK_PATH.open("a+")
+    try:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        print(
+            json.dumps({
+                "status": "REFUSED",
+                "error": f"another v5 selection run holds {LOCK_PATH}; the single "
+                         "authorized run may not be started twice at the same time",
+            })
+        )
+        return 1
+    lock.seek(0)
+    lock.truncate()
+    lock.write(f"{os.getpid()} {time.time()}\n")
+    lock.flush()
+
+    stop = threading.Event()
+    printer = threading.Thread(
+        target=_progress_printer,
+        args=(workspace, args.progress_interval, stop),
+        daemon=True,
+    )
+    printer.start()
+    started = time.perf_counter()
+    try:
+        document = runner.run_selection(workspace)
+    except Exception as exc:
+        stop.set()
+        print(json.dumps({"status": "FAILED", "error": f"{type(exc).__name__}: {exc}"}))
+        raise
+    finally:
+        stop.set()
+    elapsed = time.perf_counter() - started
+    document = dict(document)
+    document["wall_clock_seconds"] = round(elapsed, 3)
+    print(json.dumps(document, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

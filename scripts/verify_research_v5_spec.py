@@ -93,10 +93,11 @@ EXECUTION_PATH_ROOTS = (
 #: deliverables and are listed in ``V5_DELIVERED_STAGE_ARTIFACTS`` below.
 #:
 #: The rule that still holds is the **run** rule: no v5 run artifact may exist
-#: while the chain has not been authorized and has not run. That list is
-#: unchanged in substance; only the stage artifacts moved out of it.
+#: while the chain has not run. The selection authorization is now
+#: preregistered for the single authorized selection run and is listed in
+#: ``V5_DELIVERED_STAGE_ARTIFACTS`` when present; the confirmatory protocol
+#: and runbook are not run artifacts of the selection run.
 V5_RUN_ARTIFACTS_THAT_MUST_NOT_EXIST = (
-    "configs/research_v5_selection_authorization_1.json",
     "configs/research_v5_confirmatory_protocol.json",
     "configs/research_v5_confirmatory_runbook_1.json",
     "research/ledger_v5.json",
@@ -113,6 +114,7 @@ V5_DELIVERED_STAGE_ARTIFACTS = (
     "research/data_manifest_v5.json",
     "configs/research_v5_candidate_freeze.json",
     "configs/research_v5_execution.json",
+    "configs/research_v5_selection_authorization_1.json",
 )
 
 #: The v1-v4 paths a v5 artifact must never collide with.

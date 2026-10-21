@@ -1,0 +1,346 @@
+{
+  "artifact": "v5_selection_authorization",
+  "artifact_version": "v5-selection-authorization-1",
+  "version": 1,
+  "protocol_version": "v5",
+  "universe_version": "v5",
+  "created_utc": "2026-10-21T15:30:00Z",
+  "authorization_status": "PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN",
+  "specification_purpose": "Authorize exactly one bounded v5 selection grid run over the frozen v5 candidate set, under the unchanged v1 selection rule, on development data only, writing only to the v5 paths, with the effective v5 rules and the v5-cutoff-bounded benchmark built in. This artifact names the execution path, the bounds, the benchmark rule, the stopping conditions, the rollback rule and the falsifiers of that run. Building it executes nothing: no grid is run, no candle is read, no result exists.",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-019",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-019, recommendation items 1, 5 and 6",
+    "prerequisites_delivered": [
+      "P1 configs/research_v5.json",
+      "P2 research/universe_manifest_v5.json",
+      "P3 research/data_manifest_v5.json",
+      "the v5 candidate manifest freeze",
+      "the v5 candidate-freeze amendment 1",
+      "the v5 specification amendment 1",
+      "the v5 execution protocol configs/research_v5_execution.json",
+      "the v5 execution amendment 1"
+    ],
+    "execution_path_outside_hashed_set": "The v5 execution code lives in src/v5_campaign, outside the hashed source set src/breakout_research. It imports the v1 engine unchanged; it adds, edits and removes no file under src/breakout_research, so the v1 campaign authorization and the v2 identity tuples stay valid."
+  },
+  "authorized_run": {
+    "authorized": true,
+    "max_runs": 1,
+    "run_id": "v5-selection-20261021",
+    "campaign_id": "v5-campaign",
+    "run_phase": "selection_grid",
+    "authorization_note": "The run is recorded in the ledger before the first result is written. The authorization permits one logical run: a completed run is never re-run, and an interrupted run is resumed from the verified shards, with the number of resumes bounded by max_retries_on_technical_failure. A boundary abort rolls the ledger back and releases the run, so that a defect can be fixed and the run started again.",
+    "resume_semantics": {
+      "one_logical_run": true,
+      "completed_run_is_never_re_run": true,
+      "interrupted_run_is_resumed": true,
+      "resumes_bounded_by": "max_retries_on_technical_failure",
+      "resume_source_of_truth": "the verified shards under research/shards_v5",
+      "result_stream_is_a_projection_of_the_shards": true,
+      "note": "A process that is killed leaves the run in the ledger as RUNNING. The next process resumes it from the verified shards instead of starting a second run, so an interruption cannot burn the single authorized run."
+    },
+    "scope": {
+      "binance_pairs": [
+        "APTUSDT",
+        "CAKEUSDT",
+        "STXUSDT",
+        "DASHUSDT",
+        "VETUSDT",
+        "CRVUSDT",
+        "RAYUSDT"
+      ],
+      "count": 7,
+      "candidate_manifest_path": "configs/research_v5_candidate_freeze.json",
+      "bound_to_universe_hash": "ed6ade73c31c687c141b492100bff9a1af85a6fccbb80bd65bbe924589abaa7f",
+      "bound_to_data_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+      "bound_to_base_data_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+      "bound_to_freeze_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4",
+      "membership_rule": "Exactly the constituents marked validated in research/universe_manifest_v5.json. The run may not re-rank, widen or narrow the frozen set.",
+      "widening_by_reranking_forbidden": true,
+      "excluded_assets_stay_excluded": true,
+      "excluded_after_validation": {
+        "GHOUSDT": "binance_spot_unavailable",
+        "ETHFIUSDT": "insufficient_hourly_history",
+        "XDCUSDT": "binance_spot_unavailable",
+        "NIGHTUSDT": "insufficient_hourly_history",
+        "PYTHUSDT": "insufficient_hourly_history",
+        "TIAUSDT": "insufficient_hourly_history",
+        "BDXUSDT": "binance_spot_unavailable",
+        "FLRUSDT": "binance_spot_unavailable",
+        "QUSDT": "binance_spot_unavailable",
+        "TRUMPUSDT": "insufficient_hourly_history",
+        "PENGUUSDT": "insufficient_hourly_history",
+        "币安人生USDT": "insufficient_hourly_history",
+        "YLDSUSDT": "binance_spot_unavailable"
+      },
+      "benchmark_is_not_a_candidate": true
+    },
+    "execution_path": {
+      "package": "src/v5_campaign",
+      "entry_point": "src/v5_campaign/runner.py:run_selection",
+      "modules": [
+        "__init__.py",
+        "benchmark.py",
+        "data.py",
+        "errors.py",
+        "identity.py",
+        "runner.py",
+        "scope.py",
+        "units.py"
+      ],
+      "engine_imports": [
+        "breakout_research.backtest.backtester.run_fold_backtest",
+        "breakout_research.backtest.shards.ResultStore",
+        "breakout_research.backtest.shards.compute_experiment_id",
+        "breakout_research.backtest.checkpoint.CheckpointManager",
+        "breakout_research.baselines.load_verified_candles",
+        "breakout_research.baselines.buyhold_baseline",
+        "breakout_research.selection.select_candidates",
+        "breakout_research.config.get_configurations"
+      ],
+      "engine_is_reused_unchanged": true,
+      "hashed_set_untouched": true,
+      "hashed_set_root": "src/breakout_research",
+      "note": "The execution path reuses the v1 indicators, signals, backtester, verified candle loader, shard writer, checkpoint manager and candidate selector without modification. It adds no parameter, threshold, fold, cost or selection criterion of its own."
+    },
+    "code_identity": {
+      "algorithm": "canonical_source_digest_v1",
+      "algorithm_description": "sha256 over the concatenation, for every *.py file under the root in ascending POSIX relative-path order, of the relative path, a newline, the sha256 hex digest of the file bytes, and a newline.",
+      "portable": true,
+      "hashed_set_root": "src/breakout_research",
+      "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "execution_path_root": "src/v5_campaign",
+      "execution_path_digest": "2fd30c7540c13a876a3bea42891bf442023c3cbe8e1c78388e611119151f4008",
+      "run_code_identity": "4f0fb01ac745148123cbc478e389aec5e0c88c10c7e9dd83c4de46cbc20f725c",
+      "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
+      "ordered_code_hash_is_portable": false,
+      "note": "The identity of a v5 run is the composite of the canonical digest of the hashed v1 engine and the canonical digest of the v5 execution path. The checkout-dependent ordered digest compute_code_hash() stays the authorized value of record and is never used as an identity."
+    },
+    "effective_rules": {
+      "membership": {
+        "path": "configs/research_v5_specification_amendment_1.json",
+        "manifest_hash": "e130fa5ea4a01fabbfe1e102a4cff8b8495382268eec9e1e7eafe466eae94138",
+        "rule": "a candle is inside a confirmatory window when its close falls strictly after that window's start and before its end, regardless of which asset it belongs to; a candle that closes exactly at a window's start is development data",
+        "interval_start_inclusive": false,
+        "interval_end_exclusive": true,
+        "precedence": "amendment_overrides_frozen_block",
+        "consequence_for_the_run": "a candle that closes exactly at a confirmatory window's start is development data; the last development candle of every v5 dataset closes exactly at the development cutoff"
+      },
+      "overlap": {
+        "path": "configs/research_v5_candidate_freeze_amendment_1.json",
+        "manifest_hash": "43a374284df1c5f933f565c0e882d6c721302e5b1897c02ceb39344b1effa49d",
+        "rule": "the v5 confirmatory window opens inside the still-open v2, v3 and v4 confirmatory windows in time, because a 90-day window that opens later cannot end later than the 90-day window that opened before it; the time overlap is not a violation, because the two evaluations share no asset (the v5 candidate set is disjoint from the v1, v2, v3 and v4 candidate sets) and because the v5 confirmatory evaluation may not start before the later of the v4 confirmatory gate and the v5 window's own earliest end, and never before the v2 and the v3 gates; the v5 window is never populated with data that predates the v5 candidate freeze, is never a re-opening of the v1 holdout or of the v2, v3 or v4 confirmatory windows, and is never read for selection",
+        "evaluation_may_not_start_before_utc": "2027-01-19T13:00:00Z",
+        "precedence": "amendment_overrides_frozen_block",
+        "consequence_for_the_run": "the v5 confirmatory window opens inside the still-open v2, v3 and v4 confirmatory windows in time, which is inevitable and not a violation: the evaluations share no asset and the v5 confirmatory evaluation may not start before the later of the four gates"
+      },
+      "execution": {
+        "path": "configs/research_v5_execution_amendment_1.json",
+        "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988",
+        "precedence": "the effective v5 execution protocol is this amendment for the blocks it restates, and configs/research_v5_execution.json for the blocks it does not; the protocol stays on disk unchanged and visible",
+        "consequence_for_the_run": "the effective execution protocol is the execution amendment for the blocks it restates and the frozen protocol for the rest; the frozen protocol stays on disk, unchanged and visible"
+      }
+    },
+    "data_boundary": {
+      "development_data_only": true,
+      "candles_before_utc": "2026-10-19T22:00:00Z",
+      "candles_before_utc_rule": "Only candles that close at or before the effective development boundary recorded by the candidate freeze may be read during the selection run. The effective boundary is the earlier of the v5 confirmatory-window start and the preregistered development cutoff, so no run can read a candle that closes inside the open v2, v3 or v4 confirmatory window. A dataset that reaches past the boundary is refused before it is read.",
+      "boundary_convention": "inclusive: the last development candle closes exactly at the boundary",
+      "development_cutoff_utc": "2026-10-19T22:00:00Z",
+      "development_cutoff_rule": "configs/research_v5.json#holdout.development_cutoff_utc: the v5 development data ends at the last fully closed hour that closes at or before the cutoff, and no candle that closes after the cutoff may be read",
+      "v5_confirmatory_window_start_utc": "2026-10-21T13:00:00Z",
+      "confirmatory_window_never_read_during_selection": true,
+      "v1_holdout_never_reused": true,
+      "v2_confirmatory_window_never_reused": true,
+      "v3_confirmatory_window_never_reused": true,
+      "v4_confirmatory_window_never_reused": true,
+      "holdout_exposed_count_stays_zero_during_selection": true,
+      "holdout_position_fold_never_evaluated_during_selection": true,
+      "provider_requests": 0,
+      "provider_requests_note": "The run reads the immutable local datasets that the effective v5 data manifest already binds and verifies, the benchmark dataset included. It performs no provider request, so it cannot re-retrieve, re-time or refresh any market data."
+    },
+    "selection_rule": {
+      "unchanged_from_v1": true,
+      "reference": "configs/research_v1.json",
+      "block": "selection",
+      "selection_block_sha256": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e",
+      "v5_block_is_byte_equal": true,
+      "max_candidates_per_asset": 1,
+      "selector": "breakout_research.selection.select_candidates",
+      "grid_reference": "the strategy_grid of configs/research_v1.json, inherited unchanged by configs/research_v5.json: 2304 configurations per asset",
+      "grid_configuration_count": 2304,
+      "no_criterion_may_be_added_tightened_or_loosened": true
+    },
+    "paths": {
+      "shards_dir": "research/shards_v5",
+      "ledger": "research/ledger_v5.json",
+      "results_manifest": "research/results_manifest_v5.json",
+      "results_stream": "research/results_v5.jsonl",
+      "checkpoint": "research_state/checkpoint_v5.json",
+      "never_use_v1_paths": true,
+      "never_use_v2_paths": true,
+      "never_use_v3_paths": true,
+      "never_use_v4_paths": true
+    },
+    "bounds": {
+      "max_assets": 7,
+      "max_configs_per_asset": 2304,
+      "max_total_config_units": 16128,
+      "attempts": 1,
+      "max_retries_on_technical_failure": 3,
+      "planned_config_units": 16128,
+      "planned_execution_units": 193536,
+      "planned_execution_units_note": "The bounded run holds 7 assets x 2304 configurations x 4 validation folds x 3 cost scenarios execution units. The bound that the authorization enforces is max_total_config_units, the number of asset-configuration pairs; the fold and cost multipliers follow the inherited, unchanged fold and cost blocks.",
+      "resource_limits": "the v5 execution protocol records max_logical_runs 1 and checkpoint_every_n_shards 10; the run is resumable and never retries unboundedly"
+    },
+    "benchmark": {
+      "symbol": "BTCUSDT",
+      "role": "trend_filter_and_benchmark",
+      "dataset_path": "research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv",
+      "content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+      "first_candle_timestamp": 1697839200000,
+      "last_candle_timestamp": 1792443600000,
+      "observed_candle_count": 26280,
+      "alignment_rule": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called",
+      "alignment_methodology": "docs/research_protocol.md:101 - Align BTC and target asset by UTC candle close",
+      "methodology_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+      "methodology_reference": "docs/research_protocol.md:101",
+      "no_forward_fill": true,
+      "fail_closed": [
+        "the benchmark series is missing",
+        "the benchmark series does not cover an evaluated window of the asset series",
+        "the benchmark series carries a different timestamp than the asset series inside an evaluated window"
+      ],
+      "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+      "btc_configurations_dropped": false,
+      "exposure_rule": "the benchmark dataset is development data; it lies entirely before every open confirmatory window and no confirmatory-window candle is read",
+      "published_by_data_manifest": true,
+      "note": "The v5 benchmark is the v5-cutoff-bounded dataset that the v5 data manifest publishes in its benchmark block; the block is inside the manifest's own self-hash. The v4 chain's benchmark dataset (research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv) is not reused, because 13 of its candles close after the v5 development cutoff, inside the open v2 confirmatory window. The dataset is hash-verified before every use, it covers every evaluated validation window of the evaluated assets with identical timestamps, and the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called."
+    },
+    "effective_data_manifest": {
+      "effective_data_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+      "base_manifest_path": "research/data_manifest_v5.json",
+      "base_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+      "note": "The effective v5 data manifest is the base manifest alone; v5 publishes no data-manifest amendment. The benchmark dataset is published by that manifest, in its benchmark block."
+    },
+    "stopping_conditions": [
+      "Normal completion within the recorded bounds",
+      "No candidate survives the unchanged v1 selection rule -> report the outcome (do not hide it)",
+      "Any boundary violation -> abort and rollback",
+      "A technical interruption -> keep the verified shards and resume the same run"
+    ],
+    "rollback_rule": "Do not write to v1, v2, v3 or v4 artifacts; remove any newly created v5 artifact if the execution is aborted; do not alter research_state/checkpoint.json, research_state/checkpoint_v2.json, research_state/checkpoint_v3.json, research_state/checkpoint_v4.json or the v1, v2, v3 or v4 campaign state.",
+    "falsifiers": [
+      "Any modification to src/breakout_research/ (would change the code hash)",
+      "Reading any candle in the v5 confirmatory window during selection",
+      "Reading any candle that closes inside the open v2, v3 or v4 confirmatory window",
+      "Writing into v1, v2, v3 or v4 shards, ledger, tallies or result streams",
+      "Reusing the v1 holdout, or the v2, v3 or v4 confirmatory window",
+      "Reusing the v4 chain's benchmark dataset",
+      "Mixing v1, v2, v3 or v4 cycle units with v5 results",
+      "Widening or narrowing the frozen candidate set",
+      "Dropping, re-deriving or re-ranking the 576 btc_ema_168 configurations",
+      "Evaluating the BTC filter on a benchmark series that does not cover an evaluated window of the asset series, or whose timestamps differ inside it",
+      "A second run attempt under this authorization"
+    ],
+    "no_execution_in_this_session": true
+  },
+  "not_authorized": {
+    "confirmatory_evaluation_authorized": false,
+    "candle_fetch_authorized": false,
+    "v1_reauthorization_authorized": false,
+    "source_tree_change_authorized": false,
+    "second_v5_selection_run_authorized": false,
+    "amendment_of_a_frozen_artifact_authorized": false,
+    "statement": "This artifact authorizes one bounded v5 selection run and nothing else. It does not authorize a confirmatory-window evaluation, a candle fetch, a change to the hashed source set, an edit of a frozen artifact or a v1 re-authorization. The selected-configuration manifest that the v5 confirmatory window requires must be committed and hash-bound before the first confirmatory-window candle is read, and the v5 confirmatory evaluation may not start before the effective gate 2027-01-19T13:00:00Z."
+  },
+  "related_artifacts": {
+    "v5_specification": {
+      "path": "configs/research_v5.json",
+      "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2"
+    },
+    "v1_specification": {
+      "path": "configs/research_v1.json",
+      "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085"
+    },
+    "v5_candidate_freeze": {
+      "path": "configs/research_v5_candidate_freeze.json",
+      "manifest_hash": "afa35ad9673aec0f8cd533480f403de534d547a0af8bf3cb1184cd8b2eb352d4",
+      "frozen_at_utc": "2026-10-21T12:14:36Z"
+    },
+    "v5_candidate_freeze_amendment_1": {
+      "path": "configs/research_v5_candidate_freeze_amendment_1.json",
+      "manifest_hash": "43a374284df1c5f933f565c0e882d6c721302e5b1897c02ceb39344b1effa49d"
+    },
+    "v5_specification_amendment_1": {
+      "path": "configs/research_v5_specification_amendment_1.json",
+      "manifest_hash": "e130fa5ea4a01fabbfe1e102a4cff8b8495382268eec9e1e7eafe466eae94138"
+    },
+    "v5_execution_amendment_1": {
+      "path": "configs/research_v5_execution_amendment_1.json",
+      "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988"
+    },
+    "v5_universe_manifest": {
+      "path": "research/universe_manifest_v5.json",
+      "manifest_hash": "ed6ade73c31c687c141b492100bff9a1af85a6fccbb80bd65bbe924589abaa7f"
+    },
+    "v5_data_manifest": {
+      "path": "research/data_manifest_v5.json",
+      "manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126"
+    },
+    "v5_execution_protocol": {
+      "path": "configs/research_v5_execution.json",
+      "manifest_hash": "516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f"
+    },
+    "v1_campaign_authorization": {
+      "path": "research_state/campaign_authorization.json",
+      "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+      "authorized": true,
+      "note": "The functional field of the authorization is recorded, not the digest of its bytes: the controller refreshes the authorized_at_utc timestamp, so the file digest changes without the authorization changing."
+    },
+    "configuration_manifest": {
+      "path": "research/config_manifest.json",
+      "total_configurations": 2304
+    }
+  },
+  "residual_limitations": [
+    {
+      "id": "RL1",
+      "location": "the v5 selection run's result volume",
+      "limitation": "The bounded run writes 193536 execution units. At the v1 record size this is of the order of 0.5 GB of shards and of the order of 100 MB of result stream. The v1 shards are bounded to 4 MiB per file; the v1 result stream was a single file of 50 MB that the campaign could not push as one blob.",
+      "consequence": "The shards under research/shards_v5 are the authoritative record set and are committed as bounded files of at most 4 MiB each, as the v1 campaign did. The single-file result stream research/results_v5.jsonl is expected to be large and is a projection of the verified shards, regenerated from them. The ledger, the results manifest and the checkpoint are small and are committed. The v1, v2, v3 and v4 artifacts stay untouched either way."
+    },
+    {
+      "id": "RL2",
+      "location": "the benchmark dataset",
+      "limitation": "The v5 data manifest publishes the benchmark in its benchmark block and not in the assets map, so the manifest-driven asset loader cannot resolve it; the benchmark is read directly and verified against the published content hash and the canonical hourly-CSV content hash.",
+      "consequence": "The benchmark rule of BRAIN-013 is still fully implemented: the dataset is hash-verified, it covers every evaluated window of each evaluated asset with identical timestamps, and both series are sliced to the same fold window before the frozen engine is called. No observation is forward-filled. The published block is inside the manifest's own self-hash, so the benchmark identity is part of the v5 data-manifest identity."
+    },
+    {
+      "id": "RL3",
+      "location": "the v5 confirmatory window",
+      "limitation": "The v5 confirmatory window opens inside the still-open v2, v3 and v4 confirmatory windows in time. A 90-day window that opens later cannot end later than the 90-day window that opened before it, so the time overlap is inevitable.",
+      "consequence": "The overlap is not a violation: the v5 candidate set is disjoint from the v1, v2, v3 and v4 candidate sets, and the v5 confirmatory evaluation may not start before the later of the four gates (2027-01-19T13:00:00Z). The v5 window is never populated with data that predates the v5 candidate freeze and is never read for selection."
+    }
+  ],
+  "verification": {
+    "verifier_script": "scripts/verify_v5_selection_authorization_1.py",
+    "tests_module": "tests/test_v5_selection_authorization_1.py",
+    "verify_command": "python3 scripts/verify_v5_selection_authorization_1.py",
+    "execution_path_tests": "tests/test_v5_campaign_benchmark_rule.py"
+  },
+  "durability": {
+    "commit": null,
+    "pushed": false,
+    "note": "Becomes durable when the commit that carries this artifact exists. The artifact is not rewritten after that commit, because its manifest_hash must not change."
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2, v3 and v4 artifacts."
+  },
+  "manifest_hash": "44aec8431314b2e2125a91a5e3407d3805bb56fdfead2a8a0227d8a3fb911e18"
+}
