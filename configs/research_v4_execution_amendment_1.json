@@ -1,0 +1,60 @@
+{
+  "amendment_status": "PUBLISHED_BENCHMARK_RULE_NO_AUTHORIZATION",
+  "artifact": "v4_execution_amendment_1",
+  "artifact_version": 1,
+  "benchmark_rule": {
+    "alignment": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called, so that the engine's index pairing equals the UTC-candle-close alignment of docs/research_protocol.md:101",
+    "content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+    "dataset_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+    "exposure_rule": "the benchmark dataset is development data; it lies entirely before the confirmatory window and no confirmatory-window candle is read",
+    "fail_closed": [
+      "the benchmark series is missing",
+      "the benchmark series does not cover an evaluated window of the asset series",
+      "the benchmark series carries a different timestamp than the asset series inside an evaluated window"
+    ],
+    "first_candle_timestamp": 1697886000000,
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+    "last_candle_timestamp": 1792490400000,
+    "no_forward_fill": true,
+    "observed_candle_count": 26280,
+    "role": "trend_filter_and_benchmark",
+    "symbol": "BTCUSDT"
+  },
+  "code_hash_constraint": {
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "edit_under_src_breakout_research_forbidden_without_reauthorization": true,
+    "hashed_source_root": "src/breakout_research",
+    "identity_rule": "the identity of a source tree is its canonical source digest -- the sha256 over the POSIX relative path and the content digest of every *.py file in ascending path order -- and never the checkout-dependent ordered digest compute_code_hash() (BRAIN-009)",
+    "v4_execution_must_live_outside_hashed_set": true,
+    "v4_execution_root": "src/v4_campaign"
+  },
+  "created_utc": "2026-10-21T04:20:00Z",
+  "execution_authorization": {
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "this amendment records the benchmark rule and the executed run identity. It authorizes no run, no evaluation and no confirmatory-window read."
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed."
+  },
+  "manifest_hash": "dd89b349523165f466cb7094148858d2388e3b5d98992278f62a27cc25d2fc32",
+  "performed_run": {
+    "run_id": "v4-selection-20261021",
+    "campaign_id": "v4-campaign",
+    "ledger_path": "research/ledger_v4.json",
+    "shards_path": "research/shards_v4/v4-campaign",
+    "results_manifest_path": "research/results_manifest_v4.json",
+    "run_code_identity": "05a85ce1f9d3e814ecac07ac91d48d0f6228d31c30096f0628b1163f42aef165",
+    "execution_path_digest": "49adc05c3c7e332d9dbab86c21c648b03523b1a1df681028f43fa6825927b262",
+    "authorization_manifest_hash": "911bfeb0a68d91ea3453d698a2e18f9b760bc1ba76c0afe2da068b175346d681"
+  },
+  "selection_manifest": {
+    "path": "research/v4_selected_configurations_manifest.json",
+    "manifest_hash": "e2a8fa61bb090a45e4930ad79dce89fd2a10867ac6c91a8fa7d0869d505e6773"
+  }
+}

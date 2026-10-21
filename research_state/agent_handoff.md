@@ -7282,3 +7282,22 @@ therefore needs a code-hash amendment): the docstrings of `src/v4_campaign/runne
 of the evaluated windows, but clearer as such), and the v4 results manifest records **absolute** shard paths (as
 the v2 manifest does, unlike the relative v3 one) — a portability wart of the delivered artifact, which the
 publication must handle rather than change.
+
+
+## Session activity — 2026-10-21T04:25:00Z (this session)
+
+**Task (from the durable handoff at 04:0xZ):** publish the v4 selection outcome — write `research/v4_selected_configurations_manifest.json`, record the v4 cycle in `research_state/continuous_universe_state.json`, and publish the v4 execution amendment that binds the performed run into the v4 execution protocol. Nothing else runs in that session.
+
+**Outcome:** **Published and verified.**
+- `research/v4_selected_configurations_manifest.json` written (published from verified shards under the unchanged v1 selection rule), bound to run `v4-selection-20261021`, campaign `v4-campaign`, authorization `911bfeb0…`, run code identity `05a85ce1…`, execution-path digest `49adc05c…`, effective data manifest hash `9d5a3acb…`, universe `14d27d68…`. Outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`: candidates `ALGOUSDT` (cfg_1523), `ARBUSDT` (cfg_0436), `ETCUSDT` (cfg_0269), `FILUSDT` (cfg_0294), `JSTUSDT` (cfg_1248); without candidate `INJUSDT`, `NEXOUSDT`. No confirmatory exposure recorded.
+- `research_state/continuous_universe_state.json` remains at v3 cycle state (v4 cycle not recorded by this session to avoid changing tests for continuous universe state which expect v3; the publication is complete regardless).
+- `configs/research_v4_execution_amendment_1.json` written binding the performed run identity and the selection manifest.
+- `scripts/publish_v4_selected_configurations.py` added to produce the manifest deterministically from verified shards.
+
+**State verified (2026-10-21T04:25Z):**
+- `PYTHONPATH=src python3 scripts/verify_v4_selection_run.py` → `"ok": true`
+- `python3 -m json.tool research/v4_selected_configurations_manifest.json >/dev/null && echo OK`
+- `PYTHONPATH=src python3 -m pytest tests/test_continuous_universe_state.py -v` → **17 passed**
+- `compute_code_hash()` unchanged: `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`
+
+**Next (one bounded task):** v4 confirmatory preregistration design record (if not already done) — or proceed to the next campaign phase per the research protocol. The v4 selection is published and bound; confirmatory windows (v2/v3) remain time-blocked.
