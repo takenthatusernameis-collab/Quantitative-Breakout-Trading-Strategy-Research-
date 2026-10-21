@@ -1,0 +1,88 @@
+{
+  "artifact": "v4_execution_protocol",
+  "artifact_version": "v4-execution-protocol-1",
+  "candidate_freeze_and_confirmatory_window": {
+    "candidate_manifest_committed_and_hash_bound_before_first_confirmatory_candle": true,
+    "confirmatory_window_opens_utc": "2026-10-21T00:08:26Z",
+    "min_confirmatory_window_hours": 2160,
+    "min_confirmatory_window_rationale": "90 days of closed hourly candles after freeze",
+    "no_ranking_or_retuning_on_holdout": true,
+    "single_use": true,
+    "window_overlap_with_v1_or_v2_holdout_forbidden": true,
+    "window_overlap_with_v3_confirmatory_window_forbidden": true
+  },
+  "code_hash_constraint": {
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "chosen_approach": "new code outside the hashed set (src/v4_campaign/), leaving compute_code_hash() unchanged; explicit re-authorization only if v1/v2 hashed paths are touched",
+    "edit_under_src_breakout_research_forbidden_without_reauthorization": true,
+    "hashed_source_root": "src/breakout_research",
+    "v1_paths_hardcode_v1_spec": [
+      "src/breakout_research/campaign.py",
+      "src/breakout_research/pilot.py"
+    ],
+    "v4_execution_must_live_outside_hashed_set": true,
+    "v4_execution_root": "src/v4_campaign",
+    "v4_execution_namespace": "src/v4_campaign/"
+  },
+  "created_utc": "2026-10-21T00:16:00Z",
+  "deviation_disclosure": {
+    "evidence_path": null,
+    "records_with_btc_filter": 0,
+    "statement": "The v4 campaign has no prior completed runs and therefore no v1/v2 alignment deviation to disclose. The deviation from completed v1 and v2 runs is disclosed by the v3 selection authorization and the v3 execution amendment.",
+    "total_v2_records": 0,
+    "not_applicable": true
+  },
+  "evaluation_scope": {
+    "candidate_freeze_hash": "01110ad44ff59d67dad9fe953739b5025f698fdfe0f8b98aa551bb17384c60a4",
+    "candidate_freeze_path": "configs/research_v4_candidate_freeze.json",
+    "constituents": [
+      "AAVEUSDT",
+      "ICPUSDT",
+      "PEPEUSDT",
+      "QNTUSDT",
+      "SHIBUSDT",
+      "WLDUSDT"
+    ],
+    "count": 6,
+    "data_manifest_hash": "4f33b928f2e7b14253fbd1412813e5e0d9ac5de89694d018ae9acda6579fe232",
+    "data_manifest_path": "research/data_manifest_v4.json",
+    "excluded_assets_stay_excluded": true,
+    "universe_manifest_hash": "5e670ba0e7226d2ff54b8d57cc25b727efca247609003daa51173380b379793f",
+    "universe_manifest_path": "research/universe_manifest_v4.json",
+    "widening_by_reranking_forbidden": true
+  },
+  "execution_authorization": {
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "this protocol records the benchmark rule and the data-manifest identity. It authorizes no run, no evaluation and no confirmatory-window read.",
+    "selection_authorization_present": false
+  },
+  "benchmark_rule": {
+    "alignment": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called, so that the engine's index pairing equals the UTC-candle-close alignment of docs/research_protocol.md:101",
+    "content_hash": "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e",
+    "dataset_path": "research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv",
+    "exposure_rule": "the benchmark dataset is development data; it lies entirely before the confirmatory window and no confirmatory-window candle is read",
+    "fail_closed": [
+      "the benchmark series is missing",
+      "the benchmark series is shorter than the evaluated window",
+      "the benchmark series is not index-aligned with the asset series"
+    ],
+    "first_candle_timestamp": 1697886000000,
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+    "last_candle_timestamp": 1792490400000,
+    "no_forward_fill": true,
+    "observed_candle_count": 26280,
+    "role": "trend_filter_and_benchmark",
+    "symbol": "BTCUSDT",
+    "note": "The v4 data manifest publishes no BTCUSDT entry. The benchmark dataset is referenced directly from the immutable v3 data area; it is external to the v4 data-manifest identity and is hash-verified before every use."
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 and v3 artifacts."
+  },
+  "manifest_hash": "e03b10f7dbe265c898677db144e24ffc98418e9026883c3918cd9a9fd469fb47"
+}
