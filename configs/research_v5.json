@@ -1,0 +1,694 @@
+{
+  "protocol_version": "v5",
+  "universe_version": "v5",
+  "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2",
+  "created_utc": "2026-10-21T09:40:00Z",
+  "specification_status": "PREREGISTERED_SPECIFICATION_ONLY",
+  "specification_purpose": "Preregister the rules for a fifth, separately versioned market-cap universe that is a strictly additional batch of assets below the v4 universe floor. This file is a design artifact: it freezes rules before any v5 data is retrieved or any v5 result exists, and it authorizes nothing.",
+  "design_basis": {
+    "brainstorming_item": "BRAIN-019",
+    "decision_record": "research_state/brainstorming_queue.md -> BRAIN-019 (DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION)",
+    "sections_implemented_here": [
+      "BRAIN-019 recommendation 1: a new v5 version with one new pinned-window retrieval, a depth policy, the v5 floor recomputed from the v4 manifest and the identity rule extended to v1,v2,v3,v4",
+      "BRAIN-019 recommendation 2: the development data bounded at the earliest open confirmatory window, with an explicit definition of window membership",
+      "BRAIN-019 recommendation 3: the phase gates against the three pending confirmatory evaluations",
+      "BRAIN-019 recommendation 4: the isolated v5 namespace, the supersedes chain, the portable code identity and the expansion-log completion",
+      "BRAIN-019 recommendation 5: the AWAITING_NEW_CANDIDATES null-result path with the bounded cadence",
+      "BRAIN-019 recommendation 6: the falsifiers, the rollback and the staged acceptance tests are recorded in the decision record"
+    ],
+    "sections_deliberately_not_implemented_here": [
+      "the v5 market-cap retrieval and the v5 universe and data manifests",
+      "the v5 execution path",
+      "any authorized v5 run",
+      "any v5 confirmatory-window evaluation",
+      "the expansion-log entries (the derived v4 entry and the v5 entry)"
+    ]
+  },
+  "supersedes": {
+    "protocol_version": "v4",
+    "specification_path": "configs/research_v4.json",
+    "specification_hash": "f0f1be0e8c6e71a81be0618bf12081a77fefa4061975c9103dcf3302152b8d84",
+    "specification_sha256": "c642d3dca188f82cef7469df4c35a1f7e42c11e90cd5e022d1d76dcb91a3fd07",
+    "universe_manifest_path": "research/universe_manifest_v4.json",
+    "universe_manifest_sha256": "998a26496374dac0ceb8188f57b9cf10d362456a90a89fb3f7c853374c655c39",
+    "universe_manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
+    "data_manifest_path": "research/data_manifest_v4.json",
+    "data_manifest_sha256": "a9e7883a2f27319290bcd89cb5d10b6f7c2197feaf60a930102d80ec6ab7656d",
+    "data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
+    "candidate_freeze_path": "configs/research_v4_candidate_freeze.json",
+    "candidate_freeze_sha256": "2ffc15c74de1646c256b49d581efac4839fc596e439b44d5c6e0cd4708bb621e",
+    "candidate_freeze_hash": "bae6a374f17cd5c4df8a990591efc107945e74cb8b28a9f7d920a4c38e0b9e34",
+    "selected_configurations_manifest_path": "research/v4_selected_configurations_manifest.json",
+    "selected_configurations_manifest_sha256": "1e940fa27e8a758b1a236b725ca7d4390816464e996f95adf22a9e783d76bc79",
+    "selected_configurations_manifest_hash": "fbf3103ba7cc6d34d0dd9c30e8aaf8206f6411c052506975cb8f4a03bfd68e02",
+    "reason": "The v4 universe is frozen, its eligible pool is exhausted, its selection run has been performed and published, and its confirmatory window is single-use. The v5 universe is a strictly additional batch of assets below the v4 universe floor, so it supersedes the v4 universe only in the sense that it is the program's current universe version.",
+    "supersession_scope": "Additive only. The v1, v2, v3 and v4 artifacts are not replaced, rewritten or reinterpreted: they remain immutable historical evidence, and the v5 candidate set contains no asset of any of them.",
+    "v1_artifacts_are_immutable": true,
+    "v2_artifacts_are_immutable": true,
+    "v3_artifacts_are_immutable": true,
+    "v4_artifacts_are_immutable": true
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "excluded_keys": [
+      "specification_hash"
+    ],
+    "verify_command": "python3 scripts/verify_research_v5_spec.py",
+    "note": "The specification_hash binds every other field of this file, including created_utc. Recomputing it over the parsed document with the key removed is the only accepted verification."
+  },
+  "inheritance": {
+    "inherited_from": "configs/research_v1.json",
+    "inherited_unchanged_blocks": [
+      "strategy_grid",
+      "costs",
+      "execution",
+      "folds",
+      "selection",
+      "pilot",
+      "metrics",
+      "baselines",
+      "fixed_breakout_baseline",
+      "status",
+      "checkpointing"
+    ],
+    "inherited_from_v2_unchanged_blocks": [
+      "data"
+    ],
+    "inherited_from_v3_unchanged_blocks": [
+      "eligibility_validation"
+    ],
+    "changed_or_added_blocks": [
+      "universe",
+      "holdout",
+      "phase_gates",
+      "code_identity",
+      "namespace",
+      "fresh_checkout_verifiability",
+      "null_result_path",
+      "expansion_program",
+      "prerequisites",
+      "authorization"
+    ],
+    "statement": "v5 changes the evaluated universe only. The strategy family, the 2,304-configuration grid, cost assumptions, execution semantics, fold structure, selection rule, pilot gate, metrics, baselines, status vocabulary and the single confirmatory criterion are inherited from v1 without modification, the data retrieval contract is inherited from v2 without modification and the eligibility validation rules are inherited from v3 without modification, so that v5 differs from v4 in which assets are evaluated and not in how a strategy is measured."
+  },
+  "universe": {
+    "source": "coingecko",
+    "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+    "ranking_depth": 250,
+    "eligible_quote": "USDT",
+    "exchange": "binance",
+    "market_type": "spot",
+    "top_n": 20,
+    "min_history_years": 3,
+    "min_candles": 26280,
+    "exclusions": [
+      "stablecoins",
+      "wrapped_tokens",
+      "bridged_tokens",
+      "leveraged_tokens",
+      "synthetic_tokens",
+      "derivative_tokens"
+    ],
+    "benchmark_asset": "BTCUSDT",
+    "survivorship_disclaimer": "Current-universe snapshot used; historical point-in-time ranks unavailable. Results have survivorship limitations.",
+    "depth_policy": {
+      "rule": "The v5 snapshot records the ranking depth that was actually retrieved. The depth is recomputed from the raw response bytes and never copied from a recorded value: the v3 expansion-log entry recorded 99 while the v3 raw response holds 250 rows.",
+      "primary_page": {
+        "per_page": 250,
+        "page": 1,
+        "depth": 250
+      },
+      "bounded_extra_page": {
+        "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2",
+        "per_page": 250,
+        "page": 2,
+        "cumulative_depth": 500,
+        "condition": "read only when the first page yields fewer than top_n qualifying names after the exclusion rules and the prior-universe identity rule have been applied",
+        "max_extra_pages": 1
+      },
+      "pages_recorded": "each page's raw bytes, its sha256 and its retrieval timestamp are recorded separately",
+      "batch_recomputation": "the batch is re-derived from the concatenated raw pages of the recorded snapshot and is never copied from a recorded member list",
+      "forbidden": [
+        "re-reading a page",
+        "a third page",
+        "re-timing or repeating the retrieval to obtain a more convenient ranking"
+      ]
+    },
+    "expansion_scope": {
+      "rule": "The v5 universe is the next batch below the recorded floor: assets of a fresh market-cap snapshot whose market capitalization is strictly below the floor and that are not assets of the v1, v2, v3 or v4 universe.",
+      "prior_universe_floor": {
+        "source_universe_version": "v4",
+        "source_manifest_path": "research/universe_manifest_v4.json",
+        "source_manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
+        "source_manifest_sha256": "998a26496374dac0ceb8188f57b9cf10d362456a90a89fb3f7c853374c655c39",
+        "floor_symbol": "AKE",
+        "floor_market_cap_usd": 739186726,
+        "floor_market_cap_rank": 91,
+        "comparison": "strictly_less_than",
+        "recompute_rule": "the floor is the minimum market_cap_usd over the eligible_assets of research/universe_manifest_v4.json; the verifier recomputes it from that manifest and never trusts this recorded value",
+        "validated_set_floor": {
+          "symbol": "NEXO",
+          "market_cap_usd": 814674470,
+          "market_cap_rank": 87,
+          "note": "recorded for transparency only: the floor rule uses the minimum over the eligible_assets of the source manifest, not the minimum over its validated subset"
+        },
+        "note": "The v5 batch contains only assets that a fresh, deeper ranking places strictly below the market capitalization of the lowest asset that universe version v4 evaluated. The v4 universe itself is not re-ranked, widened or narrowed."
+      },
+      "prior_universe_asset_identity": {
+        "rule": "An asset is 'already in a prior universe' when its Binance symbol or its CoinGecko id already occurs in the eligible assets of the v1, v2, v3 or v4 universe manifest.",
+        "sources": [
+          {
+            "universe_version": "v1",
+            "manifest_path": "research/universe_manifest.json",
+            "manifest_hash": null,
+            "file_sha256": "c8f367d24cd7b618f97f51b8a91c877429c1cac1ddbd17765349ea6c306fdffd",
+            "eligible_asset_count": 20
+          },
+          {
+            "universe_version": "v2",
+            "manifest_path": "research/universe_manifest_v2.json",
+            "manifest_hash": "4e927e522eb18434459547602cc96201fa6e7c15b02010f9e7366270e5ad3f88",
+            "file_sha256": "68c973a0a07bd6808a18433a1cce5351d56f03800653d5c64f401d72c0769f42",
+            "eligible_asset_count": 20
+          },
+          {
+            "universe_version": "v3",
+            "manifest_path": "research/universe_manifest_v3.json",
+            "manifest_hash": "e53db5ed75ad448e52f02438c491ad76f4da75503472c0945b9adf9283e30cdf",
+            "file_sha256": "81a41604ea67b16f89066610108432b1b8f2cb5bd6d146d006687a9c483dbb63",
+            "eligible_asset_count": 20
+          },
+          {
+            "universe_version": "v4",
+            "manifest_path": "research/universe_manifest_v4.json",
+            "manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
+            "file_sha256": "998a26496374dac0ceb8188f57b9cf10d362456a90a89fb3f7c853374c655c39",
+            "eligible_asset_count": 20
+          }
+        ],
+        "matched_on": [
+          "binance_symbol",
+          "coingecko_id"
+        ],
+        "symbol_normalization": "the Binance marker is the base symbol: the 'USDT' suffix of a binance_pair is stripped before the comparison, so 'BTCUSDT' and 'BTC' are one marker",
+        "distinct_prior_symbols": 63,
+        "distinct_prior_coingecko_ids": 63,
+        "counts_note": "the two counts are the numbers of distinct prior-universe assets, recomputed by the verifier from the four manifests; the base symbol and the pair spelling of the same Binance symbol are one marker, not two",
+        "rename_rule": "A renamed asset keeps its CoinGecko id and is therefore the same asset; it is excluded from the v5 batch as already_in_prior_universe.",
+        "exclusion_reason": "already_in_prior_universe"
+      },
+      "ordering_rule": "Candidates are taken in strictly descending market-capitalization order after the prior-universe and exclusion rules have been applied; the batch contains exactly top_n assets unless the snapshot runs out of eligible names, in which case the shortfall is recorded."
+    },
+    "snapshot_retrieval": {
+      "rule": "The v5 universe is exactly one timestamped market-cap snapshot retrieved inside the window below. The first successful retrieval inside the window is the v5 snapshot.",
+      "not_before_utc": "2026-10-21T09:40:00Z",
+      "deadline_utc": "2026-10-28T09:40:00Z",
+      "window_days": 7,
+      "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+      "depth": 250,
+      "retrieval_policy": "exactly_once_read_only_bounded",
+      "evidence_required": [
+        "raw_market_cap_response.json",
+        "snapshot_observation.json"
+      ],
+      "reuse_forbidden": true,
+      "re_timing_forbidden": true,
+      "expired_window_rule": "if the pinned window expires before a successful retrieval, the provider failure evidence is recorded and a new window is preregistered in a versioned amendment; the expired window is never reused or re-timed"
+    },
+    "eligibility_validation": {
+      "binance_spot_verification": {
+        "required": true,
+        "rule": "The trading pair <SYMBOL>USDT must exist on Binance spot and be tradeable at snapshot time.",
+        "endpoints": [
+          "https://api.binance.com/api/v3/exchangeInfo",
+          "https://data-api.binance.vision/api/v3/exchangeInfo"
+        ],
+        "failover_policy": "One bounded request to the primary host. If it fails (for example HTTP 451), use the documented failover host and record both statuses with timestamps. Do not blindly retry the primary host.",
+        "record": [
+          "verification_timestamp_utc",
+          "endpoint_used",
+          "http_status_of_each_probed_host",
+          "pair_symbol"
+        ]
+      },
+      "candle_history": {
+        "min_candles": 26280,
+        "interval": "1h",
+        "closed_candles_only": true,
+        "coverage_gaps_recorded": true,
+        "no_interpolation": true,
+        "rule": "A constituent with fewer than 26,280 validated closed hourly candles is excluded and recorded with an exclusion_reason. Missing history is never interpolated, back-filled or shortened."
+      },
+      "data_integrity": {
+        "data_manifest": "research/data_manifest_v5.json",
+        "hash_verified": true,
+        "provenance": "real provider candles only; synthetic fallback is forbidden in any campaign-path artifact",
+        "survivorship_and_adjustment_policy": "v1 policy, unchanged, unless a later preregistered version says otherwise",
+        "data_manifest_note": "the v5 chain's own data manifest; the v3 block names the v2 manifest, which the v3 chain corrected by reference in configs/research_v3_spec_amendment_1.json"
+      },
+      "exclusion_rules": "The exclusion_rules block of the v2 universe manifest, copied unchanged from research/universe_manifest.json, is applied before evaluation. Every excluded candidate records an exclusion_reason.",
+      "failure_handling": "Exclude and record. Never promote, never substitute a different asset, and never lower the history requirement to admit a constituent."
+    }
+  },
+  "holdout": {
+    "policy": "single_use_after_freeze",
+    "v1_holdout_path": "research/data/holdout/holdout_index.json",
+    "v1_holdout_status": "EXPOSED_OR_UNKNOWN",
+    "v1_holdout_status_source": "configs/research_v2_candidate_freeze.json#data_boundary",
+    "v2_holdout_path": "research/data/holdout_v2/holdout_index.json",
+    "v2_holdout_exposed_count": 0,
+    "v3_holdout_path": "research/data/holdout_v3/holdout_index.json",
+    "v3_holdout_exposed_count": 0,
+    "v4_holdout_path": "research/data/holdout_v4/holdout_index.json",
+    "v4_holdout_exposed_count": 0,
+    "v5_holdout_path": "research/data/holdout_v5/holdout_index.json",
+    "v5_holdout_exposed_count": 0,
+    "v1_v2_v3_v4_holdout_never_reused_for_selection": true,
+    "confirmatory_windows_are_single_use": true,
+    "holdout_counted_on_every_confirmatory_read": true,
+    "holdout_counter_rule": "the v5 checkpoint starts holdout_exposed_count at 0 and increments it on every read of a candle inside any confirmatory window, counting by the confirmatory_window_membership rule; the v1, v2, v3 and v4 counters are never reused and never reset",
+    "development_cutoff_utc": "2026-10-19T22:00:00Z",
+    "development_cutoff_rule": "the v5 development data ends at the last fully closed hour that closes at or before the cutoff: the last development candle is the one that closes exactly at the cutoff, and no candle that closes after the cutoff may be read (the inclusive convention of BRAIN-015)",
+    "development_cutoff_recompute_rule": "the cutoff is the earliest confirmatory-window start among the windows that are open, recomputed from the v2, v3 and v4 candidate freezes; the verifier recomputes it and never trusts this recorded value",
+    "development_cutoff_cost": "the cutoff is the v2 confirmatory window's start, so it is earlier than the v4 chain's cutoff: the v5 development window is correspondingly shorter, and no v5 development read can fall inside any open confirmatory window",
+    "development_window": {
+      "candle_count": 26280,
+      "interval": "1h",
+      "closed_candles_only": true,
+      "first_candle_open_timestamp_ms": 1697839200000,
+      "last_candle_open_timestamp_ms": 1792443600000,
+      "first_candle_open_utc": "2023-10-20T22:00:00Z",
+      "last_candle_close_utc": "2026-10-19T22:00:00Z",
+      "recompute_rule": "the window is the closed hourly candle span that ends at the development cutoff: the last candle is the one that closes exactly at the cutoff and the first candle opens candle_count - 1 hours before it; the verifier recomputes both bounds from the cutoff and the candle count"
+    },
+    "confirmatory_window_membership": {
+      "rule": "a candle is inside a confirmatory window when the close timestamp of the candle falls in that window's time range, regardless of which asset the candle belongs to",
+      "interval_start_inclusive": true,
+      "interval_end_exclusive": true,
+      "asset_scope": "any asset, including assets that are not candidates of the window's own version",
+      "consequence": "no v5 read may fall inside the v2, the v3 or the v4 confirmatory window, so the exposure question that is open for the v2, v3 and v4 chains cannot arise for v5"
+    },
+    "v5_confirmatory_window": {
+      "rule": "A fresh, unexposed confirmatory window evaluated only after the v5 candidate manifest is frozen and hash-bound.",
+      "starts_after": "v5_candidate_freeze_timestamp_utc",
+      "min_hours": 2160,
+      "min_hours_rationale": "90 days of closed hourly candles; the v1 protocol used a 0.2 holdout fraction of a multi-year window, which is of the same order.",
+      "overlap_with_v1_holdout": "forbidden",
+      "overlap_with_v2_confirmatory_window": "forbidden",
+      "overlap_with_v3_confirmatory_window": "forbidden",
+      "overlap_with_v4_confirmatory_window": "forbidden",
+      "data_used_for_candidate_selection": "excluded",
+      "single_use": true,
+      "access_counting": "Every read of a candle inside the v5 confirmatory window increments holdout_exposed_count in the v5 checkpoint and is recorded in the v5 holdout report.",
+      "not_a_prior_holdout": "This is a new protocol object, not a re-opening of the v1 final holdout or of the v2, v3 or v4 confirmatory windows. It is never populated with data that predates the v5 candidate freeze.",
+      "window_path": "configs/research_v5_confirmatory_protocol.json"
+    },
+    "v1_holdout_reuse": "forbidden"
+  },
+  "phase_gates": {
+    "rule": "Each confirmatory evaluation is version-isolated: a confirmation is never re-run, never re-tuned on, and its result is never used to select anything. A window is never read for selection.",
+    "gates": [
+      {
+        "version": "v2",
+        "window_start_utc": "2026-10-19T22:00:00Z",
+        "min_hours": 2160,
+        "earliest_possible_end_utc": "2027-01-17T22:00:00Z",
+        "evaluation_may_not_start_before": "2027-01-17T22:00:00Z",
+        "source_path": "configs/research_v2_candidate_freeze.json",
+        "source_key": "data_boundary"
+      },
+      {
+        "version": "v3",
+        "window_start_utc": "2026-10-20T13:00:00Z",
+        "min_hours": 2160,
+        "earliest_possible_end_utc": "2027-01-18T13:00:00Z",
+        "evaluation_may_not_start_before": "2027-01-18T13:00:00Z",
+        "source_path": "configs/research_v3_candidate_freeze.json",
+        "source_key": "data_boundary"
+      },
+      {
+        "version": "v4",
+        "window_start_utc": "2026-10-21T01:00:00Z",
+        "min_hours": 2160,
+        "earliest_possible_end_utc": "2027-01-19T01:00:00Z",
+        "evaluation_may_not_start_before": "2027-01-19T01:00:00Z",
+        "source_path": "configs/research_v4_candidate_freeze.json",
+        "source_key": "confirmatory_window"
+      }
+    ],
+    "gate_recompute_rule": "each gate instant is recomputed by the verifier from the freeze that owns the window: the window start plus min_hours",
+    "v5_selection_run_gate": "only after the v5 candidate freeze and the v5 selection authorization exist, and only on data that ends at the development cutoff",
+    "v5_confirmatory_gate": "the v5 evaluation may not start before the v4 gate clears and not before the v5 window's own minimum of 2160 closed hourly candles has elapsed",
+    "v5_retrieval_is_not_a_candle_read": "a market-cap snapshot is universe metadata, not price data; it may be retrieved inside the v5 pinned window and is not a confirmatory read"
+  },
+  "code_identity": {
+    "algorithm": "canonical_source_digest_v1",
+    "portable": true,
+    "hashed_set_root": "src/breakout_research",
+    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "authorized_ordered_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "authorized_ordered_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
+    "ordered_code_hash_is_portable": false,
+    "ordered_digest_note": "the live ordered digest of compute_code_hash() is an environment fact of the checkout's directory enumeration order and is never used as an identity; the canonical digest is the tree identity",
+    "untouched_execution_paths": [
+      {
+        "root": "src/v2_campaign",
+        "canonical_source_digest": "c69cc02188d95def8a9c2e24f717ccc20c36035d5049a3216451e841dfe42cba",
+        "recorded_canonical_source_digest": "c69cc02188d95def8a9c2e24f717ccc20c36035d5049a3216451e841dfe42cba",
+        "owner": "configs/research_v2_selection_authorization_1.json"
+      },
+      {
+        "root": "src/v2_confirmatory",
+        "canonical_source_digest": "277a4bbec286b581ccb415fd88bb362ca2151e1b67745df23ad6802cee0ed4c9",
+        "recorded_canonical_source_digest": "277a4bbec286b581ccb415fd88bb362ca2151e1b67745df23ad6802cee0ed4c9",
+        "owner": "configs/research_v2_confirmatory_code_hash_amendment_1.json"
+      },
+      {
+        "root": "src/v3_campaign",
+        "canonical_source_digest": "29cd064e3f67e6bb66b052978bba61290adc97d4b3f8f7989fe2a01e1990cd55",
+        "recorded_canonical_source_digest": "29cd064e3f67e6bb66b052978bba61290adc97d4b3f8f7989fe2a01e1990cd55",
+        "owner": "configs/research_v3_selection_authorization_1.json"
+      },
+      {
+        "root": "src/v3_confirmatory",
+        "canonical_source_digest": "747c2387ff85b73240d89f744a70e69f25c3af2e723a6d6191fda80e80c94aba",
+        "recorded_canonical_source_digest": "747c2387ff85b73240d89f744a70e69f25c3af2e723a6d6191fda80e80c94aba",
+        "owner": "configs/research_v3_confirmatory_authorization_1.json"
+      },
+      {
+        "root": "src/v4_campaign",
+        "canonical_source_digest": "49adc05c785304f32bbf64ef990c6788b0e32c8a069224acf740ae791ccee22f",
+        "recorded_canonical_source_digest": "49adc05c785304f32bbf64ef990c6788b0e32c8a069224acf740ae791ccee22f",
+        "owner": "configs/research_v4_execution_amendment_1.json"
+      }
+    ],
+    "v5_execution_path_rule": "if the v5 chain needs an execution path it is a new directory outside the hashed set, with its own canonical digest; it is never added to src/breakout_research",
+    "rotation_rule": "any deliberate rotation of a digest requires a published, versioned code-hash amendment, as the v2 chain did"
+  },
+  "namespace": {
+    "rule": "every v5 artifact has its own name; no v5 artifact is written into a v1, v2, v3 or v4 path, and no v1, v2, v3 or v4 artifact is edited in place",
+    "specification": "configs/research_v5.json",
+    "universe_manifest": "research/universe_manifest_v5.json",
+    "data_manifest": "research/data_manifest_v5.json",
+    "datasets_directory": "research/data/candles_v5/",
+    "evidence_directory": "research/v5_evidence/",
+    "candidate_freeze": "configs/research_v5_candidate_freeze.json",
+    "execution_protocol": "configs/research_v5_execution.json",
+    "selection_authorization": "configs/research_v5_selection_authorization_1.json",
+    "confirmatory_protocol": "configs/research_v5_confirmatory_protocol.json",
+    "confirmatory_runbook": "configs/research_v5_confirmatory_runbook_1.json",
+    "shards_directory": "research/shards_v5/",
+    "ledger": "research/ledger_v5.json",
+    "results_manifest": "research/results_manifest_v5.json",
+    "result_stream": "research/results_v5.jsonl",
+    "checkpoint": "research_state/checkpoint_v5.json",
+    "result_stream_durability": "the result stream is an uncommitted projection of the verified shards, because it exceeds the per-file push limit; a v5 verifier treats its absence as not materialized and reports the shard projection's digest instead of failing"
+  },
+  "fresh_checkout_verifiability": {
+    "rule": "every v5 verifier and every v5 acceptance check must pass on a checkout that holds no v5 run artifacts: an absent uncommitted projection is reported, not failed, and every identity check uses the canonical digest, never the checkout-dependent ordered digest",
+    "reference_pattern": "scripts/verify_v2_selection_run.py reports result_stream_sha256: null and does not fail when the projection is absent",
+    "rejected_pattern": "scripts/verify_v3_selection_run.py and scripts/verify_v4_selection_run.py failed on a fresh checkout before BRAIN-020 repaired their test modules"
+  },
+  "null_result_path": {
+    "state": "AWAITING_NEW_CANDIDATES",
+    "rule": "a v5 pass that yields no eligible new name records AWAITING_NEW_CANDIDATES with the full evidence bundle below and schedules the next pass at the bounded cadence; the campaign is never declared complete because one snapshot was empty",
+    "evidence_required": [
+      "the observed endpoint, as the exact URL",
+      "the observed HTTP status, or the transport error",
+      "the probe timestamp",
+      "the exact command",
+      "the ranking depth retrieved and the depth recomputed from the raw bytes",
+      "the number of assets evaluated",
+      "the exclusion reasons with counts by reason",
+      "the number excluded by the prior-universe identity rule",
+      "the snapshot's raw bytes and their sha256",
+      "the next scheduled pass"
+    ],
+    "cadence": {
+      "cadence_mode": "bounded_cadence_not_polling",
+      "minimum_interval_between_passes": "P7D",
+      "polling_forbidden": "The program must not contact the provider on every agent activation; a pass is scheduled at the bounded cadence instead."
+    },
+    "campaign_completion_rule": "complete is a state reached only by a version whose cycle finished and whose confirmatory evaluation was performed; an empty pass is a scheduled retry, never a terminal state"
+  },
+  "comparability": {
+    "rule": "v5 differs only in the universe. The grid, costs, execution, folds, selection rule and single confirmatory criterion are identical to v1.",
+    "grid_specification_path": "configs/research_v1.json",
+    "selection_rule_path": "configs/research_v1.json",
+    "cost_model_path": "configs/research_v1.json"
+  },
+  "expansion_program": {
+    "program": "continuous_universe_expansion",
+    "append_only_log_path": "research/v_universe_expansion_log.json",
+    "append_only_log_mode": "append_only_hash_chain",
+    "append_only_log_entry_rule": "Each universe version appends exactly one entry to the log. Every entry carries its own hash and the hash of the previous entry, so the log is append-only and its history is verifiable.",
+    "append_only_log_path_note": "configs/research_v4.json#expansion_program.append_only_log_path names research/universe_expansion_log.jsonl, a file that does not exist; the v5 specification names the log that exists. The v4 specification is hash-bound and is not edited in place, so the discrepancy is recorded here as a supersession note.",
+    "log_state_at_preregistration": {
+      "entry_count": 1,
+      "versions_present": [
+        "v3"
+      ],
+      "missing_entries": [
+        "v4"
+      ],
+      "note": "a historical statement of the log at the time of preregistration: the v4 universe version was never appended to the log, so the v5 implementation must append the derived v4 entry before the v5 entry"
+    },
+    "pending_log_entries": [
+      "the derived v4 entry, re-derived from the v4 artifacts with its ranking depth recomputed from the v4 raw response",
+      "the v5 entry, chained onto the v4 entry"
+    ],
+    "log_entry_rule": "each universe version appends exactly one entry carrying its own hash and the hash of the previous entry; an entry is never hand-written, it is derived from the artifacts of its own version",
+    "routing": {
+      "on_exhaustion_or_completion_of_frozen_version": "preregister_next_version_via_design_record_before_implementation",
+      "rewrite_forbidden": true,
+      "rerun_of_frozen_selection_forbidden": true
+    },
+    "prior_versions": [
+      {
+        "version": "v1",
+        "status": "frozen",
+        "manifest_path": "research/universe_manifest.json"
+      },
+      {
+        "version": "v2",
+        "status": "frozen",
+        "manifest_path": "research/universe_manifest_v2.json"
+      },
+      {
+        "version": "v3",
+        "status": "frozen",
+        "manifest_path": "research/universe_manifest_v3.json"
+      },
+      {
+        "version": "v4",
+        "status": "frozen",
+        "manifest_path": "research/universe_manifest_v4.json"
+      }
+    ]
+  },
+  "prerequisites": {
+    "p1": {
+      "name": "preregister_v5_spec",
+      "status": "DONE"
+    },
+    "p2": {
+      "name": "retrieve_and_freeze_v5_universe",
+      "status": "OUTSTANDING"
+    },
+    "p3": {
+      "name": "validate_v5_candidates_and_freeze_data_manifest",
+      "status": "OUTSTANDING"
+    },
+    "p4": {
+      "name": "preregister_v5_execution_protocol_and_candidate_freeze",
+      "status": "OUTSTANDING"
+    },
+    "p5": {
+      "name": "append_the_derived_v4_entry_and_the_v5_entry_to_the_expansion_log",
+      "status": "OUTSTANDING"
+    }
+  },
+  "authorization": {
+    "execution_authorized": false,
+    "campaign_authorized": false,
+    "selection_authorized": false,
+    "confirmatory_authorized": false,
+    "reason": "This specification authorizes nothing. All authorizations require separate, hash-bound artifacts and must not begin before their time gates.",
+    "campaign_authorization_path": "research_state/campaign_authorization.json",
+    "code_hash_must_remain_unchanged": true
+  },
+  "strategy_grid": {
+    "entry_rule": [
+      "classic_high_breakout",
+      "close_breakout"
+    ],
+    "entry_lookback": [
+      12,
+      24,
+      48,
+      72,
+      120,
+      168,
+      336,
+      720
+    ],
+    "buffer_atr_multiple": [
+      0.0,
+      0.1,
+      0.25
+    ],
+    "confirmation": [
+      "one_close",
+      "two_close"
+    ],
+    "trend_filter": [
+      "none",
+      "asset_ema_168",
+      "asset_ema_24_168",
+      "btc_ema_168"
+    ],
+    "exit": [
+      "channel_12",
+      "channel_24",
+      "channel_48",
+      "atr_trail_1.5",
+      "atr_trail_2.5",
+      "atr_trail_4.0"
+    ],
+    "total_combinations": 2304
+  },
+  "costs": {
+    "baseline": {
+      "taker_fee_bps": 10,
+      "slippage_bps": 5
+    },
+    "scenarios": [
+      1.0,
+      2.0,
+      3.0
+    ]
+  },
+  "execution": {
+    "mode": "long_only_cash",
+    "leverage": 1.0,
+    "max_positions_per_asset": 1,
+    "fractional_units": true,
+    "fill_at_next_open": true,
+    "adverse_fill_on_gap": true
+  },
+  "folds": {
+    "development_fraction": 0.8,
+    "holdout_fraction": 0.2,
+    "validation_windows": 4,
+    "window_fractions": [
+      0.4,
+      0.5,
+      0.6,
+      0.7
+    ],
+    "reset_state_between_folds": true
+  },
+  "selection": {
+    "max_candidates_per_asset": 1,
+    "min_trades_total": 30,
+    "min_trades_per_fold": 5,
+    "min_folds_with_min_trades": 3,
+    "positive_net_return_baseline": true,
+    "positive_net_return_2x_costs": true,
+    "positive_folds_required": 3,
+    "median_sharpe_gt_zero": true,
+    "median_sharpe_gt_buyhold": true,
+    "ranking_metric": "median_net_daily_sharpe",
+    "tiebreakers": [
+      "median_net_return",
+      "max_drawdown",
+      "turnover",
+      "config_id"
+    ],
+    "neighbor_analysis": true
+  },
+  "pilot": {
+    "max_configurations": 24,
+    "asset_selection": "highest_ranked_eligible",
+    "config_selection_rule": "cover_all_dimensions"
+  },
+  "metrics": {
+    "gross_total_return": true,
+    "net_total_return": true,
+    "annualized_return": true,
+    "daily_sharpe": true,
+    "max_drawdown": true,
+    "exposure": true,
+    "turnover": true,
+    "trade_count": true,
+    "win_rate": true,
+    "avg_win_loss": true,
+    "profit_factor": true,
+    "fee_slippage_drag": true
+  },
+  "baselines": [
+    "buyhold_asset",
+    "buyhold_btc",
+    "cash",
+    "fixed_breakout_baseline"
+  ],
+  "fixed_breakout_baseline": {
+    "entry_rule": "classic_high_breakout",
+    "entry_lookback": 24,
+    "buffer_atr_multiple": 0.0,
+    "confirmation": "one_close",
+    "trend_filter": "none",
+    "exit": "channel_24"
+  },
+  "status": {
+    "execution": [
+      "NOT_STARTED",
+      "PILOT_RUNNING",
+      "PILOT_PASS",
+      "CAMPAIGN_RUNNING",
+      "CAMPAIGN_PARTIAL",
+      "CAMPAIGN_COMPLETE",
+      "INVALIDATED",
+      "INFRASTRUCTURE_FAILURE",
+      "PERSISTENCE_FAILURE"
+    ],
+    "experiment": [
+      "COMPLETED",
+      "ZERO_TRADE_COMPLETED",
+      "EXCLUDED",
+      "INVALID_DATA",
+      "FAILED",
+      "NOT_RUN"
+    ],
+    "economic": [
+      "NO_CANDIDATE",
+      "INSUFFICIENT_EVIDENCE",
+      "CANDIDATE_PENDING_HOLDOUT",
+      "REJECTED_ON_HOLDOUT",
+      "PROVISIONAL_HISTORICAL_SURVIVAL",
+      "INCONCLUSIVE"
+    ]
+  },
+  "checkpointing": {
+    "batch_size": 50,
+    "atomic_writes": true,
+    "verify_on_resume": true,
+    "max_retries": 3
+  },
+  "data": {
+    "interval": "1h",
+    "provider": "binance",
+    "endpoint": "https://api.binance.com/api/v3/klines",
+    "failover_endpoints": [
+      "https://data-api.binance.vision/api/v3/klines"
+    ],
+    "failover_policy": "One bounded request to the primary host. If it fails (for example HTTP 451), use the documented failover host and record both statuses with timestamps. The primary host is failed over, not blindly retried. max_retries applies to transient failures on the active endpoint only.",
+    "max_retries": 3,
+    "backoff_seconds": 5,
+    "rate_limit_per_minute": 1200,
+    "warmup_bars": 720,
+    "min_candles": 26280,
+    "closed_candles_only": true
+  }
+}
