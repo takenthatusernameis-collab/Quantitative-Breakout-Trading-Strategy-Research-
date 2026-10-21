@@ -1,0 +1,22 @@
+{
+  "elapsed_ms": 57,
+  "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+  "error": null,
+  "http_status": 200,
+  "policy": "exactly one read-only GET of the frozen endpoint inside the pinned window; the raw bytes are stored verbatim and hashed; the snapshot is never re-retrieved or re-timed",
+  "probed_at_utc": "2026-10-20T23:50:06.650864+00:00",
+  "protocol_version": "v4",
+  "provider": "coingecko",
+  "raw_response_bytes": 197538,
+  "raw_response_hash": "1057956c4f605f19636e13fc247b5644c5e3474db4ae50f4e3ddc423155099ca",
+  "raw_response_path": "research/v4_evidence/raw_market_cap_response.json",
+  "reachable": true,
+  "retrieval_timestamp_utc": "2026-10-20T23:50:06Z",
+  "retrieval_window": {
+    "deadline_utc": "2026-10-27T23:16:00Z",
+    "not_before_utc": "2026-10-20T23:16:00Z",
+    "retrieved_at_utc": "2026-10-20T23:50:06Z"
+  },
+  "specification_hash": "2f703f4661ecea400718a600be3f8bd5a726a635ab955c2202048a487684d158",
+  "universe_version": "v4"
+}

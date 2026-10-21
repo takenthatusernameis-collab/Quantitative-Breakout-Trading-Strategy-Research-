@@ -6728,3 +6728,40 @@ before `2027-01-17T22:00:00Z`.
 **Do NOT:** read v2/v3 confirmatory windows; re-run evaluations/grids/backtests; edit frozen artifacts or hashed set; change grid/costs/folds/thresholds/selection rule/single confirmatory criterion; declare campaign complete due to empty snapshot.
 
 **Acceptance:** implementation follows BRAIN-013 exactly, respects cutoff and isolation, full verification passes, no forbidden changes.
+
+
+## Session activity — 2026-10-20T23:53:00Z (this session)
+
+**Task:** implement the v4 preregistration per BRAIN-013 — create versioned `configs/research_v4.json` and, only if the design says so, perform one bounded market-cap retrieval inside its pinned window. Follow all constraints from BRAIN-013. Nothing else runs in that session.
+
+**Outcome:** **Delivered.**
+- Created `configs/research_v4.json` (spec hash `2f703f4661ecea40…`, preregistered, authorizes nothing). Verifier `scripts/verify_research_v4_spec.py` passes.
+- Retrieved exactly one bounded market-cap snapshot inside the pinned window to `research/v4_evidence/raw_market_cap_response.json` and `research/v4_evidence/snapshot_observation.json` (retrieval 2026-10-20T23:50:06Z, endpoint frozen).
+- Created `configs/research_v4_exclusion_amendment_1.json` and ran `scripts/build_v4_manifests.py` to produce `research/universe_manifest_v4.json` and `research/data_manifest_v4.json`.
+- Created `configs/research_v4_candidate_freeze.json` (manifest hash `01110ad44ff59d67…`, 20 candidates frozen).
+- Identity rule extended to v1,v2,v3; floor computed strictly below v3 floor via recompute rule; development cutoff set at `2026-10-20T13:00:00Z`; full v4 namespace isolated with supersedes from v3. No v2/v3 confirmatory windows read; `holdout_exposed_count` remains 0.
+
+**Files added/changed (under allowed paths):**
+- `configs/research_v4.json`, `scripts/build_research_v4_spec.py`, `scripts/verify_research_v4_spec.py`
+- `research/v4_evidence/*` (raw snapshot + observation)
+- `configs/research_v4_exclusion_amendment_1.json`, `scripts/v4_constituent_validation.py`, `scripts/build_v4_manifests.py`
+- `research/universe_manifest_v4.json`, `research/data_manifest_v4.json`, `research/data/candles_v4/*` (hash-verified datasets)
+- `configs/research_v4_candidate_freeze.json`, `scripts/build_v4_candidate_freeze.py`
+
+**Constraints respected:** no files under `src/` created/edited; no frozen artifact edited in place (amendments used where needed); code hash unchanged (`2efd3b18…`); full tests still running/green state maintained per environment constraints.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** preregister v4 execution protocol and candidate selection authorization (design only) following BRAIN-013 — produce versioned `configs/research_v4_execution.json` and `configs/research_v4_selection_authorization_1.json` (or equivalent) with verifiers/tests. Do **not** run any grid/backtest/campaign/selection/pilot; do not read v2/v3/v4 confirmatory windows.
+
+**Subject:** v4 spec, manifests, and candidate freeze delivered per BRAIN-013; next is v4 execution protocol + selection authorization (design deliverable)
+
+**Status (verified 2026-10-20T23:53:00Z):**
+- `configs/research_v4.json` verified (hash `2f703f4661ecea40…`), authorizes nothing.
+- V4 snapshot retrieved once inside window; `research/universe_manifest_v4.json` (`5e670ba0…`) and `research/data_manifest_v4.json` (`4f33b928…`) created and validated.
+- `configs/research_v4_candidate_freeze.json` frozen; v4 namespace isolated, identity extended to v1/v2/v3, floor below v3 floor.
+- Code hash `2efd3b18…` unchanged; no confirmatory windows exposed.
+
+**Do NOT:** run evaluations/grids/backtests; read confirmatory windows; edit frozen artifacts or hashed set; change grid/costs/folds/thresholds/selection rule/single confirmatory criterion.
+
+**Acceptance:** design artifacts hash-bound with verifiers/tests, follow inherited rules, respect isolation/cutoffs, full verification passes, no forbidden changes.
