@@ -844,7 +844,9 @@ def build_data_manifest(spec: Dict[str, Any], v3_data: Dict[str, Any],
                 f"{spec['holdout']['v4_confirmatory_window']['min_hours']} closed hourly candles, "
                 "so it cannot be evaluated in this session. Neither the v1 holdout, the v2 "
                 "confirmatory window nor the open v3 confirmatory window is reused, and no "
-                "development candle closes at or after the preregistered development cutoff."
+                "development candle closes after the preregistered development cutoff: the last "
+                "development candle is the one that closes exactly at the cutoff, and it contains "
+                "no instant inside the open v3 confirmatory window."
             ),
             "v1_holdout_reuse": spec["holdout"]["v1_holdout_reuse"],
             "v2_confirmatory_window_reuse": spec["holdout"]["v2_confirmatory_window"]["reuse_by_v3"],

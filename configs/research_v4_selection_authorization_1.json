@@ -49,9 +49,9 @@
       "count": 7,
       "candidate_manifest_path": "configs/research_v4_candidate_freeze.json",
       "bound_to_universe_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
-      "bound_to_data_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
-      "bound_to_base_data_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
-      "bound_to_freeze_hash": "9f0511189b6f742b6e6682ccf3c5607d68db8fce8d595c389ce6329f5357fb15",
+      "bound_to_data_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
+      "bound_to_base_data_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
+      "bound_to_freeze_hash": "bae6a374f17cd5c4df8a990591efc107945e74cb8b28a9f7d920a4c38e0b9e34",
       "membership_rule": "Exactly the constituents marked validated in research/universe_manifest_v4.json. The run may not re-rank, widen or narrow the frozen set.",
       "widening_by_reranking_forbidden": true,
       "excluded_assets_stay_excluded": true,
@@ -188,9 +188,9 @@
       "note": "The v4 data manifest publishes no BTCUSDT entry. The benchmark dataset is referenced directly from the immutable v3 data area; it is external to the v4 data-manifest identity. It is hash-verified before every use and it is index-aligned with the six evaluated assets, so the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called."
     },
     "effective_data_manifest": {
-      "effective_data_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+      "effective_data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
       "base_manifest_path": "research/data_manifest_v4.json",
-      "base_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+      "base_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
       "note": "The effective v4 data manifest is the base manifest alone; v4 publishes no data-manifest amendment. The benchmark dataset is referenced directly from the v3 data area and is external to this identity."
     },
     "stopping_conditions": [
@@ -233,7 +233,7 @@
     },
     "v4_candidate_freeze": {
       "path": "configs/research_v4_candidate_freeze.json",
-      "manifest_hash": "9f0511189b6f742b6e6682ccf3c5607d68db8fce8d595c389ce6329f5357fb15",
+      "manifest_hash": "bae6a374f17cd5c4df8a990591efc107945e74cb8b28a9f7d920a4c38e0b9e34",
       "frozen_at_utc": "2026-10-21T00:55:32Z"
     },
     "v4_universe_manifest": {
@@ -242,11 +242,11 @@
     },
     "v4_data_manifest": {
       "path": "research/data_manifest_v4.json",
-      "manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129"
+      "manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158"
     },
     "v4_execution_protocol": {
       "path": "configs/research_v4_execution.json",
-      "specification_hash": "57fce7c794dd74b0b77f971af6669734e062e271a3199f7668065eac71dbb9ac"
+      "specification_hash": "e068adb85a81dc971949f9f7b9b2229ce06e2e4b331693c8c82be8f32828ded0"
     },
     "v1_campaign_authorization": {
       "path": "research_state/campaign_authorization.json",
@@ -292,5 +292,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 and v3 artifacts."
   },
-  "manifest_hash": "0e1634ee763bd8389432eca9487c41ef384c886bfead397cebacea542e554d16"
+  "manifest_hash": "b8533ec9760173a65c085cd76affdbcd102735115fc14a078d1bbe107d7f6b2f"
 }

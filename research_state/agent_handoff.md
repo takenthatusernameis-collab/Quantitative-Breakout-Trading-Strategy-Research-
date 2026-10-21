@@ -6780,3 +6780,236 @@ before `2027-01-17T22:00:00Z`.
 - `research_state/continuous_universe_state.json` unchanged
 
 No commit created by the agent.
+
+## Session activity — 2026-10-21T02:5xZ (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it; update the handoff; write a clear
+initial task message for the next agent.
+
+**Prior task (from the durable handoff):** the last *initial task message* in this file (the 23:53Z entry) named
+one bounded task — "preregister v4 execution protocol and candidate selection authorization (design only) …
+produce versioned `configs/research_v4_execution.json` and `configs/research_v4_selection_authorization_1.json`
+(or equivalent) with verifiers/tests". The last entry in the file (02:08:50Z) restated that task as "already
+complete" and named the v4 execution protocol + selection authorization as the *next* task, after verifying
+nothing but the code hash. **The durable handoff contained no record of the two sessions that actually delivered
+it** (the 00:31Z delivery and the 01:25Z chain repair) — they are backfilled below.
+
+**Outcome:** the prior task is delivered and this session closed it properly: it verified the delivery end to
+end, **found and repaired one material defect in it** (three published v4 artifacts stated the development-data
+boundary in a convention that forbids the last candle of every delivered v4 dataset), added the mechanical
+guard that keeps that convention from drifting again, and recorded the two missing sessions. **No provider was
+contacted, no candle was read, no confirmatory window was touched, no frozen v1/v2/v3 artifact was edited, no
+file under `src/` was touched, and no v4 run was performed.**
+
+**Branch / commits:** branch `main`; HEAD `da45bdf0` ("chore(kilo): checkpoint agent session", 2026-10-21
+02:13:55Z) at session start; **no commit was created by the agent** (no explicit user request) — the changes
+below are in the working tree.
+
+**Files changed** (all inside the v4 chain; nothing else in the repository was touched)
+- `scripts/build_v4_candidate_freeze.py`, `scripts/build_v4_execution.py`, `scripts/v4_constituent_validation.py`
+  — the three producer constants that state the boundary rule; the rule is now inclusive.
+- `research/data_manifest_v4.json` — the `confirmatory_window.note` corrected and the manifest hash recomputed
+  with the producer's own `compute_manifest_hash`; **three lines changed** (the note, `manifest_hash`,
+  `snapshot_identity.data_manifest_hash`); no candle, evidence file, timestamp or validation result was touched.
+- `configs/research_v4_candidate_freeze.json`, `configs/research_v4_execution.json`,
+  `configs/research_v4_selection_authorization_1.json` — rebuilt by their producers, deterministically.
+- `scripts/verify_v4_selection_authorization_1.py` — new check 4b (the boundary convention) and the
+  "the dataset ends with the candle that closes exactly at the boundary" check.
+- `scripts/verify_research_v4_manifests.py` — two failure messages that said "at or after the cutoff" for a
+  condition that is "after the cutoff" now say what the condition says.
+- `tests/test_v4_boundary_convention.py` — **new**, 10 tests (5 tamper controls).
+- `tests/test_v4_manifests.py` — one test name and the module docstring: the same wording fix.
+- `research_state/brainstorming_queue.md` — BRAIN-015 (the defect record and the repair).
+- `research_state/agent_handoff.md` — this report, the backfill below and the next task message.
+- `research_state/campaign_authorization.json` — **controller-driven only** (`authorized_at_utc` refresh written
+  by the v1 test suite on every run); restored to its committed value after the last test run.
+
+**The defect (CONFIRMED, recomputed from the live artifacts)**
+
+Three v4 statements forbade a candle that closes **exactly at** the development cutoff, while the datasets, the
+execution path, the selection authorization and the frozen v2 and v3 freezes all treat that candle as
+development data:
+
+| Artifact | Statement (before the repair) |
+| --- | --- |
+| `configs/research_v4_candidate_freeze.json#data_boundary.development_cutoff_rule` | "… so no v4 development candle closes at or after the cutoff" — against its own block's `development_data_rule` ("Candles that close at or before effective_data_boundary_utc are development data") |
+| `configs/research_v4_execution.json#candidate_freeze_and_confirmatory_window.development_data_boundary_rule` | "no development candle that closes at or after that instant may be read" |
+| `research/data_manifest_v4.json#confirmatory_window.note` | "no development candle closes at or after the preregistered development cutoff" — against its own `window_policy.note` ("The candle window ends at the last fully closed hour at the preregistered development cutoff") |
+
+The inclusive convention is the correct one, and the exclusive one was never satisfiable:
+
+- each of the seven validated v4 datasets holds exactly 26,280 closed hourly candles, the last opening
+  2026-10-20T12:00:00Z and closing 2026-10-20T13:00:00Z — the cutoff itself; the v3 confirmatory window opens
+  at 2026-10-20T13:00:00Z, so that candle covers [12:00Z, 13:00Z) and contains **no instant inside** the open
+  v3 window;
+- `src/v4_campaign/data.py` refuses a candle with `close_ms > boundary_ms` (the boundary candle is accepted),
+  and applies the check twice — before the dataset is read and after it is read;
+- `scripts/verify_research_v4_manifests.py` already requires the last candle of every dataset to be the one
+  that opens at `cutoff − 1h`;
+- the frozen `configs/research_v2_candidate_freeze.json` and `configs/research_v3_candidate_freeze.json` both
+  state "Candles that close at or before confirmatory_window_start_utc are development data";
+- dropping the boundary candle would leave 26,279 candles, below the 26,280 that
+  `configs/research_v4.json#universe.min_candles` requires.
+
+**The repair.** The three producer constants now state the rule inclusively; the published data-manifest note
+was corrected to the identical text and the manifest hash recomputed with the producer's own
+`compute_manifest_hash` (the dotted exclusion `snapshot_identity.data_manifest_hash`) — the only hand-applied
+edit of the session, prose only. The cascade was rebuilt with the producers: the candidate freeze with its
+recorded freeze instant (`--freeze-utc 2026-10-21T00:55:32Z`, so the v4 confirmatory window still opens at
+2026-10-21T01:00:00Z and the effective boundary is unchanged), then the execution protocol, then the selection
+authorization. **Unchanged**: the candidate set (the same 20 assets, the same 7 validated), the window, the
+boundary, the bounds, the grid and the selection rule. New identities: data manifest `9d5a3acb…`, candidate
+freeze `bae6a374…`, execution protocol `e068adb8…`, selection authorization `b8533ec9…`.
+
+**The guard.** `scripts/verify_v4_selection_authorization_1.py` check 4b requires every artifact that states the
+development-data boundary — the candidate freeze (both rules), the execution protocol, the selection
+authorization and the data manifest — to state it inclusively, and requires every validated dataset to end with
+the candle that closes exactly at the authorized boundary. `tests/test_v4_boundary_convention.py` (new, 10
+tests, 5 tamper controls) pins the convention, the frozen v2/v3 convention, the data, the agreement of the three
+artifacts on the boundary and the behaviour of the execution path (the boundary candle is accepted, one hour
+earlier is refused). **The guard is not vacuous**: against the pre-repair bytes the verifier reports exactly the
+three exclusive statements and nothing else; against the repaired bytes it reports none.
+
+**Rule → code → test map** (no module under `src/` was added or edited, so `compute_code_hash()` is unchanged)
+
+| Rule | Implementation | Test |
+| --- | --- | --- |
+| every v4 statement of the development-data boundary is inclusive | `scripts/verify_v4_selection_authorization_1.py` check 4b | `tests/test_v4_boundary_convention.py::test_every_artifact_states_the_inclusive_boundary_convention`, `::test_the_verifier_detects_an_exclusive_rule_in_the_candidate_freeze`, `::test_the_verifier_detects_an_exclusive_rule_in_the_execution_protocol`, `::test_the_verifier_detects_an_exclusive_rule_in_the_authorization`, `::test_the_verifier_detects_an_exclusive_rule_in_the_data_manifest` |
+| the frozen v2 and v3 freezes state the same convention | same | `::test_the_frozen_v2_and_v3_freezes_state_the_same_convention` |
+| every validated dataset ends with the candle that closes exactly at the boundary | `scripts/verify_v4_selection_authorization_1.py` check 4 | `::test_every_validated_dataset_ends_with_the_candle_that_closes_at_the_boundary`, `::test_the_verifier_detects_a_dataset_that_stops_before_the_boundary` |
+| the execution path accepts the boundary candle and refuses one past it | `src/v4_campaign/data.py:load_development_candles` | `::test_the_execution_path_accepts_the_boundary_candle_and_refuses_one_past_it` |
+| the freeze, the execution protocol and the authorization agree on the boundary | `scripts/verify_v4_selection_authorization_1.py` check 4 | `::test_the_three_artifacts_agree_on_the_effective_boundary` |
+
+**Verified (2026-10-21T02:5xZ)**
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **1064 passed** in 234.01s, exit 0 (1054 pre-existing + 10 added
+  by this session)
+- `PYTHONPATH=src python3 -m pytest tests/test_v4_boundary_convention.py -q` → **10 passed**, exit 0
+- every `scripts/verify_*.py` exits 0 — 41 verifiers (`scripts/verify_cycle_results.py` needs a `cycle_dir`
+  argument and is not a repository-wide gate)
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` — unchanged, equal
+  to the authorized value of record in `research_state/campaign_authorization.json`
+- the canonical digests are unchanged: hashed set `3e8e4169…`, v2 selection path `c69cc021…`, v2 confirmatory
+  path `277a4bbe…`, v3 selection path `29cd064e…`, v3 confirmatory path `747c2387…`; the v4 execution-path
+  digest `4f81366e…` and the v4 run code identity `f7274c96…` are unchanged (no file under `src/` was touched)
+- the frozen v1/v2/v3 artifacts are byte-unchanged (`git status` shows no change under `research/` except the v4
+  data manifest, and none under `configs/` except the three v4 artifacts)
+- both open confirmatory windows are unexposed: `holdout_exposed_count = 0` and
+  `confirmatory_window_status = NOT_STARTED` in `research/data_manifest_v2.json`,
+  `research/data_manifest_v3.json` and `research/data_manifest_v4.json`; `holdout_exposed_count = 0` in
+  `research_state/checkpoint_v2.json` and `research_state/checkpoint_v3.json`; no holdout index exists for v1,
+  v2, v3 or v4
+- **no v4 execution artifact exists** (`research/shards_v4`, `research/ledger_v4.json`,
+  `research/results_manifest_v4.json`, `research/results_v4.jsonl`, `research_state/checkpoint_v4.json` are all
+  absent): the v4 selection run has not been performed
+- `git diff --stat` shows only the v4 chain, the four v4 scripts, the new test module and
+  `research_state/`; no `src/`, no v1/v2/v3 artifact
+
+**UNVERIFIED / STALE**
+- The 02:08:50Z entry's statement that "the next bounded task is to preregister v4 execution protocol and
+  selection authorization (design only)" is **STALE**: that task was delivered at 00:31Z and repaired at 01:25Z
+  (see the backfill below). The next bounded task is the v4 selection run.
+- The 23:53Z entry's list of delivered files does not mention the execution protocol, the selection
+  authorization, the execution path or the chain repair: it was written before them.
+- BRAIN-014's open item — the v3 confirmatory exposure counter — is **still open** and is not decided by this
+  session: see the next task message.
+- No commit was created by this agent; the changes are in the working tree only.
+
+**Unsuccessful attempts (and the condition that would justify a retry)**
+- The full test suite rewrites `research_state/campaign_authorization.json` (`authorized_at_utc`) on every run;
+  the file was restored to its committed value after the last run. A session that leaves it dirty shows a
+  spurious functional diff.
+- `scripts/v4_constituent_validation.py` cannot be re-run to regenerate the data manifest: it performs one
+  bounded provider request per candidate and one paginated candle fetch per validated candidate, and re-running
+  it would re-contact the provider and re-time the stored evidence. This is why the data-manifest note was
+  applied as a prose edit with the producer's own hash function (and the producer constant was corrected in the
+  same session, so a future run emits the same text). A retry of the *whole* chain would need a new pinned
+  market-cap window, and is not warranted.
+
+### Backfill — the two sessions the durable handoff had no record of
+
+Reconstructed from the commits and the artifacts (neither session wrote a handoff entry); every claim below is
+recomputed from the live artifacts.
+
+**00:31Z session (commit `99e48f93`) — the v4 execution protocol, the v4 selection authorization and the v4
+execution path.** Delivered `configs/research_v4_execution.json` (the benchmark rule, the data-manifest identity,
+the code-identity constraint, the output paths) and `configs/research_v4_selection_authorization_1.json`
+(`PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN`, run id `v4-selection-20261021`, 7 assets × 2,304
+configurations, 193,536 planned execution units, `provider_requests = 0`), together with the execution path
+`src/v4_campaign/` (8 modules: `__init__`, `benchmark`, `data`, `errors`, `identity`, `runner`, `scope`, `units`)
+and the tests `tests/test_v4_execution.py` and `tests/test_v4_selection_authorization_1.py`. The execution path
+lives outside the hashed set, so `compute_code_hash()` did not move. The execution-path digest and the run code
+identity of that delivery were `6f0c74ab…` and `20b93691…`.
+
+**01:25Z session (commit `0027824e`) — BRAIN-014, the v4 chain repair.** The audit found that the v4 chain had
+been built with three v3 rule bindings: the floor was recomputed from the v2 universe manifest, the identity
+rule covered only the v1 and v2 universes and the `supersedes` chain named the v2 universe manifest, so cohort
+4 **was** cohort 3 again; the candle window was bound to the snapshot timestamp, so ten hourly candles per
+asset had been read inside the open v3 confirmatory window and were deleted before any use. The repair
+recomputed the floor from the v3 universe manifest (`HTXUSDT`, 1,468,004,153 USD), extended the identity rule
+to v1, v2 **and** v3, bound the candle window to the preregistered cutoff, added
+`configs/research_v4_exclusion_amendment_2.json` and `scripts/verify_research_v4_manifests.py`, and rebuilt the
+manifests, the candidate freeze, the execution protocol and the selection authorization. The v4 cohort is now
+`ALGOUSDT`, `ARBUSDT`, `ETCUSDT`, `FILUSDT`, `INJUSDT`, `JSTUSDT`, `NEXOUSDT` (7 of 20; the other 13 are excluded
+after validation), no member is an asset of the v1, v2 or v3 universe, and no v4 development candle closes
+inside the open v3 window. The record is BRAIN-014 in `research_state/brainstorming_queue.md`; it left **one
+open item for the coordinator** (the v3 exposure counter), which is still open.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** perform the **single authorized v4 selection run** — the one logical run
+`v4-selection-20261021` that `configs/research_v4_selection_authorization_1.json` authorizes over the frozen v4
+candidate set — and record it in the durable handoff. Nothing else runs in that session.
+
+**Subject:** v4 chain audited, the boundary-convention defect repaired and guarded; next is the single
+authorized v4 selection run (`v4-selection-20261021`)
+
+**Status (verified 2026-10-21T02:5xZ):**
+- the v4 chain is delivered, audited and repaired: spec `2f703f46…`, data manifest `9d5a3acb…`, candidate
+  freeze `bae6a374…` (20 candidates, 7 validated), execution protocol `e068adb8…`, selection authorization
+  `b8533ec9…`; the candidate set, the window (opens 2026-10-21T01:00:00Z, earliest end 2027-01-19T01:00:00Z),
+  the effective boundary (2026-10-20T13:00:00Z), the bounds and the selection rule are unchanged by the repair
+- the execution path `src/v4_campaign/runner.py:run_selection` exists, lives outside the hashed set, accepts
+  the authorization and resolves a plan without executing anything (the authorization verifier does this on
+  every run); the v4 execution path digest is `4f81366e…` and the run code identity `f7274c96…`
+- **no v4 run has been performed**: `research/shards_v4`, `research/ledger_v4.json`,
+  `research/results_manifest_v4.json`, `research/results_v4.jsonl` and `research_state/checkpoint_v4.json` do
+  not exist
+- the run reads only the immutable local datasets the v4 data manifest binds (plus the v3-area BTCUSDT
+  benchmark, hash-verified before use); it makes **no provider request** and reads **no confirmatory-window
+  candle**: every development candle closes at or before 2026-10-20T13:00:00Z
+- the v3 run of the same shape (6 assets, 165,888 execution units) took 73 minutes with 2 resumes; the v4 run
+  (7 assets, 193,536 execution units) should take about 85 minutes and is bounded by
+  `max_wall_time_hours = 6`
+
+**Do NOT:** contact any provider; read a candle inside the v2, the v3 or the v4 confirmatory window; re-run a
+completed run (a completed run is never re-run; an interrupted run is resumed from the verified shards, bounded
+by `max_retries_on_technical_failure`); widen or re-rank the candidate set; change the 2,304-configuration grid,
+the costs, the folds, the thresholds, the selection rule or the single confirmatory criterion; edit any file
+under `src/breakout_research`; edit a frozen v1/v2/v3 artifact; mark a confirmatory window as started or
+`holdout_exposed_count` as non-zero; edit `research_state/continuous_universe_state.json` (the v4 cycle is
+recorded when the run completes, not before); take the v3 exposure-counter decision (see below) in the same
+session.
+
+**Acceptance criteria:** the ledger `research/ledger_v4.json` records run id `v4-selection-20261021` with status
+`COMPLETED` and the selection summary; the shard count and the result-stream row count match the planned
+execution units; `research/results_v4.jsonl`, `research/results_manifest_v4.json`,
+`research/shards_v4/` and `research_state/checkpoint_v4.json` exist and are mutually consistent;
+`holdout_exposed_count` stays 0 and no confirmatory-window candle was read; the v1/v2/v3 artifacts and
+`research_state/continuous_universe_state.json` are unchanged; `compute_code_hash()` is still `2efd3b18…` and
+the canonical digests are unchanged; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0 with no new failures;
+every `scripts/verify_*.py` still exits 0; the handoff records the run's wall clock, the per-asset selection
+outcome and the ledger's identity. A thin CLI wrapper like `scripts/run_v3_selection.py` may be added under
+`scripts/` to invoke the run with a progress line; it must not change the engine.
+
+**Still open for the coordinator (do not decide it in the run session):** BRAIN-014's exposure-counter
+question — whether the discarded, pre-use read of ten hourly candles per v3-cohort asset (deleted in the
+01:25Z session, before any use) must increment `holdout_exposed_count` in the v3 data manifest and the v3
+checkpoint, or is recorded as a disclosed pre-use read that is not an evaluation exposure. Read literally, the
+v3 candidate freeze's `access_counting` says the counter increments; the alternative changes the v3 timeline.
+The decision is due before the v3 confirmatory gate clears on **2027-01-18T13:00:00Z** (the v2 gate clears
+2027-01-17T22:00:00Z); the v4 selection run does not depend on it.
+
+**Queued after this task (not for that session):** the publication of the v4 selected-configurations manifest
+and the v4 execution amendment (the v2/v3 pattern); the v3 confirmatory evaluation (may not start before
+2027-01-18T13:00:00Z) and the v2 confirmatory evaluation (may not start before 2027-01-17T22:00:00Z); the
+preregistered v4 confirmatory protocol and runbook, which may only be written after the v3 gate clears.

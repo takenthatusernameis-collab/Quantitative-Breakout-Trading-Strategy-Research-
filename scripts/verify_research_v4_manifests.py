@@ -278,12 +278,12 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             )
         if recorded_last is not None and int(recorded_last) + HOUR_MS > cutoff_ms:
             failures.append(
-                f"{pair}: the manifest records a candle that closes at or after the "
+                f"{pair}: the manifest records a candle that closes after the "
                 "development cutoff"
             )
         if timestamps and timestamps[-1] + HOUR_MS > cutoff_ms:
             failures.append(
-                f"{pair}: the dataset closes a candle at or after the development cutoff"
+                f"{pair}: the dataset closes a candle after the development cutoff"
             )
     if (data.get("window_policy") or {}).get("development_cutoff_utc") != development_cutoff:
         failures.append("the data manifest does not bind the preregistered development cutoff")

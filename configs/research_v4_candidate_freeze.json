@@ -294,7 +294,7 @@
   "data_boundary": {
     "access_counting": "Every read of a candle inside a confirmatory window increments holdout_exposed_count in the checkpoint of that version and is recorded in its holdout report.",
     "data_used_for_candidate_selection": "excluded",
-    "development_cutoff_rule": "configs/research_v4.json#holdout.development_cutoff_utc: any development data read at or after the v3 confirmatory-window open is inside that window, so no v4 development candle closes at or after the cutoff",
+    "development_cutoff_rule": "configs/research_v4.json#holdout.development_cutoff_utc: any development data read at or after the v3 confirmatory-window open is inside that window, so the v4 development data ends at the cutoff: the last development candle is the one that closes exactly at the cutoff, and no candle that closes after the cutoff may be read",
     "development_cutoff_utc": "2026-10-20T13:00:00Z",
     "development_data_rule": "Candles that close at or before effective_data_boundary_utc are development data and may inform selection. No candle that closes after that instant may be read during selection.",
     "earliest_possible_confirmatory_window_end_utc": "2027-01-19T01:00:00Z",
@@ -310,7 +310,7 @@
     "v4_confirmatory_window_start_rule": "the first UTC hour boundary strictly after candidate_freeze_utc",
     "v4_confirmatory_window_start_utc": "2026-10-21T01:00:00Z"
   },
-  "data_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+  "data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
   "data_manifest_path": "research/data_manifest_v4.json",
   "durability": {
     "commit": null,
@@ -1984,7 +1984,7 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with the manifest_hash key removed."
   },
-  "manifest_hash": "9f0511189b6f742b6e6682ccf3c5607d68db8fce8d595c389ce6329f5357fb15",
+  "manifest_hash": "bae6a374f17cd5c4df8a990591efc107945e74cb8b28a9f7d920a4c38e0b9e34",
   "producer": {
     "note": "the freeze instant is an input; rebuilding with the recorded instant reproduces the artifact byte for byte",
     "path": "scripts/build_v4_candidate_freeze.py",
@@ -1994,7 +1994,7 @@
   "snapshot_identity": {
     "candidate_manifest_hash": null,
     "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
-    "data_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+    "data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
     "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
     "market_cap_source_retrieval_timestamp_utc": "2026-10-20T23:50:06Z",
     "protocol_version": "v4",

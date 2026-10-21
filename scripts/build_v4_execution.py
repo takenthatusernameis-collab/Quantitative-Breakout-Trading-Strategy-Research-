@@ -190,9 +190,10 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             "development_data_boundary_utc": effective_boundary,
             "development_data_boundary_rule": (
                 "the effective development boundary is the earlier of the v4 "
-                "confirmatory-window start and the preregistered development cutoff; no "
-                "development candle that closes at or after that instant may be read, so no "
-                "candle inside the open v3 confirmatory window is ever read by a v4 run"
+                "confirmatory-window start and the preregistered development cutoff; a "
+                "development candle that closes at or before that instant may be read, and no "
+                "candle that closes after it may be read, so no candle inside the open v3 "
+                "confirmatory window is ever read by a v4 run"
             ),
             "min_confirmatory_window_hours": min_hours,
             "min_confirmatory_window_rationale": "90 days of closed hourly candles after freeze",

@@ -6,7 +6,7 @@
     "confirmatory_window_opens_utc": "2026-10-21T01:00:00Z",
     "development_cutoff_utc": "2026-10-20T13:00:00Z",
     "development_data_boundary_utc": "2026-10-20T13:00:00Z",
-    "development_data_boundary_rule": "the effective development boundary is the earlier of the v4 confirmatory-window start and the preregistered development cutoff; no development candle that closes at or after that instant may be read, so no candle inside the open v3 confirmatory window is ever read by a v4 run",
+    "development_data_boundary_rule": "the effective development boundary is the earlier of the v4 confirmatory-window start and the preregistered development cutoff; a development candle that closes at or before that instant may be read, and no candle that closes after it may be read, so no candle inside the open v3 confirmatory window is ever read by a v4 run",
     "min_confirmatory_window_hours": 2160,
     "min_confirmatory_window_rationale": "90 days of closed hourly candles after freeze",
     "no_ranking_or_retuning_on_holdout": true,
@@ -37,7 +37,7 @@
     "not_applicable": true
   },
   "evaluation_scope": {
-    "candidate_freeze_hash": "9f0511189b6f742b6e6682ccf3c5607d68db8fce8d595c389ce6329f5357fb15",
+    "candidate_freeze_hash": "bae6a374f17cd5c4df8a990591efc107945e74cb8b28a9f7d920a4c38e0b9e34",
     "candidate_freeze_path": "configs/research_v4_candidate_freeze.json",
     "constituents": [
       "ALGOUSDT",
@@ -49,7 +49,7 @@
       "NEXOUSDT"
     ],
     "count": 7,
-    "data_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+    "data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
     "data_manifest_path": "research/data_manifest_v4.json",
     "excluded_assets_stay_excluded": true,
     "universe_manifest_hash": "14d27d6899009393df365ecdedac4a7b6d2d53e8777aa5bc6b789b14909029f4",
@@ -89,5 +89,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 and v3 artifacts."
   },
-  "manifest_hash": "57fce7c794dd74b0b77f971af6669734e062e271a3199f7668065eac71dbb9ac"
+  "manifest_hash": "e068adb85a81dc971949f9f7b9b2229ce06e2e4b331693c8c82be8f32828ded0"
 }

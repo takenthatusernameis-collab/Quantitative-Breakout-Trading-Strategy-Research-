@@ -12,9 +12,10 @@ that the defect cannot come back silently:
   specification names;
 * the **identity rule**: no member of the batch is an asset of the v1, the v2
   or the v3 universe;
-* the **development cutoff**: no validated dataset closes a candle at or after
-  the preregistered development cutoff, so no v4 development candle closes
-  inside the open v3 confirmatory window.
+* the **development cutoff**: no validated dataset closes a candle after the
+  preregistered development cutoff -- the candle that closes exactly at the
+  cutoff is development data -- so no v4 development candle closes inside the
+  open v3 confirmatory window.
 
 The tamper controls mutate a copy of the repository and assert that the
 verifier refuses the mutated tree.
@@ -182,7 +183,7 @@ def test_the_effective_amendment_is_the_highest_numbered_one() -> None:
     assert amendments[-1] == AMENDMENT_2_PATH
 
 
-def test_no_validated_dataset_closes_a_candle_at_or_after_the_cutoff() -> None:
+def test_no_validated_dataset_closes_a_candle_after_the_cutoff() -> None:
     data = _load(DATA_PATH)
     spec = _load(SPEC_PATH)
     cutoff = spec["holdout"]["development_cutoff_utc"]

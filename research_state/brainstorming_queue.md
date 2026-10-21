@@ -3851,3 +3851,44 @@ The market-cap snapshot of the v4 chain was retrieved at 2026-10-20T23:50:06Z, i
 - `scripts/verify_v4_selection_authorization_1.py`: the data boundary is now checked against the effective development boundary, against the preregistered cutoff and against the last candle of every validated dataset.
 
 **Recommendation:** accept the repaired v4 chain; treat the exposure-counter question as the one open campaign decision; keep the v4 confirmatory window opening after the v3 gate clears (BRAIN-013 phase gates).
+
+## BRAIN-015 — the v4 development-data boundary was stated in two conventions, and three of the statements forbade the last candle of every v4 dataset (2026-10-21T02:5xZ)
+
+**Status:** REPAIRED_IN_THIS_SESSION; no v4 run has consumed the chain, so no result depends on it.
+**Type:** defect record and repair (prose against data; the implemented and frozen convention is the inclusive one).
+**Routing:** the durable handoff named the v4 execution protocol and the v4 selection authorization as the next bounded task; both were delivered, and BRAIN-014 repaired the chain beneath them. This session audited that delivery end to end and found the boundary convention itself was stated inconsistently. The rule of record is the preregistered v4 specification, the BRAIN-013 design record and the frozen v2 and v3 candidate freezes.
+
+### The defect (recomputed from the live artifacts, not quoted)
+
+Three v4 statements forbade a candle that closes **exactly at** the development cutoff, while everything else in the chain — the datasets, the execution path, the selection authorization and the frozen v2 and v3 freezes — treats that candle as development data:
+
+1. `configs/research_v4_candidate_freeze.json#data_boundary.development_cutoff_rule`: "… so no v4 development candle closes at or after the cutoff". The **same block** states the opposite in `development_data_rule`: "Candles that close at or before effective_data_boundary_utc are development data".
+2. `configs/research_v4_execution.json#candidate_freeze_and_confirmatory_window.development_data_boundary_rule`: "no development candle that closes at or after that instant may be read".
+3. `research/data_manifest_v4.json#confirmatory_window.note`: "no development candle closes at or after the preregistered development cutoff", against its own `window_policy.note`: "The candle window ends at the last fully closed hour at the preregistered development cutoff".
+
+The inclusive convention is the correct one, and the exclusive one was never satisfiable:
+
+- every one of the seven validated v4 datasets holds exactly 26,280 closed hourly candles, the last opening 2026-10-20T12:00:00Z and closing 2026-10-20T13:00:00Z, which is the cutoff itself; the v3 confirmatory window opens at 2026-10-20T13:00:00Z, so that candle covers the hour [12:00Z, 13:00Z) and contains **no instant inside** the open v3 window;
+- `src/v4_campaign/data.py` refuses a candle with `close_ms > boundary_ms`, i.e. a candle that closes exactly at the boundary is accepted, and the check is applied twice (before the dataset is read and after it is read);
+- `scripts/verify_research_v4_manifests.py` requires the last candle of every dataset to be the one that opens at `cutoff − 1h`, i.e. it already pins the inclusive convention;
+- the frozen `configs/research_v2_candidate_freeze.json` and `configs/research_v3_candidate_freeze.json` both state "Candles that close at or before confirmatory_window_start_utc are development data";
+- dropping the boundary candle would leave 26,279 candles, below the 26,280 that `configs/research_v4.json#universe.min_candles` requires.
+
+So the defect was in the prose only: read literally, three published artifacts forbade the very last candle of every delivered v4 dataset, and one artifact contradicted itself.
+
+### The repair
+
+- `scripts/build_v4_candidate_freeze.py`, `scripts/build_v4_execution.py` and `scripts/v4_constituent_validation.py` now state the rule inclusively; the producer constants are the source of the published text.
+- `research/data_manifest_v4.json`: the note was corrected and the manifest hash recomputed with the producer's own `compute_manifest_hash` (the dotted exclusion `snapshot_identity.data_manifest_hash`); this is the only hand-applied edit of the session and it changed exactly three lines — the note, `manifest_hash` and the self-referential `snapshot_identity.data_manifest_hash`. No candle, no evidence file, no timestamp and no validation result was touched, and the manifest's producer now emits the same text.
+- The cascade was rebuilt with the producers, deterministically: the candidate freeze with its recorded freeze instant (`--freeze-utc 2026-10-21T00:55:32Z`, so the v4 confirmatory window still opens at 2026-10-21T01:00:00Z and the effective boundary is unchanged), then the execution protocol, then the selection authorization. The candidate set (the same 20 assets, the same 7 validated), the window, the boundary, the bounds and the selection rule are byte-identical; only the three rule sentences and the hash bindings changed.
+- Two failure messages in `scripts/verify_research_v4_manifests.py` and one test name in `tests/test_v4_manifests.py` said "at or after the cutoff" for a condition that is "after the cutoff"; they now say what the condition says.
+
+New identities: data manifest `9d5a3acb…`, candidate freeze `bae6a374…`, execution protocol `e068adb8…`, selection authorization `b8533ec9…`. The code hash (`2efd3b18…`), the canonical digest of the hashed set (`3e8e4169…`), the v4 execution-path digest (`4f81366e…`) and the v4 run code identity (`f7274c96…`) are unchanged: no file under `src/` was touched.
+
+### The guard that keeps the convention from drifting again
+
+- `scripts/verify_v4_selection_authorization_1.py` (check 4b, new): every artifact that states the development-data boundary — the candidate freeze (both rules), the execution protocol, the selection authorization and the data manifest — must state it inclusively; a statement that forbids the boundary candle is a failure. It also requires every validated dataset to end with the candle that closes exactly at the authorized boundary, so the data and the prose cannot disagree.
+- `tests/test_v4_boundary_convention.py` (new, 10 tests, 5 of them tamper controls): the convention in the five statements, the convention of the frozen v2 and v3 freezes, the data, the three artifacts' agreement on the boundary, the behaviour of the execution path (the boundary candle is accepted, one hour earlier is refused) and four tamper controls that make the verifier report an exclusive statement and a dataset that stops before the boundary.
+- The guard is not vacuous: against the pre-repair bytes the verifier reports exactly the three exclusive statements and nothing else, and against the repaired bytes it reports none.
+
+**Recommendation:** accept the repaired v4 chain; the next bounded task is the single authorized v4 selection run (`v4-selection-20261021`), with the exposure-counter question of BRAIN-014 still open for the coordinator before the v3 confirmatory gate clears on 2027-01-18T13:00:00Z.

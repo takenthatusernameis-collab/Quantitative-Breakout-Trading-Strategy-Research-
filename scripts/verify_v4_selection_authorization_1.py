@@ -95,6 +95,25 @@ CHECKPOINT_RELATIVE = "research_state/checkpoint_v4.json"
 
 RUN_STATUSES = ("RUNNING", "INTERRUPTED", "COMPLETED")
 
+#: Phrasings that state the development-data boundary exclusively. A candle that
+#: closes exactly at the boundary is development data -- it contains no instant
+#: inside the open v3 confirmatory window -- and the delivered datasets, the
+#: execution path and the frozen v2 and v3 freezes all use that inclusive
+#: convention. A rule that forbids the boundary candle contradicts them.
+EXCLUSIVE_BOUNDARY_MARKERS = (
+    "closes at or after",
+    "at or after the cutoff",
+    "at or after that instant",
+)
+
+#: Phrasings that state the boundary inclusively.
+INCLUSIVE_BOUNDARY_MARKERS = (
+    "at or before",
+    "closes exactly at",
+    "closes after",
+    "after that instant",
+)
+
 
 def canonical(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
@@ -436,6 +455,45 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         if int(last) + 3600000 > cutoff_ms:
             failures.append(
                 f"the dataset of {pair} closes a candle after the authorized data boundary"
+            )
+        if int(last) + 3600000 != cutoff_ms:
+            failures.append(
+                f"the dataset of {pair} does not end with the candle that closes exactly at the "
+                "authorized data boundary, so the data does not implement the boundary "
+                "convention the artifacts state"
+            )
+
+    # 4b. Every artifact that states the development-data boundary states it in
+    #     the same, inclusive convention: a candle that closes exactly at the
+    #     boundary is development data, and only a candle that closes after it is
+    #     forbidden. The convention is the one the frozen v2 and v3 candidate
+    #     freezes state and the one the delivered datasets implement.
+    rule_texts = [
+        ("the candidate freeze", dig(freeze, "data_boundary.development_data_rule")),
+        ("the candidate freeze", dig(freeze, "data_boundary.development_cutoff_rule")),
+        ("the execution protocol",
+         dig(execution, "candidate_freeze_and_confirmatory_window.development_data_boundary_rule")),
+        ("the selection authorization", boundary.get("candles_before_utc_rule")),
+        ("the data manifest", dig(data_manifest, "confirmatory_window.note")),
+    ]
+    for label, text in rule_texts:
+        if not isinstance(text, str) or not text:
+            failures.append(f"{label} states no development-data boundary rule")
+            continue
+        forbidden = [
+            marker for marker in EXCLUSIVE_BOUNDARY_MARKERS if marker in text
+        ]
+        if forbidden:
+            failures.append(
+                f"{label} states the development-data boundary exclusively "
+                f"({forbidden[0]!r}), which forbids the candle that closes exactly at the "
+                "boundary; the delivered datasets and the execution path use the inclusive "
+                "convention"
+            )
+            continue
+        if not any(marker in text for marker in INCLUSIVE_BOUNDARY_MARKERS):
+            failures.append(
+                f"{label} states no inclusive development-data boundary rule"
             )
 
     # 5. The selection rule is the unchanged v1 rule.

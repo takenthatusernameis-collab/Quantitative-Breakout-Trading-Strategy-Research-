@@ -130,8 +130,10 @@ def build(repo_root: Path = REPO_ROOT, freeze_utc: Optional[str] = None) -> Dict
             "development_cutoff_utc": spec["holdout"]["development_cutoff_utc"],
             "development_cutoff_rule": (
                 "configs/research_v4.json#holdout.development_cutoff_utc: any development data "
-                "read at or after the v3 confirmatory-window open is inside that window, so no "
-                "v4 development candle closes at or after the cutoff"
+                "read at or after the v3 confirmatory-window open is inside that window, so the "
+                "v4 development data ends at the cutoff: the last development candle is the one "
+                "that closes exactly at the cutoff, and no candle that closes after the cutoff "
+                "may be read"
             ),
             "v4_confirmatory_window_start_utc": format_utc(window_open),
             "v4_confirmatory_window_start_rule": (

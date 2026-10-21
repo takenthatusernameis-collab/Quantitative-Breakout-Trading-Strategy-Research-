@@ -1155,7 +1155,7 @@
     "confirmatory_window_status": "NOT_STARTED",
     "development_cutoff_utc": "2026-10-20T13:00:00Z",
     "holdout_exposed_count": 0,
-    "note": "No confirmatory-window candle has been read. The v4 confirmatory window starts after the v4 candidate freeze and needs at least 2160 closed hourly candles, so it cannot be evaluated in this session. Neither the v1 holdout, the v2 confirmatory window nor the open v3 confirmatory window is reused, and no development candle closes at or after the preregistered development cutoff.",
+    "note": "No confirmatory-window candle has been read. The v4 confirmatory window starts after the v4 candidate freeze and needs at least 2160 closed hourly candles, so it cannot be evaluated in this session. Neither the v1 holdout, the v2 confirmatory window nor the open v3 confirmatory window is reused, and no development candle closes after the preregistered development cutoff: the last development candle is the one that closes exactly at the cutoff, and it contains no instant inside the open v3 confirmatory window.",
     "v1_holdout_reuse": "forbidden",
     "v2_confirmatory_window_reuse": "forbidden",
     "v3_confirmatory_window_reuse": "forbidden"
@@ -1208,7 +1208,7 @@
     ],
     "note": "manifest_hash is the sha256 of the manifest body with manifest_hash and snapshot_identity.data_manifest_hash removed, so that the manifest can carry the data-manifest hash without hashing itself into a cycle."
   },
-  "manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+  "manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
   "market_cap_source": {
     "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
     "provider": "coingecko",
@@ -1228,7 +1228,7 @@
   "snapshot_identity": {
     "candidate_manifest_hash": null,
     "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
-    "data_manifest_hash": "4fc7b3b0fbcf1c90f0d783ea52ef98f0fbc4cc79ec58d0932f149993f7e05129",
+    "data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
     "market_cap_source_endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
     "market_cap_source_retrieval_timestamp_utc": "2026-10-20T23:50:06Z",
     "protocol_version": "v4",
