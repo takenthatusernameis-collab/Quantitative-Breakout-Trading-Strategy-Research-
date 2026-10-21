@@ -1,0 +1,20 @@
+{
+  "code_hash": "8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2",
+  "completed_records": 3050,
+  "current_asset_index": 0,
+  "current_config_index": 1016,
+  "current_cost_index": 1,
+  "current_fold_index": 0,
+  "holdout_exposed_count": 0,
+  "last_verified_record": 3050,
+  "next_unit": {
+    "asset_index": 0,
+    "config_index": 0,
+    "cost_index": 0,
+    "fold_index": 0
+  },
+  "pilot_completed": true,
+  "pilot_passed": true,
+  "protocol_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2",
+  "timestamp_utc": "2026-10-21T19:57:35.220881+00:00"
+}

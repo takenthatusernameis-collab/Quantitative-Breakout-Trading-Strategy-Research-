@@ -250,6 +250,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "version": 1,
         "protocol_version": "v5",
         "universe_version": "v5",
+        "specification_hash": spec_v5["specification_hash"],
         "created_utc": CREATED_UTC,
         "authorization_status": "PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN",
         "specification_purpose": (
@@ -402,11 +403,19 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 "execution": {
                     "path": rules["execution"]["path"],
                     "manifest_hash": rules["execution"]["manifest_hash"],
-                    "precedence": rules["execution"]["precedence"],
+                    "precedence": (
+                        "the effective v5 execution protocol is the newest published execution "
+                        "amendment for the blocks it restates, and configs/research_v5_execution."
+                        "json for the blocks no amendment restates; every amendment stays on "
+                        "disk, unchanged and visible"
+                    ),
+                    "named_amendment_precedence": rules["execution"]["precedence"],
                     "consequence_for_the_run": (
-                        "the effective execution protocol is the execution amendment for the "
-                        "blocks it restates and the frozen protocol for the rest; the frozen "
-                        "protocol stays on disk, unchanged and visible"
+                        "the effective execution protocol is the newest published execution "
+                        "amendment for the blocks it restates and the frozen protocol for the "
+                        "rest; every amendment stays on disk, unchanged and visible, and the "
+                        "run gate verifies the published v5 selection authorization's identity "
+                        "instead of a static flag"
                     ),
                 },
             },

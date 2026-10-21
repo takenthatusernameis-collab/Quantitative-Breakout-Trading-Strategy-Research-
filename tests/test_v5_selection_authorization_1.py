@@ -196,6 +196,26 @@ def test_the_authorization_is_self_hashing() -> None:
     assert recomputed == authorization["manifest_hash"]
 
 
+def test_the_authorization_is_bound_to_the_v5_specification() -> None:
+    """Every delivered v5 stage artifact carries the specification's identity."""
+    authorization = _load(AUTHORIZATION_PATH)
+    spec_v5 = _load(SPEC_V5_PATH)
+    assert authorization["specification_hash"] == spec_v5["specification_hash"]
+    assert authorization["universe_version"] == spec_v5["universe_version"] == "v5"
+
+
+def test_the_verifier_detects_an_authorization_that_is_not_bound_to_the_specification(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    _tamper(
+        root,
+        lambda document: document.update({"specification_hash": "0" * 64}),
+    )
+    failures = _failures(root)
+    assert any("not bound to the v5 specification" in failure for failure in failures)
+
+
 def test_the_authorization_is_reproduced_byte_for_byte_by_its_producer() -> None:
     rebuilt = producer.build(REPO_ROOT)
     on_disk = _load(AUTHORIZATION_PATH)

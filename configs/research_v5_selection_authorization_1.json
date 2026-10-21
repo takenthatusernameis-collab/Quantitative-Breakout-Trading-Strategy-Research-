@@ -4,6 +4,7 @@
   "version": 1,
   "protocol_version": "v5",
   "universe_version": "v5",
+  "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2",
   "created_utc": "2026-10-21T15:30:00Z",
   "authorization_status": "PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN",
   "specification_purpose": "Authorize exactly one bounded v5 selection grid run over the frozen v5 candidate set, under the unchanged v1 selection rule, on development data only, writing only to the v5 paths, with the effective v5 rules and the v5-cutoff-bounded benchmark built in. This artifact names the execution path, the bounds, the benchmark rule, the stopping conditions, the rollback rule and the falsifiers of that run. Building it executes nothing: no grid is run, no candle is read, no result exists.",
@@ -109,8 +110,8 @@
       "hashed_set_root": "src/breakout_research",
       "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
       "execution_path_root": "src/v5_campaign",
-      "execution_path_digest": "2fd30c7540c13a876a3bea42891bf442023c3cbe8e1c78388e611119151f4008",
-      "run_code_identity": "4f0fb01ac745148123cbc478e389aec5e0c88c10c7e9dd83c4de46cbc20f725c",
+      "execution_path_digest": "9c5f13ff86604e5b52776262d33828e6a071419a640d6343f6ff5997c7df06e8",
+      "run_code_identity": "8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2",
       "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
       "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
       "ordered_code_hash_is_portable": false,
@@ -137,8 +138,9 @@
       "execution": {
         "path": "configs/research_v5_execution_amendment_1.json",
         "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988",
-        "precedence": "the effective v5 execution protocol is this amendment for the blocks it restates, and configs/research_v5_execution.json for the blocks it does not; the protocol stays on disk unchanged and visible",
-        "consequence_for_the_run": "the effective execution protocol is the execution amendment for the blocks it restates and the frozen protocol for the rest; the frozen protocol stays on disk, unchanged and visible"
+        "precedence": "the effective v5 execution protocol is the newest published execution amendment for the blocks it restates, and configs/research_v5_execution.json for the blocks no amendment restates; every amendment stays on disk, unchanged and visible",
+        "named_amendment_precedence": "the effective v5 execution protocol is this amendment for the blocks it restates, and configs/research_v5_execution.json for the blocks it does not; the protocol stays on disk unchanged and visible",
+        "consequence_for_the_run": "the effective execution protocol is the newest published execution amendment for the blocks it restates and the frozen protocol for the rest; every amendment stays on disk, unchanged and visible, and the run gate verifies the published v5 selection authorization's identity instead of a static flag"
       }
     },
     "data_boundary": {
@@ -342,5 +344,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2, v3 and v4 artifacts."
   },
-  "manifest_hash": "44aec8431314b2e2125a91a5e3407d3805bb56fdfead2a8a0227d8a3fb911e18"
+  "manifest_hash": "55827bd8e1b11311a2977232f236566ac8b3236e4dd10229aad269aab6c503c2"
 }

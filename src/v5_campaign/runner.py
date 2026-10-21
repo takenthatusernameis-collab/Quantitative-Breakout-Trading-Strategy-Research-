@@ -268,7 +268,7 @@ def build_plan(workspace: Workspace) -> Plan:
 
     execution_protocol = resolve_effective_execution_protocol(root)
     execution_binding = verify_execution_protocol(
-        execution_protocol, scope, effective_hash
+        execution_protocol, scope, effective_hash, root
     )
     benchmark_block = execution_binding["benchmark"]
     if benchmark_block.get("content_hash") != provenance["benchmark_content_hash"]:

@@ -43,6 +43,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 PROTOCOL_PATH = REPO_ROOT / "configs" / "research_v5_execution.json"
 AMENDMENT_PATH = REPO_ROOT / "configs" / "research_v5_execution_amendment_1.json"
+AMENDMENT_2_PATH = REPO_ROOT / "configs" / "research_v5_execution_amendment_2.json"
 V4_PROTOCOL_PATH = REPO_ROOT / "configs" / "research_v4_execution.json"
 SPEC_V1_PATH = REPO_ROOT / "configs" / "research_v1.json"
 FREEZE_PATH = REPO_ROOT / "configs" / "research_v5_candidate_freeze.json"
@@ -64,6 +65,9 @@ verifier = _load_module("verify_v5_execution", "scripts/verify_v5_execution.py")
 producer = _load_module("build_v5_execution", "scripts/build_v5_execution.py")
 amendment_producer = _load_module(
     "build_v5_execution_amendment_1", "scripts/build_v5_execution_amendment_1.py"
+)
+amendment_2_producer = _load_module(
+    "build_v5_execution_amendment_2", "scripts/build_v5_execution_amendment_2.py"
 )
 
 
@@ -277,7 +281,6 @@ def test_the_execution_authorization_authorizes_nothing() -> None:
         "candle_fetch_authorized",
         "confirmatory_evaluation_authorized",
         "second_run_authorized",
-        "selection_authorization_present",
     ):
         assert authorization[flag] is False
     for flag in (
@@ -287,6 +290,160 @@ def test_the_execution_authorization_authorizes_nothing() -> None:
         "confirmatory_authorized",
     ):
         assert protocol["authorization"][flag] is False
+
+
+def test_the_effective_execution_authorization_authorizes_nothing() -> None:
+    """The effective block is amendment 2's, and it authorizes nothing either."""
+    amendment_2 = _load(AMENDMENT_2_PATH)
+    authorization = amendment_2["execution_authorization"]
+    for flag in (
+        "execution_authorized",
+        "grid_run_authorized",
+        "candle_fetch_authorized",
+        "confirmatory_evaluation_authorized",
+        "second_run_authorized",
+    ):
+        assert authorization[flag] is False
+
+
+def test_the_frozen_historical_statement_stays_visible() -> None:
+    """The frozen protocol and amendment 1 keep the state they recorded.
+
+    ``selection_authorization_present = false`` was true at their publication
+    instants. The blocks are hash-bound and are not edited in place, so the
+    statement stays on disk and the *effective* rule is the amendment's.
+    """
+    amendment = _load(AMENDMENT_PATH)
+    assert amendment["execution_authorization"]["selection_authorization_present"] is False
+    assert "selection_authorization_present" not in (
+        _load(PROTOCOL_PATH).get("authorization") or {}
+    )
+
+
+def test_the_amendment_2_is_self_hashing() -> None:
+    amendment_2 = _load(AMENDMENT_2_PATH)
+    assert (
+        verifier.compute_manifest_hash(amendment_2, ("manifest_hash",))
+        == amendment_2["manifest_hash"]
+    )
+
+
+def test_the_amendment_2_is_reproduced_byte_for_byte_by_its_producer() -> None:
+    rebuilt = amendment_2_producer.build(REPO_ROOT)
+    assert rebuilt == _load(AMENDMENT_2_PATH)
+    rendered = json.dumps(rebuilt, indent=2, ensure_ascii=False) + "\n"
+    assert rendered == AMENDMENT_2_PATH.read_text(encoding="utf-8")
+
+
+def test_the_amendment_2_names_the_artifacts_it_supersedes() -> None:
+    amendment_2 = _load(AMENDMENT_2_PATH)
+    protocol = _load(PROTOCOL_PATH)
+    amendment = _load(AMENDMENT_PATH)
+    amends = amendment_2["amends"]
+    assert amends["file"] == "configs/research_v5_execution.json"
+    assert amends["manifest_hash"] == protocol["manifest_hash"]
+    assert amends["sha256"] == verifier.sha256_file(PROTOCOL_PATH)
+    supersedes = amendment_2["supersedes_in_amendment_1"]
+    assert supersedes["file"] == "configs/research_v5_execution_amendment_1.json"
+    assert supersedes["manifest_hash"] == amendment["manifest_hash"]
+    assert supersedes["sha256"] == verifier.sha256_file(AMENDMENT_PATH)
+    assert supersedes["block"] == "execution_authorization"
+    assert amendment_2["precedence"]["superseded"] == ["execution_authorization"]
+
+
+def test_the_effective_authorization_records_the_published_selection_authorization() -> None:
+    """The effective block names the authorization, by its recomputed identity."""
+    amendment_2 = _load(AMENDMENT_2_PATH)
+    authorization = amendment_2["execution_authorization"]
+    assert authorization["selection_authorization_present"] is True
+    published = _load(REPO_ROOT / authorization["selection_authorization_path"])
+    assert (
+        verifier.compute_manifest_hash(published, ("manifest_hash",))
+        == authorization["selection_authorization_manifest_hash"]
+        == published["manifest_hash"]
+    )
+    assert (
+        verifier.sha256_file(REPO_ROOT / authorization["selection_authorization_path"])
+        == authorization["selection_authorization_sha256"]
+    )
+    assert (
+        authorization["selection_authorization_run_id"]
+        == published["authorized_run"]["run_id"]
+    )
+    assert (
+        authorization["selection_authorization_campaign_id"]
+        == published["authorized_run"]["campaign_id"]
+    )
+
+
+def test_the_verifier_detects_a_missing_amendment_2(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    target = root / "configs" / "research_v5_execution_amendment_2.json"
+    target.unlink()
+    failures = _failures(root)
+    assert any("missing artifact" in failure for failure in failures)
+
+
+def test_the_verifier_detects_an_amendment_2_that_names_another_authorization(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    _tamper(
+        root,
+        lambda document: document["execution_authorization"].update(
+            {"selection_authorization_manifest_hash": "0" * 64}
+        ),
+        "configs/research_v5_execution_amendment_2.json",
+    )
+    failures = _failures(root)
+    assert any("names another manifest hash" in failure for failure in failures)
+
+
+def test_the_verifier_detects_an_amendment_2_that_keeps_the_stale_flag(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    _tamper(
+        root,
+        lambda document: document["execution_authorization"].update(
+            {"selection_authorization_present": False}
+        ),
+        "configs/research_v5_execution_amendment_2.json",
+    )
+    failures = _failures(root)
+    assert any(
+        "does not record the published v5 selection authorization" in failure
+        for failure in failures
+    )
+
+
+def test_the_verifier_detects_an_amendment_2_that_names_another_protocol(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    _tamper(
+        root,
+        lambda document: document["amends"].update({"file": "configs/research_v4_execution.json"}),
+        "configs/research_v5_execution_amendment_2.json",
+    )
+    failures = _failures(root)
+    assert any("does not name the v5 execution protocol" in failure for failure in failures)
+
+
+def test_the_verifier_detects_an_amendment_2_that_is_not_bound_to_the_protocol(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    _tamper(
+        root,
+        lambda document: document["amends"].update({"manifest_hash": "0" * 64}),
+        "configs/research_v5_execution_amendment_2.json",
+    )
+    failures = _failures(root)
+    assert any(
+        "names another manifest hash for the v5 execution protocol" in failure
+        for failure in failures
+    )
 
 
 def test_the_deviation_disclosure_records_not_applicable() -> None:
@@ -378,10 +535,27 @@ def test_the_verifier_detects_an_execution_authorization_claim(tmp_path: Path) -
         lambda document: document["execution_authorization"].update(
             {"execution_authorized": True}
         ),
-        relative="configs/research_v5_execution_amendment_1.json",
+        relative="configs/research_v5_execution_amendment_2.json",
     )
     failures = _failures(root)
     assert any("execution_authorized as false" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_shadowed_amendment_1_block(tmp_path: Path) -> None:
+    """The frozen amendment 1 may not be edited: the chain would lose its binding."""
+    root = _mirror_repo(tmp_path)
+    _tamper(
+        root,
+        lambda document: document["execution_authorization"].update(
+            {"execution_authorized": True}
+        ),
+        relative="configs/research_v5_execution_amendment_1.json",
+    )
+    failures = _failures(root)
+    assert failures, failures
+    assert any(
+        "amendment 1" in failure for failure in failures
+    ), failures
 
 
 def test_the_verifier_detects_a_missing_amendment(tmp_path: Path) -> None:

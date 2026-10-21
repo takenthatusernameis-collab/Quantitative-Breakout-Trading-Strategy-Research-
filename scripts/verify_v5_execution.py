@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """Read-only, offline verification of the preregistered v5 execution protocol.
 
-``configs/research_v5_execution.json`` records the v5 execution protocol, and
+``configs/research_v5_execution.json`` records the v5 execution protocol,
 ``configs/research_v5_execution_amendment_1.json`` supplies the bindings the
-first publication did not carry.  The **effective** protocol is the amendment
-for the blocks it restates and the protocol for the blocks it does not; both
-stay on disk, unchanged and visible.
+first publication did not carry, and ``configs/research_v5_execution_amendment_2.json``
+corrects the one block whose recorded state the delivery of the v5 selection
+authorization made stale.  The **effective** protocol is the second amendment
+for the block it restates, the first amendment for the blocks it restates and
+the second amendment does not, and the protocol for the blocks no amendment
+restates; all three stay on disk, unchanged and visible.
 
 The verifier never writes to the repository, never contacts a provider, never
 reads a candle and never runs a grid.  It checks:
 
-1. the protocol and the amendment are both self-hashing, and the amendment
-   names the protocol it amends by its **recomputed** manifest hash and its
+1. the protocol and both amendments are self-hashing, and each amendment names
+   the artifact it amends by its **recomputed** manifest hash and its
    **recomputed** file digest;
 2. the effective evaluation scope is exactly the frozen candidate set, which is
    the set of validated constituents of the v5 universe manifest, and it is
@@ -27,7 +30,11 @@ reads a candle and never runs a grid.  It checks:
    unchanged v1 selection rule;
 5. the code-hash constraint places the v5 execution path outside the hashed
    set and records the authorized v1 code hash as the value of record;
-6. the execution authorization authorizes nothing;
+6. the execution authorization authorizes nothing, and the one statement of
+   that block that is about the world -- the published v5 selection
+   authorization -- is checked against the repository: the named artifact must
+   exist, must recompute its own manifest hash and must match the identity the
+   effective block records;
 7. the deviation disclosure records that v5 has no prior deviation to
    disclose;
 8. the ``supersedes`` chain names the v4 execution protocol, with its
@@ -55,6 +62,8 @@ if str(REPO_ROOT / "scripts") not in sys.path:
 
 PROTOCOL_RELATIVE = "configs/research_v5_execution.json"
 AMENDMENT_RELATIVE = "configs/research_v5_execution_amendment_1.json"
+AMENDMENT_2_RELATIVE = "configs/research_v5_execution_amendment_2.json"
+SELECTION_AUTHORIZATION_RELATIVE = "configs/research_v5_selection_authorization_1.json"
 V4_PROTOCOL_RELATIVE = "configs/research_v4_execution.json"
 SPEC_V1_RELATIVE = "configs/research_v1.json"
 SPEC_V5_RELATIVE = "configs/research_v5.json"
@@ -204,6 +213,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     for relative in (
         PROTOCOL_RELATIVE,
         AMENDMENT_RELATIVE,
+        AMENDMENT_2_RELATIVE,
         V4_PROTOCOL_RELATIVE,
         SPEC_V1_RELATIVE,
         SPEC_V5_RELATIVE,
@@ -220,6 +230,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
 
     protocol = _load(root / PROTOCOL_RELATIVE)
     amendment = _load(root / AMENDMENT_RELATIVE)
+    amendment_2 = _load(root / AMENDMENT_2_RELATIVE)
     v4_protocol = _load(root / V4_PROTOCOL_RELATIVE)
     spec_v1 = _load(root / SPEC_V1_RELATIVE)
     spec_v5 = _load(root / SPEC_V5_RELATIVE)
@@ -265,13 +276,56 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     if "this amendment" not in str(precedence.get("rule") or ""):
         fail("the amendment does not state the precedence rule")
 
-    # The effective protocol: the amendment first, the protocol second.
+    # 1b. the second amendment, which corrects the stale authorization state --
+    amendment_2_excluded = tuple(
+        (amendment_2.get("hashing") or {}).get("manifest_hash_excluded_keys") or ("manifest_hash",)
+    )
+    amendment_2_hash = compute_manifest_hash(amendment_2, amendment_2_excluded)
+    computed["amendment_2_manifest_hash"] = amendment_2_hash
+    if amendment_2.get("manifest_hash") != amendment_2_hash:
+        fail(
+            f"the amendment 2's manifest_hash mismatch: declared "
+            f"{amendment_2.get('manifest_hash')}, recomputed {amendment_2_hash}"
+        )
+    if amendment_2.get("artifact") != "v5_execution_amendment_2":
+        fail("the amendment 2 is not the v5 execution amendment 2")
+    amends_2 = amendment_2.get("amends") or {}
+    if amends_2.get("file") != PROTOCOL_RELATIVE:
+        fail("the amendment 2 does not name the v5 execution protocol")
+    if amends_2.get("manifest_hash") != protocol_hash:
+        fail("the amendment 2 names another manifest hash for the v5 execution protocol")
+    if amends_2.get("sha256") != sha256_file(root / PROTOCOL_RELATIVE):
+        fail("the amendment 2 names another file digest for the v5 execution protocol")
+    supersedes_1 = amendment_2.get("supersedes_in_amendment_1") or {}
+    if supersedes_1.get("file") != AMENDMENT_RELATIVE:
+        fail("the amendment 2 does not name the v5 execution amendment 1")
+    if supersedes_1.get("manifest_hash") != amendment_hash:
+        fail("the amendment 2 names another manifest hash for the v5 execution amendment 1")
+    if supersedes_1.get("sha256") != sha256_file(root / AMENDMENT_RELATIVE):
+        fail("the amendment 2 names another file digest for the v5 execution amendment 1")
+    if supersedes_1.get("block") != "execution_authorization":
+        fail("the amendment 2 does not supersede the execution-authorization block")
+    precedence_2 = amendment_2.get("precedence") or {}
+    if "this amendment" not in str(precedence_2.get("rule") or ""):
+        fail("the amendment 2 does not state the precedence rule")
+    superseded_2 = tuple(precedence_2.get("superseded") or ())
+    if "execution_authorization" not in superseded_2:
+        fail("the amendment 2 does not supersede the execution-authorization block")
+
+    # The effective protocol: the second amendment first, the first amendment
+    # second, the protocol third. Every artifact stays on disk and visible.
     effective: Dict[str, Any] = {}
-    for block in set(protocol) | set(amendment):
+    for block in set(protocol) | set(amendment) | set(amendment_2):
         if block in {"amends", "amendment_status", "artifact", "artifact_version", "created_utc",
-                     "hashing", "manifest_hash", "precedence", "problem", "related_artifacts"}:
+                     "hashing", "manifest_hash", "precedence", "problem", "related_artifacts",
+                     "supersedes_in_amendment_1"}:
             continue
-        effective[block] = amendment[block] if block in amendment else protocol.get(block)
+        if block in amendment_2:
+            effective[block] = amendment_2[block]
+        elif block in amendment:
+            effective[block] = amendment[block]
+        else:
+            effective[block] = protocol.get(block)
 
     # 2. the evaluation scope ------------------------------------------------
     scope = effective.get("evaluation_scope") or {}
@@ -407,7 +461,6 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "candle_fetch_authorized",
         "confirmatory_evaluation_authorized",
         "second_run_authorized",
-        "selection_authorization_present",
     ):
         if execution_authorization.get(flag) is not False:
             fail(f"the execution authorization does not record {flag} as false")
@@ -415,9 +468,56 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                  "confirmatory_authorized"):
         if (protocol.get("authorization") or {}).get(flag) is not False:
             fail(f"the protocol's own authorization.{flag} is not false")
-    selection_authorization = root / "configs" / "research_v5_selection_authorization_1.json"
-    if selection_authorization.exists():
-        fail("a v5 selection authorization exists, but the v5 chain has not been authorized")
+
+    # The one statement of the block that is about the world and not about the
+    # protocol's own authority: the published selection authorization. The
+    # frozen protocol and the first amendment recorded it as absent, which was
+    # true at their publication instants; the effective block is the second
+    # amendment's, and it names the authorization that is now published.
+    if execution_authorization.get("selection_authorization_present") is not True:
+        fail("the effective execution authorization does not record the published v5 selection "
+             "authorization")
+    recorded_path = str(execution_authorization.get("selection_authorization_path") or "")
+    if recorded_path != SELECTION_AUTHORIZATION_RELATIVE:
+        fail("the effective execution authorization names another selection authorization")
+    selection_authorization = root / recorded_path
+    if not selection_authorization.exists():
+        fail("the v5 selection authorization named by the effective execution authorization "
+             "does not exist")
+    else:
+        published = _load(selection_authorization)
+        published_excluded = tuple(
+            (published.get("hashing") or {}).get("manifest_hash_excluded_keys")
+            or ("manifest_hash",)
+        )
+        published_hash = compute_manifest_hash(published, published_excluded)
+        computed["selection_authorization_manifest_hash"] = published_hash
+        if published.get("manifest_hash") != published_hash:
+            fail("the v5 selection authorization does not recompute its own manifest_hash")
+        if execution_authorization.get("selection_authorization_manifest_hash") != published_hash:
+            fail("the effective execution authorization names another manifest hash for the v5 "
+                 "selection authorization")
+        if execution_authorization.get("selection_authorization_sha256") != sha256_file(
+            selection_authorization
+        ):
+            fail("the effective execution authorization names another file digest for the v5 "
+                 "selection authorization")
+        run = published.get("authorized_run") or {}
+        if execution_authorization.get("selection_authorization_run_id") != run.get("run_id"):
+            fail("the effective execution authorization names another run for the v5 selection "
+                 "authorization")
+        if execution_authorization.get("selection_authorization_campaign_id") != run.get(
+            "campaign_id"
+        ):
+            fail("the effective execution authorization names another campaign for the v5 "
+                 "selection authorization")
+    # The historical statements stay on disk, unchanged and visible.
+    for label, document in (("the protocol", protocol), ("the amendment 1", amendment)):
+        block = document.get("execution_authorization")
+        if block is None:
+            continue
+        if block.get("selection_authorization_present") is not False:
+            fail(f"{label} no longer records the historical state of the chain")
 
     # 7. the deviation disclosure -------------------------------------------
     disclosure = effective.get("deviation_disclosure") or {}
@@ -467,6 +567,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "ok": not failures,
         "protocol_path": PROTOCOL_RELATIVE,
         "amendment_path": AMENDMENT_RELATIVE,
+        "amendment_2_path": AMENDMENT_2_RELATIVE,
         "manifest_hash": protocol.get("manifest_hash"),
         "recomputed_manifest_hash": protocol_hash,
         "computed": computed,

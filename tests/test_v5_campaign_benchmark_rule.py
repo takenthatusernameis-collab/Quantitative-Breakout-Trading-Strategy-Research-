@@ -29,8 +29,10 @@ These tests prove that
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import inspect
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -109,6 +111,27 @@ def _output_state() -> dict:
         else:
             state[str(path)] = ("absent",)
     return state
+
+
+def _mirror_repo(tmp_path: Path) -> Path:
+    """A temporary tree of the repository, every file symlinked.
+
+    The mirror is cheap even though the v5 chain carries ~50 MB of candle
+    datasets, and the tamper controls may replace single files in it.
+    """
+    root = tmp_path / "repo"
+    skip_dirs = {".git", "__pycache__", ".pytest_cache"}
+    for current, dirs, files in os.walk(REPO_ROOT):
+        dirs[:] = [name for name in dirs if name not in skip_dirs]
+        relative = Path(current).relative_to(REPO_ROOT)
+        (root / relative).mkdir(parents=True, exist_ok=True)
+        for name in files:
+            source = Path(current) / name
+            target = root / relative / name
+            if target.is_symlink() or target.exists():
+                target.unlink()
+            target.symlink_to(source)
+    return root
 
 
 def _candle(timestamp: int, close: float = 100.0) -> Candle:
@@ -320,6 +343,64 @@ def test_the_engine_never_receives_the_unsliced_benchmark_series():
     assert "btc_candles=benchmark_slice" in source
     assert "btc_candles=benchmark_candles" not in source
     assert "btc_candles=candles" not in source
+
+
+def test_the_run_gate_accepts_the_published_authorization():
+    """The gate verifies the published authorization, not a static flag.
+
+    The effective execution protocol records that a v5 selection authorization
+    is present and names it by its recomputed identity; the gate checks that
+    identity against the repository and then validates the authorization.
+    """
+    from v5_campaign.runner import build_plan
+    from v5_campaign.scope import resolve_effective_execution_protocol
+
+    effective = resolve_effective_execution_protocol(REPO_ROOT)
+    block = effective["execution_authorization"]
+    assert block["selection_authorization_present"] is True
+    published = _load(REPO_ROOT / block["selection_authorization_path"])
+    assert published["manifest_hash"] == block["selection_authorization_manifest_hash"]
+
+    plan = build_plan(default_workspace(REPO_ROOT))
+    assert plan.run_id == published["authorized_run"]["run_id"]
+    assert plan.authorization_manifest_hash == published["manifest_hash"]
+
+
+def test_the_run_gate_refuses_when_no_authorization_is_recorded(tmp_path: Path):
+    """Without the amendment that records the published authorization, the gate refuses.
+
+    The frozen protocol and the first amendment record that no selection
+    authorization is present, which was true at their publication instants.
+    When the effective rule is that historical one, the gate refuses the run.
+    """
+    from v5_campaign.runner import build_plan
+
+    root = _mirror_repo(tmp_path)
+    (root / "configs" / "research_v5_execution_amendment_2.json").unlink()
+    with pytest.raises(ScopeError):
+        build_plan(default_workspace(root))
+
+
+def test_the_run_gate_refuses_an_authorization_that_does_not_match_the_record(
+    tmp_path: Path,
+):
+    """The gate compares the authorization's identity with the recorded one."""
+    from v5_campaign.runner import build_plan
+
+    root = _mirror_repo(tmp_path)
+    target = root / "configs" / "research_v5_selection_authorization_1.json"
+    document = json.loads(target.read_text(encoding="utf-8"))
+    document["authorized_run"]["scope"]["binance_pairs"] = document["authorized_run"][
+        "scope"
+    ]["binance_pairs"][:-1]
+    body = {key: value for key, value in document.items() if key != "manifest_hash"}
+    canonical = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    document["manifest_hash"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    target.unlink()
+    target.write_text(json.dumps(document, indent=2), encoding="utf-8")
+
+    with pytest.raises(ScopeError):
+        build_plan(default_workspace(root))
 
 
 def test_no_candle_inside_the_confirmatory_window_is_read(

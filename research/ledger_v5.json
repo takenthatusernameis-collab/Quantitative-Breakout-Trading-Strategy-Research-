@@ -1,0 +1,154 @@
+{
+  "artifact": "v5_selection_ledger",
+  "artifact_version": "v5-selection-ledger-1",
+  "authorization_manifest_hash": "55827bd8e1b11311a2977232f236566ac8b3236e4dd10229aad269aab6c503c2",
+  "benchmark": {
+    "alignment_methodology": "docs/research_protocol.md:101 - Align BTC and target asset by UTC candle close",
+    "alignment_rule": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called",
+    "btc_configurations_dropped": false,
+    "content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+    "dataset_path": "research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv",
+    "exposure_rule": "the benchmark dataset is development data; it lies entirely before every open confirmatory window and no confirmatory-window candle is read",
+    "fail_closed": [
+      "the benchmark series is missing",
+      "the benchmark series does not cover an evaluated window of the asset series",
+      "the benchmark series carries a different timestamp than the asset series inside an evaluated window"
+    ],
+    "first_candle_timestamp": 1697839200000,
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+    "last_candle_timestamp": 1792443600000,
+    "methodology_reference": "docs/research_protocol.md:101",
+    "methodology_rule": "Align BTC and target asset by UTC candle close; no forward fill for missing BTC observations",
+    "no_forward_fill": true,
+    "note": "The v5 benchmark is the v5-cutoff-bounded dataset that the v5 data manifest publishes in its benchmark block; the block is inside the manifest's own self-hash. The v4 chain's benchmark dataset (research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv) is not reused, because 13 of its candles close after the v5 development cutoff, inside the open v2 confirmatory window. The dataset is hash-verified before every use, it covers every evaluated validation window of the evaluated assets with identical timestamps, and the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called.",
+    "observed_candle_count": 26280,
+    "published_by_data_manifest": true,
+    "role": "trend_filter_and_benchmark",
+    "symbol": "BTCUSDT"
+  },
+  "bounds": {
+    "attempts": 1,
+    "max_assets": 7,
+    "max_configs_per_asset": 2304,
+    "max_retries_on_technical_failure": 3,
+    "max_total_config_units": 16128,
+    "planned_config_units": 16128,
+    "planned_execution_units": 193536,
+    "planned_execution_units_note": "The bounded run holds 7 assets x 2304 configurations x 4 validation folds x 3 cost scenarios execution units. The bound that the authorization enforces is max_total_config_units, the number of asset-configuration pairs; the fold and cost multipliers follow the inherited, unchanged fold and cost blocks.",
+    "resource_limits": "the v5 execution protocol records max_logical_runs 1 and checkpoint_every_n_shards 10; the run is resumable and never retries unboundedly"
+  },
+  "campaign_id": "v5-campaign",
+  "code_identity": {
+    "algorithm": "canonical_source_digest_v1",
+    "algorithm_description": "sha256 over the concatenation, for every *.py file under the root in ascending POSIX relative-path order, of the relative path, a newline, the sha256 hex digest of the file bytes, and a newline.",
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
+    "execution_path_digest": "9c5f13ff86604e5b52776262d33828e6a071419a640d6343f6ff5997c7df06e8",
+    "execution_path_root": "src/v5_campaign",
+    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "hashed_set_root": "src/breakout_research",
+    "note": "The identity of a v5 run is the composite of the canonical digest of the hashed v1 engine and the canonical digest of the v5 execution path. The checkout-dependent ordered digest compute_code_hash() stays the authorized value of record and is never used as an identity.",
+    "ordered_code_hash_is_portable": false,
+    "portable": true,
+    "run_code_identity": "8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2"
+  },
+  "completed_utc": null,
+  "counts": {
+    "config_units": 16128,
+    "execution_units": 193536
+  },
+  "data_boundary": {
+    "candles_before_utc": "2026-10-19T22:00:00Z",
+    "confirmatory_window_never_read_during_selection": true,
+    "development_cutoff_utc": "2026-10-19T22:00:00Z",
+    "effective_data_boundary_rule": "the earlier of the v5 confirmatory-window start and the preregistered development cutoff",
+    "v1_holdout_never_reused": true,
+    "v2_confirmatory_window_never_reused": true,
+    "v3_confirmatory_window_never_reused": true,
+    "v4_confirmatory_window_never_reused": true
+  },
+  "data_manifest": {
+    "base_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126",
+    "base_manifest_path": "research/data_manifest_v5.json",
+    "benchmark_content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+    "benchmark_dataset_path": "research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv",
+    "benchmark_first_candle_timestamp": 1697839200000,
+    "benchmark_last_candle_timestamp": 1792443600000,
+    "benchmark_observed_candle_count": 26280,
+    "benchmark_published_by_manifest": true,
+    "benchmark_symbol": "BTCUSDT",
+    "effective_data_manifest_hash": "f2bd448f2e33bf7e440e584218c92694ed6486137fc557d24d77d44d89fb0126"
+  },
+  "effective_rules": {
+    "execution": {
+      "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988",
+      "path": "configs/research_v5_execution_amendment_1.json",
+      "precedence": "the effective v5 execution protocol is this amendment for the blocks it restates, and configs/research_v5_execution.json for the blocks it does not; the protocol stays on disk unchanged and visible"
+    },
+    "membership": {
+      "interval_end_exclusive": true,
+      "interval_start_inclusive": false,
+      "manifest_hash": "e130fa5ea4a01fabbfe1e102a4cff8b8495382268eec9e1e7eafe466eae94138",
+      "path": "configs/research_v5_specification_amendment_1.json",
+      "precedence": "amendment_overrides_frozen_block",
+      "rule": "a candle is inside a confirmatory window when its close falls strictly after that window's start and before its end, regardless of which asset it belongs to; a candle that closes exactly at a window's start is development data"
+    },
+    "overlap": {
+      "evaluation_may_not_start_before_utc": "2027-01-19T13:00:00Z",
+      "manifest_hash": "43a374284df1c5f933f565c0e882d6c721302e5b1897c02ceb39344b1effa49d",
+      "path": "configs/research_v5_candidate_freeze_amendment_1.json",
+      "precedence": "amendment_overrides_frozen_block",
+      "rule": "the v5 confirmatory window opens inside the still-open v2, v3 and v4 confirmatory windows in time, because a 90-day window that opens later cannot end later than the 90-day window that opened before it; the time overlap is not a violation, because the two evaluations share no asset (the v5 candidate set is disjoint from the v1, v2, v3 and v4 candidate sets) and because the v5 confirmatory evaluation may not start before the later of the v4 confirmatory gate and the v5 window's own earliest end, and never before the v2 and the v3 gates; the v5 window is never populated with data that predates the v5 candidate freeze, is never a re-opening of the v1 holdout or of the v2, v3 or v4 confirmatory windows, and is never read for selection"
+    }
+  },
+  "holdout_exposed_count": 0,
+  "run_id": "v5-selection-20261021",
+  "run_phase": "selection_grid",
+  "runs": [
+    {
+      "campaign_id": "v5-campaign",
+      "completed_utc": null,
+      "resume_events": [],
+      "resumes": 0,
+      "run_id": "v5-selection-20261021",
+      "started_utc": "2026-10-21T19:56:30.281496+00:00",
+      "status": "RUNNING"
+    }
+  ],
+  "scope": {
+    "binance_pairs": [
+      "APTUSDT",
+      "CAKEUSDT",
+      "STXUSDT",
+      "DASHUSDT",
+      "VETUSDT",
+      "CRVUSDT",
+      "RAYUSDT"
+    ],
+    "count": 7,
+    "excluded_after_validation": {
+      "BDXUSDT": "binance_spot_unavailable",
+      "ETHFIUSDT": "insufficient_hourly_history",
+      "FLRUSDT": "binance_spot_unavailable",
+      "GHOUSDT": "binance_spot_unavailable",
+      "NIGHTUSDT": "insufficient_hourly_history",
+      "PENGUUSDT": "insufficient_hourly_history",
+      "PYTHUSDT": "insufficient_hourly_history",
+      "QUSDT": "binance_spot_unavailable",
+      "TIAUSDT": "insufficient_hourly_history",
+      "TRUMPUSDT": "insufficient_hourly_history",
+      "XDCUSDT": "binance_spot_unavailable",
+      "YLDSUSDT": "binance_spot_unavailable",
+      "\u5e01\u5b89\u4eba\u751fUSDT": "insufficient_hourly_history"
+    }
+  },
+  "selection_rule": {
+    "max_candidates_per_asset": 1,
+    "reference": "configs/research_v1.json -> selection",
+    "selection_block_sha256": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e"
+  },
+  "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2",
+  "started_utc": "2026-10-21T19:56:30.281496+00:00",
+  "status": "RUNNING",
+  "v1_artifacts_touched": []
+}

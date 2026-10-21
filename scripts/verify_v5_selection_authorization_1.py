@@ -232,6 +232,14 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     ):
         failures.append("the authorization status does not record a single bounded run")
 
+    # 1b. The authorization is bound to the v5 specification. Every delivered
+    # v5 stage artifact carries the specification's identity, and the run gate
+    # refuses an authorization that does not.
+    if authorization.get("specification_hash") != spec_v5.get("specification_hash"):
+        failures.append("the authorization is not bound to the v5 specification")
+    if authorization.get("universe_version") != spec_v5.get("universe_version"):
+        failures.append("the authorization is not a v5 artifact")
+
     # 2. The authorized scope is the frozen candidate set.
     from v5_campaign.scope import effective_rules, frozen_scope, selection_rule
 

@@ -1,0 +1,101 @@
+{
+  "artifact": "v5_execution_amendment_2",
+  "artifact_version": 2,
+  "amendment_status": "PUBLISHED_CORRECTION",
+  "protocol_version": "v5",
+  "universe_version": "v5",
+  "created_utc": "2026-10-21T19:05:00Z",
+  "amends": {
+    "file": "configs/research_v5_execution.json",
+    "manifest_hash": "516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f",
+    "sha256": "a6c3a242c6727d98d5578e363e01bd70ce910ae251edd13e0113ca3f6f374218",
+    "rule": "the v5 execution protocol is hash-bound and is not edited in place; this amendment supplies the effective execution-authorization block"
+  },
+  "supersedes_in_amendment_1": {
+    "file": "configs/research_v5_execution_amendment_1.json",
+    "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988",
+    "sha256": "2a75f765670d1a9151d4426c83080eb5c8c0ddbf14ca5a6fb152b3c8bf703b0c",
+    "block": "execution_authorization",
+    "rule": "the v5 execution amendment 1 is hash-bound and is not edited in place; this amendment supersedes its execution_authorization block and leaves every other block it restates in force"
+  },
+  "problem": {
+    "affected_artifact_path": "configs/research_v5_execution.json",
+    "affected_artifact_manifest_hash": "516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f",
+    "statement": "the frozen v5 execution protocol and the v5 execution amendment 1 both record execution_authorization.selection_authorization_present = false. That was true at their publication instants, when the v5 selection authorization did not exist, and it is stale now: the v5 selection authorization has been published. The flag was used in two places and both were wrong. The repository verifier refused the repository, because the file on disk contradicted the state the frozen protocol recorded. And the run gate in src/v5_campaign/scope.py required the recorded state to stay false, so a corrected effective rule would have refused the run and the gate never verified that the authorization exists at all.",
+    "repair": "the protocol and the amendment 1 are hash-bound and are not edited in place; the effective execution-authorization block is recorded by this amendment, and the run gate verifies the published selection authorization's identity instead of a static flag",
+    "historical_statement": "the frozen protocol's and amendment 1's execution_authorization.selection_authorization_present = false records the state of the chain at their publication instants. Those blocks stay on disk, unchanged and visible."
+  },
+  "precedence": {
+    "rule": "the effective v5 execution protocol is this amendment for the blocks it restates, the v5 execution amendment 1 for the blocks it restates and this amendment does not, and configs/research_v5_execution.json for the blocks no amendment restates; every artifact stays on disk, unchanged and visible",
+    "resolution_rule": "a verifier or a run gate that reads the v5 evaluation scope, the benchmark rule, the inherited rules or the execution authorization resolves them through this amendment when it is present and verified, and fails closed when it is absent, because the block it supersedes then records that no selection authorization is present",
+    "superseded": [
+      "execution_authorization"
+    ],
+    "unchanged": [
+      "authorization.execution_authorized",
+      "authorization.campaign_authorized",
+      "authorization.selection_authorized",
+      "authorization.confirmatory_authorized",
+      "evaluation_scope",
+      "candidate_freeze_and_confirmatory_window",
+      "benchmark_rule",
+      "code_hash_constraint",
+      "inherited_rules",
+      "deviation_disclosure",
+      "selection_rule.inherit_from_v1_unchanged",
+      "resource_and_attempt_bounds",
+      "v5_result_layout"
+    ],
+    "protocol_own_authority_is_unchanged": "the frozen protocol's own authorization block records what the protocol itself authorizes, and it authorizes nothing: the single bounded v5 selection run is authorized by the v5 selection authorization named below, and by nothing else"
+  },
+  "execution_authorization": {
+    "candle_fetch_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "the v5 execution protocol, the v5 execution amendment 1 and this amendment record the benchmark rule, the inherited rules and the data-manifest identity. They authorize no run, no evaluation, no candle fetch and no confirmatory-window read.",
+    "second_run_authorized": false,
+    "selection_authorization_present": true,
+    "selection_authorization_path": "configs/research_v5_selection_authorization_1.json",
+    "selection_authorization_manifest_hash": "55827bd8e1b11311a2977232f236566ac8b3236e4dd10229aad269aab6c503c2",
+    "selection_authorization_sha256": "4e8985c21c03a9fe0a339630ae6b04fa9ca9de183d92aba94dd1e6018a47d0d6",
+    "selection_authorization_run_id": "v5-selection-20261021",
+    "selection_authorization_campaign_id": "v5-campaign",
+    "selection_authorization_scope": "exactly one bounded v5 selection grid run over the frozen v5 candidate set, on development data only, under the unchanged v1 selection rule, writing only to the v5 paths",
+    "run_gate_rule": "the run gate verifies the named selection authorization: the file must exist, its manifest hash must recompute, and both the manifest hash and the file digest must equal the ones recorded here; the gate then validates the authorization against the frozen scope, the unchanged v1 selection rule and the current source tree",
+    "historical_statement": "the frozen protocol's and amendment 1's selection_authorization_present = false records the state of the chain at their publication instants; the effective state of the chain is the one this block records"
+  },
+  "related_artifacts": {
+    "v5_execution_protocol": {
+      "manifest_hash": "516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f",
+      "path": "configs/research_v5_execution.json"
+    },
+    "v5_execution_amendment_1": {
+      "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988",
+      "path": "configs/research_v5_execution_amendment_1.json"
+    },
+    "v5_selection_authorization": {
+      "manifest_hash": "55827bd8e1b11311a2977232f236566ac8b3236e4dd10229aad269aab6c503c2",
+      "path": "configs/research_v5_selection_authorization_1.json"
+    },
+    "v5_specification": {
+      "path": "configs/research_v5.json",
+      "specification_hash": "55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2"
+    }
+  },
+  "verification": {
+    "verifier_script": "scripts/verify_v5_execution.py",
+    "tests_module": "tests/test_v5_execution.py",
+    "verify_command": "python3 scripts/verify_v5_execution.py",
+    "run_gate": "src/v5_campaign/scope.py:verify_execution_protocol"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2, v3, v4 and v5 artifacts."
+  },
+  "manifest_hash": "7bfbb85008eb670b738737469531322f8c7fee0a52af89ac7f8a369241bfc12e"
+}

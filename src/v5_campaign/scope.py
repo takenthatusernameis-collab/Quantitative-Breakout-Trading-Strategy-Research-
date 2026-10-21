@@ -52,6 +52,7 @@ UNIVERSE_MANIFEST_PATH = "research/universe_manifest_v5.json"
 CONFIG_MANIFEST_PATH = "research/config_manifest.json"
 EXECUTION_PATH = "configs/research_v5_execution.json"
 EXECUTION_AMENDMENT_1_PATH = "configs/research_v5_execution_amendment_1.json"
+EXECUTION_AMENDMENT_2_PATH = "configs/research_v5_execution_amendment_2.json"
 AUTHORIZATION_PATH = "configs/research_v5_selection_authorization_1.json"
 
 #: The v1, v2, v3 and v4 output paths a v5 run may never write.
@@ -111,6 +112,15 @@ EXECUTION_AMENDMENT_BLOCKS = (
     "inherited_rules",
     "execution_authorization",
     "deviation_disclosure",
+)
+
+#: The protocol blocks the execution amendment 2 owns. Amendment 2 corrects
+#: the one block whose recorded state the delivery of the v5 selection
+#: authorization made stale: the ``execution_authorization`` block, whose
+#: ``selection_authorization_present`` flag recorded the state of the chain at
+#: the publication instants of the protocol and of amendment 1.
+EXECUTION_AMENDMENT_2_BLOCKS = (
+    "execution_authorization",
 )
 
 
@@ -200,6 +210,12 @@ def effective_rules(repo_root: Path) -> Dict[str, Any]:
     The amendments are hash-bound; an amendment that does not recompute its own
     hash, or that names a frozen artifact other than the one it claims to
     amend, is refused.
+
+    The **execution** rule names the execution amendment 1, which owns the
+    inherited v1 rules and the blocks the protocol's first publication lacked.
+    The effective *protocol* is resolved separately, in
+    :func:`resolve_effective_execution_protocol`, which applies the newest
+    published execution amendment to the blocks it restates.
     """
     root = Path(repo_root)
 
@@ -405,9 +421,9 @@ def validate_authorization(
 ) -> Dict[str, Any]:
     """Check the v5 selection authorization against the artifacts it names.
 
-    The authorization does not exist yet; this function is the gate that will
-    check it when it does, and it recomputes every expectation from the
-    repository.
+    The authorization is the artifact that authorizes the single bounded run.
+    This function is the gate that checks it, and it recomputes every
+    expectation from the repository.
     """
     excluded = tuple(dig(authorization, "hashing.manifest_hash_excluded_keys") or ())
     if not excluded:
@@ -415,6 +431,12 @@ def validate_authorization(
     declared_hash = authorization.get("manifest_hash")
     if compute_manifest_hash(authorization, excluded) != declared_hash:
         raise ScopeError("the authorization manifest hash does not recompute")
+
+    spec_v5 = load_json(Path(repo_root) / V5_SPEC_PATH)
+    if authorization.get("specification_hash") != spec_v5.get("specification_hash"):
+        raise ScopeError("the authorization is not bound to the v5 specification")
+    if authorization.get("universe_version") != spec_v5.get("universe_version"):
+        raise ScopeError("the authorization is not a v5 artifact")
 
     run = authorization.get("authorized_run") or {}
     if run.get("authorized") is not True:
@@ -484,15 +506,27 @@ def validate_authorization(
 
 
 def resolve_effective_execution_protocol(repo_root: Path) -> Dict[str, Any]:
-    """The effective v5 execution protocol: the amendment first, the protocol second.
+    """The effective v5 execution protocol: the amendments first, the protocol second.
 
     ``configs/research_v5_execution.json`` is hash-bound and is not edited in
     place. Its first publication did not carry the inherited v1 rules, the
     benchmark's recomputed identity, the execution-authorization block, the
     deviation disclosure or the supersedes chain, so
     ``configs/research_v5_execution_amendment_1.json`` records those blocks and
-    wins over the protocol for the blocks it restates. The protocol stays on
-    disk, unchanged and visible.
+    wins over the protocol for the blocks it restates.
+
+    ``configs/research_v5_execution_amendment_2.json`` then corrected the one
+    block whose recorded state the delivery of the v5 selection authorization
+    made stale: the ``execution_authorization`` block, whose
+    ``selection_authorization_present`` flag recorded the state of the chain at
+    the publication instants of the protocol and of amendment 1. The effective
+    block is amendment 2's, and it names the published selection authorization
+    by its recomputed identity.
+
+    Every artifact stays on disk, unchanged and visible. When amendment 2 is
+    absent the effective block is amendment 1's, which records that no
+    selection authorization is present: the run gate then refuses, so the
+    absence fails closed.
     """
     root = Path(repo_root)
     protocol = load_json(root / EXECUTION_PATH)
@@ -532,17 +566,78 @@ def resolve_effective_execution_protocol(repo_root: Path) -> Dict[str, Any]:
             effective[block] = amendment[block]
     effective["_effective_blocks_from_amendment"] = list(superseded)
     effective["_amendment_manifest_hash"] = amendment.get("manifest_hash")
+
+    amendment_2_path = root / EXECUTION_AMENDMENT_2_PATH
+    if amendment_2_path.exists():
+        amendment_2 = load_json(amendment_2_path)
+        verify_artifact_hash(amendment_2, "the v5 execution amendment 2")
+        amends_2 = amendment_2.get("amends") or {}
+        if amends_2.get("file") != EXECUTION_PATH:
+            raise ScopeError(
+                "the v5 execution amendment 2 does not name the v5 execution protocol"
+            )
+        if amends_2.get("manifest_hash") != protocol.get("manifest_hash"):
+            raise ScopeError(
+                "the v5 execution amendment 2 is not bound to the current execution protocol"
+            )
+        if amends_2.get("sha256") != sha256_file(root / EXECUTION_PATH):
+            raise ScopeError(
+                "the v5 execution amendment 2 records a stale digest of the execution protocol"
+            )
+        supersedes_1 = amendment_2.get("supersedes_in_amendment_1") or {}
+        if supersedes_1.get("file") != EXECUTION_AMENDMENT_1_PATH:
+            raise ScopeError(
+                "the v5 execution amendment 2 does not name the v5 execution amendment 1"
+            )
+        if supersedes_1.get("manifest_hash") != amendment.get("manifest_hash"):
+            raise ScopeError(
+                "the v5 execution amendment 2 is not bound to the current execution amendment 1"
+            )
+        if supersedes_1.get("sha256") != sha256_file(root / EXECUTION_AMENDMENT_1_PATH):
+            raise ScopeError(
+                "the v5 execution amendment 2 records a stale digest of the execution "
+                "amendment 1"
+            )
+        superseded_2 = tuple((amendment_2.get("precedence") or {}).get("superseded") or ())
+        if not superseded_2:
+            raise ScopeError(
+                "the v5 execution amendment 2 names no superseded block of the amendment 1"
+            )
+        for block in superseded_2:
+            if block not in amendment_2:
+                raise ScopeError(
+                    f"the v5 execution amendment 2 does not restate the block {block!r} it "
+                    "claims to supersede"
+                )
+            effective[block] = amendment_2[block]
+        for block in EXECUTION_AMENDMENT_2_BLOCKS:
+            if block in amendment_2:
+                effective[block] = amendment_2[block]
+        effective["_effective_blocks_from_amendment_2"] = list(superseded_2)
+        effective["_amendment_2_manifest_hash"] = amendment_2.get("manifest_hash")
     return effective
+
 
 
 def verify_execution_protocol(execution_protocol: Dict[str, Any],
                                scope: Dict[str, Any],
-                               data_manifest_hash: str) -> Dict[str, Any]:
+                               data_manifest_hash: str,
+                               repo_root: Path) -> Dict[str, Any]:
     """Check the effective v5 execution protocol against the scope and the identity.
 
     The protocol records the benchmark rule and the data-manifest identity of
     the evaluation scope. It authorizes nothing: a run still needs the separate
     selection authorization.
+
+    The ``execution_authorization`` block of the **effective** protocol carries
+    one statement about the world rather than about the protocol's own
+    authority: ``selection_authorization_present``. The frozen protocol and the
+    execution amendment 1 recorded it as ``false``, which was true at their
+    publication instants and stale once the v5 selection authorization was
+    published. The effective block is the one the execution amendment 2
+    records, and this function checks it against the repository: the recorded
+    selection authorization must exist and must be the artifact whose identity
+    the block names.
     """
     evaluation = execution_protocol.get("evaluation_scope") or {}
     if evaluation.get("data_manifest_hash") != data_manifest_hash:
@@ -561,9 +656,35 @@ def verify_execution_protocol(execution_protocol: Dict[str, Any],
         raise ScopeError(
             "the v5 execution protocol claims an execution authorization; it authorizes none"
         )
-    if authorization.get("selection_authorization_present") is not False:
+    if authorization.get("selection_authorization_present") is not True:
         raise ScopeError(
-            "the v5 execution protocol claims a selection authorization; none exists"
+            "the effective v5 execution protocol does not record the published v5 selection "
+            "authorization; the single bounded run is gated on that artifact"
+        )
+    recorded_path = str(authorization.get("selection_authorization_path") or "")
+    if recorded_path != AUTHORIZATION_PATH:
+        raise ScopeError(
+            "the effective v5 execution protocol names another selection authorization"
+        )
+    recorded_hash = str(authorization.get("selection_authorization_manifest_hash") or "")
+    recorded_sha256 = str(authorization.get("selection_authorization_sha256") or "")
+    authorization_path = Path(repo_root) / recorded_path
+    if not authorization_path.exists():
+        raise ScopeError(
+            "the v5 selection authorization named by the effective v5 execution protocol "
+            "does not exist"
+        )
+    published = load_json(authorization_path)
+    verify_artifact_hash(published, "the v5 selection authorization")
+    if published.get("manifest_hash") != recorded_hash:
+        raise ScopeError(
+            "the v5 selection authorization does not match the identity the effective v5 "
+            "execution protocol records"
+        )
+    if recorded_sha256 and sha256_file(authorization_path) != recorded_sha256:
+        raise ScopeError(
+            "the v5 selection authorization does not match the file digest the effective v5 "
+            "execution protocol records"
         )
     if authorization.get("candle_fetch_authorized") is not False:
         raise ScopeError(
@@ -651,6 +772,7 @@ __all__ = [
     "CONFIG_MANIFEST_PATH",
     "DATA_MANIFEST_PATH",
     "EXECUTION_AMENDMENT_1_PATH",
+    "EXECUTION_AMENDMENT_2_PATH",
     "EXECUTION_PATH",
     "FORBIDDEN_PATHS",
     "FREEZE_AMENDMENT_1_PATH",
