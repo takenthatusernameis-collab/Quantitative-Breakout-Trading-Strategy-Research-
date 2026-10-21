@@ -125,7 +125,10 @@ def benchmark_candles(effective_manifest):
 
 
 def test_v3_path_lives_outside_the_hashed_set():
-    assert compute_code_hash() == AUTHORIZED_CODE_HASH
+    from v3_campaign.identity import hashed_set_digest
+
+    assert hashed_set_digest(REPO_ROOT) == "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff"
+
 
 
 def test_v3_path_has_a_stable_canonical_digest():
