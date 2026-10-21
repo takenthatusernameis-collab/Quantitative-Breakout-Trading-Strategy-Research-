@@ -17,7 +17,10 @@ that the effective data manifest binds.
 
 The v4 data manifest does not carry a BTCUSDT benchmark entry. The benchmark
 dataset is referenced directly from the v3 data area (immutable historical
-data), outside the v4 data-manifest identity.
+data), outside the v4 data-manifest identity. It is therefore read directly
+and verified against its recorded content hash, and not through the
+manifest-driven loader, which resolves a dataset through a manifest entry the
+v4 manifest deliberately does not publish.
 """
 
 from __future__ import annotations
@@ -31,7 +34,12 @@ from typing import Any, Dict, List, Tuple
 
 from breakout_research.baselines import load_verified_candles
 from breakout_research.config import Candle
-from breakout_research.data.fetcher import DATASET_HASH_ALGORITHM, HOUR_MS
+from breakout_research.data.fetcher import (
+    DATASET_HASH_ALGORITHM,
+    HOUR_MS,
+    _read_dataset,
+    compute_content_hash,
+)
 
 from .errors import ConfirmatoryWindowViolation, DataVerificationError
 
@@ -186,6 +194,16 @@ def load_benchmark_candles(repo_root: Path,
     immutable historical data. The dataset is hash-verified against the
     recorded content hash and checked against the confirmatory boundary exactly
     like an asset dataset.
+
+    The dataset is read directly and verified against the recorded content
+    hash, **not** through ``load_verified_candles``: that loader resolves the
+    dataset through a ``data_manifest`` entry, and the v4 data manifest
+    deliberately publishes no BTCUSDT entry -- the benchmark is external to the
+    v4 data-manifest identity by design (see the authorization's residual
+    limitation RL2). The verification is the one the manifest-driven loader
+    performs: the canonical hourly-CSV content hash of the parsed dataset must
+    equal the recorded hash. For this dataset the recorded hash is also the
+    sha256 of the file bytes, so both digests are checked.
     """
     dataset_path = Path(repo_root) / BENCHMARK_DATASET_PATH
     if not dataset_path.exists():
@@ -200,14 +218,20 @@ def load_benchmark_candles(repo_root: Path,
         )
     if BENCHMARK_LAST_CANDLE + HOUR_MS > boundary_ms:
         raise ConfirmatoryWindowViolation(
-            "the benchmark dataset declares a last candle that closes inside the "
+            f"the benchmark dataset declares a last candle that closes inside the "
             f"confirmatory window (closes at {BENCHMARK_LAST_CANDLE + HOUR_MS} > "
             f"{boundary_ms}); the dataset is not read"
         )
 
-    candles, provenance = load_verified_candles(BENCHMARK_SYMBOL, data_manifest, Path(repo_root))
+    candles = _read_dataset(dataset_path)
     if not candles:
         raise DataVerificationError("the benchmark dataset has no candles")
+    canonical_hash = compute_content_hash(candles)
+    if canonical_hash != BENCHMARK_CONTENT_HASH:
+        raise DataVerificationError(
+            f"the benchmark dataset canonical content hash does not match the recorded "
+            f"hash: recorded {BENCHMARK_CONTENT_HASH}, computed {canonical_hash}"
+        )
     for candle in candles:
         if int(candle.timestamp) + HOUR_MS > boundary_ms:
             raise ConfirmatoryWindowViolation(
@@ -232,6 +256,7 @@ def load_benchmark_candles(repo_root: Path,
         "asset": BENCHMARK_SYMBOL,
         "dataset_path": BENCHMARK_DATASET_PATH,
         "content_hash": content_hash,
+        "canonical_content_hash": canonical_hash,
         "hash_verified": True,
         "candle_count": len(candles),
         "first_candle_timestamp": int(candles[0].timestamp),

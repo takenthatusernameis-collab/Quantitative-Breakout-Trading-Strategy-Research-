@@ -107,8 +107,8 @@
       "hashed_set_root": "src/breakout_research",
       "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
       "execution_path_root": "src/v4_campaign",
-      "execution_path_digest": "4f81366e84d1ab24bd0fe41052449e9e604d4f14a9e0eef17ff52427923612fa",
-      "run_code_identity": "f7274c9624a91dba0fdfe1a96972e6069333a7e3cc23a145af494bb81b534c4b",
+      "execution_path_digest": "49adc05c785304f32bbf64ef990c6788b0e32c8a069224acf740ae791ccee22f",
+      "run_code_identity": "05a85ce104a564f1e478eda2126cb7981c011ec3a51d16846901703eda1a22a1",
       "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
       "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
       "ordered_code_hash_is_portable": false,
@@ -178,14 +178,14 @@
       "no_forward_fill": true,
       "fail_closed": [
         "the benchmark series is missing",
-        "the benchmark series is shorter than the evaluated window",
-        "the benchmark series is not index-aligned with the asset series"
+        "the benchmark series does not cover an evaluated window of the asset series",
+        "the benchmark series carries a different timestamp than the asset series inside an evaluated window"
       ],
       "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
       "btc_configurations_dropped": false,
       "exposure_rule": "the benchmark dataset is development data; it lies entirely before the confirmatory window and no confirmatory-window candle is read",
       "external_to_v4_manifest": true,
-      "note": "The v4 data manifest publishes no BTCUSDT entry. The benchmark dataset is referenced directly from the immutable v3 data area; it is external to the v4 data-manifest identity. It is hash-verified before every use and it is index-aligned with the six evaluated assets, so the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called."
+      "note": "The v4 data manifest publishes no BTCUSDT entry. The benchmark dataset is referenced directly from the immutable v3 data area; it is external to the v4 data-manifest identity. It is hash-verified before every use, it covers every evaluated validation window of the seven evaluated assets with identical timestamps, and the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called. The benchmark dataset ends two hours before the v4 asset datasets do, which is outside every evaluated window and inside the holdout-position fold, which the selection run never evaluates."
     },
     "effective_data_manifest": {
       "effective_data_manifest_hash": "9d5a3acb16d37d7cfe4602b40640d4d2577eaacb3ed7a09c9eae4b13a013e158",
@@ -208,7 +208,7 @@
       "Mixing v1, v2 or v3 cycle units with v4 results",
       "Widening or narrowing the frozen candidate set",
       "Dropping, re-deriving or re-ranking the 576 btc_ema_168 configurations",
-      "Evaluating the BTC filter on a benchmark series that is not index-aligned with the asset series",
+      "Evaluating the BTC filter on a benchmark series that does not cover an evaluated window of the asset series, or whose timestamps differ inside it",
       "A second run attempt under this authorization"
     ],
     "no_execution_in_this_session": true
@@ -246,7 +246,7 @@
     },
     "v4_execution_protocol": {
       "path": "configs/research_v4_execution.json",
-      "specification_hash": "e068adb85a81dc971949f9f7b9b2229ce06e2e4b331693c8c82be8f32828ded0"
+      "specification_hash": "4a559d93b5ff77976b50e0d859e444073c68aa578bb0b8ec0e79ecf486ecfe97"
     },
     "v1_campaign_authorization": {
       "path": "research_state/campaign_authorization.json",
@@ -270,7 +270,7 @@
       "id": "RL2",
       "location": "the benchmark dataset",
       "limitation": "The v4 data manifest publishes no BTCUSDT benchmark entry. The benchmark dataset is referenced directly from the immutable v3 data area (research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv) and is external to the v4 data-manifest identity. A future v4 data-manifest amendment may publish the benchmark entry into the v4 manifest.",
-      "consequence": "The benchmark rule of BRAIN-013 is still fully implemented: the dataset is hash-verified, index-aligned with each evaluated asset, and sliced to the same fold window before the frozen engine is called. No observation is forward-filled. The external reference is a disclosure, not a relaxation of the rule."
+      "consequence": "The benchmark rule of BRAIN-013 is still fully implemented: the dataset is hash-verified, it covers every evaluated window of each evaluated asset with identical timestamps, and both series are sliced to the same fold window before the frozen engine is called. No observation is forward-filled. The external reference is a disclosure, not a relaxation of the rule."
     }
   ],
   "verification": {
@@ -292,5 +292,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2 and v3 artifacts."
   },
-  "manifest_hash": "b8533ec9760173a65c085cd76affdbcd102735115fc14a078d1bbe107d7f6b2f"
+  "manifest_hash": "911bfeb0a68d91ea3453d698a2e18f9b760bc1ba76c0afe2da068b175346d681"
 }

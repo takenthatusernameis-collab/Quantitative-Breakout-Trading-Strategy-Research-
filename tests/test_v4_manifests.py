@@ -266,3 +266,63 @@ def test_the_verifier_detects_a_batch_that_is_not_the_re_derived_one(tmp_path: P
     _replace(root, "research/universe_manifest_v4.json", universe)
     failures = _failures(root)
     assert any("re-derived candidate batch" in failure for failure in failures)
+
+
+# --------------------------------------------------------------------------
+# the state-adaptive v4 execution state
+# --------------------------------------------------------------------------
+
+
+def test_the_execution_state_is_the_authorized_one() -> None:
+    """After the authorized run the v4 execution artifacts are the authorized ones."""
+    ledger = _load(REPO_ROOT / "research" / "ledger_v4.json")
+    authorization = _load(REPO_ROOT / "configs" / "research_v4_selection_authorization_1.json")
+    run = authorization["authorized_run"]
+    assert ledger["status"] == "COMPLETED"
+    assert ledger["authorization_manifest_hash"] == authorization["manifest_hash"]
+    assert ledger["run_id"] == run["run_id"]
+    assert ledger["campaign_id"] == run["campaign_id"]
+    assert ledger["holdout_exposed_count"] == 0
+    assert verifier.v4_execution_state_failures(REPO_ROOT) == []
+
+
+def test_the_verifier_detects_an_execution_artifact_without_the_authorization(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    (root / "configs" / "research_v4_selection_authorization_1.json").unlink()
+    failures = _failures(root)
+    assert any(
+        "without the v4 selection authorization" in failure for failure in failures
+    )
+
+
+def test_the_verifier_detects_a_ledger_that_is_not_bound_to_the_authorization(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _load(REPO_ROOT / "research" / "ledger_v4.json")
+    ledger["authorization_manifest_hash"] = "0" * 64
+    _replace(root, "research/ledger_v4.json", ledger)
+    failures = _failures(root)
+    assert any("not bound to the v4 selection authorization" in failure for failure in failures)
+
+
+def test_the_verifier_detects_an_incomplete_run(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _load(REPO_ROOT / "research" / "ledger_v4.json")
+    ledger["status"] = "INTERRUPTED"
+    _replace(root, "research/ledger_v4.json", ledger)
+    failures = _failures(root)
+    assert any("not 'COMPLETED'" in failure for failure in failures)
+
+
+def test_the_verifier_detects_a_confirmatory_exposure_in_the_ledger(
+    tmp_path: Path,
+) -> None:
+    root = _mirror_repo(tmp_path)
+    ledger = _load(REPO_ROOT / "research" / "ledger_v4.json")
+    ledger["holdout_exposed_count"] = 1
+    _replace(root, "research/ledger_v4.json", ledger)
+    failures = _failures(root)
+    assert any("records a confirmatory exposure" in failure for failure in failures)

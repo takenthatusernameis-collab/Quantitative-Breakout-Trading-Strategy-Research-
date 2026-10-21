@@ -48,7 +48,11 @@ from breakout_research.baselines import buyhold_baseline, baseline_for_asset
 from breakout_research.config import CheckpointState, CostScenario, get_configurations
 from breakout_research.selection import select_candidates
 
-from .benchmark import BENCHMARK_SYMBOL, align_window, assert_dataset_alignment
+from .benchmark import (
+    BENCHMARK_SYMBOL,
+    align_window,
+    assert_benchmark_covers_evaluation,
+)
 from .data import (
     load_benchmark_candles,
     load_development_candles,
@@ -65,6 +69,7 @@ from .scope import (
     frozen_scope,
     load_json,
     selection_rule,
+    sha256_file,
     validate_authorization,
     verify_execution_protocol,
 )
@@ -269,6 +274,26 @@ def build_plan(workspace: Workspace) -> Plan:
                 raise V4CampaignError(
                     f"the data manifest disagrees with itself about the content hash of {symbol}"
                 )
+
+    # The benchmark is external to the v4 data manifest, so the manifest carries
+    # no entry for it -- but the v1 unit-data-hash rule binds the benchmark
+    # dataset into the identity of every BTC trend-filter unit ("a BTC
+    # trend-filter unit depends on the asset's data **and** on the benchmark
+    # dataset"). The benchmark's content hash is therefore published into the
+    # plan, after it has been verified against the recorded hash and against
+    # the hash the v4 execution protocol binds.
+    benchmark_dataset = root / str(provenance["benchmark_dataset_path"])
+    if not benchmark_dataset.exists():
+        raise V4CampaignError(
+            f"the benchmark dataset {provenance['benchmark_dataset_path']} does not exist"
+        )
+    benchmark_content_hash = sha256_file(benchmark_dataset)
+    if benchmark_content_hash != str(provenance["benchmark_content_hash"]):
+        raise V4CampaignError(
+            f"the benchmark dataset does not hash to the recorded content hash: recorded "
+            f"{provenance['benchmark_content_hash']}, computed {benchmark_content_hash}"
+        )
+    data_hashes[BENCHMARK_SYMBOL] = benchmark_content_hash
 
     code_identity = dict(validated["code_identity"])
     paths = authorization_output_paths(authorization)
@@ -633,11 +658,13 @@ def run_selection(workspace: Workspace) -> Dict[str, Any]:
             candles, _provenance = load_development_candles(
                 plan.workspace.repo_root, symbol, plan.data_manifest, plan.boundary_ms
             )
-            assert_dataset_alignment(candles, benchmark_candles, symbol)
             bounds = fold_bounds(candles, plan.folds)
             windows = validation_folds(bounds)
             if not windows:
                 raise V4CampaignError(f"{symbol} yields no validation fold")
+            assert_benchmark_covers_evaluation(
+                candles, benchmark_candles, windows, symbol
+            )
             baseline = buyhold_baseline(
                 candles,
                 {fold[2]: (fold[0], fold[1]) for fold in windows},

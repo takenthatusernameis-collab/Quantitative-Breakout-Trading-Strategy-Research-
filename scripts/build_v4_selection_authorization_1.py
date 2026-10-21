@@ -437,10 +437,13 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 "note": (
                     "The v4 data manifest publishes no BTCUSDT entry. The benchmark dataset "
                     "is referenced directly from the immutable v3 data area; it is external to "
-                    "the v4 data-manifest identity. It is hash-verified before every use and "
-                    "it is index-aligned with the six evaluated assets, so the asset series and "
-                    "the benchmark series are sliced to the same fold window before the frozen "
-                    "engine is called."
+                    "the v4 data-manifest identity. It is hash-verified before every use, it "
+                    "covers every evaluated validation window of the seven evaluated assets "
+                    "with identical timestamps, and the asset series and the benchmark series "
+                    "are sliced to the same fold window before the frozen engine is called. "
+                    "The benchmark dataset ends two hours before the v4 asset datasets do, "
+                    "which is outside every evaluated window and inside the holdout-position "
+                    "fold, which the selection run never evaluates."
                 ),
             },
             "effective_data_manifest": {
@@ -474,8 +477,8 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 "Mixing v1, v2 or v3 cycle units with v4 results",
                 "Widening or narrowing the frozen candidate set",
                 "Dropping, re-deriving or re-ranking the 576 btc_ema_168 configurations",
-                "Evaluating the BTC filter on a benchmark series that is not index-aligned "
-                "with the asset series",
+                "Evaluating the BTC filter on a benchmark series that does not cover an "
+                "evaluated window of the asset series, or whose timestamps differ inside it",
                 "A second run attempt under this authorization",
             ],
             "no_execution_in_this_session": True,
@@ -569,8 +572,9 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 ),
                 "consequence": (
                     "The benchmark rule of BRAIN-013 is still fully implemented: the dataset "
-                    "is hash-verified, index-aligned with each evaluated asset, and sliced to "
-                    "the same fold window before the frozen engine is called. No observation is "
+                    "is hash-verified, it covers every evaluated window of each evaluated "
+                    "asset with identical timestamps, and both series are sliced to the same "
+                    "fold window before the frozen engine is called. No observation is "
                     "forward-filled. The external reference is a disclosure, not a relaxation "
                     "of the rule."
                 ),

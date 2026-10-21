@@ -22,3 +22,9 @@ research/results_v2.jsonl
 # configs/research_v3_selection_authorization_1.json). At the size of the
 # authorized run it exceeds the per-file push limit, so it is not committed.
 research/results_v3.jsonl
+
+# The v4 selection result stream is a projection of the verified shards under
+# research/shards_v4 and is regenerated from them (residual limitation RL2 of
+# configs/research_v4_selection_authorization_1.json). At the size of the
+# authorized run it exceeds the per-file push limit, so it is not committed.
+research/results_v4.jsonl

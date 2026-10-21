@@ -171,8 +171,8 @@ def test_benchmark_rule_is_recorded_by_the_execution_protocol():
     assert benchmark["grid_rule"].startswith("the 576 btc_ema_168 configurations")
     fail_closed = benchmark["fail_closed"]
     assert any("missing" in item for item in fail_closed)
-    assert any("shorter than the evaluated window" in item for item in fail_closed)
-    assert any("not index-aligned" in item for item in fail_closed)
+    assert any("does not cover an evaluated window" in item for item in fail_closed)
+    assert any("different timestamp" in item for item in fail_closed)
 
 
 def test_aligned_window_carries_identical_timestamps(benchmark_candles):
@@ -228,6 +228,13 @@ def test_misaligned_benchmark_fails_closed():
 
 
 def test_dataset_alignment_refuses_a_different_span():
+    """The dataset-level identity check still refuses a different span.
+
+    It is a *sufficient* condition for the evaluated series to be aligned; the
+    run applies the evaluated-window coverage check, because the validation
+    windows are interior fractions of the dataset and the evaluated series can
+    be aligned even when the two datasets span different ranges.
+    """
     asset = [_candle(index * 3_600_000) for index in range(10)]
     shorter = [_candle(index * 3_600_000) for index in range(9)]
     with pytest.raises(BenchmarkAlignmentError):

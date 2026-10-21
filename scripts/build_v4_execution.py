@@ -269,8 +269,9 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             ),
             "fail_closed": [
                 "the benchmark series is missing",
-                "the benchmark series is shorter than the evaluated window",
-                "the benchmark series is not index-aligned with the asset series",
+                "the benchmark series does not cover an evaluated window of the asset series",
+                "the benchmark series carries a different timestamp than the asset series "
+                "inside an evaluated window",
             ],
             "first_candle_timestamp": BENCHMARK_FIRST_CANDLE,
             "grid_rule": (
@@ -285,7 +286,13 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             "note": (
                 "The v4 data manifest publishes no BTCUSDT entry. The benchmark dataset is "
                 "referenced directly from the immutable v3 data area; it is external to the "
-                "v4 data-manifest identity and is hash-verified before every use."
+                "v4 data-manifest identity and is hash-verified before every use. The "
+                "benchmark covers every evaluated validation window: the v4 asset datasets "
+                "span the 26,280-hour window that ends at the preregistered development "
+                "cutoff, the benchmark dataset ends two hours earlier, and the difference "
+                "falls entirely outside the evaluated windows -- the 0.4 to 0.8 fractions of "
+                "the span -- and inside the holdout-position fold, which the selection run "
+                "never evaluates."
             ),
         },
         "hashing": {

@@ -72,7 +72,8 @@ FROZEN_ANCHORS = (
     "research/data_manifest_v3.json",
 )
 
-#: The paths a v4 execution run would create. None of them may exist yet.
+#: The paths a v4 execution run creates. Before the authorized run none of
+#: them may exist; after it they are the authorized ones.
 V4_EXECUTION_PATHS = (
     "research/shards_v4",
     "research/ledger_v4.json",
@@ -80,6 +81,9 @@ V4_EXECUTION_PATHS = (
     "research/results_v4.jsonl",
     "research_state/checkpoint_v4.json",
 )
+
+#: The v4 selection authorization, once it exists.
+V4_AUTHORIZATION_RELATIVE = "configs/research_v4_selection_authorization_1.json"
 
 ALLOWED_VALIDATION_EXCLUSION_REASONS = (
     "binance_spot_unavailable",
@@ -120,6 +124,60 @@ def compute_manifest_hash(document: Dict[str, Any],
 
 def read_json(path: Path) -> Dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def v4_execution_state_failures(repo_root: Path) -> List[str]:
+    """The failures of the v4 execution state.
+
+    The rule that replaced the former "a v4 execution artifact exists" check
+    is **state-adaptive** and is never weaker than the state it replaces -- the
+    same rule the v3 chain adopted in
+    ``scripts/v3_benchmark_amendment_common.py``:
+
+    * while the v4 selection authorization does not exist, no v4 execution
+      artifact may exist -- the cascade is then the last word, and a v4
+      execution artifact would contradict it;
+    * once the authorization exists, the authorized run has been performed: the
+      v4 execution artifacts are the authorized ones, the ledger of the run is
+      bound to the authorization's manifest hash, reports a completed run and
+      records no confirmatory exposure. A v4 execution artifact that is not
+      backed by the authorization, or a ledger that is not bound to it, is a
+      contradiction of the cascade.
+    """
+    root = Path(repo_root)
+    authorization_path = root / V4_AUTHORIZATION_RELATIVE
+    existing = [relative for relative in V4_EXECUTION_PATHS if (root / relative).exists()]
+    if not authorization_path.exists():
+        return [
+            f"a v4 execution artifact exists without the v4 selection authorization: {relative}"
+            for relative in existing
+        ]
+    if not existing:
+        return []
+    failures: List[str] = []
+    ledger_path = root / "research" / "ledger_v4.json"
+    if not ledger_path.exists():
+        failures.append(
+            "a v4 execution artifact exists without the ledger of the authorized run: "
+            + ", ".join(existing)
+        )
+        return failures
+    ledger = read_json(ledger_path)
+    authorization = read_json(authorization_path)
+    if ledger.get("authorization_manifest_hash") != authorization.get("manifest_hash"):
+        failures.append("the v4 ledger is not bound to the v4 selection authorization")
+    if ledger.get("status") != "COMPLETED":
+        failures.append(
+            f"the v4 ledger reports the run status {ledger.get('status')!r}, not 'COMPLETED'"
+        )
+    if int(ledger.get("holdout_exposed_count") or 0) != 0:
+        failures.append("the v4 ledger records a confirmatory exposure")
+    run = authorization.get("authorized_run") or {}
+    if ledger.get("run_id") != run.get("run_id"):
+        failures.append("the v4 ledger does not record the authorized run id")
+    if ledger.get("campaign_id") != run.get("campaign_id"):
+        failures.append("the v4 ledger does not record the authorized campaign id")
+    return failures
 
 
 def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
@@ -313,15 +371,14 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             if reason not in ALLOWED_VALIDATION_EXCLUSION_REASONS:
                 failures.append(f"{pair}: an unknown validation exclusion reason {reason!r}")
 
-    # 10. the confirmatory window is unexposed and nothing has run under v4.
+    # 10. the confirmatory window is unexposed and the v4 execution state is
+    #     the authorized one.
     window = data.get("confirmatory_window") or {}
     if window.get("holdout_exposed_count") != 0:
         failures.append("the v4 data manifest records a confirmatory exposure")
     if window.get("confirmatory_window_status") != "NOT_STARTED":
         failures.append("the v4 confirmatory window is not recorded as not started")
-    for relative in V4_EXECUTION_PATHS:
-        if (repo_root / relative).exists():
-            failures.append(f"a v4 execution artifact exists: {relative}")
+    failures.extend(v4_execution_state_failures(repo_root))
 
     # 11. the v1, v2 and v3 artifacts are unchanged.
     for relative in FROZEN_ANCHORS:

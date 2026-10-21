@@ -3892,3 +3892,78 @@ New identities: data manifest `9d5a3acb…`, candidate freeze `bae6a374…`, exe
 - The guard is not vacuous: against the pre-repair bytes the verifier reports exactly the three exclusive statements and nothing else, and against the repaired bytes it reports none.
 
 **Recommendation:** accept the repaired v4 chain; the next bounded task is the single authorized v4 selection run (`v4-selection-20261021`), with the exposure-counter question of BRAIN-014 still open for the coordinator before the v3 confirmatory gate clears on 2027-01-18T13:00:00Z.
+
+## BRAIN-016 — the v4 benchmark could not be loaded, could not be aligned and was not bound into the unit identity (2026-10-21T02:5xZ)
+
+**Status:** REPAIRED_IN_THIS_SESSION; the repair was applied **before** the single authorized v4 selection run was started, so no result depends on the defective path.
+**Type:** defect record and repair (code against a live dataset; the repaired path is the one the run used).
+**Routing:** the durable handoff named the single authorized v4 selection run (`v4-selection-20261021`) as the next bounded task. The run was attempted and could not start; the three defects below are the reason, and they were repaired in the same session, in the v4 execution path only.
+
+### The defect (recomputed from the live artifacts, not quoted)
+
+The v4 chain was audited end to end before the run was started. Three defects in `src/v4_campaign` made the authorized run impossible. The first two are fatal; the third is an identity weakness that would have survived the run.
+
+1. **The benchmark could not be loaded at all.** `src/v4_campaign/data.py:load_benchmark_candles` resolved the benchmark dataset through `load_verified_candles(BENCHMARK_SYMBOL, data_manifest, ...)`, and that loader resolves a dataset through an entry of the data manifest. The v4 data manifest publishes **no** BTCUSDT entry -- the benchmark is external to the v4 data-manifest identity by design (the authorization's residual limitation RL2 says so, and the v4 execution protocol's own note says so) -- so the loader raised `KeyError: 'asset BTCUSDT is not present in the data manifest'` before the first asset was evaluated. The run would have died with a technical failure, not even with the fail-closed alignment error.
+
+2. **The dataset-level alignment check refused every asset.** `src/v4_campaign/benchmark.py:assert_dataset_alignment` demanded an identical span: the same first candle, the same last candle and the same candle count. The seven v4 asset datasets span the 26,280-hour window that ends at the preregistered development cutoff, `[1697893200000, 1792497600000]`. The benchmark dataset -- the immutable v3-area BTC dataset -- spans `[1697886000000, 1792490400000]`, the same 26,280 hourly candles shifted two hours earlier at both ends. The check therefore refused all seven assets. The check was *stricter than the frozen methodology*: `docs/research_protocol.md:101` requires BTC and the target asset to be aligned by UTC candle close and forbids forward-filling a missing observation, and the four validation windows are the interior 0.4 to 0.8 fractions of the span, so they lie strictly inside the benchmark's coverage -- the two-hour difference falls entirely in the development prefix and in the holdout-position fold, which the selection run never evaluates.
+
+3. **The benchmark was not bound into the identity of a BTC trend-filter unit.** The v1 unit-data-hash rule is "a BTC trend-filter unit depends on the asset's data **and** on the benchmark dataset", and `src/v4_campaign/units.py:unit_data_hash` implements it by reading `data_hashes["BTCUSDT"]`. The v4 data manifest publishes no benchmark hash, so the rule degraded to the asset hash alone: the experiment id of all 576 `btc_ema_168` configurations of an asset did not depend on the benchmark dataset at all. The v3 chain, which publishes the benchmark entry in `configs/research_v3_data_manifest_amendment_1.json`, never had this weakness.
+
+### The repair
+
+- `src/v4_campaign/data.py`: the benchmark is read directly from its recorded identity -- the immutable v3-area path, the recorded sha256 of the file bytes, the recorded canonical hourly-CSV content hash, the recorded first and last candle and candle count -- and every one of those checks is applied before the dataset is used. The verification is the one the manifest-driven loader performs; only the manifest *lookup* is dropped, because the v4 manifest deliberately publishes no benchmark entry. The confirmatory-boundary check is unchanged and is applied both before and after the read.
+- `src/v4_campaign/benchmark.py`: a new `assert_benchmark_covers_evaluation` checks that the benchmark holds an observation at the close of **every evaluated asset candle** of every validation window, and refuses the run before the engine is called otherwise. The per-window identity check of `align_window` is untouched and still demands identical timestamps in the two slices. The dataset-level `assert_dataset_alignment` is kept, as the stronger statement it is.
+- `src/v4_campaign/runner.py`: the plan publishes the benchmark's verified content hash as `data_hashes["BTCUSDT"]`, so the v1 unit-data-hash rule binds the benchmark into the experiment id of every BTC trend-filter unit again. The value is the same hash the v3 manifest publishes for the same dataset.
+- `scripts/build_v4_execution.py` and `scripts/build_v4_selection_authorization_1.py`: the published rule now states what the repaired check actually refuses -- "the benchmark series does not cover an evaluated window of the asset series" and "the benchmark series carries a different timestamp than the asset series inside an evaluated window" -- and the two-hour overhang is disclosed in the protocol's note, in the authorization's benchmark note and in its residual limitation RL2. The authorization's note also no longer says "index-aligned with the six evaluated assets": there are seven, and the statement was the defect's own wording.
+- The cascade was rebuilt with the producers, deterministically: the execution protocol, then the selection authorization. The candidate freeze (`bae6a374…`), the data manifest (`9d5a3acb…`), the universe manifest, the grid, the folds, the costs, the thresholds, the selection rule and the data boundary are byte-identical; only the rule sentences, the execution-path digest, the run code identity and the hash bindings changed.
+
+New identities: execution protocol `4a559d93…`, selection authorization `911bfeb0…`, v4 execution-path digest `49adc05c…`, v4 run code identity `05a85ce1…`. The code hash (`2efd3b18…`), the canonical digest of the hashed set (`3e8e4169…`) and the candidate freeze are unchanged: no file under `src/breakout_research` was touched, and the repair changed no data, no dataset, no timestamp and no provider interaction.
+
+### The guards that keep the defects from coming back
+
+- `tests/test_v4_benchmark_coverage.py` (new, 14 tests): the premise of defect 1 (the manifest publishes no benchmark entry) and the repaired load, a tamper control that refuses a benchmark that does not hash to the record, the live proof that every evaluated window of every v4 asset lies inside the benchmark's coverage and that the overhang is inside the holdout-position fold, three tamper controls that make the coverage check refuse a hole, a short benchmark and a missing benchmark, the proof that the per-window identity check is still strict, the proof that the BTC unit identity depends on the benchmark hash, and the proof that the data manifest still hashes to the value the freeze binds.
+- `tests/test_v4_selection_run.py` (new): the record-level verification of the performed run, with ten tamper controls that prove `scripts/verify_v4_selection_run.py` is not vacuous.
+- `scripts/verify_v4_selection_run.py` (new): the record-level verifier -- the shards against the results manifest, every record against the frozen rule, the record set against the authorized grid (the expected experiment ids are re-derived), the counters against the authorized bounds, the absence of a confirmatory exposure, the result stream against the shard projection, and the selection outcome recomputed with the unchanged v1 selector.
+- `tests/test_v4_campaign_benchmark_rule.py`: the two assertions that pinned the old fail-closed wording now pin the repaired wording; the dataset-level identity check keeps its own test.
+
+### The disclosure
+
+The v4 asset datasets end two hours after the benchmark dataset does. The difference is outside every evaluated window and inside the holdout-position fold, which the selection run never evaluates, and no candle is forward-filled. The v4 confirmatory window opens at 2026-10-21T01:00:00Z, and the benchmark dataset lies entirely before the effective development boundary, so no confirmatory exposure was possible.
+
+**Recommendation:** accept the repaired v4 chain and the run performed under it; the exposure-counter question of BRAIN-014 stays open for the coordinator before the v3 confirmatory gate clears on 2027-01-18T13:00:00Z.
+
+## BRAIN-017 — the first attempt at the authorized v4 selection run was aborted by a concurrent second invocation and was rolled back (2026-10-21T03:0xZ)
+
+**Status:** DISCLOSED_AND_ROLLED_BACK; the delivered run is a single clean execution of the authorized run, with `resumes: 0`.
+**Type:** incident record (tooling, not a defect of the v4 chain).
+**Routing:** the durable handoff named the single authorized v4 selection run as the next bounded task. The run was started, aborted, rolled back and started again in the same session; this record states exactly what happened, so that the artifact set and the ledger can be read correctly.
+
+### What happened
+
+The run was started through the session's background-process facility. A later call to that facility's *monitor* action, given the same command, **started a second copy of the command instead of attaching to the running one**. For roughly 90 seconds two processes wrote into the same shard directory.
+
+The race surfaced at 2026-10-21T02:57:03Z, when the second process lost the promotion of a shard: both processes had written `research/shards_v4/v4-campaign/shard_000545.jsonl.tmp` and the first promotion renamed the temporary file away, so the second `os.replace` raised `FileNotFoundError`. The tool then terminated the first process as well. The run was left with the ledger in status `INTERRUPTED` and `resumes: 1`.
+
+### The state the aborted attempt left (measured, not estimated)
+
+- 546 shard files, **27,300 records, 27,300 distinct experiment ids**, no malformed line, one code hash (`05a85ce1…`): no record was corrupted and no record was duplicated **in the shards**;
+- but the shard set was **not a prefix of the campaign order**: the first 27,039 expected units were present, the units at positions 27,300 to 27,644 were present, and the **261 units at positions 27,039 to 27,299 were missing** — the shard that carried them had been overwritten by the racing writer;
+- the result stream held **31,950 rows against 27,300 shard records**, i.e. duplicated rows, because both processes appended to it;
+- the results manifest listed 545 shards and 27,250 records.
+
+The record set was therefore *incomplete* and the stream was *not* a projection of the shards. A resume would have recomputed the 261 missing units (which is safe: the engine is deterministic and the inputs are unchanged) and would have required the stream to be regenerated from the verified shards afterwards, because the run appends to the stream and the stream could not be repaired in place.
+
+### The decision
+
+The authorization's rollback rule ("remove any newly created v4 artifact if the execution is aborted") was applied: `research/shards_v4/`, `research/ledger_v4.json`, `research/results_manifest_v4.json`, `research/results_v4.jsonl` and `research_state/checkpoint_v4.json` were removed, and the single authorized run was then performed once, cleanly, from a clean slate. The delivered ledger records one run with `resumes: 0`, the shard set is exactly the authorized grid in the campaign order, and the result stream is the projection of the verified shards, written in one pass.
+
+The alternative -- resuming the interrupted run -- was rejected because the surviving shard set had a hole that only the engine's own skip logic could fill, and because the corrupt stream could not be repaired in place: it would have left a delivered artifact set that needed surgery after the fact. The cost of the rollback was one repeated partial computation of 27,300 units and about five minutes of wall clock; the benefit is an artifact set that is consistent by construction.
+
+**No result of the aborted attempt was used**: no record of it entered the delivered shards, the stream, the manifest, the checkpoint, the ledger or the selection outcome. The discarded ledger is preserved outside the repository for this session's audit only.
+
+### The guard that keeps the incident from repeating
+
+- `scripts/run_v4_selection.py` now takes an **exclusive lock** (`/tmp/v4_selection_run.lock`, outside the repository) for the duration of the run and refuses a concurrent invocation. Both processes of this incident went through that wrapper, so the failure mode is now impossible from that direction.
+- The engine's own `claim_attempt` already refuses a second logical run: a completed run raises `AttemptBudgetError`, and an interrupted run is resumed rather than restarted, with the resumes bounded by `max_retries_on_technical_failure`. What it cannot prevent is two *concurrent* processes on the same shard directory, which is what the wrapper's lock now covers.
+
+**Recommendation:** treat the delivered run as the one authorized run; keep this record as the disclosure of the discarded attempt. No v1, v2 or v3 artifact, no confirmatory window and no provider was touched at any point.

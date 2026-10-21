@@ -7013,3 +7013,272 @@ The decision is due before the v3 confirmatory gate clears on **2027-01-18T13:00
 and the v4 execution amendment (the v2/v3 pattern); the v3 confirmatory evaluation (may not start before
 2027-01-18T13:00:00Z) and the v2 confirmatory evaluation (may not start before 2027-01-17T22:00:00Z); the
 preregistered v4 confirmatory protocol and runbook, which may only be written after the v3 gate clears.
+
+## Session activity — 2026-10-21T04:0xZ (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it; update the handoff; write a clear
+initial task message for the next agent.
+
+**Prior task (from the durable handoff):** the last *initial task message* in this file (the 02:5xZ entry) named
+one bounded task — perform the **single authorized v4 selection run**, the one logical run `v4-selection-20261021`
+that `configs/research_v4_selection_authorization_1.json` authorizes over the frozen v4 candidate set, and record it
+in the durable handoff. Nothing else was to run in that session.
+
+**Outcome:** the run was performed and is delivered, and it is fully verified record by record. It could **not**
+start as it stood: the audit that preceded it found **three defects in the v4 execution path** that made the
+authorized run impossible (BRAIN-016). They were repaired **before** the run was started, so no result depends on
+the defective path. The run itself was then performed once, cleanly, from a clean slate; a first attempt was aborted
+by a tooling error of mine, rolled back under the authorization's rollback rule and disclosed in full (BRAIN-017).
+**No provider was contacted, no confirmatory window was read, no frozen v1/v2/v3 artifact was edited, the v4
+confirmatory window was not started, and `holdout_exposed_count` is 0 everywhere.**
+
+**Branch / commits:** branch `main`; HEAD `accb4e6a` ("chore(kilo): checkpoint agent session", 2026-10-21 02:37Z)
+at session start; **no commit was created by the agent** (no explicit user request) — the changes below are in the
+working tree.
+
+**Files changed**
+- `src/v4_campaign/data.py`, `src/v4_campaign/benchmark.py`, `src/v4_campaign/runner.py` — the three defects of
+  BRAIN-016. **No file under `src/breakout_research` was touched**, so `compute_code_hash()` is unchanged.
+- `scripts/build_v4_execution.py`, `scripts/build_v4_selection_authorization_1.py` — the producer constants that
+  state the benchmark rule; the published rule now states the repaired fail-closed conditions.
+- `configs/research_v4_execution.json`, `configs/research_v4_selection_authorization_1.json` — rebuilt by their
+  producers, deterministically.
+- `scripts/verify_research_v4_manifests.py` — the "no v4 execution artifact exists" rule became **state-adaptive**
+  (the v3 rule, from `scripts/v3_benchmark_amendment_common.py`): while the authorization does not exist no v4
+  execution artifact may exist; once it does, the artifacts must be the authorized ones and the ledger must be
+  bound to the authorization, completed and unexposed.
+- `scripts/verify_v4_selection_run.py` — **new**: the record-level verifier of the performed run.
+- `scripts/run_v4_selection.py` — **new**: the thin CLI wrapper of the run (progress line + an exclusive lock that
+  makes a concurrent second invocation impossible). It does not change the engine.
+- `tests/test_v4_benchmark_coverage.py` — **new**, 14 tests (5 tamper controls): the repaired benchmark rules.
+- `tests/test_v4_selection_run.py` — **new**, 18 tests (10 tamper controls): the record-level verification of the
+  performed run.
+- `tests/test_v4_campaign_benchmark_rule.py` — two assertions that pinned the old fail-closed wording; the
+  dataset-level identity check keeps its own test.
+- `tests/test_v4_manifests.py` — 5 new tests for the state-adaptive execution state.
+- `.gitignore` — `research/results_v4.jsonl` is now ignored, the v2/v3 pattern (it is a regenerable projection of
+  the verified shards and exceeds the per-file push limit).
+- `research_state/brainstorming_queue.md` — BRAIN-016 (the three defects and their repair) and BRAIN-017 (the
+  aborted first attempt, its measurement and the rollback).
+- `research_state/agent_handoff.md` — this report and the next task message.
+- **New run artifacts**: `research/ledger_v4.json`, `research/results_manifest_v4.json`, `research/shards_v4/`
+  (3,877 shards), `research_state/checkpoint_v4.json`; `research/results_v4.jsonl` (193,536 rows, gitignored).
+
+**The three defects of BRAIN-016 (CONFIRMED, recomputed from the live artifacts)**
+
+1. **The benchmark could not be loaded at all.** `src/v4_campaign/data.py:load_benchmark_candles` resolved the
+   benchmark through `load_verified_candles(BENCHMARK_SYMBOL, data_manifest, ...)`, and that loader resolves a
+   dataset through an entry of the data manifest. The v4 data manifest publishes **no** BTCUSDT entry — the
+   benchmark is external to the v4 data-manifest identity by design (the authorization's RL2 and the execution
+   protocol's own note say so) — so the loader raised `KeyError: 'asset BTCUSDT is not present in the data
+   manifest'` before the first asset was evaluated. *Repair*: the benchmark is read directly from its recorded
+   identity (path, file sha256, canonical hourly-CSV content hash, first/last candle, candle count) with every
+   check applied; the confirmatory-boundary check is unchanged and still applied before and after the read.
+2. **The dataset-level alignment check refused every asset.** `assert_dataset_alignment` demanded an identical
+   span; the seven v4 asset datasets span `[1697893200000, 1792497600000]` (the 26,280-hour window that ends at
+   the preregistered cutoff) and the immutable v3-area benchmark dataset spans `[1697886000000, 1792490400000]` —
+   the same 26,280 candles, two hours earlier at both ends. The check was stricter than the frozen methodology
+   (`docs/research_protocol.md:101`): the four validation windows are the interior 0.4–0.8 fractions of the span
+   and lie strictly inside the benchmark's coverage. *Repair*: a new `assert_benchmark_covers_evaluation` requires
+   an observation at the close of every evaluated asset candle and refuses the run otherwise; the per-window
+   identity check of `align_window` is untouched and still demands identical timestamps in the two slices. The
+   dataset-level check is kept as the stronger statement it is. The two-hour overhang is disclosed in the
+   protocol, the authorization and RL2.
+3. **The benchmark was not bound into the identity of a BTC trend-filter unit.** The v1 unit-data-hash rule is
+   "a BTC trend-filter unit depends on the asset's data **and** on the benchmark dataset", and
+   `src/v4_campaign/units.py:unit_data_hash` implements it through `data_hashes["BTCUSDT"]`, which the v4 data
+   manifest does not publish — so the experiment id of all 576 `btc_ema_168` configurations of an asset did not
+   depend on the benchmark at all. *Repair*: the plan publishes the benchmark's verified content hash as
+   `data_hashes["BTCUSDT"]`, the same hash the v3 manifest publishes for the same dataset.
+
+**The repair's cost, stated plainly.** The repair changed `src/v4_campaign/`, so the **v4 execution-path digest
+moved from `4f81366e…` to `49adc05c…` and the v4 run code identity from `f7274c96…` to `05a85ce1…`**. The
+acceptance criterion "the canonical digests are unchanged" is therefore **revised by evidence** for the two v4
+values only: the hashed set (`3e8e4169…`), the v2 selection path (`c69cc021…`), the v2 confirmatory path
+(`277a4bbe…`), the v3 selection path (`29cd064e…`), the v3 confirmatory path (`747c2387…`) and
+`compute_code_hash()` (`2efd3b18…`) are **unchanged**, and no data, dataset, timestamp, grid, fold, cost,
+threshold, selection rule or provider interaction was changed. The candidate freeze (`bae6a374…`), the data
+manifest (`9d5a3acb…`) and the universe manifest are byte-identical. New identities: execution protocol
+`4a559d93…`, selection authorization `911bfeb0…`.
+
+**The run (delivered)**
+
+| | |
+| --- | --- |
+| run id / campaign | `v4-selection-20261021` / `v4-campaign` |
+| authorization | `911bfeb0a68d91ea3453d698a2e18f9b760bc1ba76c0afe2da068b175346d681` |
+| run code identity | `05a85ce104a564f1e478eda2126cb7981c011ec3a51d16846901703eda1a22a1` |
+| started / completed | 2026-10-21T02:59:49Z / 2026-10-21T04:07:05Z |
+| wall clock | **4,035.8 s (67 min 16 s)**, 0 resumes, 0 skipped |
+| execution units | 193,536 planned = 193,536 executed = 193,536 records |
+| shards / stream rows | 3,877 shard files / 193,536 rows |
+| stream sha256 = shard projection sha256 | `bc521789220365a5f3ba9cc07790a979ab195e1022224e174146b2600430dc18` |
+| BTC trend-filter records | 48,384 = 7 assets × 576 configurations × 4 folds × 3 cost scenarios |
+| outcome | `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE` |
+
+Per-asset outcome under the unchanged v1 selection rule (`configs/research_v1.json#selection`, block sha256
+`b7848977…`; `max_candidates_per_asset = 1`):
+
+| Asset | Outcome | Configuration | Configs passing all gates |
+| --- | --- | --- | --- |
+| ALGOUSDT | CANDIDATE_SELECTED (`CANDIDATE_PENDING_HOLDOUT`) | `cfg_1523` | 4 |
+| ARBUSDT | CANDIDATE_SELECTED (`CANDIDATE_PENDING_HOLDOUT`) | `cfg_0436` | 1 |
+| ETCUSDT | CANDIDATE_SELECTED (`CANDIDATE_PENDING_HOLDOUT`) | `cfg_0269` | 2 |
+| FILUSDT | CANDIDATE_SELECTED (`CANDIDATE_PENDING_HOLDOUT`) | `cfg_0294` | 3 |
+| INJUSDT | INSUFFICIENT_EVIDENCE | — | 0 |
+| JSTUSDT | CANDIDATE_SELECTED (`CANDIDATE_PENDING_HOLDOUT`) | `cfg_1248` | 3 |
+| NEXOUSDT | NO_CANDIDATE | — | 0 |
+
+Five assets with a candidate, two without; the ledger reports the assets without a candidate, as the rule requires.
+No configuration is a "candidate" in the sense of a confirmatory result: every selected configuration is
+`CANDIDATE_PENDING_HOLDOUT`, i.e. it is a candidate for the confirmatory evaluation, which has not started.
+
+**Verified (2026-10-21T04:0xZ)**
+- `python3 scripts/verify_v4_selection_run.py` → **ok: true, no failures** (11.4 s): every shard against the results
+  manifest, every record against the frozen rule, the record set against the authorized grid (the 193,536 expected
+  experiment ids are re-derived from the frozen rule and compared with the observed set), the counters against the
+  authorized bounds, the absence of a confirmatory exposure, the result stream against the shard projection, and
+  the selection outcome **recomputed with the unchanged v1 selector** and compared with what the run reported.
+- `PYTHONPATH=src python3 -m pytest tests/ -q` → **1101 passed** in 302.30 s, exit 0 (1,064 pre-existing + 37 added
+  by this session).
+- every `scripts/verify_*.py` exits 0 — 43 verifiers (`scripts/verify_cycle_results.py` needs a `cycle_dir`
+  argument and is not a repository-wide gate).
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` — unchanged, equal to
+  the authorized value of record in `research_state/campaign_authorization.json`.
+- the canonical digests: hashed set `3e8e4169…`, v2 selection path `c69cc021…`, v2 confirmatory path `277a4bbe…`,
+  v3 selection path `29cd064e…`, v3 confirmatory path `747c2387…` are **unchanged**; the v4 execution-path digest
+  is `49adc05c…` and the v4 run code identity is `05a85ce1…` (moved by the repair, as stated above).
+- the frozen v1/v2/v3 artifacts are byte-unchanged: `git status` shows no change under `configs/` or `research/`
+  except the v4 artifacts, and no change under `research_state/` except this file, the brainstorming queue and the
+  controller-written `campaign_authorization.json` (restored to its committed value after the last test run).
+- both open confirmatory windows and the v4 one are unexposed: `confirmatory_window_status = NOT_STARTED` and
+  `holdout_exposed_count = 0` in `research/data_manifest_v2.json`, `research/data_manifest_v3.json` and
+  `research/data_manifest_v4.json`; `holdout_exposed_count = 0` in `research_state/checkpoint_v2.json`,
+  `research_state/checkpoint_v3.json` and `research_state/checkpoint_v4.json`; no holdout index exists for v1, v2,
+  v3 or v4.
+- `research_state/continuous_universe_state.json` is **unchanged** — the v4 cycle is still to be recorded (the next
+  task).
+
+**UNVERIFIED / STALE**
+- The 02:5xZ entry's statement that "the v4 execution-path digest `4f81366e…` and the v4 run code identity
+  `f7274c96…` are unchanged (no file under `src/` was touched)" is **STALE for the v4 values**: the repair of
+  BRAIN-016 touched `src/v4_campaign/`, so they are now `49adc05c…` and `05a85ce1…`. The v1/v2/v3 values in that
+  entry are still true.
+- The 02:5xZ entry's statement that "no v4 execution artifact exists" is **STALE**: the run has been performed and
+  the five v4 artifacts now exist.
+- BRAIN-014's open item — the v3 confirmatory exposure counter — is **still open** and is not decided by this
+  session: see the next task message.
+- The docstrings of `src/v4_campaign/runner.py` and `src/v4_campaign/__init__.py` still summarise the benchmark
+  rule as "index-aligned with the evaluated asset". Under the repaired rule "index-aligned" means aligned in the
+  *evaluated windows*, so the sentences are not wrong, but they could be clearer. They were **not** edited: the
+  performed run's records bind the run code identity `05a85ce1…`, and any change under `src/v4_campaign/` moves it.
+  The same applies to the one-word "index-aligned" in the docstring of `src/v4_campaign/units.py`.
+- No commit was created by this agent; the changes are in the working tree only.
+
+**Unsuccessful attempts (and the condition that would justify a retry)**
+- The first attempt at the run was aborted: a *monitor* call of the session's background-process facility, given the
+  same command, **started a second copy of the command instead of attaching to the running one**, and for about 90
+  seconds two processes wrote into the same shard directory. The race surfaced as a `FileNotFoundError` on the
+  promotion of `shard_000545.jsonl.tmp` and the first process was terminated at the same time. The abandoned state
+  was measured, not estimated: 546 shard files with 27,300 distinct records, no malformed line, no duplicate id —
+  but a **261-record hole** in the campaign order and a result stream of **31,950 rows against 27,300 shard
+  records** (duplicated, because both processes appended to it). Under the authorization's rollback rule ("remove
+  any newly created v4 artifact if the execution is aborted") the five artifacts were removed and the single
+  authorized run was then performed once, cleanly. The full record is BRAIN-017. **The discarded attempt's ledger
+  is preserved outside the repository** (`/tmp/v4_incident/ledger_v4_interrupted.json`) for this session's audit
+  only; no record of it entered the delivered artifacts.
+- `scripts/verify_research_v4_manifests.py` refused the tree after the run because it still carried the pre-run rule
+  ("a v4 execution artifact exists"). The rule was replaced by the v3 chain's state-adaptive rule, which is never
+  weaker than the state it replaces; five tamper controls pin it.
+- The first version of `scripts/verify_v4_selection_run.py` resolved the manifest's shard paths as recorded. The v4
+  results manifest records **absolute** shard paths (as the v2 manifest does; the v3 manifest records relative
+  ones), so the verifier read the real tree instead of the tree it was given and two tamper controls did not fire.
+  The verifier now resolves every manifest entry inside the tree it verifies and refuses a manifest that names
+  another tree. This is a defect of the *verifier*, not of the run: the run's artifacts are correct and the
+  verifier now proves it.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** publish the **v4 selection outcome** — make the performed run's result durable and
+hash-bound, in the v2/v3 pattern. Concretely, from the verified shards of the completed run `v4-selection-20261021`:
+(a) publish a versioned `research/v4_selected_configurations_manifest.json` (the v3 pattern:
+`scripts/publish_v3_selected_configurations.py` → `research/v3_selected_configurations_manifest.json`), binding the
+run identity, the specification identities, the data identities, the benchmark, the frozen candidate set and the
+per-asset outcome; (b) record the v4 cycle in `research_state/continuous_universe_state.json` (the v3 cycle is
+recorded there as `current_cycle_id = v3-selection-20261020`, with the cohort, the outcome, the candidates and the
+assets without a candidate); and (c) publish the v4 execution amendment that binds the performed run into the v4
+execution protocol (the v3 pattern: `configs/research_v3_execution_amendment_1.json`), with a producer, a verifier
+and tests. Nothing else runs in that session.
+
+**Subject:** the v4 selection run is performed and verified; next is the publication of the v4 selection outcome
+
+**Status (verified 2026-10-21T04:0xZ):**
+- **the single authorized v4 selection run is performed and delivered**: `research/ledger_v4.json` records run id
+  `v4-selection-20261021` with status `COMPLETED`, `resumes: 0`, 193,536 records written against 193,536 planned
+  execution units, 0 skipped; 3,877 shard files under `research/shards_v4/`, a 193,536-row
+  `research/results_v4.jsonl` (gitignored, a regenerable projection), `research/results_manifest_v4.json` and
+  `research_state/checkpoint_v4.json`; the stream's sha256 equals the shard projection's sha256
+  (`bc521789…`); wall clock 4,035.8 s
+- the outcome is `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`: candidates for `ALGOUSDT` (`cfg_1523`),
+  `ARBUSDT` (`cfg_0436`), `ETCUSDT` (`cfg_0269`), `FILUSDT` (`cfg_0294`), `JSTUSDT` (`cfg_1248`), all
+  `CANDIDATE_PENDING_HOLDOUT`; `INJUSDT` is `INSUFFICIENT_EVIDENCE` and `NEXOUSDT` is `NO_CANDIDATE`; the ledger
+  reports the assets without a candidate
+- `python3 scripts/verify_v4_selection_run.py` exits 0 with no failures: the record set is exactly the authorized
+  grid, every record recomputes its experiment id, binds the benchmark content hash and the fold window the frozen
+  fold rule derives, and the outcome recomputes with the unchanged v1 selector
+- the v4 chain was **repaired before the run** (BRAIN-016): the benchmark could not be loaded, could not be aligned
+  and was not bound into the unit identity. The repair moved the v4 execution-path digest to `49adc05c…` and the
+  run code identity to `05a85ce1…`; the hashed set `3e8e4169…`, the v2/v3 paths and `compute_code_hash()`
+  (`2efd3b18…`) are unchanged, and the candidate freeze `bae6a374…` and the data manifest `9d5a3acb…` are
+  byte-identical
+- the identities the publication must bind: authorization `911bfeb0…`, execution protocol `4a559d93…`, candidate
+  freeze `bae6a374…`, data manifest `9d5a3acb…`, universe manifest `14d27d68…`, run code identity `05a85ce1…`,
+  selection rule `b7848977…` (`configs/research_v1.json#selection`)
+- **the v4 confirmatory window is not started**: `confirmatory_window_status = NOT_STARTED` and
+  `holdout_exposed_count = 0` in `research/data_manifest_v4.json` and in `research_state/checkpoint_v4.json`; the
+  v2 and v3 windows are unexposed as well; no holdout index exists for v1, v2, v3 or v4
+- `research_state/continuous_universe_state.json` still records the **v3** cycle — the v4 cycle is not recorded yet
+
+**Do NOT:** contact any provider; read a candle inside the v2, the v3 or the v4 confirmatory window; re-run the
+completed v4 selection run (a completed run is never re-run; `claim_attempt` refuses it); edit any file under
+`src/breakout_research`; edit a frozen v1/v2/v3 artifact; change the 2,304-configuration grid, the costs, the
+folds, the thresholds, the selection rule or the single confirmatory criterion; **edit any file under
+`src/v4_campaign`** — the performed run's 193,536 records bind the run code identity `05a85ce1…`, and a change
+there moves the v4 execution-path digest and that identity, so it would need a published code-hash amendment (the
+v2 pattern: `configs/research_v2_confirmatory_code_hash_amendment_1.json`) and would invalidate the publication's
+binding; put the publication itself in `scripts/`, as the v3 publication is, so that the run identity does not
+move; mark a confirmatory window as started or `holdout_exposed_count` as non-zero; edit the five delivered v4 run
+artifacts (`research/shards_v4/`, `research/ledger_v4.json`, `research/results_manifest_v4.json`,
+`research/results_v4.jsonl`, `research_state/checkpoint_v4.json`); re-select, re-rank or re-weight anything — the
+outcome is recomputed from the records, not chosen; take the v3 exposure-counter decision (see below) in the same
+session.
+
+**Acceptance criteria:** `research/v4_selected_configurations_manifest.json` exists, is versioned and hash-bound,
+and every value in it recomputes from the delivered run (the run identity, the ledger's selection block, the
+per-asset outcome and the data identities) — including a verifier that refuses a manifest whose numbers do not
+recompute; `research_state/continuous_universe_state.json` records the v4 cycle (the cycle id, the cohort, the
+outcome, the candidates and the assets without a candidate) and the file still hashes to the value the repository
+expects for the fields the v1/v2/v3 cycles set; the v4 execution amendment names the performed run's identity
+(the authorization's manifest hash, the run code identity, the code-hash constraint, the evaluation scope, the
+benchmark rule) and authorizes **nothing**; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0 with no new
+failures; every `scripts/verify_*.py` still exits 0; `compute_code_hash()` is still `2efd3b18…`; the five
+delivered v4 run artifacts are byte-unchanged (compare their digests before and after); no confirmatory exposure
+is recorded anywhere; the handoff records what was published, with the digests.
+
+**Still open for the coordinator (do not decide it in the publication session):** BRAIN-014's exposure-counter
+question — whether the discarded, pre-use read of ten hourly candles per v3-cohort asset (deleted in the 01:25Z
+session, before any use) must increment `holdout_exposed_count` in the v3 data manifest and the v3 checkpoint, or is
+recorded as a disclosed pre-use read that is not an evaluation exposure. Read literally, the v3 candidate freeze's
+`access_counting` says the counter increments; the alternative changes the v3 timeline. The decision is due before
+the v3 confirmatory gate clears on **2027-01-18T13:00:00Z** (the v2 gate clears 2027-01-17T22:00:00Z); the v4
+selection run and its publication do not depend on it.
+
+**Queued after this task (not for that session):** the preregistered v4 confirmatory protocol and runbook, which may
+only be written after the v3 gate clears; the v3 confirmatory evaluation (may not start before
+2027-01-18T13:00:00Z) and the v2 confirmatory evaluation (may not start before 2027-01-17T22:00:00Z). Two
+deferred cosmetic items from this session, to be folded into whatever change next touches `src/v4_campaign` (and
+therefore needs a code-hash amendment): the docstrings of `src/v4_campaign/runner.py` and
+`src/v4_campaign/__init__.py` still summarise the benchmark rule as "index-aligned with the evaluated asset" (true
+of the evaluated windows, but clearer as such), and the v4 results manifest records **absolute** shard paths (as
+the v2 manifest does, unlike the relative v3 one) — a portability wart of the delivered artifact, which the
+publication must handle rather than change.

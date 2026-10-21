@@ -14,7 +14,9 @@ lives outside the hashed set:
 
 * the benchmark dataset is loaded and hash-verified;
 * the benchmark series and the asset series are checked to be index-aligned at
-  the *dataset* level (identical first candle, last candle and candle count);
+  the *evaluated-window* level: the benchmark must hold an observation at the
+  close of every evaluated asset candle, and the two slices of every window
+  must carry identical timestamps;
 * both series are sliced to the **same fold window** before the engine is
   called, and the two slices are checked to carry identical timestamps, so that
   the engine's index pairing *is* the UTC-candle-close alignment;
@@ -70,6 +72,16 @@ def assert_dataset_alignment(asset_candles: Sequence[Candle],
     Index alignment at the dataset level means: the same first candle, the same
     last candle and the same number of candles. A benchmark that covers a
     different span is refused -- it would silently misalign every index.
+
+    This is the *dataset-level* form of the rule. It is a **sufficient**
+    condition for the evaluated series to be aligned, not a necessary one: the
+    frozen methodology (``docs/research_protocol.md:101``) requires the
+    *evaluated* series to be aligned by UTC candle close, and the validation
+    windows are interior fractions of the dataset, so a benchmark that covers
+    every evaluated window satisfies the methodology even when the two
+    datasets span different ranges. :func:`assert_benchmark_covers_evaluation`
+    is the check the run applies; this function is kept because dataset-level
+    identity is the stronger statement and the v3 path relies on it.
     """
     if not benchmark_candles:
         raise BenchmarkAlignmentError(
@@ -103,6 +115,66 @@ def assert_dataset_alignment(asset_candles: Sequence[Candle],
         "first_candle_timestamp": asset_first,
         "last_candle_timestamp": asset_last,
         "candle_count": len(asset_candles),
+        "index_aligned": True,
+    }
+
+
+def assert_benchmark_covers_evaluation(asset_candles: Sequence[Candle],
+                                        benchmark_candles: Sequence[Candle],
+                                        windows: Sequence[Tuple[int, int]],
+                                        symbol: str) -> Dict[str, Any]:
+    """Check that the benchmark covers every evaluated window of an asset.
+
+    The frozen methodology (``docs/research_protocol.md:101``) requires BTC and
+    the target asset to be aligned by UTC candle close and forbids
+    forward-filling a missing BTC observation. The frozen engine pairs the two
+    series **by index**, so the benchmark must hold an observation at the very
+    close of every evaluated asset candle. A benchmark that does not is
+    refused **before** the engine is called, so a misaligned benchmark can
+    never reach a result and no observation is ever invented.
+
+    The check is deliberately a *coverage* check over the evaluated windows and
+    not a dataset-level equality check: the validation windows are interior
+    fractions of the dataset, so the evaluated series can be aligned even when
+    the two datasets span different ranges (the v4 asset datasets end at the
+    preregistered development cutoff, the benchmark dataset ends two hours
+    earlier, and the difference falls entirely outside every evaluated
+    window). The per-window timestamp identity is enforced separately and
+    strictly by :func:`align_window`.
+    """
+    if not benchmark_candles:
+        raise BenchmarkAlignmentError(
+            f"the benchmark series of {symbol} is missing: no dataset was loaded"
+        )
+    if not asset_candles:
+        raise BenchmarkAlignmentError(f"the asset series of {symbol} is empty")
+    if not windows:
+        raise BenchmarkAlignmentError(
+            f"the asset series of {symbol} yields no evaluated window to align"
+        )
+
+    benchmark_timestamps = {int(candle.timestamp) for candle in benchmark_candles}
+    uncovered: List[int] = []
+    evaluated_candles = 0
+    for start_ms, end_ms, *_rest in windows:
+        for candle in asset_candles:
+            timestamp = int(candle.timestamp)
+            if int(start_ms) <= timestamp < int(end_ms):
+                evaluated_candles += 1
+                if timestamp not in benchmark_timestamps:
+                    uncovered.append(timestamp)
+    if uncovered:
+        raise BenchmarkAlignmentError(
+            f"the benchmark series of {symbol} holds no observation for "
+            f"{len(uncovered)} of the {evaluated_candles} evaluated candles: the first "
+            f"uncovered close is {uncovered[0]}; the benchmark is not forward-filled"
+        )
+    return {
+        "asset": symbol,
+        "evaluated_candles": evaluated_candles,
+        "evaluated_windows": len(windows),
+        "benchmark_covers_evaluation": True,
+        "forward_filled": False,
         "index_aligned": True,
     }
 
@@ -208,6 +280,7 @@ __all__ = [
     "BENCHMARK_SYMBOL",
     "align_window",
     "alignment_report",
+    "assert_benchmark_covers_evaluation",
     "assert_dataset_alignment",
     "benchmark_required_for",
     "candle_close_ms",
