@@ -46,6 +46,7 @@ if str(REPO_ROOT / "scripts") not in sys.path:
 from v6_universe_rules import (  # noqa: E402
     canonical_source_digest,
     compute_manifest_hash,
+    published_manifest_hash,
     read_json,
     sha256_file,
 )
@@ -59,6 +60,9 @@ UNIVERSE_RELATIVE = "research/universe_manifest_v6.json"
 DATA_RELATIVE = "research/data_manifest_v6.json"
 EXECUTION_RELATIVE = "configs/research_v6_execution.json"
 AUTHORIZATION_RELATIVE = "research_state/campaign_authorization.json"
+SELECTION_AUTHORIZATION_RELATIVE = "configs/research_v6_selection_authorization_1.json"
+SELECTED_CONFIGURATIONS_RELATIVE = "research/v6_selected_configurations_manifest.json"
+CONFIRMATORY_AUTHORIZATION_RELATIVE = "configs/research_v6_confirmatory_authorization_1.json"
 
 #: The freezes that own the v2, v3, v4 and v5 confirmatory windows, and the
 #: key each one keeps its window bounds under.
@@ -237,6 +241,70 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     freeze_binding = bindings.get("v6_candidate_freeze") or {}
     if freeze_binding.get("manifest_hash") != freeze.get("manifest_hash"):
         fail("the runbook is not bound to the v6 candidate freeze")
+    # The selection authorization is bound by the hash recomputed from the
+    # artifact's own bytes: a published authorization is bound by that hash,
+    # an unpublished one is recorded as unpublished and bound to nothing.
+    selection_authorization_hash = published_manifest_hash(
+        root, SELECTION_AUTHORIZATION_RELATIVE
+    )
+    computed["selection_authorization_manifest_hash"] = selection_authorization_hash
+    selection_binding = bindings.get("selection_authorization_1") or {}
+    if selection_binding.get("path") != SELECTION_AUTHORIZATION_RELATIVE:
+        fail("the runbook binds the selection authorization to the wrong path")
+    if selection_binding.get("manifest_hash") != selection_authorization_hash:
+        fail("the runbook does not bind the live v6 selection authorization hash")
+    if selection_authorization_hash is None:
+        if selection_binding.get("status") != "NOT_YET_PUBLISHED":
+            fail("the runbook does not record the selection authorization as unpublished")
+    elif selection_binding.get("status") is not None:
+        fail("the runbook records the published selection authorization as unpublished")
+    selected_binding = bindings.get("selected_configurations_manifest") or {}
+    if selected_binding.get("path") != SELECTED_CONFIGURATIONS_RELATIVE:
+        fail("the runbook binds the selected-configurations manifest to the wrong path")
+    if selected_binding.get("manifest_hash") is not None:
+        fail(
+            "the runbook claims a selected-configurations manifest hash, but the runbook is "
+            "published before the selection run"
+        )
+    authorization_binding = bindings.get("authorization") or {}
+    if authorization_binding.get("path") != CONFIRMATORY_AUTHORIZATION_RELATIVE:
+        fail("the runbook binds the confirmatory authorization to the wrong path")
+    if authorization_binding.get("manifest_hash") is not None:
+        fail(
+            "the runbook claims a confirmatory authorization hash, but the runbook is published "
+            "before the authorization"
+        )
+
+    # the related artifacts are the live ones, each recomputed from its bytes
+    related = runbook.get("related_artifacts") or {}
+    for key, entry in related.items():
+        relative = str((entry or {}).get("path") or "")
+        if not relative:
+            if (entry or {}).get("root"):
+                # a directory that does not exist yet, not a published file
+                continue
+            fail(f"the related artifact {key} names no path")
+            continue
+        if not (root / relative).exists():
+            if (entry or {}).get("manifest_hash") is None and (entry or {}).get(
+                "specification_hash"
+            ) is None:
+                continue
+            fail(f"the related artifact {relative} is missing")
+            continue
+        document = read_json(root / relative)
+        if "specification_hash" in entry:
+            if entry["specification_hash"] != document.get("specification_hash"):
+                fail(f"the related artifact {relative} carries another specification hash")
+            continue
+        excluded_keys = tuple(
+            (document.get("hashing") or {}).get("manifest_hash_excluded_keys") or ("manifest_hash",)
+        )
+        recomputed = compute_manifest_hash(document, excluded_keys)
+        if document.get("manifest_hash") != recomputed:
+            fail(f"the related artifact {relative} does not recompute its own manifest_hash")
+        if entry.get("manifest_hash") != recomputed:
+            fail(f"the runbook names another manifest hash for {relative}")
 
     # 2. the scope -----------------------------------------------------------
     applies = runbook.get("applies_to") or {}

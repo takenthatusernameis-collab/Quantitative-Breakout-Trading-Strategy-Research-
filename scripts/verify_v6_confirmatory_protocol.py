@@ -53,6 +53,7 @@ if str(REPO_ROOT / "scripts") not in sys.path:
 from v6_universe_rules import (  # noqa: E402
     canonical_source_digest,
     compute_manifest_hash,
+    published_manifest_hash,
     read_json,
     sha256_file,
 )
@@ -65,6 +66,7 @@ UNIVERSE_RELATIVE = "research/universe_manifest_v6.json"
 DATA_RELATIVE = "research/data_manifest_v6.json"
 EXECUTION_RELATIVE = "configs/research_v6_execution.json"
 AUTHORIZATION_RELATIVE = "research_state/campaign_authorization.json"
+SELECTION_AUTHORIZATION_RELATIVE = "configs/research_v6_selection_authorization_1.json"
 
 #: The freezes that own the v2, v3, v4 and v5 confirmatory windows, and the
 #: key each one keeps its window bounds under.
@@ -238,8 +240,19 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         fail("the protocol claims a selected-configurations manifest that does not exist yet")
     if scope.get("selected_configurations_manifest_status") != "NOT_YET_PUBLISHED":
         fail("the protocol does not record the selected-configurations manifest as unpublished")
-    if scope.get("selection_authorization_manifest_hash") is not None:
-        fail("the protocol claims a selection authorization that does not exist yet")
+    if scope.get("selection_authorization_path") != SELECTION_AUTHORIZATION_RELATIVE:
+        fail("the protocol does not name the v6 selection authorization")
+    # The selection authorization is bound by the hash recomputed from the
+    # artifact's own bytes. A published authorization must be bound by that
+    # hash; an unpublished one must not be bound at all.
+    selection_authorization_hash = published_manifest_hash(root, SELECTION_AUTHORIZATION_RELATIVE)
+    computed["selection_authorization_manifest_hash"] = selection_authorization_hash
+    if selection_authorization_hash is None:
+        if scope.get("selection_authorization_manifest_hash") is not None:
+            fail("the protocol claims a selection authorization that does not exist")
+    else:
+        if scope.get("selection_authorization_manifest_hash") != selection_authorization_hash:
+            fail("the protocol does not bind the live v6 selection authorization hash")
 
     # 3. the window ----------------------------------------------------------
     window_block = protocol.get("window_definition") or {}
@@ -451,6 +464,15 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         fail("the code-hash constraint does not record that the ordered hash is not portable")
 
     # 8. the related artifacts ----------------------------------------------
+    supersedes = protocol.get("supersedes") or {}
+    if supersedes.get("selection_authorization_path") != SELECTION_AUTHORIZATION_RELATIVE:
+        fail("the supersedes block does not name the v6 selection authorization")
+    if supersedes.get("selection_authorization_manifest_hash") != selection_authorization_hash:
+        fail("the supersedes block does not bind the live v6 selection authorization hash")
+    for flag in ("v1_holdout_never_reused", "v2_v3_v4_v5_confirmatory_window_never_read"):
+        if supersedes.get(flag) is not True:
+            fail(f"the supersedes block does not record {flag}")
+
     related = protocol.get("related_artifacts") or {}
     for key, entry in related.items():
         relative = str((entry or {}).get("path") or "")

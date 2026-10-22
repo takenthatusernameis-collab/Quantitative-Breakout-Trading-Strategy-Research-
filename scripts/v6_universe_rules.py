@@ -137,6 +137,25 @@ def read_json(path: Path) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def published_manifest_hash(repo_root: Path, relative: str) -> Optional[str]:
+    """The manifest hash of a published artifact, recomputed from its bytes.
+
+    ``None`` means the artifact is not published yet; a caller records that
+    state explicitly instead of inventing a digest. The excluded-key set is
+    read from the artifact itself, so the returned value is never a constant
+    copied out of another document.
+    """
+    path = Path(repo_root) / relative
+    if not path.exists():
+        return None
+    document = read_json(path)
+    excluded = tuple(
+        (document.get("hashing") or {}).get("manifest_hash_excluded_keys")
+        or MANIFEST_HASH_EXCLUDED_KEYS
+    )
+    return compute_manifest_hash(document, excluded)
+
+
 def canonical_source_digest(repo_root: Path = REPO_ROOT) -> str:
     """The portable identity of the hashed source tree.
 

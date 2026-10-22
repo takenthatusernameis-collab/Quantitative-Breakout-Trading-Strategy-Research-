@@ -57,6 +57,7 @@ if str(REPO_ROOT / "scripts") not in sys.path:
 from v6_universe_rules import (  # noqa: E402
     canonical_source_digest,
     compute_manifest_hash,
+    published_manifest_hash,
     read_json,
     sha256_file,
 )
@@ -181,6 +182,21 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         canonical({block: spec_v1.get(block) for block in INHERITED_V1_BLOCKS}).encode("utf-8")
     )
 
+    # --- the selection authorization, if it is published ----------------------
+    # The v6 selection authorization may or may not exist when this protocol is
+    # built. Its identity is recomputed from the artifact's own bytes; a
+    # published artifact is bound by that hash, an absent one is recorded as
+    # absent. Nothing is ever invented here.
+    selection_authorization_hash = published_manifest_hash(
+        root, SELECTION_AUTHORIZATION_RELATIVE
+    )
+    if selection_authorization_hash is not None:
+        declared = read_json(root / SELECTION_AUTHORIZATION_RELATIVE).get("manifest_hash")
+        if declared != selection_authorization_hash:
+            raise SystemExit(
+                "the v6 selection authorization does not recompute its own manifest_hash"
+            )
+
     document: Dict[str, Any] = {
         "artifact": "v6_confirmatory_protocol",
         "artifact_version": "v6-confirmatory-protocol-1",
@@ -207,7 +223,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             "selected_configurations_manifest_hash": None,
             "selected_configurations_manifest_status": "NOT_YET_PUBLISHED",
             "selection_authorization_path": SELECTION_AUTHORIZATION_RELATIVE,
-            "selection_authorization_manifest_hash": None,
+            "selection_authorization_manifest_hash": selection_authorization_hash,
             "in_scope_assets": len(in_scope),
             "in_scope_assets_list": [str(entry["binance_pair"]) for entry in in_scope],
             "out_of_scope_assets_excluded_at_validation": [
@@ -460,7 +476,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "supersedes": {
             "protocol_version": "v6",
             "selection_authorization_path": SELECTION_AUTHORIZATION_RELATIVE,
-            "selection_authorization_manifest_hash": None,
+            "selection_authorization_manifest_hash": selection_authorization_hash,
             "reason": (
                 "The v6 selection run selects at most one configuration per asset of the frozen "
                 "v6 candidate set. The confirmatory protocol evaluates exactly the published "
@@ -497,7 +513,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             },
             "v6_selection_authorization_1": {
                 "path": SELECTION_AUTHORIZATION_RELATIVE,
-                "manifest_hash": json.load(open(SELECTION_AUTHORIZATION_RELATIVE)).get("manifest_hash"),
+                "manifest_hash": selection_authorization_hash,
             },
         },
         "durability": {

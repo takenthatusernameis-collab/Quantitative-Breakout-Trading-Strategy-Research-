@@ -5101,3 +5101,71 @@ All four windows are **open** at the time of this record (2026-10-21T23:3xZ) and
 **Open for the coordinator, not decided here (and deliberately not decided by this record):** the v2 exposure-counter question raised in §2 — whether the 13 (v3) and 15 (v4) candles per asset whose close falls inside the open v2 confirmatory window and that are part of the v3 and v4 *development* data must increment the v2 `holdout_exposed_count`, or are recorded as disclosed development reads of a disjoint asset set that are not evaluation exposures. It is the same question as BRAIN-014's open v3 item, it is due before the v2 gate clears on **2027-01-17T22:00:00Z**, and the v6 design does not depend on the answer — the v6 rule is chosen so that it cannot arise for v6. Also open and not decided here: the missing **v4 and v5 confirmatory protocol and runbook** (BRAIN-025 blocker 1); the v6 design does not depend on them, but they are due before their own gates.
 
 **Next bounded task (queued):** the v6 preregistration **implementation** — the versioned `configs/research_v6.json` and the v6 verifiers — and, only if the implementation session decides to do it, one bounded market-cap retrieval inside the v6 pinned window. The v6 design record must not be implemented in the session that produced it (README Section 2A C1).
+
+---
+
+## BRAIN-027 — the v6 execution-authorization block records a world state that has changed (2026-10-22T12:5xZ)
+
+### Evidence, revalidated from the live artifacts (nothing below is quoted from a previous record)
+
+1. `configs/research_v6_execution.json` — created **2026-10-22T04:20:00Z**, manifest_hash `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (recomputed and equal to the declared value), file sha256 `7080b749ea2cc0523e60391cb9a8a6cbc1284bf05c8d678b07ae32e979ed1923` — records
+   `"execution_authorization": {..., "selection_authorization_present": false}`.
+2. `configs/research_v6_selection_authorization_1.json` — created **2026-10-22T09:52:00Z**, manifest_hash `7b27784fe52f89c7b6770bb6f53e0f6d452c4df0a1d4222a1cf530d8e3648ce1` (recomputed and equal), file sha256 `8b9baeb61301ca566c09af4764b918116d78231fde2ffaef4df8bfda75c9769f` — **exists and is published**.
+3. ⇒ The flag in (1) was true at 04:20Z (no selection authorization existed) and it is **false now**. The v6 chain has published the artifact the flag denies.
+4. `scripts/verify_v6_execution.py:458` — `if execution_authorization.get("selection_authorization_present") is not False: fail("the execution authorization records a published selection authorization")`. The verifier therefore **enforces the stale state**: a corrected frozen protocol would be refused. This is the exact v5 failure BRAIN-024 §4 recorded, in the same artifact kind and for the same flag.
+5. `configs/research_v6_selection_authorization_1.json#authorized_run.effective_rules.execution.precedence` — *"the effective v6 execution protocol is configs/research_v6_execution.json; v6 publishes no execution amendment; the protocol stays on disk, unchanged and visible"* and `named_amendment_precedence` — *"no v6 execution amendment exists yet"*. A run gate that follows this text reads the block that carries the stale flag.
+6. `src/v6_campaign/` **does not exist** (`src/` holds only `breakout_research`, `v2_campaign`, `v2_confirmatory`, `v3_campaign`, `v3_confirmatory`, `v4_campaign`, `v5_campaign`), and no v6 run artifact exists (`research/ledger_v6.json`, `research/results_manifest_v6.json`, `research/shards_v6/` are absent). **No run has read the block, no exposure has occurred and no recorded result is affected.**
+7. `configs/research_v6_selection_authorization_1.json#authorized_run.effective_rules.execution.consequence_for_the_run` — *"the run gate verifies the published v6 selection authorization's identity instead of a static flag"*. The v6 authorization already prescribes the BRAIN-024 lesson for the gate. A gate written to that prescription does not read the static flag; a gate written from the frozen protocol's block alone does, and then refuses the authorized run.
+
+**Classification (README Section 2A C):** primary `IMPLEMENTATION_DEFECT` — the producer wrote a world state into a hash-bound artifact and the verifier then encoded that state as a rule; secondary `TEST_GAP` — no check recomputes the flag from the live repository. **Not** `RESEARCH_DESIGN_RISK`: the selection rule, the grid, the costs and the confirmatory criterion are untouched, and no evidence has been produced.
+
+### Why this is a design question and not a one-line fix
+
+The v6 execution protocol is bound by a published artifact: the selection authorization's `effective_rules.execution.manifest_hash` is `928727279a3a…`, the frozen protocol's own hash. Any in-place edit of the protocol therefore invalidates a published binding, and the campaign's rule (BRAIN-026 §4) is that *"a correction to a frozen artifact is a new, versioned amendment (the v2–v5 pattern), not an edit"*. The repair additionally needs an **effective-rule resolution** that both `scripts/verify_v6_execution.py` and the future `src/v6_campaign/scope.py` share, and the future gate does not exist yet, so the resolution's shape is a design decision.
+
+### Two materially different designs
+
+**Design A — versioned amendment (the v5 template).** Publish `configs/research_v6_execution_amendment_1.json` that restates the effective `execution_authorization` block with `selection_authorization_present: true` and the published selection authorization named by its **recomputed** manifest hash, file digest, run id and campaign id; keep the frozen protocol's `false` on disk as the historical statement; resolve the effective block amendment-first, frozen-protocol-second.
+*Pros:* the frozen protocol is not edited and its published binding stays valid; the historical statement stays visible; the v5 chain already proves the mechanism end to end (`configs/research_v5_execution_amendment_2.json`, `src/v5_campaign/scope.py:197 effective_rules()`).
+*Cons:* one new v6 artifact; the effective-rule resolution must be implemented twice (verifier and gate) or once in a shared helper; the selection authorization's `effective_rules.execution.precedence` text names the frozen protocol and says that no amendment exists, so it must be republished with the **v5-style generic rule** ("the newest published v6 execution amendment for the blocks it restates, and configs/research_v6_execution.json for the blocks no amendment restates"), which changes the authorization's manifest_hash and therefore the protocol and the runbook that bind it.
+
+**Design B — republish the frozen protocol.** Change the producer so `selection_authorization_present` is recomputed from the live world (true when the authorization exists), republish `configs/research_v6_execution.json`, republish the selection authorization (it binds the protocol's hash), and rebuild the protocol and the runbook (they bind the authorization's hash).
+*Pros:* no new artifact and no effective-rule machinery; every consumer reads one artifact.
+*Cons:* it edits a published, hash-bound execution protocol in place, which the campaign's own rule forbids, and it reverses the decision the campaign already took for the identical artifact kind and the identical flag (BRAIN-024 §4), leaving the v5 and v6 chains inconsistent.
+
+### Recommendation
+
+**Design A**, on the v5 blueprint, with three additions that the v5 chain needed and the v6 chain should have from the start:
+
+1. **Generic, not named, precedence.** The republished selection authorization states the *rule* ("the newest published v6 execution amendment for the blocks it restates") and names no amendment. A named amendment would be circular — the authorization is published before the amendment — and the v5 chain shows the generic rule is what survives a later amendment (the v5 authorization still names amendment 1 while amendment 2 governs).
+2. **One shared resolution helper.** The amendment-first resolution is implemented once, in `scripts/v6_universe_rules.py` (the module the v6 verifiers already import), and both `scripts/verify_v6_execution.py` and the future `src/v6_campaign/scope.py` call it. The verifier must therefore be able to resolve the effective rule from a repository root without importing anything from `src/`, and the future gate must fail **closed** when the amendment is absent or does not recompute its own hash.
+3. **The verifier recomputes the world state.** `scripts/verify_v6_execution.py` must stop enforcing the static flag. It must check the *effective* block: `selection_authorization_present` is true exactly when the named selection authorization exists, its identity is the recomputed manifest hash, and the frozen protocol's historical `false` stays on disk unchanged.
+
+The v6 **specification** needs no amendment for this repair: the v5 chain published three amendments and `configs/research_v5.json#namespace` names none of them, and `scripts/verify_research_v5_spec.py` exits 0 on that tree. The v6 namespace rule is the same, and `scripts/verify_research_v6_spec.py` checks that the namespace *names* the stage artifacts, not that it enumerates every file in the chain.
+
+### Falsifying evidence — this design must be rejected if any of the following is shown
+
+- the v6 selection authorization does not exist or does not recompute its own `manifest_hash` (then the flag is not stale and the repair is unnecessary);
+- `src/v6_campaign/scope.py` exists and resolves the effective execution rule by identity rather than by the static flag (then the trap of (7) is absent and only the verifier's stale check needs repair);
+- the v5 chain's `configs/research_v5_execution_amendment_2.json` does **not** in fact supply the effective `execution_authorization` block, or `src/v5_campaign/scope.py` does not resolve it amendment-first (then the v5 blueprint does not apply);
+- `scripts/verify_research_v5_spec.py` fails on a tree whose namespace omits a published amendment (then the v6 namespace must also be amended, and the specification cascade this record does not plan enters the repair);
+- republishing the selection authorization would move any identity that a **published run** already depends on (no v6 run exists, so this cannot hold today — it must be re-checked at implementation time, and if a v6 run has happened by then, the amendment route must be taken without republication);
+- the effective rule can be satisfied by an artifact that does not recompute its own hash (the defect BRAIN-018 found in the v4 amendment).
+
+### Rollback
+
+This record created no artifact. The repair is rolled back by removing the amendment, restoring the republished selection authorization from its producer, and rebuilding the protocol and the runbook from their producers — every one of them byte-reproducible and re-runnable. The frozen v1–v5 artifacts are never touched, and the v6 selection authorization's `durability` block (`commit: null`, `pushed: false`) shows that no campaign commit has yet been recorded for it, so the republication does not break a published commit.
+
+### Staged acceptance tests (for the later implementation session, not this one)
+
+1. **The amendment exists and is self-hashing:** `configs/research_v6_execution_amendment_1.json` recomputes its own `manifest_hash`; it names the frozen protocol by path, **recomputed** manifest hash and **recomputed** file digest; it names the selection authorization by path and **recomputed** manifest hash; it restates `execution_authorization` with the five authority flags still `false` and `selection_authorization_present: true`; it states the precedence and the commit-before-run rule; `scripts/build_v6_execution_amendment_1.py` is deterministic, refuses to overwrite without `--force`, and reproduces the artifact byte for byte.
+2. **The effective rule resolves:** a helper resolves the effective `execution_authorization` amendment-first and frozen-protocol-second, and fails closed when the amendment is absent, unreadable or does not recompute its own hash. The verifier and the future gate use the same helper.
+3. **The verifier recomputes the world:** `scripts/verify_v6_execution.py` no longer contains the rule that a published selection authorization must be denied; it fails when the effective block says `false` while the authorization exists, when it names another authorization, and when the frozen protocol's historical statement is edited. Tamper controls prove each of the three.
+4. **The authorization is amendment-aware:** the republished `configs/research_v6_selection_authorization_1.json` states the generic precedence rule, still authorizes exactly one bounded run, still authorizes nothing else, and is bound by the same frozen execution-protocol hash `928727279a3a…`.
+5. **The chain is consistent after the republication:** the confirmatory protocol and the confirmatory runbook are rebuilt from their producers and bind the republished authorization's recomputed hash; every `scripts/verify_*.py` exits 0; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0.
+6. **No exposure, no run:** `research/ledger_v6.json`, `research/results_manifest_v6.json` and `research/shards_v6/` remain absent; no candle inside any confirmatory window is read; `holdout_exposed_count` stays 0 in every version's counter; the canonical digest of the hashed set is unchanged (`3e8e4169…`).
+7. **Fresh-checkout reproducibility:** on a clean checkout with no v6 run artifacts, every v6 verifier exits 0 and the v6 test module passes.
+
+**Status:** `DESIGN_READY_FOR_DETERMINENTIC_IMPLEMENTATION`. The design is explicit, the prerequisites are known (the v5 blueprint is in the repository), the staged steps are listed above, and the rollback is the producers. **This record must not be implemented in the session that produced it (README Section 2A C1).**
+
+**Next bounded task (queued):** implement this record — the v6 execution amendment, the shared effective-rule resolution, the verifier that recomputes the world state, the amendment-aware republication of the v6 selection authorization and the rebuild of the confirmatory protocol and runbook — and only then the v6 selection execution path (`src/v6_campaign/`), whose run gate consumes the same resolution helper.

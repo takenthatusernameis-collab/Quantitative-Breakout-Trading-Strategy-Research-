@@ -7,8 +7,10 @@ selection phase. The rules these tests pin are therefore:
 
 * the **scope**: the in-scope assets are the validated members of the frozen
   band and the excluded members keep their exclusion reasons; the protocol
-  and the runbook do **not** claim a selected configuration, a selection
-  authorization or a selected-configurations manifest that do not exist yet;
+  and the runbook do **not** claim a selected configuration or a
+  selected-configurations manifest that do not exist yet, and they bind the
+  v6 selection authorization that **does** exist by the hash recomputed from
+  the artifact's own bytes;
 * the **window**: the start, the minimum hours, the earliest end and the
   evaluation gate, which is the later of the four recomputed earlier gates and
   the v6 window's own earliest end;
@@ -40,9 +42,13 @@ FREEZE_PATH = REPO_ROOT / "configs" / "research_v6_candidate_freeze.json"
 UNIVERSE_PATH = REPO_ROOT / "research" / "universe_manifest_v6.json"
 DATA_PATH = REPO_ROOT / "research" / "data_manifest_v6.json"
 SPEC_V1_PATH = REPO_ROOT / "configs" / "research_v1.json"
+SELECTION_AUTHORIZATION_PATH = (
+    REPO_ROOT / "configs" / "research_v6_selection_authorization_1.json"
+)
 
 PROTOCOL_RELATIVE = "configs/research_v6_confirmatory_protocol.json"
 RUNBOOK_RELATIVE = "configs/research_v6_confirmatory_runbook_1.json"
+SELECTION_AUTHORIZATION_RELATIVE = "configs/research_v6_selection_authorization_1.json"
 
 
 def _load_module(name: str, relative: str):
@@ -214,8 +220,25 @@ def test_the_protocol_does_not_claim_an_unpublished_selection_result() -> None:
     scope = protocol["evaluation_scope"]
     assert scope["selected_configurations_manifest_hash"] is None
     assert scope["selected_configurations_manifest_status"] == "NOT_YET_PUBLISHED"
-    assert scope["selection_authorization_manifest_hash"] is None
     assert "readiness test" in scope["selected_configuration_per_asset"]
+
+
+def test_the_protocol_binds_the_published_selection_authorization() -> None:
+    """The v6 selection authorization exists, so the protocol binds it.
+
+    The identity is the hash recomputed from the artifact's own bytes, so a
+    replaced authorization is a different identity and is refused.
+    """
+    protocol = _load(PROTOCOL_PATH)
+    selection_authorization = _load(SELECTION_AUTHORIZATION_PATH)
+    live = rules.published_manifest_hash(REPO_ROOT, SELECTION_AUTHORIZATION_RELATIVE)
+    assert live == selection_authorization["manifest_hash"]
+    assert protocol["evaluation_scope"]["selection_authorization_manifest_hash"] == live
+    assert protocol["supersedes"]["selection_authorization_manifest_hash"] == live
+    assert protocol["related_artifacts"]["v6_selection_authorization_1"]["manifest_hash"] == live
+    assert protocol["evaluation_scope"]["selection_authorization_path"] == (
+        SELECTION_AUTHORIZATION_RELATIVE
+    )
 
 
 def test_the_protocol_decision_rule_is_the_unchanged_v1_rule() -> None:
@@ -296,9 +319,27 @@ def test_the_runbook_does_not_claim_the_selected_configurations() -> None:
     assert applies["in_scope_configurations"] is None
     assert applies["in_scope_configurations_rule"]
     bindings = runbook["binding_identities"]
-    assert bindings["selection_authorization_1"]["manifest_hash"] is None
     assert bindings["selected_configurations_manifest"]["manifest_hash"] is None
     assert bindings["authorization"]["manifest_hash"] is None
+
+
+def test_the_runbook_binds_the_published_selection_authorization() -> None:
+    """The runbook binds the v6 selection authorization that exists.
+
+    A published authorization is never recorded as unpublished, and the bound
+    identity is the hash recomputed from the artifact's own bytes.
+    """
+    runbook = _load(RUNBOOK_PATH)
+    selection_authorization = _load(SELECTION_AUTHORIZATION_PATH)
+    live = rules.published_manifest_hash(REPO_ROOT, SELECTION_AUTHORIZATION_RELATIVE)
+    assert live == selection_authorization["manifest_hash"]
+    binding = runbook["binding_identities"]["selection_authorization_1"]
+    assert binding["path"] == SELECTION_AUTHORIZATION_RELATIVE
+    assert binding["manifest_hash"] == live
+    assert "status" not in binding
+    related = runbook["related_artifacts"]["selection_authorization_1"]
+    assert related["path"] == SELECTION_AUTHORIZATION_RELATIVE
+    assert related["manifest_hash"] == live
 
 
 def test_the_runbook_write_order_names_eight_v6_paths() -> None:
@@ -496,3 +537,125 @@ def test_the_runbook_verifier_detects_a_v6_confirmatory_run_artifact(tmp_path: P
     (root / "research" / "ledger_v6_confirmatory.json").write_text("{}", encoding="utf-8")
     failures = _runbook_failures(root)
     assert any("the v6 confirmatory artifact" in failure for failure in failures)
+
+
+def test_the_protocol_verifier_detects_an_unbound_selection_authorization(
+    tmp_path: Path,
+) -> None:
+    """A protocol that does not bind the published authorization is refused."""
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["evaluation_scope"]["selection_authorization_manifest_hash"] = None
+
+    _tamper(root, mutate, PROTOCOL_RELATIVE)
+    failures = _protocol_failures(root)
+    assert any(
+        "does not bind the live v6 selection authorization hash" in failure
+        for failure in failures
+    )
+
+
+def test_the_protocol_verifier_detects_another_selection_authorization(
+    tmp_path: Path,
+) -> None:
+    """A protocol bound to a substituted authorization is refused."""
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["evaluation_scope"]["selection_authorization_manifest_hash"] = "0" * 64
+
+    _tamper(root, mutate, PROTOCOL_RELATIVE)
+    failures = _protocol_failures(root)
+    assert any(
+        "does not bind the live v6 selection authorization hash" in failure
+        for failure in failures
+    )
+
+
+def test_the_protocol_verifier_detects_an_unbound_supersession(tmp_path: Path) -> None:
+    """The supersedes block must bind the live authorization as well."""
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["supersedes"]["selection_authorization_manifest_hash"] = None
+
+    _tamper(root, mutate, PROTOCOL_RELATIVE)
+    failures = _protocol_failures(root)
+    assert any(
+        "supersedes block does not bind the live v6 selection authorization hash" in failure
+        for failure in failures
+    )
+
+
+def test_the_protocol_verifier_detects_a_replaced_selection_authorization(
+    tmp_path: Path,
+) -> None:
+    """A replaced authorization changes the identity and is refused.
+
+    The artifact is republished from a tampered body, so its own manifest hash
+    recomputes to a different value than the protocol records.
+    """
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["authorized_run"]["max_runs"] = 2
+
+    _tamper(root, mutate, SELECTION_AUTHORIZATION_RELATIVE)
+    failures = _protocol_failures(root)
+    assert any(
+        "does not bind the live v6 selection authorization hash" in failure
+        for failure in failures
+    )
+
+
+def test_the_runbook_verifier_detects_an_unbound_selection_authorization(
+    tmp_path: Path,
+) -> None:
+    """A runbook that does not bind the published authorization is refused."""
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["binding_identities"]["selection_authorization_1"]["manifest_hash"] = None
+
+    _tamper(root, mutate, RUNBOOK_RELATIVE)
+    failures = _runbook_failures(root)
+    assert any(
+        "does not bind the live v6 selection authorization hash" in failure
+        for failure in failures
+    )
+
+
+def test_the_runbook_verifier_detects_an_unpublished_published_authorization(
+    tmp_path: Path,
+) -> None:
+    """A published authorization may not be recorded as unpublished."""
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["binding_identities"]["selection_authorization_1"]["status"] = (
+            "NOT_YET_PUBLISHED"
+        )
+
+    _tamper(root, mutate, RUNBOOK_RELATIVE)
+    failures = _runbook_failures(root)
+    assert any(
+        "records the published selection authorization as unpublished" in failure
+        for failure in failures
+    )
+
+
+def test_the_runbook_verifier_detects_another_related_selection_authorization(
+    tmp_path: Path,
+) -> None:
+    """The related-artifacts block must name the live identity too."""
+    root = _mirror_repo(tmp_path)
+
+    def mutate(document: Dict[str, Any]) -> None:
+        document["related_artifacts"]["selection_authorization_1"]["manifest_hash"] = "0" * 64
+
+    _tamper(root, mutate, RUNBOOK_RELATIVE)
+    failures = _runbook_failures(root)
+    assert any(
+        "names another manifest hash for" in failure for failure in failures
+    )

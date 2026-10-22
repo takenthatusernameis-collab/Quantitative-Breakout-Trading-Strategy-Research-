@@ -52,6 +52,7 @@ if str(REPO_ROOT / "scripts") not in sys.path:
 from v6_universe_rules import (  # noqa: E402
     canonical_source_digest,
     compute_manifest_hash,
+    published_manifest_hash,
     read_json,
     sha256_file,
 )
@@ -166,6 +167,26 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     # --- the code identity ---------------------------------------------------
     source_digest = canonical_source_digest(root)
 
+    # --- the selection authorization, if it is published ----------------------
+    # Its identity is recomputed from the artifact's own bytes. A published
+    # authorization is bound by that hash and is no longer recorded as
+    # unpublished; an absent one is recorded as absent.
+    selection_authorization_hash = published_manifest_hash(
+        root, SELECTION_AUTHORIZATION_RELATIVE
+    )
+    if selection_authorization_hash is not None:
+        declared = read_json(root / SELECTION_AUTHORIZATION_RELATIVE).get("manifest_hash")
+        if declared != selection_authorization_hash:
+            raise SystemExit(
+                "the v6 selection authorization does not recompute its own manifest_hash"
+            )
+    selection_authorization_binding: Dict[str, Any] = {
+        "path": SELECTION_AUTHORIZATION_RELATIVE,
+        "manifest_hash": selection_authorization_hash,
+    }
+    if selection_authorization_hash is None:
+        selection_authorization_binding["status"] = "NOT_YET_PUBLISHED"
+
     # --- the frozen anchors the run must not disturb -------------------------
     anchors: Dict[str, Dict[str, str]] = {}
     for label, relatives in (
@@ -262,11 +283,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 "manifest_hash": None,
                 "status": "NOT_YET_PUBLISHED",
             },
-            "selection_authorization_1": {
-                "path": SELECTION_AUTHORIZATION_RELATIVE,
-                "manifest_hash": None,
-                "status": "NOT_YET_PUBLISHED",
-            },
+            "selection_authorization_1": selection_authorization_binding,
             "v6_candidate_freeze": {
                 "path": FREEZE_RELATIVE,
                 "manifest_hash": freeze.get("manifest_hash"),
@@ -801,7 +818,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             },
             "selection_authorization_1": {
                 "path": SELECTION_AUTHORIZATION_RELATIVE,
-                "manifest_hash": None,
+                "manifest_hash": selection_authorization_hash,
             },
             "v6_candidate_freeze": {
                 "path": FREEZE_RELATIVE,
