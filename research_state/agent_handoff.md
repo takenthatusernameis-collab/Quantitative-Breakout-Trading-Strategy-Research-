@@ -1,8 +1,8 @@
-## Session activity — 2026-10-22T04:50:34Z (this session)
+## Session activity — 2026-10-22T04:51:08Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it (v6 preregistration implementation P2-P6).
 
-**Outcome:** Already complete. All v6 artifacts present and verified: `configs/research_v6.json` (spec hash `4a07911a…`), `research/universe_manifest_v6.json` (`baac2b94…`), `research/data_manifest_v6.json` (`a9c6c492…`), `configs/research_v6_candidate_freeze.json` (`3b482a4f…`), `configs/research_v6_execution.json`, `configs/research_v6_confirmatory_protocol.json`, `configs/research_v6_confirmatory_runbook_1.json`. Expansion log now includes v6 entry chained onto v5 `092f10c4…`.
+**Outcome:** Already complete. All v6 artifacts present and verified: `configs/research_v6.json` (spec hash `4a07911a…`), `research/universe_manifest_v6.json` (`baac2b94…`), `research/data_manifest_v6.json` (`a9c6c492…`), `configs/research_v6_candidate_freeze.json` (`3b482a4f…`), `configs/research_v6_execution.json`, `configs/research_v6_confirmatory_protocol.json`, `configs/research_v6_confirmatory_runbook_1.json`. Expansion log includes v6 entry chained onto v5 `092f10c4…`.
 
 **Verification:**
 - `python3 scripts/verify_research_v6_spec.py` → ok, exit 0
@@ -11,13 +11,14 @@
 - `python3 scripts/verify_v6_execution.py` → ok, exit 0
 - `python3 scripts/verify_v6_confirmatory_protocol.py` → ok, exit 0
 - `python3 scripts/verify_v6_confirmatory_runbook_1.py` → ok, exit 0
-- `compute_code_hash()` unchanged `2efd3b18…`
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `2efd3b18…` unchanged
+- `git status --short` → clean
 
-**Next bounded task (queued):** none actionable until confirmatory windows close (v5 earliest end 2027-01-19T13:00:00Z; v6 2027-01-20T02:00:00Z). State file still records v5 cycle; update only when a new selection run occurs.
+**Next bounded task (queued):** none actionable until confirmatory windows close (v5 earliest end 2027-01-19T13:00:00Z; v6 2027-01-20T02:00:00Z). Update only when a new selection run occurs.
 
 ## Initial task message for next agent
 
-**Status (verified 2026-10-22T04:50Z):** v6 preregistration implementation P2-P6 is complete and verified. All v6 verifiers exit 0; code hash `2efd3b18…` unchanged. Confirmatory windows remain closed until 2027-01-19/20. No further implementation is authorized without a new selection run or a new version design.
+**Status (verified 2026-10-22T04:51Z):** v6 preregistration implementation P2-P6 complete and verified. All v6 verifiers exit 0; code hash `2efd3b18…` unchanged. Confirmatory windows remain closed until 2027-01-19/20. No further implementation is authorized without a new selection run or a new version design.
 
 **Do NOT:** run any grid/backtest/selection, read any confirmatory-window candle, modify `src/`, or re-retrieve snapshots.
 
