@@ -1,3 +1,21 @@
+## Session activity — 2026-10-22T01:05:04Z (this session)
+
+**Task:** Review the durable handoff's initial task message ("produce the v4 preregistration design record") against the actual repository state.
+
+**Outcome:** The task is already complete. `BRAIN-013` (v4 preregistration design record) exists at `research_state/brainstorming_queue.md:3684` with status `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`, all six design decisions present with falsifying evidence, rollback and staged acceptance tests. v4 is fully implemented (`configs/research_v4.json`, `research/universe_manifest_v4.json`, `research/data_manifest_v4.json`, `configs/research_v4_candidate_freeze.json`, `configs/research_v4_execution.json`, `configs/research_v4_selection_authorization_1.json`). `BRAIN-019` (v5 preregistration design record) exists at line 4033 and v5 is fully implemented. `BRAIN-026` (v6 preregistration design record) exists at line 4936 with all six design decisions, falsifying evidence, rollback and staged acceptance tests; `configs/research_v6.json` is preregistered (`specification_status: PREREGISTERED_SPECIFICATION_ONLY`, prerequisite P1 `preregister_v6_spec` DONE) but v6 implementation (P2-P6) is outstanding.
+
+**Verification:**
+- `python3 scripts/verify_research_v6_spec.py` → exit 0, recomputed specification_hash `4a07911a…` matches the recorded value
+- `python3 scripts/verify_research_v5_spec.py` → exit 0; `python3 scripts/verify_research_v4_spec.py` → exit 0
+- every `scripts/verify_*.py` exits 0
+- `PYTHONPATH=src python3 -m pytest tests/test_continuous_universe_state.py tests/test_research_v6_spec.py -q` → 86 passed, exit 0
+- `compute_code_hash()` = `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`, unchanged, equal to the authorized value of record
+- `git status --short` → clean; HEAD == origin/main == `b80f858537c5d0b706ab921d313a2936b347c6bf`
+
+**Next bounded task (queued):** v6 preregistration implementation — P2 `retrieve_and_freeze_v6_universe` (one bounded market-cap retrieval inside the v6 pinned window, `not_before 2026-10-22T00:45:00Z`, deadline `2026-10-29T00:45:00Z`, inside `configs/research_v6.json#universe.snapshot_retrieval`), then P3 (validate candidates and freeze `research/data_manifest_v6.json`), P4 (preregister `configs/research_v6_execution.json` and `configs/research_v6_candidate_freeze.json`), P5 (append the v6 entry to `research/v_universe_expansion_log.json` chained onto the v5 entry `092f10c4…`), P6 (preregister `configs/research_v6_confirmatory_protocol.json` and `configs/research_v6_confirmatory_runbook_1.json`). Per BRAIN-026 and README Section 2A C1, implementation is a separate session from the design record.
+
+**Files changed:** `research_state/agent_handoff.md` only (this report). No `configs/`, `research/`, `reports/` or `src/` file touched. `research_state/continuous_universe_state.json` unchanged.
+
 ## Session activity — 2026-10-20T22:29:31Z (this session)
 
 **Task (from the durable handoff at 22:55Z):** the **campaign-level close-out of the v3
@@ -202,107 +220,41 @@ rule. A prompt edit that merely restated "re-derive every number" would duplicat
 
 ## Initial task message for next agent
 
-**Next (one bounded task):** produce the **v4 preregistration design record** — the decision record
-for the *next* expansion version, written into `research_state/brainstorming_queue.md`. This is the
-campaign's own routing rule (BRAIN-012 recommendation 9 and D-9: "completion or exhaustion of one
-frozen version routes to preregistration of the next version"), and it is now the only campaign work
-that is not time-blocked: the v2 and the v3 confirmatory evaluations may not start before
-`2027-01-17T22:00:00Z` and `2027-01-18T13:00:00Z` respectively. **Design deliverable only: no
-provider contact, no candle read, no code, no artifact written, and — per README Section 2A C1 — no
-implementation of the same item in the same session.**
+**Status (verified 2026-10-22T01:05Z):** the v4 preregistration design record task is already
+complete — `BRAIN-013` exists at `research_state/brainstorming_queue.md:3684`
+(`DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`) with all six design decisions, ≥2 designs each,
+recommendations, falsifying evidence, rollback and staged acceptance tests. v4 is fully implemented
+(`configs/research_v4.json`, `research/universe_manifest_v4.json`, `research/data_manifest_v4.json`,
+`configs/research_v4_candidate_freeze.json`, `configs/research_v4_execution.json`,
+`configs/research_v4_selection_authorization_1.json`). `BRAIN-019` (v5 preregistration design
+record) exists at line 4033 and v5 is fully implemented. `BRAIN-026` (v6 preregistration design
+record) exists at line 4936 with all six design decisions, falsifying evidence, rollback and staged
+acceptance tests; `configs/research_v6.json` is preregistered
+(`specification_status: PREREGISTERED_SPECIFICATION_ONLY`, prerequisite P1 `preregister_v6_spec`
+DONE) but v6 implementation (P2-P6) is outstanding.
 
-**Subject:** the v3 cycle close-out is complete **and corrected** (two state defects fixed and the
-missing check added); the next bounded task is the v4 preregistration design record (design only)
+**State:** `research_state/continuous_universe_state.json` — `current_cycle_id = v5-selection-20261021`,
+`cohort_index: 5` (completed: true), `next_cohort_index = 6`, `completed_cycle_ids` includes v4 and
+v5, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z)`, `schema_version
+= 1`, `updated_utc = 2026-10-21T21:45:00+00:00`.
 
-**Status (verified 2026-10-20T22:29Z):**
-- `research_state/continuous_universe_state.json` records the completed v3 cohort: cohort index **3**
-  (the 6 validated constituents `SHIBUSDT`, `QNTUSDT`, `AAVEUSDT`, `WLDUSDT`, `PEPEUSDT`, `ICPUSDT`,
-  `completed: true`), `current_cycle_id = v3-selection-20261020`, `next_cohort_index = 4`, the v3
-  snapshot id `54f9516c…`, the v3 selection outcome `CANDIDATES_SELECTED_FOR_PART_OF_THE_UNIVERSE`,
-  the 4/2 split (`v3_candidates = 4` with `ICPUSDT`, `PEPEUSDT`, `SHIBUSDT`, `WLDUSDT`; `v3_without_candidate`
-  = `AAVEUSDT`, `QNTUSDT`) and the blocking dependency `CONFIRMATORY_WINDOW (earliest end
-  2027-01-18T13:00:00Z)`; `schema_version` is still 1.
-- The v2 history is preserved and now agrees with its own manifest: `v2-selection-20261019`,
-  `v2_candidates = 14`, `v2_without_candidate` (4 assets), the v2 snapshot id `c4772c58…`.
-- **Two defects found and corrected**: `v3_candidates` counted the cohort (6) instead of constituents
-  with a selected configuration (4), and the v2 cycle id was a label occurring nowhere else in the
-  repository. Both now mechanically checked by `tests/test_continuous_universe_state.py` (17 tests,
-  7 tamper controls).
-- The v3 eligible pool is **exhausted**: 20 `eligible_assets` (6 validated + 14 excluded), 79
-  rule-excluded — cohort 4 cannot be drawn from the frozen v3 snapshot; a new version with a new
-  pinned-window retrieval is required. Next floor: `HTXUSDT`, 1,468,004,153 USD, `market_cap_rank`
-  65.
-- Full suite **966/966 green**; all `scripts/verify_*.py` exit 0; `compute_code_hash()` =
-  `2efd3b18…`; canonical digests unchanged; no frozen artifact edited and no `src/` file touched.
-- Both confirmatory windows unexposed: `holdout_exposed_count = 0`; v3 window is open (opened
-  2026-10-20T13:00:00Z) and cannot end before `2027-01-18T13:00:00Z`; v2 cannot end before
-  `2027-01-17T22:00:00Z`.
+**One bounded task (next):** v6 preregistration implementation — P2
+`retrieve_and_freeze_v6_universe` (one bounded market-cap retrieval inside the v6 pinned window,
+`not_before 2026-10-22T00:45:00Z`, deadline `2026-10-29T00:45:00Z`, per
+`configs/research_v6.json#universe.snapshot_retrieval`), then P3 (validate v6 candidates and freeze
+`research/data_manifest_v6.json`), P4 (preregister `configs/research_v6_execution.json` and
+`configs/research_v6_candidate_freeze.json`), P5 (append the v6 entry to
+`research/v_universe_expansion_log.json` chained onto the v5 entry `092f10c4…`), P6 (preregister
+`configs/research_v6_confirmatory_protocol.json` and `configs/research_v6_confirmatory_runbook_1.json`).
+Per BRAIN-026 and README Section 2A C1, implementation is a separate session from the design record.
+No provider contact, no candle read, no code, no artifact write in this session — design and
+handoff update only.
 
-**One bounded task — the design record must decide, in rules only:**
-1. **Where cohort 4's constituents come from.** The v3 eligible pool is exhausted, so the record must
-   compare (a) a new version with one new pinned-window market-cap retrieval against (b) any reuse of
-   the v3 snapshot, and choose one. Fix the v4 floor rule (strictly below the v3 floor, with the
-   recompute rule the v3 specification states) and extend the prior-universe asset identity rule to
-   v1, v2 **and** v3, so no v4 asset repeats a v1/v2/v3 constituent.
-2. **The data boundary relative to the open v3 confirmatory window.** The v3 window opened
-   `2026-10-20T13:00:00Z` and is still open, so any v4 development data read at or after that instant
-   is a read inside the v3 confirmatory window. The record must state whether v4's development data is
-   bounded at `2026-10-20T13:00:00Z` (and what that costs — e.g. a shortened development window for
-   newly listed assets) or whether v4 waits for the window to close on `2027-01-18T13:00:00Z`.
-3. **The sequencing rule against the two pending confirmatory evaluations** (v2 `2027-01-17T22:00:00Z`,
-   v3 `2027-01-18T13:00:00Z`): what may be done before, between and after those gates, that a
-   confirmatory evaluation is never re-run and never re-tuned on, and that the two windows are never
-   read for selection.
-4. **The v4 namespace and identity chain**: the v4 specification, universe/data manifests, candidate
-   freeze, shards, ledger, result stream, results manifest, checkpoint, authorizations and reports;
-   the `supersedes` chain from the v3 manifest identities; the code-identity rule (the canonical
-   digest, the hashed set `src/breakout_research/` untouched); and a holdout counter that starts at 0
-   and is counted on every confirmatory read.
-5. **The null-result path**: a pass that yields no eligible new name records `AWAITING_NEW_CANDIDATES`
-   with the observed endpoint, HTTP status, probe timestamp, the exact command, the ranking depth and
-   the exclusion reasons, and schedules the next pass at a bounded cadence; the campaign is never
-   declared complete because one snapshot was empty.
-6. **Falsifying evidence, rollback and staged acceptance tests** for the record itself.
-
-**Do NOT:** contact any provider (no market-cap retrieval, no candle fetch, no Binance call); read
-any candle inside the v2 or the v3 confirmatory window; run any evaluation, grid, backtest,
-campaign, selection or pilot; create or edit any file under `configs/`, `research/`, `reports/` or
-`src/`; edit `research_state/continuous_universe_state.json`; edit any frozen v1/v2/v3 artifact;
-re-run any producer (`scripts/build_*.py`, `scripts/v2_constituent_validation.py`,
-`scripts/v3_constituent_validation.py`) that would rewrite an artifact; re-retrieve or re-time the v2
-or the v3 market-cap snapshot; mark a confirmatory window as started or `holdout_exposed_count` as
-non-zero; change the 2,304-configuration grid, the costs, the folds, the thresholds, the selection
-rule or the single confirmatory criterion.
-
-**Acceptance criteria:** the design record exists in `research_state/brainstorming_queue.md` with
-evidence revalidated against the live artifacts (every claim about a frozen artifact recomputed
-from it), at least two materially different designs for each of the six points, one recommendation
-per point, falsifying evidence, rollback and staged acceptance tests; `research_state/agent_handoff.md`
-records the decision and the next bounded task; `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0
-with no new failures; every `scripts/verify_*.py` still exits 0; `compute_code_hash()` is still
-`2efd3b18…` and the five canonical digests are unchanged; `research_state/continuous_universe_state.json`
-is unchanged; **no new or changed file exists under `configs/`, `research/`, `reports/` or `src/`**;
-no confirmatory-window candle was read and `holdout_exposed_count` stays 0.
-
-**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`;
-`PYTHONPATH=src python3 -m pytest tests/test_continuous_universe_state.py -q`;
-`python3 scripts/verify_v3_confirmatory_runbook_1.py`;
-`python3 scripts/verify_v3_confirmatory_path.py`; `python3 scripts/verify_v3_confirmatory_protocol.py`;
-`python3 scripts/verify_v3_selected_configurations_manifest.py`; `python3 scripts/verify_v3_selection_run.py`;
-`python3 scripts/verify_v3_selection_authorization_1.py`; `python3 scripts/verify_research_v3_spec.py`;
-`python3 scripts/verify_research_v3_manifests.py`; `python3 scripts/verify_research_v3_candidate_freeze.py`;
-`python3 scripts/verify_v3_universe_expansion_log.py`; `python3 scripts/verify_v2_confirmatory_runbook_1.py`;
-`python3 scripts/verify_v2_confirmatory_path.py`; `python3 scripts/verify_v2_confirmatory_protocol.py`;
-`python3 scripts/verify_v2_selection_run.py`; `python3 scripts/verify_v2_selected_configurations_manifest.py`;
-`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
-`git status --short`; `git diff --stat` (confirm only `research_state/` changed — no `src/`, no
-`configs/`, no `research/`, no `reports/`).
-
-**Queued after this task (not for that session):** the v4 preregistration *implementation* (the
-versioned `configs/research_v4.json` and, only if the design says so, one bounded market-cap
-retrieval inside its pinned window); the v3 confirmatory evaluation and the final report, which may
-not start before `2027-01-18T13:00:00Z`; and the v2 confirmatory evaluation, which may not start
-before `2027-01-17T22:00:00Z`.
+**Verification commands:** `python3 scripts/verify_research_v6_spec.py`;
+`python3 scripts/verify_research_v5_spec.py`; `python3 scripts/verify_research_v4_spec.py`;
+`PYTHONPATH=src python3 -m pytest tests/test_continuous_universe_state.py tests/test_research_v6_spec.py
+-q`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`;
+`git status --short`; `git diff --stat`.
 
 ## Session activity — 2026-10-20T22:55:00Z (this session)
 
