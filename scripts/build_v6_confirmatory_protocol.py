@@ -497,7 +497,7 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             },
             "v6_selection_authorization_1": {
                 "path": SELECTION_AUTHORIZATION_RELATIVE,
-                "manifest_hash": None,
+                "manifest_hash": json.load(open(SELECTION_AUTHORIZATION_RELATIVE)).get("manifest_hash"),
             },
         },
         "durability": {

@@ -305,7 +305,7 @@
     },
     "v6_selection_authorization_1": {
       "path": "configs/research_v6_selection_authorization_1.json",
-      "manifest_hash": null
+      "manifest_hash": "7b27784fe52f89c7b6770bb6f53e0f6d452c4df0a1d4222a1cf530d8e3648ce1"
     }
   },
   "durability": {
@@ -326,5 +326,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
   },
-  "manifest_hash": "9568bccbf92ff912223bc6720e7157b5a979f2c255acbbfd1c60eb3f187d055e"
+  "manifest_hash": "96cd7e0ef890db536dae60ab4cd494de8f55453e175e844f3fdaf4d5e1f4f628"
 }

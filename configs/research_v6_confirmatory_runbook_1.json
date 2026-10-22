@@ -70,7 +70,7 @@
     },
     "confirmatory_protocol": {
       "path": "configs/research_v6_confirmatory_protocol.json",
-      "manifest_hash": "9568bccbf92ff912223bc6720e7157b5a979f2c255acbbfd1c60eb3f187d055e"
+      "manifest_hash": "96cd7e0ef890db536dae60ab4cd494de8f55453e175e844f3fdaf4d5e1f4f628"
     },
     "selected_configurations_manifest": {
       "path": "research/v6_selected_configurations_manifest.json",
@@ -133,7 +133,7 @@
         "research/data_manifest_v6.json": "33d51a5470b888383e82cc0ff2d3fcabe32bdfd35884150b439a1732a510f5b1",
         "configs/research_v6_candidate_freeze.json": "c1e32e66670d2fb7f02bf367382788dc0ac17e439a55acb0ead2ac0c9a7b6bdc",
         "configs/research_v6_execution.json": "7080b749ea2cc0523e60391cb9a8a6cbc1284bf05c8d678b07ae32e979ed1923",
-        "configs/research_v6_confirmatory_protocol.json": "29a14686f2f44c2cadf1c8d5ec432e1274391a2686235af6a526d454b6f6b719"
+        "configs/research_v6_confirmatory_protocol.json": "fbb7606b51fa6d03c110f50ba9cc251a0d52b056611fdb7c2187a1f1e3beb41f"
       }
     },
     "decision_rule": {
@@ -543,7 +543,7 @@
     },
     "confirmatory_protocol": {
       "path": "configs/research_v6_confirmatory_protocol.json",
-      "manifest_hash": "9568bccbf92ff912223bc6720e7157b5a979f2c255acbbfd1c60eb3f187d055e"
+      "manifest_hash": "96cd7e0ef890db536dae60ab4cd494de8f55453e175e844f3fdaf4d5e1f4f628"
     },
     "selected_configurations_manifest": {
       "path": "research/v6_selected_configurations_manifest.json",
@@ -604,5 +604,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
   },
-  "manifest_hash": "c7481ef6a6326f2a1b8b13982dc3c86c94749b5f54aad544ce81022b805b07cf"
+  "manifest_hash": "4a2b5546b75e04aead52cddb1aa76e9c599cb0f656c89c0a545420430229b451"
 }
