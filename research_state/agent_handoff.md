@@ -8856,3 +8856,17 @@ may not start before **2027-01-17T22:00:00Z**.
 **Do NOT:** run any grid, backtest, campaign, selection or pilot; read any candle; contact any provider beyond the single bounded v6 retrieval; edit any v1–v5 frozen artifact; edit anything under `src/breakout_research/` or `src/v2_campaign/`; rewrite an existing artifact without `--force` and a recorded reason.
 
 **Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v6_spec.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
+
+## Session activity — 2026-10-22T02:01:03Z (this session)
+
+**Task:** Complete the queued v6 preregistration implementation (P2-P6).
+
+**Outcome:** Partial. P2/P3 delivered and verified (`verify_research_v6_manifests.py` exit 0; 7 validated of 20). P5 delivered (`research/v_universe_expansion_log.json` now holds the v6 entry chained onto `092f10c4…`, verifier exit 0). Candidate freeze (`configs/research_v6_candidate_freeze.json`) exists but fails its verifier (canonical source digest mismatch; 4 excluded band members recorded with verified Binance spot pairs; overlap rule wording). P4 (execution protocol) and P6 (confirmatory protocol + runbook) are outstanding.
+
+**Next bounded task (queued):** repair the v6 candidate freeze (source digest, spot-pair records, overlap-rule wording) then produce P4 `configs/research_v6_execution.json` and P6 `configs/research_v6_confirmatory_protocol.json` + `configs/research_v6_confirmatory_runbook_1.json`, following the v5 pattern.
+
+## Initial task message for next agent
+
+**Status (verified 2026-10-22T02:01Z):** v6 P2/P3 and P5 done and verified; candidate freeze present but failing; P4/P6 outstanding.
+
+**One bounded task (next):** repair `configs/research_v6_candidate_freeze.json` so `verify_research_v6_candidate_freeze.py` exits 0, then deliver P4 and P6 per BRAIN-026, following the v5 pattern. No provider contact, no candle read, no src/ changes.

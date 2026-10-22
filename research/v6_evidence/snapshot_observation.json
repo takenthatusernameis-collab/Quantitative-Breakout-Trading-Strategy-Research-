@@ -1,0 +1,35 @@
+{
+  "created_utc": "2026-10-22T01:17:30.779149+00:00",
+  "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+  "page_2_read": false,
+  "page_2_reason": null,
+  "pages": [
+    {
+      "elapsed_ms": 100,
+      "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
+      "http_status": 200,
+      "page": 1,
+      "raw_response_bytes": 197504,
+      "raw_response_hash": "a58da3b196a104af63105a1f356ad47727023df0653d40e6c2fd61228cbed512",
+      "raw_response_path": "research/v6_evidence/raw_market_cap_response.json",
+      "retrieval_timestamp_utc": "2026-10-22T01:17:30Z",
+      "row_count": 250
+    }
+  ],
+  "policy": "exactly one read-only GET of the frozen endpoint, plus at most one bounded extra page when the first page yields fewer than top_n qualifying names; the raw bytes are stored verbatim and hashed; the snapshot is never re-retrieved or re-timed",
+  "protocol_version": "v6",
+  "provider": "coingecko",
+  "qualifying_after_page_1": 20,
+  "ranking_depth_recomputed_from_bytes": 250,
+  "ranking_depth_recorded_by_the_specification": 250,
+  "retrieval_policy": "exactly_once_read_only_bounded",
+  "retrieval_timestamp_utc": "2026-10-22T01:17:30Z",
+  "retrieval_window": {
+    "deadline_utc": "2026-10-29T00:45:00Z",
+    "not_before_utc": "2026-10-22T00:45:00Z",
+    "retrieved_at_utc": "2026-10-22T01:17:30Z"
+  },
+  "specification_hash": "4a07911a1e0a79e0489e0ff638526ffeef2f2d217696e80308c77b440dbeac9c",
+  "total_rows": 250,
+  "universe_version": "v6"
+}

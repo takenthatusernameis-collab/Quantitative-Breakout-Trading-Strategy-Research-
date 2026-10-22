@@ -1,0 +1,46 @@
+{
+  "created_utc": "2026-10-22T01:21:10.610064+00:00",
+  "protocol_version": "v6",
+  "record": {
+    "content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+    "dataset_path": "research/data/candles_v6/BTCUSDT_1h_626e639b02e54bc1.csv",
+    "download_attempts": 27,
+    "endpoint": "https://data-api.binance.vision/api/v3/klines",
+    "endpoint_failures": [
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451",
+      "https://api.binance.com/api/v3/klines: HTTP 451"
+    ],
+    "endpoints_used": [
+      "https://data-api.binance.vision/api/v3/klines"
+    ],
+    "error": null,
+    "expected_candle_count": 26280,
+    "first_candle_timestamp": 1697839200000,
+    "gaps": [],
+    "hash_algorithm": "sha256-canonical-hourly-csv-v1",
+    "last_candle_timestamp": 1792443600000,
+    "observed_candle_count": 26280,
+    "role": "trend_filter_and_benchmark",
+    "rule": "The v6 benchmark series is a separate dataset under research/data/candles_v6, bounded at the v6 development cutoff. configs/research_v6.json -> holdout.benchmark_rule requires the benchmark dataset to be bounded at the v6 development cutoff and to be bound by its recomputed content hash in the v6 execution protocol. The v5 chain's dataset (research/data/candles_v5/BTCUSDT_1h_626e639b02e54bc1.csv) covers the identical span and its last candle closes exactly at the v6 cutoff, so the v6 chain fetches its own copy of the same bounded window and every v6 artifact lives in the v6 namespace.",
+    "symbol": "BTCUSDT",
+    "validated": true
+  }
+}
