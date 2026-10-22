@@ -114,6 +114,46 @@ FOREIGN_NAMESPACES = (
     "research_state/checkpoint_v5.json",
 )
 
+#: The v6 artifacts the retrieval stage and the freeze stage deliver.  When
+#: they exist they must be bound to this specification, exactly as the v5 stage
+#: artifacts are bound to the v5 specification.
+#:
+#: The rule this replaces was a **preregistration** rule ("no v6 artifact may
+#: exist while the specification authorizes nothing").  It described the world
+#: while the v6 chain had not started; it cannot describe the world after the
+#: v6 retrieval stage is delivered, which is the next bounded task.  The rule
+#: that does describe it is the stage rule: an artifact that exists must be
+#: bound to this specification and to this universe version.
+V6_BOUND_STAGE_ARTIFACTS = (
+    "research/universe_manifest_v6.json",
+    "research/data_manifest_v6.json",
+    "configs/research_v6_candidate_freeze.json",
+    "configs/research_v6_execution.json",
+    "configs/research_v6_selection_authorization_1.json",
+)
+
+#: The v6 confirmatory artifacts that must not exist before the v6 confirmatory
+#: chain is delivered.  The v3 chain is the template (protocol, runbook, a
+#: confirmatory authorization and a code-hash amendment); the v4 and v5 chains
+#: omit them, which BRAIN-025 records as a defect.
+V6_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST = (
+    "configs/research_v6_confirmatory_protocol.json",
+    "configs/research_v6_confirmatory_runbook_1.json",
+)
+
+#: The v6 run artifacts.  They may exist only once the v6 selection
+#: authorization exists and is bound to this specification, because that
+#: authorization is what authorizes the run.
+V6_RUN_ARTIFACTS = (
+    "research/shards_v6",
+    "research/ledger_v6.json",
+    "research/results_manifest_v6.json",
+    "research/results_v6.jsonl",
+    "research_state/checkpoint_v6.json",
+)
+
+V6_SELECTION_AUTHORIZATION_RELATIVE = "configs/research_v6_selection_authorization_1.json"
+
 HOLDOUT_INDEX_PATHS = (
     "research/data/holdout/holdout_index.json",
     "research/data/holdout_v2/holdout_index.json",
@@ -254,12 +294,39 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             fail(f"inherited block {block} differs from v1")
     if "data" in spec and spec.get("data") != spec_v2.get("data"):
         fail("the inherited data block differs from v2")
+    spec_v3 = _load_json(repo_root / SPEC_V3_RELATIVE) or {}
+    inheritance = spec.get("inheritance", {})
+    eligibility = spec.get("universe", {}).get("eligibility_validation")
+    inherited_eligibility = (spec_v3.get("universe") or {}).get("eligibility_validation")
+    if eligibility is None:
+        fail("the v6 specification records no eligibility validation block")
+    elif inherited_eligibility is None:
+        fail("the v3 specification records no eligibility validation block to inherit")
+    else:
+        # The v6 chain inherits the v3 rules unchanged except for the two
+        # deviations it documents: its own data manifest and the note that says
+        # so.  Everything else must be the v3 block, byte for byte.
+        deviations = {"data_manifest", "data_manifest_note"}
+        stripped = json.loads(json.dumps(eligibility))
+        for key in deviations:
+            stripped.get("data_integrity", {}).pop(key, None)
+        expected = json.loads(json.dumps(inherited_eligibility))
+        for key in deviations:
+            expected.get("data_integrity", {}).pop(key, None)
+        if stripped != expected:
+            fail("the eligibility validation block differs from the v3 block it inherits")
+        if (eligibility.get("data_integrity") or {}).get("data_manifest") != "research/data_manifest_v6.json":
+            fail("the eligibility validation block does not name the v6 data manifest")
+        if not (eligibility.get("data_integrity") or {}).get("data_manifest_note"):
+            fail("the eligibility validation block does not document its data-manifest deviation")
+        deviations_recorded = inheritance.get("inherited_from_v3_documented_deviations") or []
+        if not deviations_recorded:
+            fail("the inheritance block does not record its documented deviation from v3")
     grid = spec.get("strategy_grid", {})
     if grid.get("total_combinations") != 2304:
         fail("strategy_grid.total_combinations is not 2304")
     elif _grid_combinations(grid) != 2304:
         fail("strategy_grid dimensions do not multiply to total_combinations")
-    inheritance = spec.get("inheritance", {})
     for block in list(inheritance.get("inherited_unchanged_blocks") or []):
         if block not in INHERITED_BLOCKS:
             fail(f"inheritance claims {block} is inherited from v1, but it is not a v1 block")
@@ -556,8 +623,60 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         fail("the v6 gate does not require 2,160 closed hourly candles in its own window")
     if "later of" not in str(v6_gate.get("rule") or ""):
         fail("the v6 gate does not state that it is the later of the four gates and its own window")
+    isolation = str(spec.get("phase_gates", {}).get("rule") or "")
+    for phrase in ("never re-run", "never re-tuned on", "never read for selection"):
+        if phrase not in isolation:
+            fail(f"the version-isolation rule does not state that a confirmation is {phrase}")
+    fresh = spec.get("fresh_checkout_verifiability", {})
+    fresh_rule = str(fresh.get("rule") or "")
+    if "canonical digest" not in fresh_rule:
+        fail("the fresh-checkout rule does not require the canonical digest")
+    if "reported, not failed" not in fresh_rule:
+        fail("the fresh-checkout rule does not report an absent projection instead of failing it")
 
-    # 9. the code identity --------------------------------------------------
+    # 9. the pinned retrieval window ----------------------------------------
+    retrieval = spec.get("universe", {}).get("snapshot_retrieval", {})
+    created = spec.get("created_utc")
+    if not created:
+        fail("the specification records no creation instant")
+    elif retrieval.get("not_before_utc") != created:
+        fail(
+            f"the retrieval window opens at {retrieval.get('not_before_utc')}, but the "
+            f"specification was created at {created}"
+        )
+    window_days = retrieval.get("window_days")
+    if window_days != 7:
+        fail(f"the retrieval window spans {window_days} days, not 7")
+    if created and window_days:
+        expected_deadline = format_utc(parse_utc(created) + timedelta(days=int(window_days)))
+        computed["recomputed_retrieval_deadline_utc"] = expected_deadline
+        if retrieval.get("deadline_utc") != expected_deadline:
+            fail(
+                f"the retrieval window ends at {retrieval.get('deadline_utc')}, recomputed "
+                f"{expected_deadline} from the creation instant and the window length"
+            )
+    if retrieval.get("reuse_forbidden") is not True:
+        fail("the specification does not forbid reusing the v6 snapshot")
+    if retrieval.get("re_timing_forbidden") is not True:
+        fail("the specification does not forbid re-timing the v6 retrieval")
+    if retrieval.get("is_a_candle_read") is not False:
+        fail("the specification does not state that the market-cap retrieval is not a candle read")
+    if retrieval.get("retrieval_policy") != "exactly_once_read_only_bounded":
+        fail("the retrieval policy is not exactly_once_read_only_bounded")
+    if "first successful retrieval inside the window" not in str(retrieval.get("rule") or ""):
+        fail("the specification does not state that the first successful retrieval is the v6 snapshot")
+    if "versioned amendment" not in str(retrieval.get("expired_window_rule") or ""):
+        fail("the expired-window rule does not provide for a new window by versioned amendment")
+    if retrieval.get("endpoint") != spec.get("universe", {}).get("endpoint"):
+        fail("the retrieval endpoint is not the endpoint of the universe block")
+    if retrieval.get("depth") != spec.get("universe", {}).get("ranking_depth"):
+        fail("the retrieval depth is not the ranking depth of the universe block")
+    evidence = list(retrieval.get("evidence_required") or [])
+    for required in ("raw_market_cap_response.json", "snapshot_observation.json"):
+        if required not in evidence:
+            fail(f"the retrieval does not require the evidence file {required}")
+
+    # 10. the code identity --------------------------------------------------
     code_identity = spec.get("code_identity", {})
     hashed_set_digest = canonical_source_digest(repo_root / HASHED_SET_ROOT)
     computed["canonical_hashed_set_digest"] = hashed_set_digest
@@ -590,7 +709,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     ):
         fail("the specification does not name every execution path it claims to leave untouched")
 
-    # 10. the supersedes chain ---------------------------------------------
+    # 11. the supersedes chain ---------------------------------------------
     supersedes = spec.get("supersedes", {})
     chain = (
         ("specification_path", "specification_hash", "specification_sha256", "configs/research_v5.json"),
@@ -625,7 +744,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         if supersedes.get(f"{version}_artifacts_are_immutable") is not True:
             fail(f"the specification does not declare the {version} artifacts immutable")
 
-    # 11. the namespace -----------------------------------------------------
+    # 12. the namespace -----------------------------------------------------
     namespace = spec.get("namespace", {})
     narrative_keys = {"rule", "result_stream_durability"}
     v6_paths = [
@@ -653,19 +772,44 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             fail(f"the v6 namespace does not name its {key}")
     if namespace.get("specification") != SPEC_V6_RELATIVE:
         fail("the v6 namespace does not name this specification as the v6 specification")
-    # Nothing in the v6 namespace may exist before the v6 chain has run: the
-    # specification authorizes nothing, so a v6 artifact here would be an
-    # unauthorized write.
-    for relative in sorted(set(v6_paths)):
-        if relative == SPEC_V6_RELATIVE:
-            continue
+    # The v6 chain has not run, so no v6 artifact may exist that is not bound
+    # to this specification, and the v6 confirmatory chain has not been
+    # delivered at all.  The rules are stated per stage so that they stay true
+    # as the v6 chain is delivered, stage by stage.
+    for relative in V6_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST:
         if (repo_root / relative).exists():
             fail(
-                f"the v6 artifact {relative} exists, but the v6 specification authorizes "
-                f"nothing and no v6 stage has been delivered"
+                f"the v6 confirmatory artifact {relative} exists, but the v6 confirmatory "
+                f"chain has not been delivered"
             )
+    for relative in V6_BOUND_STAGE_ARTIFACTS:
+        path = repo_root / relative
+        if not path.exists():
+            continue
+        stage = _load_json(path)
+        if stage is None:
+            fail(f"the v6 stage artifact {relative} is unreadable")
+            continue
+        if stage.get("specification_hash") != spec.get("specification_hash"):
+            fail(f"the v6 stage artifact {relative} is not bound to this specification")
+        if stage.get("universe_version") != spec.get("universe_version"):
+            fail(f"the v6 stage artifact {relative} is not a v6 artifact")
+    run_artifacts = [relative for relative in V6_RUN_ARTIFACTS if (repo_root / relative).exists()]
+    if run_artifacts:
+        authorization = _load_json(repo_root / V6_SELECTION_AUTHORIZATION_RELATIVE)
+        if authorization is None:
+            fail(
+                f"the v6 run artifact {run_artifacts[0]} exists, but the v6 selection "
+                f"authorization does not: the run artifacts are not the outputs of an "
+                f"authorized run"
+            )
+        elif authorization.get("specification_hash") != spec.get("specification_hash"):
+            fail("the v6 selection authorization is not bound to this specification")
+        checkpoint = _load_json(repo_root / "research_state" / "checkpoint_v6.json")
+        if checkpoint is not None and checkpoint.get("holdout_exposed_count") not in (0, None):
+            fail("the v6 checkpoint records a holdout exposure")
 
-    # 12. the expansion log -------------------------------------------------
+    # 13. the expansion log -------------------------------------------------
     program = spec.get("expansion_program", {})
     log_relative = program.get("append_only_log_path")
     if not log_relative:
@@ -692,28 +836,50 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             state = program.get("log_state_at_preregistration") or {}
             live_versions = [entry.get("universe_version") for entry in entries]
             computed["expansion_log_versions"] = live_versions
-            if state.get("versions_present") != live_versions:
+            recorded_versions = list(state.get("versions_present") or [])
+            # The recorded block is a historical statement of the log at the
+            # moment of preregistration, so it must stay the prefix of the log
+            # once the v6 entry is appended.
+            if live_versions[: len(recorded_versions)] != recorded_versions:
                 fail(
-                    f"the recorded expansion-log versions are {state.get('versions_present')}, "
-                    f"the log holds {live_versions}"
+                    f"the recorded expansion-log versions are {recorded_versions}, the log "
+                    f"holds {live_versions}"
                 )
-            if state.get("entry_count") != len(entries):
+            if state.get("entry_count") != len(recorded_versions):
                 fail(
                     f"the recorded expansion-log entry count is {state.get('entry_count')}, the "
-                    f"log holds {len(entries)}"
+                    f"recorded versions are {recorded_versions}"
                 )
+            if len(set(recorded_versions)) != len(recorded_versions):
+                fail("the recorded expansion-log versions repeat a universe version")
             if state.get("missing_entries"):
                 fail("the expansion log is missing an entry of a frozen universe version")
-            if entries:
-                last_hash = entries[-1].get("entry_hash")
-                computed["expansion_log_last_entry_hash"] = last_hash
-                if program.get("log_entry_previous_hash") != last_hash:
-                    fail("the v6 expansion-log entry does not chain onto the last entry of the log")
+            if recorded_versions:
+                anchor = next(
+                    (
+                        entry
+                        for entry in reversed(entries)
+                        if entry.get("universe_version") == recorded_versions[-1]
+                    ),
+                    None,
+                )
+                if anchor is None:
+                    fail(
+                        f"the log holds no entry for the recorded universe version "
+                        f"{recorded_versions[-1]}"
+                    )
+                else:
+                    computed["expansion_log_anchor_entry_hash"] = anchor.get("entry_hash")
+                    if program.get("log_entry_previous_hash") != anchor.get("entry_hash"):
+                        fail(
+                            "the v6 expansion-log entry does not chain onto the "
+                            f"{recorded_versions[-1]} entry of the log"
+                        )
             pending = " ".join(program.get("pending_log_entries") or [])
             if "v6" not in pending:
                 fail("the expansion program does not record the v6 entry")
 
-    # 13. the exposure counters --------------------------------------------
+    # 14. the exposure counters --------------------------------------------
     for version in ("v2", "v3", "v4", "v5"):
         data_manifest = _load_json(repo_root / "research" / f"data_manifest_{version}.json")
         if data_manifest is None:
@@ -735,13 +901,13 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         if (repo_root / relative).exists():
             fail(f"a holdout index exists at {relative}, but no confirmatory window has been read")
 
-    # 14. the authorization -------------------------------------------------
+    # 15. the authorization -------------------------------------------------
     authorization_block = spec.get("authorization", {})
     for flag in ("execution_authorized", "campaign_authorized", "selection_authorized", "confirmatory_authorized"):
         if authorization_block.get(flag) is not False:
             fail(f"authorization.{flag} is not false")
 
-    # 15. the null-result path and the depth policy -------------------------
+    # 16. the null-result path and the depth policy -------------------------
     null_result = spec.get("null_result_path", {})
     if null_result.get("state") != "AWAITING_NEW_CANDIDATES":
         fail("the null-result path does not record AWAITING_NEW_CANDIDATES")
@@ -767,7 +933,7 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     if not depth_policy.get("forbidden"):
         fail("the depth policy states no forbidden retrieval behaviour")
 
-    # 16. the specification smuggles in no asset membership -----------------
+    # 17. the specification smuggles in no asset membership -----------------
     for forbidden_key in ("eligible_assets", "candidates", "frozen_candidate_set", "candidate_batch"):
         if forbidden_key in spec.get("universe", {}):
             fail(f"the v6 specification records asset membership in universe.{forbidden_key}")

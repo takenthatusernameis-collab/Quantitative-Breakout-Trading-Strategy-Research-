@@ -28,9 +28,15 @@ ARTIFACT_PATH = REPO_ROOT / "configs" / "research_v6.json"
 
 #: The pinned creation instant of the v6 specification.  It opens the v6
 #: market-cap retrieval window and is part of the specification's hash.
-CREATED_UTC = "2026-10-22T00:30:00Z"
+CREATED_UTC = "2026-10-22T00:45:00Z"
 
 RETRIEVAL_WINDOW_DAYS = 7
+
+#: The universe versions whose expansion-log entries existed when the v6
+#: specification was preregistered.  The log is append-only, so this pinned
+#: history stays the prefix of the log once the v6 entry is appended and the
+#: document stays reproducible from this producer.
+PINNED_LOG_VERSIONS = ("v3", "v4", "v5")
 
 MARKET_CAP_ENDPOINT = (
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
@@ -409,7 +415,17 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     deadline = created + timedelta(days=RETRIEVAL_WINDOW_DAYS)
 
     log_entries = expansion_log.get("entries") or []
-    last_log_entry = log_entries[-1] if log_entries else {}
+    entries_by_version = {
+        entry.get("universe_version"): entry for entry in log_entries if entry.get("universe_version")
+    }
+    missing_versions = [version for version in PINNED_LOG_VERSIONS if version not in entries_by_version]
+    if missing_versions:
+        raise SystemExit(
+            f"the expansion log holds no entry for {missing_versions}, so the pinned log "
+            "history cannot be derived"
+        )
+    pinned_log_entries = [entries_by_version[version] for version in PINNED_LOG_VERSIONS]
+    last_log_entry = pinned_log_entries[-1]
 
     document: Dict[str, Any] = {
         "protocol_version": "v6",
@@ -499,6 +515,11 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             "inherited_unchanged_blocks": list(INHERITED_BLOCKS),
             "inherited_from_v2_unchanged_blocks": ["data"],
             "inherited_from_v3_unchanged_blocks": ["eligibility_validation"],
+            "inherited_from_v3_documented_deviations": [
+                "universe.eligibility_validation.data_integrity.data_manifest names the v6 "
+                "chain's own data manifest instead of the v2 manifest the v3 block names; the "
+                "deviation is recorded in that block's data_manifest_note"
+            ],
             "changed_or_added_blocks": [
                 "universe",
                 "holdout",
@@ -981,15 +1002,15 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 # since grown, but this block records the log at the moment the
                 # specification was preregistered. The live state of the log is
                 # the log itself.
-                "entry_count": len(log_entries),
+                "entry_count": len(pinned_log_entries),
                 "versions_present": [
-                    entry.get("universe_version") for entry in log_entries
+                    entry.get("universe_version") for entry in pinned_log_entries
                 ],
                 "missing_entries": [],
                 "note": (
                     "a historical statement of the log at the time of preregistration: the log "
-                    "holds exactly one entry per frozen universe version (v3, v4 and v5), so "
-                    "the v6 entry is a pure append"
+                    "holds exactly one entry per frozen universe version (v3, v4 and v5), so the "
+                    "v6 entry is a pure append"
                 ),
             },
             "pending_log_entries": [

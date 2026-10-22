@@ -1,8 +1,8 @@
 {
   "protocol_version": "v6",
   "universe_version": "v6",
-  "specification_hash": "d16cd1236c6c84d2d2bd05dc997a47d352b80815d03ab88398d0cfc1690d5907",
-  "created_utc": "2026-10-22T00:30:00Z",
+  "specification_hash": "4a07911a1e0a79e0489e0ff638526ffeef2f2d217696e80308c77b440dbeac9c",
+  "created_utc": "2026-10-22T00:45:00Z",
   "specification_status": "PREREGISTERED_SPECIFICATION_ONLY",
   "specification_purpose": "Preregister the rules for a sixth, separately versioned market-cap universe that is a strictly additional batch of assets below the v5 universe floor. This file is a design artifact: it freezes rules before any v6 data is retrieved or any v6 result exists, and it authorizes nothing.",
   "design_basis": {
@@ -79,6 +79,9 @@
     ],
     "inherited_from_v3_unchanged_blocks": [
       "eligibility_validation"
+    ],
+    "inherited_from_v3_documented_deviations": [
+      "universe.eligibility_validation.data_integrity.data_manifest names the v6 chain's own data manifest instead of the v2 manifest the v3 block names; the deviation is recorded in that block's data_manifest_note"
     ],
     "changed_or_added_blocks": [
       "universe",
@@ -222,8 +225,8 @@
     },
     "snapshot_retrieval": {
       "rule": "The v6 universe is exactly one timestamped market-cap snapshot retrieved inside the window below. The first successful retrieval inside the window is the v6 snapshot.",
-      "not_before_utc": "2026-10-22T00:30:00Z",
-      "deadline_utc": "2026-10-29T00:30:00Z",
+      "not_before_utc": "2026-10-22T00:45:00Z",
+      "deadline_utc": "2026-10-29T00:45:00Z",
       "window_days": 7,
       "endpoint": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1",
       "depth": 250,

@@ -218,6 +218,24 @@ def test_the_grid_still_enumerates_2304_combinations():
     assert grid["total_combinations"] == 2304
 
 
+def test_the_eligibility_validation_block_is_the_inherited_v3_block():
+    """The v6 chain inherits the v3 eligibility rules, with two documented deviations."""
+    v3 = _load(REPO_ROOT / "configs" / "research_v3.json")
+    v6 = _load(SPEC_V6)
+    inherited = v3["universe"]["eligibility_validation"]
+    recorded = v6["universe"]["eligibility_validation"]
+    deviations = {"data_manifest", "data_manifest_note"}
+    stripped = json.loads(json.dumps(recorded))
+    for key in deviations:
+        stripped["data_integrity"].pop(key, None)
+    expected = json.loads(json.dumps(inherited))
+    for key in deviations:
+        expected["data_integrity"].pop(key, None)
+    assert stripped == expected
+    assert recorded["data_integrity"]["data_manifest"] == "research/data_manifest_v6.json"
+    assert recorded["data_integrity"]["data_manifest_note"]
+
+
 def test_the_specification_records_no_asset_membership():
     v6 = _load(SPEC_V6)
     for forbidden in ("eligible_assets", "candidates", "frozen_candidate_set", "candidate_batch"):
@@ -412,6 +430,29 @@ def test_the_holdout_counter_starts_at_zero_for_every_version():
     assert holdout["v1_v2_v3_v4_v5_holdout_never_reused_for_selection"] is True
 
 
+def test_the_retrieval_window_opens_at_the_creation_instant():
+    v6 = _load(SPEC_V6)
+    retrieval = v6["universe"]["snapshot_retrieval"]
+    assert retrieval["not_before_utc"] == v6["created_utc"]
+    assert retrieval["window_days"] == 7
+    expected = (_parse_utc(v6["created_utc"]) + timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert retrieval["deadline_utc"] == expected
+
+
+def test_the_retrieval_is_single_use_and_not_a_candle_read():
+    v6 = _load(SPEC_V6)
+    retrieval = v6["universe"]["snapshot_retrieval"]
+    assert retrieval["reuse_forbidden"] is True
+    assert retrieval["re_timing_forbidden"] is True
+    assert retrieval["is_a_candle_read"] is False
+    assert retrieval["retrieval_policy"] == "exactly_once_read_only_bounded"
+    assert "first successful retrieval inside the window" in retrieval["rule"]
+    assert "versioned amendment" in retrieval["expired_window_rule"]
+    assert retrieval["endpoint"] == v6["universe"]["endpoint"]
+    assert retrieval["depth"] == v6["universe"]["ranking_depth"]
+    assert "raw_market_cap_response.json" in retrieval["evidence_required"]
+
+
 # ---------------------------------------------------------------------------
 # the code identity
 # ---------------------------------------------------------------------------
@@ -501,16 +542,37 @@ def test_the_v6_namespace_names_the_confirmatory_protocol_and_the_runbook():
     assert namespace["confirmatory_runbook"] == "configs/research_v6_confirmatory_runbook_1.json"
 
 
-def test_no_v6_artifact_exists_but_the_specification():
-    """The specification authorizes nothing, so no v6 artifact may exist yet."""
+def test_the_delivered_stage_artifacts_are_bound_to_the_specification():
+    """A v6 artifact that exists carries this specification's identity.
+
+    The v6 chain has not started, so no stage artifact exists yet; the rule
+    that holds now and after the retrieval stage is the same: an artifact that
+    exists must be bound to this specification and to this universe version.
+    """
     v6 = _load(SPEC_V6)
-    namespace = v6["namespace"]
-    for key, value in namespace.items():
-        if key in {"rule", "result_stream_durability"} or not isinstance(value, str):
+    for relative in verifier.V6_BOUND_STAGE_ARTIFACTS:
+        path = REPO_ROOT / relative
+        if not path.exists():
             continue
-        if value == "configs/research_v6.json":
-            continue
-        assert not (REPO_ROOT / value).exists(), value
+        artifact = _load(path)
+        assert artifact["specification_hash"] == v6["specification_hash"], relative
+        assert artifact["universe_version"] == "v6", relative
+
+
+def test_the_v6_run_artifacts_require_the_selection_authorization():
+    """A v6 run artifact may only exist once the v6 selection authorization exists."""
+    present = [relative for relative in verifier.V6_RUN_ARTIFACTS if (REPO_ROOT / relative).exists()]
+    if not present:
+        return
+    authorization = REPO_ROOT / verifier.V6_SELECTION_AUTHORIZATION_RELATIVE
+    assert authorization.exists(), present
+    assert _load(authorization)["specification_hash"] == _load(SPEC_V6)["specification_hash"]
+
+
+def test_the_v6_confirmatory_chain_is_not_delivered_yet():
+    """The v6 confirmatory protocol and runbook are due before the v6 gate."""
+    for relative in verifier.V6_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST:
+        assert not (REPO_ROOT / relative).exists(), relative
 
 
 def test_the_expansion_log_chain_is_intact_and_the_v6_entry_is_a_pure_append():
@@ -526,11 +588,13 @@ def test_the_expansion_log_chain_is_intact_and_the_v6_entry_is_a_pure_append():
         if index:
             assert entry["previous_entry_hash"] == entries[index - 1]["entry_hash"]
     assert program["append_only_log_path"] == "research/v_universe_expansion_log.json"
-    assert program["log_entry_previous_hash"] == entries[-1]["entry_hash"]
-    assert program["log_state_at_preregistration"]["versions_present"] == [
-        entry["universe_version"] for entry in entries
-    ]
-    assert program["log_state_at_preregistration"]["missing_entries"] == []
+    recorded = program["log_state_at_preregistration"]
+    recorded_versions = recorded["versions_present"]
+    assert [entry["universe_version"] for entry in entries[: len(recorded_versions)]] == recorded_versions
+    assert recorded["entry_count"] == len(recorded_versions)
+    assert recorded["missing_entries"] == []
+    anchor = next(entry for entry in entries if entry["universe_version"] == recorded_versions[-1])
+    assert program["log_entry_previous_hash"] == anchor["entry_hash"]
 
 
 def test_the_exposure_counters_are_zero_everywhere():
@@ -783,13 +847,94 @@ def test_the_verifier_detects_a_tampered_benchmark_content_hash(tmp_path):
 
 
 def test_the_verifier_detects_a_v6_artifact_written_before_authorization(tmp_path):
-    """A v6 artifact may not exist while the v6 specification authorizes nothing."""
+    """A v6 artifact that exists must be bound to this specification."""
     root = _mirror_repo(tmp_path)
     path = root / "research" / "universe_manifest_v6.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("{}\n", encoding="utf-8")
     failures = _failures(root)
-    assert any("unauthorized" in failure or "authorizes" in failure for failure in failures), failures
+    assert any("not bound to this specification" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_v6_confirmatory_artifact_written_too_early(tmp_path):
+    """The v6 confirmatory protocol and runbook are due before the v6 gate."""
+    root = _mirror_repo(tmp_path)
+    path = root / "configs" / "research_v6_confirmatory_protocol.json"
+    path.write_text("{}\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("confirmatory chain has not been delivered" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_v6_run_artifact_without_an_authorization(tmp_path):
+    """A v6 run artifact may only exist once the v6 selection authorization exists."""
+    root = _mirror_repo(tmp_path)
+    path = root / "research_state" / "checkpoint_v6.json"
+    path.write_text(json.dumps({"holdout_exposed_count": 0}, indent=2) + "\n", encoding="utf-8")
+    failures = _failures(root)
+    assert any("selection authorization does not" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_retrieval_window_that_opens_before_the_specification(tmp_path):
+    root = _mirror_repo(tmp_path)
+
+    def mutate(spec):
+        spec["universe"]["snapshot_retrieval"]["not_before_utc"] = "2026-10-01T00:00:00Z"
+
+    _rewrite_spec(root, mutate)
+    failures = _failures(root)
+    assert any("retrieval window opens" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_re_timed_retrieval_deadline(tmp_path):
+    root = _mirror_repo(tmp_path)
+
+    def mutate(spec):
+        spec["universe"]["snapshot_retrieval"]["deadline_utc"] = "2026-11-01T00:00:00Z"
+
+    _rewrite_spec(root, mutate)
+    failures = _failures(root)
+    assert any("retrieval window ends" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_reusable_snapshot(tmp_path):
+    root = _mirror_repo(tmp_path)
+
+    def mutate(spec):
+        spec["universe"]["snapshot_retrieval"]["reuse_forbidden"] = False
+
+    _rewrite_spec(root, mutate)
+    failures = _failures(root)
+    assert any("forbid reusing" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_widened_eligibility_block(tmp_path):
+    root = _mirror_repo(tmp_path)
+
+    def mutate(spec):
+        spec["universe"]["eligibility_validation"]["candle_history"]["min_candles"] = 1000
+
+    _rewrite_spec(root, mutate)
+    failures = _failures(root)
+    assert any("eligibility validation" in failure for failure in failures), failures
+
+
+def test_the_verifier_survives_the_v6_expansion_log_entry(tmp_path):
+    """The v6 entry is a pure append: the verifier stays green once it is there."""
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "v_universe_expansion_log.json"
+    log = json.loads(path.read_text(encoding="utf-8"))
+    spec = json.loads((root / "configs" / "research_v6.json").read_text(encoding="utf-8"))
+    body = {
+        "universe_version": "v6",
+        "previous_entry_hash": log["entries"][-1]["entry_hash"],
+        "specification_hash": spec["specification_hash"],
+    }
+    body["entry_hash"] = hashlib.sha256(
+        json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+    log["entries"].append(body)
+    path.write_text(json.dumps(log, indent=2) + "\n", encoding="utf-8")
+    assert _failures(root) == []
 
 
 def test_the_verifier_detects_a_wrong_development_window_bound(tmp_path):
