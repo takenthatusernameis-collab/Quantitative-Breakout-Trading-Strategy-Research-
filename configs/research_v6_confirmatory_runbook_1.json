@@ -70,7 +70,7 @@
     },
     "confirmatory_protocol": {
       "path": "configs/research_v6_confirmatory_protocol.json",
-      "manifest_hash": "56679927091c51c698350357c4e60a033bdff628619606a4f24f3e8bf9f34cef"
+      "manifest_hash": "71f7322f66147cb63f0e05da6f8ff816331fcda8c0829d07a6a3a2b2f5928ad4"
     },
     "selected_configurations_manifest": {
       "path": "research/v6_selected_configurations_manifest.json",
@@ -79,7 +79,7 @@
     },
     "selection_authorization_1": {
       "path": "configs/research_v6_selection_authorization_1.json",
-      "manifest_hash": "7b27784fe52f89c7b6770bb6f53e0f6d452c4df0a1d4222a1cf530d8e3648ce1"
+      "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990"
     },
     "v6_candidate_freeze": {
       "path": "configs/research_v6_candidate_freeze.json",
@@ -132,7 +132,7 @@
         "research/data_manifest_v6.json": "33d51a5470b888383e82cc0ff2d3fcabe32bdfd35884150b439a1732a510f5b1",
         "configs/research_v6_candidate_freeze.json": "c1e32e66670d2fb7f02bf367382788dc0ac17e439a55acb0ead2ac0c9a7b6bdc",
         "configs/research_v6_execution.json": "7080b749ea2cc0523e60391cb9a8a6cbc1284bf05c8d678b07ae32e979ed1923",
-        "configs/research_v6_confirmatory_protocol.json": "c4cfd77fbe4eaeaba469731f76a0e0211fa33e05f599d1c1eb28ec6fa13777bd"
+        "configs/research_v6_confirmatory_protocol.json": "525723996564770712a6ffff8a89954615ce9591a45a8a857362d6fcef5a40e6"
       }
     },
     "decision_rule": {
@@ -542,7 +542,7 @@
     },
     "confirmatory_protocol": {
       "path": "configs/research_v6_confirmatory_protocol.json",
-      "manifest_hash": "56679927091c51c698350357c4e60a033bdff628619606a4f24f3e8bf9f34cef"
+      "manifest_hash": "71f7322f66147cb63f0e05da6f8ff816331fcda8c0829d07a6a3a2b2f5928ad4"
     },
     "selected_configurations_manifest": {
       "path": "research/v6_selected_configurations_manifest.json",
@@ -550,7 +550,7 @@
     },
     "selection_authorization_1": {
       "path": "configs/research_v6_selection_authorization_1.json",
-      "manifest_hash": "7b27784fe52f89c7b6770bb6f53e0f6d452c4df0a1d4222a1cf530d8e3648ce1"
+      "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990"
     },
     "v6_candidate_freeze": {
       "path": "configs/research_v6_candidate_freeze.json",
@@ -603,5 +603,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
   },
-  "manifest_hash": "f2df1defd25aabc87eb5aaa8f81a4ac60609d4f0e73b8d34fcb2d7035d688027"
+  "manifest_hash": "dd95b653b62e55059bec908c07530870418612b6fd841d74a5ab44803dae273b"
 }

@@ -11,6 +11,7 @@
   "design_basis": {
     "brainstorming_item": "BRAIN-026",
     "decision_record": "research_state/brainstorming_queue.md -> BRAIN-026, recommendation items 1, 5 and 6",
+    "repair_decision_record": "research_state/brainstorming_queue.md -> BRAIN-027, recommendation item 1: the precedence rule of the effective execution protocol is generic -- the newest published v6 execution amendment for the blocks it restates -- so that this authorization is not bound to an amendment that does not exist yet and survives an amendment published after it",
     "prerequisites_delivered": [
       "P1 configs/research_v6.json",
       "P2 research/universe_manifest_v6.json",
@@ -113,9 +114,9 @@
       "execution": {
         "path": "configs/research_v6_execution.json",
         "manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
-        "precedence": "the effective v6 execution protocol is configs/research_v6_execution.json; v6 publishes no execution amendment; the protocol stays on disk, unchanged and visible",
-        "named_amendment_precedence": "no v6 execution amendment exists yet",
-        "consequence_for_the_run": "the effective execution protocol is the frozen protocol; the run gate verifies the published v6 selection authorization's identity instead of a static flag"
+        "precedence": "the effective v6 execution protocol is the newest published v6 execution amendment for the blocks it restates, and configs/research_v6_execution.json for the blocks no amendment restates; every artifact stays on disk, unchanged and visible",
+        "named_amendment_precedence": "no v6 execution amendment is named here: the rule above is generic, so it survives an amendment published after this authorization",
+        "consequence_for_the_run": "the effective execution protocol is resolved amendment-first, from the newest published v6 execution amendment that recomputes its own hash and is bound to the frozen protocol; the run gate verifies the published v6 selection authorization's identity instead of a static flag"
       }
     },
     "data_boundary": {
@@ -308,5 +309,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2, v3, v4 and v5 artifacts."
   },
-  "manifest_hash": "7b27784fe52f89c7b6770bb6f53e0f6d452c4df0a1d4222a1cf530d8e3648ce1"
+  "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990"
 }

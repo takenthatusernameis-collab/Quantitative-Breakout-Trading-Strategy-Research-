@@ -18,7 +18,7 @@
     "selected_configurations_manifest_hash": null,
     "selected_configurations_manifest_status": "NOT_YET_PUBLISHED",
     "selection_authorization_path": "configs/research_v6_selection_authorization_1.json",
-    "selection_authorization_manifest_hash": "7b27784fe52f89c7b6770bb6f53e0f6d452c4df0a1d4222a1cf530d8e3648ce1",
+    "selection_authorization_manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
     "in_scope_assets": 7,
     "in_scope_assets_list": [
       "FETUSDT",
@@ -273,7 +273,7 @@
   "supersedes": {
     "protocol_version": "v6",
     "selection_authorization_path": "configs/research_v6_selection_authorization_1.json",
-    "selection_authorization_manifest_hash": "7b27784fe52f89c7b6770bb6f53e0f6d452c4df0a1d4222a1cf530d8e3648ce1",
+    "selection_authorization_manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
     "reason": "The v6 selection run selects at most one configuration per asset of the frozen v6 candidate set. The confirmatory protocol evaluates exactly the published candidates on the v6 confirmatory window; the selection run remains the preceding, immutable step.",
     "v1_holdout_never_reused": true,
     "v2_v3_v4_v5_confirmatory_window_never_read": true
@@ -305,7 +305,7 @@
     },
     "v6_selection_authorization_1": {
       "path": "configs/research_v6_selection_authorization_1.json",
-      "manifest_hash": "7b27784fe52f89c7b6770bb6f53e0f6d452c4df0a1d4222a1cf530d8e3648ce1"
+      "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990"
     }
   },
   "durability": {
@@ -326,5 +326,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
   },
-  "manifest_hash": "56679927091c51c698350357c4e60a033bdff628619606a4f24f3e8bf9f34cef"
+  "manifest_hash": "71f7322f66147cb63f0e05da6f8ff816331fcda8c0829d07a6a3a2b2f5928ad4"
 }

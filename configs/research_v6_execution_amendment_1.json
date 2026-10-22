@@ -1,0 +1,93 @@
+{
+  "artifact": "v6_execution_amendment_1",
+  "artifact_version": 1,
+  "amendment_status": "PUBLISHED_CORRECTION",
+  "protocol_version": "v6",
+  "universe_version": "v6",
+  "created_utc": "2026-10-22T12:52:00Z",
+  "amends": {
+    "file": "configs/research_v6_execution.json",
+    "manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
+    "sha256": "7080b749ea2cc0523e60391cb9a8a6cbc1284bf05c8d678b07ae32e979ed1923",
+    "rule": "the v6 execution protocol is hash-bound and is not edited in place; this amendment supplies the effective execution-authorization block"
+  },
+  "problem": {
+    "affected_artifact_path": "configs/research_v6_execution.json",
+    "affected_artifact_manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
+    "statement": "the frozen v6 execution protocol records execution_authorization.selection_authorization_present = false. That was true at its publication instant, when the v6 selection authorization did not exist, and it is stale now: the v6 selection authorization has been published. The flag is used in two places and both are wrong. The repository verifier scripts/verify_v6_execution.py refuses a published selection authorization, so it enforces a world state that has changed and a corrected effective rule would be refused. And the run gate, which reads the effective execution protocol, would resolve the block by the static flag and refuse the authorized run, never verifying that the authorization exists at all.",
+    "repair": "the protocol is hash-bound and is not edited in place; the effective execution-authorization block is recorded by this amendment, and the run gate verifies the published selection authorization's identity instead of a static flag",
+    "historical_statement": "the frozen protocol's execution_authorization.selection_authorization_present = false records the state of the chain at its publication instant. That block stays on disk, unchanged and visible.",
+    "historical_selection_authorization_present": false
+  },
+  "precedence": {
+    "rule": "the effective v6 execution protocol is the newest published v6 execution amendment for the blocks it restates, and configs/research_v6_execution.json for the blocks no amendment restates; every artifact stays on disk, unchanged and visible",
+    "resolution_rule": "a verifier or a run gate that reads the v6 evaluation scope, the benchmark rule, the inherited rules or the execution authorization resolves them through the newest published v6 execution amendment when it is present and verified, and fails closed when it is absent, unreadable, or does not recompute its own hash",
+    "superseded": [
+      "execution_authorization"
+    ],
+    "unchanged": [
+      "authorization.execution_authorized",
+      "authorization.campaign_authorized",
+      "authorization.selection_authorized",
+      "authorization.confirmatory_authorized",
+      "evaluation_scope",
+      "candidate_freeze_and_confirmatory_window",
+      "benchmark_rule",
+      "code_hash_constraint",
+      "inherited_rules",
+      "deviation_disclosure",
+      "resource_and_attempt_bounds",
+      "v6_result_layout",
+      "supersedes"
+    ],
+    "protocol_own_authority_is_unchanged": "the frozen protocol's own authorization block records what the protocol itself authorizes, and it authorizes nothing: the single bounded v6 selection run is authorized by the v6 selection authorization named below, and by nothing else"
+  },
+  "execution_authorization": {
+    "candle_fetch_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "the v6 execution protocol and this amendment record the benchmark rule, the inherited rules and the data-manifest identity. They authorize no run, no evaluation, no candle fetch and no confirmatory-window read.",
+    "second_run_authorized": false,
+    "selection_authorization_present": true,
+    "selection_authorization_path": "configs/research_v6_selection_authorization_1.json",
+    "selection_authorization_manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
+    "selection_authorization_sha256": "14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b",
+    "selection_authorization_run_id": "v6-selection-20261022",
+    "selection_authorization_campaign_id": "v6-campaign",
+    "selection_authorization_scope": "exactly one bounded v6 selection grid run over the frozen v6 candidate set, on development data only, under the unchanged v1 selection rule, writing only to the v6 paths",
+    "run_gate_rule": "the run gate verifies the named selection authorization: the file must exist, its manifest hash must recompute, and both the manifest hash and the file digest must equal the ones recorded here; the gate then validates the authorization against the frozen scope, the unchanged v1 selection rule and the current source tree",
+    "historical_statement": "the frozen protocol's selection_authorization_present = false records the state of the chain at its publication instant; the effective state of the chain is the one this block records"
+  },
+  "commit_before_run": "this amendment is committed to the repository before the authorized run starts; the run gate resolves the effective execution-authorization block from the committed tree, and a run that starts while this amendment is uncommitted, unreadable or does not recompute its own hash is refused",
+  "related_artifacts": {
+    "v6_execution_protocol": {
+      "manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
+      "path": "configs/research_v6_execution.json"
+    },
+    "v6_selection_authorization": {
+      "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
+      "path": "configs/research_v6_selection_authorization_1.json"
+    },
+    "v6_specification": {
+      "path": "configs/research_v6.json",
+      "specification_hash": "4a07911a1e0a79e0489e0ff638526ffeef2f2d217696e80308c77b440dbeac9c"
+    }
+  },
+  "verification": {
+    "verifier_script": "scripts/verify_v6_execution.py",
+    "tests_module": "tests/test_v6_execution_amendment_1.py",
+    "verify_command": "python3 scripts/verify_v6_execution.py",
+    "shared_resolution_helper": "scripts/v6_universe_rules.py:resolve_effective_v6_execution_protocol",
+    "run_gate": "src/v6_campaign/scope.py (not yet created)"
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ],
+    "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2, v3, v4 and v5 artifacts."
+  },
+  "manifest_hash": "25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af"
+}

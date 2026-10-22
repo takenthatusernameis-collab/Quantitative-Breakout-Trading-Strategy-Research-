@@ -27,7 +27,13 @@ reads a candle and never runs a grid. It checks:
 5. the code-hash constraint places the v6 execution path outside the hashed
    set and records the authorized v1 code hash and the canonical tree digest,
    both recomputed;
-6. the execution authorization authorizes nothing;
+6. the **effective** execution authorization authorizes nothing, and the one
+   statement it makes about the world -- that the v6 selection authorization is
+   published -- is recomputed from the repository instead of being read off the
+   frozen protocol's static flag. The effective block is resolved amendment
+   first, the frozen protocol second, by the same shared helper the future run
+   gate calls, and the frozen protocol's historical statement stays on disk
+   unchanged;
 7. the deviation disclosure records that v6 has no prior deviation to
    disclose;
 8. the ``supersedes`` chain names the v5 execution protocol and its two
@@ -58,10 +64,14 @@ if str(REPO_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from v6_universe_rules import (  # noqa: E402
+    V6RuleError,
     canonical_source_digest,
     compute_manifest_hash,
     read_json,
+    resolve_effective_v6_execution_protocol,
     sha256_file,
+    verify_effective_v6_selection_authorization,
+    verify_v6_historical_execution_authorization,
 )
 
 PROTOCOL_RELATIVE = "configs/research_v6_execution.json"
@@ -445,7 +455,42 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             )
 
     # 6. the execution authorization authorizes nothing ----------------------
-    execution_authorization = protocol.get("execution_authorization") or {}
+    # The **effective** execution-authorization block is resolved amendment
+    # first, the frozen protocol second, by the shared helper the future run
+    # gate calls. The frozen protocol's block recorded the state of the chain
+    # at its publication instant; the amendment supplies the effective one.
+    effective: Dict[str, Any] = {}
+    resolved = True
+    try:
+        effective = resolve_effective_v6_execution_protocol(root)
+    except V6RuleError as error:
+        fail(str(error))
+        resolved = False
+    execution_authorization = effective.get("execution_authorization") or {}
+    computed["effective_execution_authorization_source"] = effective.get(
+        "_amendment_path"
+    ) or PROTOCOL_RELATIVE
+    if resolved:
+        for flag in (
+            "execution_authorized",
+            "grid_run_authorized",
+            "candle_fetch_authorized",
+            "confirmatory_evaluation_authorized",
+            "second_run_authorized",
+        ):
+            if execution_authorization.get(flag) is not False:
+                fail(f"the execution authorization does not record {flag} as false")
+        # The one statement of the block that is about the world and not about
+        # the protocol's own authority: the published selection authorization.
+        # It is recomputed from the repository, not read off a static flag.
+        try:
+            computed.update(verify_effective_v6_selection_authorization(root, effective))
+        except V6RuleError as error:
+            fail(str(error))
+    # The frozen protocol's own authority flags, on disk: the protocol
+    # authorizes nothing in its own right, and the amendment does not change
+    # that.
+    frozen_block = protocol.get("execution_authorization") or {}
     for flag in (
         "execution_authorized",
         "grid_run_authorized",
@@ -453,10 +498,13 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "confirmatory_evaluation_authorized",
         "second_run_authorized",
     ):
-        if execution_authorization.get(flag) is not False:
-            fail(f"the execution authorization does not record {flag} as false")
-    if execution_authorization.get("selection_authorization_present") is not False:
-        fail("the execution authorization records a published selection authorization")
+        if frozen_block.get(flag) is not False:
+            fail(f"the frozen v6 execution protocol does not record {flag} as false")
+    # The historical statement stays on disk, unchanged and visible.
+    try:
+        computed.update(verify_v6_historical_execution_authorization(root))
+    except V6RuleError as error:
+        fail(str(error))
     for flag in (
         "execution_authorized",
         "campaign_authorized",

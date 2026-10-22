@@ -18,7 +18,8 @@ Every fact the artifact records is recomputed from the repository:
 * the candidate set from the freeze and re-derived from the v6 universe manifest;
 * the effective rules from the v6 specification itself -- the membership rule
   of the holdout block, the overlap rule of the phase gates, and the effective
-  execution protocol (v6 publishes no amendments yet);
+  execution protocol, which the frozen protocol owns for every block no
+  published v6 execution amendment restates;
 * the selection rule from the unchanged v1 ``selection`` block;
 * the code identity from the source tree, under the canonical digest rule of
   BRAIN-009;
@@ -291,15 +292,20 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "path": EXECUTION_RELATIVE,
         "manifest_hash": execution.get("manifest_hash"),
         "precedence": (
-            "the effective v6 execution protocol is configs/research_v6_execution."
-            "json; v6 publishes no execution amendment; the protocol stays on "
-            "disk, unchanged and visible"
+            "the effective v6 execution protocol is the newest published v6 "
+            "execution amendment for the blocks it restates, and "
+            "configs/research_v6_execution.json for the blocks no amendment "
+            "restates; every artifact stays on disk, unchanged and visible"
         ),
-        "named_amendment_precedence": "no v6 execution amendment exists yet",
+        "named_amendment_precedence": (
+            "no v6 execution amendment is named here: the rule above is generic, so it "
+            "survives an amendment published after this authorization"
+        ),
         "consequence_for_the_run": (
-            "the effective execution protocol is the frozen protocol; the run "
-            "gate verifies the published v6 selection authorization's identity "
-            "instead of a static flag"
+            "the effective execution protocol is resolved amendment-first, from the "
+            "newest published v6 execution amendment that recomputes its own hash and "
+            "is bound to the frozen protocol; the run gate verifies the published v6 "
+            "selection authorization's identity instead of a static flag"
         ),
     }
 
@@ -333,6 +339,11 @@ def build(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             "brainstorming_item": "BRAIN-026",
             "decision_record": "research_state/brainstorming_queue.md -> BRAIN-026, "
             "recommendation items 1, 5 and 6",
+            "repair_decision_record": "research_state/brainstorming_queue.md -> BRAIN-027, "
+            "recommendation item 1: the precedence rule of the effective execution protocol is "
+            "generic -- the newest published v6 execution amendment for the blocks it restates "
+            "-- so that this authorization is not bound to an amendment that does not exist yet "
+            "and survives an amendment published after it",
             "prerequisites_delivered": [
                 "P1 configs/research_v6.json",
                 "P2 research/universe_manifest_v6.json",

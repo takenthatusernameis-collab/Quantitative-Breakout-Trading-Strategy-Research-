@@ -87,6 +87,30 @@ DATA_MANIFEST_HASH_EXCLUDED_KEYS = ("manifest_hash", "snapshot_identity.data_man
 
 HOUR_MS = 60 * 60 * 1000
 
+#: The frozen v6 execution protocol, the amendment that supersedes the one
+#: block of it whose recorded world state went stale, and the selection
+#: authorization whose publication made it stale.
+V6_EXECUTION_RELATIVE = "configs/research_v6_execution.json"
+V6_EXECUTION_AMENDMENT_1_RELATIVE = "configs/research_v6_execution_amendment_1.json"
+V6_SELECTION_AUTHORIZATION_RELATIVE = "configs/research_v6_selection_authorization_1.json"
+
+#: The blocks a v6 execution amendment may restate.
+V6_EXECUTION_AMENDMENT_BLOCKS: Tuple[str, ...] = ("execution_authorization",)
+
+#: The authority flags the effective execution-authorization block keeps
+#: false: the protocol authorizes no run of any kind.
+V6_EXECUTION_AUTHORITY_FLAGS: Tuple[str, ...] = (
+    "execution_authorized",
+    "grid_run_authorized",
+    "candle_fetch_authorized",
+    "confirmatory_evaluation_authorized",
+    "second_run_authorized",
+)
+
+
+class V6RuleError(RuntimeError):
+    """A v6 rule could not be resolved, so the consumer must fail closed."""
+
 
 # ---------------------------------------------------------------------------
 # hashing and time helpers
@@ -184,6 +208,222 @@ def authorized_code_hash(repo_root: Path = REPO_ROOT) -> Optional[str]:
         return None
     value = document.get("code_hash")
     return str(value) if value else None
+
+
+# ---------------------------------------------------------------------------
+# the effective v6 execution protocol
+# ---------------------------------------------------------------------------
+
+
+def resolve_effective_v6_execution_protocol(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
+    """The effective v6 execution protocol: the amendment first, the protocol second.
+
+    ``configs/research_v6_execution.json`` is hash-bound and is not edited in
+    place. Its ``execution_authorization`` block records
+    ``selection_authorization_present = false``, which was true at the
+    protocol's publication instant -- the v6 selection authorization did not
+    exist yet -- and is stale now: the v6 selection authorization has been
+    published. ``configs/research_v6_execution_amendment_1.json`` records the
+    effective block and wins over the protocol for the blocks it restates.
+
+    This is the **one** resolution: the repository verifier and the future
+    ``src/v6_campaign`` run gate both call it, so the gate cannot resolve the
+    effective rule by a different rule than the verifier does. It fails closed:
+    when the amendment is absent, unreadable, does not recompute its own hash,
+    does not name the current protocol or does not restate the block it claims
+    to supersede, it raises :class:`V6RuleError` instead of falling back to the
+    stale block.
+    """
+    root = Path(repo_root)
+    protocol_path = root / V6_EXECUTION_RELATIVE
+    if not protocol_path.exists():
+        raise V6RuleError(
+            f"the v6 execution protocol {V6_EXECUTION_RELATIVE} does not exist"
+        )
+    protocol = read_json(protocol_path)
+    protocol_excluded = tuple(
+        (protocol.get("hashing") or {}).get("manifest_hash_excluded_keys")
+        or MANIFEST_HASH_EXCLUDED_KEYS
+    )
+    protocol_hash = compute_manifest_hash(protocol, protocol_excluded)
+    if protocol.get("manifest_hash") != protocol_hash:
+        raise V6RuleError(
+            "the v6 execution protocol does not recompute its own manifest_hash: recorded "
+            f"{protocol.get('manifest_hash')}, recomputed {protocol_hash}"
+        )
+
+    amendment_path = root / V6_EXECUTION_AMENDMENT_1_RELATIVE
+    if not amendment_path.exists():
+        raise V6RuleError(
+            "the v6 execution amendment 1 does not exist, so the effective "
+            "execution-authorization block cannot be resolved and the chain fails closed"
+        )
+    try:
+        amendment = read_json(amendment_path)
+    except (OSError, ValueError) as error:
+        raise V6RuleError(
+            f"the v6 execution amendment 1 cannot be read: {error}"
+        ) from error
+    amendment_excluded = tuple(
+        (amendment.get("hashing") or {}).get("manifest_hash_excluded_keys")
+        or MANIFEST_HASH_EXCLUDED_KEYS
+    )
+    amendment_hash = compute_manifest_hash(amendment, amendment_excluded)
+    if amendment.get("manifest_hash") != amendment_hash:
+        raise V6RuleError(
+            "the v6 execution amendment 1 does not recompute its own manifest_hash: recorded "
+            f"{amendment.get('manifest_hash')}, recomputed {amendment_hash}"
+        )
+    amends = amendment.get("amends") or {}
+    if amends.get("file") != V6_EXECUTION_RELATIVE:
+        raise V6RuleError(
+            "the v6 execution amendment 1 does not name the v6 execution protocol"
+        )
+    if amends.get("manifest_hash") != protocol_hash:
+        raise V6RuleError(
+            "the v6 execution amendment 1 is not bound to the current v6 execution protocol"
+        )
+    if amends.get("sha256") != sha256_file(protocol_path):
+        raise V6RuleError(
+            "the v6 execution amendment 1 records a stale digest of the v6 execution protocol"
+        )
+    superseded = tuple((amendment.get("precedence") or {}).get("superseded") or ())
+    if not superseded:
+        raise V6RuleError(
+            "the v6 execution amendment 1 names no superseded block of the v6 execution protocol"
+        )
+    for block in superseded:
+        if block not in amendment:
+            raise V6RuleError(
+                f"the v6 execution amendment 1 does not restate the block {block!r} it claims "
+                "to supersede"
+            )
+    effective = json.loads(json.dumps(protocol))
+    for block in superseded:
+        effective[block] = amendment[block]
+    for block in V6_EXECUTION_AMENDMENT_BLOCKS:
+        if block in amendment:
+            effective[block] = amendment[block]
+    effective["_effective_blocks_from_amendment"] = list(superseded)
+    effective["_amendment_manifest_hash"] = amendment_hash
+    effective["_amendment_path"] = V6_EXECUTION_AMENDMENT_1_RELATIVE
+    return effective
+
+
+def verify_v6_historical_execution_authorization(
+    repo_root: Path = REPO_ROOT,
+) -> Dict[str, Any]:
+    """The frozen protocol's historical statement must stay on disk unchanged.
+
+    The protocol's ``selection_authorization_present = false`` records the state
+    of the chain at its publication instant. It stays on disk, visible and
+    unchanged: the effective state is the amendment's. The expected historical
+    value is not a constant: it is the value the amendment itself records.
+    """
+    root = Path(repo_root)
+    try:
+        amendment = read_json(root / V6_EXECUTION_AMENDMENT_1_RELATIVE)
+        protocol = read_json(root / V6_EXECUTION_RELATIVE)
+    except (OSError, ValueError) as error:
+        raise V6RuleError(
+            f"the v6 execution artifacts cannot be read: {error}"
+        ) from error
+    historical = (amendment.get("problem") or {}).get(
+        "historical_selection_authorization_present"
+    )
+    if historical is not False:
+        raise V6RuleError(
+            "the v6 execution amendment 1 does not record the historical state it preserves"
+        )
+    block = protocol.get("execution_authorization") or {}
+    if block.get("selection_authorization_present") is not historical:
+        raise V6RuleError(
+            "the frozen v6 execution protocol no longer records the historical state of the chain"
+        )
+    return {"historical_selection_authorization_present": historical}
+
+
+def verify_effective_v6_selection_authorization(
+    repo_root: Path = REPO_ROOT,
+    effective: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Check the effective execution-authorization block against the repository.
+
+    The block's one statement about the world -- ``selection_authorization_present``
+    -- is recomputed here: the named selection authorization must exist, must
+    recompute its own manifest hash, and must be the artifact whose identity the
+    block names. The five authority flags stay false, because the protocol
+    authorizes no run of any kind: the single bounded v6 selection run is
+    authorized by the selection authorization and by nothing else.
+
+    Raises :class:`V6RuleError` when the block and the repository disagree.
+    """
+    root = Path(repo_root)
+    if effective is None:
+        effective = resolve_effective_v6_execution_protocol(root)
+    block = effective.get("execution_authorization") or {}
+    for flag in V6_EXECUTION_AUTHORITY_FLAGS:
+        if block.get(flag) is not False:
+            raise V6RuleError(
+                f"the effective execution authorization does not record {flag} as false"
+            )
+    if block.get("selection_authorization_present") is not True:
+        raise V6RuleError(
+            "the effective execution authorization does not record the published v6 selection "
+            "authorization; the single bounded run is gated on that artifact"
+        )
+    recorded_path = str(block.get("selection_authorization_path") or "")
+    if recorded_path != V6_SELECTION_AUTHORIZATION_RELATIVE:
+        raise V6RuleError(
+            "the effective execution authorization names another selection authorization"
+        )
+    path = root / recorded_path
+    if not path.exists():
+        raise V6RuleError(
+            "the v6 selection authorization named by the effective execution authorization does "
+            "not exist"
+        )
+    published = read_json(path)
+    published_excluded = tuple(
+        (published.get("hashing") or {}).get("manifest_hash_excluded_keys")
+        or MANIFEST_HASH_EXCLUDED_KEYS
+    )
+    published_hash = compute_manifest_hash(published, published_excluded)
+    if published.get("manifest_hash") != published_hash:
+        raise V6RuleError(
+            "the v6 selection authorization does not recompute its own manifest_hash"
+        )
+    if block.get("selection_authorization_manifest_hash") != published_hash:
+        raise V6RuleError(
+            "the effective execution authorization names another manifest hash for the v6 "
+            "selection authorization"
+        )
+    published_digest = sha256_file(path)
+    if block.get("selection_authorization_sha256") != published_digest:
+        raise V6RuleError(
+            "the effective execution authorization names another file digest for the v6 "
+            "selection authorization"
+        )
+    run = published.get("authorized_run") or {}
+    if run.get("authorized") is not True:
+        raise V6RuleError("the v6 selection authorization does not authorize a run")
+    if block.get("selection_authorization_run_id") != run.get("run_id"):
+        raise V6RuleError(
+            "the effective execution authorization names another run for the v6 selection "
+            "authorization"
+        )
+    if block.get("selection_authorization_campaign_id") != run.get("campaign_id"):
+        raise V6RuleError(
+            "the effective execution authorization names another campaign for the v6 selection "
+            "authorization"
+        )
+    return {
+        "selection_authorization_path": recorded_path,
+        "selection_authorization_manifest_hash": published_hash,
+        "selection_authorization_sha256": published_digest,
+        "selection_authorization_run_id": run.get("run_id"),
+        "selection_authorization_campaign_id": run.get("campaign_id"),
+    }
 
 
 # ---------------------------------------------------------------------------
