@@ -20,6 +20,16 @@ chain is append-only and its history is verifiable. This verifier checks that
 * every entry agrees with the current, hash-bound manifests of its own
   version, follows the frozen floor rule and respects the bounded cadence.
 
+**Scope.** The log is append-only and every universe version appends exactly
+one entry, so this verifier owns the **v3, v4 and v5 prefix** of the chain and
+tolerates the entries that later universe versions append after it. It
+therefore requires that the chain *begins* with the v3, v4 and v5 entries --
+in that order, one entry per version -- and that every entry, including the
+later ones, hashes to its recorded digest and chains onto its predecessor. This
+is the same prefix rule ``scripts/verify_research_v6_spec.py`` applies to the
+historical ``log_state_at_preregistration`` block, and the same rule the v3
+verifier has always applied.
+
 The verifier never writes and never contacts a provider.
 """
 from __future__ import annotations
@@ -39,7 +49,10 @@ LOG_RELATIVE = "research/v_universe_expansion_log.json"
 SPEC_V3_RELATIVE = "configs/research_v3.json"
 SPEC_V5_RELATIVE = "configs/research_v5.json"
 
-#: The versions the log must hold, in chain order.
+#: The versions this verifier owns, in chain order. The log is append-only and
+#: a later universe version appends its own entry after the v5 entry, so this
+#: verifier owns the *prefix* of the chain and tolerates the entries that
+#: follow it.
 EXPECTED_VERSIONS = ("v3", "v4", "v5")
 
 #: The version the chain starts with: the v1 and v2 universes predate the log.
@@ -84,8 +97,27 @@ def parse_iso_utc(value: str) -> datetime:
     return datetime.fromisoformat(text).astimezone(timezone.utc)
 
 
+def _version_number(version: Any) -> Optional[int]:
+    """The numeric suffix of a universe version label (``v6`` -> ``6``)."""
+    text = str(version or "")
+    if len(text) < 2 or text[0] != "v" or not text[1:].isdigit():
+        return None
+    return int(text[1:])
+
+
 def read_json(path: Path) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _read_json_or_none(path: Path) -> Optional[Any]:
+    """The parsed document, or ``None`` when the file is missing or unreadable.
+
+    A verifier reports a failure; it never raises on a malformed artifact.
+    """
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
 
 
 def compute_entry_hash(entry: Dict[str, Any]) -> str:
@@ -119,8 +151,11 @@ def _check_entry_against_artifacts(repo_root: Path,
         if not (repo_root / paths[key]).exists():
             failures.append(f"missing artifact: {paths[key]}")
             return
-    universe = read_json(repo_root / paths["universe"])
-    data = read_json(repo_root / paths["data"])
+    universe = _read_json_or_none(repo_root / paths["universe"])
+    data = _read_json_or_none(repo_root / paths["data"])
+    if universe is None or data is None:
+        failures.append(f"the {version} artifacts are missing or unreadable")
+        return
 
     manifest = entry.get("manifest") or {}
     if manifest.get("path") != paths["universe"]:
@@ -173,23 +208,25 @@ def _check_entry_against_artifacts(repo_root: Path,
     # The prior floor is recomputed from the source manifest.
     prior = entry.get("prior_universe_floor") or {}
     prior_relative = str(prior.get("source_manifest_path") or "")
-    prior_path = repo_root / prior_relative
-    if not prior_path.exists():
-        failures.append(f"the {version} entry names a missing source manifest")
+    if not prior_relative:
+        failures.append(f"the {version} entry names no source manifest for its prior floor")
     else:
-        prior_universe = read_json(prior_path)
-        prior_assets = prior_universe.get("eligible_assets") or []
-        if prior_assets:
-            floor_asset = min(prior_assets, key=lambda item: float(item.get("market_cap_usd") or 0))
-            if prior.get("floor_market_cap_usd") != floor_asset.get("market_cap_usd"):
-                failures.append(
-                    f"the {version} entry's prior floor is not the minimum market "
-                    f"capitalization of {prior_relative}"
-                )
-            if prior.get("source_manifest_hash") != prior_universe.get("manifest_hash"):
-                failures.append(
-                    f"the {version} entry's prior floor names another source manifest"
-                )
+        prior_universe = _read_json_or_none(repo_root / prior_relative)
+        if prior_universe is None:
+            failures.append(f"the {version} entry names a missing source manifest")
+        else:
+            prior_assets = prior_universe.get("eligible_assets") or []
+            if prior_assets:
+                floor_asset = min(prior_assets, key=lambda item: float(item.get("market_cap_usd") or 0))
+                if prior.get("floor_market_cap_usd") != floor_asset.get("market_cap_usd"):
+                    failures.append(
+                        f"the {version} entry's prior floor is not the minimum market "
+                        f"capitalization of {prior_relative}"
+                    )
+                if prior.get("source_manifest_hash") != prior_universe.get("manifest_hash"):
+                    failures.append(
+                        f"the {version} entry's prior floor names another source manifest"
+                    )
 
     # The new floor is the lowest-ranked candidate of the version.
     caps = [
@@ -216,8 +253,12 @@ def _check_entry_against_artifacts(repo_root: Path,
     if raw_path is None or not raw_path.exists():
         failures.append(f"the {version} entry names a missing raw market-cap response")
     else:
-        rows = json.loads(raw_path.read_text(encoding="utf-8"))
-        if version in DERIVED_VERSIONS and snapshot.get("ranking_depth") != len(rows):
+        rows = _read_json_or_none(raw_path)
+        if not isinstance(rows, list):
+            failures.append(
+                f"the raw market-cap response {raw_relative} is not a list of rows"
+            )
+        elif version in DERIVED_VERSIONS and snapshot.get("ranking_depth") != len(rows):
             failures.append(
                 f"the {version} entry's ranking depth is not the row count of {raw_relative}"
             )
@@ -280,10 +321,11 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         failures.append("the log holds no entry")
     if int(log.get("entry_count") or 0) != len(entries):
         failures.append("the recorded entry count does not match the number of entries")
-    if len(entries) != len(EXPECTED_VERSIONS):
+    if len(entries) < len(EXPECTED_VERSIONS):
         failures.append(
-            f"the log holds {len(entries)} entries; the chain holds "
-            f"{', '.join(EXPECTED_VERSIONS)}"
+            f"the log holds {len(entries)} entries; it must hold at least the "
+            f"{len(EXPECTED_VERSIONS)} entries of this scope "
+            f"({', '.join(EXPECTED_VERSIONS)})"
         )
 
     versions: List[str] = []
@@ -303,9 +345,21 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             f"the chain does not start with the {GENESIS_VERSION} entry; it starts with "
             f"{versions[0]!r}"
         )
-    if versions != list(EXPECTED_VERSIONS):
+    if versions[: len(EXPECTED_VERSIONS)] != list(EXPECTED_VERSIONS):
         failures.append(
-            f"the chain holds {versions}; the expected chain is {list(EXPECTED_VERSIONS)}"
+            f"the chain begins with {versions[: len(EXPECTED_VERSIONS)]}; the expected "
+            f"prefix is {list(EXPECTED_VERSIONS)}"
+        )
+    # The chain is in version order: every universe version appends its entry
+    # after the entry of the version before it.
+    numbers = [_version_number(version) for version in versions]
+    if any(number is None for number in numbers):
+        failures.append(
+            "the chain holds an entry whose universe version is not of the form v<n>"
+        )
+    elif numbers != sorted(numbers) or len(set(numbers)) != len(numbers):
+        failures.append(
+            f"the chain is not in universe-version order: {versions}"
         )
 
     # The v3 entry must be the entry the v3 producer derives.
@@ -359,6 +413,14 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "the log is append-only: the v3 producer refuses to rebuild it now that it holds "
         "later versions, and the v5 producer refuses to rewrite a recorded entry"
     )
+    later = versions[len(EXPECTED_VERSIONS):]
+    if later:
+        environment_facts.append(
+            f"the chain holds {len(later)} entry/entries after this verifier's scope "
+            f"({', '.join(later)}); they are appended by later universe versions, are "
+            "verified in depth by their own version's verifier, and are checked here only "
+            "for their hash, their chain link and their version order"
+        )
 
     return {
         "ok": not failures,

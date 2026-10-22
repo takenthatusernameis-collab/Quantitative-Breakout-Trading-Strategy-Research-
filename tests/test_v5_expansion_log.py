@@ -11,7 +11,7 @@ These tests prove that
 
 * the log lives at the path the specifications name and records the frozen log
   mode;
-* the chain holds exactly the v3, v4 and v5 entries, every entry hash
+* the chain **begins with** the v3, v4 and v5 entries, every entry hash
   recomputes and every entry chains to its predecessor;
 * the **v3 entry is byte-identical to the entry the v3 producer derives**, so
   the append did not rewrite the history;
@@ -23,6 +23,12 @@ These tests prove that
 * the log is append-only: the v3 producer refuses to rebuild it, the v5
   producer refuses to rewrite a recorded entry, and the verifier is not
   vacuous.
+
+The log is append-only and every universe version appends exactly one entry, so
+the v5 verifier owns the **v3, v4 and v5 prefix** of the chain and tolerates
+the entries a later universe version appends after it. The tests below pin
+both directions of that rule: a valid later append is accepted, and a missing,
+moved or rewritten scope entry is refused.
 """
 from __future__ import annotations
 
@@ -132,11 +138,34 @@ def _entry(version: str) -> Dict[str, Any]:
     return entries[0]
 
 
+def _synthetic_entry(version: str, previous_entry_hash: str) -> Dict[str, Any]:
+    """A minimal later entry that carries a correct hash and chain link."""
+    entry: Dict[str, Any] = {
+        "universe_version": version,
+        "created_utc": "2026-10-30T00:00:00Z",
+        "previous_entry_hash": previous_entry_hash,
+    }
+    body = json.dumps(entry, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    entry["entry_hash"] = hashlib.sha256(body.encode("utf-8")).hexdigest()
+    return entry
+
+
+def _append_synthetic_entry(log: Dict[str, Any], version: str) -> Dict[str, Any]:
+    entry = _synthetic_entry(version, log["entries"][-1]["entry_hash"])
+    log["entries"].append(entry)
+    log["entry_count"] = len(log["entries"])
+    return entry
+
+
 def test_verifier_reports_no_failures() -> None:
     report = verifier.verify(REPO_ROOT)
     assert report["failures"] == []
     assert report["ok"] is True
-    assert report["entry_count"] == 3
+    log = _load(LOG)
+    assert report["entry_count"] == len(log["entries"])
+    assert report["universe_versions"] == [
+        entry["universe_version"] for entry in log["entries"]
+    ]
 
 
 def test_the_log_lives_at_the_specified_path_in_the_frozen_mode() -> None:
@@ -148,11 +177,21 @@ def test_the_log_lives_at_the_specified_path_in_the_frozen_mode() -> None:
     assert log["log_mode"] == "append_only_hash_chain"
 
 
-def test_the_chain_holds_the_v3_v4_and_v5_entries() -> None:
+def test_the_chain_begins_with_the_v3_v4_and_v5_entries() -> None:
     log = _load(LOG)
     versions = [entry["universe_version"] for entry in log["entries"]]
-    assert versions == list(EXPECTED_VERSIONS)
-    assert log["entry_count"] == len(log["entries"]) == 3
+    assert versions[: len(EXPECTED_VERSIONS)] == list(EXPECTED_VERSIONS)
+    assert log["entry_count"] == len(log["entries"])
+
+
+def test_the_entries_after_the_scope_are_later_universe_versions() -> None:
+    log = _load(LOG)
+    versions = [entry["universe_version"] for entry in log["entries"]]
+    later = versions[len(EXPECTED_VERSIONS):]
+    assert later, "the log holds at least one entry after the v5 scope"
+    assert not set(later) & set(EXPECTED_VERSIONS)
+    numbers = [int(version[1:]) for version in versions]
+    assert numbers == sorted(numbers)
 
 
 def test_every_entry_hash_recomputes_and_chains() -> None:
@@ -345,6 +384,87 @@ def test_verifier_detects_a_missing_entry(tmp_path: Path) -> None:
     log = json.loads(path.read_text(encoding="utf-8"))
     log["entries"] = [entry for entry in log["entries"] if entry["universe_version"] != "v4"]
     log["entry_count"] = len(log["entries"])
+    _write_log(root, log)
+    failures = _failures(root)
+    assert failures, failures
+
+
+def test_the_verifier_accepts_the_entry_a_later_version_appends(tmp_path: Path) -> None:
+    """The log is append-only: a later universe version appends, it does not replace."""
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "v_universe_expansion_log.json"
+    log = json.loads(path.read_text(encoding="utf-8"))
+    _append_synthetic_entry(log, "v7")
+    _write_log(root, log)
+    report = verifier.verify(root)
+    assert report["failures"] == []
+    assert report["ok"] is True
+    assert report["universe_versions"][-1] == "v7"
+
+
+def test_the_verifier_detects_a_missing_scope_entry(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "v_universe_expansion_log.json"
+    log = json.loads(path.read_text(encoding="utf-8"))
+    log["entries"] = [
+        entry for entry in log["entries"] if entry["universe_version"] != "v5"
+    ]
+    log["entry_count"] = len(log["entries"])
+    _write_log(root, log)
+    failures = _failures(root)
+    assert any("the chain begins with" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_scope_entry_that_is_out_of_order(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "v_universe_expansion_log.json"
+    log = json.loads(path.read_text(encoding="utf-8"))
+    head = log["entries"].pop(1)
+    head["previous_entry_hash"] = log["entries"][0]["entry_hash"]
+    body = {key: value for key, value in head.items() if key != "entry_hash"}
+    head["entry_hash"] = hashlib.sha256(
+        json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode(
+            "utf-8"
+        )
+    ).hexdigest()
+    log["entries"].insert(0, head)
+    log["entry_count"] = len(log["entries"])
+    _write_log(root, log)
+    failures = _failures(root)
+    assert any("the chain begins with" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_chain_that_is_not_in_version_order(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "v_universe_expansion_log.json"
+    log = json.loads(path.read_text(encoding="utf-8"))
+    _append_synthetic_entry(log, "v9")
+    _append_synthetic_entry(log, "v7")
+    _write_log(root, log)
+    failures = _failures(root)
+    assert any("not in universe-version order" in failure for failure in failures), failures
+
+
+def test_the_verifier_detects_a_duplicated_version(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "v_universe_expansion_log.json"
+    log = json.loads(path.read_text(encoding="utf-8"))
+    _append_synthetic_entry(log, "v6")
+    _write_log(root, log)
+    failures = _failures(root)
+    assert any("appears more than once" in failure for failure in failures), failures
+
+
+def test_the_verifier_reports_a_malformed_scope_entry_instead_of_raising(
+    tmp_path: Path,
+) -> None:
+    """A malformed entry is a failure to report, never an exception to raise."""
+    root = _mirror_repo(tmp_path)
+    path = root / "research" / "v_universe_expansion_log.json"
+    log = json.loads(path.read_text(encoding="utf-8"))
+    for entry in log["entries"]:
+        if entry["universe_version"] == "v5":
+            entry["prior_universe_floor"].pop("source_manifest_path", None)
     _write_log(root, log)
     failures = _failures(root)
     assert failures, failures
