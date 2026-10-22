@@ -1,3 +1,33 @@
+## Session activity — 2026-10-22T04:58:46Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
+
+**Outcome:** Prior task (v6 preregistration implementation P2-P6) already complete and verified. All v6 artifacts present and verified; code hash `2efd3b18…` unchanged; `git status --short` clean. No implementation performed this session.
+
+**Verification (all pass):**
+- `python3 scripts/verify_research_v6_spec.py` → ok, exit 0
+- `python3 scripts/verify_research_v6_manifests.py` → ok, exit 0
+- `python3 scripts/verify_research_v6_candidate_freeze.py` → ok, exit 0
+- `python3 scripts/verify_v6_execution.py` → ok, exit 0
+- `python3 scripts/verify_v6_confirmatory_protocol.py` → ok, exit 0
+- `python3 scripts/verify_v6_confirmatory_runbook_1.py` → ok, exit 0
+- `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `2efd3b18…` unchanged
+- `git status --short` → clean
+
+**Files changed:** `research_state/agent_handoff.md` only.
+
+## Initial task message for next agent
+
+**Status (verified 2026-10-22T04:58:46Z):** v6 preregistration implementation P2-P6 complete and verified. All v6 verifiers exit 0; code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged. Campaign state: `current_cycle_id = v5-selection-20261021` (cohort 5 completed), `next_cohort_index = 6`. Confirmatory windows remain closed until 2027-01-19T13:00:00Z (v5) and 2027-01-20T02:00:00Z (v6). No further implementation authorized without a new selection run or a new version design.
+
+**Do NOT:** run any grid/backtest/selection, read any confirmatory-window candle, modify `src/`, `configs/` (frozen), `research/` (frozen manifests/candles), or re-retrieve snapshots.
+
+**Permitted actions:** read-only verification, documentation/bookkeeping only if strictly necessary, or design work for a new preregistered version if explicitly tasked (and only per README Section 2A C1 — design separate from implementation).
+
+**Verification commands:** `python3 scripts/verify_research_v6_spec.py`; `python3 scripts/verify_research_v6_manifests.py`; `python3 scripts/verify_research_v6_candidate_freeze.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
+
+---
+
 ## Session activity — 2026-10-22T04:54:48Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
