@@ -63,6 +63,8 @@ MIRRORED_FILES = (
     "configs/research_v3.json",
     "configs/research_v5.json",
     "configs/research_v6.json",
+    "configs/research_v6_confirmatory_protocol.json",
+    "configs/research_v6_confirmatory_runbook_1.json",
     "configs/research_v2_candidate_freeze.json",
     "configs/research_v3_candidate_freeze.json",
     "configs/research_v4_candidate_freeze.json",
@@ -569,10 +571,22 @@ def test_the_v6_run_artifacts_require_the_selection_authorization():
     assert _load(authorization)["specification_hash"] == _load(SPEC_V6)["specification_hash"]
 
 
-def test_the_v6_confirmatory_chain_is_not_delivered_yet():
-    """The v6 confirmatory protocol and runbook are due before the v6 gate."""
-    for relative in verifier.V6_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST:
-        assert not (REPO_ROOT / relative).exists(), relative
+def test_the_v6_confirmatory_chain_is_bound_to_the_specification():
+    """The v6 confirmatory protocol and runbook are delivered in this stage.
+
+    The v4 and v5 chains omitted them (BRAIN-025); the v6 chain delivers the
+    protocol and the runbook in the same stage as this check, so they must
+    exist and must bind this specification.
+    """
+    v6 = _load(SPEC_V6)
+    for relative, binding in verifier.V6_CONFIRMATORY_ARTIFACTS:
+        path = REPO_ROOT / relative
+        assert path.exists(), relative
+        artifact = _load(path)
+        value = artifact
+        for key in binding.split("."):
+            value = value.get(key) if isinstance(value, dict) else None
+        assert value == v6["specification_hash"], (relative, binding)
 
 
 def test_the_expansion_log_chain_is_intact_and_the_v6_entry_is_a_pure_append():
@@ -856,13 +870,13 @@ def test_the_verifier_detects_a_v6_artifact_written_before_authorization(tmp_pat
     assert any("not bound to this specification" in failure for failure in failures), failures
 
 
-def test_the_verifier_detects_a_v6_confirmatory_artifact_written_too_early(tmp_path):
-    """The v6 confirmatory protocol and runbook are due before the v6 gate."""
+def test_the_verifier_detects_a_v6_confirmatory_artifact_not_bound_to_the_specification(tmp_path):
+    """A confirmatory artifact that exists must bind this specification."""
     root = _mirror_repo(tmp_path)
     path = root / "configs" / "research_v6_confirmatory_protocol.json"
     path.write_text("{}\n", encoding="utf-8")
     failures = _failures(root)
-    assert any("confirmatory chain has not been delivered" in failure for failure in failures), failures
+    assert any("does not bind this specification" in failure for failure in failures), failures
 
 
 def test_the_verifier_detects_a_v6_run_artifact_without_an_authorization(tmp_path):
