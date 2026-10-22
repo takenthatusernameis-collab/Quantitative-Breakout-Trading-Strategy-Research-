@@ -1,4 +1,4 @@
-## Session activity — 2026-10-22T17:16:56Z (this session)
+## Session activity — 2026-10-22T17:17:25Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
 
@@ -12,7 +12,7 @@
 - `python3 scripts/verify_v6_confirmatory_protocol.py` → ok, exit 0; manifest hash `71f7322f66147cb63f0e05da6f8ff816331fcda8c0829d07a6a3a2b2f5928ad4`
 - `python3 scripts/verify_v6_confirmatory_runbook_1.py` → ok, exit 0; manifest hash `dd95b653b62e55059bec908c07530870418612b6fd841d74a5ab44803dae273b`
 - `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `2efd3b18fe3f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged
-- `git status --short` → clean; HEAD `c1aa8d709219eeb6b951f8eb3315b3c9146e71f8`
+- `git status --short` → clean; HEAD `7c5b44a4097532b6b837ba91fe8663d218c422e1`
 
 **Campaign state confirmed from `research_state/continuous_universe_state.json`:** `current_cycle_id = v5-selection-20261021`, `current_cohort.cohort_index = 5` (`completed: true`, 7 assets + 13 excluded), `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z)`, `schema_version = 1`.
 
@@ -20,7 +20,7 @@
 
 ## Initial task message for next agent
 
-**Status (verified 2026-10-22T17:16:56Z):** v6 preregistration P2-P6 complete and verified. All v6 verifiers exit 0; code hash `2efd3b18fe3f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged. Campaign state: `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`. Confirmatory windows closed until 2027-01-19T13:00:00Z (v5) and 2027-01-20T02:00:00Z (v6). No further implementation authorized without a new selection run or new version design.
+**Status (verified 2026-10-22T17:17:25Z):** v6 preregistration P2-P6 complete and verified. All v6 verifiers exit 0; code hash `2efd3b18fe3f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged. Campaign state: `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`. Confirmatory windows closed until 2027-01-19T13:00:00Z (v5) and 2027-01-20T02:00:00Z (v6). No further implementation authorized without a new selection run or new version design.
 
 **Do NOT:** run grid/backtest/selection, read confirmatory-window candle, modify `src/`, `configs/` (frozen), `research/` (frozen), or re-retrieve snapshots.
 
@@ -29,5 +29,3 @@
 **Verification commands:** `python3 scripts/verify_research_v6_spec.py`; `python3 scripts/verify_research_v6_manifests.py`; `python3 scripts/verify_research_v6_candidate_freeze.py`; `python3 scripts/verify_v6_execution.py`; `python3 scripts/verify_v6_confirmatory_protocol.py`; `python3 scripts/verify_v6_confirmatory_runbook_1.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`.
 
 ---
-
-" + (read original content)
