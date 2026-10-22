@@ -6224,6 +6224,20 @@ performed before `2027-01-18T13:00:00Z`, and the v2 confirmatory evaluation not 
 
 **Do NOT:** edit `src/breakout_research/`, `src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/`; edit any frozen artifact; read any confirmatory-window candle; contact any provider; run any evaluation.
 
+## Session activity — 2026-10-20T21:00:00Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it (deliver the v3 confirmatory-evaluation execution path and authorization), update the handoff, write the initial task message for the next agent.
+
+**Outcome:** Verified complete. `src/v3_confirmatory/` (10 modules) imports cleanly; `configs/research_v3_confirmatory_authorization_1.json` exists and is hash-bound; `scripts/verify_v3_confirmatory_path.py` → `{"ok": true, "failures": []}`; `scripts/verify_v3_confirmatory_protocol.py` → `{"ok": true, "failures": []}`; canonical digests unchanged (`3e8e4169…` hashed set, `2efd3b18…` authorized); no frozen artifact edited; no confirmatory-window candle read; `holdout_exposed_count = 0`. No new code or artifacts were produced; no run was started.
+
+## Initial task message for next agent
+
+**Next:** No bounded implementation task is actionable. The v3 confirmatory evaluation cannot be performed before `2027-01-18T13:00:00Z` (single-use window, ≥ 2,160 closed hourly candles); the v2 confirmatory evaluation is time-blocked until `2027-01-17T22:00:00Z`. The v3 confirmatory protocol (`configs/research_v3_confirmatory_protocol.json`, `f008876b…`), the v3 confirmatory execution path (`src/v3_confirmatory/`, digest `0b1605be…`), the v3 confirmatory authorization (`5d378589…`) and the read-only verifier are all delivered and verified. Maintain the green tree: re-run `PYTHONPATH=src python3 -m pytest tests/ -q` and `python3 scripts/verify_v3_confirmatory_path.py` after any change, and confirm `compute_code_hash()` remains `2efd3b18…`.
+
+**Do NOT:** modify `src/breakout_research/`, `src/v2_campaign/`, `src/v2_confirmatory/` or `src/v3_campaign/`; edit any frozen artifact in place; start a v3 confirmatory evaluation; read any confirmatory-window candle; reuse the v1 holdout or the v2 confirmatory window; write into any v1/v2/v3 selection output path; rewrite existing artifacts without `--force` and a recorded reason.
+
+**Acceptance criteria:** `PYTHONPATH=src python3 -m pytest tests/ -q` exits 0; `python3 scripts/verify_v3_confirmatory_path.py` exits 0; `compute_code_hash()` unchanged; `holdout_exposed_count = 0`; no frozen artifact changed.
+
 ## Session activity — 2026-10-20T20:53:55Z (this session)
 
 **Task (from the durable handoff at 11:30Z):** perform the campaign-level close-out of the v2 cycle.
