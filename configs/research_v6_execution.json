@@ -1,0 +1,218 @@
+{
+  "artifact": "v6_execution_protocol",
+  "artifact_version": "v6-execution-protocol-1",
+  "protocol_version": "v6-execution",
+  "universe_version": "v6",
+  "manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
+  "specification_hash": "4a07911a1e0a79e0489e0ff638526ffeef2f2d217696e80308c77b440dbeac9c",
+  "created_utc": "2026-10-22T04:20:00Z",
+  "specification_purpose": "Preregister how a future v6 grid run will be authorized and bounded. Design deliverable only; nothing runs.",
+  "specification_status": "PREREGISTERED_EXECUTION_PROTOCOL_ONLY",
+  "candidate_freeze_and_confirmatory_window": {
+    "candidate_freeze_path": "configs/research_v6_candidate_freeze.json",
+    "candidate_freeze_hash": "3b482a4f25c575cbe1e2bd9a8d787a76caf34be0e76de03b0e14b0daa70fbec4",
+    "candidate_manifest_committed_and_hash_bound_before_first_confirmatory_candle": true,
+    "confirmatory_window_opens_utc": "2026-10-22T02:00:00Z",
+    "min_confirmatory_window_hours": 2160,
+    "earliest_possible_confirmatory_window_end_utc": "2027-01-20T02:00:00Z",
+    "evaluation_may_not_start_before_utc": "2027-01-20T02:00:00Z",
+    "evaluation_start_rule": "the v6 evaluation may not start before the later of the four recorded gates and the v6 window's own earliest end",
+    "confirmatory_gates": [
+      {
+        "earliest_possible_end_utc": "2027-01-17T22:00:00Z",
+        "min_hours": 2160,
+        "source_key": "data_boundary",
+        "source_path": "configs/research_v2_candidate_freeze.json",
+        "version": "v2",
+        "window_start_utc": "2026-10-19T22:00:00Z"
+      },
+      {
+        "earliest_possible_end_utc": "2027-01-18T13:00:00Z",
+        "min_hours": 2160,
+        "source_key": "data_boundary",
+        "source_path": "configs/research_v3_candidate_freeze.json",
+        "version": "v3",
+        "window_start_utc": "2026-10-20T13:00:00Z"
+      },
+      {
+        "earliest_possible_end_utc": "2027-01-19T01:00:00Z",
+        "min_hours": 2160,
+        "source_key": "confirmatory_window",
+        "source_path": "configs/research_v4_candidate_freeze.json",
+        "version": "v4",
+        "window_start_utc": "2026-10-21T01:00:00Z"
+      },
+      {
+        "earliest_possible_end_utc": "2027-01-19T13:00:00Z",
+        "min_hours": 2160,
+        "source_key": "confirmatory_window",
+        "source_path": "configs/research_v5_candidate_freeze.json",
+        "version": "v5",
+        "window_start_utc": "2026-10-21T13:00:00Z"
+      }
+    ],
+    "development_cutoff_utc": "2026-10-19T22:00:00Z",
+    "development_data_boundary_rule": "no v6 development candle may close inside any open confirmatory window; the last v6 development candle is the one that closes exactly at the cutoff, per the inclusive convention of the v6 specification",
+    "confirmatory_window_membership_rule": "a candle is inside a confirmatory window when its close falls strictly after that window's start and before its end, regardless of which asset the candle belongs to; a candle that closes exactly at a window's start is development data",
+    "confirmatory_window_membership_rule_owner": "configs/research_v6.json#holdout.confirmatory_window_membership",
+    "no_ranking_or_retuning_on_holdout": true,
+    "single_use": true,
+    "v1_v2_v3_v4_v5_confirmatory_window_reuse": "forbidden"
+  },
+  "evaluation_scope": {
+    "universe_manifest_path": "research/universe_manifest_v6.json",
+    "universe_manifest_hash": "baac2b942ea76749cffc7a71940fe03496e2416a358940c8e7972036b7295072",
+    "data_manifest_path": "research/data_manifest_v6.json",
+    "data_manifest_hash": "a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465",
+    "candidate_freeze_hash": "3b482a4f25c575cbe1e2bd9a8d787a76caf34be0e76de03b0e14b0daa70fbec4",
+    "constituents": [
+      "FETUSDT",
+      "SEIUSDT",
+      "PENDLEUSDT",
+      "XTZUSDT",
+      "LDOUSDT",
+      "SUNUSDT",
+      "GNOUSDT"
+    ],
+    "count": 7,
+    "excluded_assets_stay_excluded": true,
+    "widening_by_reranking_forbidden": true,
+    "band_rule": "the evaluated scope is the validated subset of the frozen 20-name band; the band is the definition and the validated subset is its consequence, so the scope is never widened to reach a target count"
+  },
+  "benchmark_rule": {
+    "symbol": "BTCUSDT",
+    "dataset_path": "research/data/candles_v6/BTCUSDT_1h_626e639b02e54bc1.csv",
+    "role": "trend_filter_and_benchmark",
+    "content_hash": "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52",
+    "content_hash_algorithm": "sha256-canonical-hourly-csv-v1",
+    "observed_candle_count": 26280,
+    "first_candle_timestamp": 1697839200000,
+    "last_candle_timestamp": 1792443600000,
+    "alignment": "the asset series and the benchmark series are sliced to the same fold window before the frozen engine is called, so that the engine's index pairing equals the UTC-candle-close alignment of docs/research_protocol.md:101",
+    "no_forward_fill": true,
+    "fail_closed": [
+      "the benchmark series is missing",
+      "the benchmark series does not cover an evaluated window of the asset series",
+      "the benchmark series carries a different timestamp than the asset series inside an evaluated window"
+    ],
+    "grid_rule": "the 576 btc_ema_168 configurations per asset are evaluated, never dropped, re-derived or re-ranked",
+    "exposure_rule": "the benchmark dataset is development data; it lies entirely before every open confirmatory window and no confirmatory-window candle is read",
+    "note": "The v6 benchmark is the v6-cutoff-bounded dataset the v6 data manifest publishes, and its last candle closes exactly at the v6 development cutoff 2026-10-19T22:00:00Z. The v3 and v4 chains' benchmark dataset (research/data/candles_v3/BTCUSDT_1h_50d357b0cb2d6f8d.csv) ends with a candle closing 2026-10-20T11:00:00Z and 13 of its candles close after the v6 development cutoff, inside the open v2 confirmatory window, so it is not reused unchanged by the v6 chain."
+  },
+  "inherited_rules": {
+    "inherited_from": "configs/research_v1.json",
+    "blocks": [
+      "strategy_grid",
+      "costs",
+      "execution",
+      "folds",
+      "selection",
+      "pilot",
+      "metrics",
+      "baselines",
+      "fixed_breakout_baseline",
+      "status",
+      "checkpointing"
+    ],
+    "blocks_digest": "0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433",
+    "v1_specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
+    "grid_total_combinations": 2304,
+    "rule": "the v6 chain inherits the v1 strategy grid, costs, execution semantics, fold structure, selection rule, pilot gate, metrics, baselines, status vocabulary and checkpointing without modification, so that v6 differs from v5 in which assets are evaluated and not in how a strategy is measured",
+    "single_confirmatory_criterion": "the confirmatory evaluation applies the unchanged v1 selection rule to the single v6 confirmatory window: one criterion, never re-tuned, re-weighted or re-ranked, and its outcome is never used to select anything",
+    "change_requires": "a published, versioned amendment that names the changed block and the artifacts it supersedes"
+  },
+  "code_hash_constraint": {
+    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "authorized_code_hash_source": "research_state/campaign_authorization.json",
+    "hashed_source_root": "src/breakout_research",
+    "canonical_hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "canonical_digest_is_the_identity": true,
+    "ordered_code_hash_is_not_an_identity": true,
+    "v6_execution_root": "src/v6_campaign",
+    "v6_execution_path_exists": false,
+    "v6_execution_path_digest_is_recorded_in": "configs/research_v6_selection_authorization_1.json",
+    "v6_execution_must_live_outside_hashed_set": true,
+    "edit_under_src_breakout_research_forbidden_without_reauthorization": true,
+    "rule": "the v6 execution path is a new directory outside the hashed set; it is never added to src/breakout_research, and the canonical digest of the path is recorded in the v6 selection authorization when the path is created"
+  },
+  "execution_authorization": {
+    "candle_fetch_authorized": false,
+    "confirmatory_evaluation_authorized": false,
+    "execution_authorized": false,
+    "grid_run_authorized": false,
+    "scope": "this protocol records the candidate-freeze binding, the inherited rules, the benchmark rule, the data-manifest identity and the code-hash constraint. It authorizes no run, no evaluation, no candle fetch and no confirmatory-window read.",
+    "second_run_authorized": false,
+    "selection_authorization_present": false
+  },
+  "deviation_disclosure": {
+    "evidence_path": null,
+    "not_applicable": true,
+    "records_with_btc_filter": 0,
+    "statement": "The v6 campaign has no prior completed runs and therefore no v1/v2/v3/v4/v5 alignment deviation to disclose.",
+    "total_v2_records": 0
+  },
+  "resource_and_attempt_bounds": {
+    "max_logical_runs": 1,
+    "checkpoint_every_n_shards": 10
+  },
+  "v6_result_layout": {
+    "shard_directory": "research/shards_v6",
+    "ledger_path": "research/ledger_v6.json",
+    "results_manifest_path": "research/results_manifest_v6.json",
+    "result_stream": "research/results_v6.jsonl",
+    "checkpoint": "research_state/checkpoint_v6.json"
+  },
+  "authorization": {
+    "execution_authorized": false,
+    "campaign_authorized": false,
+    "selection_authorized": false,
+    "confirmatory_authorized": false
+  },
+  "supersedes": {
+    "protocol_version": "v5",
+    "reason": "the v5 execution protocol governed the v5 cycle; the v6 protocol governs the v6 cycle, which is a strictly additional universe below the v5 floor with its own namespace",
+    "superseded_artifacts": {
+      "research_v5_execution": {
+        "manifest_hash": "516f8a55f699f9292aeee0a66c0926d64ea18ff736fc1ca19b915efea9e9e64f",
+        "path": "configs/research_v5_execution.json",
+        "sha256": "a6c3a242c6727d98d5578e363e01bd70ce910ae251edd13e0113ca3f6f374218"
+      },
+      "research_v5_execution_amendment_1": {
+        "manifest_hash": "a5c5384c72a55c42417ffa58f5faebb5e3cc0fab0ed828d5ca7c9b59f9d25988",
+        "path": "configs/research_v5_execution_amendment_1.json",
+        "sha256": "2a75f765670d1a9151d4426c83080eb5c8c0ddbf14ca5a6fb152b3c8bf703b0c"
+      },
+      "research_v5_execution_amendment_2": {
+        "manifest_hash": "7bfbb85008eb670b738737469531322f8c7fee0a52af89ac7f8a369241bfc12e",
+        "path": "configs/research_v5_execution_amendment_2.json",
+        "sha256": "5649d145316ef881c6c0c40d2d39239bf9bc5debab5b6290585cf2dc44142c9c"
+      }
+    },
+    "v1_v2_v3_v4_v5_artifacts_are_immutable": true
+  },
+  "related_artifacts": {
+    "v6_specification": {
+      "path": "configs/research_v6.json",
+      "specification_hash": "4a07911a1e0a79e0489e0ff638526ffeef2f2d217696e80308c77b440dbeac9c"
+    },
+    "v6_candidate_freeze": {
+      "path": "configs/research_v6_candidate_freeze.json",
+      "manifest_hash": "3b482a4f25c575cbe1e2bd9a8d787a76caf34be0e76de03b0e14b0daa70fbec4"
+    },
+    "v6_universe_manifest": {
+      "path": "research/universe_manifest_v6.json",
+      "manifest_hash": "baac2b942ea76749cffc7a71940fe03496e2416a358940c8e7972036b7295072"
+    },
+    "v6_data_manifest": {
+      "path": "research/data_manifest_v6.json",
+      "manifest_hash": "a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465"
+    }
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  }
+}

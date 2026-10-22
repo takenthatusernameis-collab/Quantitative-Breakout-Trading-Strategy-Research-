@@ -122,10 +122,15 @@ V6_RUN_ARTIFACTS: Tuple[str, ...] = (
     "research_state/checkpoint_v6.json",
 )
 
-#: The v6 confirmatory artifacts that have not been delivered yet.
-V6_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST: Tuple[str, ...] = (
-    "configs/research_v6_confirmatory_protocol.json",
-    "configs/research_v6_confirmatory_runbook_1.json",
+#: The v6 confirmatory artifacts, and the dotted key each one keeps the
+#: freeze's identity under. The confirmatory chain binds the freeze forward:
+#: the protocol and the runbook name this freeze's manifest hash, so the
+#: freeze verifier checks that binding rather than their absence.
+V6_CONFIRMATORY_ARTIFACTS: Tuple[Tuple[str, str], ...] = (
+    ("configs/research_v6_confirmatory_protocol.json",
+     "related_artifacts.v6_candidate_freeze.manifest_hash"),
+    ("configs/research_v6_confirmatory_runbook_1.json",
+     "binding_identities.v6_candidate_freeze.manifest_hash"),
 )
 
 #: The minimum number of closed hourly candles a confirmatory window needs.
@@ -415,7 +420,9 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
 
     # 2c. the code identity -------------------------------------------------
     code_identity = freeze.get("code_identity") or {}
-    hashed_set_digest = canonical_source_digest(root / HASHED_SET_ROOT)
+    # ``canonical_source_digest`` takes the *repository* root and appends the
+    # hashed-set root itself, so it is called with the repository root.
+    hashed_set_digest = canonical_source_digest(root)
     computed["canonical_hashed_set_digest"] = hashed_set_digest
     if hashed_set_digest is None:
         fail("the hashed source set is missing, so the tree identity cannot be recomputed")
@@ -541,10 +548,43 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 f"the frozen band member {pair} carries the unknown exclusion reason "
                 f"{entry.get('exclusion_reason')!r}"
             )
-        if entry.get("validated") is not True and entry.get("binance_spot_verified") is not False:
+        if entry.get("validated") is not True and entry.get("exclusion_reason") not in (
+            None,
+            *ALLOWED_EXCLUSION_REASONS,
+        ):
             fail(
-                f"the frozen band member {pair} is excluded but records a verified Binance spot "
-                "pair"
+                f"the frozen band member {pair} is excluded and carries an unknown exclusion "
+                "reason"
+            )
+        # The recorded validation evidence of every member must be the re-derived
+        # one. A member excluded for a *history* reason is a tradeable Binance
+        # spot pair with too short a history: excluding it does not un-verify
+        # its spot pair, so only a spot exclusion may carry
+        # ``binance_spot_verified: false``.
+        if entry.get("binance_spot_verified") is not outcome["binance_spot_verified"]:
+            fail(
+                f"the frozen band member {pair} records a Binance spot verification of "
+                f"{entry.get('binance_spot_verified')!r}, re-derived "
+                f"{outcome['binance_spot_verified']!r} from the validation evidence"
+            )
+        if entry.get("candle_history_verified") is not outcome["candle_history_verified"]:
+            fail(
+                f"the frozen band member {pair} records a candle-history verification of "
+                f"{entry.get('candle_history_verified')!r}, re-derived "
+                f"{outcome['candle_history_verified']!r} from the validation evidence"
+            )
+        if entry.get("observed_candles") != outcome["observed_candles"]:
+            fail(
+                f"the frozen band member {pair} records {entry.get('observed_candles')!r} observed "
+                f"candles, re-derived {outcome['observed_candles']!r} from the validation evidence"
+            )
+        if (
+            entry.get("exclusion_reason") == "binance_spot_unavailable"
+            and entry.get("binance_spot_verified") is not False
+        ):
+            fail(
+                f"the frozen band member {pair} is excluded as unavailable on Binance spot but "
+                "records a verified Binance spot pair"
             )
     validated_members = [entry for entry in members if entry.get("validated") is True]
     computed["frozen_band_count"] = len(members)
@@ -972,11 +1012,24 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 f"the v6 run artifact {relative} exists, but the v6 chain has not run: the "
                 "freeze authorizes no run"
             )
-    for relative in V6_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST:
-        if (root / relative).exists():
+    for relative, binding in V6_CONFIRMATORY_ARTIFACTS:
+        path = root / relative
+        if not path.exists():
             fail(
-                f"the v6 confirmatory artifact {relative} exists, but the v6 confirmatory chain "
-                "has not been delivered"
+                f"the v6 confirmatory artifact {relative} is missing: the v6 confirmatory chain "
+                "must be preregistered before the v6 gate"
+            )
+            continue
+        document = read_json(path)
+        excluded_keys = tuple(
+            (document.get("hashing") or {}).get("manifest_hash_excluded_keys") or ("manifest_hash",)
+        )
+        if document.get("manifest_hash") != compute_manifest_hash(document, excluded_keys):
+            fail(f"the v6 confirmatory artifact {relative} does not recompute its own hash")
+        if _dig(document, binding) != freeze.get("manifest_hash"):
+            fail(
+                f"the v6 confirmatory artifact {relative} does not bind this candidate freeze's "
+                f"manifest hash at {binding}"
             )
     namespace = freeze.get("namespace") or {}
     spec_namespace = spec.get("namespace") or {}

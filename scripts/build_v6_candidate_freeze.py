@@ -540,7 +540,7 @@ def build(repo_root: Path = REPO_ROOT, freeze_utc: Optional[str] = None) -> Dict
                 "confirmatory windows, which is not a violation: the v6 evaluation may not start "
                 "before the later of the four recorded gates and the v6 window's own earliest "
                 "end, the two evaluations share no asset, and no confirmatory window is ever read "
-                "for selection"
+                "for selection; windows are never read for selection"
             ),
             "single_use": True,
         },

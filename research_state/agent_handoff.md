@@ -1,3 +1,28 @@
+## Session activity — 2026-10-22T04:50:34Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it (v6 preregistration implementation P2-P6).
+
+**Outcome:** Already complete. All v6 artifacts present and verified: `configs/research_v6.json` (spec hash `4a07911a…`), `research/universe_manifest_v6.json` (`baac2b94…`), `research/data_manifest_v6.json` (`a9c6c492…`), `configs/research_v6_candidate_freeze.json` (`3b482a4f…`), `configs/research_v6_execution.json`, `configs/research_v6_confirmatory_protocol.json`, `configs/research_v6_confirmatory_runbook_1.json`. Expansion log now includes v6 entry chained onto v5 `092f10c4…`.
+
+**Verification:**
+- `python3 scripts/verify_research_v6_spec.py` → ok, exit 0
+- `python3 scripts/verify_research_v6_manifests.py` → ok, exit 0
+- `python3 scripts/verify_research_v6_candidate_freeze.py` → ok, exit 0
+- `python3 scripts/verify_v6_execution.py` → ok, exit 0
+- `python3 scripts/verify_v6_confirmatory_protocol.py` → ok, exit 0
+- `python3 scripts/verify_v6_confirmatory_runbook_1.py` → ok, exit 0
+- `compute_code_hash()` unchanged `2efd3b18…`
+
+**Next bounded task (queued):** none actionable until confirmatory windows close (v5 earliest end 2027-01-19T13:00:00Z; v6 2027-01-20T02:00:00Z). State file still records v5 cycle; update only when a new selection run occurs.
+
+## Initial task message for next agent
+
+**Status (verified 2026-10-22T04:50Z):** v6 preregistration implementation P2-P6 is complete and verified. All v6 verifiers exit 0; code hash `2efd3b18…` unchanged. Confirmatory windows remain closed until 2027-01-19/20. No further implementation is authorized without a new selection run or a new version design.
+
+**Do NOT:** run any grid/backtest/selection, read any confirmatory-window candle, modify `src/`, or re-retrieve snapshots.
+
+**Verification commands:** `python3 scripts/verify_research_v6_spec.py`; `python3 scripts/verify_research_v6_manifests.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`.
+
 ## Session activity — 2026-10-22T01:05:04Z (this session)
 
 **Task:** Review the durable handoff's initial task message ("produce the v4 preregistration design record") against the actual repository state.

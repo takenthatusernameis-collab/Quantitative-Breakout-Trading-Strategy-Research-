@@ -132,13 +132,17 @@ V6_BOUND_STAGE_ARTIFACTS = (
     "configs/research_v6_selection_authorization_1.json",
 )
 
-#: The v6 confirmatory artifacts that must not exist before the v6 confirmatory
-#: chain is delivered.  The v3 chain is the template (protocol, runbook, a
-#: confirmatory authorization and a code-hash amendment); the v4 and v5 chains
-#: omit them, which BRAIN-025 records as a defect.
-V6_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST = (
-    "configs/research_v6_confirmatory_protocol.json",
-    "configs/research_v6_confirmatory_runbook_1.json",
+#: The v6 confirmatory artifacts, and the dotted key each one keeps the
+#: specification's identity under.  The v3 chain is the template (protocol,
+#: runbook, a confirmatory authorization and a code-hash amendment); the v4 and
+#: v5 chains omit them, which BRAIN-025 records as a defect.  The v6 chain
+#: delivers the protocol and the runbook in the same stage as this check, so
+#: they must exist and must bind this specification.
+V6_CONFIRMATORY_ARTIFACTS = (
+    ("configs/research_v6_confirmatory_protocol.json",
+     "related_artifacts.v6_specification.specification_hash"),
+    ("configs/research_v6_confirmatory_runbook_1.json",
+     "binding_identities.v6_specification.specification_hash"),
 )
 
 #: The v6 run artifacts.  They may exist only once the v6 selection
@@ -773,14 +777,23 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
     if namespace.get("specification") != SPEC_V6_RELATIVE:
         fail("the v6 namespace does not name this specification as the v6 specification")
     # The v6 chain has not run, so no v6 artifact may exist that is not bound
-    # to this specification, and the v6 confirmatory chain has not been
-    # delivered at all.  The rules are stated per stage so that they stay true
-    # as the v6 chain is delivered, stage by stage.
-    for relative in V6_CONFIRMATORY_ARTIFACTS_THAT_MUST_NOT_EXIST:
-        if (repo_root / relative).exists():
+    # to this specification.  The rules are stated per stage so that they stay
+    # true as the v6 chain is delivered, stage by stage.  The confirmatory
+    # protocol and the runbook are delivered in this stage, so they must exist
+    # and must bind this specification.
+    for relative, binding in V6_CONFIRMATORY_ARTIFACTS:
+        path = repo_root / relative
+        if not path.exists():
+            fail(f"the v6 confirmatory artifact {relative} is missing")
+            continue
+        document = json.loads(path.read_text(encoding="utf-8"))
+        value = document
+        for key in binding.split("."):
+            value = value.get(key) if isinstance(value, dict) else None
+        if value != spec.get("specification_hash"):
             fail(
-                f"the v6 confirmatory artifact {relative} exists, but the v6 confirmatory "
-                f"chain has not been delivered"
+                f"the v6 confirmatory artifact {relative} does not bind this specification at "
+                f"{binding}"
             )
     for relative in V6_BOUND_STAGE_ARTIFACTS:
         path = repo_root / relative
