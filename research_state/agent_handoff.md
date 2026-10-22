@@ -8882,3 +8882,25 @@ the recorded v6 cycle; the preregistered **v4 and v5 confirmatory protocol and r
 them today, and the v3 chain is the template) — due before their gates; the v3 confirmatory evaluation and the
 final report, which may not start before **2027-01-18T13:00:00Z**; and the v2 confirmatory evaluation, which
 may not start before **2027-01-17T22:00:00Z**.
+
+## Session activity — 2026-10-22T01:01:11Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it, update the handoff, write the initial task message for the next agent.
+
+**Prior task (from the handoff at the end of the file):** implement BRAIN-026 stage 1 — produce `configs/research_v6.json` (self-hashed, immutable) with a read-only offline verifier and deterministic tests; `python3 scripts/verify_research_v6_spec.py` exits 0 and `PYTHONPATH=src python3 -m pytest tests/test_research_v6_spec.py -q` exits 0 with at least 30 tests.
+
+**Outcome:** already delivered and verified. `scripts/verify_research_v6_spec.py` → `"ok": true`, `"failures": []`; `tests/test_research_v6_spec.py` → 67 passed, exit 0. Full suite `PYTHONPATH=src python3 -m pytest tests/ -q` → 698+ passed. `compute_code_hash()` = `608c7340…` (environment fact); authorized value of record `2efd3b18…`; canonical digest `3e8e4169…` unchanged. No new code or artifacts were produced; no run was started; no provider was contacted; no candle was read.
+
+## Initial task message for next agent
+
+**Next (one bounded task):** implement BRAIN-026 stage 2 — the **v6 universe and data manifests**: the one bounded market-cap retrieval inside the v6 pinned window, the raw bytes and their sha256 committed, the depth recomputed from the bytes, the batch re-derived from the raw bytes and never copied, the per-candidate validation (Binance spot verification, ≥ 26,280 closed hourly candles, hash-verified datasets bounded at the v6 cutoff) and the offline verifier and test module that re-derive the batch. Nothing runs; no v6 execution artifact; no v1–v5 artifact edit; no `src/` change beyond additive v6 code outside the hashed set.
+
+**Subject:** BRAIN-026 stage 1 delivered and verified; the next bounded task is the v6 universe and data manifests (design-to-code, nothing runs).
+
+**Status (verified 2026-10-22T01:01:11Z):**
+- `configs/research_v6.json` delivered, hash-bound, self-verifying; verifier exits 0; 67 tests pass.
+- Full suite green; all existing verifiers exit 0; `compute_code_hash()` `608c7340…` (environment fact); authorized value of record `2efd3b18…`; canonical digest `3e8e4169…` unchanged; v1–v5 artifacts byte-unchanged; no v6 execution artifact; holdout exposure 0.
+
+**Do NOT:** run any grid, backtest, campaign, selection or pilot; read any candle; contact any provider beyond the single bounded v6 retrieval; edit any v1–v5 frozen artifact; edit anything under `src/breakout_research/` or `src/v2_campaign/`; rewrite an existing artifact without `--force` and a recorded reason.
+
+**Verification commands:** `PYTHONPATH=src python3 -m pytest tests/ -q`; `python3 scripts/verify_research_v6_spec.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
