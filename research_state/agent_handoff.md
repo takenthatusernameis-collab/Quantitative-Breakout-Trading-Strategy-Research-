@@ -1,10 +1,10 @@
-## Session activity — 2026-10-22T04:51:08Z (this session)
+## Session activity — 2026-10-22T04:54:48Z (this session)
 
-**Task:** Read the prior agent task from the durable handoff and complete it (v6 preregistration implementation P2-P6).
+**Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
 
-**Outcome:** Already complete. All v6 artifacts present and verified: `configs/research_v6.json` (spec hash `4a07911a…`), `research/universe_manifest_v6.json` (`baac2b94…`), `research/data_manifest_v6.json` (`a9c6c492…`), `configs/research_v6_candidate_freeze.json` (`3b482a4f…`), `configs/research_v6_execution.json`, `configs/research_v6_confirmatory_protocol.json`, `configs/research_v6_confirmatory_runbook_1.json`. Expansion log includes v6 entry chained onto v5 `092f10c4…`.
+**Outcome:** Prior task (v6 preregistration implementation P2-P6) already complete and verified. All v6 artifacts present and verified: `configs/research_v6.json` (spec hash `4a07911a…`), `research/universe_manifest_v6.json` (`baac2b94…`), `research/data_manifest_v6.json` (`a9c6c492…`), `configs/research_v6_candidate_freeze.json` (`3b482a4f…`), `configs/research_v6_execution.json`, `configs/research_v6_confirmatory_protocol.json`, `configs/research_v6_confirmatory_runbook_1.json`. Expansion log includes v6 entry chained onto v5 `092f10c4…`. Confirmatory windows remain closed until 2027-01-19/20.
 
-**Verification:**
+**Verification (all pass):**
 - `python3 scripts/verify_research_v6_spec.py` → ok, exit 0
 - `python3 scripts/verify_research_v6_manifests.py` → ok, exit 0
 - `python3 scripts/verify_research_v6_candidate_freeze.py` → ok, exit 0
@@ -14,15 +14,19 @@
 - `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"` → `2efd3b18…` unchanged
 - `git status --short` → clean
 
-**Next bounded task (queued):** none actionable until confirmatory windows close (v5 earliest end 2027-01-19T13:00:00Z; v6 2027-01-20T02:00:00Z). Update only when a new selection run occurs.
+**Next bounded task (queued):** none actionable until confirmatory windows close (v5 earliest end 2027-01-19T13:00:00Z; v6 2027-01-20T02:00:00Z). Update only when a new selection run occurs or a new version design is preregistered.
+
+**Files changed:** `research_state/agent_handoff.md` only. No `configs/`, `research/`, `reports/`, or `src/` files modified.
 
 ## Initial task message for next agent
 
-**Status (verified 2026-10-22T04:51Z):** v6 preregistration implementation P2-P6 complete and verified. All v6 verifiers exit 0; code hash `2efd3b18…` unchanged. Confirmatory windows remain closed until 2027-01-19/20. No further implementation is authorized without a new selection run or a new version design.
+**Status (verified 2026-10-22T04:54:48Z):** v6 preregistration implementation P2-P6 complete and verified. All v6 verifiers exit 0; code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged. Campaign state: `current_cycle_id = v5-selection-20261021` (cohort 5 completed), `next_cohort_index = 6`. Confirmatory windows remain closed until 2027-01-19T13:00:00Z (v5) and 2027-01-20T02:00:00Z (v6). No further implementation authorized without a new selection run or a new version design.
 
-**Do NOT:** run any grid/backtest/selection, read any confirmatory-window candle, modify `src/`, or re-retrieve snapshots.
+**Do NOT:** run any grid/backtest/selection, read any confirmatory-window candle, modify `src/`, `configs/` (frozen), `research/` (frozen manifests/candles), or re-retrieve snapshots.
 
-**Verification commands:** `python3 scripts/verify_research_v6_spec.py`; `python3 scripts/verify_research_v6_manifests.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`.
+**Permitted actions:** read-only verification, documentation/bookkeeping only if strictly necessary, or design work for a new preregistered version if explicitly tasked (and only per README Section 2A C1 - design separate from implementation).
+
+**Verification commands:** `python3 scripts/verify_research_v6_spec.py`; `python3 scripts/verify_research_v6_manifests.py`; `python3 scripts/verify_research_v6_candidate_freeze.py`; `PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`; `git status --short`; `git diff --stat`.
 
 ## Session activity — 2026-10-22T01:05:04Z (this session)
 
