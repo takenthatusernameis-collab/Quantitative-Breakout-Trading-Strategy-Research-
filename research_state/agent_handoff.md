@@ -1,10 +1,14 @@
-## Session activity — 2026-10-23T16:55:16Z (this session)
+## Session activity — 2026-10-23T16:56:44Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
 
-**Outcome:** Prior task already complete; re-verified all six v6 verifiers exit 0 with `ok: true`; code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged; `git status --short` clean; HEAD `992e38722cb59c5e04014136fa95d3c881fa4763`. Campaign state: `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW` (earliest end 2027-01-19T13:00:00Z v5; 2027-01-20T02:00:00Z v6), `schema_version = 1`. No implementation performed (v6 frozen).
+**Outcome:** Prior task already complete; re-verified all six v6 verifiers exit 0 with `ok: true`; code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged; `git status --short` clean; HEAD `168264e832150f29f64b0654304937d2b183ed62`. Campaign state: `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW` (earliest end 2027-01-19T13:00:00Z v5; 2027-01-20T02:00:00Z v6), `schema_version = 1`. No implementation performed (v6 frozen).
 
 **Files changed:** `research_state/agent_handoff.md` only.
+
+---
+
+## Session activity — 2026-10-23T16:55:16Z (this session)
 
 ---
 
@@ -40,7 +44,7 @@
 
 ## Initial task message for next agent
 
-**Status (verified 2026-10-23T16:54:48Z):** v6 preregistration P2-P6 complete and verified. All six v6 verifiers exit 0 with `ok: true`; code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged; `git status --short` clean; HEAD `6118430ee6ebc4a62f4ddd25e22e6d3709e6a7f1`. Campaign state: `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW` (earliest end 2027-01-19T13:00:00Z v5; 2027-01-20T02:00:00Z v6), `schema_version = 1`. No further implementation authorized without a new selection run or new version design.
+**Status (verified 2026-10-23T16:56:44Z):** v6 preregistration P2-P6 complete and verified. All six v6 verifiers exit 0 with `ok: true`; code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` unchanged; `git status --short` clean; HEAD `168264e832150f29f64b0654304937d2b183ed62`. Campaign state: `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW` (earliest end 2027-01-19T13:00:00Z v5; 2027-01-20T02:00:00Z v6), `schema_version = 1`. No further implementation authorized without a new selection run or new version design.
 
 **Do NOT:** run grid/backtest/selection, read confirmatory-window candle, modify `src/`, `configs/` (frozen), `research/` (frozen), or re-retrieve snapshots.
 
