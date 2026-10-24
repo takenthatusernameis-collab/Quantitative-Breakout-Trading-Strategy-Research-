@@ -11,6 +11,9 @@ coverage.xml
 .venv/
 venv/
 
+# Per-module pytest logs and reports are CI artifacts, not research evidence.
+test-results/
+
 # The v2 selection result stream is a projection of the verified shards under
 # research/shards_v2 and is regenerated from them (residual limitation RL2 of
 # configs/research_v2_selection_authorization_1.json). At the size of the
