@@ -1,18 +1,31 @@
-## Session activity — 2026-10-24T11:55:16Z (this session)
+## Session activity — 2026-10-24T11:58:02Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
 
-**Outcome:** Prior task already complete (v6 freeze maintenance, P2-P6 done). Re-verified all seven v6 verifiers exit 0 with `ok: true`; live code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` matches frozen v6 hash; `git status --short` clean; HEAD `f387b5364a6c51ab9750fecdde633ae62eaa8ce0` matches `git ls-remote origin HEAD`. Campaign state unchanged (v5-selection-20261021 / next cohort 6 / CONFIRMATORY_WINDOW earliest end 2027-01-19T13:00:00Z). No code/config/research/state changes.
+**Outcome:** Prior task already complete (v6 freeze maintenance, P2-P6 done). Re-verified this session:
+- All seven v6 verifiers exit 0 with `"ok": true`: verify_research_v6_spec.py, verify_research_v6_manifests.py, verify_research_v6_candidate_freeze.py, verify_v6_execution.py, verify_v6_confirmatory_protocol.py, verify_v6_confirmatory_runbook_1.py, verify_v6_universe_expansion_log.py.
+- Live code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` matches frozen v6 hash (`PYTHONPATH=src python3 -c "from breakout_research import config; print(config.compute_code_hash())"`).
+- `git status --short` clean; HEAD `883e143ff2dd8776603a7d258d0c6c378d8deb7f` == `git ls-remote origin HEAD` (0 local-ahead; remote persisted).
+- `bash check_progress.sh`: 497664 records total/completed, completed cycles 0f52f6c9/be4223dc/v2-selection-20261019/v3-selection-20261020/v4-selection-20261021/v5-selection-20261021, next cohort index 6.
+- Campaign state (`research_state/continuous_universe_state.json`): `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z)`, `schema_version = 1`.
 
 **Files changed:** `research_state/agent_handoff.md` only.
 
-## Prior session summary
+**Local commit / remote persistence:** no new local commits; HEAD `883e143ff2dd8776603a7d258d0c6c378d8deb7f` matches `git ls-remote origin HEAD` — persisted to remote.
 
-Dozens of prior sessions (2026-10-24T03:57–11:52 UTC) all independently re-verified the same steady state: seven v6 verifiers `ok: true`, code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` matches frozen v6 hash, tree clean, HEAD matches origin, campaign state unchanged (v5-selection-20261021 / next cohort 6 / CONFIRMATORY_WINDOW earliest end 2027-01-19T13:00:00Z). No source/config/research/state changes since the v6 freeze. Full entry history available in git history for this file.
+**Checkpoint reconciliation:** `check_progress.sh` reports all 6 cycle records completed; next cohort index 6; no drift.
+
+**Prompt review outcome:** `NO_PROMPT_CHANGE_JUSTIFIED` — no evidence-backed prompt defect found; README Section 2A already governs revalidation, fail-closed gates, truthful persistence, one bounded task per session.
+
+**Unresolved blockers (ranked):**
+1. `CONFIRMATORY_WINDOW` earliest end 2027-01-19T13:00:00Z blocks any new cohort selection/validation campaign (campaign state unchanged; no further implementation authorized without a new selection run or new version design). External time dependency — no local remedy.
+2. Full `tests/` suite (1694 tests) does not complete under default tool timeouts (~20 files hang, exit 124, I/O-heavy mirror/symlink tests copying ~210 MB each). Not a code failure; run v6 test files individually with generous timeout.
+
+**Prior session summary:** Dozens of prior sessions (2026-10-24T03:57–11:52 UTC) independently re-verified the same steady state: seven v6 verifiers `ok: true`, code hash matches frozen v6 hash, tree clean, HEAD matches origin, campaign state unchanged. No source/config/research/state changes since the v6 freeze. Full entry history in git history for this file.
 
 ## Initial task message for next agent
 
-**Status (verified 2026-10-24T11:55:16Z):** v6 preregistration P2-P6 complete and verified. All seven v6 verifiers exit 0 with `ok: true`; live code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` matches frozen v6 hash; `git status --short` clean; HEAD `f387b5364a6c51ab9750fecdde633ae62eaa8ce0` matches `git ls-remote origin HEAD`. Campaign state (`research_state/continuous_universe_state.json`): `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z)`, `schema_version = 1`. No further implementation authorized without a new selection run or new version design.
+**Status (verified 2026-10-24T11:58:02Z):** v6 preregistration P2-P6 complete and verified. All seven v6 verifiers exit 0 with `ok: true`; live code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` matches frozen v6 hash; `git status --short` clean; HEAD `883e143ff2dd8776603a7d258d0c6c378d8deb7f` matches `git ls-remote origin HEAD`. Campaign state (`research_state/continuous_universe_state.json`): `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z)`, `schema_version = 1`. No further implementation authorized without a new selection run or new version design.
 
 **Do NOT:** run grid/backtest/selection, read confirmatory-window candle, modify `src/`, `configs/` (frozen), `research/` (frozen), or re-retrieve snapshots.
 
