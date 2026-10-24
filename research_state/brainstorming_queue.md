@@ -5208,3 +5208,27 @@ Do not bypass or retime the v6 gate. Choose Design A for v6 evaluation. If the u
 **Status:** RESEARCH_GATE_PRESERVED; no gate relaxation or alternate execution path implemented.
 
 **Next bounded task:** if explicitly authorized, draft and independently review a v7 preregistration design. Do not implement or execute the design in the same session that creates its decision record.
+
+
+---
+
+## BRAIN-029 — BRAIN-027's amendment already exists; the durable blocker status is stale (2026-10-24T13:43:00Z)
+
+### Revalidation against the branch base
+
+1. The current main/base tree already contains scripts/build_v6_execution_amendment_1.py, configs/research_v6_execution_amendment_1.json, scripts/v6_universe_rules.py, and tests/test_v6_execution_amendment_1.py. These artifacts are present in the base commit 00e859a12e4387ef23ffaa5d18437edc6803c05d; this session did not create them.
+2. scripts/v6_universe_rules.py defines resolve_effective_v6_execution_protocol(). The implementation reads the hash-bound protocol and amendment, verifies the artifacts and their identities, resolves the amendment first, and fails closed rather than falling back to the stale frozen flag.
+3. scripts/verify_v6_execution.py uses that shared resolution and calls verify_effective_v6_selection_authorization() and verify_v6_historical_execution_authorization(). tests/test_v6_execution_amendment_1.py contains tamper controls and producer-reproducibility tests for the same design.
+4. The older BRAIN-027 entry still says DESIGN_READY_FOR_DETERMINENTIC_IMPLEMENTATION, and the preceding handoff says the amendment is not implemented. Those statements no longer accurately describe the tracked source/artifact tree.
+
+### Classification and status
+
+**Implementation status:** IMPLEMENTED_IN_BASE_TREE; CURRENT_SESSION_VERIFICATION_PENDING.
+
+BRAIN-027 is not an unimplemented blocker to repair again. The outstanding task is to run and inspect the explicit verifier and acceptance tests, then update the durable status with actual results. The per-module suite workflow added by this branch includes tests/test_v6_execution_amendment_1.py; its result must remain pending until observed. The frozen protocol's historical false remains unchanged, and the effective amendment must remain self-hashing and fail-closed.
+
+### Scope boundary
+
+This finding authorizes no new selection run, no confirmatory evaluation, and no read of confirmatory-window candles. It changes only the status of the queued defect and guards against duplicate implementation. It does not complete or authorize the missing src/v6_campaign run path.
+
+**Next bounded action:** inspect the per-module CI report. If the amendment test or python3 scripts/verify_v6_execution.py fails, diagnose from that evidence; do not reimplement the amendment or edit frozen artifacts in place.
