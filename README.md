@@ -13,6 +13,35 @@ A blocked real-data gate blocks **historical backtests, performance claims, econ
 
 Never use synthetic fixtures as historical market evidence. Never shorten the frozen 3-year / 26,280-hour minimum to get a green run. Distinguish `strategy correctness`, `evaluation validity`, `data readiness`, `economic outcome` and `infrastructure completion` as separate statuses.
 
+
+
+## Adaptive research-gate policy v1 — default for future work
+
+**Purpose:** prevent repeated feasibility deadlocks without turning weaker evidence into a stronger claim. This policy changes the default way the agent makes progress; it does not rewrite frozen experiments.
+
+### 1. Keep two tracks separate
+- **Confirmatory track:** preserve the currently registered hypothesis, sample minimums, history minimums, universe definition, parameter grid, costs, holdout boundaries and acceptance criteria. Never change them in place or retroactively reclassify old evidence.
+- **Exploratory track:** when the trigger below is met, automatically create a new uniquely identified version with the smallest feasible change. It may answer a narrower or lower-powered question, but its status must be `EXPLORATORY_ONLY` or `INCONCLUSIVE`; it cannot validate, replace or unlock the frozen confirmatory track.
+
+### 2. Trigger for adaptive relaxation
+Start the exploratory track after either (a) three materially distinct, documented attempts spanning at least two independent source families or methodological routes fail to advance the same feasibility gate, or (b) a durable structural impossibility is evidenced by source coverage, terms, schema or sample counts. A repeat of the same failed endpoint is not a distinct attempt. Record route, date, observed response/coverage, exact unmet requirement and why retries are unlikely to help. Do not keep looping on a known failure.
+
+### 3. Relax the least damaging feasibility constraint first
+Consider, one at a time: use a smaller *explicitly defined* eligible population; use the verified historical overlap rather than demanding a market-cap rank that is not essential to the mechanism; shorten history for a clearly labeled pilot; reduce grid breadth by testing a frozen anchor first; or run a descriptive/measurement feasibility study before estimating outcomes. Choose based on the estimand and data-generating process, not on which choice improves returns. If more than one dimension changes, state and justify each change in a new version before calculating its outcomes.
+
+### 4. Hard safeguards are never relaxed
+No look-ahead, fabricated or forward-filled observations, invented fills, silent sample exclusions, outcome-informed parameters/costs, hidden multiple-testing, reuse of an inspected holdout as fresh confirmation, misleading performance labels, breach of source terms, paid services or compute where prohibited, or live/paper trading. Synthetic fixtures are software tests, never market evidence. A current market-cap snapshot must never be labeled historical point-in-time truth. Do not open an originally sealed holdout to rescue progress; any relaxed study needs a new ID, explicit estimand and correctly labeled data vintage.
+
+### 5. Reporting and promotion
+Report all attempted routes and failures, coverage/missingness, sample and independent-cluster counts, changed assumptions, uncertainty, all tried variants, costs and reasons for exclusions. Report effect sizes descriptively if calculable, but do not describe underpowered inference as confirmation. A green workflow or passing tests proves only what the tests cover. Promotion requires the original confirmatory gates on admissible data, a sealed evaluation, complete multiple-testing correction and independent recomputation. If the alternative remains infeasible, say so and move to another independent task.
+
+**Default execution rule:** once the trigger is met, do not merely write another blocker memo. Within the repository's existing authorization, complete the next bounded, no-cost exploratory task and preserve the original blocked status. Do not obtain new permissions, spend money, trigger prohibited workflows, or alter frozen result artifacts to make this possible.
+
+
+### Repository-specific default: breakout research
+The frozen >=3-year / 26,280-hour requirement remains binding for a confirmatory campaign. If the data gate repeatedly fails after the trigger above, open a new exploratory lane with its own ID and complete the smallest useful historical-data / execution pilot on verified real observations. A shorter sample or narrower universe may support implementation diagnostics and explicitly exploratory descriptive metrics only; it must not authorize a full campaign, candidate selection, or a profitability claim. Never count fixtures as historical market data, weaken the frozen spec in place, or tune the new lane to outcomes from a protected holdout.
+
+
 ## Lane execution contract
 
 1. Inspect the queue, existing research specifications, result ledger and prior lane artifacts before choosing a hypothesis. Avoid renaming or reparameterizing an already tested idea as a "new" strategy.
