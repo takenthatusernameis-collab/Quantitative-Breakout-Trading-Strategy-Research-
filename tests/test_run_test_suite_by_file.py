@@ -91,3 +91,25 @@ def test_module_timeout_is_reported_as_timeout_not_success(tmp_path: Path) -> No
     assert result["status"] == "TIMEOUT"
     assert result["exit_code"] is None
     assert Path(result["log_path"]).is_file()
+
+
+def test_module_with_only_skipped_tests_is_not_reported_as_pass(tmp_path: Path) -> None:
+    tests = tmp_path / "tests"
+    tests.mkdir()
+    (tests / "test_all_skipped.py").write_text(
+        "import pytest\n"
+        "pytest.skip('required fixture unavailable', allow_module_level=True)\n",
+        encoding="utf-8",
+    )
+
+    result = runner.run_test_module(
+        tmp_path,
+        "tests/test_all_skipped.py",
+        tmp_path / "logs" / "all-skipped.log",
+        timeout_seconds=10,
+    )
+
+    assert result["exit_code"] == 0
+    assert result["status"] == "FAIL"
+    assert result["pytest_counts"] == {"skipped": 1}
+    assert "no test cases executed" in result["error"]
