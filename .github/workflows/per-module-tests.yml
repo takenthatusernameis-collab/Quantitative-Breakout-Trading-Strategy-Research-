@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: per-module-python-tests-${ github.event.pull_request.number || github.ref }}
+  group: per-module-python-tests-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -52,7 +52,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: per-module-pytest-${ github.run_id }}
+          name: per-module-pytest-${{ github.run_id }}
           path: test-results/
           if-no-files-found: warn
           retention-days: 14
