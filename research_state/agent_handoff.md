@@ -1,3 +1,43 @@
+## Session activity — 2026-10-24T13:36:04Z (this session)
+
+**Task:** Repair the test-suite timeout blocker, audit the stated confirmatory-window blocker, and review nearby unresolved blockers without changing frozen research evidence.
+
+**Base and branch:** base main commit 00e859a12e4387ef23ffaa5d18437edc6803c05d; working branch repair/per-file-test-suite-20261024. The branch is review-only until CI results and remote PR state are verified.
+
+**Confirmed timing and gate interpretation:**
+- configs/research_v6_candidate_freeze.json sets the v6 window start to 2026-10-22T02:00:00Z and requires 2,160 hours (90 days). The v6 window's earliest possible end and evaluation-may-not-start-before time are both 2027-01-20T02:00:00Z.
+- The inherited v2, v3, v4 and v5 gates end at 2027-01-17T22:00:00Z, 2027-01-18T13:00:00Z, 2027-01-19T01:00:00Z and 2027-01-19T13:00:00Z. The v6 gate is later.
+- The current continuous-universe state still names v5-selection-20261021 as the last completed cycle and correctly records that cycle's v5 end. Do not rewrite that state as if a v6 selection cycle had completed. Keep cycle-state and evaluation-gate status distinct.
+- This gate is a research-validity constraint, not a local timeout or source-code bug. No confirmatory candle was read, no selection run was started, no exposure counter was changed, and no frozen config/research/data artifact was changed.
+
+**Changes on the repair branch:**
+- Added scripts/run_test_suite_by_file.py: discovers pytest modules deterministically; runs each module in its own subprocess; enforces per-module and total budgets; terminates timed-out process groups; records PASS, FAIL, TIMEOUT, ERROR, INTERRUPTED or NOT_RUN; exits nonzero if anything is not PASS; writes an atomic JSON report and per-module logs.
+- Added tests/test_run_test_suite_by_file.py with coverage for discovery ordering/filtering, outside-root rejection, status aggregation, pytest-summary parsing, and timeout truthfulness.
+- Added .github/workflows/per-module-tests.yml: pull-request and manual triggers, a bounded per-file timeout, a 5.5-hour runner budget inside a 350-minute job, and unconditional upload of test-results/ for diagnosis.
+- Updated .gitignore so generated test-results/ files are not mistaken for research evidence.
+- Added BRAIN-028 to research_state/brainstorming_queue.md documenting the verified v6 gate, safe options and acceptance criteria. The gate remains intact.
+
+**Test and verification status:**
+- New runner tests: NOT_RUN at handoff-write time.
+- Full per-module suite: NOT_RUN at handoff-write time. The new PR workflow is intended to produce actual per-module statuses and upload logs; do not describe the suite as passing until that workflow completes.
+- Historical handoff evidence that six v6 files passed previously is historical only; this session did not rerun those tests or the seven v6 verifiers.
+- Remote branch ref was verified at commit 69337be60c8d2fd5135b9b45df76aa61ca286305 before this handoff update; the subsequent handoff commit still needs remote-ref verification.
+- No changes were made to src/, configs/, research datasets, strategy parameters, results, selection authorizations, or holdout counters.
+
+**Additional blocker audit:** BRAIN-027 remains a distinct confirmed implementation defect with a design-ready amendment plan: the frozen v6 execution protocol records selection_authorization_present=false although the separately published v6 selection authorization now exists, and the verifier enforces the stale flag. Do not edit the hash-bound protocol in place. This branch has not implemented BRAIN-027; it requires its own amendment and authorization/protocol/runbook cascade with the queue's stated acceptance tests.
+
+**Prompt review:** NO_PROMPT_CHANGE_JUSTIFIED. README Section 2A already requires recomputing gate dates, truthful per-file test statuses, fail-closed research boundaries, versioned amendments and handoff reconciliation. The concrete improvement needed here was implementation/test orchestration and clearer gate reporting, not a change to the frozen methodology or prompt.
+
+**Unresolved blockers ranked:**
+1. v6 confirmatory/evaluation gate: earliest allowed evaluation start 2027-01-20T02:00:00Z. No safe local bypass. Any alternative requires a separately versioned, reviewed research design and its own authorization; do not reuse or expose open-window candles.
+2. BRAIN-027 stale v6 execution-authorization state: design is ready but the amendment cascade and fresh-checkout tests remain unimplemented.
+3. Full test suite: per-module runner and CI workflow added, but execution is NOT_RUN pending the PR's actual Actions results.
+
+**Next bounded action:** open/review the PR and inspect the actual per-module test report. Fix any runner/test failures without skipping assertions. Then handle BRAIN-027 as a separate versioned amendment task; do not start a selection or confirmatory run as part of test-runner maintenance.
+
+
+---
+
 ## Session activity — 2026-10-24T13:06:48Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
