@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Read-only, offline verification of the preregistered v6 execution protocol.
 
-``configs/research_v6_execution.json`` records the v6 execution protocol: the
-candidate-freeze binding, the evaluation scope bound to the frozen v6
+``configs/research_v6_execution.json`` records the frozen v6 execution protocol:
+the candidate-freeze binding, the evaluation scope bound to the frozen v6
 candidate set, the benchmark rule, the inherited v1 rules, the code-hash
-constraint, the execution authorization (which authorizes nothing) and the
-supersedes chain.
+constraint, the historical execution-authorization block and the supersedes
+chain. The effective execution-authorization block is supplied by
+``configs/research_v6_execution_amendment_1.json``. The shared resolver in
+``scripts/v6_universe_rules.py`` checks that amendment and resolves it first,
+failing closed rather than falling back to the historical static flag.
 
 The verifier never writes to the repository, never contacts a provider, never
 reads a candle and never runs a grid. It checks:
