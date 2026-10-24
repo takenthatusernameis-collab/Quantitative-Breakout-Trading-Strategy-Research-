@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "authorized_at_utc": "2026-10-24T02:24:50.617236+00:00",
+  "authorized": false,
+  "protocol_version": null,
+  "specification_hash": null,
+  "code_hash": "",
+  "pilot_evidence_path": "research_state/pilot_evidence.json",
+  "validator_version": "brain-002-v1",
+  "evidence_digest": "",
+  "reasons": [
+    "pilot evidence file not found"
+  ],
+  "legacy_pilot_gate_present": false
+}
