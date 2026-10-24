@@ -1,0 +1,58 @@
+name: Per-module Python test suite
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/per-module-tests.yml"
+      - "pyproject.toml"
+      - "scripts/run_test_suite_by_file.py"
+      - "src/**"
+      - "tests/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: per-module-python-tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    # The runner stops at 5.5 hours so logs and the report can still upload.
+    timeout-minutes: 350
+
+    steps:
+      - name: Check out the tested revision
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install project and test dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python -m pip install --disable-pip-version-check -e ".[dev]"
+
+      - name: Run every pytest module with independent timeout and status
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python scripts/run_test_suite_by_file.py \
+            --timeout-seconds 600 \
+            --overall-timeout-seconds 19800
+
+      - name: Upload per-module logs and status report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: per-module-pytest-${{ github.run_id }}
+          path: test-results/
+          if-no-files-found: warn
+          retention-days: 14

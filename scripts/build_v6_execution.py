@@ -10,7 +10,7 @@ execution authorization (which authorizes nothing) and the supersedes chain.
 It is a design deliverable. Building it runs nothing: it reads the frozen
 artifacts, recomputes every expectation from them and records what a future
 run may do. The run itself requires the separate selection authorization
-``configs/research_v6_selection_authorization_1.json``, which does not exist.
+``configs/research_v6_selection_authorization_1.json``, which is separately published and authorizes one bounded selection grid run. The execution path ``src/v6_campaign`` does not yet exist; building this protocol creates no run path and executes no grid.
 
 Every fact the artifact records is recomputed from the repository:
 

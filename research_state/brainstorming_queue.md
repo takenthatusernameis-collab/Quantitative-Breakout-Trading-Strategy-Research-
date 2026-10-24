@@ -5169,3 +5169,66 @@ This record created no artifact. The repair is rolled back by removing the amend
 **Status:** `DESIGN_READY_FOR_DETERMINENTIC_IMPLEMENTATION`. The design is explicit, the prerequisites are known (the v5 blueprint is in the repository), the staged steps are listed above, and the rollback is the producers. **This record must not be implemented in the session that produced it (README Section 2A C1).**
 
 **Next bounded task (queued):** implement this record — the v6 execution amendment, the shared effective-rule resolution, the verifier that recomputes the world state, the amendment-aware republication of the v6 selection authorization and the rebuild of the confirmatory protocol and runbook — and only then the v6 selection execution path (`src/v6_campaign/`), whose run gate consumes the same resolution helper.
+
+
+---
+
+## BRAIN-028 — the v6 confirmatory gate is later than the inherited v2-v5 gates; do not bypass it (2026-10-24T13:35:25Z)
+
+### Evidence revalidated against the frozen artifacts
+
+1. configs/research_v6_candidate_freeze.json records a v6 confirmatory window opening at 2026-10-22T02:00:00Z for 2,160 closed hourly candles. Its earliest possible end and evaluation-may-not-start-before time are both 2027-01-20T02:00:00Z.
+2. The inherited v2, v3, v4 and v5 gates recorded in the same freeze end at 2027-01-17T22:00:00Z, 2027-01-18T13:00:00Z, 2027-01-19T01:00:00Z and 2027-01-19T13:00:00Z respectively. The v6 window is the maximum gate, not the v5 end.
+3. The v6 confirmatory protocol independently states window start 2026-10-22T02:00:00Z, minimum 2,160 hours and earliest possible end 2027-01-20T02:00:00Z. The date follows arithmetically: 2,160 hours is 90 days.
+4. research_state/continuous_universe_state.json still identifies the last completed cycle as v5-selection-20261021 and stores that cycle's v5 gate ending 2027-01-19T13:00:00Z. That field must not be silently rewritten as though a v6 selection cycle had completed; it is distinct from the later v6 evaluation gate. The handoff must state both facts clearly.
+5. No v6 ledger, result manifest or v6 shards exist. This audit has not read confirmatory-window candles, started any selection run, or altered any frozen research artifact.
+
+### Classification
+
+Primary: RESEARCH_DESIGN_RISK if anyone proposes relaxing the gate; the dates themselves are a valid frozen research constraint, not an implementation bug. Secondary: PROMPT_GAP in the operational summary only, if a handoff describes the v5 gate as though it were the final v6 evaluation date. There is no safe local code change that makes the v6 evaluation eligible before the recorded gate.
+
+### Two materially different paths
+
+**Design A — preserve v6 and wait.** Leave all frozen artifacts and campaign state unchanged. Do not read a v6 confirmatory candle or start confirmatory evaluation before 2027-01-20T02:00:00Z. After that time, first revalidate current time, closed-candle completeness, the existing authorizations, code/data identities and exposure counters; the date alone is not authorization to run.
+
+**Design B — prepare a new, separately versioned research design.** If research progress is required before the date gate, define a new versioned specification first. It must preserve v1-v6 artifacts, exclude every prior candidate set as the new design requires, spell out its development cutoff and permitted data, define its selection/validation boundary, give every artifact a new namespace, and state explicitly that no v2-v6 confirmatory-window candle can be read for selection. Any execution authorization and evaluation window must be separately derived and verified. The new design is not permission to execute it in this session.
+
+### Recommendation
+
+Do not bypass or retime the v6 gate. Choose Design A for v6 evaluation. If the user's objective is to keep developing new cohorts before that date, use a distinct v7 preregistration design as a separate task and prove it does not reuse or expose the frozen confirmatory data. Do not relabel the current v5 cycle as v6 or mutate continuous_universe_state.json without a state transition owned by its producer.
+
+### Acceptance criteria for any later version-design work
+
+1. Recompute the maximum of the v2-v5 inherited gates and v6's own end from the owning frozen artifacts; expected maximum is 2027-01-20T02:00:00Z.
+2. Confirm that no confirmatory data are read or counter incremented during design and verification.
+3. Preserve all v1-v6 frozen artifacts and the existing state/ledger relationship.
+4. Derive and test any new development cutoff, universe identity, candidate disjointness, selection grid, artifact namespace, authorization and evaluation gate from the versioned specification; add tamper tests that refuse a changed boundary or overlapping candidate set.
+5. Report design completion separately from implementation, selection execution and confirmatory evaluation.
+
+**Status:** RESEARCH_GATE_PRESERVED; no gate relaxation or alternate execution path implemented.
+
+**Next bounded task:** if explicitly authorized, draft and independently review a v7 preregistration design. Do not implement or execute the design in the same session that creates its decision record.
+
+
+---
+
+## BRAIN-029 — BRAIN-027's amendment already exists; the durable blocker status is stale (2026-10-24T13:43:00Z)
+
+### Revalidation against the branch base
+
+1. The current main/base tree already contains scripts/build_v6_execution_amendment_1.py, configs/research_v6_execution_amendment_1.json, scripts/v6_universe_rules.py, and tests/test_v6_execution_amendment_1.py. These artifacts are present in the base commit 00e859a12e4387ef23ffaa5d18437edc6803c05d; this session did not create them.
+2. scripts/v6_universe_rules.py defines resolve_effective_v6_execution_protocol(). The implementation reads the hash-bound protocol and amendment, verifies the artifacts and their identities, resolves the amendment first, and fails closed rather than falling back to the stale frozen flag.
+3. scripts/verify_v6_execution.py uses that shared resolution and calls verify_effective_v6_selection_authorization() and verify_v6_historical_execution_authorization(). tests/test_v6_execution_amendment_1.py contains tamper controls and producer-reproducibility tests for the same design.
+4. The older BRAIN-027 entry still says DESIGN_READY_FOR_DETERMINENTIC_IMPLEMENTATION, and the preceding handoff says the amendment is not implemented. Those statements no longer accurately describe the tracked source/artifact tree.
+
+### Classification and status
+
+**Implementation status:** IMPLEMENTED_IN_BASE_TREE; CURRENT_SESSION_VERIFICATION_PENDING.
+
+BRAIN-027 is not an unimplemented blocker to repair again. The outstanding task is to run and inspect the explicit verifier and acceptance tests, then update the durable status with actual results. The per-module suite workflow added by this branch includes tests/test_v6_execution_amendment_1.py; its result must remain pending until observed. The frozen protocol's historical false remains unchanged, and the effective amendment must remain self-hashing and fail-closed.
+
+### Scope boundary
+
+This finding authorizes no new selection run, no confirmatory evaluation, and no read of confirmatory-window candles. It changes only the status of the queued defect and guards against duplicate implementation. It does not complete or authorize the missing src/v6_campaign run path.
+
+**Next bounded action:** inspect the per-module CI report. If the amendment test or python3 scripts/verify_v6_execution.py fails, diagnose from that evidence; do not reimplement the amendment or edit frozen artifacts in place.
