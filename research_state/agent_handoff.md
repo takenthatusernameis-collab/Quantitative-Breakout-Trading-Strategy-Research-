@@ -1,3 +1,27 @@
+## Session activity — 2026-10-24T13:52:12Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
+
+**Outcome:** Prior task complete. Re-verified steady v6 freeze state:
+- All seven v6 verifiers exit 0 with `"ok": true`.
+- Live code hash `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` matches frozen v6 hash.
+- `git status --short` clean; HEAD `527211395e6a6ef6d2d71ec2aba430ebe432eb68` == `git ls-remote origin HEAD`.
+- Campaign state unchanged: `current_cycle_id = v5-selection-20261021`, `next_cohort_index = 6`, `blocking_dependency = CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z)`.
+
+**Files changed:** `research_state/agent_handoff.md` only.
+
+**Prompt review outcome:** `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+---
+
+## Initial task message for next agent
+
+**Status (verified 2026-10-24T13:52:12Z):** v6 freeze steady. All seven v6 verifiers `ok: true`; code hash matches frozen v6 hash; tree clean; HEAD matches origin. Campaign blocked by `CONFIRMATORY_WINDOW` until 2027-01-19T13:00:00Z; no implementation authorized.
+
+**Do NOT:** run grid/backtest/selection, read confirmatory-window candle, modify frozen `src/`, `configs/`, `research/`. **Permitted:** read-only verification, bookkeeping, or design work if explicitly tasked. Full `tests/` suite timeout-prone; run v6 tests individually.
+
+---
+
 ## Session activity — 2026-10-24T13:51:40Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
