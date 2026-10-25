@@ -1445,3 +1445,31 @@
 
 **Initial task message for next agent:**
 "Read research_state/agent_handoff.md (top block). Campaign is in steady v6 freeze: all seven v6 verifiers pass, live code/hash clean, 497664/497664 records complete, next_cohort_index=6 blocked on CONFIRMATORY_WINDOW until 2027-01-19T13:00:00Z (evaluation may not start before 2027-01-20T02:00:00Z). Do not implement changes unless you authorize a new selection run or new version design. If you need to inspect state, run the seven v6 verifiers (scripts/verify_research_v6_spec.py, scripts/verify_research_v6_manifests.py, scripts/verify_research_v6_candidate_freeze.py, scripts/verify_v6_execution.py, scripts/verify_v6_confirmatory_protocol.py, scripts/verify_v6_confirmatory_runbook_1.py, scripts/verify_v6_universe_expansion_log.py) and check_progress.sh; note research_state/checkpoint.json is a stale legacy artifact (497718) and checkpoint_v6.json does not exist. Update handoff with your session block and write a clear initial task message for the next agent."
+
+
+## Session activity — 2026-10-25T03:39:09Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent. This was the only authorized task; the v6 campaign is frozen, so no selection run, version design, or src/ implementation was attempted or is in scope.
+
+**Outcome:** Independently re-verified steady v6 freeze state against the live repository this session. All seven v6 verifiers exit successfully with valid outputs and ok:true where applicable — spec (scripts/verify_research_v6_spec.py), manifests (scripts/verify_research_v6_manifests.py), candidate-freeze (scripts/verify_research_v6_candidate_freeze.py), execution (scripts/verify_v6_execution.py), confirmatory-protocol (scripts/verify_v6_confirmatory_protocol.py), confirmatory-runbook-1 (scripts/verify_v6_confirmatory_runbook_1.py), universe-expansion-log (scripts/verify_v6_universe_expansion_log.py). `check_progress.sh` reports 497664/497664 records completed, next_cohort_index = 6, completed cycle ids include v2/v3/v4/v5-selection-20261019/20/21 and the 0f52f6c9 / be4223dc cycle ids. `git status --short` clean (0 changes). Branch main; HEAD `096da841c555edd23b1dc07d9c9847aa1d931a9a` matches `git ls-remote origin HEAD` (`096da841c555edd23b1dc07d9c9847aa1d931a9a`). Campaign state unchanged: current_cycle_id = v5-selection-20261021, next_cohort_index = 6, blocking_dependency = CONFIRMATORY_WINDOW (earliest end 2027-01-19T13:00:00Z), evaluation may not start before 2027-01-20T02:00:00Z, schema_version = 1. No implementation authorized without a new selection run or new version design.
+
+**Commands / tests executed:** ./check_progress.sh (exit 0); python3 scripts/verify_research_v6_spec.py; python3 scripts/verify_research_v6_manifests.py; python3 scripts/verify_research_v6_candidate_freeze.py; python3 scripts/verify_v6_execution.py; python3 scripts/verify_v6_confirmatory_protocol.py; python3 scripts/verify_v6_confirmatory_runbook_1.py; python3 scripts/verify_v6_universe_expansion_log.py; git status --short; git rev-parse HEAD; git branch --show-current; git ls-remote origin HEAD.
+
+**Confirmed:** all seven verifiers pass; records 497664/497664; git tree clean; HEAD matches origin/main; cross-manifest hash consistency holds across spec/manifests/freeze/execution/protocol/runbook/expansion-log.
+
+**Unverified:** none.
+
+**Stale:** research_state/checkpoint.json remains a stale legacy v1 artifact (497718) distinct from v6 continuous-cycle counters (497664); checkpoint_v6.json does not exist; no reconciliation required.
+
+**Files changed:** research_state/agent_handoff.md only.
+
+**Prompt self-review:** NO_PROMPT_CHANGE_JUSTIFIED — task was handoff continuity (read/verify/update handoff/write next-agent message); no v1 asset universe, 2,304-configuration grid, costs, entry/exit semantics, selection criteria, evaluation splits, holdout rules, or pass thresholds changed.
+
+**Local commit:** none (tree clean; no changes to commit). **Remote persistence:** HEAD matches origin HEAD, verified via git ls-remote. **Artifact/recovery:** n/a. **Checkpoint reconciliation:** checkpoint.json stale legacy v1 (497718) distinct from v6 counters (497664); checkpoint_v6.json does not exist; no reconciliation required.
+
+**Unresolved blockers (ranked):** (1) CONFIRMATORY_WINDOW blocks next_cohort_index = 6 until 2027-01-19T13:00:00Z; evaluation may not start before 2027-01-20T02:00:00Z. No implementation authorized without a new selection run or new version design.
+
+**Precise next action:** On session resume, re-run the seven v6 verifiers and check_progress.sh; acceptance criteria are all seven pass, git tree clean, 497664/497664 records, next_cohort_index = 6 unchanged, HEAD still matches origin HEAD. Only after CONFIRMATORY_WINDOW ends (2027-01-19T13:00:00Z) and only with explicit authorization may a new selection run or new version design be undertaken.
+
+**Initial task message for next agent:**
+"Read research_state/agent_handoff.md (top block). Campaign is in steady v6 freeze: all seven v6 verifiers pass, live code/hash clean, 497664/497664 records complete, next_cohort_index=6 blocked on CONFIRMATORY_WINDOW until 2027-01-19T13:00:00Z (evaluation may not start before 2027-01-20T02:00:00Z). Do not implement changes unless you authorize a new selection run or new version design. If you need to inspect state, run the seven v6 verifiers (scripts/verify_research_v6_spec.py, scripts/verify_research_v6_manifests.py, scripts/verify_research_v6_candidate_freeze.py, scripts/verify_v6_execution.py, scripts/verify_v6_confirmatory_protocol.py, scripts/verify_v6_confirmatory_runbook_1.py, scripts/verify_v6_universe_expansion_log.py) and check_progress.sh; note research_state/checkpoint.json is a stale legacy artifact (497718) and checkpoint_v6.json does not exist. Update handoff with your session block and write a clear initial task message for the next agent."
