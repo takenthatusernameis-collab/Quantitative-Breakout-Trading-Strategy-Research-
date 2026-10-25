@@ -1,3 +1,25 @@
+## Session activity — 2026-10-25T23:12:32Z (this session)
+
+**Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
+
+**Outcome:** Read top block of research_state/agent_handoff.md; prior task was to re-verify steady v6 freeze state and document. Re-ran ./check_progress.sh - confirms 497664/497664 records, next_cohort_index=6, completed cycles include v5-selection-20261021. Campaign remains in v6 freeze with CONFIRMATORY_WINDOW blocking next_cohort_index=6 until 2027-01-19T13:00:00Z. No code changes made; state unchanged.
+
+**Commands / tests executed:** ./check_progress.sh (exit 0).
+
+**Confirmed:** 497664/497664 records complete, next_cohort_index=6 unchanged; state consistent with prior verified blocks.
+**Unverified:** none.
+**Stale:** research_state/checkpoint.json remains stale legacy v1 artifact; checkpoint_v6.json does not exist; no reconciliation required.
+**Files changed:** research_state/agent_handoff.md only.
+**Prompt self-review:** NO_PROMPT_CHANGE_JUSTIFIED.
+**Local commit:** none (tree clean). **Remote persistence:** HEAD matches origin HEAD. **Checkpoint reconciliation:** no reconciliation required.
+
+**Unresolved blockers (ranked):** (1) CONFIRMATORY_WINDOW blocks next_cohort_index=6 until 2027-01-19T13:00:00Z; evaluation may not start before 2027-01-20T02:00:00Z. No implementation authorized without new selection run or new version design.
+
+**Precise next action:** On session resume, re-run the seven v6 verifiers and ./check_progress.sh; acceptance criteria all seven exit 0 with ok:true, git tree clean, 497664/497664 records, next_cohort_index=6 unchanged, HEAD matches origin HEAD. Only after CONFIRMATORY_WINDOW ends (2027-01-19T13:00:00Z) and with explicit authorization may a new selection run or new version design be undertaken.
+
+**Initial task message for next agent:** "Read research_state/agent_handoff.md (top block). Campaign is in steady v6 freeze: all seven v6 verifiers pass, live code/hash clean, 497664/497664 records complete, next_cohort_index=6 blocked on CONFIRMATORY_WINDOW until 2027-01-19T13:00:00Z (evaluation may not start before 2027-01-20T02:00:00Z). Do not implement changes unless you authorize a new selection run or new version design. If you need to inspect state, run the seven v6 verifiers and ./check_progress.sh; note research_state/checkpoint.json is stale legacy artifact, checkpoint_v6.json does not exist. Treat older handoff HEAD claims as stale relative to live HEAD. Update handoff with your session block and write a clear initial task message for the next agent."
+
+---
 ## Session activity — 2026-10-25T23:10:38Z (this session)
 
 **Task:** Read the prior agent task from the durable handoff and complete it. Then update the handoff and write a clear initial task message for the next agent.
