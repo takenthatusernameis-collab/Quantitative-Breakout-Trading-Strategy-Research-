@@ -355,6 +355,9 @@ def test_the_v5_run_artifacts_bind_the_v5_manifests_and_the_specification() -> N
 
     This replaces the pre-run guard that asserted the v5 namespace was empty.
     """
+    # The large JSONL stream is intentionally not committed; verified shards
+    # are authoritative and the manifest carries the projection digest.
+    assert not (REPO_ROOT / "research" / "results_v5.jsonl").exists()
     failures = _run_binding_failures(REPO_ROOT)
     assert failures == [], failures
 
