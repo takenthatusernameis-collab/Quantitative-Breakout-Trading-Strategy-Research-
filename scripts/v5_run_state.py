@@ -25,12 +25,13 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
-#: The five output paths of the v5 selection run.
+#: The four committed output paths of the v5 selection run.  The large
+#: results_v5.jsonl file is an uncommitted projection regenerated from the
+#: authoritative shards, as specified by configs/research_v5.json and .gitignore.
 V5_RUN_ARTIFACTS = (
     "research/shards_v5",
     "research/ledger_v5.json",
     "research/results_manifest_v5.json",
-    "research/results_v5.jsonl",
     "research_state/checkpoint_v5.json",
 )
 
