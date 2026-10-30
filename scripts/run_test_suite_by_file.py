@@ -182,24 +182,35 @@ def run_test_module(
             pass
 
     pytest_counts = parse_pytest_counts(log_path)
-    if status == "PASS":
+    pytest_exit_code = exit_code
+    executed_cases = sum(
+        int(pytest_counts.get(kind, 0))
+        for kind in ("passed", "failed", "error", "xfailed", "xpassed")
+    )
+    skipped_cases = int(pytest_counts.get("skipped", 0))
+
+    # pytest uses exit code 5 for a module-level skip because collection yields
+    # no runnable tests. Normalize that expected pytest code for the runner's
+    # transport contract, but keep the module FAIL: skipped-only modules must
+    # never count as a green test module. Preserve the raw pytest code too.
+    if pytest_exit_code == 5 and skipped_cases > 0 and executed_cases == 0:
+        exit_code = 0
+        status = "FAIL"
+        error = "pytest exited 5 after module-level skip; no test cases executed, so the module is not green"
+    elif status == "PASS":
         if not pytest_counts:
             status = "ERROR"
             error = "pytest exited 0 but produced no parsable test summary"
-        else:
-            executed_cases = sum(
-                int(pytest_counts.get(kind, 0))
-                for kind in ("passed", "failed", "error", "xfailed", "xpassed")
-            )
-            if executed_cases == 0:
-                status = "FAIL"
-                error = "pytest exited 0 but no test cases executed; skip/deselect-only modules are not green"
+        elif executed_cases == 0:
+            status = "FAIL"
+            error = "pytest exited 0 but no test cases executed; skip/deselect-only modules are not green"
 
     duration = round(time.monotonic() - started, 3)
     return {
         "module": module_path,
         "status": status,
         "exit_code": exit_code,
+        "pytest_exit_code": pytest_exit_code,
         "duration_seconds": duration,
         "started_at_utc": started_utc,
         "log_path": str(log_path),
