@@ -1,6 +1,15 @@
 name: Per-module Python test suite
 
 on:
+  push:
+    branches:
+      - repair/per-file-test-suite-20261024
+    paths:
+      - ".github/workflows/per-module-tests.yml"
+      - "pyproject.toml"
+      - "scripts/run_test_suite_by_file.py"
+      - "src/**"
+      - "tests/**"
   pull_request:
     paths:
       - ".github/workflows/per-module-tests.yml"
@@ -26,6 +35,8 @@ jobs:
     steps:
       - name: Check out the tested revision
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
