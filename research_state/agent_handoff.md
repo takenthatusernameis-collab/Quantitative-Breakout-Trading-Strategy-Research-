@@ -1,3 +1,18 @@
+# DELAY-ELIMINATION OVERRIDE — 2026-10-30
+
+**Observed repeat pattern:** the same seven v6 verifiers and check_progress.sh have been run on closely spaced agent activations, with 497,664/497,664 records complete, next_cohort_index=6, no authorization, and the same CONFIRMATORY_WINDOW end time. Checkpoint-only commits do not change campaign state.
+
+**New resume cadence:**
+- On activation, first read this top block and compare HEAD, canonical code/data/spec/freeze hashes, authorization files, cohort index, and the last verified timestamp.
+- If the expected hashes, authorization state, cohort index, and source tree are unchanged and the previous full verification is recent, do not rerun all seven verifiers immediately. Run the cheap consistency/fingerprint checks and exit without writing a new checkpoint.
+- Run the full seven-verifier suite plus check_progress.sh after a material code/data/protocol/manifest change, a new authorization event, a new cohort transition, or a genuine suspected integrity failure.
+- Do not create timestamp-only handoff commits, duplicate agent checkpoints, or repeat the same full verification just to keep the loop active.
+- Keep a single exact wake-up at the confirmatory-window release. Work on independent tasks only when they are explicitly permitted and cannot contaminate the frozen confirmatory track.
+
+**Hard boundary unchanged:** do not shorten the confirmatory window (2027-01-20T02:00:00Z), reuse the consumed selection authorization, run evaluations, fetch candles, change frozen specs/manifests or bypass explicit authorization. Faster engineering cadence must not weaken statistical integrity.
+
+---
+
 # Durable agent handoff (top block — read first)
 
 **Campaign state:** steady v6 freeze (authoritative). No open implementation tracks; campaign progression blocked pending CONFIRMATORY_WINDOW.
