@@ -73,12 +73,13 @@ AUTHORIZATION_RELATIVE = "research_state/campaign_authorization.json"
 #: unchanged; this file is the effective rule.
 AMENDMENT_RELATIVE = "configs/research_v5_specification_amendment_1.json"
 
-#: The paths a v5 run creates. Before the authorized run none of them may exist.
+#: The committed paths produced by the authorized v5 run.  The large
+#: research/results_v5.jsonl stream is an uncommitted projection regenerated
+#: from the verified shards; its absence is expected on a fresh checkout.
 V5_EXECUTION_PATHS = (
     "research/shards_v5",
     "research/ledger_v5.json",
     "research/results_manifest_v5.json",
-    "research/results_v5.jsonl",
     "research_state/checkpoint_v5.json",
 )
 
