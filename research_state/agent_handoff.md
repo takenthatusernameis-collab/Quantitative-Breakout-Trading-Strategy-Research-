@@ -12,7 +12,7 @@
 - scripts/verify_v6_universe_expansion_log.py: ok:true (4 entries v3-v6, head entry hash 596af09668d0ffcc5d323beb6d71d32fdcb62fd47d120652e82643d8e60512b1)
 - ./check_progress.sh: ok:true; records 497664/497664; completed cohorts [0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d, be4223dcef25aaa0043a466fcd9044b4e6a7387eff7efd487561b9c1f873c1ae, v2-selection-20261019, v3-selection-20261020, v4-selection-20261021, v5-selection-20261021]; next_cohort_index=6
 
-**Git:** HEAD 27fe7b1ccfee7ae42f184403286d02732df9301b matches origin/main 27fe7b1ccfee7ae42f184403286d02732df9301b (clean). Re-verified this session: all seven v6 verifiers exit 0 with ok:true; ./check_progress.sh ok:true (497664/497664 records, next_cohort_index=6).
+**Git:** HEAD 56c0218a233bc2840d8e200d62e401fab60a14aa matches origin/main 56c0218a233bc2840d8e200d62e401fab60a14aa (clean). Re-verified this session: all seven v6 verifiers exit 0 with ok:true; ./check_progress.sh ok:true (497664/497664 records, next_cohort_index=6).
 
 **Authorization:** configs/research_v6_selection_authorization_1.json present (v6-selection-20261022). configs/research_v6_execution_amendment_1.json is effective execution authorization source. All authorization flags in configs/research_v6*.json are false (no evaluation/run authorized). Canonical hashed set digest 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff; inherited blocks digest 0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433.
 
