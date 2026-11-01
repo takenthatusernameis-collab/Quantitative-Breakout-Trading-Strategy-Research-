@@ -42,3 +42,10 @@ On activation, read the top of research_state/agent_handoff.md and compare HEAD 
 - Stale/mismatched checkpoint and pilot authorization rejected fail-closed.
 - Campaign remains blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; do not shorten the window, reuse the consumed selection authorization, change frozen specs/manifests, or bypass explicit authorization.
 - No timestamp-only/duplicate checkpoint commits; no rerun of all seven verifiers without a material code/data/protocol/manifest change, new authorization, new cohort transition, or genuine suspected integrity failure.
+
+## This session (2026-11-01T18:34:19Z)
+- Cheap checks passed: HEAD f4e1f4d42319c27ed842923399bdc735ac4489c6 == origin/main f4e1f4d42319c27ed842923399bdc735ac4489c6; tree clean; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Authorization files verified: selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 matches on-disk; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af matches on-disk; execution flags all false.
+- Tests rerun: 62 passed (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py, test_baselines.py, test_candidate_freeze.py).
+- BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE: Binance klines HTTP 451 persistent; no re-probe performed. No holdout-enabled campaign attempted.
+- No material change; no checkpoint commit, no verifier rerun.
