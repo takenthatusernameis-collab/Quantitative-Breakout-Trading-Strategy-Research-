@@ -163,3 +163,10 @@ On activation, read the top of research_state/agent_handoff.md and compare HEAD 
 - Tests rerun: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8).
 - BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE: Binance klines HTTP 451 persistent. No re-probe performed — repeat of the same failed endpoint is not a distinct attempt. No holdout-enabled campaign attempted. Fail-closed preserved.
 - No material change; no checkpoint commit; no seven-verifier rerun; no wakeup schedulable.
+
+## This session (2026-11-01T19:39:35Z)
+- Cheap checks passed: HEAD 341399f0cbf16c432b222aed77d9c208b9d8b362 == origin/main 341399f0cbf16c432b222aed77d9c208b9d8b362; tree clean; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Authorization files verified on-disk: selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH. Effective execution_authorization flags all false; selection_authorization_present=true.
+- Tests rerun: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8).
+- BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE: Binance klines HTTP 451 persistent. No re-probe performed — repeat of the same failed endpoint is not a distinct attempt. No holdout-enabled campaign attempted. Fail-closed preserved.
+- No material change; checkpoint commit 341399f0 created by prior session (handoff only); no seven-verifier rerun; no wakeup schedulable.
