@@ -1,9 +1,9 @@
 # Next Agent Task (initial)
 
-On activation, read the top of research_state/agent_handoff.md and compare HEAD (939a2f56d5e4be2c04f145b65682ab4880e6f3a6) vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json).
+On activation, read the top of research_state/agent_handoff.md and compare HEAD (2389083c2b7a079cb021322bd16974cca3c803eb) vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json).
 
 Current verified state (2026-11-01T10:50:24Z):
-- HEAD 939a2f56d5e4be2c04f145b65682ab4880e6f3a6 == origin/main 939a2f56d5e4be2c04f145b65682ab4880e6f3a6; git status --porcelain empty; 0 ahead 0 behind.
+- HEAD 2389083c2b7a079cb021322bd16974cca3c803eb == origin/main 2389083c2b7a079cb021322bd16974cca3c803eb; git status --porcelain empty; 0 ahead 0 behind.
 - next_cohort_index=6 (current_cohort.cohort_index 5, completed=True).
 - execution-authorization flags all false per configs/research_v6_execution_amendment_1.json (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized all false).
 - selection_authorization_present=true; authorized_run.authorized=true; max_runs=1 consumed; run_id v6-selection-20261022; campaign_id v6-campaign.
