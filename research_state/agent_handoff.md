@@ -15,6 +15,16 @@
   - CoinGecko cannot deliver 3 years continuous hourly candles (not a substitute).
   - campaign.py:run() fails closed with DataUnavailableError; holdout-enabled campaign NOT attempted. Fail-closed preserved.
 
+## This session (2026-11-01T21:40:37Z)
+- Cheap checks passed: HEAD af0f21ea61f1e3f2b804f70320dae35c8f394238 == origin/main af0f21ea61f1e3f2b804f70320dae35c8f394238; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Authorization files verified on-disk and manifest hashes recomputed from canonical body (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH. Effective execution_authorization flags all false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); selection_authorization_present=true.
+- Tests rerun: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8).
+- Data gate re-assessed, NOT re-probed: research_state/endpoint_canary_report.json records api.binance.com/api/v3/klines HTTP 451 (blocked) and data-api.binance.vision/api/v3/klines HTTP 200 (selected failover, 26280 BTCUSDT candles verified). All existing v6 datasets were fetched via the vision host and are bound locally in research/data_manifest_v6.json; the selection run reads immutable local datasets and performs zero provider requests. The remaining BRAIN-003 blocker is the CONFIRMATORY_WINDOW (evaluation may not start before 2027-01-20T02:00:00Z) plus confirmatory-window candles that do not exist yet — not a re-testable endpoint failure. Re-probing api.binance.com would be a repeat of the same failed endpoint and was not performed.
+- v6 run artifacts confirmed still absent: research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json, src/v6_campaign.
+- No checkpoint commit created (change not material); no seven-verifier rerun.
+- Campaign remains in steady v6 freeze blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; no evaluation, candle fetch, or run authorized.
+- No wakeup schedulable (release beyond 7-day horizon).
+
 ## This session (2026-11-01T21:38:45Z)
 - Cheap checks passed: HEAD 49a18ef1ea884a940bcec8fdb6ecdfeac0696f43 == origin/main 49a18ef1ea884a940bcec8fdb6ecdfeac0696f43; tree clean; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
 - Authorization files verified on-disk and manifest hashes recomputed from canonical body (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH. Effective execution_authorization flags all false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); selection_authorization_present=true.
