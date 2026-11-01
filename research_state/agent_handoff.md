@@ -1,7 +1,7 @@
 # Agent Handoff — Quantitative Breakout Trading Strategy Research
 
 ## Current state (verified)
-- HEAD: 26cf8716cecd426f0389b48177114c7c6b3e6b47 == origin/main 26cf8716cecd426f0389b48177114c7c6b3e6b47; `git status --porcelain` empty; 0 ahead / 0 behind. (HEAD advanced from ca86d138... recorded in prior handoff; HEAD==origin/main still holds.)
+- HEAD: 25b17a51d8c1b64f97c5b4668f3d450986338651 == origin/main 4abc0509d49f84ece7df3fd6d742dd4f920b848e + 1 checkpoint commit (research_state/agent_handoff.md, research_state/next_agent_task.md); `git status --porcelain` empty; 1 ahead / 0 behind. (HEAD advanced from 4abc0509... recorded in prior handoff; working tree clean.)
 - `research_state/continuous_universe_state.json`: next_cohort_index=6, current_cohort.cohort_index=5 (completed=True)
 - `configs/research_v6_selection_authorization_1.json`: authorized_run.authorized=true, max_runs=1 consumed, run_id v6-selection-20261022, campaign_id v6-campaign; manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 matches on-disk
 - `configs/research_v6_execution_amendment_1.json`: effective execution_authorization has selection_authorization_present=true with matching manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af; all execution flags false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized)
