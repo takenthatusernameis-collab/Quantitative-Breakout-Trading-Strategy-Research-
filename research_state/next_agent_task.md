@@ -4,10 +4,11 @@ On activation, read the top of research_state/agent_handoff.md and compare HEAD 
 
 ## Completed this session
 - Re-read durable handoff; BRAIN-002 step 1 verified complete (pilot_gate authorization refreshed: authorized=true, specification_hash=2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085, code_hash=2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2, evidence_digest=f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053). 52 tests pass.
-- Cheap fingerprint checks pass: HEAD b983b63a211e17b8e2bbf30ef65da78b48861ff5 == origin/main; git status clean; 0 ahead/behind; next_cohort_index=6 (cohort 5 completed=True).
+- Cheap fingerprint checks pass: HEAD 82f711f30358205febb47e3afe4e58e0de41601c == origin/main; git status clean; 0 ahead/behind; next_cohort_index=6 (cohort 5 completed=True).
+- Re-probed data gate: Binance klines HTTP 451 (persistent), CoinGecko hourly returns only partial (169 points for 7d) — cannot deliver 3 years continuous hourly candles; campaign.py:run() fails closed with DataUnavailableError.
 
 ## Remaining work (BRAIN-002 + BRAIN-003, per PLAN.md)
-BRAIN-003 is BLOCKED by DATA_OR_EXTERNAL_SERVICE: Binance klines returns HTTP 451 (persistent), CoinGecko cannot deliver 3 years of continuous hourly candles. campaign.py:run() fails closed with DataUnavailableError. Do not attempt holdout-enabled campaign until the data gate is resolved.
+BRAIN-003 is BLOCKED by DATA_OR_EXTERNAL_SERVICE. Do not attempt holdout-enabled campaign until the data gate is resolved.
 
 First, re-check the data gate (probe Binance klines + CoinGecko availability) before any BRAIN-003 work. If still blocked, perform only cheap fingerprint checks and exit without material changes.
 
@@ -26,4 +27,3 @@ When data becomes available, complete in order:
 - Do not shorten CONFIRMATORY_WINDOW, reuse the consumed selection authorization, change frozen specs/manifests, or bypass explicit authorization.
 - No wake-up can be scheduled for the confirmatory-window release (2027-01-20T02:00:00Z) because it lies beyond the 7-day scheduling horizon; re-check pending wakeups on each activation.
 - Do NOT create timestamp-only/duplicate checkpoint commits; do NOT rerun seven verifiers unless material change/new authorization/cohort/suspected integrity failure.
-(End of file - total 42 lines)
