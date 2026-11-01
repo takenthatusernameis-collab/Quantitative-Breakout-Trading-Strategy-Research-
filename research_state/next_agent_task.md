@@ -6,7 +6,7 @@
 - All execution flags are false in `configs/research_v6_execution_amendment_1.json` (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); `selection_authorization_present=true`.
 - Data gate: Binance `api.binance.com/api/v3/klines` returns HTTP 451 (persistent, recorded in `research_state/endpoint_canary_report.json`). Re-probing it is a repeat of the same failed endpoint and is NOT a distinct attempt — do not loop. The failover host `data-api.binance.vision` returns HTTP 200 and already delivered all existing v6 datasets, bound locally in `research/data_manifest_v6.json`.
 - v6 run artifacts are still absent: `research/shards_v6`, `research/ledger_v6.json`, `research/results_manifest_v6.json`, `research/results_v6.jsonl`, `research_state/checkpoint_v6.json`, `src/v6_campaign`.
-- Last session (2026-11-01T21:48:30Z): cheap checks passed (HEAD == origin/main, tree clean, 0 ahead/0 behind, next_cohort_index=6, both manifest hashes recompute to on-disk values, execution flags all false); tests 62 passed; data gate NOT re-probed; BRAIN-003 NOT attempted; no checkpoint commit; no seven-verifier rerun.
+- Last session (2026-11-01T22:29:15Z): cheap checks passed (HEAD == origin/main `701c6b19609296b1e3a21454b68e431d61c67155`, tree clean, 0 ahead/0 behind, next_cohort_index=6, both manifest hashes recompute to on-disk values — selection `f1b012b6...990`, amendment `25397ae...72af`, execution flags all false); tests not rerun (pytest unavailable; prior recorded 62 passed); data gate NOT re-probed; BRAIN-003 NOT attempted; no checkpoint commit; no seven-verifier rerun; no modifications.
 
 ## Task
 
@@ -17,7 +17,7 @@ On activation:
 
 2. **Do NOT attempt the holdout-enabled BRAIN-003 campaign** until the data gate resolves (HTTP 200, 3 years continuous hourly candles verified by a bounded live probe recorded with endpoint/status/timestamp/command). A repeat of the same failed endpoint is not a distinct attempt; do not loop. The CONFIRMATORY_WINDOW gate also must resolve (evaluation may not start before 2027-01-20T02:00:00Z).
 
-3. **Re-run tests** to confirm nothing regressed:
+3. **Re-run tests** to confirm nothing regressed if the environment has pytest:
    `PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_selection.py tests/test_baselines.py tests/test_candidate_freeze.py`
 
 4. **Only if the data gate resolves** (new live evidence), run the BRAIN-003 confirmation flow: `holdout_enabled=True` over frozen candidates (`research/candidate_manifest_v2.json`), write holdout rows only via the holdout path, run the separate holdout evaluator, preregistered selection on validation units only (holdout records raise `HoldoutRecordError`, never silently filtered), baseline artifact mandatory for `median_sharpe_gt_buyhold` with hash verification. Add end-to-end holdout + selection coverage and run the full test battery.
