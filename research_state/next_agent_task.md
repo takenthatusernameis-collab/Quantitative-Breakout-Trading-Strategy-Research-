@@ -4,7 +4,7 @@ On activation:
 
 ## 1. Cheap consistency/fingerprint checks (always)
 Read the top of research_state/agent_handoff.md and compare:
-- `git rev-parse HEAD` (a5de4282166857746c34f8af92bbd3001f49286e) vs `git ls-remote origin main`
+- `git rev-parse HEAD` (8c06e5089e832445cc179df5adaf78a6d302685e) vs `git ls-remote origin main` (expect equal)
 - `git status --porcelain` (expect empty working tree)
 - ahead/behind vs origin/main
 - next_cohort_index=6 (research_state/continuous_universe_state.json; cohort 5 completed=True)
@@ -35,6 +35,6 @@ If the data gate resolves (Binance klines HTTP 200 with 3 years continuous hourl
 - No wake-up can be scheduled for the confirmatory-window release (beyond 7-day horizon); re-check pending wakeups on each activation and only schedule one if the release falls within horizon.
 - Validation campaign never touches the final holdout fold (holdout_enabled=False default). Holdout-enabled campaign evaluates only frozen candidates from the manifest. Resume position derived from verified shard manifest, never checkpoint counters. Stale/mismatched checkpoint and pilot authorization rejected fail-closed.
 
-- 2026-11-01T14:47:43Z: Initial next-agent task written from handoff state (HEAD a5de4282166857746c34f8af92bbd3001f49286e == origin/main, clean working tree, next_cohort_index=6, sel auth present/consumed, exec flags all false, manifest hashes match, BRAIN-002 step 1 complete, BRAIN-003 blocked by DATA_OR_EXTERNAL_SERVICE).
+- 2026-11-01T14:51:35Z: Initial next-agent task written from verified handoff state (HEAD 8c06e5089e832445cc179df5adaf78a6d302685e == origin/main, clean working tree, next_cohort_index=6, sel auth present/consumed, exec flags all false, manifest hashes match, BRAIN-002 step 1 complete, BRAIN-003 blocked by DATA_OR_EXTERNAL_SERVICE).
 
 (End of file - total 38 lines)
