@@ -3,9 +3,9 @@
 On activation, read the top of research_state/agent_handoff.md and compare HEAD vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json).
 
 ## Completed this session
-- Re-read durable handoff; BRAIN-002 step 1 verified complete (pilot_gate authorization refreshed: authorized=true, specification_hash=2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085, code_hash=2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2, evidence_digest=f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053). 52 tests pass.
-- Cheap fingerprint checks pass: HEAD e5da1b1ce7332ad85a8a3e6fefac7ede74604fb5 == origin/main; git status clean; 0 ahead/behind; next_cohort_index=6 (cohort 5 completed=True).
-- Re-probed data gate: Binance klines HTTP 451 (persistent), CoinGecko hourly returns only ~169 points for 7d — cannot deliver 3 years continuous hourly candles; campaign.py:run() fails closed with DataUnavailableError.
+- Re-read durable handoff; BRAIN-002 step 1 verified complete (pilot_gate authorization refreshed). 52 tests pass.
+- Cheap fingerprint checks pass: HEAD 7a46c5386cf05fdda4937823b43fbb92d6c16a37 == origin/main; git status clean; 0 ahead/behind; next_cohort_index=6 (cohort 5 completed=True).
+- Re-probed data gate: Binance klines HTTP 451 (persistent); CoinGecko cannot deliver 3 years continuous hourly candles; campaign.py:run() fails closed with DataUnavailableError. BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE.
 
 ## Remaining work (BRAIN-002 + BRAIN-003, per PLAN.md)
 BRAIN-003 is BLOCKED by DATA_OR_EXTERNAL_SERVICE. Do not attempt holdout-enabled campaign until the data gate is resolved.
