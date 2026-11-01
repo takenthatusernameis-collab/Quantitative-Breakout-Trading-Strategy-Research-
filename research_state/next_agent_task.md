@@ -1,7 +1,38 @@
 # Next Agent Task (initial)
 
-On activation, read the top of research_state/agent_handoff.md and compare HEAD (ad745ce0b25b55601d1d4bfa138f21ab1fb09c60) vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json). If unchanged and the previous full verification is recent, run only the cheap consistency/fingerprint checks (git rev-parse HEAD vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, execution-authorization flags all false per configs/research_v6_execution_amendment_1.json with selection_authorization_present=true, recompute the two authorization manifest hashes: selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af, and verify_research_v6_manifests/verify_v6_execution ok) and exit without writing a new checkpoint or rerunning the seven verifiers.
+On activation:
 
-Do NOT create timestamp-only/duplicate checkpoint commits. Do NOT rerun all seven verifiers unless there is a material code/data/protocol/manifest change, a new authorization event, a new cohort transition, or a genuine suspected integrity failure. The campaign remains in steady v6 freeze blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z — no evaluation, candle fetch, or run is authorized; do not shorten the window, reuse the consumed selection authorization, change frozen specs/manifests, or bypass explicit authorization. No wake-up can be scheduled for the confirmatory-window release because it lies beyond the 7-day scheduling horizon; re-check pending wakeups on each activation and only schedule one if the release falls within horizon.
+## 1. Cheap consistency/fingerprint checks (always)
+Read the top of research_state/agent_handoff.md and compare:
+- `git rev-parse HEAD` (bd6b58f5a341a094acd6968d4c4aa4ba8242b739) vs `git ls-remote origin main`
+- `git status --porcelain` (expect only the uncommitted test change from this session until committed/cleaned)
+- ahead/behind vs origin/main
+- next_cohort_index=6 (research_state/continuous_universe_state.json; cohort 5 completed=True)
+- authorization files: configs/research_v6_selection_authorization_1.json (selection_authorization_present=true, max_runs=1 consumed) and configs/research_v6_execution_amendment_1.json (execution-authorization flags all false)
+- recompute the two authorization manifest hashes: selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af
 
-- 2026-11-01T13:48:39Z: Next agent task written from handoff state (HEAD ad745ce0b25b55601d1d4bfa138f21ab1fb09c60, origin/main equal, clean, next_cohort_index=6, sel auth consumed, exec flags all false, manifest hashes match, verifiers ok).
+If unchanged and the previous verification is recent, run only the cheap checks and exit without writing a new checkpoint or rerunning the seven verifiers.
+
+## 2. Principal task: BRAIN-002 + BRAIN-003 confirmation flow
+BRAIN-002 step 1 (pilot gate authorization) is COMPLETE: research_state/campaign_authorization.json authorized=true with specification_hash/code_hash/evidence_digest matching the current campaign (verified this session).
+
+BRAIN-003 (holdout-enabled campaign + holdout evaluator + preregistered selection + baseline gate + coverage) remains blocked by DATA_OR_EXTERNAL_SERVICE:
+- Binance klines returns HTTP 451 (persistent, recorded in research_state/pilot_evidence.json asset_data_hashes endpoint_failures)
+- CoinGecko cannot deliver 3 years of continuous hourly candles (recorded, not a substitute for the frozen Binance hourly provider)
+- campaign.py:run() fails closed with DataUnavailableError
+
+Do NOT attempt a holdout-enabled campaign until the data gate is resolved. End-to-end holdout + selection coverage already exists and passes (tests/test_holdout_isolation.py incl. test_holdout_campaign_writes_only_frozen_candidates_and_selection_refuses_holdout; test_selection.py; test_baselines.py; test_candidate_freeze.py). Re-run `PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_selection.py tests/test_baselines.py tests/test_candidate_freeze.py` to confirm.
+
+If the data gate resolves (Binance klines HTTP 200 with 3 years continuous hourly candles, verified by a bounded live probe recorded with endpoint, status, timestamp, command), then run the BRAIN-003 confirmation flow end to end:
+1. holdout_enabled=True campaign over frozen candidates (candidate_config_ids from research/candidate_manifest_v2.json v2 preregistered rule), writing holdout rows only from the holdout-enabled path
+2. separate holdout evaluator to confirm/reject each frozen candidate on holdout data
+3. preregistered selection (select_candidates) on validation units only; a holdout record raises HoldoutRecordError, never silently filtered
+4. baseline artifact (verify_baseline_artifact) mandatory for median_sharpe_gt_buyhold; fail closed when missing or hash-mismatched
+
+## 3. Invariant constraints (never violate)
+- Do NOT create timestamp-only/duplicate checkpoint commits. Do NOT rerun all seven verifiers unless material code/data/protocol/manifest change, new authorization event, new cohort transition, or genuine suspected integrity failure.
+- Campaign remains in steady v6 freeze blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z — no evaluation, candle fetch, or run is authorized; do not shorten the window, reuse the consumed selection authorization, change frozen specs/manifests, or bypass explicit authorization.
+- No wake-up can be scheduled for the confirmatory-window release (beyond 7-day horizon); re-check pending wakeups on each activation and only schedule one if the release falls within horizon.
+- Validation campaign never touches the final holdout fold (holdout_enabled=False default). Holdout-enabled campaign evaluates only frozen candidates from the manifest. Resume position derived from verified shard manifest, never checkpoint counters. Stale/mismatched checkpoint and pilot authorization rejected fail-closed.
+
+- 2026-11-01T13:50:00Z: Initial next-agent task written from handoff state (HEAD bd6b58f5a == origin/main, one uncommitted test file, next_cohort_index=6, sel auth consumed, exec flags all false, manifest hashes match, BRAIN-002 step 1 complete, BRAIN-003 blocked by DATA_OR_EXTERNAL_SERVICE).

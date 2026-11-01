@@ -21,6 +21,7 @@ from breakout_research.config import (
 )
 from breakout_research.data.fetcher import HOUR_MS
 import breakout_research.pilot_gate_validator as pilot_gate_validator
+from breakout_research.selection import HoldoutRecordError, select_candidates
 
 SHARD_ROOT = "research/results_shards"
 MANIFEST_PATH = "research/results_manifest.json"
@@ -344,3 +345,73 @@ def test_holdout_candidate_manifest_is_verified_before_any_holdout_execution(
     assert calls["manifest_loads"] >= 1
     holdout = [r for r in _all_records(tmp_path) if r["is_holdout"]]
     assert len(holdout) == EXPECTED_HOLDOUT_UNITS
+
+
+def test_holdout_campaign_writes_only_frozen_candidates_and_selection_refuses_holdout(
+    tmp_path, monkeypatch,
+):
+    """End-to-end BRAIN-003: holdout run writes only frozen candidates; selection
+    consumes validation units only and raises HoldoutRecordError on a holdout
+    record (never silently filtered). All fixtures are synthetic software data.
+    """
+    _build_runner(tmp_path, monkeypatch)
+    runner = campaign_module.CampaignRunner()
+    result = runner.run(holdout_enabled=True)
+    assert result["status"] == "CAMPAIGN_COMPLETE"
+
+    records = _all_records(tmp_path)
+    holdout = [r for r in records if r["is_holdout"]]
+    validation = [r for r in records if not r["is_holdout"]]
+    assert holdout, "holdout-enabled campaign must write holdout rows"
+    assert all(r["config_id"] == "cfg_holdout_0001" for r in holdout), \
+        "holdout rows only from frozen candidates"
+    assert all(r["fold_index"] == 4 for r in holdout)
+    assert all(not r["is_holdout"] for r in validation)
+
+    SELECTION_SPEC = {
+        "selection": {
+            "max_candidates_per_asset": 1,
+            "min_trades_total": 30,
+            "min_trades_per_fold": 5,
+            "min_folds_with_min_trades": 3,
+            "positive_net_return_baseline": True,
+            "positive_net_return_2x_costs": True,
+            "positive_folds_required": 3,
+            "median_sharpe_gt_zero": True,
+            "median_sharpe_gt_buyhold": True,
+        },
+    }
+    BASELINES = {"BTCUSDT": {"status": "OK", "reason": None,
+                             "median_daily_sharpe": 0.5}}
+
+    def _unit(fold, cost, trades=10, net_return=0.1, sharpe=1.0, holdout=False):
+        return {
+            "asset": "BTCUSDT",
+            "config_id": "cfg_holdout_0001",
+            "fold_index": fold,
+            "cost_multiplier": cost,
+            "status": "COMPLETED",
+            "trade_count": trades,
+            "net_total_return": net_return,
+            "daily_sharpe": sharpe,
+            "max_drawdown": 0.2,
+            "turnover": 5.0,
+            "is_holdout": holdout,
+        }
+
+    validation_units = [
+        _unit(fold=fold, cost=cost)
+        for fold in range(4)
+        for cost in (1.0, 2.0)
+    ]
+    holdout_unit = _unit(fold=4, cost=1.0, holdout=True)
+
+    # Validation units only: every preregistered gate passes, candidate selected.
+    selection = select_candidates(validation_units, SELECTION_SPEC, BASELINES)
+    assert selection["BTCUSDT"]["config_id"] == "cfg_holdout_0001"
+    assert selection["BTCUSDT"]["status"] == "CANDIDATE_SELECTED"
+
+    # A holdout record reaching the selection path raises HoldoutRecordError and
+    # is never silently filtered out.
+    with pytest.raises(HoldoutRecordError):
+        select_candidates(validation_units + [holdout_unit], SELECTION_SPEC, BASELINES)
