@@ -15,11 +15,13 @@
   - CoinGecko cannot deliver 3 years continuous hourly candles (not a substitute).
   - campaign.py:run() fails closed with DataUnavailableError; holdout-enabled campaign NOT attempted. Fail-closed preserved.
 
-## This session (2026-11-01T17:41:29Z)
-- Cheap consistency/fingerprint checks completed: HEAD 26cf8716 == origin/main 26cf8716; clean tree; 0 ahead/0 behind; next_cohort_index=6; auth files + manifest hashes verified (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af); no material code/data/protocol/manifest change.
-- Tests rerun: 62 passed, exit 0.
-- Verifiers rerun: verify_research_v6_manifests ok=true; verify_v6_execution ok=true.
-- No holdout-enabled campaign attempted (data gate blocked: Binance klines HTTP 451 persistent).
+## This session (2026-11-01T17:42:38Z)
+- Cheap consistency/fingerprint checks completed: HEAD 4abc0509 == origin/main 4abc0509; clean tree; 0 ahead/0 behind; next_cohort_index=6; no material code/data/protocol/manifest change (only prior checkpoint commits touching research_state/agent_handoff.md and research_state/next_agent_task.md).
+- Authorization files verified on-disk: configs/research_v6_selection_authorization_1.json authorized_run.authorized=true, max_runs=1 consumed, run_id v6-selection-20261022, campaign_id v6-campaign, manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 (recomputes from body); configs/research_v6_execution_amendment_1.json top-level manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af, effective execution_authorization flags all false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized), selection_authorization_present=true.
+- Tests rerun: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py, test_baselines.py, test_candidate_freeze.py).
+- Verifiers NOT rerun: no material code/data/protocol/manifest change since last verified run (HEAD 26cf8716 -> 4abc0509 touched only handoff/next-agent files); prior run recorded verify_research_v6_manifests ok=true and verify_v6_execution ok=true. Rerun on demand only.
+- v6 run artifacts confirmed absent: research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json, src/v6_campaign all absent.
+- No holdout-enabled campaign attempted (data gate blocked: Binance klines HTTP 451 persistent, recorded in research/data_manifest_v6.json binance_spot_verification and research_state/pilot_evidence.json asset_data_hashes). No re-probe performed — repeat of the same failed endpoint is not a distinct attempt.
 - No checkpoint commit created; no seven-verifier rerun (change not material).
 - Campaign remains in steady v6 freeze blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; no evaluation, candle fetch, or run authorized.
 - No wakeup schedulable (release beyond 7-day horizon).
