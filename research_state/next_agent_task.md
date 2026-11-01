@@ -3,7 +3,7 @@
 On activation, read the top of research_state/agent_handoff.md and compare HEAD vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json). If unchanged and the previous full verification is recent, run only the cheap consistency/fingerprint checks and exit without writing a new checkpoint or rerunning the seven verifiers.
 
 Cheap checks to run:
-- `git rev-parse HEAD` vs `git ls-remote origin main` (must be equal; current HEAD 1078d94342295a31ff1482f007a96bb9c49123f1)
+- `git rev-parse HEAD` vs `git ls-remote origin main` (must be equal; current HEAD c71ec2ad61cad5f124f37004ba2c345761ae4375)
 - `git status --porcelain` (must be empty)
 - `git rev-list --count HEAD..origin/main` and `git rev-list --count origin/main..HEAD` (both 0)
 - `research_state/continuous_universe_state.json` -> next_cohort_index == 6, current_cohort.cohort_index == 5, completed == true
