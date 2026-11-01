@@ -6,6 +6,7 @@
 - All execution flags are false in `configs/research_v6_execution_amendment_1.json` (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); `selection_authorization_present=true`.
 - Data gate: Binance `api.binance.com/api/v3/klines` returns HTTP 451 (persistent, recorded in `research_state/endpoint_canary_report.json`). Re-probing it is a repeat of the same failed endpoint and is NOT a distinct attempt — do not loop. The failover host `data-api.binance.vision` returns HTTP 200 and already delivered all existing v6 datasets, bound locally in `research/data_manifest_v6.json`.
 - v6 run artifacts are still absent: `research/shards_v6`, `research/ledger_v6.json`, `research/results_manifest_v6.json`, `research/results_v6.jsonl`, `research_state/checkpoint_v6.json`, `src/v6_campaign`.
+- Last session (2026-11-01T21:44:25Z): cheap checks passed (HEAD == origin/main, tree clean, 0 ahead/0 behind, next_cohort_index=6, both manifest hashes recompute to on-disk values, execution flags all false); tests 62 passed; data gate NOT re-probed; BRAIN-003 NOT attempted; no checkpoint commit; no seven-verifier rerun.
 
 ## Task
 
