@@ -1,7 +1,7 @@
 # Initial Task for Next Agent
 
 ## Current state (verified)
-- HEAD: b21b2bba2817464512c1fab0e17d1eab524f5457 == origin/main b21b2bba2817464512c1fab0e17d1eab524f5457; clean working tree; 0 ahead / 0 behind.
+- HEAD: f4945e4370d0831c8c0152b89833a11febfd10b0 == origin/main f4945e4370d0831c8c0152b89833a11febfd10b0; clean working tree; 0 ahead / 0 behind.
 - research_state/continuous_universe_state.json: next_cohort_index=6, current_cohort.cohort_index=5 (completed=True)
 - configs/research_v6_selection_authorization_1.json: authorized_run.authorized=true, max_runs=1 consumed, run_id v6-selection-20261022, campaign_id v6-campaign (manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 recomputes to same value, MATCH)
 - configs/research_v6_execution_amendment_1.json: effective execution_authorization has selection_authorization_present=true with matching manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af (recomputes to same value, MATCH); all execution flags false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized)
@@ -12,7 +12,7 @@
 ## BRAIN-002 / BRAIN-003 status
 - BRAIN-002 step 1 (pilot gate authorization): COMPLETE. research_state/campaign_authorization.json authorized=true with matching hashes.
 - BRAIN-003 (holdout-enabled campaign + holdout evaluator + preregistered selection + baseline gate): BLOCKED by DATA_OR_EXTERNAL_SERVICE (CONFIRMED).
-  - Binance klines HTTP 451 persistent (research/data_manifest_v6.json binance_spot_verification, latest probe 2026-10-22T01:20:06Z; research_state/pilot_evidence.json asset_data_hashes). Do NOT re-probe — a repeat of the same failed endpoint is not a distinct attempt.
+  - Binance klines HTTP 451 persistent (research/data_manifest_v6.json binance_spot_verification; research_state/pilot_evidence.json asset_data_hashes). Do NOT re-probe — a repeat of the same failed endpoint is not a distinct attempt.
   - CoinGecko cannot deliver 3 years continuous hourly candles (not a substitute).
   - campaign.py:run() fails closed with DataUnavailableError; holdout-enabled campaign NOT attempted. Fail-closed preserved.
 
