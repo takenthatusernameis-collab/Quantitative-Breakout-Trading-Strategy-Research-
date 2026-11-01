@@ -222,3 +222,10 @@ On activation, read the top of research_state/agent_handoff.md and compare HEAD 
 2. Do NOT attempt the holdout-enabled BRAIN-003 campaign until the Binance klines data gate resolves (HTTP 200, 3 years continuous hourly candles verified by a bounded live probe recorded with endpoint/status/timestamp/command). A repeat of the same failed endpoint is not a distinct attempt; do not loop.
 3. Re-run tests to confirm nothing regressed if environment has pytest: PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_selection.py tests/test_baselines.py tests/test_candidate_freeze.py
 4. Only if the data gate resolves (new live evidence), follow the BRAIN-003 confirmation flow per handoff invariants.
+
+## This session (2026-11-01T22:56:57Z)
+- Cheap checks passed: HEAD a32b1e658a100d0e8bea4f34ce664dc4595ef400 == origin/main a32b1e658a100d0e8bea4f34ce664dc4595ef400; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Authorization files verified on-disk; execution flags all false; selection_authorization_present=true; manifest hashes match (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af).
+- pytest not available in this environment; tests not rerun (prior recorded 62 passed). Data gate unchanged (api.binance.com HTTP 451; failover vision host HTTP 200); BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE and CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z. No re-probe performed.
+- No material change: no checkpoint commit; no seven-verifier rerun; no modifications.
+- Completed prior task per handoff: cheap checks only, no modifications/checkpoints/reruns.
