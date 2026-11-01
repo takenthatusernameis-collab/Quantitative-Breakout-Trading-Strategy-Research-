@@ -228,3 +228,14 @@ On activation, read the top of research_state/agent_handoff.md and compare HEAD 
 - BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE: Binance klines HTTP 451 persistent. No re-probe performed — repeat of the same failed endpoint is not a distinct attempt. No holdout-enabled campaign attempted. Fail-closed preserved.
 - No material change; no checkpoint commit; no seven-verifier rerun; no wakeup schedulable.
 - Campaign remains in steady v6 freeze blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; no evaluation, candle fetch, or run authorized.
+
+## This session (2026-11-01T20:38:39Z)
+- Cheap checks passed: HEAD 59abf574c1c3d1c350fb60774b47564d9654c461 == origin/main 59abf574c1c3d1c350fb60774b47564d9654c461; `git status --porcelain` empty; 0 ahead / 0 behind; `next_cohort_index=6`; `current_cohort.cohort_index=5` completed=True.
+- Authorization files verified on-disk and manifest hashes recomputed from canonical body (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH. Effective execution_authorization flags all false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); selection_authorization_present=true.
+- Tests rerun: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8).
+- BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE: Binance klines HTTP 451 persistent (research/data_manifest_v6.json binance_spot_verification; research_state/pilot_evidence.json asset_data_hashes). No re-probe performed — repeat of the same failed endpoint is not a distinct attempt. No holdout-enabled campaign attempted. Fail-closed preserved.
+- Verifiers NOT rerun: no material change since last verified run; prior runs recorded verify_research_v6_manifests ok=true and verify_v6_execution ok=true. Rerun on demand only.
+- v6 run artifacts confirmed still absent: research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json, src/v6_campaign.
+- No checkpoint commit created (change not material); no seven-verifier rerun.
+- Campaign remains in steady v6 freeze blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; no evaluation, candle fetch, or run authorized.
+- No wakeup schedulable (release beyond 7-day horizon).
