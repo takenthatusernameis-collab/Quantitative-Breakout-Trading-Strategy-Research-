@@ -4,11 +4,11 @@ On activation:
 
 ## 1. Cheap consistency/fingerprint checks (always)
 Read the top of research_state/agent_handoff.md and compare:
-- `git rev-parse HEAD` (bd6b58f5a341a094acd6968d4c4aa4ba8242b739) vs `git ls-remote origin main`
-- `git status --porcelain` (expect only the uncommitted test change from this session until committed/cleaned)
+- `git rev-parse HEAD` (a5de4282166857746c34f8af92bbd3001f49286e) vs `git ls-remote origin main`
+- `git status --porcelain` (expect empty working tree)
 - ahead/behind vs origin/main
 - next_cohort_index=6 (research_state/continuous_universe_state.json; cohort 5 completed=True)
-- authorization files: configs/research_v6_selection_authorization_1.json (selection_authorization_present=true, max_runs=1 consumed) and configs/research_v6_execution_amendment_1.json (execution-authorization flags all false)
+- authorization files: configs/research_v6_selection_authorization_1.json (selection_authorization_present=true, max_runs=1, run_id v6-selection-20261022) and configs/research_v6_execution_amendment_1.json (execution-authorization flags all false; selection_authorization_present=true)
 - recompute the two authorization manifest hashes: selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af
 
 If unchanged and the previous verification is recent, run only the cheap checks and exit without writing a new checkpoint or rerunning the seven verifiers.
@@ -17,7 +17,7 @@ If unchanged and the previous verification is recent, run only the cheap checks 
 BRAIN-002 step 1 (pilot gate authorization) is COMPLETE: research_state/campaign_authorization.json authorized=true with specification_hash/code_hash/evidence_digest matching the current campaign (verified this session).
 
 BRAIN-003 (holdout-enabled campaign + holdout evaluator + preregistered selection + baseline gate + coverage) remains blocked by DATA_OR_EXTERNAL_SERVICE:
-- Binance klines returns HTTP 451 (persistent, recorded in research_state/pilot_evidence.json asset_data_hashes endpoint_failures)
+- Binance klines returns HTTP 451 (persistent, recorded in research_state/pilot_evidence.json asset_data_hashes endpoint_failures and research/data_manifest_v6.json binance_spot_verification)
 - CoinGecko cannot deliver 3 years of continuous hourly candles (recorded, not a substitute for the frozen Binance hourly provider)
 - campaign.py:run() fails closed with DataUnavailableError
 
@@ -35,4 +35,6 @@ If the data gate resolves (Binance klines HTTP 200 with 3 years continuous hourl
 - No wake-up can be scheduled for the confirmatory-window release (beyond 7-day horizon); re-check pending wakeups on each activation and only schedule one if the release falls within horizon.
 - Validation campaign never touches the final holdout fold (holdout_enabled=False default). Holdout-enabled campaign evaluates only frozen candidates from the manifest. Resume position derived from verified shard manifest, never checkpoint counters. Stale/mismatched checkpoint and pilot authorization rejected fail-closed.
 
-- 2026-11-01T13:50:00Z: Initial next-agent task written from handoff state (HEAD bd6b58f5a == origin/main, one uncommitted test file, next_cohort_index=6, sel auth consumed, exec flags all false, manifest hashes match, BRAIN-002 step 1 complete, BRAIN-003 blocked by DATA_OR_EXTERNAL_SERVICE).
+- 2026-11-01T14:47:43Z: Initial next-agent task written from handoff state (HEAD a5de4282166857746c34f8af92bbd3001f49286e == origin/main, clean working tree, next_cohort_index=6, sel auth present/consumed, exec flags all false, manifest hashes match, BRAIN-002 step 1 complete, BRAIN-003 blocked by DATA_OR_EXTERNAL_SERVICE).
+
+(End of file - total 38 lines)
