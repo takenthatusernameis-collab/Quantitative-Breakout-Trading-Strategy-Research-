@@ -16,12 +16,12 @@ Read the top of `research_state/agent_handoff.md` and compare HEAD vs origin/mai
 - Campaign remains blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; do not shorten the window, reuse the consumed selection authorization, change frozen specs/manifests, or bypass explicit authorization.
 - No timestamp-only/duplicate checkpoint commits; no rerun of all seven verifiers without a material code/data/protocol/manifest change, new authorization, new cohort transition, or genuine suspected integrity failure.
 
-## Current state (verified 2026-11-01T20:42:33Z)
-- HEAD 9478f1830654d88e89710d7c9b1b4eaf65fa2331 == origin/main; tree clean; 0 ahead / 0 behind.
+## Current state (verified 2026-11-01T20:45:26Z)
+- HEAD 1595ff75ce73b56ce7f749e003c2a218808b1c31 == origin/main; tree clean; 0 ahead / 0 behind.
 - `research_state/continuous_universe_state.json`: next_cohort_index=6, current_cohort.cohort_index=5 (completed=True).
-- `configs/research_v6_selection_authorization_1.json`: authorized=true, max_runs=1 consumed, run_id v6-selection-20261022, campaign_id v6-campaign, manifest_hash f1b012b6... matches on-disk.
-- `configs/research_v6_execution_amendment_1.json`: effective execution_authorization flags all false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); selection_authorization_present=true; amendment manifest_hash 25397ae... matches on-disk.
+- `configs/research_v6_selection_authorization_1.json`: authorized_run.authorized=true, max_runs=1 consumed, run_id v6-selection-20261022, campaign_id v6-campaign, manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 matches on-disk.
+- `configs/research_v6_execution_amendment_1.json`: effective execution_authorization flags all false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); selection_authorization_present=true; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af matches on-disk.
 - Tests: 62 passed (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8).
-- BRAIN-003 blocked by DATA_OR_EXTERNAL_SERVICE (Binance klines HTTP 451 persistent, latest probe 2026-10-22T01:20:06Z). No holdout-enabled campaign attempted. Fail-closed preserved.
+- BRAIN-003 blocked by DATA_OR_EXTERNAL_SERVICE (Binance klines HTTP 451 persistent). No holdout-enabled campaign attempted. Fail-closed preserved.
 - v6 run artifacts absent: research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json, src/v6_campaign.
 - Campaign in steady v6 freeze blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; no evaluation, candle fetch, or run authorized. No wakeup schedulable (release beyond 7-day horizon).
