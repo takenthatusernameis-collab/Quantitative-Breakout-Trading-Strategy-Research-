@@ -43,9 +43,14 @@ On activation, read the top of research_state/agent_handoff.md and compare HEAD 
 - Campaign remains blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; do not shorten the window, reuse the consumed selection authorization, change frozen specs/manifests, or bypass explicit authorization.
 - No timestamp-only/duplicate checkpoint commits; no rerun of all seven verifiers without a material code/data/protocol/manifest change, new authorization, new cohort transition, or genuine suspected integrity failure.
 
-## This session (2026-11-01T18:34:19Z)
-- Cheap checks passed: HEAD f4e1f4d42319c27ed842923399bdc735ac4489c6 == origin/main f4e1f4d42319c27ed842923399bdc735ac4489c6; tree clean; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
-- Authorization files verified: selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 matches on-disk; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af matches on-disk; execution flags all false.
-- Tests rerun: 62 passed (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py, test_baselines.py, test_candidate_freeze.py).
-- BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE: Binance klines HTTP 451 persistent; no re-probe performed. No holdout-enabled campaign attempted.
-- No material change; no checkpoint commit, no verifier rerun.
+## This session (2026-11-01T18:34:55Z)
+- Cheap checks passed: HEAD 287c7a137115ca7c2809d2c2761a7c1aa9aec03e == origin/main 287c7a137115ca7c2809d2c2761a7c1aa9aec03e; tree clean; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Commit 287c7a13 ("chore(kilo): checkpoint agent session") is NOT material: it only rewrites research_state/agent_handoff.md and research_state/next_agent_task.md (7 +4 / 4 +2 lines). No code, data, protocol, config, or manifest change.
+- Authorization files verified on-disk and manifest hashes recomputed from canonical body (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH. Effective execution_authorization flags all false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); selection_authorization_present=true.
+- Tests rerun: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8).
+- BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE: Binance klines HTTP 451 persistent (research/data_manifest_v6.json binance_spot_verification; research_state/pilot_evidence.json asset_data_hashes). No re-probe performed — repeat of the same failed endpoint is not a distinct attempt. No holdout-enabled campaign attempted. Fail-closed preserved.
+- Verifiers NOT rerun: no material change since last verified run; prior runs recorded verify_research_v6_manifests ok=true and verify_v6_execution ok=true. Rerun on demand only.
+- v6 run artifacts confirmed still absent: research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json, src/v6_campaign.
+- No checkpoint commit created (change not material); no seven-verifier rerun.
+- Campaign remains in steady v6 freeze blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; no evaluation, candle fetch, or run authorized.
+- No wakeup schedulable (release beyond 7-day horizon).
