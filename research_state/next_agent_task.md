@@ -16,8 +16,8 @@ Read the top of `research_state/agent_handoff.md` and compare HEAD vs origin/mai
 - Campaign remains blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; do not shorten the window, reuse the consumed selection authorization, change frozen specs/manifests, or bypass explicit authorization.
 - No timestamp-only/duplicate checkpoint commits; no rerun of all seven verifiers without a material code/data/protocol/manifest change, new authorization, new cohort transition, or genuine suspected integrity failure.
 
-## Current state (verified 2026-11-01T20:38:39Z)
-- HEAD 59abf574c1c3d1c350fb60774b47564d9654c461 == origin/main; tree clean; 0 ahead / 0 behind.
+## Current state (verified 2026-11-01T20:40:29Z)
+- HEAD 6fb6c572e32d3b123d321dbdcae77ee3f64b82ee == origin/main; tree clean; 0 ahead / 0 behind.
 - `research_state/continuous_universe_state.json`: next_cohort_index=6, current_cohort.cohort_index=5 (completed=True).
 - `configs/research_v6_selection_authorization_1.json`: authorized=true, max_runs=1 consumed, run_id v6-selection-20261022, campaign_id v6-campaign, manifest_hash f1b012b6... matches on-disk.
 - `configs/research_v6_execution_amendment_1.json`: effective execution_authorization flags all false (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); selection_authorization_present=true; amendment manifest_hash 25397ae... matches on-disk.
