@@ -2,12 +2,14 @@
 
 On activation, read the top of research_state/agent_handoff.md and compare HEAD vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json).
 
-## Completed this session (BRAIN-002 step 1)
-- Ran breakout_research.pilot_gate_validator.authorize_campaign() against research_state/pilot_evidence.json -> research_state/campaign_authorization.json refreshed: authorized=true, specification_hash=2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085, code_hash=2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2, evidence_digest=f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053. All match current campaign, no rejection reasons.
-- Verified 52 tests pass: tests/test_campaign_resume.py (8), tests/test_holdout_isolation.py (7), tests/test_pilot_authorization.py, tests/test_selection.py, tests/test_candidate_freeze.py.
+## Completed this session
+- Re-read durable handoff; BRAIN-002 step 1 verified complete (pilot_gate authorization refreshed: authorized=true, specification_hash=2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085, code_hash=2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2, evidence_digest=f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053). 52 tests pass.
+- Cheap fingerprint checks pass: HEAD b983b63a211e17b8e2bbf30ef65da78b48861ff5 == origin/main; git status clean; 0 ahead/behind; next_cohort_index=6 (cohort 5 completed=True).
 
 ## Remaining work (BRAIN-002 + BRAIN-003, per PLAN.md)
-BRAIN-003 is blocked by DATA_OR_EXTERNAL_SERVICE: Binance klines returns HTTP 451 (persistent), CoinGecko cannot deliver 3 years of continuous hourly candles. campaign.py:run() fails closed with DataUnavailableError. Do not attempt holdout-enabled campaign until the data gate is resolved.
+BRAIN-003 is BLOCKED by DATA_OR_EXTERNAL_SERVICE: Binance klines returns HTTP 451 (persistent), CoinGecko cannot deliver 3 years of continuous hourly candles. campaign.py:run() fails closed with DataUnavailableError. Do not attempt holdout-enabled campaign until the data gate is resolved.
+
+First, re-check the data gate (probe Binance klines + CoinGecko availability) before any BRAIN-003 work. If still blocked, perform only cheap fingerprint checks and exit without material changes.
 
 When data becomes available, complete in order:
 1. BRAIN-003 step 2: run holdout-enabled campaign (holdout_enabled=True) over frozen candidates from research/candidate_manifest.json (v1) or research/candidate_manifest_v2.json (v2 preregistered rule), writing holdout rows only from the holdout-enabled path (never from validation).
@@ -23,3 +25,5 @@ When data becomes available, complete in order:
 - Stale/mismatched checkpoint and pilot authorization rejected fail-closed.
 - Do not shorten CONFIRMATORY_WINDOW, reuse the consumed selection authorization, change frozen specs/manifests, or bypass explicit authorization.
 - No wake-up can be scheduled for the confirmatory-window release (2027-01-20T02:00:00Z) because it lies beyond the 7-day scheduling horizon; re-check pending wakeups on each activation.
+- Do NOT create timestamp-only/duplicate checkpoint commits; do NOT rerun seven verifiers unless material change/new authorization/cohort/suspected integrity failure.
+(End of file - total 42 lines)
