@@ -1,3 +1,19 @@
+## This session (2026-11-02T01:07:14Z)
+- Cheap checks passed: HEAD f93201975a5445cbb5a5cf999c7e817dfb1b8223 == origin/main f93201975a5445cbb5a5cf999c7e817dfb1b8223; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Authorization files verified on-disk; execution flags all false per configs/research_v6_execution_amendment_1.json (effective_execution_authorization.execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized all false); selection_authorization_present=true. Manifest hashes match on-disk (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af).
+- pytest not available in this environment (`No module named pytest`); tests not rerun (prior recorded 62 passed). Data gate unchanged (api.binance.com HTTP 451; failover vision host HTTP 200); BRAIN-003 remains blocked by DATA_OR_EXTERNAL_SERVICE and CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z. No re-probe performed.
+- No material change: no checkpoint commit created; no seven-verifier rerun; no modifications.
+- Completed prior task per handoff: cheap checks only, no modifications/checkpoints/reruns.
+
+## Next Agent Task (initial — 2026-11-02T01:07:14Z)
+
+On activation, read the top of research_state/agent_handoff.md and compare HEAD vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json).
+
+1. **Cheap checks first.** If HEAD == origin/main, tree clean, 0 ahead / 0 behind, next_cohort_index=6, execution-authorization flags all false per configs/research_v6_execution_amendment_1.json, and the two authorization manifest hashes match on-disk (selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af), run only the cheap checks and exit without writing a new checkpoint or rerunning the seven verifiers.
+2. **Do NOT attempt the holdout-enabled BRAIN-003 campaign** until the Binance klines data gate resolves (HTTP 200, 3 years continuous hourly candles verified by a bounded live probe recorded with endpoint/status/timestamp/command). A repeat of the same failed endpoint is not a distinct attempt; do not loop.
+3. **Re-run tests** to confirm nothing regressed if environment has pytest: `PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_selection.py tests/test_baselines.py tests/test_candidate_freeze.py`
+4. **Only if the data gate resolves** (new live evidence), follow the BRAIN-003 confirmation flow per handoff invariants.
+
 ## This session (2026-11-02T01:06:50Z)
 - Cheap checks passed: HEAD 1680761a268410755ad40d197b935735d91af48c == origin/main 1680761a268410755ad40d197b935735d91af48c; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
 - Authorization files verified on-disk; execution flags all false; manifest hashes match on-disk (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af).
