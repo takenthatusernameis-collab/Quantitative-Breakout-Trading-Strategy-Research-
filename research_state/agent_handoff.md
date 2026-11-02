@@ -6,11 +6,13 @@
 - No material change: no checkpoint commit created; no seven-verifier rerun; no modifications.
 - Completed prior task per handoff: cheap checks only as specified.
 
-## Next Agent Task (initial — 2026-11-02T02:08:28Z)
+## This session (2026-11-02T02:11:17Z) — COMPLETED
+- Cheap checks re-run and all green: HEAD 5eec7f939b357467d2bcd9d18b903cc6a360f7e5 == origin/main 5eec7f939b357467d2bcd9d18b903cc6a360f7e5; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false).
+- Manifest hashes recomputed canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
+- Data gate NOT re-probed: no new live evidence; api.binance.com HTTP 451 previously observed; a repeat is not a distinct attempt. Holdout-enabled BRAIN-003 campaign NOT attempted. Fail-closed preserved.
+- Tests: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8). No code changes; no checkpoint commit created.
+- Prior task per handoff completed in full; see research_state/next_agent_task.md for the standing initial task message.
 
-On activation, read the top of research_state/agent_handoff.md and compare HEAD vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json).
-
-1. **Cheap checks first.** If HEAD == origin/main, tree clean, 0 ahead / 0 behind, next_cohort_index=6, execution-authorization flags all false per configs/research_v6_execution_amendment_1.json, and the two authorization manifest hashes match on-disk (selection manifest_hash f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment manifest_hash 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af), run only the cheap checks and exit without writing a new checkpoint or rerunning the seven verifiers.
-2. **Do NOT attempt the holdout-enabled BRAIN-003 campaign** until the Binance klines data gate resolves (HTTP 200, 3 years continuous hourly candles verified by a bounded live probe recorded with endpoint/status/timestamp/command). A repeat of the same failed endpoint is not a distinct attempt; do not loop.
-3. **Re-run tests** to confirm nothing regressed if environment has pytest: `PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_selection.py tests/test_baselines.py tests/test_candidate_freeze.py`
-4. **Only if the data gate resolves** (new live evidence), follow the BRAIN-003 confirmation flow per handoff invariants.
+## Next Agent Task (initial)
+See research_state/next_agent_task.md — standing task: cheap checks first, do not attempt the holdout-enabled BRAIN-003 campaign until the Binance klines data gate resolves (HTTP 200, 3 years continuous hourly candles verified by a bounded live probe), re-run tests, and only if the data gate resolves follow the BRAIN-003 confirmation flow per PLAN.md invariants.
