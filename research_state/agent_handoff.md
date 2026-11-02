@@ -97,3 +97,12 @@ See research_state/next_agent_task.md — standing task: cheap checks first; the
 - BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). No artifacts created; holdout_exposed_count 0. No checkpoint commit created.
 - Tests: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8). No code changes.
 - Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
+
+## This session (2026-11-02T04:06:39Z) — COMPLETED
+- Cheap checks all green: HEAD fe0fbe5101fd30c96dd5a0fa9a7ff55f92da93bf == origin/main fe0fbe5101fd30c96dd5a0fa9a7ff55f92da93bf; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false).
+- Manifest hashes recomputed canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
+- Binance klines data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe.
+- BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). Confirmed on-disk: research/v2_confirmatory_window_manifest.json, research/ledger_v2_confirmatory.json, research_state/checkpoint_v2_confirmatory.json all absent; holdout_exposed_count 0. No checkpoint commit created.
+- Tests: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8). No code changes.
+- Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
