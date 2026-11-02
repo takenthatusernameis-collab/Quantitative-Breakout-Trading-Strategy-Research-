@@ -1,10 +1,10 @@
-# Next Agent Task (initial message — 2026-11-02T22:20:00Z)
+# Next Agent Task (initial message — 2026-11-02T22:20:57Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-02T22:20:00Z) completed the standing task in full: all cheap checks green (HEAD == origin/main == 372ac5da68754dfecc3392adabda503914c2f1ee, porcelain empty, 0/0 left-right, next_cohort_index=6, current_cohort.cohort_index=5 completed=true, all four execution-authorization flags false, both manifest hashes MATCH), data gate RESOLVED (do not re-run probe), v6 selection run NOT STARTED, BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z, pytest unavailable (tests not re-run), no code changes, no checkpoint commit created. Standing task unchanged.
+Prior session (2026-11-02T22:20:57Z) completed the standing task in full: all cheap checks green (HEAD == origin/main == 64891c5b6af56f6ee53a10af49d85e6fbac41f99, porcelain empty, 0/0 left-right, next_cohort_index=6, current_cohort.cohort_index=5 completed=true, all four execution-authorization flags false, both manifest hashes MATCH), data gate RESOLVED (do not re-run probe), v6 selection run NOT STARTED, BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z, pytest unavailable (tests not re-run), no code changes, no checkpoint commit created. Standing task unchanged.
 
-## Standing task (initial message)
+## Standing task (initial message — 2026-11-02T22:20:57Z)
 
 1. **Cheap checks first.** Verify HEAD == origin/main, empty porcelain (`git status --porcelain` empty), 0/0 left-right, next_cohort_index==6 (from research_state/continuous_universe_state.json), current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized, confirmatory_evaluation_authorized, execution_authorized, grid_run_authorized), and both manifest hashes recompute canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990, amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af. If all green, exit without checkpoint or verifier rerun.
 
