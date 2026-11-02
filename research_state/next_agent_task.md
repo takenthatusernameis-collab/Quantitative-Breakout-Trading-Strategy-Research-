@@ -1,4 +1,4 @@
-# Next Agent Task (updated — 2026-11-02T15:21:20Z)
+# Next Agent Task (updated — 2026-11-02T16:12:57Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
@@ -14,6 +14,6 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 
 5. **Re-run tests** if pytest is available (currently unavailable in this environment: No module named pytest).
 
-6. **Only after the effective confirmatory gate elapses**, follow BRAIN-003 confirmation flow per PLAN.md invariants.
+6. **Only after the effective confirmatory gate elapses** (2027-01-20T02:00:00Z), follow BRAIN-003 confirmation flow per PLAN.md invariants. The readiness test in configs/research_v6_confirmatory_protocol.json#data_path.readiness_test requires, before any window candle is read: the v6 candidate freeze committed and hash-bound, this protocol committed, the v6 selection authorization existing and bound to the candidate freeze, the v6 selected-configurations manifest committed and hash-bound, a confirmatory evaluation authorization bound to this protocol's manifest_hash, the confirmatory execution path living outside the hashed set with its canonical digest recorded, and the window benchmark series retrievable/hash-verifiable/index-aligned.
 
 (End of file)
