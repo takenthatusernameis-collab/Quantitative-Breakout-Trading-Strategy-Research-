@@ -1611,3 +1611,10 @@
 - BRAIN-003 confirmatory campaign: STILL BLOCKED by the confirmatory window until 2027-01-20T02:00:00Z (configs/research_v6_confirmatory_protocol.json#window_definition: window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc / evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z). Confirmed on-disk absent: research/v2_confirmatory_window_manifest.json, research/ledger_v2_confirmatory.json, research_state/checkpoint_v2_confirmatory.json, research/v6_confirmatory_window_manifest.json, research/ledger_v6_confirmatory.json, research_state/checkpoint_v6_confirmatory.json. holdout_exposed_count 0 in research/ledger_v2.json, ledger_v3.json, ledger_v4.json, ledger_v5.json. Not attempted; fail-closed preserved.
 - Tests: pytest not available in this environment (No module named pytest); tests not re-run. No code changes; no checkpoint commit created.
 - Prior task per handoff completed in full; see research_state/next_agent_task.md for the updated standing task message.
+
+## This session (2026-11-02T23:29:45Z) — COMPLETED
+- Cheap checks all green: HEAD 2b2ebeaeeae7164b47a2c15c80901ebed35fc644 == origin/main 2b2ebeaeeae7164b47a2c15c80901ebed35fc644; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Execution-authorization flags all false (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false).
+- Manifest hashes verified MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af).
+- Data gate RESOLVED (do not re-run probe). v6 selection run NOT STARTED. BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. pytest unavailable. No code changes; no checkpoint commit created.
+- Prior task per handoff completed in full; standing task unchanged per research_state/next_agent_task.md.
