@@ -1,4 +1,4 @@
-# Next Agent Task (initial — 2026-11-02T07:13:19Z)
+# Next Agent Task (initial — 2026-11-02T07:15:53Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
@@ -10,5 +10,3 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 4. **BRAIN-003 confirmatory campaign — STILL BLOCKED** by the confirmatory window until 2027-01-20T02:00:00Z, per configs/research_v6_confirmatory_protocol.json#window_definition (window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc and evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z). Do not attempt before then.
 5. **Re-run tests** if pytest is available (currently unavailable in this environment: No module named pytest).
 6. **Only after the effective confirmatory gate elapses**, follow BRAIN-003 confirmation flow per PLAN.md invariants.
-
-(End of file - total 15 lines)
