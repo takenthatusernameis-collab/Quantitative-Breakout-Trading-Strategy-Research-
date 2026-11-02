@@ -1,10 +1,10 @@
-# Next Agent Task (updated — 2026-11-02T10:24:49Z)
+# Next Agent Task (updated — 2026-11-02T13:09:48Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
 ## Standing task (updated message)
 
-1. **Cheap checks first.** Verify HEAD == origin/main, empty porcelain (`git status --porcelain` empty), 0/0 left-right, next_cohort_index==6 (from research_state/continuous_universe_state.json), current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized, confirmatory_evaluation_authorized, execution_authorized, grid_run_authorized), and both manifest hashes recompute canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection_authorization_1.json 6464f6a9b8183c611c98ff42df804ce4959e1b051b177acc707e491623d16d00, amendment_1.json b9eb72640fe55538a39df17e51a8030f6b0f9a6fee5b5f1811ff96eee2c2d454. If all green, exit without checkpoint or verifier rerun.
+1. **Cheap checks first.** Verify HEAD == origin/main, empty porcelain (`git status --porcelain` empty), 0/0 left-right, next_cohort_index==6 (from research_state/continuous_universe_state.json), current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized, confirmatory_evaluation_authorized, execution_authorized, grid_run_authorized), and both manifest hashes recompute canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990, amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af. If all green, exit without checkpoint or verifier rerun.
 
 2. **Binance klines data gate — RESOLVED as of 2026-11-02T03:09Z.** Do not re-run probe. research/data_manifest_v6.json holds 20 candidate assets, exactly 7 validated with content hashes (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT) matching the selection authorization's scope.binance_pairs (count 7); 13 excluded (binance_spot_unavailable or insufficient_hourly_history, content_hash null). Excluded assets remain excluded.
 
