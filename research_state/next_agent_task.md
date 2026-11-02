@@ -1,4 +1,4 @@
-# Next Agent Task (initial — 2026-11-02T01:02:01Z)
+# Next Agent Task (initial — 2026-11-02T01:04:25Z)
 
 On activation, read the top of research_state/agent_handoff.md and compare HEAD vs origin/main, git status --porcelain, ahead/behind, next_cohort_index=6, and the authorization files (configs/research_v6_selection_authorization_1.json and configs/research_v6_execution_amendment_1.json).
 
