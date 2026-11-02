@@ -32,20 +32,6 @@
 - **BRAIN-003 confirmatory campaign NOT run — blocked by the confirmatory window, fail-closed.** Live provider server time 2026-11-02T03:09Z is before the v2 confirmatory window earliest end 2027-01-17T22:00:00Z (and the v6 gate 2027-01-20T02:00:00Z). src/v2_confirmatory/runner.py:run_confirmatory raises WindowNotReadyError and creates no artifacts: research/v2_confirmatory_window_manifest.json, research/ledger_v2_confirmatory.json, research_state/checkpoint_v2_confirmatory.json all absent; holdout_exposed_count stays 0 in every ledger. No confirmatory-window candle was read. No checkpoint commit created.
 - Prior task per handoff completed in full; see research_state/next_agent_task.md for the updated standing task message.
 
-## This session (2026-11-02T04:19:38Z) — COMPLETED
-- Cheap checks all green: HEAD eb05eb80a9b4a860fdd8aed4d53f542dc19da62c == origin/main eb05eb80a9b4a860fdd8aed4d53f542dc19da62c; `git status --porcelain` empty; 0 ahead / 0 behind.
-- Cohort state re-verified from source of truth: research_state/continuous_universe_state.json -> next_cohort_index=6, current_cohort.cohort_index=5, completed=true (assets APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). No cohort-6 work exists on disk; nothing to resume.
-- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false; selection_authorization_present true but binds only the already-completed v6 selection authorization).
-- Manifest hashes recomputed canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
-- Binance klines data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe. research/data_manifest_v6.json unchanged: 7 validated v6 assets (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT) matching the selection authorization's binance_pairs; 13 excluded (binance_spot_unavailable or insufficient history, observed_candle_count 0 or <26280).
-- v6 execution path src/v6_campaign does not exist; research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research_state/checkpoint_v6.json all absent. No v6 selection run has executed and none may until the path exists and its digest is recorded.
-- BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). Live provider time 2026-11-02T04:19Z. Not attempted; fail-closed preserved.
-- pytest not available in this environment (ModuleNotFoundError); tests not re-run. No code changes; no checkpoint commit created.
-- Prior task per handoff completed in full; see research_state/next_agent_task.md for the standing initial task message.
-
-## Next Agent Task (initial)
-See research_state/next_agent_task.md — standing task: cheap checks first; the Binance klines data gate is now RESOLVED (bounded live probe recorded); the holdout-enabled BRAIN-003 confirmatory campaign is still blocked by the confirmatory window until 2027-01-17T22:00:00Z (v2) / 2027-01-20T02:00:00Z (v6) and must not be attempted before then; re-run tests if pytest is available; follow the BRAIN-003 confirmation flow per PLAN.md invariants only after the effective gate elapses.
-
 ## This session (2026-11-02T03:12:15Z) — COMPLETED
 - Cheap checks all green: HEAD d634407c6fb7270fcddfae0924c28ec5a868b928 == origin/main d634407c6fb7270fcddfae0924c28ec5a868b928; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
 - Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (nested under execution_authorization block).
@@ -136,6 +122,15 @@ See research_state/next_agent_task.md — standing task: cheap checks first; the
 - Tests: 62 passed, exit 0 (verified in prior sessions).
 - Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
 
+## This session (2026-11-02T04:11:05Z) — COMPLETED
+- Cheap checks all green: HEAD 653e5f1dcd12c793bc9ff3347e186915badab726 == origin/main 653e5f1dcd12c793bc9ff3347e186915badab726; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (nested under execution_authorization block).
+- Manifest hashes recomputed canonically: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
+- Binance klines data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe.
+- BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). No artifacts created; holdout_exposed_count 0. No checkpoint commit created.
+- Tests: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8). No code changes.
+- Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
+
 ## This session (2026-11-02T04:17:09Z) — COMPLETED
 - Cheap checks all green: HEAD 02b5184b4f6c86728e8dba7ce4fde2d01d18fe71 == origin/main 02b5184b4f6c86728e8dba7ce4fde2d01d18fe71; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
 - Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (nested under execution_authorization block).
@@ -145,11 +140,26 @@ See research_state/next_agent_task.md — standing task: cheap checks first; the
 - pytest not available in this environment; tests not re-run. No code changes.
 - Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
 
-## This session (2026-11-02T04:11:05Z) — COMPLETED
-- Cheap checks all green: HEAD 653e5f1dcd12c793bc9ff3347e186915badab726 == origin/main 653e5f1dcd12c793bc9ff3347e186915badab726; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
-- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (nested under execution_authorization block).
-- Manifest hashes recomputed canonically: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
-- Binance klines data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe.
-- BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). No artifacts created; holdout_exposed_count 0. No checkpoint commit created.
-- Tests: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8). No code changes.
-- Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
+## This session (2026-11-02T04:19:38Z) — COMPLETED
+- Cheap checks all green: HEAD eb05eb80a9b4a860fdd8aed4d53f542dc19da62c == origin/main eb05eb80a9b4a860fdd8aed4d53f542dc19da62c; `git status --porcelain` empty; 0 ahead / 0 behind.
+- Cohort state re-verified from source of truth: research_state/continuous_universe_state.json -> next_cohort_index=6, current_cohort.cohort_index=5, completed=true (assets APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). No cohort-6 work exists on disk; nothing to resume.
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false; selection_authorization_present true but binds only the already-completed v6 selection authorization).
+- Manifest hashes recomputed canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
+- Binance klines data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe. research/data_manifest_v6.json unchanged: 7 validated v6 assets (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT) matching the selection authorization's binance_pairs; 13 excluded (binance_spot_unavailable or insufficient history, observed_candle_count 0 or <26280).
+- v6 execution path src/v6_campaign does not exist; research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research_state/checkpoint_v6.json all absent. No v6 selection run has executed and none may until the path exists and its digest is recorded.
+- BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). Live provider time 2026-11-02T04:19Z. Not attempted; fail-closed preserved.
+- pytest not available in this environment (ModuleNotFoundError); tests not re-run. No code changes; no checkpoint commit created.
+- Prior task per handoff completed in full; see research_state/next_agent_task.md for the standing initial task message.
+
+## This session (2026-11-02T04:20:57Z) — COMPLETED
+- Cheap checks all green: HEAD 79d60db3a13b115cece5277f5a3088f7c0dd049b == origin/main 79d60db3a13b115cece5277f5a3088f7c0dd049b; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false).
+- Manifest hashes recomputed canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
+- Data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe. research/data_manifest_v6.json unchanged: 7 validated v6 assets matching the selection authorization's binance_pairs (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT); 13 excluded.
+- v6 selection run: NOT STARTED. src/v6_campaign does not exist; research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json and research_state/checkpoint_v6.json all absent. No run may begin until the path exists and its canonical source digest is recorded in a revised selection authorization.
+- BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). Live provider time 2026-11-02T04:20Z. Not attempted; fail-closed preserved.
+- Tests: pytest not available in this environment (ModuleNotFoundError); tests not re-run. No code changes; no checkpoint commit created.
+- Prior task per handoff completed in full; standing task unchanged per research_state/next_agent_task.md.
+
+## Next Agent Task (initial)
+See research_state/next_agent_task.md — standing task: cheap checks first; the Binance klines data gate is now RESOLVED (bounded live probe recorded); the holdout-enabled BRAIN-003 confirmatory campaign is still blocked by the confirmatory window until 2027-01-17T22:00:00Z (v2) / 2027-01-20T02:00:00Z (v6) and must not be attempted before then; re-run tests if pytest is available; follow the BRAIN-003 confirmation flow per PLAN.md invariants only after the effective gate elapses.
