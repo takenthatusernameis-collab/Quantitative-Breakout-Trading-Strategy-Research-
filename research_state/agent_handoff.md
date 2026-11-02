@@ -533,3 +533,12 @@
 - BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window until 2027-01-20T02:00:00Z (configs/research_v6_confirmatory_protocol.json#window_definition: window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc / evaluation_may_not_start_before_utc 2027-01-20T02:00:00Z). On-disk confirmed absent: research/v2_confirmatory_window_manifest.json, research/ledger_v2_confirmatory.json, research_state/checkpoint_v2_confirmatory.json, research/v6_confirmatory_window_manifest.json, research/ledger_v6.json, research_state/checkpoint_v6.json; holdout_exposed_count 0 in research/ledger_v2.json, ledger_v3.json, ledger_v4.json, ledger_v5.json. Live provider time 2026-11-02T09:26Z. Not attempted; fail-closed preserved.
 - Tests: pytest not available in this environment (No module named pytest); tests not re-run. No code changes; no checkpoint commit created.
 - Prior task per handoff completed in full; standing task unchanged per research_state/next_agent_task.md.
+
+## This session (2026-11-02T10:17:35Z) — COMPLETED
+- Cheap checks all green: HEAD 2998c3c76d6f1c77eb087b3a13736250d27594ff == origin/main; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json.
+- Manifest hashes recomputed canonically: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
+- Binance klines data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe.
+- v6 selection run: NOT STARTED (src/v6_campaign absent). BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window until 2027-01-17T22:00:00Z (v2) / 2027-01-20T02:00:00Z (v6).
+- Tests: pytest not available in this environment (No module named pytest); tests not re-run. No code changes; no checkpoint commit created.
+- Prior task per handoff completed in full; standing task unchanged per research_state/next_agent_task.md.
