@@ -1,25 +1,13 @@
-# Next Agent Task (initial — 2026-11-02T04:11:05Z)
+# Next Agent Task (initial — 2026-11-02T04:17:09Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
 ## Standing task
 
-1. **Cheap checks first.** Verify:
-   - `git rev-parse HEAD` == `git ls-remote origin main`
-   - `git status --porcelain` empty
-   - `git rev-list --count --left-right @{upstream}...HEAD` == `0  0` (0 ahead / 0 behind)
-   - `research_state/continuous_universe_state.json`: `next_cohort_index == 6` and `current_cohort.cohort_index == 5` with `completed == true`
-   - `configs/research_v6_execution_amendment_1.json`: all execution-authorization flags false (`candle_fetch_authorized`, `confirmatory_evaluation_authorized`, `execution_authorized`, `grid_run_authorized`)
-   - Both manifest hashes recompute canonically (`json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)` with `manifest_hash` key excluded):
-     - selection `configs/research_v6_selection_authorization_1.json` == `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`
-     - amendment `configs/research_v6_execution_amendment_1.json` == `25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af`
-   If all green, run only the cheap checks and exit without writing a new checkpoint or rerunning verifiers.
+1. **Cheap checks first.** Verify HEAD == origin/main, empty porcelain, 0/0 left-right, next_cohort_index==6, current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false, and both manifest hashes recompute canonically. If all green, exit without checkpoint or verifier rerun.
+2. **Binance klines data gate — RESOLVED as of 2026-11-02T03:09Z.** Do not re-run probe.
+3. **BRAIN-003 confirmatory campaign — STILL BLOCKED** by confirmatory window until 2027-01-17T22:00:00Z (v2) / 2027-01-20T02:00:00Z (v6). Do not attempt before then.
+4. **Re-run tests** if pytest available.
+5. **Only after the effective confirmatory gate elapses**, follow BRAIN-003 confirmation flow per PLAN.md invariants.
 
-2. **Binance klines data gate — RESOLVED as of 2026-11-02T03:09Z.** A bounded live probe using the project's own `DataFetcher` fetched 26,280 continuous hourly BTCUSDT candles (3 years, `min_history_years=3`) from `https://data-api.binance.vision/api/v3/klines` (HTTP 200), with `https://api.binance.com/api/v3/klines` still returning HTTP 451 and the loader failing over. Content hash `19adb784f06eb0121ae4bef2c661e40e8f462e2f3015de0647b714481af4467c` (`sha256-canonical-hourly-csv-v1`), 0 gaps, 0 rejected rows, 27 requests, ~5s. Report: `/tmp/kilo_data_gate_report.json`; probe script: `/tmp/kilo_data_gate_probe.py`. **Do not re-run this probe** — the recorded result is live evidence; a repeat of the same endpoints is not a distinct attempt.
-
-3. **BRAIN-003 confirmatory campaign — STILL BLOCKED by the confirmatory window.** The v2 confirmatory window cannot end before **2027-01-17T22:00:00Z**. Live provider server time is ~2026-11-02T04:09Z. Running `src/v2_confirmatory/runner.py:run_confirmatory` raises `WindowNotReadyError` and creates **no** artifacts (verified absent: `research/v2_confirmatory_window_manifest.json`, `research/ledger_v2_confirmatory.json`, `research_state/checkpoint_v2_confirmatory.json`). The v6 confirmatory gate is even later: **2027-01-20T02:00:00Z**. **Do not attempt a confirmatory-window read before the effective gate.** A readiness probe (`src/v2_confirmatory/window.py:metadata_probe` + `readiness`) is safe to re-run at any time — it fetches no candles — but it is not a distinct attempt toward unblocking the campaign.
-
-4. **Re-run tests** to confirm nothing regressed (if pytest available):
-   `PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_selection.py tests/test_baselines.py tests/test_candidate_freeze.py`
-
-5. **Only after the effective confirmatory gate elapses** (v2: 2027-01-17T22:00:00Z; v6: 2027-01-20T02:00:00Z), follow the BRAIN-003 confirmation flow per PLAN.md invariants.
+Note: pytest not present in this environment; verify availability before running tests.
