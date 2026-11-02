@@ -1,4 +1,4 @@
-# Next Agent Task (initial — 2026-11-02T06:12:50Z)
+# Next Agent Task (initial — 2026-11-02T06:14:29Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
@@ -8,5 +8,5 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 2. **Binance klines data gate — RESOLVED as of 2026-11-02T03:09Z.** Do not re-run probe. research/data_manifest_v6.json holds 7 validated v6 assets (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT) matching the selection authorization's frozen v6 candidate set; 13 excluded.
 3. **v6 selection run — NOT STARTED.** src/v6_campaign does not exist; research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json and research_state/checkpoint_v6.json are all absent. No run may begin until the execution path exists and its canonical source digest is recorded in a revised selection authorization.
 4. **BRAIN-003 confirmatory campaign — STILL BLOCKED** by confirmatory window until 2027-01-17T22:00:00Z (v2) / 2027-01-20T02:00:00Z (v6). Do not attempt before then.
-5. **Re-run tests** if pytest is available.
+5. **Re-run tests** if pytest is available (currently unavailable in this environment: No module named pytest).
 6. **Only after the effective confirmatory gate elapses**, follow BRAIN-003 confirmation flow per PLAN.md invariants.
