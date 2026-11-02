@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-02T18:17:07Z)
+# Next Agent Task (initial message — 2026-11-02T18:19:06Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-02T18:17:07Z) completed the standing task in full: all cheap checks green (HEAD == origin/main == 1ceb2156178a27279ebc0f62f284ba0f6b5a383b, porcelain empty, 0/0 left-right, next_cohort_index=6, current_cohort.cohort_index=5 completed=true, all four execution-authorization flags false, both manifest hashes MATCH), data gate RESOLVED (do not re-run probe), v6 selection run NOT STARTED, BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z, pytest unavailable (tests not re-run), no code changes, no checkpoint commit created. Standing task unchanged.
+Prior session (2026-11-02T18:19:06Z) completed the standing task in full: all cheap checks green (HEAD == origin/main == 1b149f0096fbb15c9edbf7803d1297401bf29ffc, porcelain empty, 0/0 left-right, next_cohort_index=6, current_cohort.cohort_index=5 completed=true, all four execution-authorization flags false, both manifest hashes MATCH), data gate RESOLVED (do not re-run probe), v6 selection run NOT STARTED, BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z, pytest unavailable (tests not re-run), no code changes, no checkpoint commit created. Standing task unchanged.
 
 ## Standing task (initial message)
 
