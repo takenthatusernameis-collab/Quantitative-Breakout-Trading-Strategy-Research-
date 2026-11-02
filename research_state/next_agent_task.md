@@ -1,4 +1,4 @@
-# Next Agent Task (updated — 2026-11-02T14:20:25Z)
+# Next Agent Task (updated — 2026-11-02T15:14:00Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
@@ -6,7 +6,7 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 
 1. **Cheap checks first.** Verify HEAD == origin/main, empty porcelain (`git status --porcelain` empty), 0/0 left-right, next_cohort_index==6 (from research_state/continuous_universe_state.json), current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized, confirmatory_evaluation_authorized, execution_authorized, grid_run_authorized), and both manifest hashes recompute canonically (json.dumps sort_keys, separators=(',',':'), ensure_ascii=False, manifest_hash key excluded): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990, amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af. If all green, exit without checkpoint or verifier rerun.
 
-2. **Binance klines data gate — RESOLVED as of 2026-11-02T03:09Z.** Do not re-run probe. research/data_manifest_v6.json holds 20 candidate assets, exactly 7 validated with content hashes (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT) matching the selection authorization's authorized_run.scope.binance_pairs (count 7); 13 excluded (binance_spot_unavailable or insufficient_hourly_history, content_hash null). Recorded manifest_hash a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465. Excluded assets remain excluded.
+2. **Binance klines data gate — RESOLVED as of 2026-11-02T03:09Z.** Do not re-run probe. research/data_manifest_v6.json holds 20 candidate assets, exactly 7 validated with content hashes (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT) matching the selection authorization's authorized_run.scope.binance_pairs (count 7); 13 excluded (binance_spot_unavailable or insufficient_hourly_history, content_hash null). Its own manifest hash is computed with excluded keys `manifest_hash` and `snapshot_identity.data_manifest_hash` removed (per its `hashing` block): recorded a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465. Excluded assets remain excluded.
 
 3. **v6 selection run — NOT STARTED.** src/v6_campaign does not exist; research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json and research_state/checkpoint_v6.json are all absent. No run may begin until the execution path exists and its canonical source digest is recorded in a revised selection authorization.
 
@@ -16,4 +16,4 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 
 6. **Only after the effective confirmatory gate elapses**, follow BRAIN-003 confirmation flow per PLAN.md invariants.
 
-(End of file)
+(End of file - total 19 lines)
