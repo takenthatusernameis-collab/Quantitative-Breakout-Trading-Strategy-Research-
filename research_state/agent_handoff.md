@@ -61,3 +61,12 @@ See research_state/next_agent_task.md — standing task: cheap checks first; the
 - BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). No artifacts created; holdout_exposed_count 0. No checkpoint commit created.
 - Tests: 62 passed, exit 0. No code changes.
 - Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
+
+## This session (2026-11-02T04:02:49Z) — COMPLETED
+- Cheap checks all green: HEAD 1f452887e856c288b0c6bcbe0ec4c70f6651e944 == origin/main 1f452887e856c288b0c6bcbe0ec4c70f6651e944; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false).
+- Manifest hashes recomputed canonically: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
+- Binance klines data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe.
+- BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). No artifacts created; holdout_exposed_count 0. No checkpoint commit created.
+- Tests: 62 passed, exit 0. No code changes.
+- Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
