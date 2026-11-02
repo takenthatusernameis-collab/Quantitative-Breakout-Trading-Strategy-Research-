@@ -3,17 +3,17 @@
 ## Context (steady state, no action required on these)
 - Campaign is in a steady v6 freeze. `next_cohort_index=6`; `current_cohort.cohort_index=5 completed=True`.
 - Campaign remains blocked by CONFIRMATORY_WINDOW until 2027-01-20T02:00:00Z; no evaluation, candle fetch, or run is authorized.
-- All execution flags are false in `configs/research_v6_execution_amendment_1.json` (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); `selection_authorization_present=true`.
+- All execution flags are false/None in `configs/research_v6_execution_amendment_1.json` (execution_authorized/grid_run_authorized/candle_fetch_authorized/confirmatory_evaluation_authorized/second_run_authorized); `selection_authorization_present=true`.
 - Data gate: Binance `api.binance.com/api/v3/klines` returns HTTP 451 (persistent, recorded in `research_state/endpoint_canary_report.json`). Re-probing it is a repeat of the same failed endpoint and is NOT a distinct attempt — do not loop. The failover host `data-api.binance.vision` returns HTTP 200 and already delivered all existing v6 datasets, bound locally in `research/data_manifest_v6.json`.
 - v6 run artifacts are still absent: `research/shards_v6`, `research/ledger_v6.json`, `research/results_manifest_v6.json`, `research/results_v6.jsonl`, `research_state/checkpoint_v6.json`, `src/v6_campaign`.
-- Last session (2026-11-01T23:00:40Z): cheap checks passed (HEAD == origin/main `7e63597b69e301ba7c4ec4b37494ac02819e44fa`, tree clean, 0 ahead/0 behind, next_cohort_index=6, both manifest hashes recompute to on-disk values — selection `f1b012b6...990`, amendment `25397ae...72af`, execution flags all false); tests not rerun (pytest unavailable; prior recorded 62 passed); data gate NOT re-probed; BRAIN-003 NOT attempted; no checkpoint commit; no seven-verifier rerun; no modifications.
+- Last session (2026-11-02T00:04:55Z): cheap checks passed (HEAD == origin/main `8dcac129d14bfa5734ea6c606ad8a7c57f3b4d80`, tree clean, 0 ahead/0 behind, next_cohort_index=6, both manifest hashes recompute to on-disk values — selection `f1b012b6...990`, amendment `25397ae...72af`, execution flags all false/None); tests not rerun (pytest unavailable; prior recorded 62 passed); data gate NOT re-probed; BRAIN-003 NOT attempted; no checkpoint commit; no seven-verifier rerun; no modifications.
 
 ## Task
 
 On activation:
 
 1. **Cheap checks first.** Read the top of `research_state/agent_handoff.md` and compare HEAD vs origin/main, `git status --porcelain`, ahead/behind, `next_cohort_index=6`, `current_cohort.cohort_index=completed=True`, and the two authorization files (`configs/research_v6_selection_authorization_1.json`, `configs/research_v6_execution_amendment_1.json`).
-   - If HEAD == origin/main, tree clean, 0 ahead/0 behind, next_cohort_index=6, execution-authorization flags all false, and both manifest hashes recompute to on-disk values (selection `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`; amendment `25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af`), run only the cheap checks and exit without writing a new checkpoint or rerunning the seven verifiers.
+   - If HEAD == origin/main, tree clean, 0 ahead/0 behind, next_cohort_index=6, execution-authorization flags all false/None, and both manifest hashes recompute to on-disk values (selection `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`; amendment `25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af`), run only the cheap checks and exit without writing a new checkpoint or rerunning the seven verifiers.
 
 2. **Do NOT attempt the holdout-enabled BRAIN-003 campaign** until the data gate resolves (HTTP 200, 3 years continuous hourly candles verified by a bounded live probe recorded with endpoint/status/timestamp/command). A repeat of the same failed endpoint is not a distinct attempt; do not loop. The CONFIRMATORY_WINDOW gate also must resolve (evaluation may not start before 2027-01-20T02:00:00Z).
 
