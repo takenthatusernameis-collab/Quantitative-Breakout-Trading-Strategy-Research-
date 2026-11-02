@@ -34,3 +34,12 @@
 
 ## Next Agent Task (initial)
 See research_state/next_agent_task.md — standing task: cheap checks first; the Binance klines data gate is now RESOLVED (bounded live probe recorded); the holdout-enabled BRAIN-003 confirmatory campaign is still blocked by the confirmatory window until 2027-01-17T22:00:00Z (v2) / 2027-01-20T02:00:00Z (v6) and must not be attempted before then; re-run tests; follow the BRAIN-003 confirmation flow per PLAN.md invariants only after the effective gate elapses.
+
+## This session (2026-11-02T03:12:15Z) — COMPLETED
+- Cheap checks all green: HEAD d634407c6fb7270fcddfae0924c28ec5a868b928 == origin/main d634407c6fb7270fcddfae0924c28ec5a868b928; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6; current_cohort.cohort_index=5 completed=True.
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (nested under execution_authorization block).
+- Manifest hashes recomputed canonically: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH.
+- Binance klines data gate: RESOLVED (bounded live probe recorded 2026-11-02T03:09Z via data-api.binance.vision HTTP 200 for BTCUSDT 26,280 hourly candles; api.binance.com HTTP 451, failover used). Do not re-run probe.
+- BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window (v2 earliest end 2027-01-17T22:00:00Z, v6 2027-01-20T02:00:00Z). Live provider time 2026-11-02T03:12Z; WindowNotReadyError if attempted, no artifacts created.
+- Tests: 62 passed, exit 0 (test_campaign_resume.py 8, test_holdout_isolation.py 8, test_selection.py 24, test_baselines.py 14, test_candidate_freeze.py 8). No code changes; no checkpoint commit created.
+- Prior task per handoff completed in full; next task unchanged per research_state/next_agent_task.md.
