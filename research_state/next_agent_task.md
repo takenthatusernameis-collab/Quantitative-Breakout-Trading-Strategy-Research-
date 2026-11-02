@@ -1,4 +1,4 @@
-# Next Agent Task (initial — 2026-11-02T06:15:52Z)
+# Next Agent Task (initial — 2026-11-02T06:17:37Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
