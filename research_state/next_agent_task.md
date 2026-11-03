@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-03T06:22:50Z)
+# Next Agent Task (initial message — 2026-11-03T06:24:36Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-03T06:22:50Z) verified the standing task: HEAD 0a04e9bcb6e51d9bb4b097f12c9d44eab84a68dc == origin/main 0a04e9bcb6e51d9bb4b097f12c9d44eab84a68dc; `git status --porcelain` empty (0 lines); next_cohort_index==6, current_cohort.cohort_index==5 completed==true; all four execution-authorization flags false (nested under execution_authorization in configs/research_v6_execution_amendment_1.json; selection_authorization_present true binds only the already-completed v6 selection authorization); all three manifest hashes recompute MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af; data manifest a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465). Standing task complete; no code changes; no research checkpoint commit. BRAIN-002 authorized; BRAIN-003 blocked.
+Prior session (2026-11-03T06:24:36Z) verified the standing task: HEAD 0a698a62966b821c56db8bef207b52793e43b4b5 == origin/main 0a698a62966b821c56db8bef207b52793e43b4b5; `git status --porcelain` empty (0 lines); next_cohort_index==6, current_cohort.cohort_index==5 completed==true; all four execution-authorization flags false (nested under execution_authorization in configs/research_v6_execution_amendment_1.json; selection_authorization_present true binds only the already-completed v6 selection authorization); all three manifest hashes recompute MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af; data manifest a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465). BRAIN-002 authorized (evidence_digest f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053 matches sha256 canonical of research_state/pilot_evidence.json). BRAIN-003 blocked. Working tree clean; no code changes; no research checkpoint commit.
 
 ## Standing task
 
@@ -16,7 +16,7 @@ Prior session (2026-11-03T06:22:50Z) verified the standing task: HEAD 0a04e9bcb6
 
 ## Completed this session
 
-- Standing verification re-run in full: git HEAD/origin match, porcelain empty, cohort state consistent, all four execution-authorization flags false, all three manifest hashes MATCH, data gate 20 candidates / 7 validated / 13 excluded, holdout_exposed_count 0 across ledger_v2..v5, v6 campaign artifacts absent, confirmatory window still closed. No code changes; no research checkpoint commit.
+- Standing verification re-run in full: git HEAD/origin match, porcelain empty, cohort state consistent, all four execution-authorization flags false, all three manifest hashes MATCH, data gate 20 candidates / 7 validated / 13 excluded, holdout_exposed_count 0 across ledger_v2..v5, v6 campaign artifacts absent, confirmatory window still closed, BRAIN-002 authorization hashes match pilot evidence. No code changes; no research checkpoint commit.
 
 ## Next principal task (DESIGN_READY — blocked until 2027-01-20T02:00:00Z)
 
