@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-03T04:24:06Z)
+# Next Agent Task (initial message — 2026-11-03T05:14:07Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-03T04:24:06Z) verified the standing task: HEAD 31982836818c1f336d30e653b1127aa1c5ca0945 == origin/main 31982836818c1f336d30e653b1127aa1c5ca0945; `git status --porcelain` empty (0 lines); next_cohort_index==6, current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false (nested under execution_authorization), and all three manifest hashes recompute MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af; data manifest a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465). Standing task complete; no code changes; no research checkpoint commit.
+Prior session (2026-11-03T05:14:07Z) verified the standing task: HEAD f760e1f9df072a8e410a0ba71c792b119b231184 == origin/main f760e1f9df072a8e410a0ba71c792b119b231184; `git status --porcelain` empty (0 lines); 0/0 left-right; next_cohort_index==6, current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false (nested under execution_authorization), and all three manifest hashes recompute MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af; data manifest a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465). Standing task complete; no code changes; no research checkpoint commit.
 
 ## Standing task
 
@@ -14,7 +14,6 @@ Prior session (2026-11-03T04:24:06Z) verified the standing task: HEAD 3198283681
 ## Next principal task (DESIGN_READY — not part of standing task; blocked until 2027-01-20T02:00:00Z)
 
 Per PLAN.md, BRAIN-004 + BRAIN-005 is COMPLETE (VERIFIED). BRAIN-002 + full BRAIN-003 remain DESIGN_READY. When unblocked (confirmatory window opens 2027-01-20T02:00:00Z), run the BRAIN-002 + BRAIN-003 confirmation flow end to end:
-
 1. BRAIN-002 — run `breakout_research.pilot_gate_validator.authorize_campaign` against `research_state/pilot_evidence.json` to produce/refresh `research_state/campaign_authorization.json`. Confirm `authorized == true` and that `specification_hash`, `code_hash` and `evidence_digest` match the current campaign before any campaign run. (`campaign.py:_verify_pilot_gate` already enforces this at startup.)
 2. BRAIN-003 — run a holdout-enabled campaign (`holdout_enabled=True`) over the frozen candidates (`breakout_research.candidate_freeze.candidate_config_ids` from `research/candidate_manifest.json` v1 or `research/candidate_manifest_v2.json` v2 preregistered rule), writing holdout rows to shards only from the holdout-enabled path (never from validation).
 3. Run the separate holdout evaluator to confirm/reject each frozen candidate on holdout data.
