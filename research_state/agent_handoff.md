@@ -104,3 +104,11 @@
 - v6 selection run: NOT STARTED. src/v6_campaign absent; research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research_state/checkpoint_v6.json, research/v6_selected_configurations_manifest.json all absent. No run may begin until the execution path exists and its canonical source digest is recorded in a revised selection authorization.
 - BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window until 2027-01-20T02:00:00Z (now 2026-11-03T04:16:25Z < 2027-01-20T02:00:00Z). Not attempted; fail-closed preserved.
 - Standing task complete in full per research_state/next_agent_task.md. No code changes; no research checkpoint commit.
+
+## This session (2026-11-03T04:24:06Z) — COMPLETED
+- Cheap checks re-verified against live state: HEAD 31982836818c1f336d30e653b1127aa1c5ca0945 == origin/main 31982836818c1f336d30e653b1127aa1c5ca0945; `git status --porcelain` empty (0 lines); next_cohort_index=6, current_cohort.cohort_index=5 completed=true; all four execution-authorization flags false (nested under execution_authorization in configs/research_v6_execution_amendment_1.json), selection_authorization_present true binds only already-completed v6 selection authorization.
+- Manifest hashes recomputed canonically: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH; data manifest a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH (dotted exclusion: top-level manifest_hash AND snapshot_identity.data_manifest_hash).
+- Binance klines data gate: RESOLVED (do not re-run). 20 candidates, exactly 7 validated (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), 13 excluded. holdout_exposed_count stays 0.
+- v6 selection run: NOT STARTED (src/v6_campaign absent). No run until execution path exists and canonical source digest recorded in revised selection authorization.
+- BRAIN-003 confirmatory campaign: STILL BLOCKED until 2027-01-20T02:00:00Z. Not attempted; fail-closed preserved.
+- Standing task complete per research_state/next_agent_task.md. No code changes; no research checkpoint commit.
