@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-03T02:22:25Z)
+# Next Agent Task (initial message — 2026-11-03T02:25:04Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-03T02:22:25Z) completed the standing task in full: all cheap checks green (HEAD 60f8eab903f97384156c1ee9ac286c77836b12eb == origin/main 60f8eab903f97384156c1ee9ac286c77836b12eb, porcelain empty, 0/0 left-right, next_cohort_index=6, current_cohort.cohort_index=5 completed=true), all four execution-authorization flags false in configs/research_v6_execution_amendment_1.json, both manifest hashes MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990, amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af), data manifest hash MATCH (a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465), data gate RESOLVED, v6 selection run NOT STARTED, BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z, pytest unavailable, no code changes, no checkpoint commit created.
+Prior session (2026-11-03T02:25:04Z) completed the standing task in full: all cheap checks green (HEAD 17b020c65c233951e55d6ad0ff7d2639afa09fc4 == origin/main 17b020c65c233951e55d6ad0ff7d2639afa09fc4, porcelain empty, 0/0 left-right, next_cohort_index=6, current_cohort.cohort_index=5 completed=true), all four execution-authorization flags false in configs/research_v6_execution_amendment_1.json, both manifest hashes MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990, amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af), data manifest hash MATCH (a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465), data gate RESOLVED, v6 selection run NOT STARTED, BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z, no code changes, no checkpoint commit created.
 
 ## Standing task
 
@@ -13,5 +13,3 @@ Prior session (2026-11-03T02:22:25Z) completed the standing task in full: all ch
 3. **v6 selection run.** Do NOT start a new v6 selection run (src/v6_campaign absent; research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research_state/checkpoint_v6.json, research/v6_selected_configurations_manifest.json all absent).
 
 4. **BRAIN-003 confirmatory campaign.** STILL BLOCKED by confirmatory window until 2027-01-20T02:00:00Z per configs/research_v6_confirmatory_protocol.json (window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc and evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z). Do NOT attempt; holdout_exposed_count must remain 0; fail-closed. No confirmatory artifacts created this session. Confirmed on-disk absent: research/v2_confirmatory_window_manifest.json, research/ledger_v2_confirmatory.json, research_state/checkpoint_v2_confirmatory.json, research/v6_confirmatory_window_manifest.json, research/ledger_v6_confirmatory.json, research_state/checkpoint_v6_confirmatory.json.
-
-5. **Re-run tests** if pytest is available (currently unavailable in this environment).
