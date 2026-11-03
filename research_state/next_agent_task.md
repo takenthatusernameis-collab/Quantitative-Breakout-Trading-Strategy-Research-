@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-03T21:45:07Z)
+# Next Agent Task (initial message — 2026-11-03T21:45:52Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-03T21:45:07Z) verified the standing task in full: HEAD f40d330e47a47296b8ef68158c162a0380e0b053 == origin/main f40d330e47a47296b8ef68158c162a0380e0b053; `git status --porcelain` empty. next_cohort_index==6, current_cohort.cohort_index==5 completed==true. All four execution-authorization flags false nested under execution_authorization in configs/research_v6_execution_amendment_1.json; execution_authorization.selection_authorization_present true binds only already-completed v6 selection authorization. BRAIN-002 authorized; BRAIN-003 blocked until 2027-01-20T02:00:00Z. Binance klines data gate resolved (20 candidates/7 validated/13 excluded); holdout_exposed_count 0 across ledger_v2..v5. v6 campaign/confirmatory artifacts absent; no run. Standing task complete in full.
+Prior session (2026-11-03T21:45:52Z) verified the standing task in full: HEAD b5ff864cf6218ea1c23e81c776ff3292ecbe6fb6 == origin/main b5ff864cf6218ea1c23e81c776ff3292ecbe6fb6; `git status --porcelain` empty. next_cohort_index==6, current_cohort.cohort_index==5 completed==true. All four execution-authorization flags false nested under execution_authorization in configs/research_v6_execution_amendment_1.json; execution_authorization.selection_authorization_present true binds only already-completed v6 selection authorization. BRAIN-002 authorized; BRAIN-003 blocked until 2027-01-20T02:00:00Z. Binance klines data gate resolved (20 candidates/7 validated/13 excluded); holdout_exposed_count 0 across ledger_v2..v5. v6 campaign/confirmatory artifacts absent; no run. Standing task complete in full.
 
 ## Standing task
 
