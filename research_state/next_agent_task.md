@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-03T18:36:58Z)
+# Next Agent Task (initial message — 2026-11-03T18:42:41Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-03T18:36:58Z) verified the standing task: HEAD c57582941c0bd05b21d0315c3ba8807838010cfe == origin/main c57582941c0bd05b21d0315c3ba8807838010cfe (git rev-parse + git ls-remote); `git status --porcelain` empty (0 lines). next_cohort_index==6, current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). All four execution-authorization flags false nested under execution_authorization in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false; execution_authorization.selection_authorization_present true binds only the already-completed v6 selection authorization). All three manifest hashes MATCH. BRAIN-002 authorized; BRAIN-003 blocked until 2027-01-20T02:00:00Z. Binance klines data gate resolved (20 candidates/7 validated FETUSDT,GNOUSDT,LDOUSDT,PENDLEUSDT,SEIUSDT,SUNUSDT,XTZUSDT / 13 excluded); holdout_exposed_count 0 across ledger_v2..v5. v6 campaign artifacts absent; no run. Confirmatory artifacts absent. Working tree clean; no code changes; no research checkpoint commit. Handoff appended; next agent task updated.
+Prior session (2026-11-03T18:42:41Z) verified the standing task: HEAD 359ba36be071d6062ba53ae97b3a7790190a455c == origin/main 359ba36be071d6062ba53ae97b3a7790190a455c (git rev-parse + git ls-remote); `git status --porcelain` empty (0 lines). next_cohort_index==6, current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). All four execution-authorization flags false nested under execution_authorization in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false; execution_authorization.selection_authorization_present true binds only the already-completed v6 selection authorization). All three manifest hashes MATCH. BRAIN-002 authorized; BRAIN-003 blocked until 2027-01-20T02:00:00Z. Binance klines data gate resolved (20 candidates/7 validated FETUSDT,GNOUSDT,LDOUSDT,PENDLEUSDT,SEIUSDT,SUNUSDT,XTZUSDT / 13 excluded); holdout_exposed_count 0 across ledger_v2..v5. v6 campaign artifacts absent; no run. Confirmatory artifacts absent. Working tree clean; no code changes; no research checkpoint commit. Handoff appended; next agent task updated.
 
 ## Standing task
 
@@ -13,7 +13,7 @@ Prior session (2026-11-03T18:36:58Z) verified the standing task: HEAD c57582941c
 
 ## Completed this session
 
-- Standing verification re-run in full: git HEAD/origin match (741144cb...), porcelain empty, cohort state consistent, all four execution-authorization flags false, selection_authorization_present true, all three manifest hashes MATCH, data gate 20 candidates/7 validated/13 excluded, holdout_exposed_count 0 across ledger_v2..v5, v6 campaign/confirmatory artifacts absent, confirmatory window still closed (2027-01-20T02:00:00Z), BRAIN-002 authorized. No code changes; no research checkpoint commit. Handoff appended; next agent task updated.
+- Standing verification re-run in full: git HEAD/origin match (359ba36b...), porcelain empty, cohort state consistent, all four execution-authorization flags false, selection_authorization_present true, all three manifest hashes MATCH, data gate 20 candidates/7 validated/13 excluded, holdout_exposed_count 0 across ledger_v2..v5, v6 campaign/confirmatory artifacts absent, confirmatory window still closed (2027-01-20T02:00:00Z), BRAIN-002 authorized. No code changes; no research checkpoint commit. Handoff appended; next agent task updated.
 
 ## Next principal task (DESIGN_READY — blocked until 2027-01-20T02:00:00Z)
 
@@ -25,3 +25,5 @@ Per PLAN.md, BRAIN-004 + BRAIN-005 is COMPLETE (VERIFIED). BRAIN-002 is now auth
 - Holdout-enabled campaign evaluates only frozen candidates from the manifest.
 - Resume position derived from verified shard manifest, never checkpoint counters.
 - Stale/mismatched checkpoint and pilot authorization rejected fail-closed.
+", filePath">
+/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/research_state/next_agent_task.md
