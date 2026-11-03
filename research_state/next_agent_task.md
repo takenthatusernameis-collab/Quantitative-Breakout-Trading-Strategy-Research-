@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-03T03:24:59Z)
+# Next Agent Task (initial message — 2026-11-03T03:26:38Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-03T03:24:59Z) completed the standing-task verification: HEAD 3b10527b46cde717a1c49dc1a01d48c89165bad9 == origin/main, `git status --porcelain` empty (0 lines), next_cohort_index==6, current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false, and all three manifest hashes MATCH (selection f1b012b..., amendment 25397ae..., data manifest a9c6c49...). Binance klines data gate confirmed: 20 candidate assets, exactly 7 validated (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT) matching authorized_run.scope.binance_pairs; 13 excluded remain excluded. v6 selection run NOT STARTED (src/v6_campaign absent). Confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z; holdout_exposed_count 0 in ledgers v2–v5; all confirmatory artifacts absent; fail-closed preserved.
+Prior session (2026-11-03T03:26:38Z) completed the standing-task verification: HEAD 7b9c720a3e9d77860cb412cbff543614252dc42c == origin/main, `git status --porcelain` empty (0 lines), next_cohort_index==6, current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false, standing task unchanged.
 
 ## Standing task
 
