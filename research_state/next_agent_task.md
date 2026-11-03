@@ -1,12 +1,12 @@
-# Next Agent Task (initial message — 2026-11-03T03:23:46Z)
+# Next Agent Task (initial message — 2026-11-03T03:24:59Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Prior session (2026-11-03T03:23:46Z) completed the standing-task verification: HEAD 63a1fce16e67849ee88b0e28a3b1a7b949db2b78 == origin/main, `git status --porcelain` empty, next_cohort_index==6, current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false, and all three manifest hashes MATCH (selection f1b012b..., amendment 25397ae..., data manifest a9c6c49...).
+Prior session (2026-11-03T03:24:59Z) completed the standing-task verification: HEAD 3b10527b46cde717a1c49dc1a01d48c89165bad9 == origin/main, `git status --porcelain` empty (0 lines), next_cohort_index==6, current_cohort.cohort_index==5 completed==true, all four execution-authorization flags false, and all three manifest hashes MATCH (selection f1b012b..., amendment 25397ae..., data manifest a9c6c49...). Binance klines data gate confirmed: 20 candidate assets, exactly 7 validated (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT) matching authorized_run.scope.binance_pairs; 13 excluded remain excluded. v6 selection run NOT STARTED (src/v6_campaign absent). Confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z; holdout_exposed_count 0 in ledgers v2–v5; all confirmatory artifacts absent; fail-closed preserved.
 
 ## Standing task
 
-1. Cheap checks first. Verify HEAD == origin/main, empty porcelain, next_cohort_index==6, current_cohort.cohort_index==5 completed==true, and all four execution-authorization flags false. Recompute manifest hashes canonically: selection must equal f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment must equal 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af; data manifest must equal a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465.
+1. Cheap checks first. Verify HEAD == origin/main, empty porcelain, next_cohort_index==6, current_cohort.cohort_index==5 completed==true, and all four execution-authorization flags false. Recompute manifest hashes canonically: selection must equal f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment must equal 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af; data manifest must equal a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 (excluded keys: top-level manifest_hash AND snapshot_identity.data_manifest_hash).
 2. Binance klines data gate — RESOLVED. Do not re-run probe.
 3. v6 selection run — do NOT start (src/v6_campaign absent). No run until execution path exists and canonical source digest recorded in revised selection authorization.
 4. BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z. Do NOT attempt; holdout_exposed_count must remain 0; fail-closed.
