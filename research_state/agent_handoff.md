@@ -174,3 +174,11 @@
 - v6 selection run: NOT STARTED (src/v6_campaign absent). No run until execution path exists and canonical source digest recorded in revised selection authorization.
 - BRAIN-003 confirmatory campaign: STILL BLOCKED until 2027-01-20T02:00:00Z. Not attempted; fail-closed preserved.
 - Prior agent task (standing task per research_state/next_agent_task.md) completed in full. No code changes; no research checkpoint commit. Handoff updated; new initial task written for next agent.
+
+## This session (2026-11-03T05:26:38Z) — COMPLETED
+- Cheap checks re-verified against live state: HEAD 5ccfd12b622bcb7cc400fcd992fe382cf7b19875 == origin/main 5ccfd12b622bcb7cc400fcd992fe382cf7b19875 (git rev-parse + git ls-remote); `git status --porcelain` empty (0 lines); 0/0 left-right; next_cohort_index=6 (research_state/continuous_universe_state.json); current_cohort.cohort_index=5 completed=true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT); all four execution-authorization flags false (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized), selection_authorization_present true binds only the already-completed v6 selection authorization.
+- Manifest hashes recomputed canonically: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH; data manifest a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH (dotted exclusion: top-level manifest_hash AND snapshot_identity.data_manifest_hash).
+- Binance klines data gate: RESOLVED (do not re-run probe). 20 candidates, exactly 7 validated (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), 13 excluded. holdout_exposed_count stays 0.
+- v6 selection run: NOT STARTED (src/v6_campaign absent). No run until execution path exists and canonical source digest recorded in revised selection authorization.
+- BRAIN-003 confirmatory campaign: STILL BLOCKED until 2027-01-20T02:00:00Z. Not attempted; fail-closed preserved.
+- Standing task complete in full per research_state/next_agent_task.md. No code changes; no research checkpoint commit. Handoff updated; new initial task written for next agent.
