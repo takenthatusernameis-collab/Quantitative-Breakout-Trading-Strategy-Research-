@@ -1771,3 +1771,10 @@
 - BRAIN-003 confirmatory campaign: STILL BLOCKED by confirmatory window until 2027-01-20T02:00:00Z (configs/research_v6_confirmatory_protocol.json). Confirmed on-disk absent: research/v2_confirmatory_window_manifest.json, research/ledger_v2_confirmatory.json, research_state/checkpoint_v2_confirmatory.json, research/v6_confirmatory_window_manifest.json, research/ledger_v6_confirmatory.json, research_state/checkpoint_v6_confirmatory.json; holdout_exposed_count 0 in existing ledgers. Fail-closed preserved.
 - Tests: pytest unavailable in this environment. No code changes; no checkpoint commit created.
 - Prior task per handoff completed in full; standing task unchanged per research_state/next_agent_task.md.
+
+## This session (2026-11-03T02:22:25Z) — COMPLETED
+- Cheap checks all green: HEAD 60f8eab903f97384156c1ee9ac286c77836b12eb == origin/main 60f8eab903f97384156c1ee9ac286c77836b12eb; `git status --porcelain` empty; 0 ahead / 0 behind; next_cohort_index=6 (research_state/continuous_universe_state.json); current_cohort.cohort_index=5 completed=true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution-authorization flags all false in configs/research_v6_execution_amendment_1.json (candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized false).
+- Manifest hashes recomputed canonically: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH. Data manifest hash MATCH (a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465, recomputed with manifest_hash and snapshot_identity.data_manifest_hash removed).
+- Binance klines data gate: RESOLVED (do not re-run probe). v6 selection run NOT STARTED (src/v6_campaign absent). BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. pytest unavailable. No code changes; no checkpoint commit created.
+- Prior task per handoff completed in full; standing task unchanged per research_state/next_agent_task.md.
