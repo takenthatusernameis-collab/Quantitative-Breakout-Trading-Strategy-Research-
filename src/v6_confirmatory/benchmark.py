@@ -50,7 +50,7 @@ ALIGNMENT_REFERENCE = "docs/research_protocol.md:101"
 
 #: The published **development** benchmark dataset. It does not cover the
 #: confirmatory window and may not be substituted by the window benchmark.
-DEVELOPMENT_BENCHMARK_PATH = "research/data/candles_v6/BTCUSDT_1h_50d357b0cb2d6f8d.csv"
+DEVELOPMENT_BENCHMARK_PATH = "research/data/candles_v6/BTCUSDT_1h_626e639b02e54bc1.csv"
 
 #: The content hash of the published development benchmark dataset.
 DEVELOPMENT_BENCHMARK_CONTENT_HASH = (
