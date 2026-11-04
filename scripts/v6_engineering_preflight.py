@@ -182,10 +182,10 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                   (f"frozen interval yields {eligible_close_count} eligible candle closes; {minimum} required"
                    if not valid_window else f"at least {minimum} eligible closes fit inside the exclusive window end"),
                   eligible_closes=eligible_close_count, required=minimum)
-            if frozen_end < required_exclusive_end or runbook_end < required_exclusive_end:
+            if frozen_end < required_evaluation_start or runbook_end < required_exclusive_end:
                 check(report, "window:one_hour_boundary",
                       "BLOCKED_PROTOCOL_INCONSISTENCY",
-                      "strict close-time membership requires an exclusive close-time bound one hour after the 2,160th eligible close; retain the evaluation gate at the last close and publish a versioned correction (do not edit frozen artifacts in place)",
+                      "strict close-time membership requires the runbook's exclusive close-time bound to be one hour after the 2,160th eligible close; the frozen earliest-evaluation timestamp remains the last close (do not edit frozen artifacts in place)",
                       required_exclusive_end_utc=required_exclusive_end.isoformat().replace("+00:00", "Z"),
                       earliest_evaluation_start_utc=required_evaluation_start.isoformat().replace("+00:00", "Z"))
             else:
