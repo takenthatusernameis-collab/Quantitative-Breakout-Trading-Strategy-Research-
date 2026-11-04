@@ -3,7 +3,7 @@
 The v6 confirmatory protocol requires a **window** benchmark series: the BTC
 series that covers the confirmatory window, retrieved once, hash-verified and
 aligned with the asset series. The published development benchmark
-(``research/data/candles_v6/BTCUSDT_1h_50d357b0cb2d6f8d.csv``) does **not**
+(``research/data/candles_v6/BTCUSDT_1h_626e639b02e54bc1.csv``) does **not**
 cover the window and may not be substituted for it.
 
 The frozen v1 engine pairs the BTC series with the asset series **by index**
@@ -54,7 +54,7 @@ DEVELOPMENT_BENCHMARK_PATH = "research/data/candles_v6/BTCUSDT_1h_50d357b0cb2d6f
 
 #: The content hash of the published development benchmark dataset.
 DEVELOPMENT_BENCHMARK_CONTENT_HASH = (
-    "50d357b0cb2d6f8dd36000b084d0c6993db7b505ff98aeef6597a7643e8b577e"
+    "626e639b02e54bc137fe8d4ce99385f8c5e4c34c1bc5e375c6f616dabac50b52"
 )
 
 #: The failures that abort the evaluation, verbatim from the protocol.
