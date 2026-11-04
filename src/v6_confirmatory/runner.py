@@ -177,6 +177,41 @@ FORBIDDEN_OUTPUT_PATHS = (
     + V2_SELECTION_PATHS_FORBIDDEN
     + V2_CONFIRMATORY_PATHS_FORBIDDEN
     + V6_SELECTION_PATHS_FORBIDDEN
+    + (
+        "research/shards_v3/",
+        "research/ledger_v3.json",
+        "research/results_manifest_v3.json",
+        "research/results_v3.jsonl",
+        "research_state/checkpoint_v3.json",
+        "research/shards_v3_confirmatory/",
+        "research/ledger_v3_confirmatory.json",
+        "research/results_manifest_v3_confirmatory.json",
+        "research/results_v3_confirmatory.jsonl",
+        "research_state/checkpoint_v3_confirmatory.json",
+        "research/v3_confirmatory_window_manifest.json",
+        "research/shards_v4/",
+        "research/ledger_v4.json",
+        "research/results_manifest_v4.json",
+        "research/results_v4.jsonl",
+        "research_state/checkpoint_v4.json",
+        "research/shards_v4_confirmatory/",
+        "research/ledger_v4_confirmatory.json",
+        "research/results_manifest_v4_confirmatory.json",
+        "research/results_v4_confirmatory.jsonl",
+        "research_state/checkpoint_v4_confirmatory.json",
+        "research/v4_confirmatory_window_manifest.json",
+        "research/shards_v5/",
+        "research/ledger_v5.json",
+        "research/results_manifest_v5.json",
+        "research/results_v5.jsonl",
+        "research_state/checkpoint_v5.json",
+        "research/shards_v5_confirmatory/",
+        "research/ledger_v5_confirmatory.json",
+        "research/results_manifest_v5_confirmatory.json",
+        "research/results_v5_confirmatory.jsonl",
+        "research_state/checkpoint_v5_confirmatory.json",
+        "research/v5_confirmatory_window_manifest.json",
+    )
 )
 
 
@@ -336,8 +371,8 @@ def immutable_artifact_failures(
 ) -> List[str]:
     """Which of the frozen artifacts no longer match their recorded sha256.
 
-    The anchors are the ones the authorization records: the v1 evidence and the
-    v2 *selection* outputs. A confirmatory run may not proceed while any of them
+    The anchors are the ones the authorization records: v1 evidence, the v5 chain,
+    and the v6 chain up to the selected-configurations manifest. A confirmatory run may not proceed while any of them
     has changed.
     """
     root = Path(repo_root)
@@ -590,8 +625,8 @@ def build_plan(workspace: Workspace) -> Plan:
         "v2 selection outputs",
     )
     _require(
-        bool(anchors.get("v6_selection_outputs")),
-        "the authorization records no immutable artifact anchors for the v6 selection outputs",
+        bool(anchors.get("v6_chain")),
+        "the authorization records no immutable artifact anchors for the v6 chain",
     )
 
     return Plan(
@@ -642,7 +677,7 @@ def evaluate_preconditions(
         exposure event;
     (d) the live code identity equals the recorded identity;
     (e) the scope equals the frozen selected-configurations manifest;
-    (f) the v1 artifacts, the v2 selection outputs and the v6 selection outputs
+    (f) the v1 evidence, the v5 chain and v6 pre-confirmatory chain
         are byte-unchanged.
     """
     failures: List[str] = []
