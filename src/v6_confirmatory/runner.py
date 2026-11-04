@@ -837,6 +837,7 @@ def run_confirmatory(
     root = Path(workspace.repo_root)
     start_ms = parse_utc_ms(plan.window_start_utc)
     end_ms = parse_utc_ms(plan.earliest_end_utc)
+    exclusive_close_end_ms = parse_utc_ms(plan.exclusive_close_end_utc)
     started_utc = _now_utc()
 
     probe_result = (probe or metadata_probe)(plan.data_scope_assets)
@@ -858,12 +859,12 @@ def run_confirmatory(
     created_dirs: List[Path] = []
     try:
         for asset in plan.data_scope_assets:
-            persisted = _load_persisted_dataset(workspace, plan.run_id, asset, start_ms, end_ms)
+            persisted = _load_persisted_dataset(workspace, plan.run_id, asset, start_ms, exclusive_close_end_ms)
             if persisted is not None:
                 candles, record = persisted
             else:
-                rows = (fetch_rows or _refuse_fetch)(asset, start_ms, end_ms)
-                candles, record = retrieve_window_candles(asset, rows, start_ms, end_ms)
+                rows = (fetch_rows or _refuse_fetch)(asset, start_ms, exclusive_close_end_ms)
+                candles, record = retrieve_window_candles(asset, rows, start_ms, exclusive_close_end_ms)
                 verify_window_dataset(record, candles)
                 csv_path, record_path = _dataset_paths(workspace, plan.run_id, asset)
                 rendered = render_dataset_csv(candles)
@@ -881,7 +882,7 @@ def run_confirmatory(
                 plan.run_id,
                 asset,
                 start_ms,
-                end_ms,
+                exclusive_close_end_ms,
                 plan.data_scope_assets,
                 _now_utc(),
             )
@@ -918,7 +919,7 @@ def run_confirmatory(
 
         window_manifest = build_window_manifest(
             window_start_utc=plan.window_start_utc,
-            window_end_utc=plan.earliest_end_utc,
+            window_end_utc=plan.exclusive_close_end_utc,
             minimum_closed_hourly_candles=plan.minimum_closed_hourly_candles,
             retrieval_timestamp_utc=_now_utc(),
             readiness_record=readiness_record,
@@ -976,7 +977,8 @@ def run_confirmatory(
 
         window = {
             "window_start_utc": plan.window_start_utc,
-            "window_end_utc": plan.earliest_end_utc,
+            "window_end_utc": plan.exclusive_close_end_utc,
+            "evaluation_start_utc": plan.earliest_end_utc,
             "minimum_closed_hourly_candles": plan.minimum_closed_hourly_candles,
             "evaluation_window_rule": plan.window_rule,
         }
@@ -995,7 +997,7 @@ def run_confirmatory(
             per_asset_outcomes=per_asset,
             datasets=datasets,
             window_start_utc=plan.window_start_utc,
-            window_end_utc=plan.earliest_end_utc,
+            window_end_utc=plan.exclusive_close_end_utc,
         )
         shard_relative = f"{plan.paths['shards_dir']}/{plan.campaign_id}/shard_000000.jsonl"
         shard_path = root / shard_relative
