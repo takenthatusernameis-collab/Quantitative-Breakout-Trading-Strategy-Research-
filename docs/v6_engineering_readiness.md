@@ -1,0 +1,23 @@
+# v6 engineering readiness preflight
+
+Run:
+
+```bash
+python3 scripts/v6_readiness_preflight.py
+```
+
+This is a read-only metadata preflight. It reads protocol/configuration JSON and
+hashes Python source files only. It does **not** open market-data CSVs, contact
+providers, write checkpoints, retrieve the future BTC benchmark, authorize a
+run, or execute selection/confirmation.
+
+The frozen evaluation boundary remains 2,160 closed hourly candles beginning
+at 2026-10-22 02:00 UTC; evaluation cannot start before 2027-01-20 02:00 UTC.
+The report separates engineering, data, and authorization readiness. A
+successful engineering check is not evidence that the holdout is available or
+that evaluation is authorized.
+
+Exit code is 0 only when every readiness condition passes; otherwise it is 1
+and the JSON report identifies the blockers. Do not weaken the protocol to
+make this command pass. Confirmatory authorization must be separately and
+explicitly approved after selection results and code identities are frozen.
