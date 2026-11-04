@@ -308,6 +308,27 @@ def resolve_effective_v6_execution_protocol(repo_root: Path = REPO_ROOT) -> Dict
     effective["_effective_blocks_from_amendment"] = list(superseded)
     effective["_amendment_manifest_hash"] = amendment_hash
     effective["_amendment_path"] = V6_EXECUTION_AMENDMENT_1_RELATIVE
+
+    amendment_2_path = root / V6_EXECUTION_AMENDMENT_2_RELATIVE
+    if amendment_2_path.exists():
+        amendment_2 = read_json(amendment_2_path)
+        excluded_2 = tuple((amendment_2.get("hashing") or {}).get("manifest_hash_excluded_keys") or MANIFEST_HASH_EXCLUDED_KEYS)
+        amendment_2_hash = compute_manifest_hash(amendment_2, excluded_2)
+        if amendment_2.get("manifest_hash") != amendment_2_hash:
+            raise V6RuleError("the v6 execution amendment 2 does not recompute its own manifest_hash")
+        amends_2 = amendment_2.get("amends") or {}
+        if amends_2.get("file") != V6_EXECUTION_RELATIVE or amends_2.get("manifest_hash") != protocol_hash or amends_2.get("sha256") != sha256_file(protocol_path):
+            raise V6RuleError("the v6 execution amendment 2 is not bound to the current v6 execution protocol")
+        prior = amendment_2.get("supersedes_in_amendment_1") or {}
+        if prior.get("file") != V6_EXECUTION_AMENDMENT_1_RELATIVE or prior.get("manifest_hash") != amendment_hash or prior.get("sha256") != sha256_file(amendment_path):
+            raise V6RuleError("the v6 execution amendment 2 does not bind the current amendment 1")
+        superseded_2 = tuple((amendment_2.get("precedence") or {}).get("superseded") or ())
+        if superseded_2 != ("execution_authorization",) or "execution_authorization" not in amendment_2:
+            raise V6RuleError("the v6 execution amendment 2 may supersede only execution_authorization")
+        effective["execution_authorization"] = amendment_2["execution_authorization"]
+        effective["_effective_blocks_from_amendment_2"] = list(superseded_2)
+        effective["_amendment_2_manifest_hash"] = amendment_2_hash
+        effective["_amendment_path"] = V6_EXECUTION_AMENDMENT_2_RELATIVE
     return effective
 
 
