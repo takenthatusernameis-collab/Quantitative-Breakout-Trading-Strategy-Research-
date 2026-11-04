@@ -26,10 +26,13 @@ FILES = {
     "spec": "configs/research_v6.json",
     "freeze": "configs/research_v6_candidate_freeze.json",
     "protocol": "configs/research_v6_confirmatory_protocol.json",
-    "runbook": "configs/research_v6_confirmatory_runbook_1.json",
-    "selection_authorization": "configs/research_v6_selection_authorization_1.json",
+    "runbook_1": "configs/research_v6_confirmatory_runbook_1.json",
+    "runbook": "configs/research_v6_confirmatory_runbook_2.json",
+    "selection_authorization_1": "configs/research_v6_selection_authorization_1.json",
+    "selection_authorization": "configs/research_v6_selection_authorization_2.json",
     "execution": "configs/research_v6_execution.json",
-    "execution_amendment": "configs/research_v6_execution_amendment_1.json",
+    "execution_amendment_1": "configs/research_v6_execution_amendment_1.json",
+    "execution_amendment": "configs/research_v6_execution_amendment_2.json",
     "universe": "research/universe_manifest_v6.json",
     "data": "research/data_manifest_v6.json",
     "selected_manifest": "research/v6_selected_configurations_manifest.json",
@@ -112,7 +115,7 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
 
     # Verify the metadata chain. These checks only parse small JSON documents.
     for name in ("spec", "freeze", "protocol", "runbook", "selection_authorization",
-                 "execution_amendment", "universe", "data"):
+                 "execution", "execution_amendment", "universe", "data"):
         document = docs.get(name)
         if document is None:
             continue
@@ -215,7 +218,7 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         check(report, "authorization:selection_source_digest",
               "PASS" if bound == source_digest else "BLOCKED_AUTHORIZATION_AMENDMENT",
               "selection execution path digest matches the hash-bound authorization" if bound == source_digest
-              else "the current path digest is not bound by selection authorization 1; publish a versioned selection-authorization amendment",
+              else "the current path digest is not bound by selection authorization 2; rebuild the versioned identity artifact",
               recorded_digest=bound, computed_digest=source_digest)
     elif selection_auth:
         check(report, "authorization:selection_source_digest", "BLOCKED_ENGINEERING",
@@ -241,6 +244,23 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
               "confirmatory execution path digest is bound" if actual_confirmatory_digest and code_digest == actual_confirmatory_digest
               else "the confirmatory runner digest is absent or not bound by a versioned confirmatory authorization",
               recorded_digest=code_digest, computed_digest=actual_confirmatory_digest)
+
+    amendment_effective = amendment or {}
+    effective_auth = amendment_effective.get("execution_authorization") or {}
+    false_flags = (
+        "execution_authorized",
+        "candle_fetch_authorized",
+        "confirmatory_evaluation_authorized",
+        "grid_run_authorized",
+        "second_run_authorized",
+    )
+    if effective_auth:
+        violations = [flag for flag in false_flags if effective_auth.get(flag) is not False]
+        check(report, "safety:execution_flags", "PASS" if not violations else "BLOCKED_SAFETY",
+              "all execution, grid, candle-fetch and confirmatory flags remain false" if not violations
+              else f"unexpected authorization flags: {violations}")
+    else:
+        check(report, "safety:execution_flags", "BLOCKED_ENGINEERING", "effective execution amendment 2 is missing or unreadable")
 
     if data:
         exposure = data.get("confirmatory_window") or {}
