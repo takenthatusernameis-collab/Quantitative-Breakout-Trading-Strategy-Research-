@@ -485,9 +485,12 @@ def build_plan(workspace: Workspace) -> Plan:
         "the authorized earliest window end does not follow from the window start",
     )
     _require(
-        window.get("must_not_overlap_v2_confirmatory_window") is True,
-        "the authorization does not forbid an overlap with the v2 confirmatory window",
+        window.get("exclusive_close_end_utc") == bounds_utc["exclusive_close_end_utc"],
+        "the authorization does not bind the strict close-time exclusive end",
     )
+    for version in ("v2", "v3", "v4", "v5"):
+        key = f"must_not_overlap_{version}_confirmatory_window"
+        _require(window.get(key) is True, f"the authorization does not forbid overlap with {version}")
 
     # The single preregistered confirmatory criterion: the v6 specification's
     # promotion rule. The v6 line states no second criterion, so the path
