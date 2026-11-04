@@ -86,16 +86,26 @@ def _require_fetch_authorization(
     return document
 
 
-def _request_page(session: Any, url: str, params: Dict[str, Any]) -> Any:
+def _request_page(session: Any, url: str, params: Dict[str, Any], audit: List[Dict[str, Any]]) -> Any:
     last_error: Optional[str] = None
     for attempt in range(MAX_ATTEMPTS_PER_PAGE):
+        started_utc = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
         try:
             response = session.get(url, params=params, timeout=30)
             status = int(response.status_code)
+            audit.append({
+                "endpoint": url,
+                "http_status": status,
+                "request_started_utc": started_utc,
+                "response_observed_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+                "attempt": attempt + 1,
+            })
             if 200 <= status < 300:
                 payload = response.json()
                 if not isinstance(payload, list):
                     raise DataVerificationError("Binance kline endpoint returned a non-list payload")
+                audit[-1]["outcome"] = "SUCCESS"
+                audit[-1]["rows_returned"] = len(payload)
                 return payload
             if status in RATE_LIMIT_STATUS_CODES:
                 retry_after = response.headers.get("Retry-After")
@@ -108,17 +118,27 @@ def _request_page(session: Any, url: str, params: Dict[str, Any]) -> Any:
                     continue
                 raise DataVerificationError(f"Binance rate-limited the kline request (HTTP {status})")
             if status in FAILOVER_STATUS_CODES:
+                audit[-1]["outcome"] = "FAILOVER"
                 last_error = f"HTTP {status}"
                 break
             raise DataVerificationError(f"Binance kline request failed (HTTP {status})")
         except DataVerificationError:
             raise
         except Exception as error:
+            audit.append({
+                "endpoint": url,
+                "http_status": None,
+                "request_started_utc": started_utc,
+                "response_observed_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+                "attempt": attempt + 1,
+                "outcome": "TRANSPORT_ERROR",
+                "error_type": type(error).__name__,
+            })
             last_error = f"{type(error).__name__}: {error}"
             if attempt + 1 < MAX_ATTEMPTS_PER_PAGE:
                 time.sleep(min(MAX_BACKOFF_SECONDS, 2.0 ** attempt))
     if url == PRIMARY_KLINES_URL:
-        return _request_page(session, FAILOVER_KLINES_URL, params)
+        return _request_page(session, FAILOVER_KLINES_URL, params, audit)
     raise DataVerificationError(f"Binance kline request failed after bounded retries: {last_error or 'unknown error'}")
 
 
@@ -141,6 +161,7 @@ def fetch_window_rows(
     final_open_inclusive = exclusive_close_end_ms - HOUR_MS - 1
     cursor = int(window_start_ms)
     rows: List[Sequence[Any]] = []
+    audit: List[Dict[str, Any]] = []
     seen = set()
     while cursor <= final_open_inclusive:
         params = {
@@ -150,7 +171,7 @@ def fetch_window_rows(
             "endTime": final_open_inclusive,
             "limit": MAX_KLINES_PER_REQUEST,
         }
-        page = _request_page(session, PRIMARY_KLINES_URL, params)
+        page = _request_page(session, PRIMARY_KLINES_URL, params, audit)
         if not page:
             break
         for row in page:
@@ -169,7 +190,7 @@ def fetch_window_rows(
         cursor = next_cursor
         if len(page) < MAX_KLINES_PER_REQUEST:
             break
-    return rows
+    return ProviderFetchResult(rows, audit)
 
 
 __all__ = [
@@ -178,5 +199,6 @@ __all__ = [
     "MAX_ATTEMPTS_PER_PAGE",
     "MAX_KLINES_PER_REQUEST",
     "PRIMARY_KLINES_URL",
+    "ProviderFetchResult",
     "fetch_window_rows",
 ]
