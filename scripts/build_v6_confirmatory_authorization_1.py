@@ -24,6 +24,7 @@ import argparse
 import hashlib
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
 
@@ -232,7 +233,7 @@ def build(root: Path = ROOT, *, authorize: bool = False) -> Dict[str, Any]:
     if protocol_benchmark.get("development_benchmark_may_be_reused_as_the_window_benchmark") is not False:
         raise SystemExit("protocol allows reuse of the development benchmark")
 
-    created = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    created = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     document: Dict[str, Any] = {
         "artifact": "v6_confirmatory_authorization",
         "artifact_version": "v6-confirmatory-authorization-1",
