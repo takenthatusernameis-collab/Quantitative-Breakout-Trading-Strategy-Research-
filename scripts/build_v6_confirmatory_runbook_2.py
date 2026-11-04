@@ -148,7 +148,7 @@ def build(root: Path = ROOT) -> Dict[str, Any]:
         if command not in commands:
             commands.append(command)
     result["verification"]["verification_commands"] = commands
-    result["created_utc"] = "2026-11-04T00:00:00Z"
+    result["created_utc"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     result.setdefault("hashing", {})["manifest_hash_excluded_keys"] = ["manifest_hash"]
     result["manifest_hash"] = ""
     result["manifest_hash"] = artifact_hash(result)
