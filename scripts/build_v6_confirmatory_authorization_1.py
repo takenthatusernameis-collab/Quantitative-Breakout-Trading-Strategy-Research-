@@ -148,11 +148,12 @@ def build(root: Path = ROOT, *, authorize: bool = False) -> Dict[str, Any]:
         raise SystemExit("runbook does not bind strict close-time membership")
 
     selections = selected.get("selections") or {}
+    manifest_assets = sorted(str(asset) for asset in selections)
+    if manifest_assets != sorted(window.get("in_scope_assets") or []):
+        raise SystemExit("selection manifest candidate universe differs from the frozen seven-asset runbook scope")
     expected_assets = sorted(asset for asset, entry in selections.items() if entry.get("selected") is True)
     if not expected_assets:
         raise SystemExit("the selection manifest contains no selected candidate; there is nothing to authorize")
-    if expected_assets != sorted(window.get("in_scope_assets") or []):
-        raise SystemExit("selected assets differ from the frozen runbook scope")
     config_ids = {
         asset: str(selections[asset].get("config_id") or "")
         for asset in expected_assets
