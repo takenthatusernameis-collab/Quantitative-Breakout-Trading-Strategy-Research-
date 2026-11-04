@@ -157,10 +157,13 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             rule = (spec.get("holdout") or {}).get("confirmatory_window_membership") or {}
             strict_start = rule.get("interval_start_inclusive") is False
             strict_end = rule.get("interval_end_exclusive") is True
-            interval_hours = int((frozen_end - start).total_seconds() // 3600)
-            eligible_close_count = max(0, interval_hours - 1) if strict_start and strict_end else interval_hours
             runbook_bounds = runbook.get("applies_to") or {}
             runbook_end = parse_utc(str(runbook_bounds.get("window_end_utc")))
+            # Count candle close instants in the actual runbook's exclusive
+            # interval. The frozen earliest evaluation start is the 2,160th
+            # close, not the exclusive endpoint.
+            interval_hours = int((runbook_end - start).total_seconds() // 3600)
+            eligible_close_count = max(0, interval_hours - 1) if strict_start and strict_end else interval_hours
             report["window"] = {
                 "opens_utc": start.isoformat().replace("+00:00", "Z"),
                 "minimum_closed_hourly_candles": minimum,
