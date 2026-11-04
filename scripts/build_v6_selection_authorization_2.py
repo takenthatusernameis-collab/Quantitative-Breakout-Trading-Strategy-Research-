@@ -15,6 +15,7 @@ import argparse
 import copy
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any, Dict
 
@@ -66,6 +67,8 @@ def composite_identity(hashed_set_digest: str, execution_digest: str) -> str:
 
 def build(root: Path = ROOT) -> Dict[str, Any]:
     source_path = root / SOURCE
+    if str(root / "src") not in sys.path:
+        sys.path.insert(0, str(root / "src"))
     document = json.loads(source_path.read_text(encoding="utf-8"))
     if manifest_hash(document) != document.get("manifest_hash"):
         raise SystemExit("selection authorization 1 does not verify; refusing to derive a successor")
