@@ -470,7 +470,7 @@ def build_plan(workspace: Workspace) -> Plan:
     )
 
     window = run.get("window") or {}
-    frozen_start = (freeze.get("data_boundary") or {}).get("confirmatory_window_start_utc")
+    frozen_start = (freeze.get("confirmatory_window") or {}).get("opens_utc")
     _require(
         window.get("window_start_utc") == frozen_start,
         "the authorized window start is not the frozen confirmatory-window start",
