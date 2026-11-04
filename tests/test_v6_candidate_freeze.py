@@ -624,3 +624,30 @@ def test_the_verifier_detects_a_v6_run_artifact(tmp_path: Path) -> None:
     (root / "research" / "ledger_v6.json").write_text("{}", encoding="utf-8")
     failures = _failures(root)
     assert any("the v6 run artifact" in failure for failure in failures)
+
+
+def test_verifier_allows_only_the_declared_v6_execution_namespaces(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    src = root / "src"
+    # v6_campaign is populated by the current implementation; v6_confirmatory
+    # is a declared future namespace and may exist before its executor is built.
+    (src / "v6_campaign").mkdir(exist_ok=True)
+    (src / "v6_confirmatory").mkdir(exist_ok=True)
+    failures = _failures(root)
+    assert failures == [], failures
+
+
+def test_verifier_rejects_an_undeclared_v6_execution_namespace(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    (root / "src" / "v6_unapproved").mkdir()
+    failures = _failures(root)
+    assert any("unexpected v6 code namespace directory src/v6_unapproved" in x for x in failures)
+
+
+def test_verifier_rejects_a_symlinked_v6_execution_namespace(tmp_path: Path) -> None:
+    root = _mirror_repo(tmp_path)
+    target = tmp_path / "external-v6-package"
+    target.mkdir()
+    (root / "src" / "v6_confirmatory").symlink_to(target, target_is_directory=True)
+    failures = _failures(root)
+    assert any("must be a real directory" in x for x in failures)

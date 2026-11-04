@@ -444,12 +444,38 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         "authorized_ordered_code_hash"
     ):
         fail("the freeze does not retain the authorized ordered code hash as value of record")
-    for entry in (root / "src").iterdir() if (root / "src").is_dir() else []:
-        if entry.is_dir() and entry.name.startswith("v6"):
-            fail(
-                f"the v6 execution path {entry.name} lives inside src/, but the v6 execution path "
-                "must be a new directory outside the hashed set"
-            )
+    # v6 execution packages are siblings of the frozen engine under src/.
+    # They are outside HASHED_SET_ROOT, not outside the entire src/ tree.
+    # Keep this allowlist exact: an arbitrary new v6 namespace is still a
+    # repository-layout error, and symlinked paths are refused.
+    allowed_v6_namespaces = {"v6_campaign", "v6_confirmatory"}
+    src_root = root / "src"
+    hashed_source_root = (root / HASHED_SET_ROOT).resolve()
+    if src_root.is_dir():
+        for entry in src_root.iterdir():
+            if not entry.name.startswith("v6"):
+                continue
+            if entry.name not in allowed_v6_namespaces:
+                fail(
+                    f"unexpected v6 code namespace directory src/{entry.name}; "
+                    "only src/v6_campaign and src/v6_confirmatory are declared"
+                )
+                continue
+            if entry.is_symlink() or not entry.is_dir():
+                fail(
+                    f"the v6 code namespace src/{entry.name} must be a real directory, "
+                    "not a symlink or non-directory path"
+                )
+                continue
+            try:
+                entry.resolve().relative_to(hashed_source_root)
+            except ValueError:
+                pass
+            else:
+                fail(
+                    f"the v6 code namespace src/{entry.name} is inside the frozen "
+                    "hashed source set"
+                )
 
     # 3. the band, re-derived from the raw snapshot bytes -------------------
     prior_universes = [read_json(root / relative) for relative in PRIOR_UNIVERSE_RELATIVES]

@@ -1,0 +1,83 @@
+{
+  "artifact": "v6_selection_execution_binding",
+  "artifact_version": "v6-selection-execution-binding-1",
+  "protocol_version": "v6",
+  "created_utc": "2026-11-04T16:00:00Z",
+  "binding_status": "IMPLEMENTATION_BOUND_NOT_RUN",
+  "engineering_scope": {
+    "basis": "explicit user instruction on 2026-11-04 to remove engineering bottlenecks on main",
+    "purpose": "bind the isolated v6 selection execution implementation to the already-published one-run authorization",
+    "hashed_v1_engine_modified": false,
+    "frozen_v1_v5_artifacts_modified": false,
+    "no_campaign_started": true,
+    "no_market_data_read_by_builder": true,
+    "no_provider_contact": true
+  },
+  "amends": {
+    "path": "configs/research_v6_selection_authorization_1.json",
+    "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
+    "sha256": "14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b",
+    "scope": "execution package identity only; the original authorization remains the sole authority for one bounded selection run"
+  },
+  "execution_path": {
+    "package": "src/v6_campaign",
+    "entry_point": "src/v6_campaign/runner.py:run_selection",
+    "modules": [
+      "__init__.py",
+      "benchmark.py",
+      "data.py",
+      "errors.py",
+      "identity.py",
+      "runner.py",
+      "scope.py",
+      "units.py"
+    ],
+    "outside_hashed_set": true,
+    "hashed_set_root": "src/breakout_research",
+    "canonical_source_digest": "37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72",
+    "engine_reused_unchanged": true
+  },
+  "code_identity": {
+    "algorithm": "canonical_source_digest_v1",
+    "portable": true,
+    "hashed_set_root": "src/breakout_research",
+    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "execution_path_root": "src/v6_campaign",
+    "execution_path_digest": "37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72",
+    "run_code_identity": "647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961"
+  },
+  "scope_binding": {
+    "candidate_freeze_hash": "3b482a4f25c575cbe1e2bd9a8d787a76caf34be0e76de03b0e14b0daa70fbec4",
+    "universe_manifest_hash": "baac2b942ea76749cffc7a71940fe03496e2416a358940c8e7972036b7295072",
+    "data_manifest_hash": "a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465",
+    "candidate_pairs": [
+      "FETUSDT",
+      "SEIUSDT",
+      "PENDLEUSDT",
+      "XTZUSDT",
+      "LDOUSDT",
+      "SUNUSDT",
+      "GNOUSDT"
+    ],
+    "selection_rule_sha256": "b7848977a499b3779202e4bc4de53dc4b9e2bb81b391b333e2165994e8217e5e",
+    "development_boundary_utc": "2026-10-19T22:00:00Z"
+  },
+  "authority": {
+    "single_selection_run_authority_source": "configs/research_v6_selection_authorization_1.json",
+    "single_selection_run_authority_manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
+    "max_runs": 1,
+    "confirmatory_evaluation_authorized": false,
+    "candle_fetch_authorized": false,
+    "second_v6_selection_run_authorized": false,
+    "amendment_of_a_frozen_artifact_authorized": false,
+    "holdout_reads_authorized": false
+  },
+  "hashing": {
+    "algorithm": "sha256",
+    "canonicalization": "json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False)",
+    "manifest_hash_excluded_keys": [
+      "manifest_hash"
+    ]
+  },
+  "manifest_hash": "b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e"
+}
