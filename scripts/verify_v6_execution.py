@@ -435,24 +435,65 @@ def verify(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
         fail("the code-hash constraint does not forbid edits under src/breakout_research")
     execution_root = root / V6_EXECUTION_ROOT
     execution_path_exists = (root / "src").is_dir() and execution_root.is_dir()
-    if constraint.get("v6_execution_path_exists") is not execution_path_exists:
-        fail(
-            "the code-hash constraint records the wrong state for the v6 execution path: "
-            f"{constraint.get('v6_execution_path_exists')!r}, recomputed {execution_path_exists!r}"
-        )
+    # The frozen protocol records the publication-time fact that the new v6
+    # package did not exist. A versioned, self-hashing selection-execution
+    # binding may supersede that one implementation-state fact without
+    # changing the frozen protocol or granting any new run authority.
+    historical_exists = constraint.get("v6_execution_path_exists")
+    binding_relative = "configs/research_v6_selection_execution_binding_1.json"
+    binding_path = root / binding_relative
+    if historical_exists is not False:
+        fail("the frozen v6 protocol no longer records its publication-time absent execution path")
     if execution_path_exists:
-        recorded = str(constraint.get("v6_execution_path_canonical_digest") or "")
-        live = tree_digest(execution_root)
-        computed["v6_execution_path_canonical_digest"] = live
-        if not recorded:
-            fail(
-                "the v6 execution path exists but the protocol records no canonical digest for it"
-            )
-        elif recorded != live:
-            fail(
-                "the code-hash constraint records another canonical digest for the v6 execution "
-                f"path: {recorded}, recomputed {live}"
-            )
+        if not binding_path.is_file():
+            fail("the v6 execution path exists without a versioned source-identity binding")
+        else:
+            try:
+                binding = read_json(binding_path)
+                binding_hash = compute_manifest_hash(binding, ("manifest_hash",))
+                if binding.get("manifest_hash") != binding_hash:
+                    fail("the v6 selection execution binding does not recompute its manifest_hash")
+                auth_path = root / "configs/research_v6_selection_authorization_1.json"
+                auth = read_json(auth_path)
+                if binding.get("amends", {}).get("path") != "configs/research_v6_selection_authorization_1.json":
+                    fail("the v6 execution binding amends another selection authorization")
+                if binding.get("amends", {}).get("manifest_hash") != auth.get("manifest_hash"):
+                    fail("the v6 execution binding names another selection authorization hash")
+                if binding.get("amends", {}).get("sha256") != sha256_file(auth_path):
+                    fail("the v6 execution binding names another selection authorization file digest")
+                code_identity = binding.get("code_identity") or {}
+                live_path_digest = tree_digest(execution_root)
+                live_hashed_digest = canonical_source_digest(root)
+                computed["v6_execution_path_canonical_digest"] = live_path_digest
+                if code_identity.get("execution_path_digest") != live_path_digest:
+                    fail("the versioned binding's v6 execution path digest does not recompute")
+                if code_identity.get("hashed_set_digest") != live_hashed_digest:
+                    fail("the versioned binding's hashed engine digest does not recompute")
+                expected_identity = sha256_bytes(canonical({
+                    "algorithm": "canonical_source_digest_v1",
+                    "hashed_set_root": HASHED_SET_ROOT,
+                    "hashed_set_digest": live_hashed_digest,
+                    "execution_path_root": V6_EXECUTION_ROOT,
+                    "execution_path_digest": live_path_digest,
+                }).encode("utf-8"))
+                if code_identity.get("run_code_identity") != expected_identity:
+                    fail("the versioned binding's composite run code identity does not recompute")
+                if binding.get("binding_status") != "IMPLEMENTATION_BOUND_NOT_RUN":
+                    fail("the v6 execution binding does not record implementation-only status")
+                authority = binding.get("authority") or {}
+                for flag in ("confirmatory_evaluation_authorized", "candle_fetch_authorized",
+                             "second_v6_selection_run_authorized", "amendment_of_a_frozen_artifact_authorized",
+                             "holdout_reads_authorized"):
+                    if authority.get(flag) is not False:
+                        fail(f"the v6 implementation binding improperly grants {flag}")
+                if authority.get("single_selection_run_authority_source") != "configs/research_v6_selection_authorization_1.json":
+                    fail("the v6 implementation binding does not retain the original selection authorization")
+                if binding.get("execution_path", {}).get("outside_hashed_set") is not True:
+                    fail("the v6 execution binding does not keep the package outside the hashed engine")
+            except (OSError, ValueError, TypeError, KeyError) as error:
+                fail(f"the v6 selection execution binding cannot be verified: {error}")
+    elif binding_path.exists():
+        fail("the v6 execution binding exists but its package directory is missing")
 
     # 6. the execution authorization authorizes nothing ----------------------
     # The **effective** execution-authorization block is resolved amendment
