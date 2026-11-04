@@ -215,7 +215,7 @@ def verify_artifact_hash(document: Dict[str, Any], label: str) -> str:
 def effective_rules(repo_root: Path) -> Dict[str, Any]:
     """Resolve the v6 rules from their frozen owners without editing them."""
     root = Path(repo_root)
-    spec = load_json(root / V5_SPEC_PATH)
+    spec = load_json(root / V6_SPEC_PATH)
     freeze = load_json(root / FREEZE_PATH)
     protocol = load_json(root / EXECUTION_PATH)
     amendment_effective = resolve_effective_execution_protocol(root)
@@ -223,7 +223,7 @@ def effective_rules(repo_root: Path) -> Dict[str, Any]:
     window = freeze.get("confirmatory_window") or {}
     return {
         "membership": {
-            "path": V5_SPEC_PATH,
+            "path": V6_SPEC_PATH,
             "manifest_hash": spec.get("specification_hash"),
             "rule": membership.get("rule"),
             "interval_start_inclusive": membership.get("interval_start_inclusive"),
@@ -454,7 +454,10 @@ def resolve_effective_execution_protocol(repo_root: Path) -> Dict[str, Any]:
     try:
         return resolve_effective_v6_execution_protocol(root)
     except V6RuleError as error:
-        raise ScopeError(str(error)) from errordef verify_execution_protocol(execution_protocol: Dict[str, Any],
+        raise ScopeError(str(error)) from error
+
+
+def verify_execution_protocol(execution_protocol: Dict[str, Any],
                                scope: Dict[str, Any],
                                data_manifest_hash: str,
                                repo_root: Path) -> Dict[str, Any]:
@@ -515,7 +518,10 @@ def resolve_effective_execution_protocol(repo_root: Path) -> Dict[str, Any]:
         "inherited_rules": inherited,
         "effective_blocks_from_amendment": list(execution_protocol.get("_effective_blocks_from_amendment") or ()),
         "amendment_manifest_hash": execution_protocol.get("_amendment_manifest_hash"),
-    }def load_workspace_documents(repo_root: Path) -> Dict[str, Any]:
+    }
+
+
+def load_workspace_documents(repo_root: Path) -> Dict[str, Any]:
     """Load every artifact the authorization is checked against."""
     root = Path(repo_root)
     return {
