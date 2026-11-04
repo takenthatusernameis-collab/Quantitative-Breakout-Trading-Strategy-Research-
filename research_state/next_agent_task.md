@@ -1,4 +1,4 @@
-# Next Agent Task (initial message — 2026-11-04T04:39:36Z)
+# Next Agent Task (initial message — 2026-11-04T04:41:41Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
@@ -10,7 +10,7 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 
 3. v6 selection run — do NOT start (no v6 campaign artifacts present; src/v6_campaign does not exist). No run until the execution path exists and its canonical source digest is recorded in a revised selection authorization.
 
-4. BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z (current time 2026-11-04T04:39:36Z). Do NOT attempt; holdout_exposed_count must remain 0; fail-closed. configs/research_v6_confirmatory_protocol.json#window_definition: window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc / evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z.
+4. BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z (current time 2026-11-04T04:41:41Z). Do NOT attempt; holdout_exposed_count must remain 0; fail-closed. configs/research_v6_confirmatory_protocol.json#window_definition: window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc / evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z.
 
 ## Key invariants to preserve
 
@@ -22,3 +22,6 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 ## Session closeout
 
 When the standing task is verified complete: update research_state/agent_handoff.md with a new COMPLETED entry recording HEAD, porcelain state, cohort state, authorization flags, manifest hashes, BRAIN gates, data gate, artifact absence, and clean working tree; then refresh this file as the initial task message for the next agent. Do not commit unless explicitly asked.
+" \
+filePath">
+/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/research_state/next_agent_task.md
