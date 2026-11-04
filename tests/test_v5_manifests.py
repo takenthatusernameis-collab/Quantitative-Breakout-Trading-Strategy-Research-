@@ -355,6 +355,10 @@ def test_the_v5_run_artifacts_bind_the_v5_manifests_and_the_specification() -> N
 
     This replaces the pre-run guard that asserted the v5 namespace was empty.
     """
+    # The large JSONL stream is an uncommitted projection regenerated from
+    # verified shards. It may exist in a working tree, but is not a required
+    # committed run artifact.
+    assert "research/results_v5.jsonl" not in verifier.V5_EXECUTION_PATHS
     failures = _run_binding_failures(REPO_ROOT)
     assert failures == [], failures
 
