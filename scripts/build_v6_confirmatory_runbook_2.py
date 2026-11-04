@@ -66,7 +66,7 @@ def build(root: Path = ROOT) -> Dict[str, Any]:
     minimum = int(freeze["confirmatory_window"]["min_hours"])
     evaluation_start = start + timedelta(hours=minimum)
     exclusive_end = evaluation_start + timedelta(hours=1)
-    if evaluation_start.isoformat().replace("+00:00", "Z") != "2027-01-20T02:00:00Z":
+    if evaluation_start.isoformat(timespec="milliseconds").replace("+00:00", "Z") != "2027-01-20T02:00:00Z":
         raise SystemExit("the computed evaluation start no longer matches the frozen v6 date")
     if spec["holdout"]["confirmatory_window_membership"]["interval_start_inclusive"] is not False:
         raise SystemExit("strict close-time start membership is not frozen as expected")
@@ -83,7 +83,7 @@ def build(root: Path = ROOT) -> Dict[str, Any]:
     }
     applies = result["applies_to"]
     applies["evaluation_start_utc"] = evaluation_start.isoformat().replace("+00:00", "Z")
-    applies["window_end_utc"] = exclusive_end.isoformat().replace("+00:00", "Z")
+    applies["window_end_utc"] = exclusive_end.isoformat(timespec="milliseconds").replace("+00:00", "Z")
     applies["evaluation_window_rule"] = (
         "The 2,160 eligible hourly candles are selected by strict candle-close membership: "
         "window_start_utc < candle_close_utc < window_end_utc. The 2,160th candle closes at "
