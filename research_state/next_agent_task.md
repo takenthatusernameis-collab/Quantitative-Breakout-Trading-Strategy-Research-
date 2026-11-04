@@ -1,4 +1,4 @@
-# Next Agent Task (initial message — 2026-11-04T00:32:13Z)
+# Next Agent Task (initial message — 2026-11-04T00:33:54Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
@@ -10,7 +10,7 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 
 3. v6 selection run — do NOT start (no v6 campaign artifacts present; src/v6_campaign does not exist). No run until the execution path exists and its canonical source digest is recorded in a revised selection authorization.
 
-4. BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z (current time 2026-11-04T00:32:13Z). Do NOT attempt; holdout_exposed_count must remain 0; fail-closed. configs/research_v6_confirmatory_protocol.json#window_definition: window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc / evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z.
+4. BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z (current time 2026-11-04T00:33:54Z). Do NOT attempt; holdout_exposed_count must remain 0; fail-closed. configs/research_v6_confirmatory_protocol.json#window_definition: window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc / evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z.
 
 ## Key invariants to preserve
 
