@@ -83,8 +83,15 @@ def self_hash(document: Dict[str, Any]) -> str:
     )
     body = dict(document)
     for key in excluded:
-        if "." not in key:
-            body.pop(key, None)
+        parts = str(key).split(".")
+        cursor = body
+        for part in parts[:-1]:
+            if not isinstance(cursor.get(part), dict):
+                cursor = None
+                break
+            cursor = cursor[part]
+        if cursor is not None:
+            cursor.pop(parts[-1], None)
     return sha256_bytes(canonical(body))
 
 
