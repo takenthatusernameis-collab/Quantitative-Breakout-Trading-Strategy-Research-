@@ -140,7 +140,12 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
             # start+(2160+1)h.
             first_eligible_close = start + HOUR
             last_required_close = start + HOUR * minimum
-            # Close timestamps are strict at both ends. The last required close is\n            # start + 2160h; the exclusive boundary is one hour later. Evaluation\n            # may begin immediately when that final candle closes.\n            required_exclusive_end = last_required_close + HOUR\n            required_evaluation_start = last_required_close\n            prior_gates = [
+            # Close timestamps are strict at both ends. The last required close is
+            # start + 2160h; the exclusive boundary is one hour later. Evaluation
+            # may begin immediately when that final candle closes.
+            required_exclusive_end = last_required_close + HOUR
+            required_evaluation_start = last_required_close
+            prior_gates = [
                 parse_utc(str(gate["earliest_possible_end_utc"]))
                 for gate in (freeze.get("confirmatory_window") or {}).get("gates", [])
                 if gate.get("earliest_possible_end_utc")
@@ -158,7 +163,8 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 "minimum_closed_hourly_candles": minimum,
                 "first_eligible_close_utc": first_eligible_close.isoformat().replace("+00:00", "Z"),
                 "last_required_close_utc": last_required_close.isoformat().replace("+00:00", "Z"),
-                "minimum_exclusive_end_utc": required_exclusive_end.isoformat().replace("+00:00", "Z"),\n                "minimum_evaluation_start_utc": required_evaluation_start.isoformat().replace("+00:00", "Z"),
+                "minimum_exclusive_end_utc": required_exclusive_end.isoformat().replace("+00:00", "Z"),
+                "minimum_evaluation_start_utc": required_evaluation_start.isoformat().replace("+00:00", "Z"),
                 "freeze_earliest_end_utc": frozen_end.isoformat().replace("+00:00", "Z"),
                 "runbook_window_end_utc": runbook_end.isoformat().replace("+00:00", "Z"),
                 "eligible_closes_with_frozen_end": eligible_close_count,
@@ -174,12 +180,15 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 check(report, "window:one_hour_boundary",
                       "BLOCKED_PROTOCOL_INCONSISTENCY",
                       "strict close-time membership requires an exclusive close-time bound one hour after the 2,160th eligible close; retain the evaluation gate at the last close and publish a versioned correction (do not edit frozen artifacts in place)",
-                      required_exclusive_end_utc=required_exclusive_end.isoformat().replace("+00:00", "Z"),\n                      earliest_evaluation_start_utc=required_evaluation_start.isoformat().replace("+00:00", "Z"))
+                      required_exclusive_end_utc=required_exclusive_end.isoformat().replace("+00:00", "Z"),
+                      earliest_evaluation_start_utc=required_evaluation_start.isoformat().replace("+00:00", "Z"))
             else:
                 check(report, "window:one_hour_boundary", "PASS", "strict close-time boundary includes the full registered sample")
             declared_protocol_gate = parse_utc(str((protocol.get("window_definition") or {}).get("evaluation_may_not_start_before_utc")))
             declared_runbook_gate = parse_utc(str(runbook_bounds.get("evaluation_may_not_start_before_utc")))
-            gate_ok = (declared_protocol_gate >= effective_gate and declared_runbook_gate >= effective_gate\n                       and declared_protocol_gate >= required_evaluation_start\n                       and declared_runbook_gate >= required_evaluation_start)
+            gate_ok = (declared_protocol_gate >= effective_gate and declared_runbook_gate >= effective_gate
+                       and declared_protocol_gate >= required_evaluation_start
+                       and declared_runbook_gate >= required_evaluation_start)
             check(report, "window:prior_gates", "PASS" if gate_ok else "BLOCKED_PROTOCOL_INCONSISTENCY",
                   "protocol and operator runbook respect the later of the sample end and earlier-version gates" if gate_ok else
                   "protocol/runbook evaluation gate is earlier than the computed effective gate",
@@ -259,8 +268,10 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
 def canonical_tree_digest(base: Path) -> str:
     digest = hashlib.sha256()
     for relative in sorted(path.relative_to(base).as_posix() for path in base.rglob("*.py")):
-        digest.update(relative.encode("utf-8") + b"\n")
-        digest.update(sha256_bytes((base / relative).read_bytes()).encode("ascii") + b"\n")
+        digest.update(relative.encode("utf-8") + b"
+")
+        digest.update(sha256_bytes((base / relative).read_bytes()).encode("ascii") + b"
+")
     return digest.hexdigest()
 
 
