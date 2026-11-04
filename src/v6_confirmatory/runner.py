@@ -902,6 +902,31 @@ def _load_persisted_dataset(
     return candles, record
 
 
+def _committed_checkout(root: Path) -> bool:
+    """Require a clean committed checkout before any confirmatory data access."""
+    import subprocess
+    try:
+        status = subprocess.run(
+            ["git", "status", "--porcelain"],
+            cwd=str(root),
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        head = subprocess.run(
+            ["git", "rev-parse", "--verify", "HEAD"],
+            cwd=str(root),
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        return status.stdout.strip() == "" and bool(head.stdout.strip())
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
 def run_confirmatory(
     workspace: Workspace,
     *,
@@ -1057,7 +1082,10 @@ def run_confirmatory(
             readiness_record=readiness_record,
             window_manifest=window_manifest,
             exposure_state=state,
-            committed={"authorization": True, "protocol": True},
+            committed={
+                "authorization": _committed_checkout(root),
+                "protocol": _committed_checkout(root),
+            },
         )
         if failures:
             raise AuthorizationError("; ".join(failures))
