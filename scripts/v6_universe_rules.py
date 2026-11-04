@@ -92,6 +92,7 @@ HOUR_MS = 60 * 60 * 1000
 #: authorization whose publication made it stale.
 V6_EXECUTION_RELATIVE = "configs/research_v6_execution.json"
 V6_EXECUTION_AMENDMENT_1_RELATIVE = "configs/research_v6_execution_amendment_1.json"
+V6_EXECUTION_AMENDMENT_2_RELATIVE = "configs/research_v6_execution_amendment_2.json"
 V6_SELECTION_AUTHORIZATION_RELATIVE = "configs/research_v6_selection_authorization_1.json"
 
 #: The blocks a v6 execution amendment may restate.
@@ -373,9 +374,13 @@ def verify_effective_v6_selection_authorization(
             "authorization; the single bounded run is gated on that artifact"
         )
     recorded_path = str(block.get("selection_authorization_path") or "")
-    if recorded_path != V6_SELECTION_AUTHORIZATION_RELATIVE:
+    allowed_selection_paths = (
+        V6_SELECTION_AUTHORIZATION_RELATIVE,
+        "configs/research_v6_selection_authorization_2.json",
+    )
+    if recorded_path not in allowed_selection_paths:
         raise V6RuleError(
-            "the effective execution authorization names another selection authorization"
+            "the effective execution authorization names an unsupported selection authorization"
         )
     path = root / recorded_path
     if not path.exists():
