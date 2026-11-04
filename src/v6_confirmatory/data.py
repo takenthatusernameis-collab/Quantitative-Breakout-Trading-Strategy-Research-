@@ -140,14 +140,15 @@ def parse_klines(symbol: str, rows: Sequence[Sequence[Any]]) -> Tuple[List[Candl
 
 
 def inside_window(candle: Candle, window_start_ms: int, window_end_ms: int) -> bool:
-    """Whether a candle opens inside the window and closes inside it.
+    """Apply the preregistered strict close-time membership rule.
 
-    A candle that is still open at the end of the window is **not** inside it:
-    only closed candles may be evaluated.
+    A candle belongs to the single-use window iff its *close timestamp* is
+    strictly after the window start and strictly before the exclusive end.
+    The first eligible candle opens at the window start and closes one hour
+    later. The exclusive end is one hour after the final required close.
     """
-    if candle.timestamp < int(window_start_ms):
-        return False
-    return candle.timestamp + HOUR_MS <= int(window_end_ms)
+    close_ms = int(candle.timestamp) + HOUR_MS
+    return int(window_start_ms) < close_ms < int(window_end_ms)
 
 
 def retrieve_window_candles(
