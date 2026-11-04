@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-04T20:46:00Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD advanced from recorded 4f09982ca8cfb25ced0b740843fae92874148d87 to 7ce5d7f20f5e320b9f6ae57368373917e6ea9c19:
+
+- git: live state `git rev-parse HEAD` = 7ce5d7f20f5e320b9f6ae57368373917e6ea9c19, `git rev-parse origin/main` = 7ce5d7f20f5e320b9f6ae57368373917e6ea9c19 (HEAD == origin/main, in sync). `git status --porcelain` empty; working tree clean.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized false / confirmatory_evaluation_authorized false / execution_authorized false / grid_run_authorized false / second_run_authorized false; selection_authorization_present true.
+- Manifest hashes MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990, amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af, data a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465).
+- BRAIN-002 authorized true; evidence_digest MATCH (f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053).
+- Data gate RESOLVED; validated assets count 7 (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), holdout_exposed_count==0.
+- v6 selection run absent; BRAIN-003 blocked until 2027-01-20T02:00:00Z.
+- Verification: scripts/verify_v6_execution.py -> ok true; verify_research_v6_manifests.py -> ok true; verify_v6_confirmatory_protocol.py -> ok true; pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -> 16 passed.
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-04T20:45:36Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD advanced from recorded 1ae4ca1a5bf605bbe61d445ee5621d7027a4e4d3 to 4f09982ca8cfb25ced0b740843fae92874148d87:
