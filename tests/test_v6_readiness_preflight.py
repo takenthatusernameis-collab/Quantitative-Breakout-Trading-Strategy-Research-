@@ -5,7 +5,7 @@ from pathlib import Path
 
 from scripts.v6_readiness_preflight import (
     manifest_digest, source_tree_digest, verify_selection_source_binding,
-    verify_confirmatory_scope_contract,
+    verify_confirmatory_scope_contract, verify_confirmatory_retrieval_contract,
 )
 
 
@@ -210,3 +210,53 @@ def test_confirmatory_scope_contract_accepts_unambiguous_selected_config_rule():
     ok, detail = verify_confirmatory_scope_contract(protocol, runbook)
     assert ok
     assert "no conflict" in detail
+
+
+def test_confirmatory_retrieval_contract_blocks_one_response_for_2160_candles():
+    runbook = {
+        "applies_to": {"minimum_closed_hourly_candles": 2160},
+        "operator_procedure": {
+            "retrieval": {
+                "one_request_per_asset": True,
+                "retrieval_happens_once": True,
+            }
+        },
+    }
+    ok, detail = verify_confirmatory_retrieval_contract(runbook)
+    assert not ok
+    assert "at least 3 responses" in detail
+    assert "versioned, hash-bound pagination clarification" in detail
+
+
+def test_confirmatory_retrieval_contract_accepts_explicit_three_page_window():
+    runbook = {
+        "applies_to": {"minimum_closed_hourly_candles": 2160},
+        "operator_procedure": {
+            "retrieval": {
+                "one_request_per_asset": False,
+                "max_candles_per_request": 1000,
+                "max_pages_per_series": 3,
+                "pagination_cursor": "open_time",
+                "deduplicate_by": "open_time",
+                "require_contiguous_hourly_coverage": True,
+            }
+        },
+    }
+    ok, detail = verify_confirmatory_retrieval_contract(runbook)
+    assert ok
+    assert "at least 3 are required" in detail
+
+
+def test_confirmatory_retrieval_contract_rejects_page_limit_above_documented_maximum():
+    runbook = {
+        "applies_to": {"minimum_closed_hourly_candles": 2160},
+        "operator_procedure": {
+            "retrieval": {
+                "max_candles_per_request": 2160,
+                "max_pages_per_series": 1,
+            }
+        },
+    }
+    ok, detail = verify_confirmatory_retrieval_contract(runbook)
+    assert not ok
+    assert "documented maximum of 1000" in detail

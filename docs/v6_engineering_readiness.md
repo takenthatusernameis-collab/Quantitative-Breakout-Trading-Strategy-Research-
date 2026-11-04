@@ -23,3 +23,6 @@ make this command pass. After the authorized selection completes, run `python3 s
 
 
 The preflight also compares the frozen confirmatory protocol's one-selected-configuration-per-asset rule with the operator runbook. A contradictory 576-configuration-per-asset instruction is reported as `BLOCKED_PROTOCOL_CONFLICT`. It must be resolved by a versioned, hash-bound clarification; the preflight does not rewrite either frozen artifact or choose an evaluation scope.
+
+
+The preflight also checks the frozen candle retrieval contract against Binance Spot's documented `GET /api/v3/klines` maximum of 1,000 candles per response. The 2,160-hour window requires at least three bounded pages per series. The existing one-request-per-asset runbook instruction is therefore reported as `BLOCKED_PROTOCOL_CONFLICT` until an additive, versioned pagination clarification is published and hash-bound. The required history is never shortened.

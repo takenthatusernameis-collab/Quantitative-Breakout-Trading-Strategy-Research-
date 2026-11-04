@@ -174,6 +174,59 @@ def verify_confirmatory_scope_contract(
     return True, "the frozen protocol and runbook do not contain the known one-config-versus-576-grid conflict"
 
 
+# Binance Spot GET /api/v3/klines documents a maximum response limit of 1,000.
+# Source: https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#klinecandlestick-data
+BINANCE_KLINES_MAX_LIMIT = 1000
+
+
+def verify_confirmatory_retrieval_contract(runbook: Dict[str, Any]) -> tuple[bool, str]:
+    """Reject a one-response retrieval plan that cannot return the frozen window."""
+    applies_to = runbook.get("applies_to") or {}
+    operator = runbook.get("operator_procedure") or {}
+    retrieval = operator.get("retrieval") or {}
+    required = int(applies_to.get("minimum_closed_hourly_candles") or 0)
+    if required <= 0:
+        return False, "the runbook does not declare a positive closed-hourly candle minimum"
+
+    page_limit = int(retrieval.get("max_candles_per_request") or BINANCE_KLINES_MAX_LIMIT)
+    if page_limit <= 0 or page_limit > BINANCE_KLINES_MAX_LIMIT:
+        return (
+            False,
+            f"the declared kline page limit {page_limit} exceeds Binance's documented maximum "
+            f"of {BINANCE_KLINES_MAX_LIMIT} candles per response",
+        )
+
+    required_pages = (required + page_limit - 1) // page_limit
+    declared_pages = retrieval.get("max_pages_per_series")
+    if declared_pages is None:
+        declared_pages = 1 if retrieval.get("one_request_per_asset") is True else 0
+    try:
+        declared_pages = int(declared_pages)
+    except (TypeError, ValueError):
+        return False, "the runbook's maximum pages per series is not an integer"
+    if declared_pages < required_pages:
+        return (
+            False,
+            f"the runbook permits {declared_pages} page(s) per series, but {required} closed "
+            f"hourly candles require at least {required_pages} responses at the documented "
+            f"{page_limit}-candle page limit; publish a versioned, hash-bound pagination clarification",
+        )
+
+    if required_pages > 1:
+        required_fields = {
+            "pagination_cursor": "open_time",
+            "deduplicate_by": "open_time",
+            "require_contiguous_hourly_coverage": True,
+        }
+        for key, expected in required_fields.items():
+            if retrieval.get(key) != expected:
+                return False, f"the paginated retrieval contract does not explicitly bind {key}={expected!r}"
+    return True, (
+        f"retrieval allows {declared_pages} bounded page(s) per series; at least "
+        f"{required_pages} are required for {required} closed hourly candles"
+    )
+
+
 def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
     """Return a fail-closed readiness report without reading market candles."""
     root = Path(root)
@@ -216,6 +269,16 @@ def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
         "confirmatory_scope_contract",
         "PASS" if scope_contract_ok else "BLOCKED_PROTOCOL_CONFLICT",
         scope_contract_detail,
+    )
+
+    retrieval_contract_ok, retrieval_contract_detail = verify_confirmatory_retrieval_contract(
+        runbook
+    )
+    add(
+        checks,
+        "confirmatory_retrieval_contract",
+        "PASS" if retrieval_contract_ok else "BLOCKED_PROTOCOL_CONFLICT",
+        retrieval_contract_detail,
     )
 
     # The frozen scientific boundary is asserted, never edited here.
@@ -342,9 +405,10 @@ def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
         "data_ready": data_ready,
         "authorization_ready": authorization_ready,
         "confirmatory_scope_ready": scope_contract_ok,
+        "confirmatory_retrieval_ready": retrieval_contract_ok,
         "evaluation_eligible": (
             not blocked and engineering_ready and data_ready and authorization_ready
-            and scope_contract_ok
+            and scope_contract_ok and retrieval_contract_ok
         ),
         "holdout_reads_performed": 0,
         "run_started": False,
