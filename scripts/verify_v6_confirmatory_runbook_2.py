@@ -62,9 +62,9 @@ def verify():
     start = datetime.fromisoformat(window["window_start_utc"].replace("Z", "+00:00"))
     final_close = start + timedelta(hours=2160)
     exclusive_end = final_close + timedelta(hours=1)
-    if window.get("evaluation_start_utc") != final_close.isoformat().replace("+00:00", "Z"):
+    if window.get("evaluation_start_utc") != final_close.isoformat(timespec="milliseconds").replace("+00:00", "Z"):
         fails.append("evaluation start does not equal the 2,160th close")
-    if window.get("window_end_utc") != exclusive_end.isoformat().replace("+00:00", "Z"):
+    if window.get("window_end_utc") != exclusive_end.isoformat(timespec="milliseconds").replace("+00:00", "Z"):
         fails.append("exclusive end does not follow the 2,160th close")
     if window.get("minimum_closed_hourly_candles") != 2160:
         fails.append("minimum hourly sample differs from 2,160")
