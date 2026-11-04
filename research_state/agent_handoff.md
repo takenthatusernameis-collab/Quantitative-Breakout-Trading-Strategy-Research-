@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-04T20:46:35Z)
+## COMPLETED — this session (2026-11-04T20:48:22Z)
 
-Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD advanced from recorded 7ce5d7f20f5e320b9f6ae57368373917e6ea9c19 to 5c086d5e07d956242df143c4a7eb88d021e30bd5:
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD advanced from recorded 5c086d5e07d956242df143c4a7eb88d021e30bd5 to ebbbadd3ca26e39ba5041525e00fbeef022af582:
 
-- git: live state `git rev-parse HEAD` = 5c086d5e07d956242df143c4a7eb88d021e30bd5, `git rev-parse origin/main` = 5c086d5e07d956242df143c4a7eb88d021e30bd5 (HEAD == origin/main, in sync). `git status --porcelain` empty; working tree clean.
+- git: live state `git rev-parse HEAD` = ebbbadd3ca26e39ba5041525e00fbeef022af582, `git rev-parse origin/main` = ebbbadd3ca26e39ba5041525e00fbeef022af582 (HEAD == origin/main, in sync). `git status --porcelain` empty; working tree clean.
 - Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
 - Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized false / confirmatory_evaluation_authorized false / execution_authorized false / grid_run_authorized false / second_run_authorized false; selection_authorization_present true.
 - Manifest hashes MATCH (selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990, amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af, data a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465).
