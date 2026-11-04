@@ -1012,6 +1012,7 @@ def run_confirmatory(
                 )
                 rows = (fetch_rows or _refuse_fetch)(asset, start_ms, exclusive_close_end_ms)
                 candles, record = retrieve_window_candles(asset, rows, start_ms, exclusive_close_end_ms)
+                record["provider_audit"] = list(getattr(rows, "provider_audit", []) or [])
                 # Record payload completion before any validation or result
                 # transformation; a failure can never make the asset eligible
                 # for a second provider call.
