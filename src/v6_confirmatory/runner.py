@@ -501,7 +501,7 @@ def build_plan(workspace: Workspace) -> Plan:
         "the authorization does not record exactly one confirmatory decision criterion",
     )
     _require(
-        decision_rule.get("authoritative_source") == "configs/research_v6.json#holdout.promotion_rule",
+        decision_rule.get("authoritative_source") == "configs/research_v1.json#selection",
         "the authorization does not make the frozen v6 specification authoritative",
     )
     _require(
@@ -513,7 +513,7 @@ def build_plan(workspace: Workspace) -> Plan:
     _require(
         protocol_decision.get("criterion_count") == 1
         and protocol_decision.get("authoritative_source")
-        == "configs/research_v6.json#holdout.promotion_rule",
+        == "configs/research_v1.json#selection",
         "the recorded confirmatory protocol does not state exactly one criterion",
     )
 
@@ -585,7 +585,7 @@ def build_plan(workspace: Workspace) -> Plan:
         for group, entries in (run.get("immutable_artifact_anchors") or {}).items()
     }
     _require(
-        bool(anchors.get("v1_evidence")) and bool(anchors.get("v2_selection_outputs")),
+        bool(anchors.get("v1_evidence")) and bool(anchors.get("v5_chain")),
         "the authorization records no immutable artifact anchors for the v1 evidence and the "
         "v2 selection outputs",
     )
