@@ -872,12 +872,58 @@ def run_confirmatory(
     try:
         for asset in plan.data_scope_assets:
             persisted = _load_persisted_dataset(workspace, plan.run_id, asset, start_ms, exclusive_close_end_ms)
-            if persisted is not None:
-                candles, record = persisted
-            else:
+            if persisted is None:
+                # A successful payload return is the exposure event. Persist
+                # that event before parsing, hashing or writing the dataset so
+                # a later crash cannot silently make the single-use window
+                # available for another fetch.
                 rows = (fetch_rows or _refuse_fetch)(asset, start_ms, exclusive_close_end_ms)
+                state, _event, incremented = register_exposure(
+                    state, plan.run_id, asset, start_ms, exclusive_close_end_ms,
+                    plan.data_scope_assets, _now_utc(),
+                )
+                assert_monotonic(previous_state, state)
+                _atomic_write_json(
+                    workspace.checkpoint,
+                    build_checkpoint(
+                        campaign_id=plan.campaign_id,
+                        run_id=plan.run_id,
+                        status="EXPOSED_IN_PROGRESS",
+                        code_identity=plan.code_identity,
+                        protocol_hash=plan.protocol_manifest_hash,
+                        authorization_manifest_hash=plan.authorization_manifest_hash,
+                        window_manifest_hash="",
+                        exposure_state=state,
+                        window={
+                            "window_start_utc": plan.window_start_utc,
+                            "window_end_utc": plan.exclusive_close_end_utc,
+                            "evaluation_start_utc": plan.earliest_end_utc,
+                            "minimum_closed_hourly_candles": plan.minimum_closed_hourly_candles,
+                        },
+                        counts={"datasets_started": len(datasets) + 1},
+                        timestamp_utc=_now_utc(),
+                    ),
+                )
                 candles, record = retrieve_window_candles(asset, rows, start_ms, exclusive_close_end_ms)
-                verify_window_dataset(record, candles)
+            else:
+                candles, record = persisted
+                state, _event, incremented = register_exposure(
+                    state, plan.run_id, asset, start_ms, exclusive_close_end_ms,
+                    plan.data_scope_assets, _now_utc(),
+                )
+                assert_monotonic(previous_state, state)
+
+            verify_window_dataset(record, candles)
+            if (
+                len(candles) != plan.minimum_closed_hourly_candles
+                or record.get("gaps")
+                or int(record.get("rejected_rows") or 0) != 0
+            ):
+                raise DataVerificationError(
+                    f"{asset} window is not exactly {plan.minimum_closed_hourly_candles} "
+                    "contiguous, valid closed hourly candles; the single-use window is spent"
+                )
+            if persisted is None:
                 csv_path, record_path = _dataset_paths(workspace, plan.run_id, asset)
                 rendered = render_dataset_csv(candles)
                 _atomic_write_text(csv_path, rendered)
@@ -889,16 +935,6 @@ def run_confirmatory(
                 record["persisted_dataset_sha256"] = sha256_bytes(rendered.encode("utf-8"))
                 _atomic_write_json(record_path, record)
                 created_files.append(record_path)
-            state, _event, incremented = register_exposure(
-                state,
-                plan.run_id,
-                asset,
-                start_ms,
-                exclusive_close_end_ms,
-                plan.data_scope_assets,
-                _now_utc(),
-            )
-            assert_monotonic(previous_state, state)
             record["exposure_incremented"] = incremented
             datasets[asset] = record
             candles_by_asset[asset] = candles
