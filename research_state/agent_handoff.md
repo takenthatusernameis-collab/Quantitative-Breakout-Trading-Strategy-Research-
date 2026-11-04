@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-04T16:17:23Z)
+## COMPLETED — this session (2026-11-04T16:20:08Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state:
 
-- git: HEAD == origin/main == e90624871c93ddf2c93ddab2e04d0aa132fe878d; `git status --porcelain` empty (0 lines); working tree clean; no code changes; no research checkpoint commit pending. (HEAD advanced from recorded 97e24e4df581a9ef121fac923e70069e81d8d0f5 via new checkpoint commit e90624871 chore(kilo): checkpoint agent session; tree remains clean and in sync with remote.)
+- git: HEAD == origin/main == d307a384a06cd5466f7e78b4fc33ab14a43c3a47; `git status --porcelain` empty (0 lines); working tree clean; no code changes; no research checkpoint commit pending. (HEAD advanced from recorded e90624871c93ddf2c93ddab2e04d0aa132fe878d via new checkpoint commit d307a384 chore(kilo): checkpoint agent session; tree remains clean and in sync with remote.)
 - Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
 - Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized false / confirmatory_evaluation_authorized false / execution_authorized false / grid_run_authorized false; selection_authorization_present true (binds only the already-completed v6 selection authorization).
 - Manifest hashes (canonical, excluded keys per artifact): selection authorization f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH (exclude top-level manifest_hash); amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH (exclude top-level manifest_hash); data manifest a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH (exclude top-level manifest_hash AND snapshot_identity.data_manifest_hash).
