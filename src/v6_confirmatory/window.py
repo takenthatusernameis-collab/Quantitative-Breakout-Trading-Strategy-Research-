@@ -83,13 +83,21 @@ def window_bounds(window_start_utc: str, min_hours: int = MIN_WINDOW_HOURS) -> D
     ``window_start_utc`` and one closed hourly candle needs one hour.
     """
     start_ms = parse_utc_ms(window_start_utc)
+    # The final required candle closes at start + min_hours.  Since the
+    # protocol's close-time membership is strict at both ends, the exclusive
+    # close-time bound is one further hour; the evaluation itself may start
+    # as soon as the final close is available.
     earliest_end_ms = start_ms + int(min_hours) * 3600 * 1000
+    exclusive_close_end_ms = earliest_end_ms + 3600 * 1000
     return {
         "window_start_ms": start_ms,
         "window_start_utc": format_utc_ms(start_ms),
         "earliest_end_ms": earliest_end_ms,
         "earliest_end_utc": format_utc_ms(earliest_end_ms),
+        "exclusive_close_end_ms": exclusive_close_end_ms,
+        "exclusive_close_end_utc": format_utc_ms(exclusive_close_end_ms),
         "minimum_closed_hourly_candles": int(min_hours),
+        "membership_rule": "candle close timestamp is strictly after window_start_ms and strictly before exclusive_close_end_ms",
     }
 
 
