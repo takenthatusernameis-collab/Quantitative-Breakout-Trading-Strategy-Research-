@@ -150,7 +150,7 @@ def build_report(repo_root: Path = REPO_ROOT) -> Dict[str, Any]:
                 for gate in (freeze.get("confirmatory_window") or {}).get("gates", [])
                 if gate.get("earliest_possible_end_utc")
             ]
-            effective_gate = max([required_exclusive_end, *prior_gates])
+            effective_gate = max([required_evaluation_start, *prior_gates])
             rule = (spec.get("holdout") or {}).get("confirmatory_window_membership") or {}
             strict_start = rule.get("interval_start_inclusive") is False
             strict_end = rule.get("interval_end_exclusive") is True
