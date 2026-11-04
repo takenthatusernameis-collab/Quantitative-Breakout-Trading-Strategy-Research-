@@ -46,6 +46,20 @@ def _format_utc(milliseconds: int) -> str:
     return datetime.fromtimestamp(milliseconds / 1000, tz=timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _parse_utc_ms(value: str) -> int:
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        raise AuthorizationError("authorization window timestamp has no timezone")
+    return int(parsed.astimezone(timezone.utc).timestamp() * 1000)
+
+
+class ProviderFetchResult(list):
+    """List-compatible rows with the provider endpoint/status audit."""
+    def __init__(self, rows=(), provider_audit=None):
+        super().__init__(rows)
+        self.provider_audit = list(provider_audit or [])
+
+
 def _require_fetch_authorization(
     repo_root: Path, symbol: str, window_start_ms: int, exclusive_close_end_ms: int
 ) -> Dict[str, Any]:
@@ -61,9 +75,9 @@ def _require_fetch_authorization(
     if symbol not in (run.get("data_scope_assets") or []):
         raise AuthorizationError(f"{symbol} is outside the authorized confirmatory data scope")
     window = run.get("window") or {}
-    if window.get("window_start_utc") != _format_utc(window_start_ms):
+    if _parse_utc_ms(window.get("window_start_utc")) != int(window_start_ms):
         raise AuthorizationError("requested window start differs from the authorized v6 window")
-    if window.get("exclusive_close_end_utc") != _format_utc(exclusive_close_end_ms):
+    if _parse_utc_ms(window.get("exclusive_close_end_utc")) != int(exclusive_close_end_ms):
         raise AuthorizationError("requested exclusive close-time bound differs from the authorized v6 window")
     if int(window.get("minimum_closed_hourly_candles") or 0) != 2160:
         raise AuthorizationError("the authorized window does not preserve the 2,160-candle minimum")
