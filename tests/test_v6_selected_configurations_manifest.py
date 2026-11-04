@@ -24,7 +24,7 @@ def test_manifest_keeps_selected_and_nonselected_assets_explicit():
     assert selections["AAAUSDT"]["config_id"] == "cfg_0001"
     assert selections["BBBUSDT"]["selected"] is False
     assert selections["BBBUSDT"]["config_id"] is None
-    assert selections["BBBUSDT"]["reason"] == "NO_CANDIDATE_SURVIVED_THE_UNCHANGED_V1_SELECTION_RULE"
+    assert selections["BBBUSDT"]["reason"] == "NO_CANDIDATE"
 
 
 def test_manifest_refuses_a_widened_or_narrowed_selection_scope():
