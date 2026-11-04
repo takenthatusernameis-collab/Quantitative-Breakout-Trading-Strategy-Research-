@@ -1,0 +1,50 @@
+name: v6 engineering verification
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/v6_campaign/**"
+      - "scripts/*v6*"
+      - "configs/research_v6*.json"
+      - "tests/test_v6_*.py"
+      - ".github/workflows/v6-engineering.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/v6_campaign/**"
+      - "scripts/*v6*"
+      - "configs/research_v6*.json"
+      - "tests/test_v6_*.py"
+      - ".github/workflows/v6-engineering.yml"
+permissions:
+  contents: read
+concurrency:
+  group: v6-engineering-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install project and test dependencies
+        run: python -m pip install --disable-pip-version-check -e ".[dev]"
+      - name: Verify frozen v6 artifacts and authorization chain
+        run: |
+          python scripts/verify_research_v6_spec.py
+          python scripts/verify_research_v6_candidate_freeze.py
+          python scripts/verify_research_v6_manifests.py
+          python scripts/verify_v6_execution.py
+          python scripts/verify_v6_confirmatory_protocol.py
+          python scripts/verify_v6_confirmatory_runbook_1.py
+      - name: Verify v6 selection implementation binding
+        run: |
+          python scripts/build_v6_selection_execution_binding_1.py --check
+          python scripts/run_v6_selection.py
+      - name: Run focused v6 regression tests
+        run: |
+          pytest -q tests/test_v6_campaign.py tests/test_v6_selection_execution_binding_1.py tests/test_v6_execution.py tests/test_v6_execution_amendment_1.py tests/test_v6_confirmatory.py
