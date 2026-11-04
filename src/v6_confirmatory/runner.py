@@ -419,7 +419,43 @@ def build_plan(workspace: Workspace) -> Plan:
 
     run = authorization.get("authorized_run") or {}
     _require(run.get("authorized") is True, "the authorization does not authorize a run")
+    _require(run.get("provider_access_authorized") is True, "the authorization does not authorize provider access")
     _require(run.get("max_runs") == 1, "the authorization does not bound the run to one attempt")
+
+    runbook_path = root / "configs/research_v6_confirmatory_runbook_2.json"
+    _require(runbook_path.is_file(), "the corrected v6 confirmatory runbook 2 is missing")
+    runbook = load_json(runbook_path)
+    runbook_excluded = tuple((runbook.get("hashing") or {}).get("manifest_hash_excluded_keys") or ())
+    _require(bool(runbook_excluded), "runbook 2 declares no self-hash exclusions")
+    _require(
+        runbook.get("manifest_hash") == compute_manifest_hash(runbook, runbook_excluded),
+        "runbook 2 manifest hash does not recompute",
+    )
+    runbook_window = runbook.get("applies_to") or {}
+    _require(
+        runbook_window.get("window_start_utc") == (freeze.get("confirmatory_window") or {}).get("opens_utc"),
+        "runbook 2 start differs from frozen v6 window",
+    )
+    derived_bounds = window_bounds(str(runbook_window.get("window_start_utc")), MIN_WINDOW_HOURS)
+    _require(
+        runbook_window.get("evaluation_start_utc") == derived_bounds["earliest_end_utc"],
+        "runbook 2 evaluation start is not the 2,160th candle close",
+    )
+    _require(
+        runbook_window.get("window_end_utc") == derived_bounds["exclusive_close_end_utc"],
+        "runbook 2 exclusive close boundary is inconsistent",
+    )
+    runbook_bindings = runbook.get("binding_identities") or {}
+    _require(
+        runbook_bindings.get("selected_configurations_manifest", {}).get("manifest_hash")
+        == selected_manifest.get("manifest_hash"),
+        "runbook 2 is not bound to the selected-configurations manifest",
+    )
+    runbook_code = runbook_bindings.get("code_identity") or {}
+    _require(
+        runbook_code.get("execution_path_digest") == identity.execution_path_digest(root),
+        "runbook 2 does not bind the live confirmatory execution-path digest",
+    )
 
     scope = evaluation_scope(root)
     selections = selected_manifest.get("selections") or {}
