@@ -246,7 +246,10 @@ def effective_rules(repo_root: Path) -> Dict[str, Any]:
             "named_amendment_precedence": (amendment_effective.get("precedence") or {}).get("rule"),
             "consequence_for_the_run": "the effective execution authorization is resolved amendment-first and is checked against the published selection authorization",
         },
-    }def frozen_scope(freeze: Dict[str, Any], universe: Dict[str, Any],
+    }
+
+
+def frozen_scope(freeze: Dict[str, Any], universe: Dict[str, Any],
                   rules: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """The frozen v6 candidate set, checked against the universe manifest.
 
