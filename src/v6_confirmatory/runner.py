@@ -969,14 +969,23 @@ def run_confirmatory(
         for asset in plan.data_scope_assets:
             persisted = _load_persisted_dataset(workspace, plan.run_id, asset, start_ms, exclusive_close_end_ms)
             if persisted is None:
-                # A successful payload return is the exposure event. Persist
-                # that event before parsing, hashing or writing the dataset so
-                # a later crash cannot silently make the single-use window
-                # available for another fetch.
-                rows = (fetch_rows or _refuse_fetch)(asset, start_ms, exclusive_close_end_ms)
+                # Persist the asset-window exposure intent before the first
+                # payload request. If the process dies while a paginated read
+                # is in progress, the resume path must not issue the same read
+                # again. This is deliberately conservative: even an uncertain
+                # transport failure spends this one-use asset/window attempt.
+                prior_event = any(
+                    event.get("run_id") == plan.run_id and event.get("asset") == asset
+                    for event in (state.get("exposure_events") or [])
+                )
+                if prior_event:
+                    raise WindowExposureError(
+                        f"{asset} has an exposure record but no complete persisted dataset; "
+                        "refusing to fetch a single-use window twice"
+                    )
                 state, _event, incremented = register_exposure(
                     state, plan.run_id, asset, start_ms, exclusive_close_end_ms,
-                    plan.data_scope_assets, _now_utc(),
+                    plan.data_scope_assets, _now_utc(), outcome="READ_ATTEMPT_STARTED",
                 )
                 assert_monotonic(previous_state, state)
                 _atomic_write_json(
@@ -1000,7 +1009,33 @@ def run_confirmatory(
                         timestamp_utc=_now_utc(),
                     ),
                 )
+                rows = (fetch_rows or _refuse_fetch)(asset, start_ms, exclusive_close_end_ms)
                 candles, record = retrieve_window_candles(asset, rows, start_ms, exclusive_close_end_ms)
+                # Record payload completion before any validation or result
+                # transformation; a failure can never make the asset eligible
+                # for a second provider call.
+                _event["outcome"] = "PAYLOAD_RETURNED"
+                _atomic_write_json(
+                    workspace.checkpoint,
+                    build_checkpoint(
+                        campaign_id=plan.campaign_id,
+                        run_id=plan.run_id,
+                        status="EXPOSED_IN_PROGRESS",
+                        code_identity=plan.code_identity,
+                        protocol_hash=plan.protocol_manifest_hash,
+                        authorization_manifest_hash=plan.authorization_manifest_hash,
+                        window_manifest_hash="",
+                        exposure_state=state,
+                        window={
+                            "window_start_utc": plan.window_start_utc,
+                            "window_end_utc": plan.exclusive_close_end_utc,
+                            "evaluation_start_utc": plan.earliest_end_utc,
+                            "minimum_closed_hourly_candles": plan.minimum_closed_hourly_candles,
+                        },
+                        counts={"datasets_started": len(datasets) + 1, "payloads_completed": 1},
+                        timestamp_utc=_now_utc(),
+                    ),
+                )
             else:
                 candles, record = persisted
                 state, _event, incremented = register_exposure(
