@@ -62,7 +62,7 @@ CONFIG_MANIFEST_PATH = "research/config_manifest.json"
 EXECUTION_PATH = "configs/research_v6_execution.json"
 EXECUTION_AMENDMENT_1_PATH = "configs/research_v6_execution_amendment_1.json"
 EXECUTION_AMENDMENT_2_PATH = "configs/research_v6_execution_amendment_2.json"
-AUTHORIZATION_PATH = "configs/research_v6_selection_authorization_1.json"
+AUTHORIZATION_PATH = "configs/research_v6_selection_authorization_2.json"
 
 #: The v1, v2, v3 and v4 output paths a v6 run may never write.
 FORBIDDEN_PATHS = (
@@ -527,8 +527,11 @@ def verify_execution_protocol(execution_protocol: Dict[str, Any],
 def load_workspace_documents(repo_root: Path) -> Dict[str, Any]:
     """Load every artifact the authorization is checked against."""
     root = Path(repo_root)
+    auth_path = AUTHORIZATION_PATH
+    if not (root / auth_path).is_file():
+        auth_path = "configs/research_v6_selection_authorization_1.json"
     return {
-        "authorization": load_json(root / AUTHORIZATION_PATH),
+        "authorization": load_json(root / auth_path),
         "freeze": load_json(root / FREEZE_PATH),
         "spec_v1": load_json(root / V1_SPEC_PATH),
         "spec_v6": load_json(root / V6_SPEC_PATH),
