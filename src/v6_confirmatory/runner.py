@@ -605,6 +605,7 @@ def build_plan(workspace: Workspace) -> Plan:
         window_start_utc=str(frozen_start),
         minimum_closed_hourly_candles=MIN_WINDOW_HOURS,
         earliest_end_utc=bounds_utc["earliest_end_utc"],
+        exclusive_close_end_utc=bounds_utc["exclusive_close_end_utc"],
         bounds=bounds,
         paths=paths,
         code_identity=code_identity,
