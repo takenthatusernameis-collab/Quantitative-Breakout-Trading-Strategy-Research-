@@ -1,7 +1,8 @@
 """The bounded v6 confirmatory evaluation run.
 
-This module drives **one** confirmatory evaluation of the 4 published
-configurations on the v6 confirmatory window. It is *not* executed by the
+This module drives **one** confirmatory evaluation of the selected, hash-bound
+candidate configurations on the v6 confirmatory window. The candidate count is
+derived from the published manifest, never assumed in code. It is *not* executed by the
 session that delivers it: the run requires the versioned authorization
 ``configs/research_v6_confirmatory_authorization_1.json``, and that
 authorization permits **at most one** logical run, and only after the window
