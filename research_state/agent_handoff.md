@@ -1,3 +1,17 @@
+## COMPLETED — this session (2026-11-04T19:45:02Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state; stale HEAD record corrected:
+
+- git: live state `git rev-parse HEAD` = 99ac8e7dbe87930eb1c5ba518acc655a86dc8871, `git rev-parse origin/main` = 99ac8e7dbe87930eb1c5ba518acc655a86dc8871 (HEAD == origin/main, in sync); prior recorded e47d8c781dfe1d2a783db5ddb74dcdda9d1a79aa is stale. `git status --porcelain` empty; working tree clean.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization flags all false; selection_authorization_present true.
+- Manifest hashes MATCH (selection f1b0...b990, amendment 2539...b2af, data a9c6...1465).
+- BRAIN-002 authorized true; evidence_digest MATCH.
+- Data gate RESOLVED; holdout_exposed_count==0.
+- v6 selection run absent; BRAIN-003 blocked until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-04T19:43:39Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state; no stale claims found:
