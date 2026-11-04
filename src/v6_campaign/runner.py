@@ -138,9 +138,13 @@ class Workspace:
 def default_workspace(repo_root: Path) -> Workspace:
     """The repository's standard v6 workspace."""
     root = Path(repo_root)
+    paths = dict(DEFAULT_PATHS)
+    versioned_authorization = "configs/research_v6_selection_authorization_2.json"
+    if (root / versioned_authorization).is_file():
+        paths["authorization"] = versioned_authorization
     return Workspace(
         repo_root=root,
-        **{name: root / relative for name, relative in DEFAULT_PATHS.items()},
+        **{name: root / relative for name, relative in paths.items()},
     )
 
 
