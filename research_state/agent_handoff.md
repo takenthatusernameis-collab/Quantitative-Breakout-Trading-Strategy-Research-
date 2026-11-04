@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-04T19:50:00Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD advanced from recorded 66cbea05 to 3e31309e:
+
+- git: live state `git rev-parse HEAD` = 3e31309e04c2fce8f758af1fe4e4ff4b615df209, `git rev-parse origin/main` = 3e31309e04c2fce8f758af1fe4e4ff4b615df209 (HEAD == origin/main, in sync). `git status --porcelain` empty; working tree clean.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization flags all false; selection_authorization_present true.
+- Manifest hashes MATCH (selection f1b0...b990, amendment 2539...b2af, data a9c6...1465).
+- BRAIN-002 authorized true; evidence_digest MATCH.
+- Data gate RESOLVED; holdout_exposed_count==0.
+- v6 selection run absent; BRAIN-003 blocked until 2027-01-20T02:00:00Z.
+- Verification: scripts/verify_v6_execution.py -> ok true; verify_research_v6_manifests.py -> ok true; verify_v6_confirmatory_protocol.py -> ok true; pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -> 16 passed.
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-04T19:48:00Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD advanced from recorded 99ac8e7 to 66cbea05:
