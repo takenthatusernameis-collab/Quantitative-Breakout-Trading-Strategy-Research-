@@ -629,8 +629,10 @@ def test_the_verifier_detects_a_v6_run_artifact(tmp_path: Path) -> None:
 def test_verifier_allows_only_the_declared_v6_execution_namespaces(tmp_path: Path) -> None:
     root = _mirror_repo(tmp_path)
     src = root / "src"
-    (src / "v6_campaign").mkdir()
-    (src / "v6_confirmatory").mkdir()
+    # v6_campaign is populated by the current implementation; v6_confirmatory
+    # is a declared future namespace and may exist before its executor is built.
+    (src / "v6_campaign").mkdir(exist_ok=True)
+    (src / "v6_confirmatory").mkdir(exist_ok=True)
     failures = _failures(root)
     assert failures == [], failures
 
@@ -646,6 +648,6 @@ def test_verifier_rejects_a_symlinked_v6_execution_namespace(tmp_path: Path) -> 
     root = _mirror_repo(tmp_path)
     target = tmp_path / "external-v6-package"
     target.mkdir()
-    (root / "src" / "v6_campaign").symlink_to(target, target_is_directory=True)
+    (root / "src" / "v6_confirmatory").symlink_to(target, target_is_directory=True)
     failures = _failures(root)
     assert any("must be a real directory" in x for x in failures)
