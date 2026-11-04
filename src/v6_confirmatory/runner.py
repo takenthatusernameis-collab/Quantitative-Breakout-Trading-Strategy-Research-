@@ -287,6 +287,7 @@ class Plan:
     window_start_utc: str
     minimum_closed_hourly_candles: int
     earliest_end_utc: str
+    exclusive_close_end_utc: str
     bounds: Dict[str, Any]
     paths: Dict[str, str]
     code_identity: Dict[str, Any]
