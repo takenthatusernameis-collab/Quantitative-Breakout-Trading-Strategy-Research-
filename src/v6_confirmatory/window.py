@@ -8,9 +8,9 @@ authorized retrieval.
 
 Instead the readiness test uses the provider's **metadata** endpoints:
 
-* ``/api/v6/time`` -- the provider's server time, which says whether the
+* ``/api/v3/time`` -- the provider's server time, which says whether the
   window has held enough closed hourly candles;
-* ``/api/v6/exchangeInfo`` -- the spot trading status of the pairs that are
+* ``/api/v3/exchangeInfo`` -- the spot trading status of the pairs that are
   in scope.
 
 Both requests follow the frozen failover policy of ``configs/research_v6.json``
@@ -36,8 +36,8 @@ PRIMARY_HOST = "https://api.binance.com"
 FAILOVER_HOST = "https://data-api.binance.vision"
 
 #: The metadata paths the readiness probe uses. Neither returns a candle.
-SERVER_TIME_PATH = "/api/v6/time"
-EXCHANGE_INFO_PATH = "/api/v6/exchangeInfo"
+SERVER_TIME_PATH = "/api/v3/time"
+EXCHANGE_INFO_PATH = "/api/v3/exchangeInfo"
 
 #: The endpoint pairs of the frozen failover policy, in order.
 METADATA_ENDPOINTS: Tuple[Tuple[str, str], ...] = (
