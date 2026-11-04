@@ -15,7 +15,7 @@ def test_manifest_keeps_selected_and_nonselected_assets_explicit():
     selections = MODULE.build_selections(
         ["AAAUSDT", "BBBUSDT"],
         {
-            "AAAUSDT": {"config_id": "cfg_0001", "status": "SELECTED", "economic_status": "PASS"},
+            "AAAUSDT": {"config_id": "cfg_0001", "status": "CANDIDATE_SELECTED", "economic_status": "PASS"},
             "BBBUSDT": {"config_id": None, "status": "NO_CANDIDATE", "economic_status": None},
         },
         ["cfg_0001", "cfg_0002"],
