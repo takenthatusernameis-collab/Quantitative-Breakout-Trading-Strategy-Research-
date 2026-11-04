@@ -800,8 +800,14 @@ def _load_persisted_dataset(
     resumed run therefore never reads the window a second time.
     """
     csv_path, record_path = _dataset_paths(workspace, run_id, asset)
-    if not csv_path.exists() or not record_path.exists():
+    csv_exists = csv_path.exists()
+    record_exists = record_path.exists()
+    if not csv_exists and not record_exists:
         return None
+    if csv_exists != record_exists:
+        raise WindowExposureError(
+            f"the persisted window dataset for {asset} is incomplete; refusing to fetch the single-use window again"
+        )
     record = load_json(record_path)
     if (
         record.get("run_id") != run_id
@@ -809,13 +815,19 @@ def _load_persisted_dataset(
         or int(record.get("window_start_ms") or 0) != int(start_ms)
         or int(record.get("window_end_ms") or 0) != int(end_ms)
     ):
-        return None
+        raise WindowExposureError(
+            f"the persisted window dataset for {asset} belongs to another run or window; refusing a second read"
+        )
     text = csv_path.read_text(encoding="utf-8")
-    if sha256_bytes(text.encode("utf-8")) != record.get("content_hash"):
-        return None
+    if sha256_bytes(text.encode("utf-8")) != record.get("persisted_dataset_sha256"):
+        raise WindowExposureError(
+            f"the persisted window dataset bytes for {asset} changed; the single-use window is spent"
+        )
     candles = parse_dataset_csv(text, asset)
     if compute_content_hash(list(candles)) != record.get("content_hash"):
-        return None
+        raise WindowExposureError(
+            f"the persisted window dataset hash for {asset} changed; the single-use window is spent"
+        )
     return candles, record
 
 
