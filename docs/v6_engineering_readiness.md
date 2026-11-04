@@ -20,3 +20,6 @@ that evaluation is authorized.
 Exit code is 0 only when every readiness condition passes; otherwise it is 1
 and the JSON report identifies the blockers. Do not weaken the protocol to
 make this command pass. After the authorized selection completes, run `python3 scripts/publish_v6_selected_configurations.py` to publish the immutable, self-hashed selected-configuration manifest from the completed ledger. The publisher does not authorize or start confirmation and refuses incomplete, mismatched, or already-different outputs. Confirmatory authorization must be separately and explicitly approved after selection results and code identities are frozen.
+
+
+The preflight also compares the frozen confirmatory protocol's one-selected-configuration-per-asset rule with the operator runbook. A contradictory 576-configuration-per-asset instruction is reported as `BLOCKED_PROTOCOL_CONFLICT`. It must be resolved by a versioned, hash-bound clarification; the preflight does not rewrite either frozen artifact or choose an evaluation scope.

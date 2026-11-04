@@ -3,7 +3,10 @@ import hashlib
 import json
 from pathlib import Path
 
-from scripts.v6_readiness_preflight import manifest_digest, source_tree_digest, verify_selection_source_binding
+from scripts.v6_readiness_preflight import (
+    manifest_digest, source_tree_digest, verify_selection_source_binding,
+    verify_confirmatory_scope_contract,
+)
 
 
 def test_manifest_digest_uses_declared_exclusions_and_nested_keys():
@@ -159,3 +162,51 @@ def test_selection_binding_rejects_implicit_confirmatory_authority(tmp_path: Pat
     ok, detail = verify_selection_source_binding(root, auth, selection_digest)
     assert not ok
     assert "confirmatory_evaluation_authorized" in detail
+
+
+def test_confirmatory_scope_contract_blocks_one_config_vs_576_grid_conflict():
+    protocol = {
+        "scope": {
+            "selected_configuration_per_asset": (
+                "the one configuration published in the selected-configurations manifest "
+                "for each eligible asset"
+            )
+        }
+    }
+    runbook = {
+        "operator_procedure": {
+            "ordered_steps": [
+                {
+                    "step": 7,
+                    "action": (
+                        "Evaluate every in-scope asset's frozen configuration over the window. "
+                        "The 576 btc_ema_168 configurations per asset are evaluated, never dropped."
+                    ),
+                }
+            ]
+        }
+    }
+    ok, detail = verify_confirmatory_scope_contract(protocol, runbook)
+    assert not ok
+    assert "versioned, hash-bound clarification" in detail
+    assert "step(s) 7" in detail
+
+
+def test_confirmatory_scope_contract_accepts_unambiguous_selected_config_rule():
+    protocol = {
+        "scope": {
+            "selected_configuration_per_asset": (
+                "exactly one configuration is selected per eligible asset by the frozen selection manifest"
+            )
+        }
+    }
+    runbook = {
+        "operator_procedure": {
+            "ordered_steps": [
+                {"step": 7, "action": "Evaluate each selected configuration once on the frozen window."}
+            ]
+        }
+    }
+    ok, detail = verify_confirmatory_scope_contract(protocol, runbook)
+    assert ok
+    assert "no conflict" in detail

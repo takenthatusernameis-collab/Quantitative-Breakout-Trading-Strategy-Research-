@@ -140,6 +140,40 @@ def verify_selection_source_binding(
     return True, f"versioned binding {binding_hash} matches the live selection source and frozen engine"
 
 
+def verify_confirmatory_scope_contract(
+    protocol: Dict[str, Any], runbook: Dict[str, Any]
+) -> tuple[bool, str]:
+    """Reject the known mismatch between selected-config scope and the runbook's 576-grid sentence."""
+    scope = protocol.get("scope") or {}
+    scope_rule = str(scope.get("selected_configuration_per_asset") or "")
+    if not scope_rule.strip():
+        return False, "the frozen confirmatory protocol does not define selected configuration per asset"
+
+    steps = ((runbook.get("operator_procedure") or {}).get("ordered_steps") or [])
+    conflicts = []
+    for step in steps:
+        action = str((step or {}).get("action") or "")
+        normalized = " ".join(action.lower().split())
+        if (
+            "576" in normalized
+            and "btc_ema_168" in normalized
+            and "per asset" in normalized
+            and "evaluated" in normalized
+        ):
+            conflicts.append(int((step or {}).get("step") or -1))
+
+    if conflicts:
+        step_labels = ", ".join(str(value) for value in conflicts)
+        return (
+            False,
+            "protocol scope requires the one selected configuration per eligible asset, "
+            f"but confirmatory runbook step(s) {step_labels} also require all 576 "
+            "btc_ema_168 configurations per asset to be evaluated; publish and verify "
+            "a versioned, hash-bound clarification before implementing or authorizing the executor",
+        )
+    return True, "the frozen protocol and runbook do not contain the known one-config-versus-576-grid conflict"
+
+
 def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
     """Return a fail-closed readiness report without reading market candles."""
     root = Path(root)
@@ -173,6 +207,16 @@ def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
     selection = docs.get("selection_authorization", {})
     amendment = docs.get("execution_amendment", {})
     data = docs.get("data_manifest", {})
+
+    scope_contract_ok, scope_contract_detail = verify_confirmatory_scope_contract(
+        protocol, runbook
+    )
+    add(
+        checks,
+        "confirmatory_scope_contract",
+        "PASS" if scope_contract_ok else "BLOCKED_PROTOCOL_CONFLICT",
+        scope_contract_detail,
+    )
 
     # The frozen scientific boundary is asserted, never edited here.
     window = freeze.get("confirmatory_window") or {}
@@ -297,7 +341,11 @@ def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
         "engineering_ready": engineering_ready,
         "data_ready": data_ready,
         "authorization_ready": authorization_ready,
-        "evaluation_eligible": not blocked and engineering_ready and data_ready and authorization_ready,
+        "confirmatory_scope_ready": scope_contract_ok,
+        "evaluation_eligible": (
+            not blocked and engineering_ready and data_ready and authorization_ready
+            and scope_contract_ok
+        ),
         "holdout_reads_performed": 0,
         "run_started": False,
         "checks": checks,
