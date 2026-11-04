@@ -77,6 +77,69 @@ def add(checks: List[Dict[str, str]], name: str, status: str, detail: str) -> No
     checks.append({"name": name, "status": status, "detail": detail})
 
 
+def verify_selection_source_binding(
+    root: Path, selection: Dict[str, Any], live_selection_digest: Optional[str]
+) -> tuple[bool, str]:
+    """Verify the versioned implementation binding without editing frozen authorization."""
+    if not live_selection_digest:
+        return False, "src/v6_campaign is absent or has no Python source"
+    auth_relative = "configs/research_v6_selection_authorization_1.json"
+    binding_relative = "configs/research_v6_selection_execution_binding_1.json"
+    auth_path = Path(root) / auth_relative
+    binding_path = Path(root) / binding_relative
+    if not auth_path.is_file() or not binding_path.is_file():
+        return False, "the frozen selection authorization or its versioned execution binding is missing"
+    try:
+        auth = load_json(auth_path)
+        binding = load_json(binding_path)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        return False, f"cannot read selection authorization/binding: {exc}"
+
+    auth_hash = manifest_digest(auth)
+    if auth.get("manifest_hash") != auth_hash:
+        return False, "the v6 selection authorization self-hash does not recompute"
+    binding_hash = manifest_digest(binding)
+    if binding.get("manifest_hash") != binding_hash:
+        return False, "the v6 selection execution binding self-hash does not recompute"
+    if binding.get("binding_status") != "IMPLEMENTATION_BOUND_NOT_RUN":
+        return False, "the selection binding does not retain its not-run status"
+    amends = binding.get("amends") or {}
+    if amends.get("path") != auth_relative or amends.get("manifest_hash") != auth_hash:
+        return False, "the selection binding is not bound to the live frozen authorization"
+    if amends.get("sha256") != hashlib.sha256(auth_path.read_bytes()).hexdigest():
+        return False, "the selection binding records another authorization file digest"
+
+    execution = binding.get("execution_path") or {}
+    identity = binding.get("code_identity") or {}
+    expected_engine_digest = source_tree_digest(Path(root) / "src" / "breakout_research")
+    if execution.get("package") != "src/v6_campaign":
+        return False, "the binding names another selection execution package"
+    if execution.get("canonical_source_digest") != live_selection_digest:
+        return False, "the binding does not match the live selection execution source digest"
+    if identity.get("execution_path_root") != "src/v6_campaign" or identity.get("execution_path_digest") != live_selection_digest:
+        return False, "the binding's composite code identity does not match the live selection source"
+    if identity.get("hashed_set_root") != "src/breakout_research" or identity.get("hashed_set_digest") != expected_engine_digest:
+        return False, "the binding does not match the live frozen engine digest"
+    if identity.get("hashed_set_digest") != (selection.get("authorized_run") or {}).get("code_identity", {}).get("hashed_set_digest"):
+        return False, "the binding changes the frozen engine digest recorded by the authorization"
+
+    authority = binding.get("authority") or {}
+    if authority.get("single_selection_run_authority_source") != auth_relative:
+        return False, "the binding does not retain the frozen authorization as the sole run authority"
+    if authority.get("single_selection_run_authority_manifest_hash") != auth_hash or authority.get("max_runs") != 1:
+        return False, "the binding does not preserve the original one-run authorization"
+    for flag in (
+        "confirmatory_evaluation_authorized",
+        "candle_fetch_authorized",
+        "second_v6_selection_run_authorized",
+        "amendment_of_a_frozen_artifact_authorized",
+        "holdout_reads_authorized",
+    ):
+        if authority.get(flag) is not False:
+            return False, f"the binding improperly grants {flag}"
+    return True, f"versioned binding {binding_hash} matches the live selection source and frozen engine"
+
+
 def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
     """Return a fail-closed readiness report without reading market candles."""
     root = Path(root)
@@ -158,17 +221,21 @@ def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
         "both execution paths are outside src/breakout_research" if paths_outside
         else "an execution path is inside the frozen engine tree")
 
-    # Selection authorization must be revised to bind the implemented runner digest.
-    auth_run = (selection.get("authorized_run") or {})
-    selection_exec = auth_run.get("execution_path") or {}
-    selection_bound = (
-        selection_digest is not None
-        and selection_exec.get("v6_execution_path_exists") is True
-        and selection_exec.get("execution_path_digest") == selection_digest
+    # Verify the versioned implementation binding. The frozen selection authorization
+    # remains unchanged and continues to be the sole source of run authority.
+    selection_bound, selection_binding_detail = verify_selection_source_binding(
+        root, selection, selection_digest
     )
-    add(checks, "selection_source_binding", "PASS" if selection_bound else "BLOCKED_AUTHORITY",
-        "selection authorization binds the exact runner digest" if selection_bound
-        else "selection authorization must be versioned to bind the implemented src/v6_campaign digest")
+    add(checks, "selection_source_binding",
+        "PASS" if selection_bound else "BLOCKED_AUTHORITY",
+        selection_binding_detail)
+
+    publisher_path = root / "scripts" / "publish_v6_selected_configurations.py"
+    publisher_present = publisher_path.is_file()
+    add(checks, "selection_manifest_publisher",
+        "PASS" if publisher_present else "BLOCKED_ENGINEERING",
+        "post-selection hash-bound manifest publisher is present" if publisher_present
+        else "scripts/publish_v6_selected_configurations.py is missing")
 
     # Confirmatory selected configs and authorization must exist and self-hash.
     selected_path = root / "research" / "v6_selected_configurations_manifest.json"
@@ -213,7 +280,7 @@ def run_preflight(root: Path = ROOT) -> Dict[str, Any]:
 
     # This report intentionally does not open any dataset file or initiate a run.
     blocked = [item for item in checks if item["status"].startswith(("BLOCKED", "NOT_AUTHORIZED"))]
-    engineering_names = {"selection_runner", "confirmatory_runner", "execution_code_isolated"}
+    engineering_names = {"selection_runner", "selection_manifest_publisher", "confirmatory_runner", "execution_code_isolated"}
     engineering_ready = all(
         item["status"] == "PASS" for item in checks if item["name"] in engineering_names
     )
