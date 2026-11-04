@@ -5,6 +5,7 @@ import argparse, json, sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
 sys.path.insert(0,str(ROOT/"src"))
+sys.path.insert(0,str(ROOT/"scripts"))
 def main(argv=None) -> int:
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root",default=str(ROOT))
@@ -27,7 +28,12 @@ def main(argv=None) -> int:
         },indent=2,sort_keys=True))
         return 0
     result=run_selection(default_workspace(Path(args.repo_root)))
-    print(json.dumps(result,indent=2,sort_keys=True))
+    from publish_v6_selected_configurations import publish
+    selected_manifest = publish(Path(args.repo_root))
+    print(json.dumps({
+        "selection_ledger": result,
+        "selected_configurations_manifest": selected_manifest,
+    }, indent=2, sort_keys=True))
     return 0
 if __name__=="__main__":
     raise SystemExit(main())
