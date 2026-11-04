@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-04T15:23:12Z)
+## COMPLETED — this session (2026-11-04T15:27:48Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state:
 
-- git: HEAD == origin/main == c509fa3bdf4cc2aecaee27b27772ceabe562e445; `git status --porcelain` empty (0 lines); working tree clean; no code changes; no research checkpoint commit pending.
+- git: HEAD == origin/main == c134a630923f8bbd84b870aae9d09ef3b3dd2a19; `git status --porcelain` empty (0 lines); working tree clean; no code changes; no research checkpoint commit pending.
 - Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
 - Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized false / confirmatory_evaluation_authorized false / execution_authorized false / grid_run_authorized false; selection_authorization_present true (binds only the already-completed v6 selection authorization).
 - Manifest hashes (canonical, excluded keys per artifact): selection authorization f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH (exclude top-level manifest_hash); amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH (exclude top-level manifest_hash); data manifest a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH (exclude top-level manifest_hash AND snapshot_identity.data_manifest_hash).
