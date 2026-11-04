@@ -18,6 +18,8 @@ from typing import Any, Dict
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = "configs/research_v6_confirmatory_runbook_1.json"
 TARGET = "configs/research_v6_confirmatory_runbook_2.json"
+SELECTED = "research/v6_selected_configurations_manifest.json"
+SELECTION_AUTH = "configs/research_v6_selection_authorization_2.json"
 EXECUTION_ROOT = "src/v6_confirmatory"
 
 
@@ -93,8 +95,33 @@ def build(root: Path = ROOT) -> Dict[str, Any]:
     applies["earliest_evaluation_start_utc"] = evaluation_start.isoformat().replace("+00:00", "Z")
     applies["exclusive_close_end_utc"] = exclusive_end.isoformat().replace("+00:00", "Z")
 
+    selected_path = root / SELECTED
+    selection_auth_path = root / SELECTION_AUTH
+    if not selected_path.is_file() or not selection_auth_path.is_file():
+        raise SystemExit("selection has not completed: selected-configurations manifest and versioned selection authorization are required")
+    selected_manifest = json.loads(selected_path.read_text(encoding="utf-8"))
+    selection_auth = json.loads(selection_auth_path.read_text(encoding="utf-8"))
+    if artifact_hash(selected_manifest) != selected_manifest.get("manifest_hash"):
+        raise SystemExit("selected-configurations manifest self-hash does not verify")
+    if artifact_hash(selection_auth) != selection_auth.get("manifest_hash"):
+        raise SystemExit("selection authorization 2 self-hash does not verify")
+
     binding = result["binding_identities"]
     binding["confirmatory_protocol"]["manifest_hash"] = protocol["manifest_hash"]
+    binding["selected_configurations_manifest"] = {
+        "path": SELECTED,
+        "manifest_hash": selected_manifest["manifest_hash"],
+        "status": "PUBLISHED_HASH_VERIFIED",
+    }
+    binding["selection_authorization_2"] = {
+        "path": SELECTION_AUTH,
+        "manifest_hash": selection_auth["manifest_hash"],
+    }
+    applies["in_scope_configurations"] = {
+        asset: entry.get("config_id")
+        for asset, entry in sorted((selected_manifest.get("selections") or {}).items())
+        if entry.get("selected") is True
+    }
     binding["code_identity"] = dict(binding["code_identity"])
     binding["code_identity"].update({
         "execution_path_digest": source_digest(root),
