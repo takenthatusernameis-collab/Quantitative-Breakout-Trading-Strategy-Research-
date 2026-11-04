@@ -47,4 +47,4 @@ jobs:
           python scripts/run_v6_selection.py
       - name: Run focused v6 regression tests
         run: |
-          pytest -q tests/test_v6_campaign.py tests/test_v6_selection_execution_binding_1.py tests/test_v6_execution.py tests/test_v6_execution_amendment_1.py tests/test_v6_confirmatory.py
+          pytest -q tests/test_v6_candidate_freeze.py tests/test_v6_campaign.py tests/test_v6_selection_execution_binding_1.py tests/test_v6_execution.py tests/test_v6_execution_amendment_1.py tests/test_v6_confirmatory.py
