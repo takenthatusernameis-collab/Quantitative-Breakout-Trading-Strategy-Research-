@@ -172,7 +172,15 @@ def test_the_protocol_is_reproduced_byte_for_byte_by_its_producer(tmp_path: Path
     protocol = _load(PROTOCOL_PATH)
     # Rebuild the immutable preregistration in the source state it records;
     # the later execution path is bound separately and cannot rewrite this artifact.
-    rebuilt = producer.build(_mirror_repo(tmp_path, omit_v6_campaign=True))
+    root = _mirror_repo(tmp_path, omit_v6_campaign=True)
+    # The producer recomputes the prior-window overrun from this exact V3
+    # benchmark file; restore that single source artifact in the otherwise
+    # size-reduced mirror so the original frozen bytes are reproduced.
+    benchmark_source = REPO_ROOT / V3_BENCHMARK_RELATIVE
+    benchmark_target = root / V3_BENCHMARK_RELATIVE
+    benchmark_target.parent.mkdir(parents=True, exist_ok=True)
+    benchmark_target.symlink_to(benchmark_source)
+    rebuilt = producer.build(root)
     assert rebuilt == protocol
     assert json.dumps(rebuilt, indent=2) + "\n" == PROTOCOL_PATH.read_text(encoding="utf-8")
 
