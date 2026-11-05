@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T18:34:36Z)
+# Next Agent Task (initial message — 2026-11-05T18:36:00Z)
 
 On activation, read the top of `research_state/agent_handoff.md` (latest COMPLETED entry), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = d3fe885d210f61198218438ba93b8b05c6e0285a, HEAD == origin/main, working tree was porcelain clean at verification (this session modified `agent_handoff.md` and `next_agent_task.md` only).
+Last recorded state (verify fresh — do not trust): HEAD = 4977e17ab113be8053fd15b87501e22ce62df1a9, HEAD == origin/main, working tree was porcelain clean at verification (this session modified `agent_handoff.md` and `next_agent_task.md` only).
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain` (expect handoff-only dirtiness or clean), `next_cohort_index==6` (research_state/continuous_universe_state.json), `current_cohort.cohort_index==5` `completed==true` (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Verify execution-authorization flags in configs/research_v6_execution_amendment_1.json: top-level `candle_fetch_authorized`/`confirmatory_evaluation_authorized`/`execution_authorized`/`grid_run_authorized`/`second_run_authorized`/`v6_execution_path_exists` are absent/not authorized; `execution_authorization.selection_authorization_present==true`. Selection authorization (configs/research_v6_selection_authorization_1.json) records `authorized_run.execution_path.v6_execution_path_exists` false and `code_identity.execution_path_digest`/`hashed_set_digest`/`run_code_identity` null (no bound execution-path digest). Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD`/`origin/main`) — do not trust recorded values.
@@ -17,3 +17,5 @@ Last recorded state (verify fresh — do not trust): HEAD = d3fe885d210f61198218
 
 ## Session closeout
 When the standing task is verified complete: append a new `## COMPLETED — this session (<UTC timestamp>)` entry to `research_state/agent_handoff.md` recording HEAD, porcelain state, cohort state, authorization flags, manifest hashes (including confirmatory protocol), BRAIN gates, data gate, artifact absence, and working tree state. Refresh this file as the initial task message for the next agent (update timestamp and last recorded HEAD). Do not commit unless explicitly asked.
+EOF
+echo done
