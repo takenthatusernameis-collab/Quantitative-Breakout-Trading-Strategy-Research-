@@ -1,9 +1,9 @@
-## COMPLETED — this session (2026-11-05T06:29:11Z)
+## COMPLETED — this session (2026-11-05T06:31:51Z)
 
-Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = 9f9418dedcc948b34b5349445eedb097d9bd28f8, in sync with origin/main. Working tree clean; no code or research changes.
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = 7431c16a6cb0f3506ebdc74cc1f86c4ae83f9134, in sync with origin/main. Working tree clean; no code or research changes.
 
-- git: live state `git rev-parse HEAD` = 9f9418dedcc948b34b5349445eedb097d9bd28f8, `git rev-parse origin/main` = 9f9418dedcc948b34b5349445eedb097d9bd28f8 (HEAD == origin/main, in sync). `git status --porcelain` empty.
-- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true () — confirmed in research_state/continuous_universe_state.json.
+- git: live state `git rev-parse HEAD` = 7431c16a6cb0f3506ebdc74cc1f86c4ae83f9134, `git rev-parse origin/main` = 7431c16a6cb0f3506ebdc74cc1f86c4ae83f9134 (HEAD == origin/main, in sync). `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT) — confirmed in research_state/continuous_universe_state.json.
 - Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized False / confirmatory_evaluation_authorized False / execution_authorized False / grid_run_authorized False / second_run_authorized False; execution_authorization.selection_authorization_present True; v6_execution_path_exists None.
 - Manifest hashes recomputed with the project's own canonical helper (scripts/v6_universe_rules.py:published_manifest_hash, each artifact's own hashing.manifest_hash_excluded_keys): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH; data a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH (excluded keys honored: manifest_hash + snapshot_identity.data_manifest_hash).
 - BRAIN-002 authorized true (research_state/campaign_authorization.json); evidence_digest recomputed as sha256 of canonical JSON of research_state/pilot_evidence.json = f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053 MATCH.
