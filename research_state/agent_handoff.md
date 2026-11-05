@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-05T11:37:21Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = 1519d06a6d8f7d40a4a9bf7e7539826c20308523, in sync with origin/main (advanced from previously recorded 47359434d76ef409a3cb5fc9aebb8efb0b1371d6). Working tree porcelain empty; no code or research changes.
+
+- git: `git rev-parse HEAD` = 1519d06a6d8f7d40a4a9bf7e7539826c20308523, `git rev-parse origin/main` = 1519d06a6d8f7d40a4a9bf7e7539826c20308523 (HEAD == origin/main). `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT) — research_state/continuous_universe_state.json.
+- Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized/second_run_authorized all false/null; execution_authorization.selection_authorization_present==true; top-level v6_execution_path_exists null. Selection authorization (configs/research_v6_selection_authorization_1.json) records authorized_run.execution_path.v6_execution_path_exists false and binds no execution_path_digest (code_identity.execution_path_digest null; run_code_identity 6bda27fa…a30b present but not used as identity).
+- Manifest hashes recomputed with scripts/v6_universe_rules.py:published_manifest_hash: selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH; data a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH. BRAIN-002 authorized true; evidence_digest sha256(canonical JSON of research_state/pilot_evidence.json) = f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053 MATCH.
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: [] (manifest_hash 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026, recomputed matches; v6_execution_path_canonical_digest 37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72; exit 0).
+- Data gate RESOLVED; research/data_manifest_v6.json assets dict 20 entries; 7 with content_hash+dataset_path (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), 13 without; confirmatory_window.holdout_exposed_count==0.
+- v6 selection run absent; src/v6_campaign exists (benchmark.py, data.py, errors.py, identity.py, runner.py, scope.py, units.py) but research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json all absent. No run until execution path canonical digest recorded in revised selection authorization.
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z (fail-closed; holdout_exposed_count must remain 0).
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-05T11:36:14Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = 47359434d76ef409a3cb5fc9aebb8efb0b1371d6, in sync with origin/main (advanced from previously recorded 298fe0b8f15cdbbc0d9075e61fca02fc93fa825a; diff touches only research_state/agent_handoff.md + research_state/next_agent_task.md — checkpoint commit only). Working tree porcelain empty; no code or research changes.
