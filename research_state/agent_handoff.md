@@ -1,3 +1,16 @@
+## COMPLETED — this session (2026-11-05T09:28:49Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = e49441e63276ebfff7a309a2d7549de1920557e7, in sync with origin/main. Working tree clean (porcelain empty); no code or research changes.
+
+- git: `git rev-parse HEAD` = e49441e63276ebfff7a309a2d7549de1920557e7, `git rev-parse origin/main` = e49441e63276ebfff7a309a2d7549de1920557e7 (HEAD == origin/main). `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization: flags null/false; selection_authorization_present true; v6_execution_path_exists null.
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: [].
+- Data gate RESOLVED; 20 assets, 7 validated, 13 excluded; holdout_exposed_count==0.
+- v6 selection run absent; BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-05T09:26:45Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = e00a92f0f0450526961a35f23e781f1b045b828b, in sync with origin/main. Working tree clean (porcelain empty); no code or research changes. (HEAD advanced from previously recorded 525a23f288cc571598cbab78021c8640f9922c09; diff to prior HEAD touches only research_state/agent_handoff.md + research_state/next_agent_task.md — checkpoint commit only.)
