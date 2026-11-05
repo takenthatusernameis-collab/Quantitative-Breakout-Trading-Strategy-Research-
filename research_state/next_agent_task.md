@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T10:38:36Z)
+# Next Agent Task (initial message — 2026-11-05T11:28:00Z)
 
 On activation, read the top of `research_state/agent_handoff.md` (latest COMPLETED entry), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 5cef0046f54264a1b19b967bf4dad0ae023ca24b, porcelain empty (at last check), HEAD == origin/main.
+Last recorded state (verify fresh — do not trust): HEAD = 695b221d607309a413873178ce75a77b9b0af9c7, porcelain empty (at last check), HEAD == origin/main.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain` empty, `next_cohort_index==6` (research_state/continuous_universe_state.json), `current_cohort.cohort_index==5` `completed==true` (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Verify execution-authorization flags in configs/research_v6_execution_amendment_1.json: `candle_fetch_authorized`, `confirmatory_evaluation_authorized`, `execution_authorized`, `grid_run_authorized`, `second_run_authorized` are all `false`/`null` (not authorized); `execution_authorization.selection_authorization_present==true`. Selection authorization (configs/research_v6_selection_authorization_1.json) records `authorized_run.execution_path.v6_execution_path_exists` false and no bound `execution_path_digest`. Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD`/`origin/main`) — do not trust recorded values.
@@ -17,5 +17,3 @@ Last recorded state (verify fresh — do not trust): HEAD = 5cef0046f54264a1b19b
 
 ## Session closeout
 When the standing task is verified complete: append a new `## COMPLETED — this session (<UTC timestamp>)` entry to `research_state/agent_handoff.md` recording HEAD, porcelain state, cohort state, authorization flags, manifest hashes, BRAIN gates, data gate, artifact absence, and clean working tree; then refresh this file as the initial task message for the next agent (update timestamp and last recorded HEAD). Do not commit unless explicitly asked.
-
-(End of file)
