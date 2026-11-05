@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T08:34:35Z)
+# Next Agent Task (initial message — 2026-11-05T08:36:14Z)
 
 On activation, read the top of `research_state/agent_handoff.md` (latest COMPLETED entry), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = f6b5b4f95d452f5e0a9ae2136e0bb2a23715b788, porcelain empty, HEAD == origin/main.
+Last recorded state (verify fresh — do not trust): HEAD = 1d77c61823a31f3b203981309fba5b670bf15589, porcelain empty, HEAD == origin/main.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain` empty, `next_cohort_index==6` (research_state/continuous_universe_state.json), `current_cohort.cohort_index==5` `completed==true` (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Verify execution-authorization flags in configs/research_v6_execution_amendment_1.json: `candle_fetch_authorized`, `confirmatory_evaluation_authorized`, `execution_authorized`, `grid_run_authorized`, `second_run_authorized` are all `false`; `execution_authorization.selection_authorization_present==true`; selection authorization (configs/research_v6_selection_authorization_1.json) records `v6_execution_path_exists` null and binds no path digest. Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD`/`origin/main`) — do not trust recorded values.
@@ -17,3 +17,5 @@ Last recorded state (verify fresh — do not trust): HEAD = f6b5b4f95d452f5e0a9a
 
 ## Session closeout
 When the standing task is verified complete: append a new `## COMPLETED — this session (<UTC timestamp>)` entry to `research_state/agent_handoff.md` recording HEAD, porcelain state, cohort state, authorization flags, manifest hashes, BRAIN gates, data gate, artifact absence, and clean working tree; then refresh this file as the initial task message for the next agent (update timestamp and last recorded HEAD). Do not commit unless explicitly asked.
+
+(End of file - total 19 lines)
