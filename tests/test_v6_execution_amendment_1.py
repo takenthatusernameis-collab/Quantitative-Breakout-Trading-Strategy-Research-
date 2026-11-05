@@ -71,7 +71,7 @@ def _load(path: Path) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-def _mirror_repo(tmp_path: Path) -> Path:
+def _mirror_repo(tmp_path: Path, *, omit_v6_campaign: bool = False) -> Path:
     """A temporary tree of the parts of the repository the verifier reads.
 
     Every file is symlinked, so the mirror is cheap. The large trees the v6
@@ -84,7 +84,6 @@ def _mirror_repo(tmp_path: Path) -> Path:
         ".git",
         "__pycache__",
         ".pytest_cache",
-        "v6_campaign",  # the frozen authorization records that this path did not yet exist
         "campaign_cycles",
         "results_shards",
         "shards_v2",
@@ -99,6 +98,8 @@ def _mirror_repo(tmp_path: Path) -> Path:
         "candles_v4",
         "candles_v5",
     }
+    if omit_v6_campaign:
+        skip_dirs.add("v6_campaign")
     skip_files = {
         "results.jsonl",
         "results_v2.jsonl",
@@ -444,7 +445,7 @@ def test_the_authorization_is_bound_by_the_frozen_execution_protocol() -> None:
 
 def test_the_authorization_is_reproduced_byte_for_byte_by_its_producer(tmp_path: Path) -> None:
     # Rebuild against the original frozen input state, not a later execution path.
-    document = authorization_producer.build(_mirror_repo(tmp_path))
+    document = authorization_producer.build(_mirror_repo(tmp_path, omit_v6_campaign=True))
     rendered = json.dumps(document, indent=2, ensure_ascii=False) + "\n"
     assert rendered == (REPO_ROOT / AUTHORIZATION_RELATIVE).read_text(encoding="utf-8")
 
