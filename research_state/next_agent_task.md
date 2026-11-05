@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T07:34:12Z)
+# Next Agent Task (initial message — 2026-11-05T07:34:51Z)
 
 On activation, read the top of `research_state/agent_handoff.md` (latest COMPLETED entry), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = be251520b58732f773db7cd3395c6b633fbba0f2, porcelain empty, HEAD == origin/main.
+Last recorded state (verify fresh — do not trust): HEAD = fdf5e4dc7e38163027daab61aefba303c4b5fb3c, porcelain empty, HEAD == origin/main.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain` empty, `next_cohort_index==6` (research_state/continuous_universe_state.json), `current_cohort.cohort_index==5` `completed==true` (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Verify execution-authorization flags in configs/research_v6_execution_amendment_1.json: `candle_fetch_authorized`, `confirmatory_evaluation_authorized`, `execution_authorized`, `grid_run_authorized`, `second_run_authorized` are all `null` (no execution authorized); `execution_authorization.selection_authorization_present==true`; `v6_execution_path_exists==null`. Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD` and `git rev-parse origin/main`) — do not trust recorded values; do not claim equality unless fresh rev-parse shows equality.
@@ -17,5 +17,3 @@ Last recorded state (verify fresh — do not trust): HEAD = be251520b58732f773db
 
 ## Session closeout
 When the standing task is verified complete: append a new `## COMPLETED — this session (<UTC timestamp>)` entry to `research_state/agent_handoff.md` recording HEAD, porcelain state, cohort state, authorization flags, manifest hashes, BRAIN gates, data gate, artifact absence, and clean working tree; then refresh this file as the initial task message for the next agent (update timestamp and last recorded HEAD). Do not commit unless explicitly asked.
-" filePath">
-/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/research_state/next_agent_task.md
