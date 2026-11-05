@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T21:54:53Z)
+# Next Agent Task (initial message — 2026-11-05T21:55:16Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-05T21:54:53Z / HEAD c0126299aa8fcf3a93fb0225b038ebb14cdce0ac), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-05T21:55:16Z / HEAD 3586d3be04b65c37de5086c6125eedc8668f4048), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = c0126299aa8fcf3a93fb0225b038ebb14cdce0ac, HEAD == origin/main, working tree clean at verification before this session's edits.
+Last recorded state (verify fresh — do not trust): HEAD = 3586d3be04b65c37de5086c6125eedc8668f4048, HEAD == origin/main, working tree clean at verification before this session's edits.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain` (expect clean or handoff-only dirtiness), `next_cohort_index==6` (`research_state/continuous_universe_state.json`), `current_cohort.cohort_index==5` `completed==true` (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Verify execution-authorization flags in `configs/research_v6_execution_amendment_1.json`: top-level `candle_fetch_authorized`/`confirmatory_evaluation_authorized`/`execution_authorized`/`grid_run_authorized`/`second_run_authorized` false/absent; `v6_execution_path_exists` absent at top level; `execution_authorization.selection_authorization_present==true`. Selection authorization (`configs/research_v6_selection_authorization_1.json`) records `authorized_run.execution_path.v6_execution_path_exists` false and `code_identity.execution_path_digest` null. Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD`/`origin/main`) — do not trust recorded values.
@@ -11,10 +11,9 @@ Last recorded state (verify fresh — do not trust): HEAD = c0126299aa8fcf3a93fb
 
 3. **Binance klines data gate — RESOLVED.** Do not re-run probe. `research/data_manifest_v6.json` `assets` is a dict of 20 entries; **7/20 validated** with `content_hash`+`dataset_path` (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), 13 without validated data. `confirmatory_window.holdout_exposed_count` must remain 0.
 
-4. **v6 selection run — do NOT start.** `src/v6_campaign` exists (modules: __init__, benchmark, data, errors, identity, runner, scope, units) but `research/shards_v6`, `research/ledger_v6.json`, `research/results_manifest_v6.json`, `research/results_v6.jsonl`, `research_state/checkpoint_v6.json` all absent. Selection authorization records `authorized_run.execution_path.v6_execution_path_exists` false and `code_identity.execution_path_digest` null. No run until the execution path canonical digest is recorded in a revised selection authorization.
+4. **v6 selection run — do NOT start.** `src/v6_campaign` exists (modules: __init__, benchmark, data, errors, identity, runner, scope, units) but `research/shards_v6`, `research/ledger_v6.json`, `research/results_manifest_v6.json`, `research/results_v6.jsonl`, `research_state/checkpoint_v6.json` (and `research/v6_selected_configurations_manifest.json`) all absent. Selection authorization records `authorized_run.execution_path.v6_execution_path_exists` false and `code_identity.execution_path_digest` null. No run until the execution path canonical digest is recorded in a revised selection authorization.
 
 5. **BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z.** Do NOT attempt; `holdout_exposed_count` must remain 0; fail-closed. `configs/research_v6_confirmatory_protocol.json#window_definition`: `window_opens_utc` 2026-10-22T02:00:00Z, `minimum_closed_hourly_candles` 2160, `earliest_possible_end_utc`/`evaluation_may_not_start_before_utc` both 2027-01-20T02:00:00Z.
 
 ## Session closeout
 When the standing task is verified complete: prepend a new `## COMPLETED — this session (<UTC timestamp>)` entry to `research_state/agent_handoff.md` recording HEAD, porcelain state, cohort state, authorization flags, manifest hashes (including confirmatory protocol), BRAIN gates, data gate (note 7/20 validated if unchanged), artifact absence, and working tree state. Refresh this file as the initial task message for the next agent (update timestamp and last recorded HEAD). Do not commit unless explicitly asked.
-"""
