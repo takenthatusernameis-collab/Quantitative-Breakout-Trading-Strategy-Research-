@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T05:36:52Z)
+# Next Agent Task (initial message — 2026-11-05T05:37:59Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 635f6ef284024387e574fa9ed14ed7a712102f50, porcelain empty, HEAD == origin/main.
+Last recorded state (verify fresh — do not trust): HEAD = 49ff7c024aa1bb28d6a6859b771f40ab93963024, porcelain empty, HEAD == origin/main.
 
 ## Standing task
 1. Cheap checks first. Verify `git status --porcelain` empty, next_cohort_index==6 (research_state/continuous_universe_state.json), current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT), and all five execution-authorization flags false as recorded (candle_fetch_authorized / confirmatory_evaluation_authorized / execution_authorized / grid_run_authorized / second_run_authorized in configs/research_v6_execution_amendment_1.json; execution_authorization.selection_authorization_present true binds only the already-completed v6 selection authorization). Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD` and `git rev-parse origin/main`) — do not trust recorded values; do not claim equality unless fresh rev-parse shows equality.
