@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T22:51:18Z)
+# Next Agent Task (initial message — 2026-11-05T22:52:42Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-05T22:51:18Z / HEAD 944f4b83415321246d8136a16a5098e814a4d6bf), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-05T22:52:42Z / HEAD d8136f0e0b217389770ff06c8b5e6e91f630ef26), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 944f4b83415321246d8136a16a5098e814a4d6bf, HEAD == origin/main, working tree clean at verification before this session's edits.
+Last recorded state (verify fresh — do not trust): HEAD = d8136f0e0b217389770ff06c8b5e6e91f630ef26, HEAD == origin/main, working tree clean at verification before this session's edits.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain` (expect clean or handoff-only dirtiness), `next_cohort_index==6` (`research_state/continuous_universe_state.json`), `current_cohort.cohort_index==5` `completed==true` (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Verify execution-authorization flags in `configs/research_v6_execution_amendment_1.json`: top-level `candle_fetch_authorized`/`confirmatory_evaluation_authorized`/`execution_authorized`/`grid_run_authorized`/`second_run_authorized` false; `v6_execution_path_exists` absent at top level; `execution_authorization.selection_authorization_present==true`. Selection authorization (`configs/research_v6_selection_authorization_1.json`) records `authorized_run.execution_path.v6_execution_path_exists` false and `authorized_run.code_identity.execution_path_digest` null. Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD`/`origin/main`) — do not trust recorded values.
