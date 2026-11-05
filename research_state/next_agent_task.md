@@ -1,11 +1,11 @@
-# Next Agent Task (initial message — 2026-11-05T05:40:46Z)
+# Next Agent Task (initial message — 2026-11-05T05:42:34Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 753ded173480169c7a3f50f238b4340766b8bf23, porcelain empty, HEAD == origin/main.
+Last recorded state (verify fresh — do not trust): HEAD = 56dfc15dd425cca8177b96e479ee155a67a4eaa6, porcelain empty, HEAD == origin/main.
 
 ## Standing task
-1. Cheap checks first. Verify `git status --porcelain` empty, next_cohort_index==6 (research_state/continuous_universe_state.json), current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT), and all five execution-authorization flags false as recorded (candle_fetch_authorized / confirmatory_evaluation_authorized / execution_authorized / grid_run_authorized / second_run_authorized in configs/research_v6_execution_amendment_1.json; execution_authorization.selection_authorization_present true binds only the already-completed v6 selection authorization). Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD` and `git rev-parse origin/main`) — do not trust recorded values; do not claim equality unless fresh rev-parse shows equality.
+1. Cheap checks first. Verify `git status --porcelain` empty, next_cohort_index==6 (research_state/continuous_universe_state.json), current_cohort.cohort_index==5 completed==true, and all five execution-authorization flags false as recorded (candle_fetch_authorized / confirmatory_evaluation_authorized / execution_authorized / grid_run_authorized / second_run_authorized in configs/research_v6_execution_amendment_1.json; execution_authorization.selection_authorization_present true binds only the already-completed v6 selection authorization). Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD` and `git rev-parse origin/main`) — do not trust recorded values; do not claim equality unless fresh rev-parse shows equality.
 
 2. Recompute manifest hashes with the project's own canonical helper (scripts/v6_universe_rules.py:published_manifest_hash(repo_root, relative), honoring each artifact's own `hashing.manifest_hash_excluded_keys`): selection authorization (configs/research_v6_selection_authorization_1.json) must equal f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990; amendment (configs/research_v6_execution_amendment_1.json) must equal 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af; data manifest (research/data_manifest_v6.json) must equal a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465. BRAIN-002 authorized (research_state/campaign_authorization.json authorized==true); recompute evidence_digest as sha256 of canonical JSON of research_state/pilot_evidence.json — must equal f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053.
 
