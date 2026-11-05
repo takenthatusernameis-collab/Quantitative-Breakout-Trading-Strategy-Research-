@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-05T08:37:04Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = 525a23f288cc571598cbab78021c8640f9922c09, in sync with origin/main. Working tree clean (porcelain empty, pre-closeout); no code or research changes.
+
+- git: `git rev-parse HEAD` = 525a23f288cc571598cbab78021c8640f9922c09, `git rev-parse origin/main` = 525a23f288cc571598cbab78021c8640f9922c09 (HEAD == origin/main). `git status --porcelain` empty. (HEAD advanced from previously recorded 1d77c61823a31f3b203981309fba5b670bf15589; checkpoint commits only.)
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT) — confirmed in research_state/continuous_universe_state.json.
+- Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized/second_run_authorized all null; v6_execution_path_exists null; execution_authorization.selection_authorization_present==true. Selection authorization (configs/research_v6_selection_authorization_1.json) records v6_execution_path_exists null and binds no path digest.
+- Manifest hashes recomputed with scripts/v6_universe_rules.py:published_manifest_hash (honoring each artifact's hashing.manifest_hash_excluded_keys): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH; data a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH. BRAIN-002 authorized true (research_state/campaign_authorization.json); evidence_digest sha256(canonical JSON of research_state/pilot_evidence.json) = f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053 MATCH.
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: [] (manifest_hash 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026; exit 0).
+- Data gate RESOLVED; research/data_manifest_v6.json assets dict has 20 entries; exactly 7 validated with content_hash+dataset_path (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), 13 excluded; confirmatory_window.holdout_exposed_count==0.
+- v6 selection artifacts absent (research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json). No run until execution path exists and its canonical source digest is recorded in a revised selection authorization.
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z (fail-closed; holdout_exposed_count must remain 0).
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-05T08:36:14Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = 1d77c61823a31f3b203981309fba5b670bf15589, in sync with origin/main. Working tree clean (porcelain empty); no code or research changes.
