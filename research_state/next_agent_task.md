@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T04:40:33Z)
+# Next Agent Task (initial message — 2026-11-05T04:41:07Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = eb51b2feba3a34cc00be1a2d524b3f28dd77e2d3, porcelain empty, HEAD == origin/main.
+Last recorded state (verify fresh — do not trust): HEAD = 967884b119634416f02cfce88c1a9bdeebcbd6e9, porcelain empty, HEAD == origin/main.
 
 ## Standing task
 1. Cheap checks first. Verify `git status --porcelain` empty, next_cohort_index==6 (research_state/continuous_universe_state.json), current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT), and all five execution-authorization flags false as recorded (candle_fetch_authorized / confirmatory_evaluation_authorized / execution_authorized / grid_run_authorized / second_run_authorized in configs/research_v6_execution_amendment_1.json; execution_authorization.selection_authorization_present true binds only the already-completed v6 selection authorization). Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD` and `git rev-parse origin/main`) — do not trust recorded values; do not claim equality unless fresh rev-parse shows equality.
@@ -17,3 +17,5 @@ Last recorded state (verify fresh — do not trust): HEAD = eb51b2feba3a34cc00be
 
 ## Session closeout
 When the standing task is verified complete: update research_state/agent_handoff.md with a new COMPLETED entry recording HEAD, porcelain state, cohort state, authorization flags, manifest hashes, BRAIN gates, data gate, artifact absence, and clean working tree; then refresh this file as the initial task message for the next agent. Do not commit unless explicitly asked.
+" filePath">
+/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/research_state/next_agent_task.md
