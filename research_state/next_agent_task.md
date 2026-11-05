@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-05T10:31:49Z))
+# Next Agent Task (initial message — 2026-11-05T10:33:11Z)
 
 On activation, read the top of `research_state/agent_handoff.md` (latest COMPLETED entry), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = a3b70b38df619ddc118c0c7c564c2bbd5c8deed7, porcelain empty (at last check), HEAD == origin/main.
+Last recorded state (verify fresh — do not trust): HEAD = aaae30a3e93f4d1d922a03e698e3fb7b8a47b623, porcelain empty (at last check), HEAD == origin/main.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain` empty, `next_cohort_index==6` (research_state/continuous_universe_state.json), `current_cohort.cohort_index==5` `completed==true` (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Verify execution-authorization flags in configs/research_v6_execution_amendment_1.json: `candle_fetch_authorized`, `confirmatory_evaluation_authorized`, `execution_authorized`, `grid_run_authorized`, `second_run_authorized` are all `false`/`null` (not authorized); `execution_authorization.selection_authorization_present==true`. Selection authorization (configs/research_v6_selection_authorization_1.json) records `authorized_run.execution_path.v6_execution_path_exists` false and no bound `execution_path_digest`. Reconfirm HEAD and origin/main against live state (`git rev-parse HEAD`/`origin/main`) — do not trust recorded values.
@@ -11,7 +11,7 @@ Last recorded state (verify fresh — do not trust): HEAD = a3b70b38df619ddc118c
 
 3. **Binance klines data gate — RESOLVED.** Do not re-run probe. research/data_manifest_v6.json `assets` is a dict of 20 entries; exactly 7 validated with `content_hash`+`dataset_path` (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT). `confirmatory_window.holdout_exposed_count` must remain 0.
 
-4. **v6 selection run — do NOT start.** `src/v6_campaign` exists but `research/shards_v6`, `research/ledger_v6.json`, `research/results_manifest_v6.json`, `research/results_v6.jsonl`, `research_state/checkpoint_v6.json` all absent. Selection authorization records `authorized_run.execution_path.v6_execution_path_exists` false with no bound path digest (verify script computes `v6_execution_path_canonical_digest` but authorization does not bind it). No run until the execution path canonical digest is recorded in a revised selection authorization.
+4. **v6 selection run — do NOT start.** `src/v6_campaign` exists but `research/shards_v6`, `research/ledger_v6.json`, `research/results_manifest_v6.json`, `research/results_v6.jsonl`, `research_state/checkpoint_v6.json` all absent. Selection authorization records `authorized_run.execution_path.v6_execution_path_exists` false with no bound `execution_path_digest`. No run until the execution path canonical digest is recorded in a revised selection authorization.
 
 5. **BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z.** Do NOT attempt; `holdout_exposed_count` must remain 0; fail-closed. configs/research_v6_confirmatory_protocol.json#window_definition: `window_opens_utc` 2026-10-22T02:00:00Z, `minimum_closed_hourly_candles` 2160, `earliest_possible_end_utc`/`evaluation_may_not_start_before_utc` both 2027-01-20T02:00:00Z.
 
