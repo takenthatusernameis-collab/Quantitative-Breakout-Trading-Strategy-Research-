@@ -80,6 +80,7 @@ def _mirror_repo(tmp_path: Path) -> Path:
         ".git",
         "__pycache__",
         ".pytest_cache",
+        "v6_campaign",  # this preregistered artifact predates the later execution-path implementation
         "campaign_cycles",
         "results_shards",
         "shards_v2",
@@ -166,9 +167,11 @@ def test_the_protocol_is_self_hashing() -> None:
     assert verifier.compute_manifest_hash(protocol, ("manifest_hash",)) == protocol["manifest_hash"]
 
 
-def test_the_protocol_is_reproduced_byte_for_byte_by_its_producer() -> None:
+def test_the_protocol_is_reproduced_byte_for_byte_by_its_producer(tmp_path: Path) -> None:
     protocol = _load(PROTOCOL_PATH)
-    rebuilt = producer.build(REPO_ROOT)
+    # Rebuild the immutable preregistration in the source state it records;
+    # the later execution path is bound separately and cannot rewrite this artifact.
+    rebuilt = producer.build(_mirror_repo(tmp_path))
     assert rebuilt == protocol
     assert json.dumps(rebuilt, indent=2) + "\n" == PROTOCOL_PATH.read_text(encoding="utf-8")
 
