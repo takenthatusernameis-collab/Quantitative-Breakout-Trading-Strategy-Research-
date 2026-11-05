@@ -171,7 +171,7 @@ def verify_confirmatory_scope_contract(
             "btc_ema_168 configurations per asset to be evaluated; publish and verify "
             "a versioned, hash-bound clarification before implementing or authorizing the executor",
         )
-    return True, "the frozen protocol and runbook do not contain the known one-config-versus-576-grid conflict"
+    return True, "no conflict: the frozen protocol and runbook agree on the selected-configuration scope"
 
 
 # Binance Spot GET /api/v3/klines documents a maximum response limit of 1,000.
