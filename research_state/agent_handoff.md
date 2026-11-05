@@ -1430,3 +1430,17 @@ Standing task (cheap checks re-verification) complete. All checks verified again
 - BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z (fail-closed; holdout_exposed_count must remain 0).
 
 Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
+## COMPLETED — this session (2026-11-05T14:33:29Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = 87e8b692ab3c4ad02b8a5059218c6541aa0c23ae == origin/main, in sync. Working tree porcelain empty; no code or research changes.
+
+- git: `git rev-parse HEAD` = 87e8b692ab3c4ad02b8a5059218c6541aa0c23ae, `git rev-parse origin/main` = 87e8b692ab3c4ad02b8a5059218c6541aa0c23ae (HEAD == origin/main). `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization: top-level flags null/false; execution_authorization.selection_authorization_present true; v6_execution_path_exists null/false; no bound digest.
+- Manifest hashes MATCH; BRAIN-002 authorized; evidence_digest MATCH.
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: [].
+- Data gate RESOLVED; 20 assets, 7 validated, 13 excluded; holdout_exposed_count==0.
+- v6 selection run absent; BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
