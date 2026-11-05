@@ -1105,3 +1105,19 @@ Standing task (cheap checks re-verification) complete. All checks verified again
 - Verification: scripts/verify_v6_execution.py -> ok true; scripts/verify_research_v6_manifests.py -> ok true; scripts/verify_v6_confirmatory_protocol.py -> ok true; scripts/verify_v6_confirmatory_runbook_1.py -> ok true; scripts/verify_research_v6_candidate_freeze.py -> ok true; scripts/verify_research_v6_spec.py -> ok true; scripts/verify_v6_universe_expansion_log.py -> ok true (tests unavailable in env).
 
 Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
+## COMPLETED — this session (2026-11-05T00:37:57Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state; HEAD = 7671663d107080e6e2b013d417da1e99bd673c8b == origin/main, in sync. Working tree clean.
+
+- git: live state `git rev-parse HEAD` = 7671663d107080e6e2b013d417da1e99bd673c8b, `git rev-parse origin/main` = 7671663d107080e6e2b013d417da1e99bd673c8b (HEAD == origin/main, in sync). `git status --porcelain` empty; working tree clean.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized false / confirmatory_evaluation_authorized false / execution_authorized false / grid_run_authorized false / second_run_authorized false; selection_authorization_present true.
+- Manifest hashes recomputed with the project's own canonical helper (scripts/v6_universe_rules.py:published_manifest_hash): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH; data a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH.
+- BRAIN-002 authorized true; evidence_digest MATCH (f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053).
+- Data gate RESOLVED; validated assets count 7 (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), holdout_exposed_count==0.
+- v6 selection run absent: src/v6_campaign exists (__init__.py, benchmark.py, data.py, errors.py, identity.py, runner.py, scope.py, units.py) but research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json all absent (verified with ls). The v6 selection authorization still records v6_execution_path_exists: false and binds no path digest. No run until the execution path exists and its canonical source digest is recorded in a revised selection authorization.
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. Do not attempt; holdout_exposed_count must remain 0; fail-closed.
+- Verification: scripts/verify_v6_execution.py -> ok true; verify_research_v6_manifests.py -> ok true; verify_v6_confirmatory_protocol.py -> ok true; verify_v6_confirmatory_runbook_1.py -> ok true; verify_research_v6_candidate_freeze.py -> ok true; verify_research_v6_spec.py -> ok true; verify_v6_universe_expansion_log.py -> ok true; pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -> 16 passed (environment had deps).
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
