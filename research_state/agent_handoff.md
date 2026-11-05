@@ -191,3 +191,16 @@ Standing task (cheap checks re-verification) complete. All checks verified again
 - BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z (`configs/research_v6_confirmatory_protocol.json#window_definition`: `window_opens_utc` 2026-10-22T02:00:00Z, `minimum_closed_hourly_candles` 2160, `earliest_possible_end_utc`/`evaluation_may_not_start_before_utc` 2027-01-20T02:00:00Z). Fail-closed; `holdout_exposed_count` must remain 0.
 
 Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+## COMPLETED — this session (2026-11-05T18:38:37Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state (fresh, not trusted): HEAD = 9b714b56e00b589991355f2d7b70f9a6f990daad, in sync with origin/main (HEAD == origin/main). Working tree porcelain clean at verification; no uncommitted code or research changes.
+
+- git: HEAD == origin/main == 9b714b56e00b589991355f2d7b70f9a6f990daad; `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization flags absent/not authorized; selection_authorization_present==true; selection `v6_execution_path_exists` false; code_identity null.
+- Manifest hashes MATCH (selection f1b012..., amendment 25397ae..., data a9c6c4..., confirmatory protocol 71f732...); BRAIN-002 authorized; evidence_digest MATCH; verify_v6_execution.py ok:true.
+- Data gate RESOLVED (7/20 validated); holdout_exposed_count==0.
+- v6 selection run absent; BRAIN-003 blocked until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
