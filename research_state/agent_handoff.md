@@ -1121,3 +1121,19 @@ Standing task (cheap checks re-verification) complete. All checks verified again
 - Verification: scripts/verify_v6_execution.py -> ok true; verify_research_v6_manifests.py -> ok true; verify_v6_confirmatory_protocol.py -> ok true; verify_v6_confirmatory_runbook_1.py -> ok true; verify_research_v6_candidate_freeze.py -> ok true; verify_research_v6_spec.py -> ok true; verify_v6_universe_expansion_log.py -> ok true; pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -> 16 passed (environment had deps).
 
 Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
+## COMPLETED — this session (2026-11-05T00:40:17Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state:
+
+- git: live state `git rev-parse HEAD` = 1c5699d83465eb037e3b96a4b5d4e0518a082914, `git rev-parse origin/main` = 1c5699d83465eb037e3b96a4b5d4e0518a082914 (HEAD == origin/main, in sync). `git status --porcelain` empty (0 lines); working tree clean.
+- Cohort: next_cohort_index==6 (from research_state/continuous_universe_state.json); current_cohort.cohort_index==5 completed==true (APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization (configs/research_v6_execution_amendment_1.json): candle_fetch_authorized false / confirmatory_evaluation_authorized false / execution_authorized false / grid_run_authorized false / second_run_authorized false; selection_authorization_present true (binds only the already-completed v6 selection authorization).
+- Manifest hashes recomputed with the project's own canonical helper (scripts/v6_universe_rules.py:published_manifest_hash): selection f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990 MATCH; amendment 25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af MATCH; data a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465 MATCH.
+- BRAIN-002 authorized true (research_state/campaign_authorization.json); evidence_digest f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053 MATCHES sha256 of canonical JSON of research_state/pilot_evidence.json.
+- Binance klines data gate RESOLVED (do not re-run probe): research/data_manifest_v6.json assets dict has 20 entries; exactly 7 validated with content_hash+dataset_path (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), 13 excluded. confirmatory_window.holdout_exposed_count must remain 0.
+- v6 selection run absent: src/v6_campaign exists but research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json all absent. v6 selection authorization records v6_execution_path_exists false with no path digest. No run until execution path exists and its canonical source digest is recorded in a revised selection authorization.
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. Do not attempt; holdout_exposed_count must remain 0; fail-closed. configs/research_v6_confirmatory_protocol.json#window_definition: window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc/evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z.
+- Verification: scripts/verify_v6_execution.py -> ok true.
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
