@@ -67,7 +67,7 @@ def _load(path: Path) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-def _mirror_repo(tmp_path: Path) -> Path:
+def _mirror_repo(tmp_path: Path, *, omit_v6_campaign: bool = False) -> Path:
     """A temporary tree of the parts of the repository the verifier reads.
 
     Every file is symlinked, so the mirror is cheap. The large trees the v6
@@ -80,7 +80,6 @@ def _mirror_repo(tmp_path: Path) -> Path:
         ".git",
         "__pycache__",
         ".pytest_cache",
-        "v6_campaign",  # this preregistered artifact predates the later execution-path implementation
         "campaign_cycles",
         "results_shards",
         "shards_v2",
@@ -95,6 +94,8 @@ def _mirror_repo(tmp_path: Path) -> Path:
         "candles_v4",
         "candles_v5",
     }
+    if omit_v6_campaign:
+        skip_dirs.add("v6_campaign")
     skip_files = {
         "results.jsonl",
         "results_v2.jsonl",
@@ -171,7 +172,7 @@ def test_the_protocol_is_reproduced_byte_for_byte_by_its_producer(tmp_path: Path
     protocol = _load(PROTOCOL_PATH)
     # Rebuild the immutable preregistration in the source state it records;
     # the later execution path is bound separately and cannot rewrite this artifact.
-    rebuilt = producer.build(_mirror_repo(tmp_path))
+    rebuilt = producer.build(_mirror_repo(tmp_path, omit_v6_campaign=True))
     assert rebuilt == protocol
     assert json.dumps(rebuilt, indent=2) + "\n" == PROTOCOL_PATH.read_text(encoding="utf-8")
 
