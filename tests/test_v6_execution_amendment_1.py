@@ -84,6 +84,7 @@ def _mirror_repo(tmp_path: Path) -> Path:
         ".git",
         "__pycache__",
         ".pytest_cache",
+        "v6_campaign",  # the frozen authorization records that this path did not yet exist
         "campaign_cycles",
         "results_shards",
         "shards_v2",
@@ -441,8 +442,9 @@ def test_the_authorization_is_bound_by_the_frozen_execution_protocol() -> None:
     assert execution["manifest_hash"] == rules.compute_manifest_hash(protocol, ("manifest_hash",))
 
 
-def test_the_authorization_is_reproduced_byte_for_byte_by_its_producer() -> None:
-    document = authorization_producer.build(REPO_ROOT)
+def test_the_authorization_is_reproduced_byte_for_byte_by_its_producer(tmp_path: Path) -> None:
+    # Rebuild against the original frozen input state, not a later execution path.
+    document = authorization_producer.build(_mirror_repo(tmp_path))
     rendered = json.dumps(document, indent=2, ensure_ascii=False) + "\n"
     assert rendered == (REPO_ROOT / AUTHORIZATION_RELATIVE).read_text(encoding="utf-8")
 
