@@ -1,4 +1,4 @@
-# Next Agent Task (initial message — 2026-11-05T00:42:31Z)
+# Next Agent Task (initial message — 2026-11-05T01:32:09Z)
 
 On activation, read the top of research_state/agent_handoff.md, then run the standing task below.
 
@@ -9,9 +9,11 @@ On activation, read the top of research_state/agent_handoff.md, then run the sta
 
 3. Binance klines data gate — RESOLVED. Do not re-run probe. research/data_manifest_v6.json assets block is a dict of 20 entries; exactly 7 validated with content_hash+dataset_path (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT), 13 excluded. confirmatory_window.holdout_exposed_count must remain 0.
 
-4. v6 selection run — do NOT start (no v6 campaign artifacts present; src/v6_campaign exists but research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json all absent). The v6 selection authorization records v6_execution_path_exists false and binds no path digest. No run until the execution path exists and its canonical source digest is recorded in a revised selection authorization.
+4. v6 selection run — do NOT start (no v6 campaign artifacts present; src/v6_campaign exists but research/shards_v6, research/ledger_v6.json, research/results_manifest_v6.json, research/results_v6.jsonl, research_state/checkpoint_v6.json all absent). The v6 selection authorization records v6_execution_path_exists null and binds no path digest. No run until the execution path exists and its canonical source digest is recorded in a revised selection authorization.
 
 5. BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z. Do NOT attempt; holdout_exposed_count must remain 0; fail-closed. configs/research_v6_confirmatory_protocol.json#window_definition: window_opens_utc 2026-10-22T02:00:00Z, minimum_closed_hourly_candles 2160, earliest_possible_end_utc/evaluation_may_not_start_before_utc both 2027-01-20T02:00:00Z.
 
 ## Session closeout
 When the standing task is verified complete: update research_state/agent_handoff.md with a new COMPLETED entry recording HEAD, porcelain state, cohort state, authorization flags, manifest hashes, BRAIN gates, data gate, artifact absence, and clean working tree; then refresh this file as the initial task message for the next agent. Do not commit unless explicitly asked.
+
+(End of file - total 17 lines)
