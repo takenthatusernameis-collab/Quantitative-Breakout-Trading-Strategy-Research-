@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-05T17:42:14Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified against live state (fresh, not trusted): HEAD = 59fed19bb74f050019583055d828e7f2ee892ceb, in sync with origin/main (HEAD == origin/main). Working tree porcelain clean at verification; no uncommitted code or research changes.
+
+- git: `git rev-parse HEAD` = 59fed19bb74f050019583055d828e7f2ee892ceb, `git rev-parse origin/main` = 59fed19bb74f050019583055d828e7f2ee892ceb (HEAD == origin/main). `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT) — `research_state/continuous_universe_state.json`.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): top-level `candle_fetch_authorized`/`confirmatory_evaluation_authorized`/`execution_authorized`/`grid_run_authorized`/`second_run_authorized`/`v6_execution_path_exists` all null/not authorized; `execution_authorization.selection_authorization_present==true`. Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.execution_path.v6_execution_path_exists` false; `code_identity.execution_path_digest` null; `hashed_set_digest` `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`; `run_code_identity` `6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b` (no bound execution-path digest recorded).
+- Manifest hashes recomputed fresh: selection `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990` MATCH; amendment `25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af` MATCH; data `a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465` MATCH; confirmatory protocol `71f7322f66147cb63f0e05da6f8ff816331fcda8c0829d07a6a3a2b2f5928ad4` MATCH. BRAIN-002 authorized true; `evidence_digest` = `f30389c8b7530b7d3df3add1e0860dbabd6305cfaa60941819f58ce8800ee053` MATCH.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0).
+- Data gate RESOLVED; 7/20 validated; `confirmatory_window.holdout_exposed_count==0`.
+- v6 selection run absent; `src/v6_campaign` exists (8 modules) but run artifacts absent. No run until execution path canonical digest recorded.
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z; `holdout_exposed_count` must remain 0.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-05T17:40:28Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified against live state (fresh, not trusted): HEAD = a08b75e781d4c74017f5c413a9e572e67bdd0c7f, in sync with origin/main (HEAD == origin/main). Note: HEAD advanced from the previously recorded 9c6a4cf5f55ce3563fa708cfa4e8e551dfb7c9db since the last session; the standing state is unchanged. Working tree porcelain clean at verification; no uncommitted code or research changes.
