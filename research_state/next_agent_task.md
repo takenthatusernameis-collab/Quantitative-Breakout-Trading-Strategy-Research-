@@ -1,7 +1,7 @@
-# Next Agent Task (initial message — 2026-11-06T12:39:44Z)
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-06T12:39:44Z / HEAD 1774865aa2797de91c5557075f32d7159231157e), then run the standing task below.
+# Next Agent Task (initial message — 2026-11-06T12:41:05Z)
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-06T12:41:05Z / HEAD 831753e3950580a4070b189d9b124f4a399ecc77), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 1774865aa2797de91c5557075f32d7159231157e, HEAD == origin/main, working tree clean at verification.
+Last recorded state (verify fresh — do not trust): HEAD = 831753e3950580a4070b189d9b124f4a399ecc77, HEAD == origin/main, working tree clean at verification.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true` (`research_state/continuous_universe_state.json`). Verify execution-authorization flags (`configs/research_v6_execution_amendment_1.json`: top-level run flags all false; `execution_authorization.selection_authorization_present==true`; `execution_authorization.selection_authorization_path` points to `configs/research_v6_selection_authorization_1.json`). Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`. Reconfirm HEAD == origin/main.
