@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-06T13:59:00Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = 45fa5aad8ba76a6f0d40896a46c265cc204eafb0, in sync with origin/main. Working tree clean at verification (handoff files modified only during this session's closeout). (Previous handoff entry recorded HEAD e86f4be94e8fec9801a0aed2f0748b363ebddaad; tree advanced one checkpoint commit since.)
+
+- git: `git rev-parse HEAD` = `45fa5aad8ba76a6f0d40896a46c265cc204eafb0`, `git rev-parse origin/main` = `45fa5aad8ba76a6f0d40896a46c265cc204eafb0`. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (13 exclusions recorded in `current_cohort.excluded`) — `research_state/continuous_universe_state.json`. No top-level `exclusions_count` field. Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): top-level run flags all None (not authorized); `execution_authorization.selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`. Selection authorization: `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`).
+- Data gate RESOLVED; holdout_exposed_count must remain 0.
+- v6 selection run NOT started; BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
 ## COMPLETED — this session (2026-11-06T13:56:10Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = e86f4be94e8fec9801a0aed2f0748b363ebddaad, in sync with origin/main. Working tree clean at verification (handoff files modified only during this session's closeout). (Previous handoff entry recorded HEAD f117449910467b7ccb765538e397655149ddab2c; tree advanced one checkpoint commit since.)
