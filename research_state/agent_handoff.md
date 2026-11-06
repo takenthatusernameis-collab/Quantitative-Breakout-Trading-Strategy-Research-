@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-06T10:43:34Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = ac35f814c426bcacce8749c32694e1784e010cd6, in sync with origin/main. Working tree clean at verification (only handoff files modified by this session before closeout).
+
+- git: `git rev-parse HEAD` = ac35f814c426bcacce8749c32694e1784e010cd6, `git rev-parse origin/main` = ac35f814c426bcacce8749c32694e1784e010cd6. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT) — `research_state/continuous_universe_state.json`. `confirmatory_window` is null in state; holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): top-level run flags all None; `execution_authorization.selection_authorization_present==true`. Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.execution_path.v6_execution_path_exists==false`; `authorized_run.code_identity.execution_path_digest==null`.
+- Manifest hashes recomputed via `scripts/v6_universe_rules.py:published_manifest_hash(root, rel)`: selection `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, amendment `25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af`, data manifest `a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465` (`research/data_manifest_v6.json`; `configs/research_v6_data_gate.json` missing) — all match recorded values. `configs/research_v6_execution_protocol_1.json` not present (MISSING); verifier uses `configs/research_v6_execution.json` and reports `ok: true`, `failures: []` (manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; canonical hashed set `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`; `v6_execution_path_canonical_digest` computed `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; exit 0).
+- Data gate RESOLVED per prior verified record; do not re-run probe. 7/20 assets validated with content_hash+dataset_path (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT); holdout exposure must remain 0.
+- `src/v6_campaign` package exists, but no authorized v6 selection run — do NOT start. Run blocked until execution path canonical digest is recorded in a revised selection authorization (verifier computes `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, but auth still binds `v6_execution_path_exists=false`, `execution_path_digest=null`).
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. Fail-closed; `holdout_exposed_count` must remain 0.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+
 ## COMPLETED — this session (2026-11-06T10:42:06Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = 63a359cf1afdd62b9205a89be24ec205224159f4, in sync with origin/main. Working tree clean at verification. (Previous handoff recorded HEAD a5316fb5e403a3c882e8b106420a0989fc719883; tree advanced one checkpoint commit since.)
