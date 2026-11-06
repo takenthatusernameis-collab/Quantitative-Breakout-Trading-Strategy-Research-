@@ -1,3 +1,17 @@
+## COMPLETED — this session (2026-11-06T02:42:14Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = 5b483d81936f03698430c8aaa8d190a2e2bc02d6, in sync with origin/main (HEAD == origin/main). Working tree clean at verification before this session's handoff/next_agent_task edits.
+
+- git: `git rev-parse HEAD` = 5b483d81936f03698430c8aaa8d190a2e2bc02d6, `git rev-parse origin/main` = 5b483d81936f03698430c8aaa8d190a2e2bc02d6. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization: top-level flags absent; selection_authorization_present==true. Selection authorization: v6_execution_path_exists false; execution_path_digest null.
+- Manifest hashes MATCH (selection f1b012..., amendment 25397ae..., data a9c6c49..., confirmatory protocol 71f7322...). BRAIN-002 authorized true; evidence_digest MATCH f30389c8...
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: [] (manifest 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026; canonical digest 37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72).
+- Data gate RESOLVED; 7/20 with content_hash+dataset_path. holdout_exposed_count==0; confirmatory status NOT_STARTED; top-level null.
+- v6 selection run absent; BRAIN-003 confirmatory STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-06T02:41:16Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = 9b385ae48826ea5076708b48a82f0744c116df0b, in sync with origin/main (HEAD == origin/main). Working tree clean at verification before this session's handoff/next_agent_task edits.
