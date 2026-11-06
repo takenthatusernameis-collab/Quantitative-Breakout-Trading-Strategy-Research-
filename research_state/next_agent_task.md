@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-06T19:59:12Z)
+# Next Agent Task (initial message — 2026-11-06T20:00:24Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-06T19:59:12Z / HEAD 7a0829b02015c230ba4467494853ecb5d2769e42), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-06T20:00:24Z / HEAD 3b93b24e87e8f4d06fb05b6f09befa0e2fb8ef53), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 7a0829b02015c230ba4467494853ecb5d2769e42, HEAD == origin/main, working tree clean at verification.
+Last recorded state (verify fresh — do not trust): HEAD = 3b93b24e87e8f4d06fb05b6f09befa0e2fb8ef53, HEAD == origin/main, working tree clean at verification.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, exclusions recorded in `current_cohort.excluded` (`research_state/continuous_universe_state.json`; 13 exclusions recorded, no top-level `exclusions_count` field). Verify execution-authorization flags (`configs/research_v6_execution_amendment_1.json`: top-level run flags all falsy/not authorized; `execution_authorization.selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`). Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`. Reconfirm HEAD == origin/main.
@@ -19,5 +19,5 @@ Last recorded state (verify fresh — do not trust): HEAD = 7a0829b02015c230ba44
 
 ## Session closeout
 When verified complete: prepend a new COMPLETED entry to `research_state/agent_handoff.md`. Refresh this file with the latest HEAD, gate time, and any changed artifact. Do not commit unless explicitly asked.
-
-(End of file - total 21 lines)
+" filePath">
+/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/research_state/next_agent_task.md
