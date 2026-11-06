@@ -1,3 +1,17 @@
+## COMPLETED — this session (2026-11-06T10:37:23Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = 3b44293ce9dbd125d5d50aac1c4313c26d3ebb69, in sync with origin/main. Working tree clean at verification. (Previous handoff recorded HEAD 8a2232ee78cc1c0247d3e69958650df3c7858017; tree advanced one checkpoint commit since.)
+
+- git: `git rev-parse HEAD` = 3b44293ce9dbd125d5d50aac1c4313c26d3ebb69, `git rev-parse origin/main` = 3b44293ce9dbd125d5d50aac1c4313c26d3ebb69. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT) — `research_state/continuous_universe_state.json`. `confirmatory_window.holdout_exposed_count`/`confirmatory_window_status` null in state (no populated counters); holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): top-level `candle_fetch_authorized`/`confirmatory_evaluation_authorized`/`execution_authorized`/`grid_run_authorized`/`second_run_authorized` all None; `execution_authorization.selection_authorization_present==true`. Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.execution_path.v6_execution_path_exists` false; `authorized_run.code_identity.execution_path_digest` null.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; canonical digest `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; exit 0).
+- Data gate RESOLVED per prior verified record; do not re-run probe. 7/20 assets validated with content_hash+dataset_path (FETUSDT, GNOUSDT, LDOUSDT, PENDLEUSDT, SEIUSDT, SUNUSDT, XTZUSDT); `confirmatory_window.holdout_exposed_count==0`.
+- `src/v6_campaign` package exists, but no authorized v6 selection run — do NOT start. Run blocked until execution path canonical digest is recorded in a revised selection authorization.
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. Fail-closed; `holdout_exposed_count` must remain 0.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-06T10:36:05Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = 8a2232ee78cc1c0247d3e69958650df3c7858017, in sync with origin/main. Working tree clean at verification. (Previous handoff recorded HEAD 8b65f70fda27e601f3e8be17b23d1ec447dfeecd; tree advanced one checkpoint commit since: `8a2232ee7 chore(kilo): checkpoint agent session`.)
