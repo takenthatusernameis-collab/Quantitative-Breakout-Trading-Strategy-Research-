@@ -1,3 +1,16 @@
+## COMPLETED — this session (2026-11-06T08:42:49Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified fresh against live state. HEAD = b0db40d9f8772a0d959efbfefaa9c9a091a03179, in sync with origin/main (HEAD == origin/main). Working tree clean at verification before this session's handoff/next_agent_task edits.
+
+- git: `git rev-parse HEAD` = b0db40d9f8772a0d959efbfefaa9c9a091a03179, `git rev-parse origin/main` = b0db40d9f8772a0d959efbfefaa9c9a091a03179. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization flags absent/None; selection_authorization_present==true; selection auth v6_execution_path_exists false; execution_path_digest null.
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: [].
+- Data gate RESOLVED; do not re-run probe. 7/20 validated. holdout_exposed_count==0; confirmatory_window_status "NOT_STARTED"; top-level null.
+- v6 selection run absent; BRAIN-003 blocked until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-06T08:41:12Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified fresh against live state. HEAD = 23a2b4ba08955eb1e0bb53c62eef0cd7487b88c9, in sync with origin/main (HEAD == origin/main). Working tree clean at verification before this session's handoff/next_agent_task edits. HEAD advanced past last recorded e1daa83c3837e03a27c50879d46fcd930e1bb288 by one checkpoint commit `chore(kilo): checkpoint agent session` (23a2b4ba0); re-verified live; no substantive state changed.
