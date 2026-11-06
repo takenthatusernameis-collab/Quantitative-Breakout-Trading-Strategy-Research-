@@ -15,6 +15,10 @@ import breakout_research.campaign as campaign_module
 from breakout_research.campaign import _data_manifest_hash, _read_json_file
 from breakout_research.candidate_freeze import save_candidate_manifest
 from breakout_research.backtest.backtester import run_fold_backtest as real_run_fold_backtest
+from breakout_research.baselines import (
+    VARIANT_BASELINE, BaselineDataError, artifact_hash, baseline_for_asset,
+    verify_baseline_artifact,
+)
 from breakout_research.config import (
     Candle, StrategyConfig, EntryRule, ConfirmationMode, TrendFilter, ExitType,
     CostScenario,
@@ -415,3 +419,99 @@ def test_holdout_campaign_writes_only_frozen_candidates_and_selection_refuses_ho
     # is never silently filtered out.
     with pytest.raises(HoldoutRecordError):
         select_candidates(validation_units + [holdout_unit], SELECTION_SPEC, BASELINES)
+
+
+def _sel_unit(fold, cost, trades=40, net_return=0.1, sharpe=2.0):
+    return {
+        "asset": "BTCUSDT",
+        "config_id": "cfg_sel_0001",
+        "fold_index": fold,
+        "cost_multiplier": cost,
+        "status": "COMPLETED",
+        "trade_count": trades,
+        "net_total_return": net_return,
+        "daily_sharpe": sharpe,
+        "max_drawdown": 0.2,
+        "turnover": 5.0,
+        "is_holdout": False,
+    }
+
+
+def _validation_units():
+    return [_sel_unit(fold, cost) for fold in range(4) for cost in (1.0, 2.0)]
+
+
+def _write_baseline_artifact(tmp_path, data_manifest, asset="BTCUSDT",
+                             median_sharpe=1.5, tamper_data_hash=False):
+    artifact = {
+        "artifact": "buyhold_baseline",
+        "data_manifest_hash": _data_manifest_hash(data_manifest),
+        "assets": {
+            asset: {
+                "status": "OK",
+                "reason": None,
+                "median_daily_sharpe": median_sharpe,
+                "variant_median_sharpe": {VARIANT_BASELINE: median_sharpe},
+            }
+        },
+    }
+    artifact["baseline_hash"] = artifact_hash(artifact, exclude=("baseline_hash",))
+    if tamper_data_hash:
+        artifact["data_manifest_hash"] = "tampered-data-manifest-hash"
+    path = tmp_path / "research/baselines/test-baseline.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
+def _selection_spec():
+    return {
+        "selection": {
+            "max_candidates_per_asset": 1,
+            "min_trades_total": 30,
+            "min_trades_per_fold": 5,
+            "min_folds_with_min_trades": 3,
+            "positive_net_return_baseline": True,
+            "positive_net_return_2x_costs": True,
+            "positive_folds_required": 3,
+            "median_sharpe_gt_zero": True,
+            "median_sharpe_gt_buyhold": True,
+        },
+    }
+
+
+def test_selection_median_sharpe_gt_buyhold_passes_with_verified_baseline(tmp_path, monkeypatch):
+    _build_runner(tmp_path, monkeypatch)
+    data_manifest = _read_json_file(str(tmp_path / "research/data_manifest.json"))
+    artifact_path = _write_baseline_artifact(tmp_path, data_manifest, "BTCUSDT", median_sharpe=1.5)
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    baselines = {"BTCUSDT": baseline_for_asset(artifact, "BTCUSDT")}
+
+    spec = _selection_spec()
+    selection = select_candidates(_validation_units(), spec, baselines)
+    assert selection["BTCUSDT"]["config_id"] == "cfg_sel_0001"
+    assert selection["BTCUSDT"]["status"] == "CANDIDATE_SELECTED"
+    gate = selection["BTCUSDT"]["gates"]["median_sharpe_gt_buyhold"]
+    assert gate["pass"] is True
+    assert gate["value"] == 0.5  # strategy 2.0 minus buyhold 1.5
+
+
+def test_selection_buyhold_gate_fail_closed_without_baseline(tmp_path, monkeypatch):
+    _build_runner(tmp_path, monkeypatch)
+    spec = _selection_spec()
+    # No baseline artifact: the buy-and-hold gate cannot be evaluated, so the
+    # candidate is never confirmed (fail closed, never silently passed).
+    selection = select_candidates(_validation_units(), spec, {})
+    assert selection["BTCUSDT"]["status"] == "CANDIDATE_SELECTED_WITH_UNEVALUABLE_GATES"
+    gate = selection["BTCUSDT"]["gates"]["median_sharpe_gt_buyhold"]
+    assert gate["status"] == "NOT_EVALUABLE"
+
+
+def test_verify_baseline_artifact_rejects_data_manifest_hash_mismatch(tmp_path, monkeypatch):
+    _build_runner(tmp_path, monkeypatch)
+    data_manifest = _read_json_file(str(tmp_path / "research/data_manifest.json"))
+    artifact_path = _write_baseline_artifact(tmp_path, data_manifest, "BTCUSDT",
+                                             median_sharpe=1.5, tamper_data_hash=True)
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    with pytest.raises(BaselineDataError, match="data manifest hash mismatch"):
+        verify_baseline_artifact(artifact, data_manifest)

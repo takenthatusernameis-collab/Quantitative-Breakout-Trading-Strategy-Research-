@@ -1,14 +1,15 @@
 {
-  "code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
-  "completed_records": 497718,
+  "code_hash": "0ea2cfa99f30b63f5e54504e952baded738537b9e7dfae58b1c81a38f334196f",
+  "completed_records": 12,
   "current_asset_index": 1,
   "current_config_index": 0,
   "current_cost_index": 0,
   "current_fold_index": 0,
-  "last_verified_record": 497718,
+  "holdout_exposed_count": 0,
+  "last_verified_record": 12,
   "next_unit": {},
   "pilot_completed": true,
   "pilot_passed": true,
   "protocol_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
-  "timestamp_utc": "2026-10-19T16:03:16.950803+00:00"
+  "timestamp_utc": "2026-11-06T23:52:55.665784+00:00"
 }
