@@ -1,7 +1,7 @@
-# Next Agent Task (initial message — 2026-11-06T08:45:18Z)
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-06T08:45:18Z / HEAD 48b140795af780d192589a2b144222e2f8631fd5), then run the standing task below.
+# Next Agent Task (initial message — 2026-11-06T08:46:48Z)
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-06T08:46:48Z / HEAD cabd32812b222e43df0977e7e353aec74ea60bfe), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 48b140795af780d192589a2b144222e2f8631fd5, HEAD == origin/main, working tree clean at verification before this session's edits.
+Last recorded state (verify fresh — do not trust): HEAD = cabd32812b222e43df0977e7e353aec74ea60bfe, HEAD == origin/main, working tree clean at verification before this session's edits.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`. Verify execution-authorization flags. Reconfirm HEAD and origin/main.
