@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-06T13:52:16Z)
+## COMPLETED — this session (2026-11-06T13:56:10Z)
 
-Standing task (cheap checks re-verification) complete. HEAD = f117449910467b7ccb765538e397655149ddab2c, in sync with origin/main. Working tree clean at verification (handoff files modified only during this session's closeout). (Previous handoff entry recorded HEAD 483be63622b09791f0fabd8a2483c8e4a432c9ce; tree advanced one checkpoint commit since.)
+Standing task (cheap checks re-verification) complete. HEAD = e86f4be94e8fec9801a0aed2f0748b363ebddaad, in sync with origin/main. Working tree clean at verification (handoff files modified only during this session's closeout). (Previous handoff entry recorded HEAD f117449910467b7ccb765538e397655149ddab2c; tree advanced one checkpoint commit since.)
 
-- git: `git rev-parse HEAD` = `f117449910467b7ccb765538e397655149ddab2c`, `git rev-parse origin/main` = `f117449910467b7ccb765538e397655149ddab2c`. `git status --porcelain` empty at verification.
+- git: `git rev-parse HEAD` = `e86f4be94e8fec9801a0aed2f0748b363ebddaad`, `git rev-parse origin/main` = `e86f4be94e8fec9801a0aed2f0748b363ebddaad`. `git status --porcelain` empty at verification.
 - Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (13 exclusions recorded in `current_cohort.excluded`) — `research_state/continuous_universe_state.json`. No top-level `exclusions_count` field. Holdout exposure must remain 0.
 - Execution authorization (`configs/research_v6_execution_amendment_1.json`): top-level run flags all `false` (not authorized); `execution_authorization.selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`. Selection authorization: `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`.
 - Manifest hashes recomputed via `scripts.v6_universe_rules:published_manifest_hash`: selection `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990` MATCH, amendment `25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af` MATCH, data manifest `a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465` MATCH (`research/data_manifest_v6.json`; `configs/research_v6_data_gate.json` missing).
