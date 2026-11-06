@@ -1,6 +1,20 @@
-## COMPLETED — this session (2026-11-06T16:01:09Z)
+## COMPLETED — this session (2026-11-06T16:49:26Z)
 
-Standing task (cheap checks re-verification) complete. HEAD = 97b71cc0d17a77c1a7ed715a5990efded97146d5, in sync with origin/main. Working tree clean at verification (handoff/next_agent_task modified only during this session's closeout). (Previous handoff entry recorded HEAD 817cf0723cfa26b80624496b9f1c0b016096f380; tree advanced one checkpoint commit since.)
+Standing task (cheap checks re-verification) complete. HEAD = 1134d2bf5e31bbb609ac49444904aa397623a3d5, in sync with origin/main. Working tree clean at verification (handoff/next_agent_task modified only during this session's closeout). (Previous handoff entry recorded HEAD 97b71cc0d17a77c1a7ed715a5990efded97146d5; tree advanced one checkpoint commit since.)
+
+- git: `git rev-parse HEAD` = `1134d2bf5e31bbb609ac49444904aa397623a3d5`, `git rev-parse origin/main` = `1134d2bf5e31bbb609ac49444904aa397623a3d5`. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT; 13 exclusions recorded in `current_cohort.excluded`) — `research_state/continuous_universe_state.json`. No top-level `exclusions_count` field. Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): top-level run flags all false (not authorized); `execution_authorization.selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`. Selection authorization: `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`.
+- Manifest hashes recomputed: amendment `25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af` MATCH, data manifest `a9c6c492d92dd323685722a70f586a155631d24b1c4e8fa34113ffd2d5dc1465` MATCH (`research/data_manifest_v6.json`). Selection manifest hash `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990` corroborated. `configs/research_v6_confirmatory_protocol_1.json` / `configs/research_v6_execution_protocol_1.json` / `configs/research_v6_data_gate.json` MISSING (unchanged).
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; protocol `configs/research_v6_execution.json`; effective auth source `configs/research_v6_execution_amendment_1.json`; `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`).
+- Data gate RESOLVED (do not re-run probe): `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`; top-level `holdout_exposed_count==null`. Holdout exposure must remain 0.
+- v6 selection run NOT started: `research_state/v6_selection_ledger.json` MISSING; `src/v6_campaign` EXISTS but no authorized run — do NOT start. Blocked until execution path canonical digest is recorded in a revised selection authorization (auth binds `v6_execution_path_exists==false`, `execution_path_digest==null`; verifier computes `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`).
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. Fail-closed; `holdout_exposed_count` must remain 0.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+
+## COMPLETED — this session (2026-11-06T16:01:09Z)
 
 - git: `git rev-parse HEAD` = `97b71cc0d17a77c1a7ed715a5990efded97146d5`, `git rev-parse origin/main` = `97b71cc0d17a77c1a7ed715a5990efded97146d5`. `git status --porcelain` empty at verification.
 - Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT; 13 exclusions recorded in `current_cohort.excluded`) — `research_state/continuous_universe_state.json`. No top-level `exclusions_count` field. Holdout exposure must remain 0.
