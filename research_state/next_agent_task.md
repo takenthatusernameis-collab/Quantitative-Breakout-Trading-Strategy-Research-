@@ -1,7 +1,7 @@
-# Next Agent Task (initial message — 2026-11-06T09:34:50Z)
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-06T09:34:50Z / HEAD 1212afdd4056357f886b3bb4a7f5e5598e79d068), then run the standing task below.
+# Next Agent Task (initial message — 2026-11-06T09:36:02Z)
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest is 2026-11-06T09:36:02Z / HEAD e48582302f94c2c8f86e19e708f87b7f2991641e), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 1212afdd4056357f886b3bb4a7f5e5598e79d068, HEAD == origin/main, working tree clean at verification before this session's edits.
+Last recorded state (verify fresh — do not trust): HEAD = e48582302f94c2c8f86e19e708f87b7f2991641e, HEAD == origin/main, working tree clean at verification before this session's edits.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`. Verify execution-authorization flags (top-level run flags absent/None; `execution_authorization.selection_authorization_present==true`; selection auth `v6_execution_path_exists==false`, `execution_path_digest==null`). Reconfirm HEAD and origin/main.
@@ -12,3 +12,5 @@ Last recorded state (verify fresh — do not trust): HEAD = 1212afdd4056357f886b
 
 ## Session closeout
 When verified complete: prepend a new COMPLETED entry to `research_state/agent_handoff.md`. Refresh this file. Do not commit unless explicitly asked.
+
+(End of file - total 14 lines)
