@@ -1,6 +1,6 @@
-# Next Agent Task (initial message — 2026-11-06T18:51:25Z)
+# Next Agent Task (initial message — 2026-11-06T18:52:07Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-06T18:51:25Z / HEAD b172d9b31dce3dfc21d5edfe47d6dcff588817a7), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-06T18:52:07Z / HEAD b172d9b31dce3dfc21d5edfe47d6dcff588817a7), then run the standing task below.
 
 Last recorded state (verify fresh — do not trust): HEAD = b172d9b31dce3dfc21d5edfe47d6dcff588817a7, HEAD == origin/main, working tree clean at verification.
 
@@ -19,4 +19,3 @@ Last recorded state (verify fresh — do not trust): HEAD = b172d9b31dce3dfc21d5
 
 ## Session closeout
 When verified complete: prepend a new COMPLETED entry to `research_state/agent_handoff.md`. Refresh this file with the latest HEAD, gate time, and any changed artifact. Do not commit unless explicitly asked.
-" \
