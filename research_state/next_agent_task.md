@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-06T21:22:12Z)
+# Next Agent Task (initial message — 2026-11-06T21:34:00Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-06T21:22:12Z / HEAD 9e2ee5dcf3be3cea16fd162f98f36237e3c9c5a3), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-06T21:34:00Z / HEAD 50d23f87b6c43336beb070317ec3ca6fda454e19), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = 9e2ee5dcf3be3cea16fd162f98f36237e3c9c5a3, HEAD == origin/main, working tree clean at verification.
+Last recorded state (verify fresh — do not trust): HEAD = 50d23f87b6c43336beb070317ec3ca6fda454e19, HEAD == origin/main, working tree clean at verification.
 
 ## Standing task
 1. **Cheap checks first.** Verify `git status --porcelain`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, exclusions recorded in `current_cohort.excluded` (`research_state/continuous_universe_state.json`; 13 exclusions recorded, no top-level `exclusions_count` field). Verify execution-authorization flags (`configs/research_v6_execution_amendment_1.json`: top-level run flags all falsy/not authorized; `execution_authorization.selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`). Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`. Reconfirm HEAD == origin/main.
@@ -19,3 +19,5 @@ Last recorded state (verify fresh — do not trust): HEAD = 9e2ee5dcf3be3cea16fd
 
 ## Session closeout
 When verified complete: prepend a new COMPLETED entry to `research_state/agent_handoff.md`. Refresh this file with the latest HEAD, gate time, and any changed artifact. Do not commit unless explicitly asked.
+" filePath">
+/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/research_state/next_agent_task.md
