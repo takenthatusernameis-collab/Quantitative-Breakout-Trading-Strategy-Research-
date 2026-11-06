@@ -1,12 +1,12 @@
-# Next Agent Task (initial message — 2026-11-06T23:39:16Z)
+# Next Agent Task (initial message — 2026-11-06T23:41:09Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-06T23:39:16Z / HEAD 54408c5892f1e91427a0f7a6b1765dd0b52cd57a), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-06T23:41:09Z / HEAD bdf9f4165bb3b53bee047c38251a977c8d218cb6), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = `54408c5892f1e91427a0f7a6b1765dd0b52cd57a`, HEAD == origin/main, working tree clean at verification.
+Last recorded state (verify fresh — do not trust): HEAD = `bdf9f4165bb3b53bee047c38251a977c8d218cb6`, HEAD == origin/main, working tree clean at verification.
 
 ## Standing task
 
-1. **Cheap checks first.** Verify `git status --porcelain`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, exclusions recorded in `current_cohort.excluded` (`research_state/continuous_universe_state.json`; 13 exclusions recorded, no top-level `exclusions_count` field). Verify execution-authorization flags (`configs/research_v6_execution_amendment_1.json`: top-level run flags all falsy/not authorized — `candle_fetch_authorized=false`, `confirmatory_evaluation_authorized=false`, `execution_authorized=false`, `grid_run_authorized=false`, `second_run_authorized=false`; `execution_authorization.selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`). Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`. Reconfirm HEAD == origin/main.
+1. **Cheap checks first.** Verify `git status --porcelain`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, exclusions recorded in `current_cohort.excluded` (`research_state/continuous_universe_state.json`; 13 exclusions recorded, no top-level `exclusions_count` field). Verify execution-authorization flags (`configs/research_v6_execution_amendment_1.json`: top-level run flags all null/not authorized — `candle_fetch_authorized=null`, `confirmatory_evaluation_authorized=null`, `execution_authorized=null`, `grid_run_authorized=null`, `second_run_authorized=null`; `execution_authorization.selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`). Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`. Reconfirm HEAD == origin/main.
 
 2. **Recompute/corroborate manifest hashes.** Run `python3 scripts/verify_v6_execution.py` (expect `ok: true`, `failures: []`; manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; protocol `configs/research_v6_execution.json`; `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`). `configs/research_v6_confirmatory_protocol_1.json`, `configs/research_v6_execution_protocol_1.json`, `configs/research_v6_data_gate.json`, `configs/research_v6_selection_universe_1.json` are MISSING — record if changed (only `configs/research_v6_confirmatory_protocol.json` exists).
 
@@ -26,5 +26,3 @@ Last recorded state (verify fresh — do not trust): HEAD = `54408c5892f1e91427a
 ## Session closeout
 
 When verified complete: prepend a new COMPLETED entry to `research_state/agent_handoff.md`. Refresh this file with the latest HEAD, gate time, and any changed artifact. Do not commit unless explicitly asked.
-
-(End of file - total 28 lines)
