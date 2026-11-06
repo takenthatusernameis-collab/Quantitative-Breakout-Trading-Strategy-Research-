@@ -1,3 +1,16 @@
+## COMPLETED — this session (2026-11-06T12:40:00Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = 4b145dea943fb8019c5b223c981fecd6f00b4a55, in sync with origin/main. Working tree clean at verification.
+
+- git: HEAD == origin/main == 4b145dea943fb8019c5b223c981fecd6f00b4a55. `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true. Holdout exposure must remain 0.
+- Execution authorization flags verified; selection auth authorized==true, execution_path_exists==false, execution_path_digest==null.
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: [] (canonical digest 37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72; manifest 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026).
+- Data gate RESOLVED; holdout_exposed_count==0, confirmatory status NOT_STARTED.
+- v6 selection run NOT started; BRAIN-003 BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-06T12:38:27Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = 7a455d5fe536ab4bdf056be64e4dc12eab197321, in sync with origin/main. Working tree clean at verification.
