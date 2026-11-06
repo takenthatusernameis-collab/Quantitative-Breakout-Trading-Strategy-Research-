@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-06T05:47:46Z)
+
+Standing task (cheap checks re-verification) complete. All checks verified fresh against live state. HEAD = 651cd41b6c4e79ad97200f3c816c528cbb666939, HEAD == origin/main, working tree clean at verification before this session's handoff/next_agent_task edits. No substantive state changed.
+
+- git: HEAD = origin/main = 651cd41b6c4e79ad97200f3c816c528cbb666939. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT).
+- Execution authorization: top-level flags absent; selection_authorization_present==true. Selection auth: v6_execution_path_exists false; execution_path_digest null.
+- Manifest hashes MATCH (selection f1b0..., amendment 25397..., data a9c6..., confirmatory protocol 71f73...). BRAIN-002 authorized true; evidence_digest f303... MATCH.
+- verify_v6_execution.py -> ok: true, failures: [] (manifest 928727..., canonical digest 37ba6...).
+- Data gate RESOLVED; 7/20 validated. holdout_exposed_count==0; confirmatory_window_status "NOT_STARTED"; top-level null.
+- v6 selection run absent; artifacts all absent. No run until execution path canonical digest recorded.
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. holdout_exposed_count must remain 0.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-06T05:46:54Z)
 
 Standing task (cheap checks re-verification) complete. All checks verified fresh against live state. HEAD = 090a74976000afc06d531a52b61dbf666fac3d6e, HEAD == origin/main, working tree clean at verification before this session's handoff/next_agent_task edits. No substantive state changed.
