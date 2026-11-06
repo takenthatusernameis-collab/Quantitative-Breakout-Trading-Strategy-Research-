@@ -1,3 +1,16 @@
+## COMPLETED — this session (2026-11-06T12:45:36Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = cc9dc96f8dd28e129edf0bd2cee5b390554875ea, in sync with origin/main. Working tree clean at verification. (Previous handoff entry recorded HEAD 2e8d99e78a21dc4b9db952bd871391c6a3a5dafd; tree advanced one checkpoint commit since.)
+
+- git: `git rev-parse HEAD` = cc9dc96f8dd28e129edf0bd2cee5b390554875ea, `git rev-parse origin/main` = cc9dc96f8dd28e129edf0bd2cee5b390554875ea. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Holdout exposure must remain 0.
+- Execution authorization: top-level run flags all None; selection auth authorized==true, v6_execution_path_exists==false, execution_path_digest==null.
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: []. Canonical `v6_execution_path_canonical_digest` 37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72; manifest 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026; protocol configs/research_v6_execution.json.
+- Data gate RESOLVED; holdout_exposed_count==0, confirmatory status NOT_STARTED.
+- v6 selection run NOT started; BRAIN-003 BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-06T12:43:50Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = 2e8d99e78a21dc4b9db952bd871391c6a3a5dafd, in sync with origin/main. Working tree clean at verification. (Previous handoff entry recorded HEAD 1dc34fd4529e9bc1d856c03e197b88ceff14cdb5; tree advanced one checkpoint commit since.)
