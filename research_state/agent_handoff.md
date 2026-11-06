@@ -1,3 +1,16 @@
+## COMPLETED — this session (2026-11-06T12:41:44Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = dc944fc7a0b2a9752ee52518a470ea30e7795fce, in sync with origin/main. Working tree clean at verification.
+
+- git: `git rev-parse HEAD` = dc944fc7a0b2a9752ee52518a470ea30e7795fce, `git rev-parse origin/main` = dc944fc7a0b2a9752ee52518a470ea30e7795fce. `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets: APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT). Holdout exposure must remain 0.
+- Execution authorization: top-level run flags all false; selection auth authorized==true, v6_execution_path_exists==false, execution_path_digest==null.
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: [] (canonical digest 37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72; manifest 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026; protocol configs/research_v6_execution.json).
+- Data gate RESOLVED; holdout_exposed_count==0, confirmatory status NOT_STARTED.
+- v6 selection run NOT started; BRAIN-003 BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
 ## COMPLETED — this session (2026-11-06T12:41:05Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = 831753e3950580a4070b189d9b124f4a399ecc77, in sync with origin/main. Working tree clean at verification.
