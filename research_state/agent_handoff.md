@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-07T09:26:08Z)
+## COMPLETED — this session (2026-11-07T09:26:52Z)
 
-Standing task (cheap checks + execution integrity re-verification) complete. HEAD = `2a6736f3a3d1a6dd94f75069bef45e0b18b71fdc`, in sync with `origin/main`. `git status --porcelain` empty at verification. Change since prior recorded HEAD (`967505dcc57786c8e81263ecb72b5c79d02ccea5`): HEAD advanced (checkpoint commit); no substantive state change.
+Standing task (cheap checks + execution integrity re-verification) complete. HEAD = `8707e545ef8a66c395fd3ac8ecfca3a23cd617af`, in sync with `origin/main`. `git status --porcelain` empty at verification. Change since prior recorded HEAD (`2a6736f3a3d1a6dd94f75069bef45e0b18b71fdc`): HEAD advanced (checkpoint commit `8707e545e`); no substantive state change.
 
-- git: `git rev-parse HEAD` = `git rev-parse origin/main` = `2a6736f3a3d1a6dd94f75069bef45e0b18b71fdc`. Clean at verification.
+- git: `git rev-parse HEAD` = `git rev-parse origin/main` = `8707e545ef8a66c395fd3ac8ecfca3a23cd617af`. Clean at verification.
 - Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` entries (`research_state/continuous_universe_state.json`). Holdout exposure must remain 0.
 - Execution authorization (`configs/research_v6_execution_amendment_1.json`): `selection_authorization_present==true` under `execution_authorization`; run flags all false. Selection auth (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `max_runs==1`; file records `authorized_run.execution_path.v6_execution_path_exists==false` and `code_identity.execution_path_digest==null`. Filesystem shows `src/v6_campaign/` present — do not treat as authorization; selection auth must be revised/bound and verifier must pass.
 - `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`. `v3_benchmark_candles_after_the_v6_cutoff` = 13.
@@ -11,6 +11,10 @@ Standing task (cheap checks + execution integrity re-verification) complete. HEA
 - BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z (fail-closed; `holdout_exposed_count` must remain 0).
 
 Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
+## COMPLETED — this session (2026-11-07T09:26:08Z)
 
 ---
 
