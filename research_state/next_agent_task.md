@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-07T20:21:07Z)
+# Next Agent Task (initial message — 2026-11-07T20:22:33Z)
 
-On activation, read the top `COMPLETED — this session` entry of `research_state/agent_handoff.md` (latest 2026-11-07T20:21:07Z / HEAD `7dc5899f9e4bc71173cd76e4530fed8014ef1cb5` `7dc5899`), then run the standing task below.
+On activation, read the top `COMPLETED — this session` entry of `research_state/agent_handoff.md` (latest 2026-11-07T20:22:33Z / HEAD `ee2a4dbe3cbbec2050093a60ae7f3ded2a89fa0e` `ee2a4db`), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD == origin/main == `7dc5899f9e4bc71173cd76e4530fed8014ef1cb5`. `git status --porcelain` was empty at verification. Note: prior entry recorded HEAD `fac972c`; HEAD advanced one checkpoint commit to `7dc5899` (only handoff/task checkpoint state changed).
+Last recorded state (verify fresh — do not trust): HEAD == origin/main == `ee2a4dbe3cbbec2050093a60ae7f3ded2a89fa0e`. `git status --porcelain` was empty at verification. Note: prior entry recorded HEAD `7dc5899`; HEAD advanced one checkpoint commit to `ee2a4db` (only handoff/task checkpoint state changed).
 
 ## Standing task
 
