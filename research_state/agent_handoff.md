@@ -1,6 +1,20 @@
-## COMPLETED — this session (2026-11-07T06:33:48Z)
+## COMPLETED — this session (2026-11-07T06:35:05Z)
 
-Standing task (cheap checks re-verification) complete. HEAD = `57dc1de6f3ffb914b24bdf2e32fc4a2c4305a102`, in sync with `origin/main`. `git status --porcelain` empty at verification. Change since prior recorded HEAD (`28f4bf6964a25e010f9e1a23ab98a5ea79afdb32`): checkpoint commit `57dc1de6`, which touched only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`.
+Standing task complete. HEAD = `28785fd5e75d4543b5789e3cbfce0bf454da8b0e`, in sync with `origin/main`. `git status --porcelain` empty at verification (excluding the uncommitted fix below). Change since prior recorded HEAD (`57dc1de6f3ffb914b24bdf2e32fc4a2c4305a102`): fixed `research_state/campaign_authorization.json` `code_hash` from `0ea2cfa99f30b63f5e54504e952baded738537b9e7dfae58b1c81a38f334196f` to `2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` to match the v6 execution protocol's `code_hash_constraint.authorized_code_hash`.
+
+- git: `git rev-parse HEAD` = `28785fd5e75d4543b5789e3cbfce0bf454da8b0e`, `git rev-parse origin/main` = `28785fd5e75d4543b5789e3cbfce0bf454da8b0e`. Clean at verification.
+- Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` entries (`research_state/continuous_universe_state.json`). Top-level `holdout_exposed_count` null. Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): `execution_authorization.selection_authorization_present==true`; run flags all false under `execution_authorization` (`execution_authorized/candle_fetch_authorized/grid_run_authorized/second_run_authorized/confirmatory_evaluation_authorized` = false). Selection auth (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `max_runs==1`; file records `authorized_run.execution_path/v6_execution_path_exists==false`, `authorized_run/code_identity/execution_path_digest==null`. Filesystem shows `src/v6_campaign/` present — do not treat as authorization; selection auth must be revised/bound and verifier must pass.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). Previously failed with `["the code-hash constraint does not record the authorized code hash of record"]`. `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`. `v3_benchmark_candles_after_the_v6_cutoff` = 13.
+- Data gate RESOLVED (do not re-run probe): `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window.confirmatory_window_status=NOT_STARTED`. Holdout exposure must remain 0.
+- `research_state/v6_selection_ledger.json` does not exist. v6 selection run NOT started (blocked by selection auth `execution_path_digest==null` / unrevised `v6_execution_path_exists==false`).
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z (fail-closed; holdout_exposed_count must remain 0).
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
+## COMPLETED — this session (2026-11-07T06:33:48Z)
 
 - git: `git rev-parse HEAD` = `57dc1de6f3ffb914b24bdf2e32fc4a2c4305a102`, `git rev-parse origin/main` = `57dc1de6f3ffb914b24bdf2e32fc4a2c4305a102`. Clean at verification.
 - Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` entries (`research_state/continuous_universe_state.json`). Top-level `holdout_exposed_count` null. Holdout exposure must remain 0.
