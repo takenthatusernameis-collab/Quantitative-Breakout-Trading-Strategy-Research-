@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-07T08:37:36Z)
+# Next Agent Task (initial message — 2026-11-07T08:38:00Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T08:35:51Z / HEAD `41ea28dde0c86d2b48324639b6bf8c2ae251f1a2`), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T08:38:00Z / HEAD `fc0ca54b3cab20f0b2a91e986c95b0d78335c088`), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD == origin/main == `076c1e7bbaa237db5f6e4bf5c9ba0395aa4ef466` (2026-11-07T08:37:36Z).
+Last recorded state (verify fresh — do not trust): HEAD == origin/main == `fc0ca54b3cab20f0b2a91e986c95b0d78335c088` (2026-11-07T08:38:00Z).
 
 ## Standing task
 
@@ -22,3 +22,5 @@ Last recorded state (verify fresh — do not trust): HEAD == origin/main == `076
 ## Session closeout
 
 When verified complete: prepend a new COMPLETED entry to `research_state/agent_handoff.md`. Refresh this file with latest HEAD/timestamp. Do not commit unless explicitly asked.
+" filePath">
+/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/research_state/next_agent_task.md
