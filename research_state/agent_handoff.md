@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-07T14:23:47Z)
+## COMPLETED — this session (2026-11-07T14:24:10Z)
 
-Standing task (cheap checks + execution integrity re-verification) complete. HEAD = `2b09e1094db71f7bdbb1f5c829dcd939487c7a92`, in sync with `origin/main`. `git status --porcelain` empty at verification.
+Standing task (cheap checks + execution integrity re-verification) complete. HEAD = `a44c4e6e600ce24b57658f66d87939372cbe6449`, in sync with `origin/main`. `git status --porcelain` empty at verification. Change since prior recorded HEAD (`2b09e1094db71f7bdbb1f5c829dcd939487c7a92`): HEAD advanced (checkpoint commit "chore(kilo): checkpoint agent session"); handoff/task state only — no substantive state change.
 
-- git: `git rev-parse HEAD` = `git rev-parse origin/main` = `2b09e1094db71f7bdbb1f5c829dcd939487c7a92`. Clean at verification.
+- git: `git rev-parse HEAD` = `git rev-parse origin/main` = `a44c4e6e600ce24b57658f66d87939372cbe6449`. Clean at verification.
 - Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` (`research_state/continuous_universe_state.json`). Holdout exposure must remain 0.
 - Execution authorization (`configs/research_v6_execution_amendment_1.json`, effective): `execution_authorization.selection_authorization_present==true`; all run/fetch/eval/exec/grid/second flags false. Selection auth (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `max_runs==1`; `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null` (filesystem has `src/v6_campaign/` — not authorization; selection auth file state must be revised/bound and verifier/run gate must pass).
 - `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`. `v3_benchmark_candles_after_the_v6_cutoff=13`. Effective exec auth source `configs/research_v6_execution_amendment_1.json`.
