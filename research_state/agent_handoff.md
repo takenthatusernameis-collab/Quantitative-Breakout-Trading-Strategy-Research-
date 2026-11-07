@@ -1,3 +1,16 @@
+## COMPLETED — this session (2026-11-07T01:46:13Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = 2dda9ad33ea1ffd94e2d4407b63cb31a0699dc2e, in sync with origin/main. Working tree clean at verification (handoff/next_agent_task modified only during this session's closeout).
+
+- git: `git rev-parse HEAD` = `2dda9ad33ea1ffd94e2d4407b63cb31a0699dc2e`, `git rev-parse origin/main` = `2dda9ad33ea1ffd94e2d4407b63cb31a0699dc2e`. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT; 13 exclusions recorded in `current_cohort.excluded`) — `research_state/continuous_universe_state.json`. No top-level `exclusions_count` field. Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): top-level run flags all false (not authorized); `execution_authorization.selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`. Selection authorization: `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`.
+- `python3 scripts/verify_v6_execution.py` -> `ok: false`, `failures: ["the code-hash constraint does not record the authorized code hash of record"]` (exit 1; manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; protocol `configs/research_v6_execution.json`; effective auth source `configs/research_v6_execution_amendment_1.json`; `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`).
+- Data gate RESOLVED (do not re-run probe): `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`, top-level `holdout_exposed_count=null`. Holdout exposure must remain 0.
+- v6 selection run NOT started: `research_state/v6_selection_ledger.json` MISSING; `src/v6_campaign` EXISTS but no authorized run — do NOT start. Blocked by verifier `ok:false` and missing execution path canonical digest in a revised selection authorization (auth binds `v6_execution_path_exists==false`, `execution_path_digest==null`).
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z. Fail-closed; `holdout_exposed_count` must remain 0.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
 ## COMPLETED — this session (2026-11-07T01:44:39Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = `5ec0e5d0711e78c233c117aa775945de239f4435`, in sync with origin/main. Working tree clean at verification. HEAD advanced since last handoff entry (`3b8a076aba2144b889232a4ed2fe274a404f8782` — `5ec0e5d07 chore(kilo): checkpoint agent session` — delta limited to closeout artifacts in `research_state/` (`agent_handoff.md`, `next_agent_task.md`), so all substantive facts below are re-verified at HEAD `5ec0e5d07`).

@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-07T01:44:39Z)
+# Next Agent Task (initial message — 2026-11-07T01:46:13Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T01:44:39Z / HEAD `5ec0e5d0711e78c233c117aa775945de239f4435`), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T01:46:13Z / HEAD `2dda9ad33ea1ffd94e2d4407b63cb31a0699dc2e`), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD = `5ec0e5d0711e78c233c117aa775945de239f4435`, HEAD == origin/main.
+Last recorded state (verify fresh — do not trust): HEAD = `2dda9ad33ea1ffd94e2d4407b63cb31a0699dc2e`, HEAD == origin/main.
 
 ## Standing task
 
@@ -10,9 +10,9 @@ Last recorded state (verify fresh — do not trust): HEAD = `5ec0e5d0711e78c233c
 
 2. **Verify execution integrity.** Run `python3 scripts/verify_v6_execution.py`. Expect `ok: false`, `failures: ["the code-hash constraint does not record the authorized code hash of record"]`. Manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
 
-3. **Data gate — RESOLVED.** Do not re-run probe. `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, status NOT_STARTED. Holdout exposure must remain 0.
+3. **Data gate — RESOLVED.** Do not re-run probe. `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`, top-level `holdout_exposed_count=null`. Holdout exposure must remain 0.
 
-4. **v6 selection run — do NOT start.** Blocked on verifier `ok:false` and missing execution path canonical digest in a revised selection authorization.
+4. **v6 selection run — do NOT start.** Blocked on verifier `ok:false` and missing execution path canonical digest in a revised selection authorization (`v6_execution_path_exists==false`, `execution_path_digest==null`; `research_state/v6_selection_ledger.json` MISSING).
 
 5. **BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z.** Fail-closed; holdout_exposed_count must remain 0.
 
