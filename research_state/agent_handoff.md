@@ -1,3 +1,19 @@
+## COMPLETED — this session (2026-11-07T07:35:50Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = `46a43d280146d4fa4af79e81f6e996b2f10d5e05`, in sync with `origin/main`. `git status --porcelain` empty at verification. Change since prior recorded HEAD (`48ba92155763b30ff8c028c8543cec75b09a78e3`): HEAD advanced (checkpoint commits); state checks unchanged.
+
+- git: `git rev-parse HEAD` = `git rev-parse origin/main` = `46a43d280146d4fa4af79e81f6e996b2f10d5e05`. Clean at verification.
+- Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` entries (`research_state/continuous_universe_state.json`). Top-level `holdout_exposed_count` null. Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): `selection_authorization_present==true`; run flags all false under `execution_authorization` (`execution_authorized/candle_fetch_authorized/grid_run_authorized/second_run_authorized/confirmatory_evaluation_authorized` = false). Selection auth (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `max_runs==1`; file records `authorized_run.execution_path/v6_execution_path_exists==false`, `authorized_run/code_identity/execution_path_digest==null`. Filesystem shows `src/v6_campaign/` present; do not treat as authorization — selection auth must be revised/bound and verifier must pass.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`. `v3_benchmark_candles_after_the_v6_cutoff` = 13.
+- Data gate RESOLVED (do not re-run probe): `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window.confirmatory_window_status=NOT_STARTED`. Holdout exposure must remain 0.
+- `research_state/v6_selection_ledger.json` does not exist. v6 selection run NOT started (blocked by selection auth `execution_path_digest==null` / unrevised `v6_execution_path_exists==false`).
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z (fail-closed; holdout_exposed_count must remain 0).
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
 ## COMPLETED — this session (2026-11-07T07:33:47Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = `48ba92155763b30ff8c028c8543cec75b09a78e3`, in sync with `origin/main`. `git status --porcelain` empty at verification. Change since prior recorded HEAD (`7b82ff76b9ff2638cf34d6dffa07e18e7da1e0fd`): HEAD advanced; state checks unchanged.
