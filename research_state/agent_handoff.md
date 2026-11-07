@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-07T02:44:42Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = `0726f35e56f181bcada4a221ef627805b907e84f`, in sync with origin/main. Working tree clean at verification.
+
+- git: `git rev-parse HEAD` = `0726f35e56f181bcada4a221ef627805b907e84f`, `git rev-parse origin/main` = `0726f35e56f181bcada4a221ef627805b907e84f`. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (13 exclusions) — `research_state/continuous_universe_state.json`. Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): run flags all false/not authorized; `selection_authorization_present==true`; selection auth authorized==true, `v6_execution_path_exists==false`, `execution_path_digest==null`.
+- `python3 scripts/verify_v6_execution.py` -> `ok: false`, `failures: ["the code-hash constraint does not record the authorized code hash of record"]` (exit 1). Manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`.
+- Data gate RESOLVED (do not re-run probe): holdout_exposed_count==0, status NOT_STARTED. Holdout exposure must remain 0.
+- v6 selection run NOT started. BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
 ## COMPLETED — this session (2026-11-07T02:43:49Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = `23f8265e5052d97f277d7c8704772a14982011b2`, in sync with origin/main. Working tree clean at verification. HEAD advanced since last handoff entry (`5b0506861ad1cff524a0e52a35236dd5cdb7a99a` — `23f8265e chore(kilo): checkpoint agent session` — delta limited to closeout artifacts in `research_state/` (`agent_handoff.md`, `next_agent_task.md`), so all substantive facts below are re-verified at HEAD `23f8265e5`).
