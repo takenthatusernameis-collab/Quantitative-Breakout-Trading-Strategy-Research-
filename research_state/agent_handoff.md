@@ -1,4 +1,19 @@
-## COMPLETED — this session (2026-11-07T00:45:16Z)
+## COMPLETED — this session (2026-11-07T00:46:32Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = `70de88357478b215701b22148be12a3bf2c7165e`, in sync with origin/main. Working tree clean at verification. HEAD advanced since last handoff entry (`d16294dd2bb8c134c7f456dd620a4faab29c12fe` — `70de8835 chore(kilo): checkpoint agent session` — delta limited to closeout artifacts in `research_state/`).
+
+- git: `git rev-parse HEAD` = `70de88357478b215701b22148be12a3bf2c7165e`, `git rev-parse origin/main` = `70de88357478b215701b22148be12a3bf2c7165e`. `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT; 13 exclusions recorded in `current_cohort.excluded`) — `research_state/continuous_universe_state.json`. No top-level `exclusions_count` field. Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): run flags all false/not authorized; `selection_authorization_present==true`; `selection_authorization_path`=`configs/research_v6_selection_authorization_1.json`. Selection authorization: `authorized_run.authorized==true`, `authorized_run.execution_path.v6_execution_path_exists==false`, `authorized_run.code_identity.execution_path_digest==null`.
+- `python3 scripts/verify_v6_execution.py` -> `ok: false`, `failures: ["the code-hash constraint does not record the authorized code hash of record"]`. Manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`.
+- Data gate RESOLVED (do not re-run probe): holdout_exposed_count==0, status NOT_STARTED. Holdout exposure must remain 0.
+- v6 selection run NOT started. BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
+"
 
 Standing task (cheap checks re-verification) complete. HEAD = `d16294dd2bb8c134c7f456dd620a4faab29c12fe`, in sync with origin/main. Working tree clean at verification. HEAD advanced since last handoff entry (`680a4bf793325753af007c954c662f11b4c2236a` — `d16294dd2 chore(kilo): checkpoint agent session` — delta limited to closeout artifacts in `research_state/`).
 
