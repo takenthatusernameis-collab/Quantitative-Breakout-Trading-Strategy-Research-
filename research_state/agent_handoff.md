@@ -1,3 +1,19 @@
+## COMPLETED — this session (2026-11-07T13:26:30Z)
+
+Standing task (cheap checks + execution integrity re-verification) complete. HEAD = `d4c96c4e84c8ebf3b721ecd785358b62b7698019`, in sync with `origin/main`. `git status --porcelain` empty at verification.
+
+- git: `git rev-parse HEAD` = `git rev-parse origin/main` = `d4c96c4e84c8ebf3b721ecd785358b62b7698019`. Clean at verification.
+- Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` entries. Holdout exposure must remain 0.
+- Execution authorization: selection_authorization_present==true; all run/fetch/eval flags false. Selection auth: authorized==true, max_runs==1; execution_path_digest==null / v6_execution_path_exists==false (filesystem has src/v6_campaign/ — not authorization).
+- `python3 scripts/verify_v6_execution.py` -> ok: true, failures: []. manifest hashes MATCH. v6_execution_path_canonical_digest 37ba6eb3... evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z. v3_benchmark_candles_after_the_v6_cutoff=13.
+- Data gate RESOLVED; holdout_exposed_count==0, NOT_STARTED.
+- research_state/v6_selection_ledger.json ABSENT. v6 selection NOT started.
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (research_state/next_agent_task.md). Do not commit unless explicitly asked.
+
+---
+
 ## COMPLETED — this session (2026-11-07T13:25:56Z)
 
 Standing task (cheap checks + execution integrity re-verification) complete. HEAD = `3dfcddd50f32c78d3be0be191f37622cdbfe06d9`, in sync with `origin/main`. `git status --porcelain` empty at verification. Change since prior recorded HEAD (`a04a44020e33fde58382735ffd3c38ac2f7cf2db`): HEAD advanced (checkpoint commit); handoff/task state only — no substantive state change.
