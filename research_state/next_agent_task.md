@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-07T18:17:20Z)
+# Next Agent Task (initial message — 2026-11-07T18:18:20Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T18:17:20Z / HEAD `36d17c9aacbc93342aa07380d623327727402fbf` `36d17c9a`), then run the standing task below.
+On activation, read the top `COMPLETED — this session` entry of `research_state/agent_handoff.md` (latest 2026-11-07T18:18:20Z / HEAD `bf98943557bb1b837e5a6db574cd3d23f3d656f1` `bf989435`), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD == origin/main == `36d17c9aacbc93342aa07380d623327727402fbf`.
+Last recorded state (verify fresh — do not trust): HEAD == origin/main == `bf98943557bb1b837e5a6db574cd3d23f3d656f1`. `git status --porcelain` was empty at verification. No substantive state change observed (checkpoint commits only).
 
 ## Standing task
 
@@ -21,4 +21,4 @@ Last recorded state (verify fresh — do not trust): HEAD == origin/main == `36d
 
 ## Session closeout
 
-When verified complete: prepend a new COMPLETED entry to `research_state/agent_handoff.md`. Refresh this file with latest HEAD/timestamp. Do not commit unless explicitly asked.
+When verified complete: prepend a new `COMPLETED` entry to `research_state/agent_handoff.md` (with UTC timestamp, current HEAD, check results, and any substantive changes). Refresh this file with latest HEAD/timestamp and a clear next-agent message. Do not commit unless explicitly asked.
