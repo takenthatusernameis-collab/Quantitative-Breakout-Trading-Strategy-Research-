@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-07T08:39:00Z)
+# Next Agent Task (initial message — 2026-11-07T08:39:40Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T08:39:00Z / HEAD `896dff5043432843b156ef11a50680d986cc21f3`), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T08:39:40Z / HEAD `5e4f87481c16f56fc5f0a274d5334a948858c654`), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD == origin/main == `896dff5043432843b156ef11a50680d986cc21f3` (2026-11-07T08:39:00Z).
+Last recorded state (verify fresh — do not trust): HEAD == origin/main == `5e4f87481c16f56fc5f0a274d5334a948858c654` (2026-11-07T08:39:40Z).
 
 ## Standing task
 
@@ -10,7 +10,7 @@ Last recorded state (verify fresh — do not trust): HEAD == origin/main == `896
 2. **Verify execution integrity.** Run `python3 scripts/verify_v6_execution.py`. Expect `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` must match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`. `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
 3. **Data gate — RESOLVED.** Do not re-run probe. `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window.confirmatory_window_status=NOT_STARTED`. Holdout exposure must remain 0.
 4. **v6 selection run — do NOT start.** Blocked on selection auth not recording a bound execution path digest (`v6_execution_path_exists==false`, `execution_path_digest==null` in file). `research_state/v6_selection_ledger.json` absent.
-5. **BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z.** Fail-closed; holdout_exposed_count must remain 0.
+5. **BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z.** Fail-closed; `holdout_exposed_count` must remain 0.
 
 ## Out of scope
 
@@ -22,5 +22,3 @@ Last recorded state (verify fresh — do not trust): HEAD == origin/main == `896
 ## Session closeout
 
 When verified complete: prepend a new COMPLETED entry to `research_state/agent_handoff.md`. Refresh this file with latest HEAD/timestamp. Do not commit unless explicitly asked.
-" filePath">
-/home/runner/work/Quantitative-Breakout-Trading-Strategy-Research-/Quantitative-Breakout-Trading-Strategy-Research-/research_state/next_agent_task.md
