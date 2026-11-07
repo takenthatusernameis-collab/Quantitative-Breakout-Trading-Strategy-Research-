@@ -1,8 +1,8 @@
-# Next Agent Task (initial message — 2026-11-07T05:33:31Z)
+# Next Agent Task (initial message — 2026-11-07T05:34:50Z)
 
-On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T05:33:31Z / HEAD `aaf99cf27c114fbc5efdf791414586f69b0e46de`), then run the standing task below.
+On activation, read the top COMPLETED entry of `research_state/agent_handoff.md` (latest 2026-11-07T05:34:50Z / HEAD `a985cd4591f424e19bb82ad138e94c6c93ae5df6`), then run the standing task below.
 
-Last recorded state (verify fresh — do not trust): HEAD == origin/main == `aaf99cf27c114fbc5efdf791414586f69b0e46de` (2026-11-07T05:33:31Z).
+Last recorded state (verify fresh — do not trust): HEAD == origin/main == `a985cd4591f424e19bb82ad138e94c6c93ae5df6` (2026-11-07T05:34:50Z).
 
 ## Standing task
 
