@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-07T00:49:17Z)
+## COMPLETED — this session (2026-11-07T00:49:48Z)
 
-Standing task (cheap checks re-verification) complete. HEAD = `3191f0627aced3d0379c4988ae7e44589be21c63`, in sync with origin/main. Working tree clean at verification.
+Standing task (cheap checks re-verification) complete. HEAD = `ed4351541f85da95a2da1e95e1347f50d5887679`, in sync with origin/main. Working tree clean at verification. Note: the prior entry recorded HEAD `3191f0627...`; a checkpoint commit `ed4351541 chore(kilo): checkpoint agent session` advanced HEAD after that entry; its delta was limited to closeout artifacts in `research_state/` (`agent_handoff.md`, `next_agent_task.md`), so all substantive facts below are re-verified at HEAD `ed4351541`.
 
-- git: `git rev-parse HEAD` = `3191f0627aced3d0379c4988ae7e44589be21c63`, `git rev-parse origin/main` = `3191f0627aced3d0379c4988ae7e44589be21c63`. `git status --porcelain` empty.
+- git: `git rev-parse HEAD` = `ed4351541f85da95a2da1e95e1347f50d5887679`, `git rev-parse origin/main` = `ed4351541f85da95a2da1e95e1347f50d5887679`. `git status --porcelain` empty.
 - Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT; 13 exclusions in `current_cohort.excluded`) — `research_state/continuous_universe_state.json`. Holdout exposure must remain 0.
 - Execution authorization (`configs/research_v6_execution_amendment_1.json`): run flags all false/not authorized; selection_authorization_present==true; selection auth authorized==true, v6_execution_path_exists==false, execution_path_digest==null.
 - `python3 scripts/verify_v6_execution.py` -> `ok: false`, `failures: ["the code-hash constraint does not record the authorized code hash of record"]`. Manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`.
