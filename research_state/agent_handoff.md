@@ -1,3 +1,17 @@
+## COMPLETED — this session (2026-11-07T02:45:30Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = `08cb22b874fc1bc85ac4f348b8972a2a7001f8ab`, in sync with origin/main. Working tree clean at verification.
+
+- git: `git rev-parse HEAD` = `08cb22b874fc1bc85ac4f348b8972a2a7001f8ab`, `git rev-parse origin/main` = `08cb22b874fc1bc85ac4f348b8972a2a7001f8ab`. `git status --porcelain` empty at verification.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (13 exclusions) — `research_state/continuous_universe_state.json`. Holdout exposure must remain 0.
+- `python3 scripts/verify_v6_execution.py` -> `ok: false`, `failures: ["the code-hash constraint does not record the authorized code hash of record"]` (exit 1). Manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`.
+- Data gate RESOLVED (do not re-run probe): holdout_exposed_count==0, status NOT_STARTED. Holdout exposure must remain 0.
+- v6 selection run NOT started. BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
 ## COMPLETED — this session (2026-11-07T02:44:42Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = `0726f35e56f181bcada4a221ef627805b907e84f`, in sync with origin/main. Working tree clean at verification.
