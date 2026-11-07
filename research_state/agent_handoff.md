@@ -1,3 +1,18 @@
+## COMPLETED — this session (2026-11-07T01:40:55Z)
+
+Standing task (cheap checks re-verification) complete. HEAD = `ea2c5e2de92de82f95b29e1099efeb29d5f1ff86`, in sync with origin/main. Working tree clean at verification. HEAD advanced since last handoff entry (`72b12ce83b910fd74416f501d4f9b22dc4cc4b80` — delta limited to closeout artifacts in `research_state/` (`agent_handoff.md`, `next_agent_task.md`), so all substantive facts below are re-verified at HEAD `ea2c5e2d`).
+
+- git: `git rev-parse HEAD` = `ea2c5e2de92de82f95b29e1099efeb29d5f1ff86`, `git rev-parse origin/main` = `ea2c5e2de92de82f95b29e1099efeb29d5f1ff86`. `git status --porcelain` empty.
+- Cohort: next_cohort_index==6; current_cohort.cohort_index==5 completed==true (assets APTUSDT, CAKEUSDT, STXUSDT, DASHUSDT, VETUSDT, CRVUSDT, RAYUSDT; 13 exclusions in `current_cohort.excluded`) — `research_state/continuous_universe_state.json`. Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): run flags all false/not authorized; selection_authorization_present==true; selection auth authorized==true, v6_execution_path_exists==false, execution_path_digest==null.
+- `python3 scripts/verify_v6_execution.py` -> `ok: false`, `failures: ["the code-hash constraint does not record the authorized code hash of record"]`. Manifest `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH; canonical `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`.
+- Data gate RESOLVED (do not re-run probe): holdout_exposed_count==0, status NOT_STARTED. Holdout exposure must remain 0.
+- v6 selection run NOT started. BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
 ## COMPLETED — this session (2026-11-07T00:53:01Z)
 
 Standing task (cheap checks re-verification) complete. HEAD = `72b12ce83b910fd74416f501d4f9b22dc4cc4b80`, in sync with origin/main. Working tree clean at verification. HEAD advanced since last handoff entry (`ed4351541f85da95a2da1e95e1347f50d5887679` — `72b12ce8 chore(kilo): checkpoint agent session` — delta limited to closeout artifacts in `research_state/` (`agent_handoff.md`, `next_agent_task.md`), so all substantive facts below are re-verified at HEAD `72b12ce8`).
