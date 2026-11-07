@@ -1,3 +1,19 @@
+## COMPLETED — this session (2026-11-07T09:25:03Z)
+
+Standing task (cheap checks + execution integrity re-verification) complete. HEAD = `967505dcc57786c8e81263ecb72b5c79d02ccea5`, in sync with `origin/main`. `git status --porcelain` empty at verification. Change since prior recorded HEAD (`f9e8747abed5913dfabbd50eb8ab356f04eb7158`): HEAD advanced (checkpoint commit); state checks unchanged.
+
+- git: `git rev-parse HEAD` = `git rev-parse origin/main` = `967505dcc57786c8e81263ecb72b5c79d02ccea5`. Clean at verification.
+- Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` entries (`research_state/continuous_universe_state.json`). Holdout exposure must remain 0.
+- Execution authorization (`configs/research_v6_execution_amendment_1.json`): `selection_authorization_present==true` under `execution_authorization`; run flags all false. Selection auth (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `max_runs==1`; file records `authorized_run.execution_path.v6_execution_path_exists==false` and `code_identity.execution_path_digest==null`. Filesystem shows `src/v6_campaign/` present — do not treat as authorization; selection auth must be revised/bound and verifier must pass.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc` = `2027-01-20T02:00:00Z`. `v3_benchmark_candles_after_the_v6_cutoff` = 13.
+- Data gate RESOLVED (do not re-run probe): `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window.confirmatory_window_status=NOT_STARTED`. Holdout exposure must remain 0.
+- `research_state/v6_selection_ledger.json` does not exist. v6 selection run NOT started (blocked by selection auth execution path not bound in file: `execution_path_digest==null` / `v6_execution_path_exists==false`).
+- BRAIN-003 confirmatory campaign STILL BLOCKED until 2027-01-20T02:00:00Z (fail-closed; holdout_exposed_count must remain 0).
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
 ## COMPLETED — this session (2026-11-07T09:20:55Z)
 
 Standing task (cheap checks + execution integrity re-verification) complete. HEAD = `f9e8747abed5913dfabbd50eb8ab356f04eb7158`, in sync with `origin/main`. `git status --porcelain` empty at verification (only `research_state/agent_handoff.md` and `research_state/next_agent_task.md` modified by this session closeout). Change since prior recorded HEAD (`88d0b4e8489ed1fc621fec16d2df2a56fce486ff`): HEAD advanced (checkpoint commits); no substantive state change.
