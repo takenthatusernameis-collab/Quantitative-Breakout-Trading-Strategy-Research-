@@ -1,3 +1,19 @@
+## COMPLETED — this session (2026-11-07T20:25:12Z)
+
+Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh. HEAD = `5d113e2e1595494a1925e0b2bd9fa09b1dd14b27` (`5d113e2`), in sync with `origin/main`; `git status --porcelain` empty at verification. HEAD advanced from prior `ebe20f6` one checkpoint commit.
+
+- git: HEAD == origin/main == `5d113e2e1595494a1925e0b2bd9fa09b1dd14b27`. Clean at verification.
+- Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded`. Holdout exposure 0.
+- Execution authorization: `selection_authorization_present==true`; all run/fetch/eval/exec/grid/confirmatory flags absent/false. Selection auth: `authorized==true`, `max_runs==1`; `v6_execution_path_exists==false`, `execution_path_digest==null`.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`. `canonical_hashed_set_digest` `3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`. `recomputed_inherited_blocks_digest` `0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`.
+- Data gate RESOLVED: `holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`.
+- `research_state/v6_selection_ledger.json` ABSENT. v6 selection NOT started (blocked by selection auth file state).
+- BRAIN-003 confirmatory campaign STILL BLOCKED until `2027-01-20T02:00:00Z`.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`). Do not commit unless explicitly asked.
+
+---
+
 ## COMPLETED — this session (2026-11-07T20:23:55Z)
 
 Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh (do not trust prior entries). HEAD = `ebe20f6bea529f139574dedb2b728d963978e607` (`ebe20f6`), in sync with `origin/main` (`git rev-parse HEAD` == `git rev-parse origin/main`); `git status --porcelain` empty at verification. Change since prior recorded HEAD (`60363a3e62cfc124a5fdbb2911c907befce3adc6` `60363a3`): HEAD advanced one checkpoint commit (`chore(kilo): checkpoint agent session`); only handoff/task checkpoint state changed — no substantive state change observed.
