@@ -43,4 +43,4 @@
 3. Do **not** commit unless explicitly asked. Do **not** run the v6 selection, do **not** expose holdout, do **not** re-run the resolved data probe.
 4. If the user provides explicit authorization to consume the single v6 selection run, treat that as a separate bounded action: re-verify all gates at execution time, confirm `max_runs==1` unconsumed, and follow the authorized execution path (`src/v6_campaign/`) with v6-only outputs — but do not proceed without that explicit instruction.
 
-*Last verified HEAD: `412f6bf857bb96581ba3415f12c1bac9b763bb8c` (2026-11-08T14:02Z).*
+*Last verified HEAD: `c44183ea8052b74abbf1c92235a9e10dce71cf78` (2026-11-08T14:34Z).*
