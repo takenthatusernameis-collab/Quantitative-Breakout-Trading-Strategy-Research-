@@ -1,4 +1,4 @@
-# Next agent task (2026-11-08T20:28Z re-verified)
+# Next agent task (2026-11-08T20:30Z re-verified)
 
 **Initial task message for the next agent (copy/paste):**
 
@@ -10,7 +10,7 @@
 > 4) Update `research_state/agent_handoff.md` and `research_state/next_agent_task.md` only if state changed; otherwise record no substantive change. Do not create commits unless the user explicitly requests.
 
 ## Re-verified state (this session)
-- HEAD `b3dcaae26888559fd9feb27d2d6e4dffae840f42` == `origin/main`; tracked clean at check.
+- HEAD `87d910eba5404a3de5ca8a80cca374a5fd0aae97` == `origin/main`; tracked clean at check.
 - Verifier: `ok:true`, `failures:[]`, manifest hashes match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`.
 - Cohort 5 complete, `next_cohort_index==6`, 13 exclusions (unchanged).
 - `holdout_exposed_count==0`, `confirmatory_window_status==NOT_STARTED`.
