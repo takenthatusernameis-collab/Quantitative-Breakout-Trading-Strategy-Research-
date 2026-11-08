@@ -26,7 +26,7 @@ from .backtest.backtester import run_fold_backtest
 from .backtest.checkpoint import CheckpointManager
 from .backtest.ledger import ResultLedger
 from .backtest.shards import ResultStore, compute_experiment_id
-from .candidate_freeze import load_candidate_manifest, candidate_config_ids, CANDIDATE_MANIFEST_PATH
+from .candidate_freeze import load_candidate_manifest, candidate_config_ids, CANDIDATE_MANIFEST_PATH, CANDIDATE_MANIFEST_V2_PATH
 from .pilot_gate_validator import load_authorization, authorize_campaign, VALIDATOR_ARTIFACT_PATH
 
 DATA_MANIFEST_PATH = "research/data_manifest.json"
@@ -334,7 +334,7 @@ class CampaignRunner:
         candidate_ids = None
         if holdout_enabled:
             try:
-                manifest = load_candidate_manifest()
+                manifest = load_candidate_manifest(CANDIDATE_MANIFEST_V2_PATH)
             except (OSError, ValueError) as exc:
                 raise RuntimeError(f"Holdout evaluation requires a frozen candidate manifest: {exc}") from exc
             candidate_ids = candidate_config_ids(manifest)

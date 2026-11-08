@@ -13,7 +13,7 @@ import pytest
 
 import breakout_research.campaign as campaign_module
 from breakout_research.campaign import _data_manifest_hash, _read_json_file
-from breakout_research.candidate_freeze import save_candidate_manifest
+from breakout_research.candidate_freeze import save_candidate_manifest, CANDIDATE_MANIFEST_V2_PATH
 from breakout_research.backtest.backtester import run_fold_backtest as real_run_fold_backtest
 from breakout_research.baselines import (
     VARIANT_BASELINE, BaselineDataError, artifact_hash, baseline_for_asset,
@@ -186,7 +186,7 @@ def _build_runner(tmp_path, monkeypatch, write_candidate_manifest=True):
                 "BTCUSDT": {"config_id": "cfg_holdout_0001",
                             "parameters": {}, "freeze_commit": "test"},
             },
-        }, str(tmp_path / "research/candidate_manifest.json"))
+        }, str(tmp_path / CANDIDATE_MANIFEST_V2_PATH))
 
     candles = make_candles()
     def loader(symbol):
