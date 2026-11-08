@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-08T16:44Z, fresh re-verification)
+## COMPLETED — this session (2026-11-08T16:45Z, fresh re-verification)
 
 Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change**.
 
-- branch: `main`; HEAD `7356f5c39a854b6142b07e206e89edf6d1b5a171` == `origin/main`. Working tree **tracked clean** (`git status --porcelain` empty). Prior durable handoff (2026-11-08T16:41Z) recorded `bf353121ab39709ce0f220186591cab32f325896`; delta = 1 non-substantive checkpoint commit (`7356f5c39`, `chore(kilo): checkpoint agent session`, handoff files only). **This session refreshed durable handoff only** (bounded scope).
+- branch: `main`; HEAD `dee12f9e95d674028f4388c64d14c0845e8954b0` == `origin/main`. Working tree **tracked clean** (`git status --porcelain` empty). Prior durable handoff (2026-11-08T16:44Z) recorded `7356f5c39a854b6142b07e206e89edf6d1b5a171`; delta = 1 non-substantive checkpoint commit (`dee12f9e9`, `chore(kilo): checkpoint agent session`, handoff files only). **This session refreshed durable handoff only** (bounded scope).
 - Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` (GHOUSDT/binance_spot_unavailable, ETHFIUSDT/insufficient_hourly_history, XDCUSDT/binance_spot_unavailable, NIGHTUSDT/insufficient_hourly_history, PYTHUSDT/insufficient_hourly_history, TIAUSDT/insufficient_hourly_history, BDXUSDT/binance_spot_unavailable, FLRUSDT/binance_spot_unavailable, QUSDT/binance_spot_unavailable, TRUMPUSDT/insufficient_hourly_history, PENGUUSDT/insufficient_hourly_history, 币安人生USDT/insufficient_hourly_history, YLDSUSDT/binance_spot_unavailable). `research/data_manifest_v6.json#confirmatory_window`: `holdout_exposed_count==0`, `confirmatory_window_status==NOT_STARTED`. **Holdout exposure must remain 0.**
 - Execution authorization (effective, `configs/research_v6_execution_amendment_1.json` -> `execution_authorization`; verifier-computed): `selection_authorization_present==true` (bound to `configs/research_v6_selection_authorization_1.json`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, sha `14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, run `v6-selection-20261022`, campaign `v6-campaign`); `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection auth: `authorized_run.authorized==true`, `max_runs==1`. Binding `configs/research_v6_selection_execution_binding_1.json` present (`BINDING_PRESENT`, `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, manifest `b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`; execution path `src/v6_campaign`, digest `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`). `src/v6_campaign/` PRESENT, `src/v6_confirmatory/` ABSENT.
 - `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `selection_authorization_campaign_id=v6-campaign`, `run_id=v6-selection-20261022`, `selection_authorization_manifest_hash=f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
@@ -12,7 +12,8 @@ Standing task (cheap checks + execution integrity re-verification) complete. Ver
 
 ## Prior sessions (condensed)
 
-- 2026-11-08T16:44Z (this): HEAD `7356f5c39...`/`origin/main`, tracked clean; verify ok; no substantive change.
+- 2026-11-08T16:45Z (this): HEAD `dee12f9e9...`/`origin/main`, tracked clean; verify ok; no substantive change.
+- 2026-11-08T16:44Z: HEAD `7356f5c39...`/`origin/main`, tracked clean; verify ok.
 - 2026-11-08T16:41Z: HEAD `bf353121a...`/`origin/main`, tracked clean; verify ok.
 - 2026-11-08T16:40Z: HEAD `2e59cbe29...`/`origin/main`, tracked clean; verify ok.
 - 2026-11-08T16:36Z–16:37Z: successive non-substantive verifications; clean/synced.
