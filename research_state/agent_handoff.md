@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-08T03:02Z, fresh verification)
+## COMPLETED — this session (2026-11-08T03:03Z, fresh verification)
 
 Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh (do not trust prior entries).
 
-- branch: `main`; HEAD `d730827c53f63a5b79ab9b4189465a6bf917b3b2` (`d730827c5`) == origin/main `d730827c5`, clean (`git status --porcelain` empty). HEAD advanced from prior handoff `cb075d2e66b56ef1b98fdd8e0fa4047f5dc4e2ea` by 1 non-substantive commit (`d730827c5 chore(kilo): checkpoint agent session`); no substantive state change observed.
+- branch: `main`; HEAD `a52dedceb50de8a83dc16e91c4928a6f23f13b5c` (`a52dedce`) == origin/main `a52dedce`, clean (`git status --porcelain` empty). HEAD advanced from prior handoff `d730827c53f63a5b79ab9b4189465a6bf917b3b2` by 1 non-substantive commit (`a52dedce chore(kilo): checkpoint agent session`); no substantive state change observed.
 - Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded`. Holdout exposure 0 (`research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`).
 - Execution authorization (`configs/research_v6_execution_amendment_1.json`, effective): `selection_authorization_present==true` (bound to `configs/research_v6_selection_authorization_1.json`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, sha `14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, run `v6-selection-20261022`, campaign `v6-campaign`); `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection auth file: `authorized==true`, `max_runs==1`; frozen file intentionally unchanged (`v6_execution_path_exists==false`, `execution_path_digest==null`). Versioned binding `configs/research_v6_selection_execution_binding_1.json` present: `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, manifest `b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`, binds `src/v6_campaign` canonical digest `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72` to the frozen auth; `src/v6_campaign/` present (8 modules). Preflight `scripts/v6_readiness_preflight.py`: `selection_source_binding` PASS, `selection_runner` PASS, `holdout_exposure_counter` PASS, `no_implicit_execution_authority` PASS, `execution_code_isolated` PASS, `selection_manifest_publisher` PASS, `frozen_confirmatory_boundary` PASS; overall not eligible — 6 blockers, all confirmatory-side (see below).
 - `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `selection_authorization_campaign_id=v6-campaign`, `selection_authorization_run_id=v6-selection-20261022`, `selection_authorization_manifest_hash=f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
@@ -19,7 +19,8 @@ Handoff updated; initial task message refreshed (`research_state/next_agent_task
 
 ## Prior sessions (condensed)
 
-- 2026-11-08T03:01Z: HEAD `cb075d2e6` (+1 non-substantive checkpoint vs `17f15841b`), clean/synced; same blockers/state.
+- 2026-11-08T03:03Z: HEAD `a52dedce` (+1 non-substantive checkpoint vs `d730827c5`), clean/synced; same blockers/state.
+- 2026-11-08T03:02Z: HEAD `d730827c5` (+1 non-substantive checkpoint vs `cb075d2e6`), clean/synced; same blockers/state.
 - 2026-11-08T02:54Z: HEAD `17f15841b` (+1 non-substantive checkpoint vs `28fa5375`), clean/synced; selection execution binding confirmed in place (versioned addendum, preflight `selection_source_binding` PASS); same remaining blockers.
 - 2026-11-08T02:53Z: HEAD `28fa5375` (+2 non-substantive commits vs `f510a06c`), clean/synced; same blockers/state.
 - 2026-11-08T02:52Z: HEAD `f510a06c` (+1 checkpoint vs `3dd2391ca`), no substantive change; same blockers/state.
