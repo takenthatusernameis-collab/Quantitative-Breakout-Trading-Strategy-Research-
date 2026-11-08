@@ -1,6 +1,8 @@
-## COMPLETED — this session (2026-11-08T11:52Z, fresh verification)
+## COMPLETED — this session (2026-11-08T11:54Z, fresh verification)
 
 Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh.
+
+- branch: `main`; HEAD `1efc02acb51fe478ac33346e94b9e7756d8c81b6` == origin/main, clean (`git status --porcelain` empty). HEAD advanced from prior handoff's recorded HEAD `2671b871dcfd9fbc6e08064b19f5ab2c122b901b` by 1 non-substantive commit (`1efc02acb`, `chore(kilo): checkpoint agent session`, touching `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only); no substantive state change.
 
 - branch: `main`; HEAD `2671b871dcfd9fbc6e08064b19f5ab2c122b901b` == origin/main, clean (`git status --porcelain` empty). HEAD advanced from prior handoff's recorded HEAD `771819076b8ef9f740ba4d2fd6e5928fd6416622` by 1 non-substantive commit (`2671b871d`, `chore(kilo): checkpoint agent session`, touching `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only); no substantive state change.
 - Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` — GHOUSDT/binance_spot_unavailable, ETHFIUSDT/insufficient_hourly_history, XDCUSDT/binance_spot_unavailable, NIGHTUSDT/insufficient_hourly_history, PYTHUSDT/insufficient_hourly_history, TIAUSDT/insufficient_hourly_history, BDXUSDT/binance_spot_unavailable, FLRUSDT/binance_spot_unavailable, QUSDT/binance_spot_unavailable, TRUMPUSDT/insufficient_hourly_history, PENGUUSDT/insufficient_hourly_history, 币安人生USDT/insufficient_hourly_history, YLDSUSDT/binance_spot_unavailable. Holdout exposure 0 (`research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window.confirmatory_window_status==NOT_STARTED`).
@@ -15,7 +17,16 @@ Standing task (cheap checks + execution integrity re-verification) complete. Ver
 
 ## Prior sessions (condensed)
 
+- 2026-11-08T11:54Z: HEAD `1efc02acb51fe478ac33346e94b9e7756d8c81b6` (+1 non-substantive vs `2671b871dcfd9fbc6e08064b19f5ab2c122b901b`; handoff/next_agent_task only), clean/synced; same blockers/state.
 - 2026-11-08T11:52Z: HEAD `2671b871dcfd9fbc6e08064b19f5ab2c122b901b` (+1 non-substantive vs `771819076b8ef9f740ba4d2fd6e5928fd6416622`; handoff/next_agent_task only), clean/synced; same blockers/state.
+- 2026-11-08T11:48Z: HEAD `c55014b6e8e1c8f7c4e904d56221d39ace9f1d4c` (+1 non-substantive vs `7b2f8cc3dcf4961c263e8d05c129d723d6d4ce32`; handoff/next_agent_task only), clean/synced; same blockers/state.
+- 2026-11-08T10:56Z: HEAD `7b2f8cc3dcf4961c263e8d05c129d723d6d4ce32` (+1 non-substantive vs `052b3d8993fb47d3f6a37d177a57b287d2d698f1`), clean/synced; same blockers/state.
+- 2026-11-08T10:54Z: HEAD `052b3d8993fb47d3f6a37d177a57b287d2d698f1` (+1 non-substantive vs `13017faac2d45d0bad8a4ce630f8c56efabe7deb`), clean/synced; same blockers/state.
+- 2026-11-08T10:55Z: HEAD `13017faac2d45d0bad8a4ce630f8c56efabe7deb` (+1 non-substantive), clean/synced; same blockers/state.
+- 2026-11-08T10:53Z: HEAD `6e819f6e343f2315909b91b037c1dd042d8bf27a`, clean/synced; same blockers/state.
+- 2026-11-08T10:47Z–08:11Z: non-substantive HEAD advances, clean/synced; same blockers/state.
+- 2026-11-08T02:54Z: HEAD `17f15841b`; selection execution binding confirmed in place (preflight `selection_source_binding` PASS); same remaining blockers.
+- Prior 2026-11-07/08 standing-task re-verifications: no substantive state change. Same blockers: BRAIN-003 blocked until 2027-01-20T02:00:00Z (holdout_exposed_count 0), v6 selection single run unconsumed pending later-session execution.
 - 2026-11-08T11:48Z: HEAD `c55014b6e8e1c8f7c4e904d56221d39ace9f1d4c` (+1 non-substantive vs `7b2f8cc3dcf4961c263e8d05c129d723d6d4ce32`; handoff/next_agent_task only), clean/synced; same blockers/state.
 - 2026-11-08T10:56Z: HEAD `7b2f8cc3dcf4961c263e8d05c129d723d6d4ce32` (+1 non-substantive vs `052b3d8993fb47d3f6a37d177a57b287d2d698f1`), clean/synced; same blockers/state.
 - 2026-11-08T10:54Z: HEAD `052b3d8993fb47d3f6a37d177a57b287d2d698f1` (+1 non-substantive vs `13017faac2d45d0bad8a4ce630f8c56efabe7deb`), clean/synced; same blockers/state.
