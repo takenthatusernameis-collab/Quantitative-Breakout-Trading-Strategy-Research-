@@ -1,14 +1,15 @@
-## COMPLETED — this session (2026-11-08T21:34Z re-verification)
+## COMPLETED — this session (2026-11-08T21:35Z re-verification)
 
-Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change** vs prior handoff except HEAD advanced to `ca56835a7fc98957451e6264c92e0d01e2291dc5` == `origin/main` (previously `ecaabc2b4553d6a2c9faa82f4d3d52789da38269`); tracked clean; verify ok: true, failures: [], manifest hashes match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`.
+Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change** vs prior handoff except HEAD advanced to `ef80eb2c2a9c81e11aaff0dceefba5c9ec87a1cd` == `origin/main` (previously `ca56835a7fc98957451e6264c92e0d01e2291dc5`); tracked clean; verify ok: true, failures: [], manifest hashes match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`.
 
-- branch: `main`; HEAD `ca56835a7fc98957451e6264c92e0d01e2291dc5` == `origin/main`. Working tree **tracked clean** (`git status --porcelain` empty) at check.
+- branch: `main`; HEAD `ef80eb2c2a9c81e11aaff0dceefba5c9ec87a1cd` == `origin/main`. Working tree **tracked clean** (`git status --porcelain` empty) at check.
 - Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded`.
 - `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `holdout_exposed_count==0`, `confirmatory_window_status==NOT_STARTED`. `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`. **Holdout exposure must remain 0.**
 - v6 selection NOT Started; single authorized run (`v6-selection-20261022`, `max_runs==1`, campaign `v6-campaign`) unconsumed (`authorization_status==PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN`); binding `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`. `src/v6_confirmatory/` absent; `research_state/v6_selection_ledger.json` and `research/v6_selected_configurations_manifest.json` absent.
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## Prior sessions (condensed)
+- 2026-11-08T21:35Z: HEAD `ef80eb2c`/`origin/main`, tracked clean; verify ok; no substantive change vs `ca56835a` (one checkpoint commit).
 - 2026-11-08T21:34Z: HEAD `ca56835a`/`origin/main`, tracked clean; verify ok; no substantive change vs `ecaabc2b4` (one checkpoint commit).
 - 2026-11-08T21:33Z: HEAD `ecaabc2b4`/`origin/main`, tracked clean; verify ok; no substantive change vs `f586230fc` (HEAD advanced).
 - 2026-11-08T21:31Z: HEAD `f586230fc`/`origin/main`, tracked clean; verify ok; no substantive change vs `6eccc2d73` (one checkpoint commit).
@@ -24,7 +25,7 @@ Standing task (cheap checks + execution integrity re-verification) complete. Ver
 - 2026-11-08T19:48Z: HEAD `813d121cc`/`origin/main`, tracked clean; verify ok; no substantive change.
 - 2026-11-08T19:46Z: HEAD `01915db2b`/`origin/main`, tracked clean; verify ok; no substantive change.
 - 2026-11-08T19:45Z: HEAD `ff38b72ef`/`origin/main`, tracked clean; verify ok; no substantive change.
-- 2026-11-08T19:44Z: HEAD `98c0ea84c`/`origin/main`, tracked clean; verify ok; no substantive change.
+- 2026-11-08T20:44Z: HEAD `98c0ea84c`/`origin/main`, tracked clean; verify ok; no substantive change.
 - 2026-11-08T19:43Z: HEAD `340bdddf1`/`origin/main`, tracked clean; verify ok; no substantive change.
 - 2026-11-08T19:41Z: HEAD `d719c559c`/`origin/main`, tracked clean; verify ok; no substantive change.
 - 2026-11-08T19:40Z: HEAD `2f5f03001`/`origin/main`, tracked clean; verify ok; no substantive change.
@@ -35,6 +36,6 @@ Standing task (cheap checks + execution integrity re-verification) complete. Ver
 2. **v6 selection run** not executed. Implementation binding in place; gate checks pass. Consuming the single authorized run (`v6-selection-20261022`, campaign `v6-campaign`, `max_runs==1`) is a **substantive action reserved for a later session with explicit user authorization** — do **not** run it without that instruction.
 
 ## Next agent initial task
-Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run or expose holdout. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified 2026-11-08T21:34Z, HEAD `ca56835a7fc98957451e6264c92e0d01e2291dc5`).
+Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run or expose holdout. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified 2026-11-08T21:35Z, HEAD `ef80eb2c2a9c81e11aaff0dceefba5c9ec87a1cd`).
 
 (End of file)
