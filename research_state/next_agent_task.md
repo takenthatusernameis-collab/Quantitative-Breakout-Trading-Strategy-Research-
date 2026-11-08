@@ -11,11 +11,11 @@
 5. Confirm data gate RESOLVED (do not re-run probe) and `research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` ABSENT unless a bounded selection run was explicitly authorized+completed.
 6. Prompt review: emit `NO_PROMPT_CHANGE_JUSTIFIED` or a concrete, evidence-backed change proposal (no prompt-level defect known).
 
-## Current verified state (2026-11-08T18:39Z — re-verify before acting)
+## Current verified state (2026-11-08T18:41Z — re-verify before acting)
 
-- branch `main`, HEAD `c9394a24e960cf32869e4506e3f9b68930d41b7e` == `origin/main`, tracked clean. Non-substantive checkpoint commit(s) advanced HEAD since prior durable handoff refresh; handoff refreshed only (bounded scope).
+- branch `main`, HEAD `3b99671281a27750f7153b26fe1b305445a8b8ce` == `origin/main`, tracked clean. Non-substantive checkpoint commits advanced HEAD since prior durable handoff refresh; handoff refreshed only (bounded scope).
 - Cohort (`continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 excluded (GHOUSDT, ETHFIUSDT, XDCUSDT, NIGHTUSDT, PYTHUSDT, TIAUSDT, BDXUSDT, FLRUSDT, QUSDT, TRUMPUSDT, PENGUUSDT, 币安人生USDT, YLDSUSDT). `confirmatory_window.holdout_exposed_count==0`; `confirmatory_window_status==NOT_STARTED`.
-- Exec auth (effective): `selection_authorization_present==true` (bound `configs/research_v6_selection_authorization_1.json`, run `v6-selection-20261022`, campaign `v6-campaign`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, sha `14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`); `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection auth `authorized_run.authorized==true`, `max_runs==1`. Binding `configs/research_v6_selection_execution_binding_1.json` `BINDING_PRESENT`/`IMPLEMENTATION_BOUND_NOT_RUN`; `src/v6_campaign/` present, `src/v6_confirmatory/` absent.
+- Exec auth (effective): `selection_authorization_present==true` (bound `configs/research_v6_selection_authorization_1.json`, run `v6-selection-20261022`, campaign `v6-campaign`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, sha `14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`); `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection auth `authorized_run.authorized==true`, `max_runs==1`. Binding `configs/research_v6_selection_execution_binding_1.json` `BINDING_PRESENT`/`IMPLEMENTATION_BOUND_NOT_RUN` (manifest `b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`); `src/v6_campaign/` present, `src/v6_confirmatory/` absent.
 - `verify_v6_execution.py` -> `ok:true`, `failures:[]` (exit 0). manifest/recomputed `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `selection_authorization_campaign_id=v6-campaign`, `run_id=v6-selection-20261022`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
 - Data gate RESOLVED. `v6_selection_ledger.json` ABSENT; `v6_selected_configurations_manifest.json` ABSENT. Single authorized run unconsumed.
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
@@ -32,4 +32,4 @@
 3. Do **not** commit unless explicitly asked. Do **not** run the v6 selection, do **not** expose holdout, do **not** re-run the resolved data probe.
 4. If the user provides explicit authorization to consume the single v6 selection run, treat that as a separate bounded action: re-verify all gates at execution time, confirm `max_runs==1` unconsumed, and follow `src/v6_campaign/` with v6-only outputs — do not proceed without that explicit instruction.
 
-*Last verified HEAD: `c9394a24e960cf32869e4506e3f9b68930d41b7e` (2026-11-08T18:39Z).*
+*Last verified HEAD: `3b99671281a27750f7153b26fe1b305445a8b8ce` (2026-11-08T18:41Z).*
