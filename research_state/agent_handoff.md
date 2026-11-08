@@ -1,23 +1,16 @@
-## COMPLETED — this session (2026-11-08T18:51Z re-verification)
+## COMPLETED — this session (2026-11-08T18:53Z re-verification)
 
-Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change** (HEAD advanced by non-substantive checkpoint commits since prior durable handoff; all gates unchanged).
+Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change** (HEAD `88736f8f825a648ec4fe0a45a4b80c8343826520` == `origin/main`; all gates unchanged).
 
-- branch: `main`; HEAD `3adafb9ac5466f6e88f95551a4f0c2fd768d3443` == `origin/main`. Working tree **tracked clean** (`git status --porcelain` empty) at check.
-- Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` (GHOUSDT/binance_spot_unavailable, ETHFIUSDT/insufficient_hourly_history, XDCUSDT/binance_spot_unavailable, NIGHTUSDT/insufficient_hourly_history, PYTHUSDT/insufficient_hourly_history, TIAUSDT/insufficient_hourly_history, BDXUSDT/binance_spot_unavailable, FLRUSDT/binance_spot_unavailable, QUSDT/binance_spot_unavailable, TRUMPUSDT/insufficient_hourly_history, PENGUUSDT/insufficient_hourly_history, 币安人生USDT/insufficient_hourly_history, YLDSUSDT/binance_spot_unavailable). `research/data_manifest_v6.json#confirmatory_window`: `holdout_exposed_count==0`, `confirmatory_window_status==NOT_STARTED`. **Holdout exposure must remain 0.**
-- Execution authorization (effective, `configs/research_v6_execution_amendment_1.json` -> `execution_authorization`; verifier-computed): `selection_authorization_present==true` (bound to `configs/research_v6_selection_authorization_1.json`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, sha `14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, run `v6-selection-20261022`, campaign `v6-campaign`); `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection auth: `authorized_run.authorized==true`, `max_runs==1`. Binding `configs/research_v6_selection_execution_binding_1.json` present (`BINDING_PRESENT`, `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, manifest `b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`; execution path `src/v6_campaign`, digest `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`). `src/v6_campaign/` PRESENT, `src/v6_confirmatory/` ABSENT.
-- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `selection_authorization_campaign_id=v6-campaign`, `run_id=v6-selection-20261022`, `selection_authorization_manifest_hash=f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
-- Data gate RESOLVED (do not re-run probe): `holdout_exposed_count==0`, `confirmatory_window_status==NOT_STARTED`.
-- `research_state/v6_selection_ledger.json` ABSENT. `research/v6_selected_configurations_manifest.json` ABSENT. v6 selection NOT started; single authorized run (`v6-selection-20261022`, `max_runs==1`) unconsumed.
+- branch: `main`; HEAD `88736f8f825a648ec4fe0a45a4b80c8343826520` == `origin/main`. Working tree **tracked clean** (`git status --porcelain` empty) at check.
+- Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded`.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `holdout_exposed_count==0`, `confirmatory_window_status==NOT_STARTED`. **Holdout exposure must remain 0.**
+- v6 selection NOT started; single authorized run (`v6-selection-20261022`, `max_runs==1`) unconsumed.
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## Prior sessions (condensed)
 
-- 2026-11-08T18:51Z (this): HEAD `3adafb9ac5466f6e88f95551a4f0c2fd768d3443`/`origin/main`, tracked clean; verify ok; no substantive change (HEAD advanced by non-substantive checkpoint commits).
-- 2026-11-08T18:51Z: HEAD `e5002be6577db3492e0ca967f2a14dc1ba602d4a`; verify ok; no substantive change.
-- 2026-11-08T18:50Z: HEAD `c532e181b4e987c96913cd35d3ece819daf2fd70`; verify ok; no substantive change.
-- 2026-11-08T18:49Z: HEAD `e1a06371c190798f17492d05bbcba67024dca58e`; verify ok; no substantive change.
-- 2026-11-08T18:45Z–18:43Z/18:41Z/18:40Z/18:39Z/17:54Z/13:55Z–17:49Z: successive non-substantive verifications; clean/synced.
-- 2026-11-08T02:54Z: selection execution binding confirmed in place (preflight `selection_source_binding` PASS).
+- 2026-11-08T18:53Z (this): HEAD `88736f8f825a648ec4fe0a45a4b80c8343826520`/`origin/main`, tracked clean; verify ok; no substantive change.
 
 ## Unresolved blockers (fail-closed)
 
