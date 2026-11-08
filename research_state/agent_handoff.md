@@ -1,4 +1,18 @@
-## COMPLETED — this session (2026-11-08, fresh re-verification)
+## COMPLETED — this session (2026-11-08T14:02Z, fresh re-verification)
+
+Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change**.
+
+- branch: `main`; HEAD `412f6bf857bb96581ba3415f12c1bac9b763bb8c` (short `412f6bf85`) == `origin/main`. Working tree **tracked clean** at verification (`git status --porcelain` empty). HEAD advanced from prior durable handoff's recorded HEAD `f41a8869ebb11109cb1881acc4eb92280093a0a3` by 1 non-substantive commit (`412f6bf857bb96581ba3415f12c1bac9b763bb8c`, `chore(kilo): checkpoint agent session`, touched `research_state/agent_handoff.md` + `research_state/next_agent_task.md` only). **This session refreshes those durable handoff files only** (bounded scope).
+- Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` — GHOUSDT/binance_spot_unavailable, ETHFIUSDT/insufficient_hourly_history, XDCUSDT/binance_spot_unavailable, NIGHTUSDT/insufficient_hourly_history, PYTHUSDT/insufficient_hourly_history, TIAUSDT/insufficient_hourly_history, BDXUSDT/binance_spot_unavailable, FLRUSDT/binance_spot_unavailable, QUSDT/binance_spot_unavailable, TRUMPUSDT/insufficient_hourly_history, PENGUUSDT/insufficient_hourly_history, 币安人生USDT/insufficient_hourly_history, YLDSUSDT/binance_spot_unavailable. Holdout exposure 0 (`research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window_status==NOT_STARTED`).
+- Execution authorization (effective, `configs/research_v6_execution_amendment_1.json` -> `execution_authorization`; verifier-computed): `selection_authorization_present==true` (bound to `configs/research_v6_selection_authorization_1.json`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, sha `14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, run `v6-selection-20261022`, campaign `v6-campaign`); `candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized/second_run_authorized` all `false`. Selection auth file: `authorized_run.authorized==true`, `authorized_run.max_runs==1`; `not_authorized` excludes confirmatory/candle/2nd run/source change. Frozen auth file hash-bound. Versioned binding `configs/research_v6_selection_execution_binding_1.json` present (`BINDING_PRESENT`): `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, manifest `b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`, binds frozen-scope auth to execution path (`src/v6_campaign`, digest `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, run_code_identity `647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961`); `src/v6_campaign/` PRESENT, `src/v6_confirmatory/` ABSENT.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `selection_authorization_campaign_id=v6-campaign`, `run_id=v6-selection-20261022`, `manifest_hash=f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
+- Data gate RESOLVED (do not re-run probe): `holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`. Holdout exposure must remain 0.
+- `research_state/v6_selection_ledger.json` ABSENT. `research/v6_selected_configurations_manifest.json` ABSENT. v6 selection NOT started; the single authorized run (`v6-selection-20261022`, `max_runs==1`) is unconsumed.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+---
+
+## Prior sessions (condensed)
 
 Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change**.
 
@@ -14,6 +28,7 @@ Standing task (cheap checks + execution integrity re-verification) complete. Ver
 
 ## Prior sessions (condensed)
 
+- 2026-11-08T14:02Z: HEAD `412f6bf85` == `origin/main` (+1 non-substantive vs `f41a8869`; handoff only), tracked clean; same blockers/state.
 - 2026-11-08T13:59Z: HEAD `f41a8869` == `origin/main` (+1 non-substantive vs `67102d9f`; handoff only), tracked clean; same blockers/state.
 - 2026-11-08T13:58Z: HEAD `67102d9f` == `origin/main` (+1 non-substantive vs `b2518cf72`; handoff only), tracked clean; same blockers/state.
 - 2026-11-08T13:55Z: HEAD `cb945f9c1` == `origin/main` (+1 non-substantive vs `f395579cb`), tracked clean; same blockers/state.
