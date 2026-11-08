@@ -8,8 +8,8 @@
 5. Confirm data gate RESOLVED (do not re-run probe) and `research_state/v6_selection_ledger.json` ABSENT unless a bounded selection run was explicitly authorized+completed.
 6. Prompt review: emit `NO_PROMPT_CHANGE_JUSTIFIED` or a concrete, evidence-backed change proposal (no prompt-level defect known).
 
-## Current verified state (2026-11-08T01:19:30Z — re-verify)
-- branch `main`, HEAD == origin/main `ed369bb0e` (`ed369bb0e33f73f7d53a64a5ef01d2ead33420cf`), clean. Prior handoff recorded `bcfab0eb`; delta = 3 non-substantive `chore(kilo): checkpoint agent session` commits, no substantive change.
+## Current verified state (2026-11-08T01:21:27Z — re-verify)
+- branch `main`, HEAD == origin/main `a0aa7838` (`a0aa7838001e110868731c8b495ccf554e619bc7`), clean. Prior handoff recorded `ed369bb0e`; delta = 1 non-substantive `chore(kilo): checkpoint agent session` commit, no substantive change.
 - Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 excluded. `holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`.
 - Exec auth (effective): `selection_authorization_present==true`; `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`/null. Selection auth file: `authorized==true`, `max_runs==1`, but still records `v6_execution_path_exists==false`, `execution_path_digest==null`. FS has `src/v6_campaign/` (8 modules) — selection auth file state must be revised/bound (and gate pass) before a selection run.
 - `verify_v6_execution.py` -> `ok:true`, `failures:[]` (exit 0). manifest/recomputed `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `selection_authorization_campaign_id=v6-campaign`, `run_id=v6-selection-20261022`, `manifest_hash=f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
