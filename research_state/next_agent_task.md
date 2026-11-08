@@ -8,8 +8,8 @@
 5. Confirm data gate RESOLVED (do not re-run probe) and `research_state/v6_selection_ledger.json` ABSENT unless a bounded selection run was explicitly authorized+completed.
 6. Prompt review: emit `NO_PROMPT_CHANGE_JUSTIFIED` or a concrete, evidence-backed change proposal (no prompt-level defect known).
 
-## Current verified state (2026-11-08T01:10:56Z — re-verify)
-- branch `main`, HEAD == origin/main `742cac2d7` (`742cac2d76cf2440b969c45d5dd26d583d5d6e7e`), clean. Prior handoff recorded `b3e391355`; delta = 1 non-substantive `chore(kilo): checkpoint agent session` commit, no substantive change.
+## Current verified state (2026-11-08T01:12:48Z — re-verify)
+- branch `main`, HEAD == origin/main `b11fa5cf2` (`b11fa5cf2d584c8dcef50d8177db0e8bd9b8f05e`), clean. Prior handoff recorded `742cac2d7`; delta = 1 non-substantive `chore(kilo): checkpoint agent session` commit, no substantive change.
 - Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 excluded. `holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`.
 - Exec auth (effective): `selection_authorization_present==true`; `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection auth: `authorized==true`, `max_runs==1`; file still records `v6_execution_path_exists==false`, `execution_path_digest==null` (fs has `src/v6_campaign/` — selection auth file state must be revised/bound and verifier/run gate must pass before a selection run).
 - `verify_v6_execution.py` -> `ok:true`, `failures:[]` (exit 0). manifest/recomputed `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
@@ -21,3 +21,5 @@
 
 ## Next precise action
 Re-run this standing task and refresh handoff/this file with fresh-verified values. No new substantive action until the 2027-01-20 gate or an explicit selection-authorization revision. Do not commit unless explicitly asked.
+
+(End of file - total 28 lines)
