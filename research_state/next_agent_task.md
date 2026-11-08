@@ -1,24 +1,23 @@
-# Next Agent Task (initial message — 2026-11-08T01:07:34Z)
+# Next agent task (initial message)
 
-On activation, read the top `COMPLETED — this session` entry of `research_state/agent_handoff.md` (latest 2026-11-08T01:07:34Z / HEAD `382e2ee7e2abddf2fb10e32b9440c38954f8a4c8` `382e2ee`), then run the standing task below.
+## Standing task (re-run cheap checks; do not trust this file — verify fresh)
+1. `git rev-parse --abbrev-ref HEAD && git rev-parse HEAD && git rev-parse origin/main && git status --porcelain` (record HEAD/clean/sync; note any non-substantive checkpoint commits vs last handoff).
+2. Read cohort/holdout: `research_state/continuous_universe_state.json` (`next_cohort_index`, `current_cohort`), `research/data_manifest_v6.json#confirmatory_window` (`holdout_exposed_count` must remain 0, `confirmatory_window_status=NOT_STARTED`).
+3. Read execution auth: `configs/research_v6_execution_amendment_1.json` (effective, under `execution_authorization`) and `configs/research_v6_selection_authorization_1.json` (note `authorized_run.execution_path.v6_execution_path_exists`/`code_identity.execution_path_digest` vs filesystem `src/v6_campaign/`).
+4. Run `python3 scripts/verify_v6_execution.py`; record `ok`, `failures`, `manifest_hash`/`recomputed_manifest_hash` (must match), `v6_execution_path_canonical_digest`, `evaluation_may_not_start_before_utc`.
+5. Confirm data gate RESOLVED (do not re-run probe) and `research_state/v6_selection_ledger.json` ABSENT unless a bounded selection run was explicitly authorized+completed.
+6. Prompt review: emit `NO_PROMPT_CHANGE_JUSTIFIED` or a concrete, evidence-backed change proposal (no prompt-level defect known).
 
-Last recorded state (verify fresh — do not trust): HEAD == origin/main == `382e2ee7e2abddf2fb10e32b9440c38954f8a4c8`. `git status --porcelain` was empty at verification. HEAD advanced from prior handoff record `5bbab98de27b2db4ce5880572469f8c86ea381b4` by one non-substantive checkpoint commit; no substantive state change observed.
+## Current verified state (2026-11-08T01:09:25Z — re-verify)
+- branch `main`, HEAD == origin/main `b3e391355` (`b3e391355051721acd0e1f1e8724c16a1fb7b3bd`), clean. Prior handoff recorded `fa3fda4b`; delta = 1 non-substantive `chore(kilo): checkpoint agent session` commit, no substantive change.
+- Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 excluded. `holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`.
+- Exec auth (effective): `selection_authorization_present==true`; `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection auth: `authorized==true`, `max_runs==1`; file still records `v6_execution_path_exists==false`, `execution_path_digest==null` (fs has `src/v6_campaign/` — selection auth file state must be revised/bound and verifier/run gate must pass before a selection run).
+- `verify_v6_execution.py` -> `ok:true`, `failures:[]` (exit 0). manifest/recomputed `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
+- `research_state/v6_selection_ledger.json` ABSENT. v6 selection NOT started.
 
-## Standing task
+## Unresolved blockers (fail-closed)
+1. **BRAIN-003 confirmatory campaign** blocked until `2027-01-20T02:00:00Z`; `holdout_exposed_count` must remain 0.
+2. **v6 selection run** blocked until selection auth file state binds `src/v6_campaign` (`execution_path_digest==null`, `v6_execution_path_exists==false` in `configs/research_v6_selection_authorization_1.json`) and gate passes.
 
-1. **Cheap checks first.** Verify `git rev-parse HEAD` / `git rev-parse origin/main` / `git status --porcelain`; `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, 13 `current_cohort.excluded` in `research_state/continuous_universe_state.json`. Verify execution-authorization flags in `configs/research_v6_execution_amendment_1.json` (under `execution_authorization`): `selection_authorization_present==true`; `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection authorization (`configs/research_v6_selection_authorization_1.json`): `authorized_run.authorized==true`, `authorized_run.max_runs==1`; file records `authorized_run.execution_path.v6_execution_path_exists==false` and `authorized_run.code_identity.execution_path_digest==null` (filesystem shows `src/v6_campaign/` present; do **not** treat filesystem presence as authorization — selection auth file state must be revised/bound and verifier/run gate must pass).
-2. **Verify execution integrity.** Run `python3 scripts/verify_v6_execution.py`. Expect `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` must match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`. `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
-3. **Data gate — RESOLVED.** Do not re-run probe. `research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window.confirmatory_window_status=NOT_STARTED`. Holdout exposure must remain 0.
-4. **v6 selection run — do NOT start.** Blocked on selection auth file state: `execution_path_digest==null` / `v6_execution_path_exists==false` despite `src/v6_campaign/` present. `research_state/v6_selection_ledger.json` must be absent.
-5. **BRAIN-003 confirmatory campaign — STILL BLOCKED until 2027-01-20T02:00:00Z.** Fail-closed; `holdout_exposed_count` must remain 0.
-
-## Out of scope
-
-- Do NOT start a v6 selection run.
-- Do NOT read or evaluate any confirmatory-window candle.
-- Do NOT modify `src/breakout_research`.
-- Do NOT commit unless explicitly asked.
-
-## Session closeout
-
-When verified complete: prepend a new `COMPLETED` entry to `research_state/agent_handoff.md` (with UTC timestamp, current HEAD, check results, and any substantive changes). Refresh this file with latest HEAD/timestamp and a clear next-agent message. Do not commit unless explicitly asked.
+## Next precise action
+Re-run this standing task and refresh handoff/this file with fresh-verified values. No new substantive action until the 2027-01-20 gate or an explicit selection-authorization revision. Do not commit unless explicitly asked.
