@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-08T04:59Z, fresh verification)
+## COMPLETED — this session (2026-11-08T05:01Z, fresh verification)
 
 Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh.
 
-- branch: `main`; HEAD `ffa89b11c8761b05374ee5347a676e7ede761d6c` (`ffa89b11c`) == origin/main, clean (`git status --porcelain` empty). HEAD advanced from prior handoff `dad4f1a31159afcb244aac33eaa8ec83ef4d8d3c` (`dad4f1a3`) by 1 non-substantive checkpoint commit; no substantive state change.
+- branch: `main`; HEAD `894d5302f646b28eede7bb5ee291b0cda2ad4cad` (`894d5302f`) == origin/main, clean (`git status --porcelain` empty). HEAD advanced from prior handoff `ffa89b11c8761b05374ee5347a676e7ede761d6c` (`ffa89b11c`) by 1 non-substantive checkpoint commit; no substantive state change.
 - Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded`. Holdout exposure 0 (`research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window_status=NOT_STARTED`).
 - Execution authorization (effective, `configs/research_v6_execution_amendment_1.json`): `selection_authorization_present==true` (bound to `configs/research_v6_selection_authorization_1.json`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, sha `14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, run `v6-selection-20261022`, campaign `v6-campaign`); `candle_fetch/confirmatory_evaluation/execution/grid_run/second_run` all `false`. Selection auth file: `authorized==true`, `max_runs==1`; frozen file still records `v6_execution_path_exists==false`/`execution_path_digest==null` (hash-bound, intentionally unchanged). Versioned binding `configs/research_v6_selection_execution_binding_1.json` present: `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, manifest `b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`, binds `src/v6_campaign` digest `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72` to the frozen auth; `src/v6_campaign/` present.
 - `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `selection_authorization_campaign_id=v6-campaign`, `run_id=v6-selection-20261022`, `manifest_hash=f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
@@ -17,6 +17,7 @@ Standing task (cheap checks + execution integrity re-verification) complete. Ver
 
 ## Prior sessions (condensed)
 
+- 2026-11-08T04:59Z: HEAD `ffa89b11c` (+1 non-substantive vs `dad4f1a3`), clean/synced; same blockers/state.
 - 2026-11-08T04:11Z: HEAD `dad4f1a3` (+1 non-substantive vs `f941426b9`), clean/synced; same blockers/state.
 - 2026-11-08T04:10Z: HEAD `f941426b9` (+1 non-substantive vs `d60390b53`), clean/synced; same blockers/state.
 - 2026-11-08T04:09Z: HEAD `d60390b53` (+1 non-substantive vs `db771dad8`), clean/synced; same blockers/state.
