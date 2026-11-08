@@ -1,3 +1,21 @@
+## COMPLETED — this session (2026-11-08T04:10Z, fresh verification)
+
+Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh.
+
+- branch: `main`; HEAD `f941426b92de0f797814b5cb92d0ee08f04243a7` (`f941426b9`) == origin/main, clean. HEAD advanced from prior handoff `d60390b53004a9001709b6aed6de6018cf312017` (`d60390b53`) by 1 non-substantive checkpoint commit; no substantive state change.
+- Cohort: `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 excluded. Holdout exposure 0 (`confirmatory_window_status=NOT_STARTED`).
+- Exec auth: effective `configs/research_v6_execution_amendment_1.json`, `selection_authorization_present==true` (run `v6-selection-20261022`, campaign `v6-campaign`, max_runs==1); candle_fetch/confirmatory_evaluation/execution/grid_run/second_run all false. Frozen file still records `v6_execution_path_exists==false`/`execution_path_digest==null` (hash-bound). Versioned binding present: `IMPLEMENTATION_BOUND_NOT_RUN`. `src/v6_campaign/` present.
+- `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []`. manifest/recomputed `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
+- Data gate RESOLVED (do not re-run probe): holdout_exposed_count==0, confirmatory_window_status=NOT_STARTED.
+- `v6_selection_ledger.json` ABSENT. `research/v6_selected_configurations_manifest.json` ABSENT. v6 selection NOT started; single authorized run unconsumed.
+- Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
+- Unresolved blockers (fail-closed): (1) BRAIN-003 confirmatory campaign blocked until `2027-01-20T02:00:00Z`; holdout_exposed_count must remain 0. 6 confirmatory-side blockers. (2) v6 selection run not executed — reserved for later session.
+- Bounded write scope honored: only `research_state/agent_handoff.md` and `research_state/next_agent_task.md` modified. No commit.
+
+Handoff updated; initial task message refreshed (`research_state/next_agent_task.md`).
+
+---
+
 ## COMPLETED — this session (2026-11-08T04:09Z, fresh verification)
 
 Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh (do not trust prior entries).
