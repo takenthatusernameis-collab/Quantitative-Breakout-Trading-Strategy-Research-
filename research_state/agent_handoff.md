@@ -1,6 +1,6 @@
-## COMPLETED — this session (2026-11-08T17:42Z, fresh re-verification)
+## COMPLETED — this session (2026-11-08T17:44Z, fresh re-verification)
 
-Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change** (HEAD advanced by non-substantive checkpoint commit(s) since prior handoff; durable handoff refreshed only, bounded scope).
+Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh; **no substantive state change** (HEAD `39fad54d6419ac35ebcc1f32448717e5f228a8c9` == origin/main, tracked clean; verify ok; manifest hash match; holdout_exposed_count==0).
 
 - branch: `main`; HEAD `cc34b0e7e4ca959c78e02e4d420b059ee77857f8` == `origin/main`. Working tree **tracked clean** (`git status --porcelain` empty).
 - Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` (GHOUSDT/binance_spot_unavailable, ETHFIUSDT/insufficient_hourly_history, XDCUSDT/binance_spot_unavailable, NIGHTUSDT/insufficient_hourly_history, PYTHUSDT/insufficient_hourly_history, TIAUSDT/insufficient_hourly_history, BDXUSDT/binance_spot_unavailable, FLRUSDT/binance_spot_unavailable, QUSDT/binance_spot_unavailable, TRUMPUSDT/insufficient_hourly_history, PENGUUSDT/insufficient_hourly_history, 币安人生USDT/insufficient_hourly_history, YLDSUSDT/binance_spot_unavailable). `research/data_manifest_v6.json#confirmatory_window`: `holdout_exposed_count==0`, `confirmatory_window_status==NOT_STARTED`. **Holdout exposure must remain 0.**
