@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-08T08:11Z, fresh verification)
+## COMPLETED — this session (2026-11-08T08:43Z, fresh verification)
 
 Standing task (cheap checks + execution integrity re-verification) complete. Verified fresh.
 
-- branch: `main`; HEAD `4e6704fa30e7a30918091e73b434a2dc660221f2` == origin/main, clean (`git status --porcelain` empty). HEAD advanced from prior handoff's recorded `e27d780824da09c4a7a87b65e3a99236e19505a6` by 1 non-substantive checkpoint commit (`4e6704fa3 chore(kilo): checkpoint agent session`, 2026-11-08T08:11:39Z, touching only `research_state/agent_handoff.md` + `research_state/next_agent_task.md`); no substantive state change.
+- branch: `main`; HEAD `b55870de09270c7dbafdf1ffd7bf6fb29b8191d0` == origin/main, clean (`git status --porcelain` empty). HEAD advanced from prior handoff's recorded `4e6704fa30e7a30918091e73b434a2dc660221f2` by 2 non-substantive commits (`8720eafe6 chore(kilo): checkpoint agent session`, `b55870de0 chore: capture completed workflow run diagnostics`); no substantive state change.
 - Cohort (`research_state/continuous_universe_state.json`): `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded` — GHOUSDT/binance_spot_unavailable, ETHFIUSDT/insufficient_hourly_history, XDCUSDT/binance_spot_unavailable, NIGHTUSDT/insufficient_hourly_history, PYTHUSDT/insufficient_hourly_history, TIAUSDT/insufficient_hourly_history, BDXUSDT/binance_spot_unavailable, FLRUSDT/binance_spot_unavailable, QUSDT/binance_spot_unavailable, TRUMPUSDT/insufficient_hourly_history, PENGUUSDT/insufficient_hourly_history, 币安人生USDT/insufficient_hourly_history, YLDSUSDT/binance_spot_unavailable. Holdout exposure 0 (`research/data_manifest_v6.json#confirmatory_window.holdout_exposed_count==0`, `confirmatory_window.confirmatory_window_status==NOT_STARTED`).
 - Execution authorization (effective, `configs/research_v6_execution_amendment_1.json` -> `execution_authorization`): `selection_authorization_present==true` (bound to `configs/research_v6_selection_authorization_1.json`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, sha `14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, run `v6-selection-20261022`, campaign `v6-campaign`); `candle_fetch_authorized/confirmatory_evaluation_authorized/execution_authorized/grid_run_authorized/second_run_authorized` all `false`. Selection auth file: `authorized_run.authorized==true`, `authorized_run.max_runs==1`; `not_authorized` excludes confirmatory/candle/2nd run/source change. Frozen auth file hash-bound (no exec-path digest in-file). Versioned binding `configs/research_v6_selection_execution_binding_1.json` present (`BINDING_PRESENT`): `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, manifest `b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`, binds `src/v6_campaign` digest `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72` to frozen auth; `src/v6_campaign/` PRESENT, `src/v6_confirmatory/` ABSENT.
 - `python3 scripts/verify_v6_execution.py` -> `ok: true`, `failures: []` (exit 0). `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `v6_execution_path_canonical_digest` `37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. `selection_authorization_campaign_id=v6-campaign`, `run_id=v6-selection-20261022`, `manifest_hash=f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`. `evaluation_may_not_start_before_utc=2027-01-20T02:00:00Z`.
@@ -16,6 +16,7 @@ Standing task (cheap checks + execution integrity re-verification) complete. Ver
 
 ## Prior sessions (condensed)
 
+- 2026-11-08T08:11Z: HEAD `4e6704fa3` (+1 non-substantive vs `e27d78082`), clean/synced; same blockers/state.
 - 2026-11-08T08:10Z: HEAD `e27d780824` (+1 non-substantive vs `ddf64a81a`), clean/synced; same blockers/state.
 - 2026-11-08T08:04Z: HEAD `1c1193264` (+1 non-substantive vs `08a384b02`), clean/synced; same blockers/state.
 - 2026-11-08T08:03Z: HEAD `08a384b02` (+1 non-substantive vs `f0eded3dd`), clean/synced; same blockers/state.
@@ -41,7 +42,7 @@ Standing task (cheap checks + execution integrity re-verification) complete. Ver
 - 2026-11-08T04:10Z: HEAD `f941426b9` (+1 non-substantive vs `d60390b53`), clean/synced; same blockers/state.
 - 2026-11-08T04:09Z: HEAD `d60390b53` (+1 non-substantive vs `db771dad8`), clean/synced; same blockers/state.
 - 2026-11-08T04:08Z: HEAD `db771dad8` (+1 non-substantive vs `ca385c49`), clean/synced; same blockers/state.
-- 2026-11-08T04:02Z–03:02Z: repeated cheap checks; only non-substantive checkpoint HEAD advances; same blockers/state.
+- 2026-11-08T04:02Z–03:02Z: repeated cheap checks; only non-substantive HEAD advances; same blockers/state.
 - 2026-11-08T02:54Z: HEAD `17f15841b`; selection execution binding confirmed in place (preflight `selection_source_binding` PASS); same remaining blockers.
 - 2026-11-08T02:53Z–02:17Z: non-substantive HEAD advances; same blockers/state.
 - Prior 2026-11-07/08 standing-task re-verifications (git history): repeated cheap checks, no substantive state change. Same blockers: BRAIN-003 blocked until 2027-01-20T02:00:00Z (holdout_exposed_count 0), v6 selection single run unconsumed pending later-session execution.
