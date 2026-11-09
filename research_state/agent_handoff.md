@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-09T10:03Z re-verification)
+## COMPLETED — this session (2026-11-09T10:06Z re-verification)
 
-Standing task (cheap checks + execution-integrity re-verification) complete. **HEAD advanced from `db74a5553f3d07069fe5654c2e5d70ba81d8445d` to `8a0545ac46d6b1a14bf9d168aad1e5f8d5ce537d` (`origin/main`); tracked tree clean, no untracked transient files.** Verifier state, digests, cohort, and v6 selection artifacts unchanged — no substantive/drift state change other than HEAD advance. Verified fresh:
+Standing task (cheap checks + execution-integrity re-verification) complete. **HEAD advanced from `8a0545ac46d6b1a14bf9d168aad1e5f8d5ce537d` to `fc6d1f9c3017601dcfa35a59ae3db3242d25bf26` (`origin/main`); tracked tree clean, no untracked transient files.** Verifier state, digests, cohort, and v6 selection artifacts unchanged — no substantive/drift state change other than HEAD advance. Verified fresh:
 
-- branch: `main`; HEAD `8a0545ac46d6b1a14bf9d168aad1e5f8d5ce537d` == `origin/main`. `git status --porcelain` empty; 0 untracked transient files (`--untracked-files=all`). No commit this session (handoff-only update; user did not request commits). HEAD advanced via checkpoint commit(s) since prior handoff (`db74a5553`).
+- branch: `main`; HEAD `fc6d1f9c3017601dcfa35a59ae3db3242d25bf26` == `origin/main`. `git status --porcelain` empty; 0 untracked transient files (`--untracked-files=all`). No commit this session (handoff-only update; user did not request commits). HEAD advanced via checkpoint commit(s) since prior handoff (`8a0545ac`).
 
 - Cohort (`research_state/continuous_universe_state.json`): **no drift** — `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded`.
 
@@ -13,7 +13,8 @@ Standing task (cheap checks + execution-integrity re-verification) complete. **H
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## Prior sessions (condensed)
-- 2026-11-09T10:03Z (this): HEAD `8a0545ac46d6b1a14bf9d168aad1e5f8d5ce537d`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update; no commit — user did not request). HEAD advanced from `db74a5553f3d07069fe5654c2e5d70ba81d8445d`.
+- 2026-11-09T10:06Z (this): HEAD `fc6d1f9c3017601dcfa35a59ae3db3242d25bf26`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update; no commit — user did not request). HEAD advanced from `8a0545ac46d6b1a14bf9d168aad1e5f8d5ce537d`.
+- 2026-11-09T10:03Z: HEAD `8a0545ac46d6b1a14bf9d168aad1e5f8d5ce537d`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update; no commit — user did not request). HEAD advanced from `db74a5553f3d07069fe5654c2e5d70ba81d8445d`.
 - 2026-11-09T10:00Z: HEAD `db74a5553f3d07069fe5654c2e5d70ba81d8445d`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update; no commit — user did not request). HEAD advanced from `2fde849eee5250f7027d968277c79bb15f212259`.
 - 2026-11-09T09:57Z: HEAD `2fde849eee5250f7027d968277c79bb15f212259`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update; no commit — user did not request commits). HEAD advanced from `dd5090645321c383bd924ffd5328822a1eb6c1d6`.
 - 2026-11-09T09:47Z: HEAD `23dcfa8435939fe5c195f41d366e7698fcb8b7ca`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update). HEAD advanced from `e266d69db802d1c88af2c8ed3ac0d043b74202ef`.
@@ -84,4 +85,4 @@ Standing task (cheap checks + execution-integrity re-verification) complete. **H
 
 ## Next agent initial task
 
-Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified 2026-11-09T10:03Z, HEAD `8a0545ac46d6b1a14bf9d168aad1e5f8d5ce537d`).
+Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified 2026-11-09T10:06Z, HEAD `fc6d1f9c3017601dcfa35a59ae3db3242d25bf26`).
