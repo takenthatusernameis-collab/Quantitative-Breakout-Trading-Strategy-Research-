@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-09T07:37Z re-verification)
+## COMPLETED — this session (2026-11-09T07:40Z re-verification)
 
-Standing task (cheap checks + execution-integrity re-verification) complete. **HEAD advanced from `85d10ecf9c67c041c599d948e7db0e3686cd2543` to `cf689f03f773f6aa9d3896974486c62b15a3f47e` (`origin/main`); tracked tree clean, no untracked transient files.** Verifier state, digests, cohort, and v6 selection artifacts unchanged — no substantive/drift state change other than HEAD advance. Verified fresh:
+Standing task (cheap checks + execution-integrity re-verification) complete. **HEAD advanced from `cf689f03f773f6aa9d3896974486c62b15a3f47e` to `b7eb1b984d40140fe9bf476c2aa9a6b8bfa462a6` (`origin/main`); tracked tree clean, no untracked transient files.** Verifier state, digests, cohort, and v6 selection artifacts unchanged — no substantive/drift state change other than HEAD advance. Verified fresh:
 
-- branch: `main`; HEAD `cf689f03f773f6aa9d3896974486c62b15a3f47e` == `origin/main`. `git status --porcelain` empty; no untracked transient files. No commit this session (handoff-only update; user did not request commits).
+- branch: `main`; HEAD `b7eb1b984d40140fe9bf476c2aa9a6b8bfa462a6` == `origin/main`. `git status --porcelain` empty; no untracked transient files (0 untracked, `--untracked-files=all`). No commit this session (handoff-only update; user did not request commits).
 
 - Cohort (`research_state/continuous_universe_state.json`): **no drift** — `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded`.
 
@@ -13,6 +13,7 @@ Standing task (cheap checks + execution-integrity re-verification) complete. **H
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## Prior sessions (condensed)
+- 2026-11-09T07:40Z (this): HEAD `b7eb1b984d40140fe9bf476c2aa9a6b8bfa462a6`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update). HEAD advanced from `cf689f03f773f6aa9d3896974486c62b15a3f47e`.
 - 2026-11-09T07:37Z (this): HEAD `cf689f03f773f6aa9d3896974486c62b15a3f47e`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update). HEAD advanced from `85d10ecf9c67c041c599d948e7db0e3686cd2543`.
 - 2026-11-09T07:34Z: HEAD `85d10ecf9c67c041c599d948e7db0e3686cd2543`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update). HEAD advanced from `144689597a85ec0ff56f99c9ba987960848499e0`.
 - 2026-11-09T07:27Z: HEAD `7a31bab525550cb859c6c090ea9ebdab5c0df361`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advance only (handoff-only update). HEAD advanced from `bfb0a4d4688233bd211e5e19281eb7a85ac76dd5`.
@@ -79,4 +80,4 @@ Standing task (cheap checks + execution-integrity re-verification) complete. **H
 
 ## Next agent initial task
 
-Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified 2026-11-09T07:37Z, HEAD `cf689f03f773f6aa9d3896974486c62b15a3f47e`).
+Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified 2026-11-09T07:40Z, HEAD `b7eb1b984d40140fe9bf476c2aa9a6b8bfa462a6`).
