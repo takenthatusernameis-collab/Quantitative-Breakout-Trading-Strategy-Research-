@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-09T20:30Z re-verification)
+## COMPLETED — this session (2026-11-09T21:12Z re-verification)
 
-Standing task (cheap checks + execution-integrity re-verification) complete. **HEAD is `50dbf01e1dd7f04b06dcf4ed2acc3ba71eab9cdb` (`origin/main` == `@{u}`); tracked tree clean before this handoff update.** Verifier state, digests, cohort, and v6 selection artifacts unchanged — **no substantive protocol/state change beyond HEAD advancing; no commit this session (handoff-only update).**
+Standing task (cheap checks + execution-integrity re-verification) complete. **HEAD is `8374a1b77d857879d972045ae9a6e1b47f14fa8e` (`origin/main` == `@{u}`); tracked tree clean before this handoff update.** Verifier state, digests, cohort, and v6 selection artifacts unchanged — **no substantive protocol/state change beyond HEAD advancing; no commit this session (handoff-only update).**
 
-- branch: `main`; HEAD `50dbf01e1dd7f04b06dcf4ed2acc3ba71eab9cdb` == `origin/main` == `@{u}`. `git status --porcelain --untracked-files=all` clean before update; handoff files modified only by this session's handoff write (left uncommitted — user did not request a commit).
+- branch: `main`; HEAD `8374a1b77d857879d972045ae9a6e1b47f14fa8e` == `origin/main` == `@{u}`. `git status --porcelain --untracked-files=all` clean before update; handoff files modified only by this session's handoff write (left uncommitted — user did not request a commit).
 
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` (unchanged): `["the code-hash constraint does not record the authorized code hash of record", "the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e", "the versioned binding's hashed engine digest does not recompute", "the versioned binding's composite run code identity does not recompute"]`. `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Computed: `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Root cause (fail-closed): frozen `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` vs `research_state/campaign_authorization.json` `code_hash==22bacfb89a469cc9eaa3ff4198510135910756721c69cda09b78d784d15c0c06`; binding hashed-engine/composite digests no longer recompute. **Do not edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` to paper over this without explicit user authorization.** Resolving is a substantive/protocol decision requiring explicit authorization.
 
@@ -12,65 +12,14 @@ Standing task (cheap checks + execution-integrity re-verification) complete. **H
 
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-**Change vs prior handoff (prior recorded HEAD `199a664c3f0c13cf7f80141c2b29985350f2083d`):** HEAD advanced to `50dbf01e1dd7f04b06dcf4ed2acc3ba71eab9cdb` (checkpoint commit; HEAD == origin/main == @{u}). Verifier/cohort/v6 artifacts unchanged. Handoff files refreshed; no commits this session (user did not request). `NO_PROMPT_CHANGE_JUSTIFIED`.
+**Change vs prior handoff (prior recorded HEAD `50dbf01e1dd7f04b06dcf4ed2acc3ba71eab9cdb`):** HEAD advanced to `8374a1b77d857879d972045ae9a6e1b47f14fa8e` (checkpoint commit; HEAD == origin/main == @{u}). Verifier/cohort/v6 artifacts unchanged. Handoff files refreshed; no commits this session (user did not request). `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-
-## 2026-11-09T20:30Z — Cheap-check re-verification (this session, handoff refresh)
-- HEAD `50dbf01e1dd7f04b06dcf4ed2acc3ba71eab9cdb` == `origin/main` == `@{u}` (checkpoint commit; advanced from `199a664c3f0c13cf7f80141c2b29985350f2083d`). Tracked clean before this handoff update.
+## 2026-11-09T21:12Z — Cheap-check re-verification (this session, handoff refresh)
+- HEAD `8374a1b77d857879d972045ae9a6e1b47f14fa8e` == `origin/main` == `@{u}` (checkpoint commit; advanced from `50dbf01e1dd7f04b06dcf4ed2acc3ba71eab9cdb`). Tracked clean before this handoff update.
 - `python3 scripts/verify_v6_execution.py` -> **`ok:false` (exit 1)**, 4 failures (unchanged): frozen `authorized_code_hash==2efd3b18...` vs `campaign_authorization.json` `code_hash==22bacfb89...`; recomputed `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; binding hashed-engine/composite run code identity digests do not recompute. Manifest hashes match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; `selection_authorization_run_id==v6-selection-20261022`, `campaign==v6-campaign`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - `research_state/continuous_universe_state.json`: cohort 5 completed, `next_cohort_index==6`, 13 exclusions (unchanged).
 - v6: `src/v6_campaign/` present; `src/v6_confirmatory/` absent; no `research_state/v6_selection_ledger.json` or `research/v6_selected_configurations_manifest.json`. Selection auth `PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN` (`v6-selection-20261022`, `v6-campaign`, `max_runs==1`, unconsumed); binding `IMPLEMENTATION_BOUND_NOT_RUN`. Holdout/confirmatory exposure remains 0.
 - **No substantive drift (artifacts unchanged).** HEAD advanced only. No frozen artifacts edited. No commits created (user did not request). `NO_PROMPT_CHANGE_JUSTIFIED`. Next task: see `research_state/next_agent_task.md`.
-
-## 2026-11-09T20:27Z — Cheap-check re-verification (prior session, handoff refresh)
-- HEAD `199a664c3f0c13cf7f80141c2b29985350f2083d` == `origin/main` == `@{u}` (checkpoint commit; advanced from `f47cbeab5aa546203c5d5b2ef164f89fcf9a69ee`). Tracked clean before this handoff update.
-- `python3 scripts/verify_v6_execution.py` -> **`ok:false` (exit 1)**, 4 failures (unchanged): frozen `authorized_code_hash==2efd3b18...` vs `campaign_authorization.json` `code_hash==22bacfb89...`; recomputed `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; binding hashed-engine/composite run code identity digests do not recompute. Manifest hashes match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; `selection_authorization_run_id==v6-selection-20261022`, `campaign==v6-campaign`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
-- `research_state/continuous_universe_state.json`: cohort 5 completed, `next_cohort_index==6`, 13 exclusions (unchanged).
-- v6: `src/v6_campaign/` present; `src/v6_confirmatory/` absent; no `research_state/v6_selection_ledger.json` or `research/v6_selected_configurations_manifest.json`. Selection auth `PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN` (`v6-selection-20261022`, `v6-campaign`, `max_runs==1`, unconsumed); binding `IMPLEMENTATION_BOUND_NOT_RUN`. Holdout/confirmatory exposure remains 0.
-- **No substantive drift.** No frozen artifacts edited. No commits created (user did not request). `NO_PROMPT_CHANGE_JUSTIFIED`. Next task: see `research_state/next_agent_task.md`.
-
-## 2026-11-09T20:24Z — Cheap-check re-verification (prior session, handoff refresh)
-- HEAD `f47cbeab5aa546203c5d5b2ef164f89fcf9a69ee` == `origin/main` (checkpoint commit from prior session; advanced from `68a7bb5ca33f5d84c50760e19d6705e7c1b2fc06`). `git status --porcelain --untracked-files=all` clean before handoff update.
-- `python3 scripts/verify_v6_execution.py` -> **`ok:false` (exit 1)**, 4 failures (unchanged): frozen `authorized_code_hash==2efd3b18...` vs `campaign_authorization.json` `code_hash==22bacfb89...`; recomputed `canonical_hashed_set_digest==8cd17522...`; binding hashed-engine/composite run code identity digests do not recompute. Manifest hashes match `928727279a...`; `selection_authorization_run_id==v6-selection-20261022`, `campaign==v6-campaign`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
-- Cohort 5 completed, `next_cohort_index==6`, 13 exclusions (unchanged). v6 selection auth unconsumed, binding `IMPLEMENTATION_BOUND_NOT_RUN`, confirmatory absent.
-- **No substantive drift.** No commits created. `NO_PROMPT_CHANGE_JUSTIFIED`.
-
-## 2026-11-09T20:22Z — Cheap-check re-verification (condensed, prior)
-- HEAD `68a7bb5ca33f5d84c50760e19d6705e7c1b2fc06` == `origin/main`; verify fail-closed (same 4 failures); no drift. Handoff-only.
-
-## Prior sessions (condensed)
-- 2026-11-09T20:20Z: HEAD `76a5400b8a4e50d939809961bf08be5f70dca560`/`origin/main` (advanced from `d003d1806c...`); tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T20:16Z: HEAD `60682a19db70541a59dc14b02dbfb60cdf16036a`/`origin/main` (advanced from `66fe5c7db4...`); tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T20:13Z: HEAD `66fe5c7db4a0f027b3e9b082c3e1e4d4802bdbf5`/`origin/main` (advanced from `deb81c03...`); tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T20:11Z: HEAD `deb81c0373b96a045e5872ec417cbdce2067e097`/`origin/main` (advanced from `150982de9c...`); tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T15:19Z: HEAD `150982de9c288cd6f9bcc1774fe3c7084fa17a2a`/`origin/main` (advanced from `bd3348c84...`); tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T15:13Z: HEAD `bd3348c84cf46ec2b0d0987942781d8f5aff6f39`/`origin/main` (advanced from `ce1bfbf04...`); tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T15:07Z: HEAD `9c9eeb56bf0fa515794004a352ff9e8a2c4d0612`/`origin/main` (advanced from `0508acb73...`); tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T15:02Z: HEAD `0508acb733e1c8e8ea5e18e3b7f5a2500ba86ec3`/`origin/main` (advanced from `e9796d1e2...`); tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T14:58Z: HEAD `e9796d1e2bf661d50343dec1ce2a936ef933be95`/`origin/main`; tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T14:55Z: HEAD `0b9ae01d4567ce83fecfde86ec1b43950f7ff30b`/`origin/main`; tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T14:53Z: HEAD `d370890e62ec519a739be9a44710028e2507d475`/`origin/main`; tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T14:49Z: HEAD `282c9fea479ca2a4c964bcdb4e80b8b981fde210`/`origin/main`; tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T14:47Z: HEAD `f2052d2a2b2b0652b29ed96f99fa67dc57510dce`/`origin/main`; tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T14:09Z: HEAD `683483c7b77f8f55ecf0739b547c3ba3c26fde4f`/`origin/main`; tracked clean; verify fail-closed (same 4 failures); handoff-only update, no commit.
-- 2026-11-09T14:00Z: HEAD `efcb2864c7574cc81b43d81d51fc51319e2b6d17`/`origin/main` (advanced to `bdecbb39d...`); verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T13:46Z: HEAD `d48e3b04d3f4fdaf8ccffdca0079548fb6e51288`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T13:18Z: HEAD `b50c65c093f901d234cc4d6b884fa00f7003944f`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T13:12Z: HEAD `9020a36ab01349b223b55b9c21ca3247b7a768c2`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T13:06Z: HEAD `d90bd2906099788395a83dcb1931b504626bd3c9`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T13:05Z: HEAD `56d4d6bd165e4e41a0fc61bc1c7ccdb6fa92a411`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T12:56Z: HEAD `24ccba379667f6a68798ba7259bc5469a2045fff`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T12:54Z: HEAD `47e9b656cbc191b798d350b23adbfa8f60996dae`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T12:44Z: HEAD `e4ce6b7e89b4a508df86774241fd3ef885cace70`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T12:13Z: HEAD `fc2389d5f2f35546211860620bb58a4a54b4833e`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T12:09Z: HEAD `cd1c237a0402dbb09eb46ad50bbf2f02f541e4ca`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T12:04Z: HEAD `a44c7b054d5eebec053c8230fef84abfef1110de`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T12:02Z: HEAD `00d10ba2fe5566ecb5f8899b52749456b2b86974`/`origin/main`; verify fail-closed (same 4 failures); handoff-only update.
-- 2026-11-09T10:06Z–12:00Z: repeated cheap-check re-verifications; HEAD advanced through checkpoints; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); no substantive drift.
-- 2026-11-09T06:39Z–07:24Z: earlier re-verifications; same fail-closed verifier state, same cohort/v6 artifacts.
-- 2026-11-09T01:49Z–02:16Z: verify fail-closed (4 failures, canonical digest `8cd17522...`); `campaign_authorization.json` `code_hash==22bacfb89...`.
-- 2026-11-08T23:35Z–23:29Z: verify fail-closed (code-hash mismatch); HEAD advanced from `951aa68a` era.
-- 2026-11-08T21:37Z–18:53Z: earlier cheap-check verifications; verify was ok through `951aa68a` era, fail-closed from `64cf625` onward.
 
 ## Unresolved blockers (fail-closed)
 1. **V6 EXECUTION INTEGRITY / CODE-HASH + BINDING DIGEST MISMATCH (fail-closed):** `python3 scripts/verify_v6_execution.py` -> `ok:false` (4 failures). Frozen `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`; `research_state/campaign_authorization.json` `code_hash==22bacfb89a469cc9eaa3ff4198510135910756721c69cda09b78d784d15c0c06`. Verifier recomputes `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e` and reports binding hashed-engine/composite digests do not recompute. Protocol/manifest hashes match `928727279a...`. **Substantive/protocol decision required; do not edit frozen config, binding, or authorization artifacts to paper over it without explicit user authorization.**
@@ -79,4 +28,4 @@ Standing task (cheap checks + execution-integrity re-verification) complete. **H
 
 ## Next agent initial task
 
-Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified, HEAD `50dbf01e1dd7f04b06dcf4ed2acc3ba71eab9cdb`).
+Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified, HEAD `8374a1b77d857879d972045ae9a6e1b47f14fa8e`).
