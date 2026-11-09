@@ -1,10 +1,10 @@
-# Next agent task (re-verified, HEAD 3aef89bd)
+# Next agent task (re-verified, HEAD ab6ae7d7)
 
 ## Initial task message for the next agent (copy/paste):
 
 > Continue the standing cheap-checks + execution-integrity re-verification for this repo. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization.
 >
-> 1) Re-verify (cheap): `git status --porcelain --untracked-files=all` clean (no tracked/untracked drift before your handoff write); `git rev-parse HEAD == git rev-parse origin/main` (expect `3aef89bd1997c37b3ac281e6518f7d5c831100a0`); `python3 scripts/verify_v6_execution.py` — **currently `ok:false`** (fail-closed, 4 failures) incl. `"the code-hash constraint does not record the authorized code hash of record"` (frozen `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` vs `research_state/campaign_authorization.json` `code_hash==22bacfb89a469cc9eaa3ff4198510135910756721c69cda09b78d784d15c0c06`), recomputed `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, and binding hashed-engine/composite run code identity digests do not recompute. Manifest hashes still match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
+> 1) Re-verify (cheap): `git status --porcelain --untracked-files=all` clean (no tracked/untracked drift before your handoff write); `git rev-parse HEAD == git rev-parse origin/main` (expect `ab6ae7d7be002fd524afdfa8830d3050ceca32a5`); `python3 scripts/verify_v6_execution.py` — **currently `ok:false`** (fail-closed, 4 failures) incl. `"the code-hash constraint does not record the authorized code hash of record"` (frozen `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` vs `research_state/campaign_authorization.json` `code_hash==22bacfb89a469cc9eaa3ff4198510135910756721c69cda09b78d784d15c0c06`), recomputed `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, and binding hashed-engine/composite run code identity digests do not recompute. Manifest hashes still match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 >
 > 2) Confirm no state drift: `research_state/continuous_universe_state.json` shows `next_cohort_index==6`, cohort 5 completed with 13 exclusions; `src/v6_confirmatory/` absent; `research_state/v6_selection_ledger.json` and `research/v6_selected_configurations_manifest.json` absent; `src/v6_campaign/` present; `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; selection auth `configs/research_v6_selection_authorization_1.json` `authorization_status==PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN`, `authorized_run.run_id==v6-selection-20261022`, `authorized_run.campaign_id==v6-campaign`, `max_runs==1`, unconsumed. Holdout/confirmatory exposure must remain 0 (`research_state/checkpoint_v5.json` `holdout_exposed_count==0`; `scripts/v6_readiness_preflight.py` -> `authorization_ready:false`, `blocker_count:7`).
 >
@@ -12,9 +12,9 @@
 >
 > 4) Update `research_state/agent_handoff.md` and `research_state/next_agent_task.md` only if state changed; otherwise record no substantive change. Do not create commits unless the user explicitly requests.
 
-## Re-verified state (this session, 2026-11-09T23:26Z)
+## Re-verified state (this session, 2026-11-09T23:28Z)
 
-- HEAD `3aef89bd1997c37b3ac281e6518f7d5c831100a0` == `origin/main` == `@{u}` (`git status --porcelain --untracked-files=all` clean before this handoff update).
+- HEAD `ab6ae7d7be002fd524afdfa8830d3050ceca32a5` == `origin/main` == `@{u}` (`git status --porcelain --untracked-files=all` clean before this handoff update).
 - Verifier: **`ok:false` (exit 1)**, 4 failures (unchanged): code-hash constraint mismatch (`2efd3b18...` frozen vs `22bacfb89...` in `campaign_authorization.json`), canonical hashed-set digest recomputed `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, binding hashed-engine/composite run code identity digests do not recompute. Manifest hashes match `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - Cohort 5 complete, `next_cohort_index==6`, 13 exclusions (unchanged).
 - Selection auth `configs/research_v6_selection_authorization_1.json` `PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN` (`authorized_run.run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, unconsumed); binding `IMPLEMENTATION_BOUND_NOT_RUN`; `src/v6_campaign/` present; `src/v6_confirmatory/` absent; no selection ledger/manifest. `holdout_exposed_count==0`.
@@ -22,7 +22,7 @@
 
 ## Change vs prior handoff
 
-HEAD advanced `95b96ea5` -> `3aef89bd` (`origin/main` == `@{u}` == `3aef89bd`). Verifier/cohort/v6/preflight artifacts unchanged. Handoff files refreshed (2026-11-09T23:26Z); no commits (user did not request). `NO_PROMPT_CHANGE_JUSTIFIED`.
+HEAD advanced `3aef89bd` -> `ab6ae7d7` (`origin/main` == `@{u}` == `ab6ae7d7`). Verifier/cohort/v6/preflight artifacts unchanged. Handoff files refreshed (2026-11-09T23:28Z); no commits (user did not request). `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## Unresolved blockers (fail-closed)
 
