@@ -1,6 +1,6 @@
-## COMPLETED — this session (2026-11-09T02:27Z re-verification)
+## COMPLETED — this session (2026-11-09T02:29Z re-verification)
 
-Standing task (cheap checks + execution integrity re-verification) complete. **HEAD advanced from `e4835e555ec934ab153899a1e0a9d3d7fb31789d` to `934a5084bb057925c9dd970e1a2cf97ca2f08d98` (`origin/main`). Tracked tree clean; no untracked transient files.** Verifier state, digests, cohort, and v6 selection artifacts unchanged — no substantive/drift state change other than HEAD advance. Verified fresh:
+Standing task (cheap checks + execution integrity re-verification) complete. **HEAD advanced from `934a5084bb057925c9dd970e1a2cf97ca2f08d98` to `34daed5b9adb1b5e13e553dd1f752cb5fffebadf` (`origin/main`). Tracked tree clean; no untracked transient files.** Verifier state, digests, cohort, and v6 selection artifacts unchanged — no substantive/drift state change other than HEAD advance. Verified fresh:
 
 - branch: `main`; HEAD `934a5084bb057925c9dd970e1a2cf97ca2f08d98` == `origin/main`. `git status --porcelain` shows no tracked drift; no untracked transient shard tmp present.
 - Cohort (`research_state/continuous_universe_state.json`): **no drift** — `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 `current_cohort.excluded`.
@@ -9,7 +9,7 @@ Standing task (cheap checks + execution integrity re-verification) complete. **H
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## Prior sessions (condensed)
-- 2026-11-09T02:27Z: HEAD `934a5084bb057925c9dd970e1a2cf97ca2f08d98`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); commit `934a5084b` touched only handoff files. HEAD advanced from `e4835e555`.
+- 2026-11-09T02:29Z: HEAD `34daed5b9adb1b5e13e553dd1f752cb5fffebadf`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); commit `34daed5b9` touched only handoff files. HEAD advanced from `934a5084b`.
 - 2026-11-09T02:25Z: HEAD `e4835e555ec934ab153899a1e0a9d3d7fb31789d`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); commit `e4835e555` touched only handoff files. HEAD advanced from `627f34168353ff488d226b15002961c37779b653`.
 - 2026-11-09T02:22Z: HEAD `627f34168353ff488d226b15002961c37779b653`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); commit `9918dfa0a` touched only handoff files. HEAD advanced from `8ca7243c`.
 - 2026-11-09T02:16Z: HEAD `8ca7243c674a6cc9422da515b4fa1b09cb8ddccf`/`origin/main`; tracked clean, no untracked files; verify fail-closed (same 4 failures, canonical digest `8cd17522...`); HEAD advanced from `d86e2a99`.
@@ -46,4 +46,4 @@ Standing task (cheap checks + execution integrity re-verification) complete. **H
 
 ## Next agent initial task
 
-Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run or expose holdout. **Note fail-closed verifier blocker (code-hash + binding digest mismatch, blocker #1) — do not "fix" by editing frozen artifacts/binding/authorization without explicit authorization.** See `research_state/next_agent_task.md` for the copy/paste task message (re-verified 2026-11-09T02:27Z, HEAD `934a5084bb057925c9dd970e1a2cf97ca2f08d98`).
+Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run or expose holdout. **Note fail-closed verifier blocker (code-hash + binding digest mismatch, blocker #1) — do not "fix" by editing frozen artifacts/binding/authorization without explicit authorization.** See `research_state/next_agent_task.md` for the copy/paste task message (re-verified 2026-11-09T02:29Z, HEAD `34daed5b9adb1b5e13e553dd1f752cb5fffebadf`).
