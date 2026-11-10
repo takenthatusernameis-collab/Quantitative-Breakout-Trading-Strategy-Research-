@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-10T23:22:34Z UTC)
+## Initial task message (handoff 2026-11-10T23:25:02Z UTC)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state:** `main` @ `264f26052935a20ffa515001f40cac436696da99` == `origin/main` == `@{u}` (tracked tree clean at check). `python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
+**Current state:** `main` @ `f24a54c96f940f083b716520412456130b9d2ce0` == `origin/main` == `@{u}` (tracked tree clean at check). `python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -23,4 +23,4 @@ You are the next agent in the chain. Complete the standing task below, then upda
 
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
-(End of file - total 48 lines)
+(End of file - total 26 lines)
