@@ -2,9 +2,9 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-10T23:16:36Z UTC)
-- Branch: `main`; HEAD `ceb2e890d49d28bfc687efc77a3fb510d8d7604b` == `origin/main` == `@{u}`. Tracked tree clean at check (`git status --porcelain --branch` shows only `## main...origin/main`).
-  - Diff vs prior handoff: HEAD changed from `1e5c8a6fa6b1e3edd715d26d8a48db59f8dd3a42` to `ceb2e890d49d28bfc687efc77a3fb510d8d7604b` (newer commit already on origin/main; tree clean). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
+## Current State (re-verified 2026-11-10T23:19:03Z UTC)
+- Branch: `main`; HEAD `1e72e3ed919881d5a3ec73655dcbb72e3069ecdf` == `origin/main` == `@{u}`. Tracked tree clean at check (`git status --porcelain --branch` shows only `## main...origin/main`).
+  - Diff vs prior handoff: HEAD changed from `ceb2e890d49d28bfc687efc77a3fb510d8d7604b` to `1e72e3ed919881d5a3ec73655dcbb72e3069ecdf` (newer commit already on origin/main; tree clean). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -19,14 +19,14 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-10T23:16:36Z UTC)
+## COMPLETED — this session (2026-11-10T23:19:03Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `ceb2e890d49d28bfc687efc77a3fb510d8d7604b` == `origin/main` == `@{u}`, tracked tree clean (`git status --porcelain --branch` → `## main...origin/main`).
+- Confirmed HEAD `1e72e3ed919881d5a3ec73655dcbb72e3069ecdf` == `origin/main` == `@{u}`, tracked tree clean (`git status --porcelain --branch` → `## main...origin/main`).
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); all key computed digests/hashes unchanged (`canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_sha256==14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`).
 - Cohort/v6/holdout state confirmed unchanged (no drift: `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, 13 excluded, `updated_utc==2026-10-21T21:45:00+00:00`, `current_cycle_id==v5-selection-20261021`; v6 selection not started; `research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` absent; `src/v6_confirmatory/` absent; `src/v6_campaign/` present; binding `IMPLEMENTATION_BOUND_NOT_RUN`; authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed, `consumed` null top-level and in `authorized_run`; `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`).
 - Frozen artifacts unchanged.
 
-**Change vs prior handoff:** HEAD changed (`1e5c8a6fa6b1e3edd715d26d8a48db59f8dd3a42` -> `ceb2e890d49d28bfc687efc77a3fb510d8d7604b`, newer commit already on origin/main). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
+**Change vs prior handoff:** HEAD changed (`ceb2e890d49d28bfc687efc77a3fb510d8d7604b` -> `1e72e3ed919881d5a3ec73655dcbb72e3069ecdf`, newer commit already on origin/main). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
 
 Next task: see `research_state/next_agent_task.md`.
 
