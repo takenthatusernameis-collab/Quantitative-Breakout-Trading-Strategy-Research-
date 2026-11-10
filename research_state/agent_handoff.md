@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-10T11:41Z UTC)
-- Branch: `main`; HEAD `adddf6fdd180f8a005263bdb21c344b8ed0227bd` == `origin/main` == `@{u}`. Tracked tree clean at check time (aside from this session's handoff edits). Prior recorded HEAD `b56b1a083b3e5a69e7e40c081b1f509f361a3bce` (2026-11-10T11:38Z); **HEAD advanced** (prior checkpoint commit `b56b1a083 chore(kilo): checkpoint agent session`; diff touched only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`).
+## Current State (re-verified 2026-11-10T12:32Z UTC)
+- Branch: `main`; HEAD `89df69de21f8202a04edee715704bd88bc444217` == `origin/main` == `@{u}`. Tracked tree clean. Prior recorded HEAD `adddf6fdd180f8a005263bdb21c344b8ed0227bd` (2026-11-10T11:41Z); **HEAD advanced** (external commit on main; tree clean).
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -18,15 +18,15 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-10T11:41Z UTC)
+## COMPLETED — this session (2026-11-10T12:32Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `adddf6fdd180f8a005263bdb21c344b8ed0227bd` == `origin/main` == `@{u}`, tracked tree clean at check time (handoff files modified this session).
+- Confirmed HEAD `89df69de21f8202a04edee715704bd88bc444217` == `origin/main` == `@{u}`, tracked tree clean.
 - Verifier re-run: `ok:false` exit 1, same 4 failures; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; all key computed digests/hashes unchanged vs prior handoff.
 - Cohort/v6/holdout state confirmed unchanged (no drift; v6 selection not started; authorized run unconsumed; `holdout_exposed_count==0`).
 - `research_state/agent_handoff.md` and `research_state/next_agent_task.md` refreshed.
 
-**Change vs prior handoff:** HEAD advanced `b56b1a083` → `adddf6fdd` (prior checkpoint commit `b56b1a083 chore(kilo): checkpoint agent session`; only handoff files changed). Verifier/cohort/v6 artifacts unchanged. No commit made (not requested).
+**Change vs prior handoff:** HEAD advanced `adddf6fdd` → `89df69de` (external commit on main; tree clean). Verifier/cohort/v6 artifacts unchanged. No commit made (not requested).
 
 Next task: see `research_state/next_agent_task.md`.
 
-(End of file - total 32 lines)
+(End of file - total 41 lines)
