@@ -2,9 +2,9 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-10T18:23Z UTC)
-- Branch: `main`; HEAD `1c74597d8a15d9c2784fdcde46649776dc79bd29` == `origin/main` == `@{u}`. Tracked tree clean at check (no unstaged/staged tracked changes) except handoff files updated this session.
-  - Diff vs prior handoff: HEAD changed from `9e0f8e7d7ea95fe0c208cda68f7808a84ad70b65` to `1c74597d8a15d9c2784fdcde46649776dc79bd29` (prior agent's checkpoint commit; only handoff files changed). Verifier/cohort/v6 artifacts unchanged.
+## Current State (re-verified 2026-11-10T18:26Z UTC)
+- Branch: `main`; HEAD `3652986e8cf620c9ef6d4c68d0d0cd7635ca0efb` == `origin/main` == `@{u}`. Tracked tree clean at check (no unstaged/staged tracked changes) except handoff files updated this session.
+  - Diff vs prior handoff: HEAD changed from `1c74597d8a15d9c2784fdcde46649776dc79bd29` to `3652986e8cf620c9ef6d4c68d0d0cd7635ca0efb` (prior agent's checkpoint commit; only handoff files changed). Verifier/cohort/v6 artifacts unchanged.
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -19,14 +19,14 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-10T18:23Z UTC)
+## COMPLETED — this session (2026-11-10T18:26Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change; no commit made (not requested).
-- Confirmed HEAD `1c74597d8a15d9c2784fdcde46649776dc79bd29` == `origin/main` == `@{u}`, tracked tree clean at check.
+- Confirmed HEAD `3652986e8cf620c9ef6d4c68d0d0cd7635ca0efb` == `origin/main` == `@{u}`, tracked tree clean at check.
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; all key computed digests/hashes unchanged.
 - Cohort/v6/holdout state confirmed unchanged (no drift: `next_cohort_index==6`, cohort 5 `completed==true`, 13 excluded; v6 selection not started; `research_state/v6_selection_ledger.json`/`research/v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent; authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed, top-level `consumed` absent/null; `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`).
 - `research_state/agent_handoff.md` and `research_state/next_agent_task.md` refreshed.
 
-**Change vs prior handoff:** HEAD changed (`9e0f8e7d7ea95fe0c208cda68f7808a84ad70b65` -> `1c74597d8a15d9c2784fdcde46649776dc79bd29`). Verifier/cohort/v6 artifacts unchanged. No commit made (not requested).
+**Change vs prior handoff:** HEAD changed (`1c74597d8a15d9c2784fdcde46649776dc79bd29` -> `3652986e8cf620c9ef6d4c68d0d0cd7635ca0efb`). Verifier/cohort/v6 artifacts unchanged. No commit made (not requested).
 
 Next task: see `research_state/next_agent_task.md`.
 
