@@ -1,8 +1,8 @@
-## COMPLETED — this session (2026-11-09T23:36Z re-verification)
+## COMPLETED — this session (2026-11-10T00:15Z re-verification)
 
-Standing task (cheap checks + execution-integrity re-verification) complete. **HEAD is `af5e5006c6fc9daa0cc7574cff33b6fcc33115d7` (`origin/main` == `@{u}` == HEAD); tracked tree clean before this handoff update.** Verifier state, digests, cohort, and v6 selection artifacts unchanged from prior handoff — **no substantive protocol/state change; no commit this session (handoff-only update).**
+Standing task (cheap checks + execution-integrity re-verification) complete. **HEAD is `71a7938af8378b63eba617d6bda5db068c685f3a` (`origin/main` == `@{u}` == HEAD); tracked tree clean before this handoff update.** Verifier state, digests, cohort, and v6 selection artifacts unchanged from prior handoff — **no substantive protocol/state change; no commit this session (handoff-only update).**
 
-- branch: `main`; HEAD `af5e5006c` == `origin/main` == `@{u}`. `git status --porcelain --untracked-files=all` clean before update; handoff files modified only by this session's handoff write (left uncommitted — user did not request a commit).
+- branch: `main`; HEAD `71a7938af` == `origin/main` == `@{u}`. `git status --porcelain --untracked-files=all` clean before update; handoff files modified only by this session's handoff write (left uncommitted — user did not request a commit).
 
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` (unchanged): `["the code-hash constraint does not record the authorized code hash of record", "the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e", "the versioned binding's hashed engine digest does not recompute", "the versioned binding's composite run code identity does not recompute"]`. `manifest_hash`/`recomputed_manifest_hash` `928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Computed: `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Root cause (fail-closed): frozen `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` vs `research_state/campaign_authorization.json` `code_hash==22bacfb89a469cc9eaa3ff4198510135910756721c69cda09b78d784d15c0c06`; binding hashed-engine/composite digests no longer recompute. **Do not edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` to paper over this without explicit user authorization.** Resolving is a substantive/protocol decision requiring explicit authorization.
 
@@ -12,7 +12,7 @@ Standing task (cheap checks + execution-integrity re-verification) complete. **H
 
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-**Change vs prior handoff (2026-11-09T23:31Z):** HEAD advanced `02f95855c` -> `af5e5006c` (`origin/main` == `@{u}` == `af5e5006c`). Verifier/cohort/v6/preflight artifacts unchanged. Handoff files refreshed (2026-11-09T23:36Z); no commits this session (user did not request). `NO_PROMPT_CHANGE_JUSTIFIED`. Next task: see `research_state/next_agent_task.md`.
+**Change vs prior handoff (2026-11-09T23:36Z):** HEAD advanced `af5e5006c` -> `71a7938af` (`origin/main` == `@{u}` == `71a7938af`). Verifier/cohort/v6/preflight artifacts unchanged. Handoff files refreshed (2026-11-10T00:15Z); no commits this session (user did not request). `NO_PROMPT_CHANGE_JUSTIFIED`. Next task: see `research_state/next_agent_task.md`.
 
 ## Unresolved blockers (fail-closed)
 
@@ -24,4 +24,4 @@ Standing task (cheap checks + execution-integrity re-verification) complete. **H
 
 ## Next agent initial task
 
-Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified, HEAD `af5e5006c`).
+Standing cheap-checks + execution-integrity re-verification only. Do NOT consume the authorized v6 selection run and do NOT expose holdout. Do NOT "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. See `research_state/next_agent_task.md` for the copy/paste task message (re-verified, HEAD `71a7938af`).
