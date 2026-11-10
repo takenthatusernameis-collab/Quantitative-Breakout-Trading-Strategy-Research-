@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-10T07:59Z UTC)
-- Branch: `main`; HEAD `092f681ddf2c65a021cd664ea685b00953f7e42e` == `origin/main` == `@{u}`. Tracked tree clean at check time. Prior recorded HEAD `7336d8a4e3c788714f26865a28195ec0c92a6c6a` (2026-11-10T07:57Z, now STALE); HEAD advanced to `092f681d`.
+## Current State (re-verified 2026-11-10T08:00Z UTC)
+- Branch: `main`; HEAD `aaa0289ad94bfb19bda60cf6f370980f4c787bdd` == `origin/main` == `@{u}`. Tracked tree clean at check time. Prior recorded HEAD `092f681ddf2c65a021cd664ea685b00953f7e42e` (2026-11-10T07:57Z, now STALE); HEAD advanced via `092f681d chore(kilo): checkpoint agent session` → `aaa0289a chore(kilo): checkpoint agent session`.
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -18,13 +18,13 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-10T07:59Z UTC)
+## COMPLETED — this session (2026-11-10T08:00Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `092f681ddf2c65a021cd664ea685b00953f7e42e` == `origin/main` == `@{u}`, tracked tree clean at check time.
+- Confirmed HEAD `aaa0289ad94bfb19bda60cf6f370980f4c787bdd` == `origin/main` == `@{u}`, tracked tree clean at check time.
 - Verifier re-run: `ok:false` exit 1, same 4 failures; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; all key computed digests/hashes unchanged vs prior handoff.
 - Cohort/v6/holdout state confirmed unchanged (no drift; v6 selection not started; authorized run unconsumed; `holdout_exposed_count==0`).
 - `research_state/agent_handoff.md` and `research_state/next_agent_task.md` refreshed.
 
-**Change vs prior handoff:** HEAD advanced (`7336d8a4e` → `092f681d`); verifier/cohort/v6 artifacts unchanged.
+**Change vs prior handoff:** HEAD advanced (`092f681d` → `aaa0289a`); verifier/cohort/v6 artifacts unchanged.
 
 Next task: see `research_state/next_agent_task.md`.
