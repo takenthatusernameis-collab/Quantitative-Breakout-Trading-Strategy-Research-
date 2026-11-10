@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-10T07:53Z UTC)
-- Branch: `main`; HEAD `5b49d090e17bd57fd02a1e064b48cb343998dbf0` == `origin/main` == `@{u}`. Tracked tree clean at check time. Prior recorded HEAD `363cb73a170df603acc9f0bf502f1085942d4e0c` (2026-11-10T07:20Z, now STALE); HEAD advanced to `5b49d090e`.
+## Current State (re-verified 2026-11-10T07:54Z UTC)
+- Branch: `main`; HEAD `c0a6228d982e1123743ff04c6174b091b4b5ba38` == `origin/main` == `@{u}`. Tracked tree clean at check time. Prior recorded HEAD `5b49d090e17bd57fd02a1e064b48cb343998dbf0` (2026-11-10T07:53Z, now STALE); HEAD advanced to `c0a6228d`.
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -18,13 +18,13 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-10T07:53Z UTC)
+## COMPLETED — this session (2026-11-10T07:54Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `5b49d090e17bd57fd02a1e064b48cb343998dbf0` == `origin/main` == `@{u}`, tracked tree clean at check time.
+- Confirmed HEAD `c0a6228d982e1123743ff04c6174b091b4b5ba38` == `origin/main` == `@{u}`, tracked tree clean at check time.
 - Verifier re-run: `ok:false` exit 1, same 4 failures; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; all key computed digests/hashes unchanged vs prior handoff.
 - Cohort/v6/holdout state confirmed unchanged (no drift; v6 selection not started; authorized run unconsumed; `holdout_exposed_count==0`).
 - `research_state/agent_handoff.md` and `research_state/next_agent_task.md` refreshed.
 
-**Change vs prior handoff:** HEAD advanced (`363cb73a` → `5b49d090e`); verifier/cohort/v6 artifacts unchanged.
+**Change vs prior handoff:** HEAD advanced (`5b49d090e` → `c0a6228d`); verifier/cohort/v6 artifacts unchanged.
 
 Next task: see `research_state/next_agent_task.md`.
