@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-10T13:48Z UTC)
-- Branch: `main`; HEAD `d9c3336e2e99e3fed99135e5b4d6a03a6f86f5e6` == `origin/main` == `@{u}`. Tracked tree clean. Prior recorded HEAD `78e5656e1c4d0124e438c963484c6cd6e126daf5` (2026-11-10T13:47Z); **HEAD advanced** (external commit on main; tree clean).
+## Current State (re-verified 2026-11-10T13:50Z UTC)
+- Branch: `main`; HEAD `0852e3dcc10d86df6392fcb47277ac77384be82c` == `origin/main` == `@{u}`. Tracked tree clean. Prior recorded HEAD `d9c3336e2e99e3fed99135e5b4d6a03a6f86f5e6` (2026-11-10T13:48Z); **HEAD advanced** (external commit on main; tree clean).
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -18,14 +18,14 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-10T13:48Z UTC)
+## COMPLETED — this session (2026-11-10T13:50Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `d9c3336e2e99e3fed99135e5b4d6a03a6f86f5e6` == `origin/main` == `@{u}`, tracked tree clean.
+- Confirmed HEAD `0852e3dcc10d86df6392fcb47277ac77384be82c` == `origin/main` == `@{u}`, tracked tree clean.
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; all key computed digests/hashes unchanged vs prior handoff.
 - Cohort/v6/holdout state confirmed unchanged (no drift: `next_cohort_index==6`, cohort 5 `completed==true`, 13 excluded, `updated_utc==2026-10-21T21:45:00+00:00`; v6 selection not started; authorized run unconsumed; `holdout_exposed_count==0`).
 - `research_state/agent_handoff.md` and `research_state/next_agent_task.md` refreshed.
 
-**Change vs prior handoff:** HEAD advanced `78e5656e` → `d9c3336e` (external commit on main; tree clean). Verifier/cohort/v6 artifacts unchanged. No commit made (not requested).
+**Change vs prior handoff:** HEAD advanced `d9c3336e` → `0852e3dc` (external commit on main; tree clean). Verifier/cohort/v6 artifacts unchanged. No commit made (not requested).
 
 Next task: see `research_state/next_agent_task.md`.
 
