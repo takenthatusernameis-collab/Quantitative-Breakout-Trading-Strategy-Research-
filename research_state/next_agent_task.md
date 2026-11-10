@@ -1,6 +1,6 @@
 # Next agent task (copy/paste)
 
-**Context (re-verified 2026-11-10T10:43Z).** `main` @ `fe2e4467b0796297c9515996bbb496403990d508` == `origin/main` == `@{u}` (tracked tree clean at check aside from handoff edits). HEAD advanced vs prior handoff `b7e3abd6f459efd013cbe4a236c8b779f4193147` → `fe2e4467b0796297c9515996bbb496403990d508` (prior checkpoint commits). `python3 scripts/verify_v6_execution.py` -> **`ok:false` (exit 1, fail-closed), 4 failures unchanged**:
+**Context (re-verified 2026-11-10T10:44Z).** `main` @ `18fe00c515dfe3356e74a5a3a730985918ddddd` == `origin/main` == `@{u}` (tracked tree clean at check aside from handoff edits). HEAD advanced vs prior handoff `fe2e4467b0796297c9515996bbb496403990d508` → `18fe00c515dfe3356e74a5a3a730985918ddddd` (prior checkpoint commits). `python3 scripts/verify_v6_execution.py` -> **`ok:false` (exit 1, fail-closed), 4 failures unchanged**:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
