@@ -1,6 +1,6 @@
 # Next agent task (copy/paste)
 
-**Context (re-verified 2026-11-10T07:15Z).** `main` @ `e65d15cc2dbb0033d4fda4a54e35197b655c94c9` == `origin/main` == `@{u}` (tracked tree clean at check). Prior recorded HEAD was `bcaaf5c94fcfc394309687e42ac28e5490cb8a3e` (next_agent_task 2026-11-10T07:13Z, now STALE); HEAD advanced to `e65d15cc2dbb0033d4fda4a54e35197b655c94c9`. `python3 scripts/verify_v6_execution.py` -> **`ok:False` (exit 1, fail-closed), 4 failures unchanged**:
+**Context (re-verified 2026-11-10T07:17Z).** `main` @ `9f0196c2eafd14edbdcffc2ef7c73a0fc9fe1869` == `origin/main` == `@{u}` (tracked tree clean at check). Prior recorded HEAD was `e65d15cc2dbb0033d4fda4a54e35197b655c94c9` (next_agent_task 2026-11-10T07:15Z, now STALE); HEAD advanced to `9f0196c2eafd14edbdcffc2ef7c73a0fc9fe1869`. `python3 scripts/verify_v6_execution.py` -> **`ok:False` (exit 1, fail-closed), 4 failures unchanged**:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -17,5 +17,3 @@
 6. Update `research_state/agent_handoff.md` (timestamp, HEAD, verifier output summary, cohort/v6 state, any diffs) and refresh this `research_state/next_agent_task.md`. Commit **only** if the user explicitly requests a commit (handoff-only commits are fine when requested). Keep diffs minimal and mechanical.
 
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
-
-(End of file - total 15 lines)
