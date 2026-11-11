@@ -2,20 +2,20 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## COMPLETED — this session (2026-11-11T23:02:30Z UTC)
+## COMPLETED — this session (2026-11-11T23:04:30Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `eae8ec9ea22d6d0f829fa1b0a11a916a2d19a008` == `origin/main` == `@{u}`; tracked tree clean at check (`git status --porcelain=v1 --untracked-files=no` empty). HEAD advanced from prior recorded `46d152f7668cd4a329a47fdc785f95c06bf09091` via upstream handoff-only checkpoint commits (no code change).
+- Confirmed HEAD `bda9ccd06aeaaa910f2f7b017c41ea354ea5daeb` == `origin/main` == `@{u}`; tracked tree clean at check (`git status --porcelain=v1 --untracked-files=no` empty). HEAD advanced from prior recorded `eae8ec9ea22d6d0f829fa1b0a11a916a2d19a008` via upstream handoff-only checkpoint commits (no code change).
 - Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - Cohort/v6/holdout state confirmed unchanged (no drift): `continuous_universe_state.json` `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`. `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`, `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2`, `protocol_hash==55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2`. Binding `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed (`consumed` absent top-level and in `authorized_run`). `v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent; `src/v6_campaign/` present. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
 
-## COMPLETED — previous session (2026-11-11T22:59:27Z UTC, condensed)
-Standing task re-run; no substantive protocol/state change. HEAD `46d152f7668cd4a329a47fdc785f95c06bf09091` at check (advanced from `e13c9f142...` via handoff-only commits). Verifier `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH), key digests unchanged. Cohort/v6/holdout unchanged; v6 selection not started/unconsumed; no holdout exposure; no frozen-artifact edits. Not committed.
+## COMPLETED — previous session (2026-11-11T23:02:30Z UTC, condensed)
+Standing task re-run; no substantive protocol/state change. HEAD `eae8ec9ea22d6d0f829fa1b0a11a916a2d19a008` at check (advanced from `46d152f766...` via handoff-only commits). Verifier `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Cohort/v6/holdout unchanged; v6 selection not started/unconsumed; no holdout exposure; no frozen-artifact edits. Not committed.
 
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## Current State (re-verified 2026-11-11T23:02:30Z UTC)
-- Branch: `main`; HEAD `eae8ec9ea22d6d0f829fa1b0a11a916a2d19a008` == `origin/main` == `@{u}`. Tracked tree clean at check.
+## Current State (re-verified 2026-11-11T23:04:30Z UTC)
+- Branch: `main`; HEAD `bda9ccd06aeaaa910f2f7b017c41ea354ea5daeb` == `origin/main` == `@{u}`. Tracked tree clean at check.
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
