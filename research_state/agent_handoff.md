@@ -2,9 +2,9 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-10T23:35:05Z UTC)
-- Branch: `main`; HEAD `8525a4c4bd5378700f8640bd48729b9997066b32` == `origin/main` == `@{u}`. Tracked tree clean at check (`git status --porcelain --branch` shows only `## main...origin/main`).
-  - Diff vs prior handoff: HEAD changed from `7d3f5baf077f6132a72c607f36be15d2ce3d9221` to `8525a4c4bd5378700f8640bd48729b9997066b32` (newer commit(s) already on origin/main). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
+## Current State (re-verified 2026-11-11T00:03:01Z UTC)
+- Branch: `main`; HEAD `0806c525632694b9d6308d9bdcb9ba4ba3718fb2` == `origin/main` == `@{u}`. Tracked tree clean at check (`git status --porcelain --branch` shows only `## main...origin/main`).
+  - Diff vs prior handoff: HEAD changed from `8525a4c4bd5378700f8640bd48729b9997066b32` to `0806c525632694b9d6308d9bdcb9ba4ba3718fb2` (newer commit(s) already on origin/main). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -19,14 +19,14 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-10T23:35:05Z UTC)
+## COMPLETED — this session (2026-11-11T00:03:01Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `8525a4c4bd5378700f8640bd48729b9997066b32` == `origin/main` == `@{u}`, tracked tree clean (`git status --porcelain --branch` → `## main...origin/main`).
+- Confirmed HEAD `0806c525632694b9d6308d9bdcb9ba4ba3718fb2` == `origin/main` == `@{u}`, tracked tree clean (`git status --porcelain --branch` → `## main...origin/main`).
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); all key computed digests/hashes unchanged (`canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_sha256==14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`).
 - Cohort/v6/holdout state confirmed unchanged (no drift: `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, 13 excluded, `updated_utc==2026-10-21T21:45:00+00:00`, `current_cycle_id==v5-selection-20261021`; v6 selection not started; `research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` absent; `src/v6_confirmatory/` absent; `src/v6_campaign/` present; binding `IMPLEMENTATION_BOUND_NOT_RUN`; authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed, `consumed` absent top-level and in `authorized_run`; `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`).
 - Frozen artifacts unchanged. No fix applied to verifier.
 
-**Change vs prior handoff:** HEAD changed (`7d3f5baf077f6132a72c607f36be15d2ce3d9221` -> `8525a4c4bd5378700f8640bd48729b9997066b32`). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
+**Change vs prior handoff:** HEAD changed (`8525a4c4bd5378700f8640bd48729b9997066b32` -> `0806c525632694b9d6308d9bdcb9ba4ba3718fb2`). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
 
 Next task: see `research_state/next_agent_task.md`.
 
