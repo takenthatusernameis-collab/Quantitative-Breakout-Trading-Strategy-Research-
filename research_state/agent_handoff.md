@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T13:59:45Z UTC)
-- Branch: `main`; HEAD `d68b63cd48657f28d718a498e846054104f59f9f` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `ed2f4abddc1c412f14f9587cdb5d1a5cb5473a79`; verified `git rev-parse HEAD == git ls-remote origin main`.)
+## Current State (re-verified 2026-11-11T14:15:44Z UTC)
+- Branch: `main`; HEAD `d49e0b81fb5faa8af76fccda58f1c65c1b0e4360` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `d68b63cd48657f28d718a498e846054104f59f9f`; verified `git rev-parse HEAD == git ls-remote origin main`.)
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -14,18 +14,18 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 - Binding/authorization: `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; single authorized run in `configs/research_v6_selection_authorization_1.json` — `authorization_status==PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN`, `authorized_run.run_id==v6-selection-20261022`, `authorized_run.campaign_id==v6-campaign`, `authorized_run.max_runs==1`, `consumed` absent top-level and in `authorized_run` — **unconsumed**.
 - Cohort (`research_state/continuous_universe_state.json`): **no drift** — `next_cohort_index==6`; `current_cohort.cohort_index==5`, `completed==true`, 13 excluded; `updated_utc==2026-10-21T21:45:00+00:00`; `current_cycle_id==v5-selection-20261021`.
 - Holdout (`research_state/checkpoint_v5.json`): `holdout_exposed_count==0` (`completed_records==193536`, `pilot_passed==true`, `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2`, `protocol_hash==55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2`).
-- v6 selection: **NOT started** (live-confirmed). Absent: `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/`. `src/v6_campaign/` exists (path dir, `v6_execution_path_exists: false` in authorization). **Holdout/confirmatory exposure must remain 0.**
+- v6 selection: **NOT started** (live-confirmed). Absent: `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/`. `src/v6_campaign/` exists (implementation path present; `v6_execution_path_exists==false` recorded in authorization). **Holdout/confirmatory exposure must remain 0.**
 
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-11T13:59:45Z UTC)
+## COMPLETED — this session (2026-11-11T14:15:44Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `d68b63cd48657f28d718a498e846054104f59f9f` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `ed2f4abddc1c412f14f9587cdb5d1a5cb5473a79`; a commit landed since the prior handoff.)
+- Confirmed HEAD `d49e0b81fb5faa8af76fccda58f1c65c1b0e4360` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `d68b63cd48657f28d718a498e846054104f59f9f`; commits landed since prior handoff.)
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==92872727...7026` (MATCH); all key computed digests/hashes unchanged.
-- Cohort/v6/holdout state confirmed unchanged against live files (no drift; cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true` 13 excluded, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0`; binding `IMPLEMENTATION_BOUND_NOT_RUN`; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed; `v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent).
+- Cohort/v6/holdout state confirmed unchanged against live files (no drift; cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true` 13 excluded, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0`; binding `IMPLEMENTATION_BOUND_NOT_RUN`; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed; `v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent; `src/v6_campaign/` present).
 - Frozen artifacts unchanged. No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. No commit made (not requested).
 
-**Change vs prior handoff:** HEAD `d68b63cd48657f28d718a498e846054104f59f9f` (prior recorded `ed2f4abddc1c412f14f9587cdb5d1a5cb5473a79`); verifier/cohort/v6/holdout/frozen artifacts unchanged; v6-not-started re-confirmed live.
+**Change vs prior handoff:** HEAD `d49e0b81fb5faa8af76fccda58f1c65c1b0e4360` (prior recorded `d68b63cd48657f28d718a498e846054104f59f9f`); verifier/cohort/v6/holdout/frozen artifacts unchanged; v6-not-started re-confirmed live.
 
 Next task: see `research_state/next_agent_task.md`.
