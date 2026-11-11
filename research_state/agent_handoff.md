@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T14:17:00Z UTC)
-- Branch: `main`; HEAD `2ac51a3268b6a07a633a3c888430e6faf7506d02` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `d49e0b81fb5faa8af76fccda58f1c65c1b0e4360`; verified `git rev-parse HEAD == git ls-remote origin main`.)
+## Current State (re-verified 2026-11-11T14:22:53Z UTC)
+- Branch: `main`; HEAD `bad7ce9f5185bc970ed3de9d81c7a1fa7cd9a2e7` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `2ac51a3268b6a07a633a3c888430e6faf7506d02`; verified `git rev-parse HEAD == git ls-remote origin main`.)
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
