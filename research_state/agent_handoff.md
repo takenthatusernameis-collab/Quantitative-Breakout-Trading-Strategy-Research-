@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T20:22:59Z UTC)
-- Branch: `main`; HEAD `f6bd263db5930c85bc91b5e37ccc312bc199aa69` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `6f3c03b5d9c2f23d64394564855d39b6840773e8`.)
+## Current State (re-verified 2026-11-11T20:25:07Z UTC)
+- Branch: `main`; HEAD `cb3fb71dfb9538ec4d3f06e06dd7b10fd1d0c7c0` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `f6bd263db5930c85bc91b5e37ccc312bc199aa69`.)
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -24,6 +24,15 @@ Standing task (cheap checks + execution-integrity re-verification) complete. No 
 - Frozen artifacts unchanged (`configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, `research_state/campaign_authorization.json` not edited). No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
 
 **Change vs prior handoff:** HEAD `f6bd263db5930c85bc91b5e37ccc312bc199aa69` (prior recorded `6f3c03b5d9c2f23d64394564855d39b6840773e8`); verifier/cohort/v6/holdout/frozen artifacts unchanged; v6-not-started re-confirmed live.
+
+## COMPLETED — this session (2026-11-11T20:25:07Z UTC)
+Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
+- Confirmed HEAD `cb3fb71dfb9538ec4d3f06e06dd7b10fd1d0c7c0` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `f6bd263db5930c85bc91b5e37ccc312bc199aa69`.)
+- Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); key computed digests/hashes unchanged (`canonical_hashed_set_digest==8cd17522...`, `v6_execution_path_canonical_digest==37ba6eb3...`, `recomputed_inherited_blocks_digest==0d131954...`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6...`, `selection_authorization_sha256==14508bbc...`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`).
+- Cohort/v6/holdout state confirmed unchanged (no drift; cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`; `holdout_exposed_count==0` `checkpoint_v5.json` `completed_records==193536` `pilot_passed==true` `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2` `protocol_hash==55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2`; binding `IMPLEMENTATION_BOUND_NOT_RUN`; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed (`consumed` absent top-level and in `authorized_run`); `v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent; `src/v6_campaign/` present).
+- Frozen artifacts unchanged (`configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, `research_state/campaign_authorization.json` not edited). No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
+
+**Change vs prior handoff:** HEAD `cb3fb71dfb9538ec4d3f06e06dd7b10fd1d0c7c0` (prior recorded `f6bd263db5930c85bc91b5e37ccc312bc199aa69`); verifier/cohort/v6/holdout/frozen artifacts unchanged; v6-not-started re-confirmed live.
 
 ## COMPLETED — this session (2026-11-11T20:15:16Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
