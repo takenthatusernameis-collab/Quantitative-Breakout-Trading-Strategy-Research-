@@ -2,9 +2,9 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## COMPLETED — this session (2026-11-11T23:15:56Z UTC)
+## COMPLETED — this session (2026-11-11T23:18:11Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `86fd364e7f757c9ccbf3e6678623662be236a876` == `origin/main` == `@{u}`; tracked tree clean at check (excluding handoff updates in progress). HEAD advanced from prior recorded `6662d4586f7cbf4df24b92c191bd3b714b2c0368` via upstream handoff-only checkpoint commits (no code change).
+- Confirmed HEAD `cc8ab32e37a1c992ea463f1454ba90d0a66d343b` == `origin/main` == `@{u}`; tracked tree clean at check (excluding handoff updates in progress). HEAD advanced from prior recorded `86fd364e7f757c9ccbf3e6678623662be236a876` via upstream handoff-only checkpoint commits (no code change).
 - Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Key computed unchanged: `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, `selection_authorization_sha256==14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
 - Cohort/v6/holdout state confirmed unchanged (no drift): `continuous_universe_state.json` `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`. `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`, `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2`, `protocol_hash==55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2`. `research_state/campaign_authorization.json` `code_hash==22bacfb89a469cc9eaa3ff4198510135910756721c69cda09b78d784d15c0c06` (unchanged; frozen-vs-authorized-of-record mismatch is the pre-existing root cause, not papered over). Single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed (`consumed` absent top-level and in `authorized_run`). `v6_selection_ledger.json`/`research/v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent; `src/v6_campaign/` present. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
 
@@ -26,8 +26,8 @@ Standing task re-run; no substantive protocol/state change. HEAD `bda9ccd06aeaaa
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## Current State (re-verified 2026-11-11T23:15:56Z UTC)
-- Branch: `main`; HEAD `86fd364e7f757c9ccbf3e6678623662be236a876` == `origin/main` == `@{u}`. Tracked tree clean at check.
+## Current State (re-verified 2026-11-11T23:18:11Z UTC)
+- Branch: `main`; HEAD `cc8ab32e37a1c992ea463f1454ba90d0a66d343b` == `origin/main` == `@{u}`. Tracked tree clean at check.
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -41,24 +41,14 @@ Standing task re-run; no substantive protocol/state change. HEAD `bda9ccd06aeaaa
 - v6 selection: **NOT started** (live-confirmed). Absent: `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/`. `src/v6_campaign/` exists. **Holdout/confirmatory exposure must remain 0.**
 
 ## COMPLETED — recent sessions (condensed)
-- 2026-11-11T23:14:16Z (HEAD `6662d4586f7cbf4df24b92c191bd3b714b2c0368`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced from `48f50eae4c25aa58e4e141b15e85b50943e5b70d` via upstream handoff-only commits.
-- 2026-11-11T23:11:03Z (HEAD `48f50eae4c25aa58e4e141b15e85b50943e5b70d`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced from `b71e3952bf927c336afcf34a1d03f707d5d60b95` via upstream handoff-only commits.
-- 2026-11-11T23:06:39Z (HEAD `95d553ce86636120f706a64dc7f4261c428abd40`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced from `bda9ccd06aeaaa910f2f7b017c41ea354ea5daeb` via upstream handoff-only commits.
-- 2026-11-11T23:04:30Z (HEAD `bda9ccd06aeaaa910f2f7b017c41ea354ea5daeb`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced from `eae8ec9...` via upstream handoff-only commits.
-- 2026-11-11T23:02:30Z (HEAD `eae8ec9ea22d6d0f829fa1b0a11a916a2d19a008`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced from `46d152f766...` via upstream handoff-only commits.
-- 2026-11-11T22:59:27Z (HEAD `46d152f7668cd4a329a47fdc785f95c06bf09091`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced from `e13c9f142...` via upstream handoff-only commits.
-- 2026-11-11T22:14:46Z (HEAD `e13c9f142da6acf1d061a632900748fefcb66548`): standing task re-run; unchanged (same 4 failures, manifest MATCH); handoff-only commits.
-- 2026-11-11T22:12:01Z (HEAD `4377ca817eb76932cfa1e68ce003cb4d38f86526`): standing task re-run; unchanged.
-- 2026-11-11T22:08:00Z (HEAD `0aa67ebc9cfddc1773a6a14ff3400e5647f2bf79`): standing task re-run; unchanged.
-- 2026-11-11T22:05:45Z (HEAD `1ac3134a6586de195d179b440737e626b7f737b9`): standing task re-run; unchanged.
-- 2026-11-11T21:59:21Z (HEAD `b3c9301e9b6086f1291cb5497b77116e5b88aeb2`): standing task re-run; unchanged.
-- 2026-11-11T21:57:39Z (HEAD `4f6c56645bebd36c7eaf16344dd0ce04ee54ea2b`): standing task re-run; unchanged.
-- 2026-11-11T21:37:30Z (HEAD `3683604567a08327b9c6333fca781bb6d08db0b8`): standing task re-run; unchanged.
-- 2026-11-11T21:29:11Z (HEAD `3237247b0c75282559edbf832a060a1d4b387f5b`): standing task re-run; unchanged.
-- 2026-11-11T21:23:33Z (HEAD `8f2b84ba2604fe74ac0924ae4802bb1254bc4c94`): standing task re-run; unchanged.
-- 2026-11-11T21:15:06Z (HEAD `58e58f21ec44e7ef857c61fbf2deec1c153f3b78`): standing task re-run; unchanged.
-- 2026-11-11T21:13:00Z–2026-11-11T20:22:59Z (heads `666d1f2…`→`f6bd263…`): checks re-run; unchanged.
-- 2026-11-11T20:15:16Z–2026-11-11T14:47:46Z: repeated standing-task re-verifications; no substantive change (same 4 verifier failures, no cohort/holdout/v6 drift, frozen artifacts untouched). See git history for per-session detail.
+- 2026-11-11T23:15:56Z (HEAD `86fd364e7f757c9ccbf3e6678623662be236a876`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced from `6662d4586f7cbf4df24b92c191bd3b714b2c0368` via upstream handoff-only commits.
+- 2026-11-11T23:14:16Z (HEAD `6662d4586f7cbf4df24b92c191bd3b714b2c0368`): standing task re-run; unchanged; HEAD advanced from `48f50eae...`.
+- 2026-11-11T23:11:03Z (HEAD `48f50eae4c25aa58e4e141b15e85b50943e5b70d`): standing task re-run; unchanged; HEAD advanced from `b71e3952...`.
+- 2026-11-11T23:06:39Z (HEAD `95d553ce86636120f706a64dc7f4261c428abd40`): standing task re-run; unchanged; HEAD advanced from `bda9ccd0...`.
+- 2026-11-11T23:04:30Z (HEAD `bda9ccd06aeaaa910f2f7b017c41ea354ea5daeb`): standing task re-run; unchanged; HEAD advanced from `eae8ec9...`.
+- 2026-11-11T23:02:30Z (HEAD `eae8ec9ea22d6d0f829fa1b0a11a916a2d19a008`): standing task re-run; unchanged; HEAD advanced from `46d152f7...`.
+- 2026-11-11T22:59:27Z (HEAD `46d152f7668cd4a329a47fdc785f95c06bf09091`): standing task re-run; unchanged; HEAD advanced from `e13c9f14...`.
+- 2026-11-11T22:14:46Z–2026-11-11T14:47:46Z: repeated standing-task re-verifications; no substantive change (same 4 verifier failures, no cohort/holdout/v6 drift, frozen artifacts untouched). See git history for per-session detail.
 
 Next task: see `research_state/next_agent_task.md`.
 
