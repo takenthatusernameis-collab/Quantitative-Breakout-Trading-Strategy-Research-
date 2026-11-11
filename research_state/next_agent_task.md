@@ -24,3 +24,6 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 6. Update `research_state/agent_handoff.md` (timestamp, HEAD, verifier output summary, cohort/v6 state, any diffs) and refresh this `research_state/next_agent_task.md`. Commit **only** if the user explicitly requests a commit (handoff-only commits are fine when requested). Keep diffs minimal and mechanical.
 
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
+
+---
+*Prior handoff commit: `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25`; this handoff update committed as `59e74f0b71d719157d8aaaa7e46f02f4505e9f1f` (mechanical handoff-only).*
