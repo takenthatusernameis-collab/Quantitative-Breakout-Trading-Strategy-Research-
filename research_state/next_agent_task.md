@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-11T03:16:58Z UTC)
+## Initial task message (handoff 2026-11-11T03:19:22Z UTC)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state:** `main` @ `44b317c7a71c09feeec057e914d2fca9ade98a2e` == `origin/main` == `@{u}` (tracked tree clean at check). `python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
+**Current state:** `main` @ `188afe03b5224a0fd7ef86c2192c4ebbf2a01f4d` == `origin/main` == `@{u}` (tracked tree clean at check). `python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
