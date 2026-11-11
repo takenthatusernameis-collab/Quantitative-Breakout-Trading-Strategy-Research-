@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T11:17:38Z UTC)
-- Branch: `main`; HEAD `8f84143ce4ef8acb5985298554a3c546a02c9bae` == `origin/main` == `@{u}`. Tracked tree clean at check; one untracked shard temp file `research/results_shards/41f0dc8d48674ef33cbe7e636fb476bab981286a3cc11dfb158f5f89bc6607c1/shard_000741.jsonl.tmp`. HEAD advanced from prior handoff's recorded `bc7250a5419efb2de83068e7eff0f91f96ef1a3c`.
+## Current State (re-verified 2026-11-11T11:21:43Z UTC)
+- Branch: `main`; HEAD `af94f0f81b8c54de0dc75f0ed1fd9e6790dde56a` == `origin/main` == `@{u}`. Tracked tree clean at check; one untracked shard temp file `research/results_shards/41f0dc8d48674ef33cbe7e636fb476bab981286a3cc11dfb158f5f89bc6607c1/shard_000741.jsonl.tmp`. HEAD advanced from prior handoff's recorded `8f84143ce4ef8acb5985298554a3c546a02c9bae`.
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -26,6 +26,6 @@ Standing task (cheap checks + execution-integrity re-verification) complete. No 
 - Cohort/v6/holdout state confirmed unchanged (no drift; v6 selection not started; binding `IMPLEMENTATION_BOUND_NOT_RUN`, no `authorized_run` block; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed; `holdout_exposed_count==0`).
 - Frozen artifacts unchanged. No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. No commit made (not requested).
 
-**Change vs prior handoff:** HEAD advanced to `8f84143ce4ef8acb5985298554a3c546a02c9bae` (prior `bc7250a541...`); verifier/cohort/v6/holdout/frozen artifacts unchanged.
+**Change vs prior handoff:** HEAD advanced to `af94f0f81b8c54de0dc75f0ed1fd9e6790dde56a` (prior `8f84143ce4ef8acb5985298554a3c546a02c9bae`); verifier/cohort/v6/holdout/frozen artifacts unchanged.
 
 Next task: see `research_state/next_agent_task.md`.
