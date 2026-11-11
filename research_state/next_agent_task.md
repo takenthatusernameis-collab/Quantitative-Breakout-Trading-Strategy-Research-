@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-11T17:17:54Z UTC)
+## Initial task message (handoff 2026-11-11T18:11:17Z UTC)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state (re-verified):** `main` @ `618564a3fa041b0c539aa437702270f0b34b4a52` == `origin/main` == `@{u}` (tracked tree clean at check). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged verbatim:
+**Current state (re-verified):** `main` @ `464aa750465ade9ee6cdb0173e9a13a9aa317ee9` == `origin/main` == `@{u}` (tracked tree clean at check). HEAD advanced from prior recorded `81ed1c9b1712794d31d3032cbefbb1082950fbb0` (new HEAD `464aa7504` is `chore(kilo): checkpoint agent session`). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -26,4 +26,4 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
 ---
-*Prior handoff commit: `618564a3fa041b0c539aa437702270f0b34b4a52` (recorded HEAD at handoff write); prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
+*Prior handoff commit: `464aa750465ade9ee6cdb0173e9a13a9aa317ee9` (recorded HEAD at handoff write); prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
