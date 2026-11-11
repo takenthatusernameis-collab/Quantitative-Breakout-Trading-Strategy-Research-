@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T02:19:30Z UTC)
-- Branch: `main`; HEAD `39b15c685947b7aed4db10b8d0f0bf5860c36959` == `origin/main` == `@{u}`. Tracked tree clean (`git status --porcelain --branch` → `## main...origin/main`). HEAD advanced since prior handoff's recorded `9f2567dd7696cd03c6d8137043182573ccbfadef` (now ancestor of HEAD) via the checkpoint session commit (handoff files only). Working tree modified this session only by handoff-file updates (uncommitted; no commit requested). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
+## Current State (re-verified 2026-11-11T02:21:57Z UTC)
+- Branch: `main`; HEAD `63dac83cf93253db55493e8ded7aed34178d7b62` == `origin/main` == `@{u}`. Tracked tree clean (`git status --porcelain --branch` → `## main...origin/main`). HEAD advanced since prior handoff's recorded `39b15c685947b7aed4db10b8d0f0bf5860c36959` (now ancestor of HEAD). Working tree modified this session only by handoff-file updates (uncommitted; no commit requested). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
 - Verifier (`python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -19,16 +19,16 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-11T02:19:30Z UTC)
+## COMPLETED — this session (2026-11-11T02:21:57Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `39b15c685947b7aed4db10b8d0f0bf5860c36959` == `origin/main` == `@{u}`, tracked tree clean at check start. Prior handoff's recorded HEAD `9f2567dd7696cd03c6d8137043182573ccbfadef` is an ancestor of HEAD (checkpoint session commit touched handoff files only).
+- Confirmed HEAD `63dac83cf93253db55493e8ded7aed34178d7b62` == `origin/main` == `@{u}`, tracked tree clean at check start. Prior handoff's recorded HEAD `39b15c685947b7aed4db10b8d0f0bf5860c36959` is an ancestor of HEAD.
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a...` (MATCH); all key computed digests/hashes unchanged.
 - Cohort/v6/holdout state confirmed unchanged (no drift: `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, 13 excluded, `updated_utc==2026-10-21T21:45:00+00:00`, `current_cycle_id==v5-selection-20261021`; v6 selection not started; `research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` absent; `src/v6_confirmatory/` absent; `src/v6_campaign/` present; binding `IMPLEMENTATION_BOUND_NOT_RUN` with no `authorized_run` block; authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed, `consumed` absent top-level and in `authorized_run`; `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`).
 - Frozen artifacts unchanged. No fix applied to verifier.
 - Did not consume the authorized v6 selection run; did not expose holdout/confirmatory; did not edit frozen protocol/binding/authorization artifacts. No commit made (not requested).
 
-**Change vs prior handoff:** HEAD actual `39b15c6859...` (prior handoff recorded `9f2567dd7...`, now an ancestor of HEAD); HEAD == `origin/main` == `@{u}`, tree clean. Verifier/cohort/v6/holdout/frozen artifacts unchanged. Handoff files updated this session (uncommitted).
+**Change vs prior handoff:** HEAD actual `63dac83cf9...` (prior handoff recorded `39b15c6859...`, now an ancestor of HEAD); HEAD == `origin/main` == `@{u}`, tree clean. Verifier/cohort/v6/holdout/frozen artifacts unchanged. Handoff files updated this session (uncommitted).
 
 Next task: see `research_state/next_agent_task.md`.
 
-(End of file - total 32 lines)
+(End of file - total 34 lines)
