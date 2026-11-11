@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T09:02:47Z UTC)
-- Branch: `main`; HEAD `109eefb398f53497b4fdfe98bc4de130ba6ff9dd` == `origin/main` == `@{u}`. Tracked tree clean (`git status --porcelain --branch` → `## main...origin/main`). HEAD advanced from prior handoff's recorded `fdbd269e8615acbae422127d53e52f8727b12b49` (post-handoff mechanical checkpoint commits on remote; verifier/cohort/v6/holdout/frozen artifacts unchanged).
+## Current State (re-verified 2026-11-11T10:01:09Z UTC)
+- Branch: `main`; HEAD `e96ff953d5b82dcbcfd77f57a0794abab8a0ed27` == `origin/main` == `@{u}`. Tracked tree clean (`git status --porcelain --branch` → `## main...origin/main`). One untracked shard temp file `research/results_shards/41f0dc8d48674ef33cbe7e636fb476bab981286a3cc11dfb158f5f89bc6607c1/shard_000741.jsonl.tmp`. HEAD advanced from prior handoff's recorded `109eefb398f53497b4fdfe98bc4de130ba6ff9dd` (post-handoff mechanical checkpoint commits on remote; verifier/cohort/v6/holdout/frozen artifacts unchanged).
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -19,14 +19,16 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-11T09:02:47Z UTC)
+## COMPLETED — this session (2026-11-11T10:01:09Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `109eefb398f53497b4fdfe98bc4de130ba6ff9dd` == `origin/main` == `@{u}`, tracked tree clean at check. HEAD advanced vs prior handoff's recorded `fdbd269e8615acbae422127d53e52f8727b12b49`.
+- Confirmed HEAD `e96ff953d5b82dcbcfd77f57a0794abab8a0ed27` == `origin/main` == `@{u}`, tracked tree clean at check (one untracked shard temp file). HEAD advanced vs prior handoff's recorded `109eefb398f53497b4fdfe98bc4de130ba6ff9dd`.
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); all key computed digests/hashes unchanged (`canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, `selection_authorization_sha256==14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`).
 - Cohort/v6/holdout state confirmed unchanged (no drift: `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, 13 excluded, `updated_utc==2026-10-21T21:45:00+00:00`, `current_cycle_id==v5-selection-20261021`; v6 selection not started; `v6_selection_ledger.json` / `v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present; binding `IMPLEMENTATION_BOUND_NOT_RUN` with no `authorized_run` block; authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed, `consumed` absent top-level and in `authorized_run`; `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`).
 - Frozen artifacts unchanged. No fix applied to verifier.
 - Did not consume the authorized v6 selection run; did not expose holdout/confirmatory; did not edit frozen protocol/binding/authorization artifacts. No commit made (not requested).
 
-**Change vs prior handoff:** HEAD is `109eefb398f53497b4fdfe98bc4de130ba6ff9dd` (prior `fdbd269e8615acbae422127d53e52f8727b12b49`); HEAD == `origin/main` == `@{u}`, tree clean at check. Verifier/cohort/v6/holdout/frozen artifacts unchanged.
+**Change vs prior handoff:** HEAD is `e96ff953d5b82dcbcfd77f57a0794abab8a0ed27` (prior `109eefb398f53497b4fdfe98bc4de130ba6ff9dd`); HEAD == `origin/main` == `@{u}`, tree clean at check (one untracked shard temp file). Verifier/cohort/v6/holdout/frozen artifacts unchanged.
 
 Next task: see `research_state/next_agent_task.md`.
+
+(End of file - total 32 lines)
