@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-11T18:55:42Z UTC)
+## Initial task message (handoff 2026-11-11T19:18:26Z UTC)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state (re-verified):** `main` @ `5706058641737d3d946cd8e83d6cb90eca50f95b` == `origin/main` == `@{u}` (tracked tree clean at check). HEAD advanced from prior recorded `28eb663e803e48417f98d6a46dd92209e898be3b` (new HEAD `57060586` is `chore(kilo): checkpoint agent session`). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified):** `main` @ `c75159b18ef4c7837be15be6c7b93cd0cd66fece` == `origin/main` == `@{u}` (tracked tree clean at check). HEAD advanced from prior recorded `b29d93e29c54b2952342c9f60e0c834092590166` (new HEAD `c75159b18` is `chore(kilo): checkpoint agent session`). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -26,4 +26,4 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
 ---
-*Prior handoff commit: `5706058641737d3d946cd8e83d6cb90eca50f95b` (recorded HEAD at handoff write); prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
+*Prior handoff commit: `c75159b18ef4c7837be15be6c7b93cd0cd66fece` (recorded HEAD at handoff write); prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*

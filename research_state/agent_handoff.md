@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T19:08:13Z UTC)
-- Branch: `main`; HEAD `b29d93e29c54b2952342c9f60e0c834092590166` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `5706058641737d3d946cd8e83d6cb90eca50f95b`; new HEAD `b29d93e29` is `chore(kilo): checkpoint agent session`.)
+## Current State (re-verified 2026-11-11T19:18:26Z UTC)
+- Branch: `main`; HEAD `c75159b18ef4c7837be15be6c7b93cd0cd66fece` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `b29d93e29c54b2952342c9f60e0c834092590166`; new HEAD `c75159b18` is `chore(kilo): checkpoint agent session`.)
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -16,19 +16,20 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 - Holdout (`research_state/checkpoint_v5.json`): `holdout_exposed_count==0` (`completed_records==193536`, `pilot_passed==true`, `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2`, `protocol_hash==55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2`).
 - v6 selection: **NOT started** (live-confirmed). Absent: `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/`. `src/v6_campaign/` exists (implementation path present). **Holdout/confirmatory exposure must remain 0.**
 
-## COMPLETED — this session (2026-11-11T19:08:13Z UTC)
+## COMPLETED — this session (2026-11-11T19:18:26Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `b29d93e29c54b2952342c9f60e0c834092590166` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `5706058641737d3d946cd8e83d6cb90eca50f95b`; new HEAD `b29d93e29` is `chore(kilo): checkpoint agent session`.)
+- Confirmed HEAD `c75159b18ef4c7837be15be6c7b93cd0cd66fece` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `b29d93e29c54b2952342c9f60e0c834092590166`; new HEAD `c75159b18` is `chore(kilo): checkpoint agent session`.)
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); all key computed digests/hashes unchanged (`canonical_hashed_set_digest==8cd17522...`, `v6_execution_path_canonical_digest==37ba6eb3...`, `recomputed_inherited_blocks_digest==0d131954...`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6...`, `selection_authorization_sha256==14508bbc...`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`).
 - Cohort/v6/holdout state confirmed unchanged against live files (no drift; cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true` (13 excluded), `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`; `holdout_exposed_count==0` `checkpoint_v5.json` `completed_records==193536` `pilot_passed==true` `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2` `protocol_hash==55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2`; binding `IMPLEMENTATION_BOUND_NOT_RUN`; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed (`consumed` absent in `configs/research_v6_selection_authorization_1.json`); `v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent; `src/v6_campaign/` present).
 - Frozen artifacts unchanged. No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
 
-**Change vs prior handoff:** HEAD `b29d93e29c54b2952342c9f60e0c834092590166` (prior recorded `5706058641737d3d946cd8e83d6cb90eca50f95b`); verifier/cohort/v6/holdout/frozen artifacts unchanged; v6-not-started re-confirmed live.
+**Change vs prior handoff:** HEAD `c75159b18ef4c7837be15be6c7b93cd0cd66fece` (prior recorded `b29d93e29c54b2952342c9f60e0c834092590166`); verifier/cohort/v6/holdout/frozen artifacts unchanged; v6-not-started re-confirmed live.
 
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## COMPLETED — previous sessions (summary)
+- 2026-11-11T19:18:26Z: HEAD `c75159b18ef4c7837be15be6c7b93cd0cd66fece`; verifier/cohort/v6/holdout unchanged (same 4 failures).
 - 2026-11-11T19:08:13Z: HEAD `b29d93e29c54b2952342c9f60e0c834092590166`; verifier/cohort/v6/holdout unchanged (same 4 failures).
 - 2026-11-11T18:55:42Z: HEAD `5706058641737d3d946cd8e83d6cb90eca50f95b`; verifier/cohort/v6/holdout unchanged (same 4 failures).
 - 2026-11-11T18:42:19Z: HEAD `28eb663e803e48417f98d6a46dd92209e898be3b`; verifier/cohort/v6/holdout unchanged (same 4 failures).
