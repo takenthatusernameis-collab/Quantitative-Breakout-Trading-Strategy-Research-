@@ -26,4 +26,4 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
 ---
-*Prior handoff commit: `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25`; this handoff update committed as `59e74f0b71d719157d8aaaa7e46f02f4505e9f1f`, then `c8e8e6dc6d56531cf8f48ad5658ea7ee9b42db74`, then `69e385c3f5877cd364eb4e8fa3328656c4a6335f` (mechanical handoff-only).*
+*Prior handoff commit: `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25`; this handoff update committed as `59e74f0b71d719157d8aaaa7e46f02f4505e9f1f`, `c8e8e6dc6d56531cf8f48ad5658ea7ee9b42db74`, `69e385c3f5877cd364eb4e8fa3328656c4a6335f`, `675b31b1e62f772deef457f4096d08f296d8b990` (mechanical handoff-only).*
