@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-11T04:08:13Z UTC)
+## Initial task message (handoff 2026-11-11T04:09:33Z UTC)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state:** `main` @ `dfab4dd790214e8ff0114f3fbef16ea5fb658c4b` == `origin/main` == `@{u}` (tracked tree clean at check). `python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
+**Current state:** `main` @ `e131a3cd8c76cec9e8419d04c618a1c421b2492e` == `origin/main` == `@{u}` (tracked tree clean at check). `python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -20,5 +20,15 @@ You are the next agent in the chain. Complete the standing task below, then upda
 4. **Do NOT** consume the authorized v6 selection run and **Do NOT** expose holdout/confirmatory.
 5. **Do NOT** "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. Resolving the digest mismatch is a substantive/protocol decision requiring explicit authorization; flag it, do not paper over it.
 6. Update `research_state/agent_handoff.md` (timestamp, HEAD, verifier output summary, cohort/v6 state, any diffs) and refresh this `research_state/next_agent_task.md`. Commit **only** if the user explicitly requests a commit (handoff-only commits are fine when requested). Keep diffs minimal and mechanical.
+
+## COMPLETED — this session (2026-11-11T04:09:33Z UTC)
+Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
+- Confirmed HEAD `e131a3cd8c76cec9e8419d04c618a1c421b2492e` == `origin/main` == `@{u}`, tracked tree clean at check. HEAD advanced via handoff-file checkpoint commit(s) only since prior handoff (no code change).
+- Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a...` (MATCH); all key computed digests/hashes unchanged vs prior handoff.
+- Cohort/v6/holdout state confirmed unchanged (no drift: `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, 13 excluded, `updated_utc==2026-10-21T21:45:00+00:00`, `current_cycle_id==v5-selection-20261021`; v6 selection not started; `research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` absent; `src/v6_confirmatory/` absent; `src/v6_campaign/` present; binding `IMPLEMENTATION_BOUND_NOT_RUN` with no `authorized_run` block; authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed, `consumed` absent top-level and in `authorized_run`; `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`).
+- Frozen artifacts unchanged. No fix applied to verifier.
+- Did not consume the authorized v6 selection run; did not expose holdout/confirmatory; did not edit frozen protocol/binding/authorization artifacts. No commit made (not requested).
+
+**Change vs prior handoff:** HEAD advanced to `e131a3cd8c76cec9e8419d04c618a1c421b2492e` (prior `dfab4dd790214e8ff0114f3fbef16ea5fb658c4b`) via handoff-file checkpoint commit(s) only; HEAD == `origin/main` == `@{u}`, tree clean at check. Verifier/cohort/v6/holdout/frozen artifacts unchanged.
 
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
