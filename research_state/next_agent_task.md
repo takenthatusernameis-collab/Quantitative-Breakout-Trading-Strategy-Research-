@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-11T21:23:33Z UTC)
+## Initial task message (handoff 2026-11-11T21:29:11Z UTC)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state (re-verified):** `main` @ `8f2b84ba2604fe74ac0924ae4802bb1254bc4c94` == `origin/main` == `@{u}` (tracked tree clean at check). HEAD advanced from prior recorded `58e58f21ec44e7ef857c61fbf2deec1c153f3b78`. `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified):** `main` @ `3237247b0c75282559edbf832a060a1d4b387f5b` == `origin/main` == `@{u}` (tracked tree clean at check). HEAD advanced from prior recorded `8f2b84ba2604fe74ac0924ae4802bb1254bc4c94`. `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -26,4 +26,4 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
 ---
-*Prior handoff HEAD at last write: `8f2b84ba2604fe74ac0924ae4802bb1254bc4c94`. Prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
+*Prior handoff HEAD at last write: `3237247b0c75282559edbf832a060a1d4b387f5b`. Prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
