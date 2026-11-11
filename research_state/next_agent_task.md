@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-11T23:04:30Z UTC)
+## Initial task message (handoff 2026-11-11T23:06:39Z UTC)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state (re-verified):** `main` @ `bda9ccd06aeaaa910f2f7b017c41ea354ea5daeb` == `origin/main` == `@{u}` (tracked tree clean at check). HEAD advanced from prior recorded `eae8ec9ea22d6d0f829fa1b0a11a916a2d19a008` via upstream handoff-only checkpoint commits (no code change). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified):** `main` @ `95d553ce86636120f706a64dc7f4261c428abd40` == `origin/main` == `@{u}` (tracked tree clean at check). HEAD advanced from prior recorded `bda9ccd06aeaaa910f2f7b017c41ea354ea5daeb` via upstream handoff-only checkpoint commits (no code change). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -26,4 +26,4 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
 ---
-*Prior handoff HEAD at last write: `bda9ccd06aeaaa910f2f7b017c41ea354ea5daeb`. Prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
+*Prior handoff HEAD at last write: `95d553ce86636120f706a64dc7f4261c428abd40`. Prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
