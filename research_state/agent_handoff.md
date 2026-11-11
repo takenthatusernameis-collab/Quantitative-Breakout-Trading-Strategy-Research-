@@ -2,17 +2,17 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## COMPLETED — this session (2026-11-11T22:05:45Z UTC)
+## COMPLETED — this session (2026-11-11T22:08:00Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `1ac3134a6586de195d179b440737e626b7f737b9` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `4168b129e674830e9effbbf098f930e5648fc954` via handoff-only checkpoint commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`. No code change.)
+- Confirmed HEAD `0aa67ebc9cfddc1773a6a14ff3400e5647f2bf79` == `origin/main` == `@{u}`; tracked tree clean at check (`## main...origin/main`, no dirty entries). (HEAD advanced from prior recorded `1ac3134a6586de195d179b440737e626b7f737b9` via handoff-only checkpoint commit `0aa67ebc9` touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`. No code change.)
 - Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - Cohort/v6/holdout state confirmed unchanged (no drift): `continuous_universe_state.json` `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`. `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`, `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2`, `protocol_hash==55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2`. Binding `configs/research_v6_selection_execution_binding_1.json` `IMPLEMENTATION_BOUND_NOT_RUN`; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed (`consumed` absent top-level and in `authorized_run`). `v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent; `src/v6_campaign/` present. Frozen artifacts unchanged. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
 
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## Current State (re-verified 2026-11-11T22:05:45Z UTC)
-- Branch: `main`; HEAD `1ac3134a6586de195d179b440737e626b7f737b9` == `origin/main` == `@{u}`. Tracked tree clean at check.
+## Current State (re-verified 2026-11-11T22:08:00Z UTC)
+- Branch: `main`; HEAD `0aa67ebc9cfddc1773a6a14ff3400e5647f2bf79` == `origin/main` == `@{u}`. Tracked tree clean at check.
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -26,7 +26,8 @@ Standing task (cheap checks + execution-integrity re-verification) complete. No 
 - v6 selection: **NOT started** (live-confirmed). Absent: `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/`. `src/v6_campaign/` exists. **Holdout/confirmatory exposure must remain 0.**
 
 ## COMPLETED — recent sessions (condensed)
-- 2026-11-11T22:02:47Z (HEAD `4168b129e674830e9effbbf098f930e5648fc954`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced via handoff-only checkpoint commit touching the two handoff files.
+- 2026-11-11T22:08:00Z (HEAD `0aa67ebc9cfddc1773a6a14ff3400e5647f2bf79`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced via handoff-only checkpoint commit touching the two handoff files.
+- 2026-11-11T22:05:45Z (HEAD `1ac3134a6586de195d179b440737e626b7f737b9`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced via handoff-only checkpoint commit touching the two handoff files.
 - 2026-11-11T21:59:21Z (HEAD `b3c9301e9b6086f1291cb5497b77116e5b88aeb2`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced via handoff-only commit touching the two handoff files.
 - 2026-11-11T21:57:39Z (HEAD `4f6c56645bebd36c7eaf16344dd0ce04ee54ea2b`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced via handoff-only commit touching the two handoff files.
 - 2026-11-11T21:37:30Z (HEAD `3683604567a08327b9c6333fca781bb6d08db0b8`): standing task re-run; verifier/cohort/v6/holdout unchanged (same 4 failures, manifest MATCH); HEAD advanced via handoff-only commit touching the two handoff files.
