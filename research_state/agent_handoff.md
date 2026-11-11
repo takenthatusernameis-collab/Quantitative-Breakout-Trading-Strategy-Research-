@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T13:29:43Z UTC)
-- Branch: `main`; HEAD `3abfbcfb7fde323603f51d5edf48d04532b640af` == `origin/main` == `@{u}`. Tracked tree clean at check (handoff files updated this session).
+## Current State (re-verified 2026-11-11T13:31:39Z UTC)
+- Branch: `main`; HEAD `10ba0ff535ea86d972d46547f3d1ee2af2aae994` == `origin/main` == `@{u}`. Tracked tree clean at check (handoff files updated this session).
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -20,14 +20,14 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-11T13:29:43Z UTC)
+## COMPLETED — this session (2026-11-11T13:31:39Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `3abfbcfb7fde323603f51d5edf48d04532b640af` == `origin/main` == `@{u}`; tracked tree clean at check.
-- Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); all key computed digests/hashes unchanged (`canonical_hashed_set_digest` `8cd17522...ae45e`, `v6_execution_path_canonical_digest` `37ba6eb3...aa72`, `recomputed_inherited_blocks_digest` `0d131954...4433`, `selection_authorization_*` unchanged, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`).
-- Cohort/v6/holdout state confirmed unchanged (no drift; cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true` 13 excluded, `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`; binding `IMPLEMENTATION_BOUND_NOT_RUN`, no `authorized_run` block; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed; `holdout_exposed_count==0`). v6 ledger/manifest/`src/v6_confirmatory/` absent.
+- Confirmed HEAD `10ba0ff535ea86d972d46547f3d1ee2af2aae994` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `3abfbcfb7fde323603f51d5edf48d04532b640af`.)
+- Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==92872727...7026` (MATCH); all key computed digests/hashes unchanged (`canonical_hashed_set_digest` `8cd17522...ae45e`, `v6_execution_path_canonical_digest` `37ba6eb3...aa72`, `recomputed_inherited_blocks_digest` `0d131954...4433`, `selection_authorization_*` unchanged, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`).
+- Cohort/v6/holdout state confirmed unchanged (no drift; cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true` 13 excluded, `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`; `holdout_exposed_count==0`; binding `IMPLEMENTATION_BOUND_NOT_RUN`, no `authorized_run` block; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed; `src/v6_confirmatory/` absent, v6 ledger/manifest absent).
 - Frozen artifacts unchanged. No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. No commit made (not requested).
 
-**Change vs prior handoff:** HEAD `3abfbcfb7fde323603f51d5edf48d04532b640af` (prior recorded `b80a1f66fbadf94058850c4f8b601ab32c6dce9b`); verifier/cohort/v6/holdout/frozen artifacts unchanged.
+**Change vs prior handoff:** HEAD `10ba0ff535ea86d972d46547f3d1ee2af2aae994` (prior recorded `3abfbcfb7fde323603f51d5edf48d04532b640af`); verifier/cohort/v6/holdout/frozen artifacts unchanged.
 
 ## COMPLETED — recent prior sessions (condensed)
 - **2026-11-11T12:07:19Z UTC** HEAD `31072ff...` (`0995115f` prior): verifier `ok:false` same 4 failures, manifest MATCH `92872727...7026`, all key digests/auth unchanged; cohort/v6/holdout unchanged; no substantive change.
