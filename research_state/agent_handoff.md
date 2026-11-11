@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T11:15:03Z UTC)
-- Branch: `main`; HEAD `bc7250a5419efb2de83068e7eff0f91f96ef1a3c` == `origin/main` == `@{u}`. Tracked tree clean at check; one untracked shard temp file `research/results_shards/41f0dc8d48674ef33cbe7e636fb476bab981286a3cc11dfb158f5f89bc6607c1/shard_000741.jsonl.tmp`. HEAD advanced from prior handoff's recorded `35b64513318b41e90e28da8bf5a86fdaaaf4a5c2`.
+## Current State (re-verified 2026-11-11T11:17:38Z UTC)
+- Branch: `main`; HEAD `8f84143ce4ef8acb5985298554a3c546a02c9bae` == `origin/main` == `@{u}`. Tracked tree clean at check; one untracked shard temp file `research/results_shards/41f0dc8d48674ef33cbe7e636fb476bab981286a3cc11dfb158f5f89bc6607c1/shard_000741.jsonl.tmp`. HEAD advanced from prior handoff's recorded `bc7250a5419efb2de83068e7eff0f91f96ef1a3c`.
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -19,13 +19,13 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-11T11:15:03Z UTC)
+## COMPLETED — this session (2026-11-11T11:17:38Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `bc7250a5419efb2de83068e7eff0f91f96ef1a3c` == `origin/main` == `@{u}`; tracked tree clean at check (one untracked shard temp file `.../shard_000741.jsonl.tmp`). HEAD advanced vs prior handoff's recorded `35b64513318b41e90e28da8bf5a86fdaaaf4a5c2`.
+- Confirmed HEAD `8f84143ce4ef8acb5985298554a3c546a02c9bae` == `origin/main` == `@{u}`; tracked tree clean at check (one untracked shard temp file `.../shard_000741.jsonl.tmp`). HEAD advanced vs prior handoff's recorded `bc7250a5419efb2de83068e7eff0f91f96ef1a3c`.
 - Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); all key computed digests/hashes unchanged.
 - Cohort/v6/holdout state confirmed unchanged (no drift; v6 selection not started; binding `IMPLEMENTATION_BOUND_NOT_RUN`, no `authorized_run` block; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed; `holdout_exposed_count==0`).
 - Frozen artifacts unchanged. No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. No commit made (not requested).
 
-**Change vs prior handoff:** HEAD advanced to `bc7250a5419efb2de83068e7eff0f91f96ef1a3c` (prior `35b645133...`); verifier/cohort/v6/holdout/frozen artifacts unchanged.
+**Change vs prior handoff:** HEAD advanced to `8f84143ce4ef8acb5985298554a3c546a02c9bae` (prior `bc7250a541...`); verifier/cohort/v6/holdout/frozen artifacts unchanged.
 
 Next task: see `research_state/next_agent_task.md`.
