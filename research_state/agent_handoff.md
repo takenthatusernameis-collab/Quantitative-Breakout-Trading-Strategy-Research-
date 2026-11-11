@@ -2,8 +2,8 @@
 
 This file is the authoritative cross-session handoff. Keep it concise and current.
 
-## Current State (re-verified 2026-11-11T17:04:27Z UTC)
-- Branch: `main`; HEAD `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25` == `origin/main` == `@{u}`. Tracked tree clean at check (before this handoff update). (HEAD advanced from prior recorded `d47bb1b48a4c40698229d09f96693b1d04b6fbbd`; that prior commit was a handoff checkpoint touching only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`.)
+## Current State (re-verified 2026-11-11T17:17:54Z UTC)
+- Branch: `main`; HEAD `618564a3fa041b0c539aa437702270f0b34b4a52` == `origin/main` == `@{u}`. Tracked tree clean at check. (HEAD advanced from prior recorded `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25`; that prior commit was a handoff checkpoint touching only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`.)
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -16,14 +16,14 @@ This file is the authoritative cross-session handoff. Keep it concise and curren
 - Holdout (`research_state/checkpoint_v5.json`): `holdout_exposed_count==0` (`completed_records==193536`, `pilot_passed==true`, `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2`, `protocol_hash==55e839f7fe82201ec9ef9a699c081a903255669c394f494ad147f3f72e72dec2`).
 - v6 selection: **NOT started** (live-confirmed). Absent: `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/`. `src/v6_campaign/` exists (implementation path present). **Holdout/confirmatory exposure must remain 0.**
 
-## COMPLETED — this session (2026-11-11T17:04:27Z UTC)
+## COMPLETED — this session (2026-11-11T17:17:54Z UTC)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `d47bb1b48a4c40698229d09f96693b1d04b6fbbd`; that prior commit was a handoff checkpoint touching only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`.)
-- Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); all key computed digests/hashes unchanged (`canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, `selection_authorization_sha256==14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`).
+- Confirmed HEAD `618564a3fa041b0c539aa437702270f0b34b4a52` == `origin/main` == `@{u}`; tracked tree clean at check. (HEAD advanced from prior recorded `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25`.)
+- Verifier re-run: `ok:false` exit 1, same 4 failures verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); all key computed digests/hashes unchanged (`canonical_hashed_set_digest==8cd17522...`, `v6_execution_path_canonical_digest==37ba6eb3...`, `recomputed_inherited_blocks_digest==0d131954...`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6...`, `selection_authorization_sha256==14508bbc...`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`).
 - Cohort/v6/holdout state confirmed unchanged against live files (no drift; cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true` (13 excluded), `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`; `holdout_exposed_count==0` `checkpoint_v5.json` `completed_records==193536` `pilot_passed==true`; binding `IMPLEMENTATION_BOUND_NOT_RUN`; single authorized run `v6-selection-20261022`/`v6-campaign`, `max_runs==1`, unconsumed (`consumed` absent in `configs/research_v6_selection_authorization_1.json`); `v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent; `src/v6_campaign/` present).
-- Frozen artifacts unchanged. No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Committed handoff-only updates (`research_state/agent_handoff.md` + `research_state/next_agent_task.md`) as `59e74f0b71d719157d8aaaa7e46f02f4505e9f1f`, `c8e8e6dc6d56531cf8f48ad5658ea7ee9b42db74`, `69e385c3f5877cd364eb4e8fa3328656c4a6335f`, `675b31b1e62f772deef457f4096d08f296d8b990`, `4071fb02d228160b5df193928fe8baa0da42cdf1`, `8cf6c0b2966f4c65436d2e152bb3ee5d5dba7c53`.
+- Frozen artifacts unchanged. No fix applied to verifier. Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Committed handoff-only updates (`research_state/agent_handoff.md` + `research_state/next_agent_task.md`) as prior handoff checkpoints.
 
-**Change vs prior handoff:** HEAD `8cf6c0b2966f4c65436d2e152bb3ee5d5dba7c53` (prior recorded `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25`); verifier/cohort/v6/holdout/frozen artifacts unchanged; v6-not-started re-confirmed live.
+**Change vs prior handoff:** HEAD `618564a3fa041b0c539aa437702270f0b34b4a52` (prior recorded `2db22268e32ac2dfe7cab2ffa400f52f6a83ab25`); verifier/cohort/v6/holdout/frozen artifacts unchanged; v6-not-started re-confirmed live.
 
 ## Prompt review
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
@@ -39,7 +39,7 @@ Standing task (cheap checks + execution-integrity re-verification) complete. No 
 - 2026-11-11T15:48:53Z: HEAD `a2e8d1705231c4ae7dc816e0b83bacdfc85eda3d`; verifier/cohort/v6/holdout unchanged (same 4 failures).
 - 2026-11-11T15:36:30Z: HEAD `ec02ce0121c486e48e32741f85250d725846c303`; verifier/cohort/v6/holdout unchanged (same 4 failures).
 - 2026-11-11T15:31:44Z: HEAD `6a27325a848e6b4d80070a5ad4a832ecc7689dbf`; verifier/cohort/v6/holdout unchanged (same 4 failures).
-- 2026-11-11T15:09:17Z: HEAD `bd6cf428489434b9fcdb67cf6913e7582ea3cec6`; verifier/cohort/v6/holdout unchanged (same 4 failures).
+- 2026-11-11T15:09:17Z: HEAD `bd6cf428489434b9fcdb67cf6913e7582ea3cec6`; verifier/cohort/v6/holdout unchanged.
 - 2026-11-11T15:03:00Z: HEAD `3b2530112556dc161b8a0db185b3ca16867004b2`; verifier/cohort/v6/holdout unchanged.
 - 2026-11-11T15:00:00Z: HEAD `031e5f446b1cc63c932513f80242c6f72d7cf8cb`; verifier/cohort/v6/holdout unchanged.
 - 2026-11-11T14:52:40Z: HEAD `96d5c2732cf682d29a9a27a6d388562ea10e`; verifier/cohort/v6/holdout unchanged.
