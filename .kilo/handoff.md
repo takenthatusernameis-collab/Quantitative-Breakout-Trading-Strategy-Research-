@@ -61,6 +61,12 @@ Completed the BRAIN-003 holdout confirmation flow over frozen candidates from `r
 - Stale checkpoint/code hash rejected fail-closed
 - Holdout records raise `HoldoutRecordError` in selection path
 
+## Kilo Verification (2026-11-12)
+- Re-confirmed `research/candidate_manifest_v2.json`: `candidate_status == "ALL_REJECTED_ON_HOLDOUT"`, `holdout_exposure == "EXPOSED_OR_UNKNOWN"` (14 per-asset verdicts recorded, all `criteria_agreement == DISAGREE`)
+- Re-confirmed `research_state/campaign_authorization.json` `code_hash == 13172b2e...` matches `checkpoint.json` and `pilot_evidence.json`
+- Re-ran `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` → **19 passed**
+- `git status` clean — all prior changes committed; no further code change required
+
 ## Files Changed
 - `research/candidate_manifest_v2.json` — updated with holdout verdicts, status `ALL_REJECTED_ON_HOLDOUT`
 - `research_state/pilot_evidence.json` — code hash refreshed to current (`13172b2e...`)
@@ -77,12 +83,19 @@ Completed the BRAIN-003 holdout confirmation flow over frozen candidates from `r
 
 ## Initial Task Message for Next Agent
 ```
-The BRAIN-003 holdout confirmation flow is complete. All 14 frozen candidates from research/candidate_manifest_v2.json (preregistered_v1 rule) were evaluated on the holdout fold and REJECTED_ON_HOLDOUT. No candidates survived the v2 promotion rule (positive net return at 1x AND 2x costs AND ≥30 closed trades).
+The BRAIN-003 holdout confirmation flow is complete and verified (Kilo, 2026-11-12).
 
-Key results:
-- candidate_manifest_v2.json updated: candidate_status = "ALL_REJECTED_ON_HOLDOUT", per-asset verdicts recorded
-- Preregistered selection re-run on validation units only: ETHUSDT selected (cfg_0635), HoldoutRecordError correctly raised for holdout records
-- All 19 acceptance tests pass (test_campaign_resume.py + test_holdout_isolation.py)
+Status: ALL_REJECTED_ON_HOLDOUT — no further holdout evaluation needed.
 
-No further holdout evaluation needed. The v2 manifest is now historically exposed. Any new confirmatory claim requires a new preregistered protocol and candidate freeze.
+Summary:
+- All 14 frozen candidates from research/candidate_manifest_v2.json (preregistered_v1 rule) were evaluated on the holdout fold (fold 4) across 3 cost scenarios (1x/2x/3x). Every candidate was REJECTED_ON_HOLDOUT; none survived the v2 promotion rule (positive net return at 1x AND 2x costs AND ≥30 closed trades).
+- research/candidate_manifest_v2.json updated: candidate_status = "ALL_REJECTED_ON_HOLDOUT", per-asset holdout_verdict/holdout_baseline_comparison/criteria_agreement recorded (all DISAGREE).
+- Preregistered selection re-run on validation units only: ETHUSDT selected (cfg_0635, all gates PASS including median_sharpe_gt_buyhold); HoldoutRecordError correctly raised for holdout records; BNBUSDT = NO_CANDIDATE; BTCUSDT = INSUFFICIENT_EVIDENCE.
+- Acceptance tests: pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py → 19 passed.
+- Code hash 13172b2e... consistent across campaign_authorization.json, checkpoint.json, pilot_evidence.json. Git tree clean.
+
+Guidance for next agent:
+1. Do NOT run further holdout evaluation on the v2 manifest — it is now historically exposed (holdout_exposure = EXPOSED_OR_UNKNOWN). Do not reuse it for confirmation claims.
+2. If new candidates are to be tested: freeze new validation candidates (via candidate_freeze.freeze_from_results) and run a fresh holdout evaluation under a separately preregistered protocol per BRAIN-003/BRAIN-011.
+3. Any new confirmatory period requires a new preregistered protocol and candidate freeze; do not reuse the v2 manifest.
 ```
