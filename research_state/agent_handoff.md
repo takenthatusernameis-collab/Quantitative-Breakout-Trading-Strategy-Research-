@@ -1,7 +1,7 @@
 # Agent handoff (durable)
 
-## Current State (re-verified 2026-11-12T04:03:18Z)
-- Branch: `main`; HEAD `6050c860c25cb43e4dc0329f988046399db4c43c` == `origin/main` == `@{u}` (0 ahead/0 behind). Tracked tree clean at check (handoff files modified by this session only). HEAD advanced from prior recorded `a63aa916c48230183da7c754267d6f450e80c50c` via upstream handoff-only checkpoint commit (`chore(kilo): checkpoint agent session`; diff touched only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; no code change).
+## Current State (re-verified 2026-11-12T04:05:16Z)
+- Branch: `main`; HEAD `ff882c0b50db91192ecf6be270b8f388ae24f626` == `origin/main` == `@{u}` (0 ahead/0 behind). Tracked tree clean at check (handoff files modified by this session only). HEAD advanced from prior recorded `6050c860c25cb43e4dc0329f988046399db4c43c` via upstream handoff-only checkpoint commit (`chore(kilo): checkpoint agent session`; diff touched only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; no code change).
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -16,9 +16,9 @@
 - v6 selection: **NOT started**. Absent: `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/`. `src/v6_campaign/` present. **Holdout/confirmatory exposure must remain 0.**
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-12T04:03:18Z)
+## COMPLETED — this session (2026-11-12T04:05:16Z)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `6050c860c25cb43e4dc0329f988046399db4c43c` == `origin/main` == `@{u}` (0 ahead / 0 behind); tracked tree clean at check (handoff files modified by this session only). HEAD advanced from prior recorded `a63aa916c48230183da7c754267d6f450e80c50c` via upstream handoff-only checkpoint commit (only handoff files changed; no code change).
+- Confirmed HEAD `ff882c0b50db91192ecf6be270b8f388ae24f626` == `origin/main` == `@{u}` (0 ahead / 0 behind); tracked tree clean at check (handoff files modified by this session only). HEAD advanced from prior recorded `6050c860c25cb43e4dc0329f988046399db4c43c` via upstream handoff-only checkpoint commit (only handoff files changed; no code change).
 - Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - Cohort/v6/holdout/authorization state confirmed unchanged (no drift): cohort 5 completed, `next_cohort_index==6`, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0` (`completed_records==193536`, `pilot_passed==true`); v6 selection unconsumed and not started; `src/v6_campaign/` present, `src/v6_confirmatory/` absent. Frozen artifact SHA-256s unchanged (recomputed: execution `7080b749...`, binding `d46862f4...`, campaign_authorization `5be54627...`, selection_authorization `14508bbc...`).
 - Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
