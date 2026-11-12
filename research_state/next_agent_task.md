@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-12T16:07:11Z)
+## Initial task message (handoff 2026-11-12T16:10:55Z)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state (re-verified 2026-11-12T16:07:11Z):** `main` @ `a534877dae82d867c6f855b1007af57f10e8d81e` == `origin/main` == `@{u}` (0 ahead/0 behind; tracked tree clean at check). HEAD advanced from prior recorded `e404a54cfc149ec4d50452c89dbd0b031d40ffed` by one handoff-only checkpoint commit (`git diff --name-only e404a54c..HEAD` == `research_state/agent_handoff.md` + `research_state/next_agent_task.md` only; no code change). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified 2026-11-12T16:10:55Z):** `main` @ `99087b628cc076045aa64b61fb64451bf8bb5720` == `origin/main` == `@{u}` (0 ahead/0 behind; tracked tree clean at check). HEAD advanced from prior recorded `a534877dae82d867c6f855b1007af57f10e8d81e` by one handoff-only checkpoint commit (`git diff --name-only a534877c..HEAD` == `research_state/agent_handoff.md` + `research_state/next_agent_task.md` only; no code change). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
