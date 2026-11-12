@@ -1,7 +1,7 @@
 # Agent handoff (durable)
 
-## Current State (re-verified 2026-11-12T04:18:32Z)
-- Branch: `main`; HEAD `32c1a66f861ba9d6aa984599a1750b7d302bb5c4` == `origin/main` == `@{u}` (0 ahead/0 behind). Tracked tree clean at check (no uncommitted tracked diffs; handoff files modified by this session only). HEAD advanced from prior recorded `7489b5bbef0938ad0c25a947e058bcd900a5882a` via upstream handoff-only checkpoint commit (diff touched only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; no code change).
+## Current State (re-verified 2026-11-12T05:04:30Z)
+- Branch: `main`; HEAD `6e5df488104973f6e84117d6079ea9f9d188e6d3` == `origin/main` == `@{u}` (0 ahead/0 behind). Tracked tree clean at check. HEAD advanced from prior recorded `32c1a66f861ba9d6aa984599a1750b7d302bb5c4` via upstream handoff-only checkpoint commit (no code change).
 - Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): **`ok: false` (exit 1, fail-closed)**, 4 `failures` unchanged verbatim:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -16,43 +16,15 @@
 - v6 selection: **NOT started**. Absent: `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/`. `src/v6_campaign/` present. **Holdout/confirmatory exposure must remain 0.**
 - Prompt review: `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## COMPLETED — this session (2026-11-12T04:18:32Z)
+## COMPLETED — this session (2026-11-12T05:04:30Z)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `32c1a66f861ba9d6aa984599a1750b7d302bb5c4` == `origin/main` == `@{u}` (0 ahead / 0 behind); tracked tree clean (no uncommitted tracked diffs). HEAD advanced from prior recorded `7489b5bbef0938ad0c25a947e058bcd900a5882a` via upstream handoff-only checkpoint commit (only `research_state/agent_handoff.md` and `research_state/next_agent_task.md` changed; no code change).
+- Confirmed HEAD `6e5df488104973f6e84117d6079ea9f9d188e6d3` == `origin/main` == `@{u}` (0 ahead / 0 behind); tracked tree clean at check. HEAD advanced from prior recorded `32c1a66f861ba9d6aa984599a1750b7d302bb5c4` via upstream handoff-only checkpoint commit (no code change).
 - Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
-- Cohort/v6/holdout/authorization state confirmed unchanged (no drift): cohort 5 completed, `next_cohort_index==6`, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0` (`checkpoint_v5.json`, `completed_records==193536`, `pilot_passed==true`); v6 selection unconsumed (`consumed` absent top-level and in `authorized_run`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`) and not started; `src/v6_campaign/` present, `src/v6_confirmatory/` absent; `research_state/v6_selection_ledger.json` and `research/v6_selected_configurations_manifest.json` absent. Binding `IMPLEMENTATION_BOUND_NOT_RUN`. Frozen artifact SHA-256s unchanged (execution `7080b749...`, binding `d46862f4...`, campaign_authorization `5be54627...`, selection_authorization `14508bbc...`).
-- Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
-
-## COMPLETED — this session (2026-11-12T04:14:35Z)
-Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `c197dbb4a18e92db2396f00eb7fd77a7527469a0` == `origin/main` == `@{u}` (0 ahead / 0 behind); tracked tree clean (no diffs at all — handoff files are the only uncommitted working-tree changes, made by this session). HEAD advanced from prior recorded `57346cc34f2f60c711cafb50ef881643110d9ad4` via upstream handoff-only checkpoint commit (only handoff files changed; no code change).
-- Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
-- Cohort/v6/holdout/authorization state confirmed unchanged (no drift): cohort 5 completed, `next_cohort_index==6`, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0` (`checkpoint_v5.json`, `completed_records==193536`, `pilot_passed==true`); v6 selection unconsumed and not started; `src/v6_campaign/` present, `src/v6_confirmatory/` absent. Frozen artifact SHA-256s unchanged (recomputed: execution `7080b749...`, binding `d46862f4...`, campaign_authorization `5be54627...`, selection_authorization `14508bbc...`).
-- Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
-
-## COMPLETED — this session (2026-11-12T04:12:55Z)
-Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `57346cc34f2f60c711cafb50ef881643110d9ad4` == `origin/main` == `@{u}` (0 ahead / 0 behind); tracked tree clean at check (handoff files modified by this session only). HEAD advanced from prior recorded `113affbe8956614e9012128898861d31a1213fb6` via upstream handoff-only checkpoint commit (only handoff files changed; no code change).
-- Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
-- Cohort/v6/holdout/authorization state confirmed unchanged (no drift): cohort 5 completed, `next_cohort_index==6`, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0` (`checkpoint_v5.json`, `completed_records==193536`, `pilot_passed==true`); v6 selection unconsumed and not started; `src/v6_campaign/` present, `src/v6_confirmatory/` absent. Frozen artifact SHA-256s unchanged (recomputed: execution `7080b749...`, binding `d46862f4...`, campaign_authorization `5be54627...`, selection_authorization `14508bbc...`).
-- Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
-
-## COMPLETED — this session (2026-11-12T04:05:16Z)
-Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `ff882c0b50db91192ecf6be270b8f388ae24f626` == `origin/main` == `@{u}` (0 ahead / 0 behind); tracked tree clean at check (handoff files modified by this session only). HEAD advanced from prior recorded `6050c860c25cb43e4dc0329f988046399db4c43c` via upstream handoff-only checkpoint commit (only handoff files changed; no code change).
-- Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
-- Cohort/v6/holdout/authorization state confirmed unchanged (no drift): cohort 5 completed, `next_cohort_index==6`, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0` (`completed_records==193536`, `pilot_passed==true`); v6 selection unconsumed and not started; `src/v6_campaign/` present, `src/v6_confirmatory/` absent. Frozen artifact SHA-256s unchanged (recomputed: execution `7080b749...`, binding `d46862f4...`, campaign_authorization `5be54627...`, selection_authorization `14508bbc...`).
-- Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
-
-## COMPLETED — this session (2026-11-12T04:08:09Z)
-Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change.
-- Confirmed HEAD `113affbe8956614e9012128898861d31a1213fb6` == `origin/main` == `@{u}` (0 ahead / 0 behind); tracked tree clean at check (handoff files modified by this session only). HEAD advanced from prior recorded `ff882c0b50db91192ecf6be270b8f388ae24f626` via upstream handoff-only checkpoint commit (only handoff files changed; no code change).
-- Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures verbatim; all computed digests/hashes unchanged vs prior handoff. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
-- Cohort/v6/holdout/authorization state confirmed unchanged (no drift): cohort 5 completed, `next_cohort_index==6`, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0` (`checkpoint_v5.json`, `completed_records==193536`, `pilot_passed==true`); v6 selection unconsumed and not started; `src/v6_campaign/` present, `src/v6_confirmatory/` absent. Frozen artifact SHA-256s unchanged (recomputed: execution `7080b749...`, binding `d46862f4...`, campaign_authorization `5be54627...`, selection_authorization `14508bbc...`).
+- Cohort/v6/holdout/authorization state confirmed unchanged (no drift): cohort 5 completed, `next_cohort_index==6`, `current_cycle_id==v5-selection-20261021`; `holdout_exposed_count==0` (`checkpoint_v5.json`, `completed_records==193536`, `pilot_passed==true`); v6 selection unconsumed (`consumed` absent top-level and in `authorized_run`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`) and not started; `src/v6_campaign/` present, `src/v6_confirmatory/` absent; `research_state/v6_selection_ledger.json` and `research/v6_selected_configurations_manifest.json` absent. Binding `IMPLEMENTATION_BOUND_NOT_RUN`. Frozen artifact SHA-256s unchanged.
 - Did not consume authorized v6 selection run; did not expose holdout/confirmatory. Not committed (no explicit user request).
 
 ## COMPLETED — recent sessions (condensed)
-- 2026-11-12T04:03:18Z and earlier: repeated standing-task re-verifications on advancing HEADs (handoff-only upstream checkpoint commits). Each run: verifier `ok:false` exit 1, same 4 failures verbatim, `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`, no cohort/holdout/v6-selection drift, frozen artifacts untouched, no authorized run consumed, no holdout/confirmatory exposure. See git history for per-session detail.
+- 2026-11-12T04:18:32Z and earlier: repeated standing-task re-verifications on advancing HEADs (handoff-only upstream checkpoint commits). Each run: verifier `ok:false` exit 1, same 4 failures verbatim, `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`, no cohort/holdout/v6-selection drift, frozen artifacts untouched, no authorized run consumed, no holdout/confirmatory exposure. See git history for per-session detail.
 
 ## Hard constraints (standing)
 - Do **not** consume `authorized_run.run_id==v6-selection-20261022` / `campaign_id==v6-campaign` and do **not** expose holdout/confirmatory (pre-`2027-01-20T02:00:00Z`, `holdout_exposed_count` must remain 0).
@@ -60,5 +32,3 @@ Standing task (cheap checks + execution-integrity re-verification) complete. No 
 - Keep diffs minimal/mechanical; commit handoff-only changes only if explicitly requested.
 
 Next task: see `research_state/next_agent_task.md`.
-
-(End of file)
