@@ -1,10 +1,10 @@
 # Next agent task (copy/paste)
 
-## Initial task message (handoff 2026-11-12T02:05:29Z UTC)
+## Initial task message (handoff 2026-11-12T02:12:43Z UTC)
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state (re-verified):** `main` @ `550a61f189fcb9db505b3125cce2c89765b5c195` == `origin/main` == `@{u}` (0 ahead/0 behind; tracked tree clean at check aside from this handoff update). HEAD advanced from prior recorded `c6f0b6c27092605b4f81e5df3ec93d15011f0499` via upstream handoff-only checkpoint commit (touches only `research_state/agent_handoff.md` + `research_state/next_agent_task.md`, no code change). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified):** `main` @ `1a09b74901b4e1c50db096a4456499722b4dfeea` == `origin/main` == `@{u}` (0 ahead/0 behind; tracked tree clean at check aside from this handoff update). HEAD advanced from prior recorded `1b7b78183175419e53226e9772686e417575a5a0` via upstream handoff-only checkpoint commit `1a09b7490` ("chore(kilo): checkpoint agent session", touches only `research_state/agent_handoff.md`, no code change). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -26,4 +26,4 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
 ---
-*Prior handoff HEAD at last write: `550a61f189fcb9db505b3125cce2c89765b5c195`. Prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
+*Prior handoff HEAD at last write: `1a09b74901b4e1c50db096a4456499722b4dfeea`. Prior handoff updates were mechanical handoff-only commits touching `research_state/agent_handoff.md` + `research_state/next_agent_task.md`.*
