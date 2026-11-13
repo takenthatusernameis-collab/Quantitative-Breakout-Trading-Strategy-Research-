@@ -1,7 +1,7 @@
-## COMPLETED - 2026-11-13T11:08Z - Agent: kilo (standing v6 execution-integrity re-verification)
+## COMPLETED - 2026-11-13T11:11Z - Agent: kilo (standing v6 execution-integrity re-verification)
 
 - **Prior task:** standing cheap checks + execution-integrity re-verification (confirm HEAD/upstream/clean tree; re-run `scripts/verify_v6_execution.py`; confirm cohort/v6/holdout state; do not consume authorized v6 run; do not expose holdout; do not edit frozen artifacts). Completed — no substantive protocol/state change.
-- **Git:** `git rev-parse HEAD` == `origin/main` == `@{u}` == `5ac7344fc9dda253cf89909a27334758f93a4950` (`chore(kilo): checkpoint agent session`). 0 ahead / 0 behind; `git status --porcelain -uall` empty (tracked tree clean). HEAD advanced from prior recorded `b4396c6cf3b7dee6e3957e57f25d64bf82457c97`.
+- **Git:** `git rev-parse HEAD` == `origin/main` == `@{u}` == `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c` (`chore(kilo): checkpoint agent session`). 0 ahead / 0 behind; `git status --porcelain -uall` empty (tracked tree clean). HEAD advanced from prior recorded `5ac7344fc9dda253cf89909a27334758f93a4950`.
 - **Verifier:** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed). `failures` (4, unchanged verbatim):
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -14,6 +14,7 @@
 
 ## COMPLETED - prior sessions (condensed)
 
+- 2026-11-13T11:08Z @ `5ac7344fc9dda253cf89909a27334758f93a4950`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED` (uncommitted).
 - 2026-11-13T10:17Z @ `e40429fdb94d4fc7a04799ba180f5368cb17be06`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED` (committed `1b4dd7933`).
 - 2026-11-13T10:14Z @ `c8a3839e31fd578c2f62ef8819ae568696332e00`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED` (committed `e40429fdb`).
 - 2026-11-13T10:08Z @ `45481f592849688c1d5dbcc537ab7ff52a869f9e`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED` (committed `c8a3839e3`).
