@@ -6,7 +6,7 @@ You are the next agent in the chain. Complete the standing task below, then upda
 
 Summary for you: the repository is at a stable, fail-closed checkpoint. The only live issue is the long-standing frozen-v6 execution/binding identity mismatch (4 verifier failures, unchanged); it is a protocol decision that requires explicit user authorization to resolve, not a bug to patch. Do not consume the single authorized v6 selection run, do not expose holdout/confirmatory data, and do not edit frozen configs/state artifacts to make the verifier pass. Everything else (cohort v5 completed, holdout exposure 0, v6 selection not started) is unchanged and verified.
 
-**Current state (re-verified 2026-11-13T07:43Z):** `main` @ `202d5298b2fe0448f9b260682847628700949a41` == `origin/main` == `@{u}` (0 ahead/0 behind; tracked tree clean, 0 untracked; HEAD advanced from prior recorded `b0920369d…` by a handoff-only checkpoint commit). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified 2026-11-13T07:44Z):** `main` @ `ef880e7765a6e49fe64f65b93a91d41d1a8926c7` == `origin/main` == `@{u}` (0 ahead/0 behind; tracked tree clean, 0 untracked; HEAD advanced from prior recorded `202d5298b…` by a handoff-only checkpoint commit). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -21,7 +21,7 @@ Identity facts (read from source of record):
 - `research_state/campaign_authorization.json` `code_hash` is a **live** value rewritten on every authorization refresh (current `13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3`), not a frozen constant.
 - Effective mismatch (fail-closed, protocol-level): authorization-of-record `authorized_code_hash` `2efd3b…` vs frozen binding `hashed_set_digest` `3e8e41…` vs live `canonical_hashed_set_digest` `8cd1…`. **Do not edit frozen artifacts to paper over.** **`NO_PROMPT_CHANGE_JUSTIFIED.`**
 
-No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00` (`continuous_universe_state.json`); `holdout_exposed_count==0` (`checkpoint_v5.json`, `completed_records==193536`, `pilot_passed==true`). v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; single authorized run unconsumed in `configs/research_v6_selection_authorization_1.json` under `authorized_run`: `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `consumed` absent). `src/v6_campaign/` present (8 modules).
+No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00` (`continuous_universe_state.json`); `holdout_exposed_count==0` (`checkpoint_v5.json`, `completed_records==193536`, `pilot_passed==true`). v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; authorized run unconsumed in `configs/research_v6_selection_authorization_1.json` under `authorized_run`: `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `consumed` absent). `src/v6_campaign/` present (8 modules).
 
 ## Task (cheap checks + execution-integrity re-verification only; no substantive changes)
 
@@ -34,3 +34,5 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 7. Update `research_state/agent_handoff.md` (timestamp, HEAD, verifier output summary, cohort/v6 state, any diffs) and refresh this `research_state/next_agent_task.md`; also refresh `.kilo/handoff.md`. Commit **only** if the user explicitly requests a commit. Keep diffs minimal and mechanical.
 
 **Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
+
+(End of file - total 36 lines)
