@@ -1,15 +1,15 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-13T18:54Z @ `4dc95352975fb9c8bc59dca48f5fce797aa8d8c8`
+## HANDOFF — 2026-11-13T19:01Z @ `3192523559543ca86713fc89a2cdaaeaa14faa80`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == 4dc95352975fb9c8bc59dca48f5fce797aa8d8c8` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
-- Tracked tree clean at check start. Only change vs prior recorded `6b6ebc497b9a066e7344143881a7c0d4933457c4` is that checkpoint commit touching the two handoff docs; no substantive diff (`git diff --name-status 6b6ebc497b9a066e7344143881a7c0d4933457c4 HEAD` = 2 × `M` on `.kilo/handoff.md` and `research_state/agent_handoff.md` only). Handoff docs updated this session (uncommitted; no commit requested).
+- `HEAD == origin/main == @{u} == 3192523559543ca86713fc89a2cdaaeaa14faa80` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
+- Tracked tree clean at check start. Only change vs prior recorded `4dc95352975fb9c8bc59dca48f5fce797aa8d8c8` is the checkpoint commit touching the three handoff docs; no substantive diff (`git diff --name-status 4dc95352975fb9c8bc59dca48f5fce797aa8d8c8 HEAD` = 3 × `M` on `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only). Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
-- `ok:false`, exit 1, 4 failures unchanged verbatim:
+- `ok:false`, exit 1, 4 failures unchanged verbatim from 2026-11-13T18:54Z:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
   3. `the versioned binding's hashed engine digest does not recompute`
@@ -26,7 +26,7 @@
 ### Cohort / v6 / holdout (no drift)
 - `research_state/continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
 - `research_state/checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
-- v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present 8 modules). Authorized run unconsumed. No holdout/confirmatory exposed.
+- v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; authorized run unconsumed). No holdout/confirmatory exposed.
 
 ### Hard constraints
 - Do **not** consume `authorized_run.run_id==v6-selection-20261022` / `campaign_id==v6-campaign` and do **not** expose holdout/confirmatory (pre-`2027-01-20T02:00:00Z`, `holdout_exposed_count` must remain 0).
