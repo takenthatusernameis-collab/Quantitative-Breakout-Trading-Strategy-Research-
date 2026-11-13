@@ -1,10 +1,10 @@
-# Session Handoff — 2026-11-13T11:11Z (Standing v6 execution-integrity re-verification)
+# Session Handoff — 2026-11-13T11:14Z (Standing v6 execution-integrity re-verification)
 
 Maintainer note: Most recent check at top; keep short and current.
 
-## COMPLETED — this session (2026-11-13T11:11Z @ `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c`)
+## COMPLETED — this session (2026-11-13T11:14Z @ `2960a9bd7ba278ad437e4deb96e062e962615adc`)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change; handoff docs updated (uncommitted — no commit requested).
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c` (`chore(kilo): checkpoint agent session`); tracked tree clean at check start (0 ahead / 0 behind; 0 untracked). HEAD advanced from prior recorded `5ac7344fc9dda253cf89909a27334758f93a4950`.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `2960a9bd7ba278ad437e4deb96e062e962615adc` (`chore(kilo): checkpoint agent session`); tracked tree clean at check start (0 ahead / 0 behind; 0 untracked). HEAD advanced from prior recorded `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c`.
 - Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH.
 - Key computed unchanged: `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, `selection_authorization_sha256==14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
 - Failures unchanged verbatim:
@@ -17,6 +17,12 @@ Standing task (cheap checks + execution-integrity re-verification) complete. No 
 - `research_state/campaign_authorization.json` live `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (rotates on refresh). Effective mismatch (fail-closed): auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`.
 - Cohort/v6/holdout unchanged: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present 8 modules).
 - Did not consume v6 run; did not expose holdout/confirmatory; did not edit frozen configs. `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+## COMPLETED — this session (2026-11-13T11:11Z @ `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c`)
+Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change; handoff docs updated (uncommitted — no commit requested).
+- HEAD `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c` == `origin/main` == `@{u}` (tracked clean). HEAD advanced from `5ac7344fc9dda253cf89909a27334758f93a4950`.
+- Verifier: `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH; key computed digests unchanged (`canonical_hashed_set_digest==8cd17522…`, binding/auth/live mismatch `2efd3b…`/`3e8e41…`/`8cd1…`).
+- State unchanged: cohort 5 completed, `next_cohort_index==6`, `holdout_exposed_count==0`, v6 selection not started/authorized run unconsumed. No frozen artifacts edited. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## COMPLETED — this session (2026-11-13T11:03Z @ `1b4dd7933c968896512c348fcd16269a460191fa`)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change; handoff docs updated (uncommitted — no commit requested).

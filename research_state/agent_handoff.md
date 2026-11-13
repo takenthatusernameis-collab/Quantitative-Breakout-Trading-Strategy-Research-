@@ -1,7 +1,7 @@
-## COMPLETED - 2026-11-13T11:11Z - Agent: kilo (standing v6 execution-integrity re-verification)
+## COMPLETED - 2026-11-13T11:14Z - Agent: kilo (standing v6 execution-integrity re-verification)
 
 - **Prior task:** standing cheap checks + execution-integrity re-verification (confirm HEAD/upstream/clean tree; re-run `scripts/verify_v6_execution.py`; confirm cohort/v6/holdout state; do not consume authorized v6 run; do not expose holdout; do not edit frozen artifacts). Completed — no substantive protocol/state change.
-- **Git:** `git rev-parse HEAD` == `origin/main` == `@{u}` == `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c` (`chore(kilo): checkpoint agent session`). 0 ahead / 0 behind; `git status --porcelain -uall` empty (tracked tree clean). HEAD advanced from prior recorded `5ac7344fc9dda253cf89909a27334758f93a4950`.
+- **Git:** `git rev-parse HEAD` == `origin/main` == `@{u}` == `2960a9bd7ba278ad437e4deb96e062e962615adc` (`chore(kilo): checkpoint agent session`). 0 ahead / 0 behind; `git status --porcelain -uall` empty (tracked tree clean at check start). HEAD advanced from prior recorded `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c`.
 - **Verifier:** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed). `failures` (4, unchanged verbatim):
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -11,6 +11,12 @@
 - **Identity (source of record):** `configs/research_v6_selection_execution_binding_1.json` (frozen 2026-11-04, `binding_status == IMPLEMENTATION_BOUND_NOT_RUN`): `code_identity.hashed_set_digest == 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `code_identity.execution_path_digest == 37ba6eb3…`, `code_identity.run_code_identity == 647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961`, `manifest_hash == b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`. `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `hashed_set_digest == 3e8e41…`, `execution_path_digest == null`, `run_code_identity == 6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash == 2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`); run unconsumed (`authorized_run.run_id == v6-selection-20261022`, `campaign_id == v6-campaign`, `max_runs == 1`, `consumed` absent). `research_state/campaign_authorization.json` `code_hash == 13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (live, rotates on refresh). Effective mismatch (fail-closed): auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`.
 - **State (no drift):** `continuous_universe_state.json` `current_cycle_id == v5-selection-20261021`, `next_cohort_index == 6`, `current_cohort.cohort_index == 5` `completed == true`, `updated_utc == 2026-10-21T21:45:00+00:00`. `checkpoint_v5.json` `holdout_exposed_count == 0`, `completed_records == 193536`, `pilot_passed == true`. v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present 8 modules). No v6 run consumed, no holdout/confirmatory exposed, no frozen artifacts edited.
 - **Handoffs updated:** `research_state/agent_handoff.md`, `research_state/next_agent_task.md`, `.kilo/handoff.md`. No commit requested. `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+## COMPLETED - 2026-11-13T11:11Z - Agent: kilo (standing v6 execution-integrity re-verification)
+
+- **Git:** HEAD `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c` == `origin/main` == `@{u}` (clean). HEAD advanced from `5ac7344fc9dda253cf89909a27334758f93a4950`.
+- **Verifier:** `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH); `canonical_hashed_set_digest==8cd17522…`.
+- **Identity/State:** mismatch auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…` unchanged; cohort 5 completed `next_cohort_index==6`, `holdout_exposed_count==0`, v6 selection not started/authorized run unconsumed. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## COMPLETED - prior sessions (condensed)
 
