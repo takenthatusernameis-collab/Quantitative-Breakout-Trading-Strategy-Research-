@@ -1,10 +1,10 @@
-# Session Handoff — 2026-11-13T11:14Z (Standing v6 execution-integrity re-verification)
+# Session Handoff — 2026-11-13T11:17Z (Standing v6 execution-integrity re-verification)
 
 Maintainer note: Most recent check at top; keep short and current.
 
-## COMPLETED — this session (2026-11-13T11:14Z @ `2960a9bd7ba278ad437e4deb96e062e962615adc`)
+## COMPLETED — this session (2026-11-13T11:17Z @ `75aecfa8ea1517588c9b8990ad378327594d5bf1`)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change; handoff docs updated (uncommitted — no commit requested).
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `2960a9bd7ba278ad437e4deb96e062e962615adc` (`chore(kilo): checkpoint agent session`); tracked tree clean at check start (0 ahead / 0 behind; 0 untracked). HEAD advanced from prior recorded `3b4a4579a8e73030fdac163f7c0eeb383a6c4f9c`.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `75aecfa8ea1517588c9b8990ad378327594d5bf1` (`chore(kilo): checkpoint agent session`); tracked tree clean at check start (0 ahead / 0 behind; 0 untracked). HEAD advanced from prior recorded `2960a9bd7ba278ad437e4deb96e062e962615adc`.
 - Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH.
 - Key computed unchanged: `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, `selection_authorization_sha256==14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
 - Failures unchanged verbatim:
