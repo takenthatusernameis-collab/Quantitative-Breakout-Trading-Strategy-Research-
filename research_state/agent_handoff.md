@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-13T21:45Z @ `5bc911f55f3dbf476d4204e2d04919ca80c4ef07` (kilo)
+## HANDOFF — 2026-11-13T21:48Z @ `3c321013c946bd2c73fbbfd6c1232593e7b5e780` (kilo)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `5bc911f55f3dbf476d4204e2d04919ca80c4ef07` (`chore(kilo): checkpoint agent session`, `main`). 0 ahead / 0 behind.
-- Tracked tree clean at check start. HEAD advanced from prior recorded `ff42f0ec0168bffb56bcd6798c8859268ed7065f` via checkpoint commit touching the three handoff docs only — `git diff --stat ff42f0ec0168bffb56bcd6798c8859268ed7065f 5bc911f55f3dbf476d4204e2d04919ca80c4ef07` = 3 files / +8/-7, no substantive diff. Handoff docs updated this session (uncommitted; no commit requested).
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `3c321013c946bd2c73fbbfd6c1232593e7b5e780` (`chore(kilo): checkpoint agent session`, `main`). 0 ahead / 0 behind.
+- Tracked tree clean at check start. HEAD advanced from prior recorded `5bc911f55f3dbf476d4204e2d04919ca80c4ef07` via checkpoint commit touching the three handoff docs only — `git diff --stat 5bc911f55f3dbf476d4204e2d04919ca80c4ef07 3c321013c946bd2c73fbbfd6c1232593e7b5e780` = 3 files / +7/-7, no substantive diff. Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -40,6 +40,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-13T21:45Z @ `5bc911f55f3dbf476d4204e2d04919ca80c4ef07`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced from prior recorded `ff42f0ec0168bffb56bcd6798c8859268ed7065f` via checkpoint commit (handoff-docs-only diff; 3 files / +8/-7).
 - 2026-11-13T21:41Z @ `5d3643c4f30764e81b64d0bf27579763f09a0a0d`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced from prior recorded `0390a39626f270f1a3efb2c19706562c4fec6179` via checkpoint commit (handoff-docs-only diff; 3 files / +8/-7).
 - 2026-11-13T20:51Z @ `0390a39626f270f1a3efb2c19706562c4fec6179`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced from prior recorded `136c291c48857e29ac64b4cbf7fc0871f46ffb98` via checkpoint commit (handoff-docs-only diff; 3 files / +9/-11).
 - 2026-11-13T20:51Z @ `136c291c48857e29ac64b4cbf7fc0871f46ffb98`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced from prior recorded `dd60abc33c772bbb53b07f8f24003b0165a63930` via checkpoint commit (handoff-docs-only diff; 3 files / +8/-7).
