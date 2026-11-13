@@ -2,9 +2,11 @@
 
 Maintainer note: Most recent check at top; keep short and current.
 
-## COMPLETED — this session (2026-11-13T12:02Z @ `0a118024dbd938a050478dbf600c55e7d762f0b3`)
+## COMPLETED — this session (2026-11-13T12:06Z @ `c20b1cfee6b4ae5bfeab215a3b8a992677ea8a9c`)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change; handoff docs updated (uncommitted — no commit requested).
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `0a118024dbd938a050478dbf600c55e7d762f0b3` (`chore(kilo): checkpoint agent session`); tracked tree clean at check start (0 ahead / 0 behind; 0 untracked). HEAD advanced from prior recorded `7228e9cc95d446e86a27e5707a1b3d33c5fb81d5`.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `c20b1cfee6b4ae5bfeab215a3b8a992677ea8a9c` (`chore(kilo): checkpoint agent session`); tracked tree clean at check start (0 ahead / 0 behind; 0 untracked). HEAD advanced from prior recorded `0a118024dbd938a050478dbf600c55e7d762f0b3`.
+- Verifier re-run (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`): `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` MATCH.
+- Identity/state no drift: binding `run_code_identity==647dc464…` vs authorization `run_code_identity==6bda27fa…` (unchanged mismatch, not touched); `campaign_authorization.json` `code_hash==13172b2e…` (rotating live, `authorized==true`); `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 selection NOT started; authorized run unconsumed; no frozen artifacts edited. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## COMPLETED — this session (2026-11-13T11:25Z @ `7228e9cc95d446e86a27e5707a1b3d33c5fb81d5`)
 Standing task (cheap checks + execution-integrity re-verification) complete. No substantive protocol/state change; handoff docs updated (uncommitted — no commit requested).
