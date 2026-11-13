@@ -1,15 +1,15 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-13T19:50Z @ `57fdd8b58e67f3f281cb08ca34f35c4b57817809`
+## HANDOFF — 2026-11-13T19:54Z @ `7065b2d583a2ec9aa548f2d23a35cc8eca2a2c64`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == 57fdd8b58e67f3f281cb08ca34f35c4b57817809` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
-- Tracked tree clean at check start. HEAD advanced from prior recorded `402b9e7f9c4178540047404a8ae49f51c9b07bbf` via checkpoint commit touching the three handoff docs; no substantive diff (`git diff --name-status 402b9e7f9c4178540047404a8ae49f51c9b07bbf HEAD` = 3 × `M` on `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only). Handoff docs updated this session (uncommitted; no commit requested).
+- `HEAD == origin/main == @{u} == 7065b2d583a2ec9aa548f2d23a35cc8eca2a2c64` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
+- Tracked tree clean at check start. HEAD advanced from prior recorded `57fdd8b58e67f3f281cb08ca34f35c4b57817809` via checkpoint commit touching the three handoff docs; no substantive diff (`git diff --name-status 57fdd8b58e67f3f281cb08ca34f35c4b57817809 HEAD` = 3 × `M` on `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only). Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
-- `ok:false`, exit 1, 4 failures unchanged verbatim from 2026-11-13T19:49Z:
+- `ok:false`, exit 1, 4 failures unchanged verbatim from 2026-11-13T19:50Z:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
   3. `the versioned binding's hashed engine digest does not recompute`
