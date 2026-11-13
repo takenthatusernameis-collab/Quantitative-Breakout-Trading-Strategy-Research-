@@ -1,8 +1,8 @@
-# Session Handoff — 2026-11-13T05:31:28Z (Standing v6 execution-integrity re-verification)
+# Session Handoff — 2026-11-13T06:32:05Z (Standing v6 execution-integrity re-verification)
 
 ## Summary
-Completed the standing task from `research_state/next_agent_task.md` (cheap checks + execution-integrity re-verification; no substantive protocol/state change). Verified live state at HEAD `5fa69796ad7b862de2e68446d490ce189c798281`:
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `5fa69796a…`; 0 ahead / 0 behind; tracked tree clean, 0 untracked (`git status --porcelain -uall` empty). HEAD advanced from prior recorded `1897133a0…` by a handoff-only checkpoint commit.
+Completed the standing task from `research_state/next_agent_task.md` (cheap checks + execution-integrity re-verification; no substantive protocol/state change). Verified live state at HEAD `0ab4654928bfcacf84c711bbf12a01629f0a896e`:
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `0ab465492…`; 0 ahead / 0 behind; tracked tree clean, 0 untracked (`git status --porcelain -uall` empty). HEAD advanced from prior recorded `7be9026c…` by a handoff-only checkpoint commit (`research_state/agent_handoff.md`, `research_state/next_agent_task.md` only).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false`, exit 1, fail-closed; 4 failures unchanged verbatim (frozen v6 execution/binding code-identity vs `research_state/campaign_authorization.json`).
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - No cohort/state drift; `holdout_exposed_count == 0`; v6 selection unconsumed and not started.
@@ -30,7 +30,9 @@ Standing cycle item: confirm HEAD/upstream/clean tree, re-run the v6 execution-i
 
 ### Frozen binding
 - `configs/research_v6_selection_execution_binding_1.json`: `binding_status == IMPLEMENTATION_BOUND_NOT_RUN`, `code_identity.hashed_set_digest == 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` (still mismatches live `8cd1…`), `code_identity.execution_path_digest == 37ba6eb3…`, `code_identity.run_code_identity == 647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961`, `manifest_hash == b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`.
-- `src/v6_campaign/` present (8 modules).
+- `research_state/campaign_authorization.json` `code_hash == 13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (authorized code hash of record). Three-way mismatch: authorization `13172b…` vs frozen binding `3e8e41…` vs live `8cd1…`. This is the fail-closed protocol condition.
+- Note: the immediately prior handoff recorded `code_identity.run_code_identity == 6bda27fa…`; the live recompute this cycle is `647dc464…`. This is a per-run derived value and does not affect the failure set.
+- `src/v6_campaign/` present (8 modules: `__init__.py`, `benchmark.py`, `data.py`, `errors.py`, `identity.py`, `runner.py`, `scope.py`, `units.py`).
 
 ### Cohort / holdout / v6 selection (no drift)
 - `continuous_universe_state.json`: `current_cycle_id == v5-selection-20261021`, `next_cohort_index == 6`, `current_cohort.cohort_index == 5`, `completed == true`, `updated_utc == 2026-10-21T21:45:00+00:00`.
@@ -43,7 +45,7 @@ Holdout confirmation of `research/candidate_manifest_v2.json` remains `ALL_REJEC
 
 ## Files Changed (this session)
 - `research_state/agent_handoff.md` — new COMPLETED entry with current HEAD/timestamp/verifier output/cohort/v6/holdout state.
-- `research_state/next_agent_task.md` — refreshed current-state block (HEAD `5fa69796a…`, timestamp) and binding details.
+- `research_state/next_agent_task.md` — refreshed current-state block (HEAD `0ab465492…`, timestamp `06:32:05Z`) and `run_code_identity`.
 - `.kilo/handoff.md` — this durable handoff rewritten for the current standing cycle.
 
 ## Next Steps for Following Agent
@@ -57,7 +59,7 @@ Holdout confirmation of `research/candidate_manifest_v2.json` remains `ALL_REJEC
 
 ## Initial Task Message for Next Agent
 ```
-You are the next agent in the chain. The repository is at a stable, fail-closed checkpoint (HEAD 5fa69796ad7b862de2e68446d490ce189c798281, tracked tree clean, 0 ahead/0 behind, 0 untracked).
+You are the next agent in the chain. The repository is at a stable, fail-closed checkpoint (HEAD 0ab4654928bfcacf84c711bbf12a01629f0a896e, tracked tree clean, 0 ahead/0 behind, 0 untracked).
 
 Standing task (cheap checks + execution-integrity re-verification only; no substantive changes):
 1. Confirm `git rev-parse HEAD` == `origin/main` == `@{u}` and a clean tracked tree. Record HEAD (do not assume prior hashes).
@@ -67,5 +69,5 @@ Standing task (cheap checks + execution-integrity re-verification only; no subst
 5. Do NOT edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` to paper over the verifier's digest mismatch without explicit user authorization; flag it instead.
 6. Update `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; commit only if explicitly requested.
 
-Known live state (re-verified 2026-11-13T05:31:28Z): verifier `ok:false` (exit 1, fail-closed), 4 failures unchanged verbatim (frozen v6 execution/binding code identity vs `research_state/campaign_authorization.json`: `the code-hash constraint does not record the authorized code hash of record`; `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; `the versioned binding's hashed engine digest does not recompute`; `the versioned binding's composite run code identity does not recompute`). `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Binding `code_identity.hashed_set_digest == 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` still mismatches live `canonical_source_digest == 8cd1…`. Cohort `next_cohort_index == 6`, `current_cohort.cohort_index == 5` `completed == true`, `current_cycle_id == v5-selection-20261021`; `holdout_exposed_count == 0`; v6 selection unconsumed/not started. `NO_PROMPT_CHANGE_JUSTIFIED`.
+Known live state (re-verified 2026-11-13T06:32:05Z): verifier `ok:false` (exit 1, fail-closed), 4 failures unchanged verbatim (frozen v6 execution/binding code identity vs `research_state/campaign_authorization.json`: `the code-hash constraint does not record the authorized code hash of record`; `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; `the versioned binding's hashed engine digest does not recompute`; `the versioned binding's composite run code identity does not recompute`). `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Binding `code_identity.hashed_set_digest == 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` still mismatches live `canonical_source_digest == 8cd1…`; authorization `code_hash == 13172b…` is a third value (three-way mismatch). Cohort `next_cohort_index == 6`, `current_cohort.cohort_index == 5` `completed == true`, `current_cycle_id == v5-selection-20261021`; `holdout_exposed_count == 0`; v6 selection unconsumed/not started. `NO_PROMPT_CHANGE_JUSTIFIED`.
 ```
