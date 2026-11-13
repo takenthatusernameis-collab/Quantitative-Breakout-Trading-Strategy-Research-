@@ -1,11 +1,11 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-13T14:04Z @ `acd33d25dd400bf572a42623a46d84d45c659dbc`
+## HANDOFF — 2026-11-13T14:05Z @ `440eaf96b07707c372d22a397fd3d273e57c25ea`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == acd33d25dd400bf572a42623a46d84d45c659dbc` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
+- `HEAD == origin/main == @{u} == 440eaf96b07707c372d22a397fd3d273e57c25ea` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
 - Tracked tree clean at check start; handoff docs updated this session (uncommitted, no commit requested).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
