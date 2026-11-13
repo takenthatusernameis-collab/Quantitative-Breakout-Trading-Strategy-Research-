@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-13T14:13Z @ `5cdb70b19cc2f8ed18ab6aa45574ccfffb7c256e` (kilo)
+## HANDOFF — 2026-11-13T14:17Z @ `b75840c31428e138bd7a834e55376b275d939c86` (kilo)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `5cdb70b19cc2f8ed18ab6aa45574ccfffb7c256e` (`handoff: record standing v6 integrity check (no change)`, `main`). 0 ahead / 0 behind.
-- `git status --porcelain -uall` empty at check start (tracked tree clean). HEAD advanced from prior recorded `bd18baa824c4acd96d63fe101079cbb53f76c617`.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `b75840c31428e138bd7a834e55376b275d939c86` (`handoff: record standing v6 integrity check (no change)`, `main`). 0 ahead / 0 behind.
+- `git status --porcelain -uall` empty at check start (tracked tree clean). HEAD advanced from prior recorded `5cdb70b19cc2f8ed18ab6aa45574ccfffb7c256e`.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -40,6 +40,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-13T14:17Z @ `b75840c31428e138bd7a834e55376b275d939c86`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
 - 2026-11-13T14:13Z @ `5cdb70b19cc2f8ed18ab6aa45574ccfffb7c256e`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
 - 2026-11-13T14:09Z @ `bd18baa824c4acd96d63fe101079cbb53f76c617`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
 - 2026-11-13T14:05Z @ `440eaf96b07707c372d22a397fd3d273e57c25ea`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
