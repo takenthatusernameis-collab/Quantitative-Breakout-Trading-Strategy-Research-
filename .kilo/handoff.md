@@ -1,12 +1,12 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-13T17:49Z @ `d0ef7f2936695d3f903fea03f4183b8dbaba50a9`
+## HANDOFF — 2026-11-13T18:38Z @ `acaa14966a24069d17a1104e47d2ea96822627c1`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == d0ef7f2936695d3f903fea03f4183b8dbaba50a9` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
-- Tracked tree clean at check start. Only change vs prior recorded `796efd45122abe3a37941dba4fe6f01cd613e75b` is that checkpoint commit touching the three handoff docs; no substantive diff (`git diff --name-status HEAD~1 HEAD` = 3 × `M` on those docs only). Handoff docs updated this session (uncommitted; no commit requested).
+- `HEAD == origin/main == @{u} == acaa14966a24069d17a1104e47d2ea96822627c1` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
+- Tracked tree clean at check start. Only change vs prior recorded `d0ef7f2936695d3f903fea03f4183b8dbaba50a9` is that checkpoint commit touching the three handoff docs; no substantive diff (`git diff --name-status d0ef7f2936695d3f903fea03f4183b8dbaba50a9 HEAD` = 3 × `M` on those docs only). Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
 - `ok:false`, exit 1, 4 failures unchanged verbatim:
