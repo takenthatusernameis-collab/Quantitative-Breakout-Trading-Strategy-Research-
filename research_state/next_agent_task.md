@@ -4,7 +4,7 @@
 
 You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md` and this file. Do not make substantive protocol changes.
 
-**Current state (re-verified 2026-11-13T03:24:58Z):** `main` @ `4d09329a3ae8180ac5cedc895216b8e379ea1767` == `origin/main` == `@{u}` (0 ahead/0 behind; tracked tree clean at check). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified 2026-11-13T03:26:18Z):** `main` @ `ba5b437f2b1245b0a3ebb989748f459b7bb32edb` == `origin/main` == `@{u}` (0 ahead/0 behind; tracked tree clean at check). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
