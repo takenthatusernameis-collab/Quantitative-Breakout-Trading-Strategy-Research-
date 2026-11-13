@@ -1,12 +1,12 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-13T20:49Z @ `dd60abc33c772bbb53b07f8f24003b0165a63930`
+## HANDOFF — 2026-11-13T20:51Z @ `136c291c48857e29ac64b4cbf7fc0871f46ffb98`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == dd60abc33c772bbb53b07f8f24003b0165a63930` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
-- Tracked tree clean at check start. HEAD advanced from prior recorded `25d5614d6a942d744ad80d97adcd1e7790328740` via checkpoint commit touching the three handoff docs only; no substantive diff (`git diff --stat 25d5614d6a942d744ad80d97adcd1e7790328740 dd60abc33c772bbb53b07f8f24003b0165a63930` = 3 files / +8/-7). Handoff docs updated this session (uncommitted; no commit requested).
+- `HEAD == origin/main == @{u} == 136c291c48857e29ac64b4cbf7fc0871f46ffb98` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
+- Tracked tree clean at check start. HEAD advanced from prior recorded `dd60abc33c772bbb53b07f8f24003b0165a63930` via checkpoint commit touching the three handoff docs only; no substantive diff (`git diff --stat dd60abc33c772bbb53b07f8f24003b0165a63930 136c291c48857e29ac64b4cbf7fc0871f46ffb98` = 3 files / +9/-11). Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
 - `ok:false`, exit 1, 4 failures unchanged verbatim across prior sessions:
