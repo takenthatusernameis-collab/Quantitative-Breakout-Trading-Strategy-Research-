@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-13T22:57Z @ `c3172d7ed964f6503ae56dc60f1b83585b8a4f68` (kilo)
+## HANDOFF — 2026-11-13T22:58Z @ `4ddb2e6b2d2b57347726e16b6e5449227a6a78d5` (kilo)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `c3172d7ed964f6503ae56dc60f1b83585b8a4f68` (main). 0 ahead / 0 behind.
-- Tracked tree clean at check start. HEAD advanced from prior recorded `5697e223cda7b5474fca68b79fcf909dd78787fc` via checkpoint commit touching the three handoff docs only — `git diff --stat 5697e223cda7b5474fca68b79fcf909dd78787fc c3172d7ed964f6503ae56dc60f1b83585b8a4f68` = 3 files / +12/-21, no substantive diff. Handoff docs updated this session (uncommitted; no commit requested).
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `4ddb2e6b2d2b57347726e16b6e5449227a6a78d5` (main). 0 ahead / 0 behind.
+- Tracked tree clean at check start. HEAD advanced from prior recorded `c3172d7ed964f6503ae56dc60f1b83585b8a4f68` via checkpoint commit touching the three handoff docs only — `git diff --stat c3172d7ed964f6503ae56dc60f1b83585b8a4f68 4ddb2e6b2d2b57347726e16b6e5449227a6a78d5` = 3 files / +9/-12, no substantive diff. Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
