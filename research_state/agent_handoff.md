@@ -1,7 +1,7 @@
-## COMPLETED - 2026-11-13T11:22Z - Agent: kilo (standing v6 execution-integrity re-verification)
+## COMPLETED - 2026-11-13T11:25Z - Agent: kilo (standing v6 execution-integrity re-verification)
 
 - **Prior task:** standing cheap checks + execution-integrity re-verification (confirm HEAD/upstream/clean tree; re-run `scripts/verify_v6_execution.py`; confirm cohort/v6/holdout state; do not consume authorized v6 run; do not expose holdout; do not edit frozen artifacts). Completed — no substantive protocol/state change.
-- **Git:** `git rev-parse HEAD` == `origin/main` == `@{u}` == `b1b52e7ce6abc7da762e9b949876d2f8972a5eb1` (`chore(kilo): checkpoint agent session`). 0 ahead / 0 behind; `git status --porcelain -uall` empty (tracked tree clean at check start). HEAD advanced from prior recorded `818c14eba48e5b6260e4f7c6c68f766cd5bd81b2`.
+- **Git:** `git rev-parse HEAD` == `origin/main` == `@{u}` == `7228e9cc95d446e86a27e5707a1b3d33c5fb81d5` (`chore(kilo): checkpoint agent session`). 0 ahead / 0 behind; `git status --porcelain -uall` empty (tracked tree clean at check start). HEAD advanced from prior recorded `b1b52e7ce6abc7da762e9b949876d2f8972a5eb1`.
 - **Verifier:** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed). `failures` (4, unchanged verbatim):
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
