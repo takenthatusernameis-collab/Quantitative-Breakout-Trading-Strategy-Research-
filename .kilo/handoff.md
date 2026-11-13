@@ -1,15 +1,15 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-13T19:39Z @ `22f66e725f8770366a79d0533a218c1f8930dde9`
+## HANDOFF — 2026-11-13T19:44Z @ `ea3167feb128c23f572d94973453053dee0e2260`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == 22f66e725f8770366a79d0533a218c1f8930dde9` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
-- Tracked tree clean at check start. Only change vs prior recorded `3192523559543ca86713fc89a2cdaaeaa14faa80` is the checkpoint commit touching the three handoff docs; no substantive diff (`git diff --name-status 3192523559543ca86713fc89a2cdaaeaa14faa80 HEAD` = 3 × `M` on `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only). Handoff docs updated this session (uncommitted; no commit requested).
+- `HEAD == origin/main == @{u} == ea3167feb128c23f572d94973453053dee0e2260` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
+- Tracked tree clean at check start. Only change vs prior recorded `22f66e725f8770366a79d0533a218c1f8930dde9` is the checkpoint commit touching the three handoff docs; no substantive diff (`git diff --name-status 22f66e725f8770366a79d0533a218c1f8930dde9 HEAD` = 3 × `M` on `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only). Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
-- `ok:false`, exit 1, 4 failures unchanged verbatim from 2026-11-13T18:54Z:
+- `ok:false`, exit 1, 4 failures unchanged verbatim from 2026-11-13T19:39Z:
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
   3. `the versioned binding's hashed engine digest does not recompute`
