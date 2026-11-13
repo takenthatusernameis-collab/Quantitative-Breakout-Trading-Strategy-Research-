@@ -1,7 +1,7 @@
-## COMPLETED - 2026-11-13T10:17Z - Agent: kilo (standing v6 execution-integrity re-verification)
+## COMPLETED - 2026-11-13T11:03Z - Agent: kilo (standing v6 execution-integrity re-verification)
 
 - **Prior task:** `research_state/next_agent_task.md` standing cheap checks + execution-integrity re-verification (confirm HEAD/upstream/clean tree; re-run `scripts/verify_v6_execution.py`; confirm cohort/v6/holdout state; do not consume authorized v6 run; do not expose holdout; do not edit frozen artifacts). No substantive protocol/state change.
-- **Git:** `git rev-parse HEAD` == `origin/main` == `@{u}` == `e40429fdb94d4fc7a04799ba180f5368cb17be06` (`chore(kilo): checkpoint agent session`, handoff-only). 0 ahead / 0 behind; `git status --porcelain -uall` empty at check start (tracked tree clean, 0 untracked). HEAD advanced from prior recorded `c8a3839e31fd578c2f62ef8819ae568696332e00`.
+- **Git:** `git rev-parse HEAD` == `origin/main` == `@{u}` == `1b4dd7933c968896512c348fcd16269a460191fa` (`chore(kilo): checkpoint agent session`, handoff-only). 0 ahead / 0 behind; `git status --porcelain -uall` empty at check start (tracked tree clean, 0 untracked). HEAD advanced from prior recorded `e40429fdb94d4fc7a04799ba180f5368cb17be06`.
 - **Verifier:** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed). `failures` (4, unchanged verbatim):
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -14,9 +14,9 @@
 
 ## COMPLETED - prior sessions (condensed)
 
-- 2026-11-13T10:14Z @ `c8a3839e31fd578c2f62ef8819ae568696332e00`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
-
-- 2026-11-13T10:08Z @ `45481f592849688c1d5dbcc537ab7ff52a869f9e`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; handoff-only changes uncommitted (committed as `c8a3839e3`); `NO_PROMPT_CHANGE_JUSTIFIED`.
+- 2026-11-13T10:17Z @ `e40429fdb94d4fc7a04799ba180f5368cb17be06`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED` (committed `1b4dd7933`).
+- 2026-11-13T10:14Z @ `c8a3839e31fd578c2f62ef8819ae568696332e00`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED` (committed `e40429fdb`).
+- 2026-11-13T10:08Z @ `45481f592849688c1d5dbcc537ab7ff52a869f9e`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED` (committed `c8a3839e3`).
 - 2026-11-13T09:59Z @ `d7952afce62475240b03c3f73b0a4c8d8ed0432f`, 09:58Z @ `422aa1f2477793dd8e11cf333b1922b79d5bfd5c`, 08:56Z @ `4581bba3d185d8291f44353b6e4cd7ef99e02368`, 08:50Z @ `0dc0c12353adaf7b9ae905de6b790084b813edf8`, 08:45Z @ `e05fd424c5c92f1bfdb768ccd6a3db097d3e661a`: standing check complete; `ok:false` exit 1, same 4 failures unchanged verbatim; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no cohort/v6/holdout drift; v6 unconsumed/not started; handoff-only changes uncommitted; `NO_PROMPT_CHANGE_JUSTIFIED`.
 - 2026-11-13T08:44Z @ `26503ed29be29fa2c306c50dca115beb5bb998c4` through 2026-11-13T07:36Z @ `07d3f66a591abe0f44d4bddb2a43678bad558761`: repeated identical standing-check result; 4 failures unchanged; manifest match; no drift; v6 unconsumed/not started; handoff-only checkpoints.
 - Earlier 2026-11-13 checkpoints (03:24Z–07:33Z): same standing-check result; no drift; v6 unconsumed/not started; handoff-only commits.
