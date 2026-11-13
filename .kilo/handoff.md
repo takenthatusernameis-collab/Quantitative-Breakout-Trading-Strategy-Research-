@@ -1,97 +1,71 @@
-# Session Handoff — 2026-11-12 UTC (BRAIN-003 Holdout Confirmation Complete)
+# Session Handoff — 2026-11-13T05:31:28Z (Standing v6 execution-integrity re-verification)
 
 ## Summary
-Completed the BRAIN-003 holdout confirmation flow over frozen candidates from `research/candidate_manifest_v2.json`. All 14 frozen candidates were evaluated on the holdout fold and **rejected**. This session re-verified every handoff claim against live state:
-- `campaign.py:337` uses `CANDIDATE_MANIFEST_V2_PATH` for holdout candidate filtering (GAP from PLAN.md already resolved — no code change needed).
-- `research/candidate_manifest_v2.json` carries `candidate_status == "ALL_REJECTED_ON_HOLDOUT"` with 14 per-asset holdout verdicts.
-- `campaign_authorization.json`, `checkpoint.json`, and `pilot_evidence.json` share code hash `13172b2e...` with `authorized == true`; specification_hash `2d22e702...` consistent.
-- `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> **19 passed**.
-- `git status` clean at HEAD `b2805647799877b605a689c9182b122bc40b259c2`; no uncommitted changes.
-- Holdout shards written under `research/results_shards/e22c47fed0126119d80b42411b20311d952862bc32d3b7d9db4dc434a95eb843/`; old manifest backed up as `research/results_manifest.legacy_41f0dc8d.json`.
+Completed the standing task from `research_state/next_agent_task.md` (cheap checks + execution-integrity re-verification; no substantive protocol/state change). Verified live state at HEAD `5fa69796ad7b862de2e68446d490ce189c798281`:
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `5fa69796a…`; 0 ahead / 0 behind; tracked tree clean, 0 untracked (`git status --porcelain -uall` empty). HEAD advanced from prior recorded `1897133a0…` by a handoff-only checkpoint commit.
+- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false`, exit 1, fail-closed; 4 failures unchanged verbatim (frozen v6 execution/binding code-identity vs `research_state/campaign_authorization.json`).
+- `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
+- No cohort/state drift; `holdout_exposed_count == 0`; v6 selection unconsumed and not started.
 
-## Work Completed
+## Prior Task Completed
+Standing cycle item: confirm HEAD/upstream/clean tree, re-run the v6 execution-integrity verifier, confirm cohort/v6/holdout state, do not consume the authorized v6 run, do not expose holdout, do not edit frozen artifacts to paper over the digest mismatch, update handoff docs.
 
-### 1. Holdout Candidate Filtering Alignment
-- `campaign.py` already uses `CANDIDATE_MANIFEST_V2_PATH` (line 337) for holdout candidate filtering.
-- No code change needed — the GAP identified in PLAN.md was already resolved.
+## Verified State
+### Verifier output (verbatim failures)
+1. `the code-hash constraint does not record the authorized code hash of record`
+2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
+3. `the versioned binding's hashed engine digest does not recompute`
+4. `the versioned binding's composite run code identity does not recompute`
 
-### 2. Holdout Evaluation Executed
-- Ran holdout evaluation for all 14 frozen candidates from v2 manifest (`preregistered_v1` rule).
-- Each candidate evaluated on holdout fold (fold 4) across 3 cost scenarios (1x, 2x, 3x).
-- Results written to new shards under campaign `e22c47fed0126119d80b42411b20311d952862bc32d3b7d9db4dc434a95eb843`.
+### Key computed values
+- `canonical_hashed_set_digest == 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
+- `v6_execution_path_canonical_digest == 37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`
+- `recomputed_inherited_blocks_digest == 0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`
+- `selection_authorization_run_id == v6-selection-20261022`
+- `selection_authorization_campaign_id == v6-campaign`
+- `selection_authorization_manifest_hash == f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`
+- `selection_authorization_sha256 == 14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`
+- `effective_execution_authorization_source == configs/research_v6_execution_amendment_1.json`
+- `evaluation_may_not_start_before_utc == 2027-01-20T02:00:00Z`, `evaluated_constituents == 7`, `historical_selection_authorization_present == false`, `v3_benchmark_candles_after_the_v6_cutoff == 13`
 
-### 3. Holdout Verdicts — All Rejected
-| Asset | Frozen Config | Holdout Verdict | Primary Failure Reason |
-|-------|--------------|-----------------|------------------------|
-| ADAUSDT | cfg_1513 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x, trades < 30 |
-| ATOMUSDT | cfg_0581 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x |
-| AVAXUSDT | cfg_1561 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 2x, trades < 30 |
-| BNBUSDT | cfg_0089 | REJECTED_ON_HOLDOUT | trades < 30 (27) |
-| DOGEUSDT | cfg_0040 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x, trades < 30 |
-| DOTUSDT | cfg_0384 | REJECTED_ON_HOLDOUT | trades < 30 (26) |
-| ETHUSDT | cfg_1525 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x, trades < 30 |
-| LTCUSDT | cfg_0084 | REJECTED_ON_HOLDOUT | trades < 30 (22) |
-| NEARUSDT | cfg_1584 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x |
-| SOLUSDT | cfg_0732 | REJECTED_ON_HOLDOUT | trades < 30 (15) |
-| SUIUSDT | cfg_0507 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x, trades < 30 |
-| UNIUSDT | cfg_0124 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x |
-| XLMUSDT | cfg_0124 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x |
-| XRPUSDT | cfg_1661 | REJECTED_ON_HOLDOUT | net_return ≤ 0 at 1x/2x, trades < 30 |
+### Frozen binding
+- `configs/research_v6_selection_execution_binding_1.json`: `binding_status == IMPLEMENTATION_BOUND_NOT_RUN`, `code_identity.hashed_set_digest == 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` (still mismatches live `8cd1…`), `code_identity.execution_path_digest == 37ba6eb3…`, `code_identity.run_code_identity == 647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961`, `manifest_hash == b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`.
+- `src/v6_campaign/` present (8 modules).
 
-- **Overall status**: `ALL_REJECTED_ON_HOLDOUT` (no survivors).
-- All candidates failed the v2 promotion rule (positive net return at 1x AND 2x costs AND ≥30 trades).
+### Cohort / holdout / v6 selection (no drift)
+- `continuous_universe_state.json`: `current_cycle_id == v5-selection-20261021`, `next_cohort_index == 6`, `current_cohort.cohort_index == 5`, `completed == true`, `updated_utc == 2026-10-21T21:45:00+00:00`.
+- `checkpoint_v5.json`: `holdout_exposed_count == 0`, `completed_records == 193536`, `pilot_passed == true`.
+- `configs/research_v6_selection_authorization_1.json`: `authorized_run.run_id == v6-selection-20261022`, `campaign_id == v6-campaign`, `max_runs == 1`, `consumed` absent top-level and in `authorized_run` -> unconsumed.
+- `research_state/v6_selection_ledger.json`, `research/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` all absent -> selection NOT started.
 
-### 4. Candidate Manifest Updated
-- `research/candidate_manifest_v2.json`: `candidate_status: "ALL_REJECTED_ON_HOLDOUT"`, per-asset `holdout_verdict`, `holdout_baseline_comparison`, `criteria_agreement`; all `criteria_agreement == DISAGREE`.
+## BRAIN-003 (prior cycle, unchanged)
+Holdout confirmation of `research/candidate_manifest_v2.json` remains `ALL_REJECTED_ON_HOLDOUT` (all 14 frozen candidates rejected; manifest historically exposed — do not reuse for confirmation claims). No further holdout work on v2.
 
-### 5. Preregistered Selection Re-run
-- Ran `select_candidates` on validation records from old campaign shards (36,960 validation units, 0 holdout).
-- Selection correctly refuses holdout records (`HoldoutRecordError` raised).
-- Results: `BNBUSDT`: NO_CANDIDATE; `BTCUSDT`: INSUFFICIENT_EVIDENCE; `ETHUSDT`: CANDIDATE_SELECTED (cfg_0635, all gates PASS including `median_sharpe_gt_buyhold`).
-- Baseline gate verified: fail-closed when missing/hash-mismatched.
-
-### 6. Acceptance Tests
-- `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> **19 passed**.
-- All invariants preserved: validation never touches holdout, resume from manifest, stale checkpoints rejected.
-
-## Key Invariants Maintained
-- Validation campaign never evaluates/writes holdout fold.
-- Holdout evaluation consumes only frozen v2 candidates.
-- Resume position derived from verified shard manifest.
-- Stale checkpoint/code hash rejected fail-closed.
-- Holdout records raise `HoldoutRecordError` in selection path.
-
-## Files Changed
-- `research/candidate_manifest_v2.json` — updated with holdout verdicts, status `ALL_REJECTED_ON_HOLDOUT`.
-- `research_state/pilot_evidence.json` — code hash refreshed to current (`13172b2e...`).
-- `research_state/campaign_authorization.json` — regenerated with current code hash, `authorized: true`.
-- `research_state/checkpoint.json` — code hash refreshed.
-- `research/results_manifest.legacy_41f0dc8d.json` — backed up old manifest (bound to old code).
-- New shards under `research/results_shards/e22c47fe.../` for holdout units.
+## Files Changed (this session)
+- `research_state/agent_handoff.md` — new COMPLETED entry with current HEAD/timestamp/verifier output/cohort/v6/holdout state.
+- `research_state/next_agent_task.md` — refreshed current-state block (HEAD `5fa69796a…`, timestamp) and binding details.
+- `.kilo/handoff.md` — this durable handoff rewritten for the current standing cycle.
 
 ## Next Steps for Following Agent
-1. **No further holdout work needed** — all frozen candidates rejected, confirmatory flow complete; v2 manifest is historically exposed (`holdout_exposure == EXPOSED_OR_UNKNOWN`), do not reuse for confirmation claims.
-2. If new candidates are to be tested: freeze new validation candidates via `candidate_freeze.freeze_from_results` and run a fresh holdout evaluation under a separately preregistered protocol per BRAIN-003/BRAIN-011.
-3. Any new confirmatory period requires a new preregistered protocol and candidate freeze; do not reuse the v2 manifest.
-4. Standing v6 execution-integrity task (optional continuation): re-run `PYTHONPATH=src python3 scripts/verify_v6_execution.py` against current HEAD `b2805647799877b605a689c9182b122bc40b259c2`; report `ok`/exit code, failures, and key computed digests vs the 4 known failures in `research_state/next_agent_task.md`. Do NOT consume the authorized v6 run (`v6-selection-20261022`) and do NOT expose holdout/confirmatory (pre-`2027-01-20T02:00:00Z`). Do NOT edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` to paper over the digest mismatch without explicit user authorization.
+1. Repeat the standing cheap checks: confirm `git rev-parse HEAD == origin/main == @{u}` and a clean tracked tree; record HEAD (do not assume prior hashes).
+2. Re-run `PYTHONPATH=src python3 scripts/verify_v6_execution.py`; report exact `ok`/exit, `failures`, and key digests/hashes; report any change vs the 4 known failures verbatim.
+3. Confirm no cohort/state drift (`continuous_universe_state.json`, `checkpoint_v5.json` `holdout_exposed_count == 0`) and that v6 selection is still not started / unconsumed.
+4. Do NOT consume `authorized_run.run_id == v6-selection-20261022` / `campaign_id == v6-campaign`; do NOT expose holdout/confirmatory (pre-`2027-01-20T02:00:00Z`, `holdout_exposed_count` must remain 0).
+5. Do NOT edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` to paper over the digest mismatch without explicit user authorization; flag it instead.
+6. Update `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; commit only if the user explicitly requests it.
+7. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## Initial Task Message for Next Agent
 ```
-The BRAIN-003 holdout confirmation flow is complete and verified (Kilo, 2026-11-12).
+You are the next agent in the chain. The repository is at a stable, fail-closed checkpoint (HEAD 5fa69796ad7b862de2e68446d490ce189c798281, tracked tree clean, 0 ahead/0 behind, 0 untracked).
 
-Status: ALL_REJECTED_ON_HOLDOUT — no further holdout evaluation needed on research/candidate_manifest_v2.json.
+Standing task (cheap checks + execution-integrity re-verification only; no substantive changes):
+1. Confirm `git rev-parse HEAD` == `origin/main` == `@{u}` and a clean tracked tree. Record HEAD (do not assume prior hashes).
+2. Run `PYTHONPATH=src python3 scripts/verify_v6_execution.py`; report exact `ok`/exit, `failures`, and key computed digests/hashes (`manifest_hash` vs `recomputed_manifest_hash`, `canonical_hashed_set_digest`, `v6_execution_path_canonical_digest`, `selection_authorization_*`, `effective_execution_authorization_source`). Report any change vs the 4 known failures verbatim.
+3. Confirm no cohort/state drift (`research_state/continuous_universe_state.json`, `research_state/checkpoint_v5.json` `holdout_exposed_count == 0`) and that v6 selection is still NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; single authorized run unconsumed in `configs/research_v6_selection_authorization_1.json`).
+4. Do NOT consume the authorized v6 selection run (`run_id == v6-selection-20261022`, `campaign_id == v6-campaign`, `max_runs == 1`) and do NOT expose holdout/confirmatory (pre-2027-01-20T02:00:00Z; `holdout_exposed_count` must remain 0).
+5. Do NOT edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, or `research_state/campaign_authorization.json` to paper over the verifier's digest mismatch without explicit user authorization; flag it instead.
+6. Update `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; commit only if explicitly requested.
 
-Verified state (2026-11-12, HEAD b2805647799877b605a689c9182b122bc40b259c2, tree clean):
-- All 14 frozen candidates from research/candidate_manifest_v2.json (preregistered_v1 rule) were evaluated on the holdout fold (fold 4) across 3 cost scenarios (1x/2x/3x). Every candidate REJECTED_ON_HOLDOUT; none survived the v2 promotion rule (positive net return at 1x AND 2x costs AND >= 30 closed trades).
-- research/candidate_manifest_v2.json: candidate_status = "ALL_REJECTED_ON_HOLDOUT", per-asset holdout_verdict/holdout_baseline_comparison/criteria_agreement recorded (all DISAGREE).
-- Preregistered selection re-run on validation units only: ETHUSDT selected (cfg_0635, all gates PASS including median_sharpe_gt_buyhold); HoldoutRecordError correctly raised for holdout records; BNBUSDT = NO_CANDIDATE; BTCUSDT = INSUFFICIENT_EVIDENCE.
-- Acceptance tests: pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -> 19 passed.
-- campaign_authorization.json / checkpoint.json / pilot_evidence.json share code hash 13172b2e... with authorized == true; specification_hash 2d22e702... consistent.
-- No uncommitted changes; git tree clean.
-
-What you need to do:
-1. Confirm BRAIN-003 is complete (above). There is no further holdout work on the v2 manifest — it is historically exposed; do not reuse it for confirmation claims.
-2. If continuing the standing session cycle, re-run the v6 execution-integrity re-verification: PYTHONPATH=src python3 scripts/verify_v6_execution.py (see research_state/next_agent_task.md). Report ok/exit code, any failures, and key computed digests vs the 4 known failures. Do NOT consume the authorized v6 selection run (run_id v6-selection-20261022, campaign_id v6-campaign, max_runs==1, unconsumed). Do NOT expose holdout/confirmatory data (pre-2027-01-20T02:00:00Z; holdout_exposed_count must remain 0).
-3. Do NOT edit frozen configs/research_v6_execution.json, configs/research_v6_selection_execution_binding_1.json, or research_state/campaign_authorization.json to paper over the verifier's digest mismatch without explicit user authorization; flag it instead.
-4. Update research_state/agent_handoff.md and research_state/next_agent_task.md with HEAD, verifier output, cohort/v6/holdout state; commit only if explicitly requested.
+Known live state (re-verified 2026-11-13T05:31:28Z): verifier `ok:false` (exit 1, fail-closed), 4 failures unchanged verbatim (frozen v6 execution/binding code identity vs `research_state/campaign_authorization.json`: `the code-hash constraint does not record the authorized code hash of record`; `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; `the versioned binding's hashed engine digest does not recompute`; `the versioned binding's composite run code identity does not recompute`). `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Binding `code_identity.hashed_set_digest == 3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff` still mismatches live `canonical_source_digest == 8cd1…`. Cohort `next_cohort_index == 6`, `current_cohort.cohort_index == 5` `completed == true`, `current_cycle_id == v5-selection-20261021`; `holdout_exposed_count == 0`; v6 selection unconsumed/not started. `NO_PROMPT_CHANGE_JUSTIFIED`.
 ```
