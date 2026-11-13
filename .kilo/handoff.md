@@ -1,12 +1,12 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-13T15:20Z @ `b6feb7ba5f1943f7f1e040fcc418328f015948c3`
+## HANDOFF — 2026-11-13T17:37Z @ `0c8fefd5c09f47da387baef12d05c2596b2f56bd`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == b6feb7ba5f1943f7f1e040fcc418328f015948c3` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
-- Tracked tree clean at check start. Only change vs prior recorded `95916152b13a2df83bd2c8a073625b9f6ffced0e` is that checkpoint commit touching the three handoff docs; no substantive diff. Handoff docs updated this session (uncommitted; no commit requested).
+- `HEAD == origin/main == @{u} == 0c8fefd5c09f47da387baef12d05c2596b2f56bd` (`chore(kilo): checkpoint agent session`, main). 0 ahead / 0 behind.
+- Tracked tree clean at check start. Only change vs prior recorded `b6feb7ba5f1943f7f1e040fcc418328f015948c3` is that checkpoint commit touching the three handoff docs; no substantive diff. Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
 - `ok:false`, exit 1, 4 failures unchanged verbatim:
@@ -24,8 +24,8 @@
 - Effective mismatch: auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`. Protocol decision required; do not edit frozen artifacts without explicit user authorization. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ### Cohort / v6 / holdout (no drift)
-- `continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
-- `checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
+- `research_state/continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
+- `research_state/checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
 - v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present 8 modules). Authorized run unconsumed. No holdout/confirmatory exposed.
 
 ### Hard constraints
@@ -35,3 +35,5 @@
 
 ### Next agent
 See `research_state/next_agent_task.md` for the copy/paste task (standing cheap checks + execution-integrity re-verification only).
+
+(End of file)

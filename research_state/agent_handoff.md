@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-13T15:20Z @ `b6feb7ba5f1943f7f1e040fcc418328f015948c3` (kilo)
+## HANDOFF — 2026-11-13T17:37Z @ `0c8fefd5c09f47da387baef12d05c2596b2f56bd` (kilo)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `b6feb7ba5f1943f7f1e040fcc418328f015948c3` (`chore(kilo): checkpoint agent session`, `main`). 0 ahead / 0 behind.
-- `git status --porcelain -uall` empty at check start (tracked tree clean). HEAD advanced from prior recorded `95916152b13a2df83bd2c8a073625b9f6ffced0e`; the only intervening change is that checkpoint commit touching the three handoff docs (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) — no substantive diff. Handoff docs updated this session (uncommitted; no commit requested).
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `0c8fefd5c09f47da387baef12d05c2596b2f56bd` (`chore(kilo): checkpoint agent session`, `main`). 0 ahead / 0 behind.
+- `git status --porcelain -uall` empty at check start (tracked tree clean). HEAD advanced from prior recorded `b6feb7ba5f1943f7f1e040fcc418328f015948c3`; the only intervening change is that checkpoint commit touching the three handoff docs (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) — no substantive diff. Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -27,8 +27,8 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - Effective mismatch (fail-closed): auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`. Do not edit frozen artifacts to paper over. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ### Cohort / v6 / holdout (no drift)
-- `continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
-- `checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
+- `research_state/continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
+- `research_state/checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
 - v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present 8 modules). Authorized run unconsumed.
 
 ### Hard constraints (standing)
@@ -40,6 +40,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-13T17:37Z @ `0c8fefd5c09f47da387baef12d05c2596b2f56bd`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced from `b6feb7ba5f1…` via checkpoint commit (no substantive diff).
 - 2026-11-13T15:20Z @ `b6feb7ba5f1943f7f1e040fcc418328f015948c3`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced from `95916152b1…` via checkpoint commit (no substantive diff).
 - 2026-11-13T15:18Z @ `95916152b13a2df83bd2c8a073625b9f6ffced0e`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced from `1c0187e4e4…` via checkpoint commit (no substantive diff).
 - 2026-11-13T15:14Z @ `1c0187e4e407377688c31a6ab953b1d1ccb576d9`: standing check; `ok:false` exit 1, same 4 failures unchanged; `manifest_hash==recomputed_manifest_hash==9287272…` MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
