@@ -1,12 +1,12 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-13T23:02Z @ `2d27863a4322a3f32252823d2226a5e8eafcda63`
+## HANDOFF — 2026-11-13T23:32Z @ `2ce909f53422180a5bdbd1c2eae3e1ca7a2aa965`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == 2d27863a4322a3f32252823d2226a5e8eafcda63` (main). 0 ahead / 0 behind.
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `b23f6ae1d36ce714d3d0ea6d83d86465324c9333` via a handoff-docs-only checkpoint commit (3 files / +12/-10). Handoff docs updated this session (uncommitted; no commit requested).
+- `HEAD == origin/main == @{u} == 2ce909f53422180a5bdbd1c2eae3e1ca7a2aa965` (main). 0 ahead / 0 behind.
+- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `2d27863a4…` via `1faeeed35` (handoff docs only: 3 files / +8/-7) and `2ce909f53` (`research_state/workflow_run_diagnostics.jsonl` +1). No substantive code/config diff. Handoff docs updated this session (uncommitted; no commit requested).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
 - `ok:false`, exit 1, 4 failures unchanged verbatim across prior sessions:
@@ -28,6 +28,9 @@
 - `research_state/continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
 - `research_state/checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
 - v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present 8 modules; authorized run unconsumed). No holdout/confirmatory exposed.
+
+### Workflow diagnostics (informational)
+- `research_state/workflow_run_diagnostics.jsonl` latest row: `run_id==43474467702`, `status==completed`, `conclusion==success`, `run_completed_at==2026-11-13T23:28:23Z`, `capture_status==complete`. Captured `potential_errors` are Kilo agent-loop `edit`-tool invalid-argument signals (malformed tool input), not a protocol/data error.
 
 ### Hard constraints
 - Do **not** consume `authorized_run.run_id==v6-selection-20261022` / `campaign_id==v6-campaign` and do **not** expose holdout/confirmatory (pre-`2027-01-20T02:00:00Z`, `holdout_exposed_count` must remain 0).
