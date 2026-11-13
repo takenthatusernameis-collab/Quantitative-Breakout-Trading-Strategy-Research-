@@ -1,8 +1,8 @@
-# Session Handoff — 2026-11-13T08:38Z (Standing v6 execution-integrity re-verification)
+# Session Handoff — 2026-11-13T08:43Z (Standing v6 execution-integrity re-verification)
 
 ## Summary
-Completed the standing task from `research_state/next_agent_task.md` (cheap checks + execution-integrity re-verification; no substantive protocol/state change). Verified live state at HEAD `1185e79adfa8dc3a388678ec2444dc0bc4e9ca18`:
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `1185e79adfa8dc3a388678ec2444dc0bc4e9ca18`; 0 ahead / 0 behind; tracked tree clean, 0 untracked (`git status --porcelain -uall` empty).
+Completed the standing task from `research_state/next_agent_task.md` (cheap checks + execution-integrity re-verification; no substantive protocol/state change). Verified live state at HEAD `74db276dc2fa55d7ebb8fe83def49116ebe3d024`:
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `74db276dc2fa55d7ebb8fe83def49116ebe3d024`; 0 ahead / 0 behind; tracked tree clean, 0 untracked (`git status --porcelain -uall` empty).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false`, exit 1, fail-closed; 4 failures unchanged verbatim.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - No cohort/state drift; `holdout_exposed_count == 0`; v6 selection unconsumed and not started.
@@ -41,7 +41,7 @@ Standing cycle: confirm HEAD/upstream/clean tree, re-run verifier, confirm cohor
 Holdout confirmation of `research/candidate_manifest_v2.json` remains `ALL_REJECTED_ON_HOLDOUT`. No further holdout work on v2.
 
 ## Files Changed (this session)
-- `research_state/agent_handoff.md` — prepended COMPLETED entry (this cycle @ 4cd949e7).
+- `research_state/agent_handoff.md` — prepended COMPLETED entry (this cycle @ 74db276dc).
 - `research_state/next_agent_task.md` — refreshed current-state and initial task message.
 - `.kilo/handoff.md` — this durable handoff rewritten.
 - **Not committed** (no commit requested).
@@ -54,7 +54,7 @@ Holdout confirmation of `research/candidate_manifest_v2.json` remains `ALL_REJEC
 
 ## Initial Task Message for Next Agent
 ```
-You are the next agent in the chain. The repository is at a stable, fail-closed checkpoint (HEAD 1185e79adfa8dc3a388678ec2444dc0bc4e9ca18, tracked tree clean, 0 ahead/0 behind, 0 untracked).
+You are the next agent in the chain. The repository is at a stable, fail-closed checkpoint (HEAD 74db276dc2fa55d7ebb8fe83def49116ebe3d024, tracked tree clean, 0 ahead/0 behind, 0 untracked).
 
 Standing task (cheap checks + execution-integrity re-verification only; no substantive changes):
 1. Confirm `git rev-parse HEAD` == `origin/main` == `@{u}` and a clean tracked tree. Record HEAD.
@@ -65,7 +65,7 @@ Standing task (cheap checks + execution-integrity re-verification only; no subst
 6. Do NOT edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, `configs/research_v6_selection_authorization_1.json`, or `research_state/campaign_authorization.json` to paper over the digest mismatch without explicit user authorization.
 7. Update `research_state/agent_handoff.md`, `research_state/next_agent_task.md`, `.kilo/handoff.md`; commit only if explicitly requested.
 
-Known live state (re-verified 2026-11-13T08:38Z): verifier `ok:false` (exit 1), 4 failures unchanged (frozen v6 execution/binding code identity vs live): `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; `canonical_hashed_set_digest==8cd17522…`; `v6_execution_path_canonical_digest==37ba6eb3…`; effective mismatch auth-of-record `2efd3b…` vs frozen binding digest `3e8e41…` vs live `8cd1…` (fail-closed, protocol-level). `src/v6_campaign/` present (8 modules). `NO_PROMPT_CHANGE_JUSTIFIED`.
+Known live state (re-verified 2026-11-13T08:43Z): verifier `ok:false` (exit 1), 4 failures unchanged (frozen v6 execution/binding code identity vs live): `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`; `canonical_hashed_set_digest==8cd17522…`; `v6_execution_path_canonical_digest==37ba6eb3…`; effective mismatch auth-of-record `2efd3b…` vs frozen binding digest `3e8e41…` vs live `8cd1…` (fail-closed, protocol-level). `src/v6_campaign/` present (8 modules). `NO_PROMPT_CHANGE_JUSTIFIED`.
 ```
 
 (End of file - total 78 lines)
