@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T08:26:01Z @ `8f40fec4183359deb436af2e190eb39a4fb973eb` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T08:28:30Z @ `aa420f63b376e9b13b7b8f8cb4228a2e787dd3a8` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `8f40fec4183359deb436af2e190eb39a4fb973eb`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 08:24:46Z block (`b06bb721e322315263dd8922dad5c37f1cebf8b2`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made by this session.
+**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `aa420f63b376e9b13b7b8f8cb4228a2e787dd3a8`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 08:26:01Z block (`8f40fec4183359deb436af2e190eb39a4fb973eb`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made by this session.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `8f40fec4183359deb436af2e190eb39a4fb973eb` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at receipt. HEAD advanced from `b06bb721e322315263dd8922dad5c37f1cebf8b2` by continuity-docs-only checkpoint commit `8f40fec4183359deb436af2e190eb39a4fb973eb` ("chore(kilo): checkpoint agent session"); no source/protocol/state changes. After this handoff update, only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` should differ from HEAD.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `aa420f63b376e9b13b7b8f8cb4228a2e787dd3a8` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at receipt. HEAD advanced from `8f40fec4183359deb436af2e190eb39a4fb973eb` by continuity-docs-only checkpoint commit `aa420f63b376e9b13b7b8f8cb4228a2e787dd3a8` ("chore(kilo): checkpoint agent session"); no source/protocol/state changes. After this handoff update, only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` should differ from HEAD.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -41,5 +41,5 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T08:24:46Z–08:26:01Z @ `b06bb721e322315263dd8922dad5c37f1cebf8b2`→`8f40fec4183359deb436af2e190eb39a4fb973eb` (this session): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; handoff-docs-only advances; HEAD advanced via continuity-docs-only checkpoint commit `8f40fec4`.
-- Earlier sessions 05:26Z–07:34:37Z (17 sessions across 4 blocks): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; handoff-docs-only advances.
+- 2026-11-14T08:26:01Z–08:28:30Z @ `8f40fec4183359deb436af2e190eb39a4fb973eb`→`aa420f63b376e9b13b7b8f8cb4228a2e787dd3a8` (this session): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; handoff-docs-only advances; HEAD advanced via continuity-docs-only checkpoint commit `aa420f63`.
+- Earlier sessions 05:26Z–08:26:01Z (18 sessions across 4+ blocks): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; handoff-docs-only advances.
