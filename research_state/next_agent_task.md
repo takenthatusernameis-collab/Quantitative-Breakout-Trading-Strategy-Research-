@@ -6,7 +6,7 @@ You are the next agent in the chain. Complete the standing task below, then upda
 
 **Summary:** The repository is at a stable, fail-closed checkpoint. The only live issue is the long-standing frozen-v6 execution/binding identity mismatch (4 verifier failures, unchanged across many sessions); it is a protocol decision that requires explicit user authorization to resolve, not a bug to patch. Do not consume the single authorized v6 selection run, do not expose holdout/confirmatory data, and do not edit frozen configs/state artifacts to make the verifier pass. Everything else (cohort v5 completed, holdout exposure 0, v6 selection not started) is unchanged and verified.
 
-**Current state (re-verified 2026-11-14T03:41Z):** `main` @ `baa0929258fa0d8af8987ae275110330718f84b5` == `origin/main` == `@{u}` (`rev-list --left-right --count HEAD...origin/main` == `0 0`; tracked tree clean at check start except handoff-doc updates by this session). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified 2026-11-14T03:44Z):** `main` @ `de1ae7dc62fcfb2e7e3b8dfeb1ff5263837950ba` == `origin/main` == `@{u}` (`rev-list --left-right --count HEAD...origin/main` == `0 0`; tracked tree clean at check start except handoff-doc updates by this session). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
