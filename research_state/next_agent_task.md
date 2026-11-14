@@ -6,7 +6,7 @@ You are the next agent in the chain. Complete the standing task below, then upda
 
 **Summary:** The repository is at a stable, fail-closed checkpoint. The only live issue is the long-standing frozen-v6 execution/binding identity mismatch (4 verifier failures, unchanged across many sessions); it is a protocol decision that requires explicit user authorization to resolve, not a bug to patch. Do not consume the single authorized v6 selection run, do not expose holdout/confirmatory data, and do not edit frozen configs/state artifacts to make the verifier pass. Everything else (cohort v5 completed, holdout exposure 0, v6 selection not started) is unchanged and verified.
 
-**Current state (re-verified 2026-11-14T05:34:21Z):** `main` @ `c224595745cc5e099469faa10c165108dcd2dc76` == `origin/main` == `@{u}` (`rev-list --left-right --count HEAD...origin/main` == `0 0`; tracked tree clean at check start except handoff-doc updates by this session; HEAD advanced from prior block `c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6`). `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
+**Current state (re-verified 2026-11-14T05:38:29Z):** `main` @ `742ac29845f52f4da172651208b2d2fa3acfc0e0` == `origin/main` == `@{u}` (`rev-list --left-right --count HEAD...origin/main` == `0 0`; tracked tree clean at check start; HEAD advanced from prior block `c224595745cc5e099469faa10c165108dcd2dc76` by a continuity-docs-only checkpoint). This handoff session made no commit, so expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file to be modified. `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 `failures` unchanged verbatim:
 
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
@@ -25,7 +25,7 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 
 ## Task (cheap checks + execution-integrity re-verification only; no substantive changes)
 
-1. Confirm `git rev-parse HEAD` == `origin/main` == `@{u}` and a clean tracked tree. Record HEAD (do not assume prior hashes).
+1. Confirm `git rev-parse HEAD` == `origin/main` == `@{u}`. Record tracked-tree state and HEAD (do not assume prior hashes); at handoff receipt, only the three continuity documents should be modified. Do not revert those handoff updates.
 2. Run `PYTHONPATH=src python3 scripts/verify_v6_execution.py`; report exact `ok`/exit, `failures`, and key computed digests/hashes (`manifest_hash` vs `recomputed_manifest_hash`, `canonical_hashed_set_digest`, `v6_execution_path_canonical_digest`, `selection_authorization_*`, `effective_execution_authorization_source`). Report any change vs the 4 known failures verbatim.
 3. Confirm no cohort/state drift (`research_state/continuous_universe_state.json` top-level `current_cycle_id`/`updated_utc`, `next_cohort_index`, `current_cohort.cohort_index`/`completed`) and `holdout_exposed_count==0` (`research_state/checkpoint_v5.json`). Confirm v6 selection still NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; authorized run unconsumed in `configs/research_v6_selection_authorization_1.json`).
 4. When reporting binding identity, read `configs/research_v6_selection_execution_binding_1.json` `code_identity.run_code_identity` directly (`647dc464…`) and do not confuse it with the authorization's `authorized_run.code_identity.run_code_identity` (`6bda27fa…`). Report `research_state/campaign_authorization.json` `code_hash` as a rotating live value, not a frozen constant.
@@ -33,6 +33,6 @@ No drift: cohort `next_cohort_index==6`, `current_cohort.cohort_index==5` `compl
 6. **Do NOT** "fix" the verifier by editing frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, `configs/research_v6_selection_authorization_1.json`, or `research_state/campaign_authorization.json` without explicit user authorization. Flag it; do not paper over it.
 7. Update `research_state/agent_handoff.md` (timestamp, HEAD, verifier output summary, cohort/v6 state, any diffs) and refresh this `research_state/next_agent_task.md`; also refresh `.kilo/handoff.md`. Commit **only** if the user explicitly requests a commit. Keep diffs minimal and mechanical. Condense older handoff sections into `Prior sessions (condensed)` bullets when the file grows.
 
-**Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
+**Hard constraints:** no BRAIN-003/holdout exposure (pre-`2027-01-20T02:00:00Z`); no consuming `authorized_run.run_id==v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
 (End of file - total 36 lines)
