@@ -1,12 +1,12 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-14T00:48Z @ `8d38d8d1fa34598c60353776eb87d2f7aae199ff`
+## HANDOFF — 2026-11-14T00:50Z @ `235ca6a682e153ad919e674af338f3fc9e275414`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == 8d38d8d1fa34598c60353776eb87d2f7aae199ff` (main). 0 ahead / 0 behind.
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `df8eeaa16ebdd3e8aeb054843ce9c263d9a9e9eb` via handoff-docs-only commit `8d38d8d1f` (`chore(kilo): checkpoint agent session`, touched only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`). No substantive code/config diff.
+- `HEAD == origin/main == @{u} == 235ca6a682e153ad919e674af338f3fc9e275414` (main). 0 ahead / 0 behind.
+- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `8d38d8d1fa34598c60353776eb87d2f7aae199ff` via handoff-docs-only commit(s) on `origin/main`; no substantive code/config diff observed in this session.
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
 - `ok:false`, exit 1, 4 failures unchanged verbatim:
@@ -20,7 +20,7 @@
 
 ### Identity (frozen, fail-closed mismatch — do not paper over)
 - Binding `configs/research_v6_selection_execution_binding_1.json` (frozen 2026-11-04, `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`): `code_identity.hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `code_identity.execution_path_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961`, `manifest_hash==b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`.
-- Authorization `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `hashed_set_digest==3e8e41…`, `execution_path_digest==null`, `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`); `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `consumed` absent (unconsumed), `no_execution_in_this_session==true` (inside `authorized_run`).
+- Authorization `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `hashed_set_digest==3e8e41…`, `execution_path_digest==null`, `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`); `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `consumed` absent (unconsumed), `no_execution_in_this_session==true`.
 - Live `research_state/campaign_authorization.json`: `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (`authorized==true`, `authorized_at_utc==2026-11-12T18:12:22.943361+00:00`; rotates on refresh).
 - Effective mismatch: auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`. Protocol decision required; do not edit frozen artifacts without explicit user authorization. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
