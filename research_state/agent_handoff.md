@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T00:34Z @ `041dc7018df084e8932262d374d24b960e9d51cb` (kilo, standing cheap checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T00:34Z @ `3eacebef374bc8f4cccc746da36274e1e35250de` (kilo, standing cheap checks + v6 execution-integrity re-verification)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `041dc7018df084e8932262d374d24b960e9d51cb` (main). 0 ahead / 0 behind.
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `4d10349bbaf349c14a6bf6284e80ffe9b8edffa7` (checkpoint/handoff docs commit). No substantive code/config diff.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `3eacebef374bc8f4cccc746da36274e1e35250de` (main). 0 ahead / 0 behind.
+- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `041dc7018df084e8932262d374d24b960e9d51cb` (checkpoint/handoff docs commit). No substantive code/config diff.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -44,6 +44,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T00:34Z @ `041dc7018df084e8932262d374d24b960e9d51cb`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
 - 2026-11-13T23:44Z @ `4d10349bbaf349c14a6bf6284e80ffe9b8edffa7`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
 - 2026-11-13T23:43Z @ `04688df2dded7f5ba3cc5aebf69f4ed709cc94ff`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started.
 - 2026-11-13T23:39Z @ `ef9a15137faaf8068124a24daf91736747c54c92`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started.
