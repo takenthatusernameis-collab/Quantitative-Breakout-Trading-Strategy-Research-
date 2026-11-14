@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T04:44Z @ `e1d9042edb942d3f91e1ced7f30715ebedf5a220` (kilo, prior durable-task completion + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T04:45Z @ `6293735460a6b59bf7b75c4856d45eeb3f82c033` (kilo, prior durable-task completion + v6 execution-integrity re-verification)
 
 **Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated the standing repository checks, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `e1d9042edb942d3f91e1ced7f30715ebedf5a220` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Parent `353ada1978f17afb389e3718764dfe857017bb7a` (`e1d9042ed chore(kilo): checkpoint agent session`).
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `6293735460a6b59bf7b75c4856d45eeb3f82c033` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Parent `e1d9042edb942d3f91e1ced7f30715ebedf5a220` (`e1d9042ed chore(kilo): checkpoint agent session`).
 - Tracked tree clean at check start (handoff files updated this session only).
 
 ### Verifier
@@ -25,7 +25,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - `configs/research_v6_selection_execution_binding_1.json` (frozen 2026-11-04, `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`): `code_identity.hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `code_identity.execution_path_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961` (read directly from binding), `manifest_hash==b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`.
 - `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `hashed_set_digest==3e8e41…`, `execution_path_digest==null`, `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`authorized_code_hash_status==RETAINED_AS_VALUE_OF_RECORD`); `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `consumed` absent (unconsumed), `no_execution_in_this_session==true`.
 - `research_state/campaign_authorization.json`: `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (`authorized==true`, `authorized_at_utc==2026-11-12T18:12:22.943361+00:00`) — **live value, rotates on refresh**.
-- Effective mismatch (fail-closed): auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`. Do not edit frozen artifacts to paper over. `NO_PROMPT_CHANGE_JUSTIFIED`.
+- Effective mismatch (fail-closed): auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`. Do not edit frozen artifacts to paper over. `NO_PROMP_CHANGE_JUSTIFIED`.
 
 ### Cohort / v6 / holdout (no drift)
 - `research_state/continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
@@ -46,14 +46,15 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T04:44Z @ `353ada1978f17afb389e3718764dfe857017bb7a`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Head advanced from `fe19ed462ad5fefefabee3432d40bc9c3863ee4e` to `353ada1978f17afb389e3718764dfe857017bb7a`; tracked tree clean.
-- 2026-11-14T04:42Z @ `fe19ed462ad5fefefabee3432d40bc9c3863ee4e`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Head advanced from `f3df634c3fe8d3e3fb77922b06c2d04a7dbb7570` to `fe19ed462ad5fefefabee3432d40bc9c3863ee4e`; tracked tree clean.
-- 2026-11-14T04:38Z @ `f3df634c3fe8d3e3fb77922b06c2d04a7dbb7570`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Head advanced from `a29aede05190f6e45e4005a77713acc9b9e719e5` to `f3df634c3fe8d3e3fb77922b06c2d04a7dbb7570`; tracked tree clean.
-- 2026-11-14T03:59Z @ `a29aede05190f6e45e4005a77713acc9b9e719e5`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Head advanced from `afd45bf249470be61096afd72196d2bfcc32706c` to `a29aede05190f6e45e4005a77713acc9b9e719e5`; tracked tree clean.
-- 2026-11-14T03:57Z @ `afd45bf249470be61096afd72196d2bfcc32706c`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Head advanced from `2b30c106c610c2082b28b5f2a971afafac49c207` to `afd45bf249470be61096afd72196d2bfcc32706c`.
+- 2026-11-14T04:44Z @ `e1d9042edb942d3f91e1ced7f30715ebedf5a220` (kilo, prior durable-task completion + v6 execution-integrity re-verification): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. Head advanced from `353ada1978f17afb389e3718764dfe857017bb7a` to `e1d9042edb942d3f91e1ced7f30715ebedf5a220`; tracked tree clean.
+- 2026-11-14T04:42Z @ `353ada1978f17afb389e3718764dfe857017bb7a`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. Head advanced from `fe19ed462ad5fefefabee3432d40bc9c3863ee4e` to `353ada1978f17afb389e3718764dfe857017bb7a`; tracked tree clean.
+- 2026-11-14T04:38Z @ `fe19ed462ad5fefefabee3432d40bc9c3863ee4e`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. Head advanced from `f3df634c3fe8d3e3fb77922b06c2d04a7dbb7570` to `fe19ed462ad5fefefabee3432d40bc9c3863ee4e`; tracked tree clean.
+- 2026-11-14T04:38Z @ `f3df634c3fe8d3e3fb77922b06c2d04a7dbb7570`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. Head advanced from `a29aede05190f6e45e4005a77713acc9b9e719e5` to `f3df634c3fe8d3e3fb77922b06c2d04a7dbb7570`; tracked tree clean.
+- 2026-11-14T03:59Z @ `a29aede05190f6e45e4005a77713acc9b9e719e5`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. Head advanced from `afd45bf249470be61096afd72196d2bfcc32706c` to `a29aede05190f6e45e4005a77713acc9b9e719e5`.
+- 2026-11-14T03:57Z @ `afd45bf249470be61096afd72196d2bfcc32706c`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. Head advanced from `2b30c106c610c2082b28b5f2a971afafac49c207` to `afd45bf249470be61096afd72196d2bfcc32706c`.
 - 2026-11-14T03:53Z @ `2b30c106c610c2082b28b5f2a971afafac49c207`: identical; Head advanced from `faec97849e625dc675860f0901cb9ffc6e4b0f40`.
 - 2026-11-14T03:51Z @ `faec97849e625dc675860f0901cb9ffc6e4b0f40`, 03:47Z @ `c3c1b89058a32aa0074e66c2778cb86263841d0a`, 03:44Z @ `de1ae7dc62fcfb2e7e3b8dfeb1ff5263837950ba`: identical standing checks; each advanced HEAD by handoff-docs-only commit.
-- 2026-11-14T03:41Z–00:34Z (20 sessions @ `baa0929258fa0d8af8987ae275110330718f84b5` … `81da2b0ade394ace5e1b1fef9b29406a96d21d17`): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
+- 2026-11-14T03:41Z–00:34Z (20 sessions @ `baa0929258fa0d8af8987ae275110330718f84b5` … `81da2b0ade394ace5e1b1fef9b29406a96d21d17`): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`.
 - 2026-11-13 (17:37Z–23:44Z, many sessions @ `4d10349`…`2d27863` and earlier): identical standing-check results; each advanced HEAD by checkpoint/handoff-docs-only commits.
 
 (End of file)
