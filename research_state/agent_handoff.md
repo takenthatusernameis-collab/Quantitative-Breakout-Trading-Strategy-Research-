@@ -2,12 +2,12 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T17:13:58Z @ `f28e60ec4361bc3616efc67b33a6b5a4abcde38d` (kilo, standing checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T17:16:57Z @ `ca8721cd54fa7ff5e585d17b82de24d47e4fae10` (kilo, standing checks + v6 execution-integrity re-verification)
 
-**Completed:** repeated standing repository checks at live HEAD `f28e60ec4361bc3616efc67b33a6b5a4abcde38d`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state and binding/auth identity fields. HEAD advanced from prior handoff checkpoint (`512e943f5127febf4ad829762cc688e8613f34de`); `HEAD==origin/main==@{u}` (`0 0`). Tracked tree clean at receipt. Recorded state and verifier outcome unchanged (4 failures, manifest MATCH). No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** repeated standing repository checks at live HEAD `ca8721cd54fa7ff5e585d17b82de24d47e4fae10`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state and binding/auth identity fields. HEAD advanced from prior handoff checkpoint (`f28e60ec4361bc3616efc67b33a6b5a4abcde38d`); `HEAD==origin/main==@{u}` (`0 0`). Tracked tree clean at receipt. Recorded state and verifier outcome unchanged (4 failures, manifest MATCH). No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 ### Git
-- `HEAD==origin/main==@{u}==f28e60ec4361bc3616efc67b33a6b5a4abcde38d` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt. HEAD commit subject `chore(kilo): checkpoint agent session` (2026-11-14 17:13:27 +0000).
+- `HEAD==origin/main==@{u}==ca8721cd54fa7ff5e585d17b82de24d47e4fae10` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt. HEAD commit subject `chore(kilo): checkpoint agent session` (2026-11-14). Diff vs prior HEAD `f28e60ec4...` is limited to the three continuity docs.
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -39,10 +39,9 @@ Repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T17:16:57Z (`ca8721cd54...`): standing checks + v6 re-verification; HEAD advanced from `f28e60ec4...`; tree clean; 4 failures unchanged; manifest MATCH.
 - 2026-11-14T17:13:58Z (`f28e60ec4...`): standing checks + v6 re-verification; HEAD advanced from `512e943f51...`; tree clean; 4 failures unchanged; manifest MATCH.
 - 2026-11-14T17:10:06Z (`512e943f51...`), 17:06:26Z (`4e84a577...`), 17:04:20Z (`2af188ab...`): same fail-closed checkpoint; HEAD advanced each time; 4 failures unchanged; manifest MATCH.
-- 2026-11-14T16:36:19Z (`4c958eeab3690ad4fb9049082d03c7483bf506ef`), 16:33:38Z (`4cf6e1eed...`), 16:31:57Z (`fe255c435423780abf55a9f9b5ae41d29c00ab93`), 16:28:19Z (`199e8778dcd69948e2d64ad213e31c822b0f6754`), 16:25:44Z (`4a7a68ee7...`), 16:24:13Z (`f0a5bf98c...`), 16:19:37Z (`cd7ec19f3e...`), 15:43:54Z (`6170c74de2...`), 15:41:30Z (`dc3b546831...`), 15:37:49Z (`d540ba228...`), 15:32:34Z (`29f053e51...`), 15:29:09Z (`6b8d40af...`), 15:24:37Z (`001186c9...`), 15:19:30Z (`5600049b...`), 14:43:03Z (`8daf33bc...`), 14:42:23Z (`63b1ff25d...`), 14:40:56Z (`abee15ef...`), 14:37:08Z (`323bbc58...`), 14:50:00Z (`79e5012c...`), 14:45:00Z (`a4179f709...`), 14:40:00Z (`083311109...`), 14:25:10Z (`f85bb4db...`): same fail-closed checkpoint, no drift.
+- 2026-11-14T16:36:19Z (`4c958eeab3690ad4fb9049082d03c7483bf506ef`), 16:33:38Z (`4cf6e1eed...`), 16:31:57Z (`fe255c435423780abf55a9f9b5ae41d29c00ab93`), 16:28:19Z (`199e8778dcd69948e2d64ad213e31c822b0f6754`), 16:25:44Z (`4a7a68ee7...`), 16:24:13Z (`f0a5bf98c...`), 16:19:37Z (`cd7ec19f3e...`), 15:43:54Z (`6170c74de2...`), 15:41:30Z (`dc3b546831...`), 15:36:10Z (`d540ba228...`), 15:32:34Z (`29f053e51...`), 15:29:09Z (`6b8d40af...`), 15:24:37Z (`001186c9...`), 15:19:30Z (`5600049b...`), 14:43:03Z (`8daf33bc...`), 14:42:23Z (`63b1ff25d...`), 14:40:56Z (`abee15ef...`), 14:37:08Z (`323bbc58...`), 14:50:00Z (`79e5012c...`), 14:45:00Z (`a4179f709...`), 14:40:00Z (`083311109...`), 14:25:10Z (`f85bb4db...`): same fail-closed checkpoint, no drift.
 - 2026-11-14T14:21:19Z (`b8bfc2b65...`): 4 failures unchanged, manifest MATCH; live `campaign_authorization.json` code_hash rotated.
 - Earlier 2026-11-14 sessions: repeated fail-closed checkpoints, `NO_PROMPT_CHANGE_JUSTIFIED`.
-
-(End of file - total 51 lines)
