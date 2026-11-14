@@ -2,12 +2,12 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T14:45:00Z @ `a4179f7096cee6f0aa195b194b3fa8b94f239d53` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T14:50:00Z @ `79e5012cce4e4b012a7f8d1c4b69b638a71889a9` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** repeated standing repository checks at live HEAD `a4179f7096cee6f0aa195b194b3fa8b94f239d53`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state. HEAD advanced from prior handoff `083311109c8a0fc52a86403846956e2a82840df3` via a checkpoint commit carrying only continuity docs; recorded state and verifier outcome unchanged. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** repeated standing repository checks at live HEAD `79e5012cce4e4b012a7f8d1c4b69b638a71889a9`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state. HEAD advanced from prior handoff `a4179f7096cee6f0aa195b194b3fa8b94f239d53` via a checkpoint commit carrying only continuity docs; recorded state and verifier outcome unchanged. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 ### Git
-- `HEAD==origin/main==@{u}==a4179f7096cee6f0aa195b194b3fa8b94f239d53` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt and after verifier.
+- `HEAD==origin/main==@{u}==79e5012cce4e4b012a7f8d1c4b69b638a71889a9` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt and after verifier.
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -39,11 +39,9 @@ Repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T14:45:00Z (`a4179f709...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `083311109...` via checkpoint commit; tracked clean at receipt.
-- 2026-11-14T14:40:00Z (`083311109...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `f85bb4db2...` via checkpoint commit; tracked clean at receipt.
-- 2026-11-14T14:25:10Z (`f85bb4db...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `b8bfc2b65...` via checkpoint commit; tracked clean at receipt.
+- 2026-11-14T14:50:00Z (`79e5012c...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `a4179f709...` via checkpoint commit; tracked clean at receipt.
+- 2026-11-14T14:45:00Z (`a4179f709...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `083311109...` via checkpoint commit.
+- 2026-11-14T14:40:00Z (`083311109...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `f85bb4db2...`.
+- 2026-11-14T14:25:10Z (`f85bb4db...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `b8bfc2b65...`.
 - 2026-11-14T14:21:19Z (`b8bfc2b65...`): 4 failures unchanged, manifest MATCH; live `campaign_authorization.json` code_hash rotated.
-- 2026-11-14T14:17:23Z (`78cae193...`), 13:39:18Z (`1aa3a4cc...`), 13:36:39Z (`f0364e44...`), 13:29:38Z (`203659f1...`), 13:26:15Z (`0be5c4b6...`), 13:25:08Z (`d4007d8f...`), 13:21:20Z (`b7a7de0b...`), 13:19:15Z (`bdbdbcfb...`), 13:18:25Z (`fd550d10...`): same fail-closed checkpoint (HEAD advanced via continuity commits).
-- 2026-11-14T12:29:15Z–12:33:43Z & earlier: same repeated fail-closed checkpoint. `NO_PROMPT_CHANGE_JUSTIFIED` throughout.
-
-(End of file - total 47 lines)
+- 2026-11-14T14:17:23Z (`78cae193...`)–13:18:25Z (`fd550d10...`) and earlier 2026-11-14 sessions: same repeated fail-closed checkpoint (HEAD advanced via continuity commits). `NO_PROMPT_CHANGE_JUSTIFIED` throughout.
