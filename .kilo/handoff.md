@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T05:30:35Z @ `c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T05:34:21Z @ `c224595745cc5e099469faa10c165108dcd2dc76` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated the standing repository checks at live HEAD `c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs the 05:28Z block (`15a4ee437f929397fa57d92673a80c26ef8114de`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
+**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated the standing repository checks at live HEAD `c224595745cc5e099469faa10c165108dcd2dc76`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs the 05:30Z block (`c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. HEAD advanced from prior block `15a4ee437f929397fa57d92673a80c26ef8114de`. Tracked tree clean.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `c224595745cc5e099469faa10c165108dcd2dc76` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. HEAD advanced from prior block `c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6`. Tracked tree clean.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -45,5 +45,8 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T05:28:24Z @ `15a4ee437f929397fa57d92673a80c26ef8114de`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `d41b376a2c2da9e97df57c27bcade9b28523e360` to `15a4ee437f929397fa57d92673a80c26ef8114de`; this session advanced HEAD to `c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6`.
+- 2026-11-14T05:30:35Z @ `c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `15a4ee437f929397fa57d92673a80c26ef8114de` to `c1941e60fc019739a3e3c5bc19d46e0ba1cc33d6`.
+- 2026-11-14T05:28:24Z @ `15a4ee437f92�9397fa57d92673a80c26ef8114de`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `d41b376a2c2da9e97df57c27bcade9b28523e360` to `15a4ee437f929397fa57d92673a80c26ef8114de`.
 - 2026-11-14T05:26Z @ `d41b376a2c2da9e97df57c27bcade9b28523e360` through 2026-11-13T17:37Z @ `4d10349…` (many sessions): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; each advanced HEAD by handoff-docs-only commits.
+
+(End of file - total 49 lines)
