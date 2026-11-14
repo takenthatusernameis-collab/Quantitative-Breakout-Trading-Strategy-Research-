@@ -1,12 +1,12 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-14T01:40Z @ `b58cb804e72d9e7a6c4516329b51ea294a730f2f`
+## HANDOFF — 2026-11-14T01:40Z @ `717fe75ee179510afc6e486147af80f76d091858`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == b58cb804e72d9e7a6c4516329b51ea294a730f2f` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0` (0 ahead / 0 behind).
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `f46cbbddc80ed8f0667a81ef3578b58329bc972f` via handoff-docs-only checkpoint commit `b58cb804e`; no substantive code/config diff.
+- `HEAD == origin/main == @{u} == 717fe75ee179510afc6e486147af80f76d091858` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0` (0 ahead / 0 behind).
+- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `b58cb804e72d9e7a6c4516329b51ea294a730f2f` via handoff-docs-only checkpoint commit `717fe75e`; no substantive code/config diff.
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
 - `ok:false`, exit 1, 4 failures unchanged verbatim:
