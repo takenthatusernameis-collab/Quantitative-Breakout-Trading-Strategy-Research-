@@ -2,16 +2,16 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T18:16:06Z @ `be893ba4592ba125b010a9f7dd2980d8b4b10f2b` (kilo, standing checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T18:22:29Z @ `0f57da4b5c7fb3876af29f65b8940207b78dfebd` (kilo, standing checks + v6 execution-integrity re-verification)
 
-**Completed:** repeated standing repository checks at live HEAD `be893ba4592ba125b010a9f7dd2980d8b4b10f2b`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state and binding/auth identity fields. HEAD advanced from prior handoff receipt (`7b2a5c99427ab31170ed8a7426f08b84749842a7`); `HEAD==origin/main==@{u}` (`0 0`). Tracked tree clean at receipt. Recorded state and verifier outcome unchanged (4 failures, manifest MATCH). No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** standing repository checks at live HEAD `0f57da4b5c7fb3876af29f65b8940207b78dfebd`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state and binding/auth identity fields. HEAD advanced from prior handoff receipt (`be893ba4592ba125b010a9f7dd2980d8b4b10f2b`); `HEAD==origin/main==@{u}` (`0 0`). Tracked tree clean at receipt. State and verifier outcome unchanged (4 failures, manifest MATCH). No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 ### Git
-- `HEAD==origin/main==@{u}==be893ba4592ba125b010a9f7dd2980d8b4b10f2b` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt. Diff vs prior receipt HEAD `7b2a5c994...` is the checkpoint commit `be893ba45` (continuity docs only).
+- `HEAD==origin/main==@{u}==0f57da4b5c7fb3876af29f65b8940207b78dfebd` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt. Diff vs prior receipt HEAD `be893ba45...` is the checkpoint commit `0f57da4b` (continuity docs only).
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
-- Failures (4, unchanged verbatim):
+- Failures (4, unchanged):
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
   3. `the versioned binding's hashed engine digest does not recompute`
@@ -21,14 +21,14 @@ Repo-resident continuity surface for cross-agent handoff.
 
 ### Identity (source of record; no drift)
 - Binding `configs/research_v6_selection_execution_binding_1.json` (frozen, `IMPLEMENTATION_BOUND_NOT_RUN`): `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961` (≠ authorization `6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`).
-- Authorization `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`; top-level `authorized_code_hash` absent/`None`), `execution_path_digest==null`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `no_execution_in_this_session==true`; no `consumed` field (run unconsumed).
+- Authorization `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`; top-level `authorized_code_hash` absent/`None`), `execution_path_digest==null`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `no_execution_in_this_session==true`; no `consumed` field (unconsumed).
 - `research_state/campaign_authorization.json`: `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (live/rotating; unchanged at this check).
 - Mismatch (fail-closed, unchanged): `2efd3b...` vs `3e8e41...` vs live canonical `8cd175...`. **`NO_PROMPT_CHANGE_JUSTIFIED`.**
 
 ### Cohort / v6 / holdout (no drift)
 - `continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`.
-- `checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`, `code_hash==8a63085e0df880c8d74de5c8f19d6338dd9330ee42c632882634f185ef4948c2`.
-- v6 NOT started: `research_state/v6_selection_ledger.json` / `research_state/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present; run unconsumed, `no_execution_in_this_session==true`. No holdout/confirmatory exposed.
+- `checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
+- v6 NOT started: `research_state/v6_selection_ledger.json` / `research_state/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present; run unconsumed. No holdout/confirmatory exposed.
 
 ### Constraints
 - Do **not** consume `authorized_run.run_id==v6-selection-20261022` / `campaign_id==v6-campaign`.
@@ -39,12 +39,7 @@ Repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T18:16:06Z (`be893ba45...`): standing checks + v6 re-verification; HEAD advanced from receipt `7b2a5c994...` to `be893ba45...`; tree clean; 4 failures unchanged; manifest MATCH.
-- 2026-11-14T18:13:50Z (`7b2a5c994...`): standing checks + v6 re-verification; HEAD advanced from receipt `f922f9ac9...` to `7b2a5c994...`; tree clean; 4 failures unchanged; manifest MATCH.
-- 2026-11-14T18:10:59Z (`f922f9ac9...`): standing checks + v6 re-verification; HEAD advanced from receipt `d37c5947...` to `f922f9ac9...`; tree clean; 4 failures unchanged; manifest MATCH.
-- 2026-11-14T18:08:31Z (`d37c5947...`): standing checks + v6 re-verification; HEAD advanced from receipt `653e287d...` to `d37c5947...`; tree clean; 4 failures unchanged; manifest MATCH.
-- 2026-11-14T18:06:25Z (`653e287d...`): standing checks + v6 re-verification; HEAD advanced from receipt `c22de861...` to `653e287d...`; tree clean; 4 failures unchanged; manifest MATCH.
-- 2026-11-14T17:23:31Z (`c22de861...`) back through 14:21:19Z (`b8bfc2b65...`): same fail-closed checkpoint; HEAD advanced each time; 4 failures unchanged; manifest MATCH; `campaign_authorization.json` code_hash rotated at 14:21:19Z.
-- Earlier 2026-11-14 sessions: repeated fail-closed checkpoints, `NO_PROMPT_CHANGE_JUSTIFIED`. See git history for full detail.
-
-(End of file - total 47 lines)
+- 2026-11-14T18:16:06Z (`be893ba45...`): standing checks + v6 re-verification; HEAD advanced from `7b2a5c994...`; 4 failures unchanged; manifest MATCH.
+- 2026-11-14T18:13:50Z (`7b2a5c994...`) -> 18:06:25Z (`653e287d...`): successive HEAD-advance checkpoints; 4 failures unchanged; manifest MATCH.
+- 2026-11-14T17:23:31Z (`c22de861...`) back through 14:21:19Z (`b8bfc2b65...`): same fail-closed checkpoint; `campaign_authorization.json` code_hash rotated at 14:21:19Z.
+- Earlier 2026-11-14 sessions: repeated fail-closed checkpoints, `NO_PROMPT_CHANGE_JUSTIFIED`. See git history.
