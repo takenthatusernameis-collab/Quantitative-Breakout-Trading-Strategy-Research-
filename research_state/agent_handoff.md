@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T01:35Z @ `8028230aa3e752e47844593dc91b7cbf218f3684` (kilo, standing cheap checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T01:36Z @ `f46cbbddc80ed8f0667a81ef3578b58329bc972f` (kilo, standing cheap checks + v6 execution-integrity re-verification)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `8028230aa3e752e47844593dc91b7cbf218f3684` (main). 0 ahead / 0 behind.
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `235ca6a682e153ad919e674af338f3fc9e275414` via handoff-docs-only checkpoint commit(s) on `origin/main`; no substantive code/config diff observed in this session.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `f46cbbddc80ed8f0667a81ef3578b58329bc972f` (main). 0 ahead / 0 behind.
+- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `8028230aa3e752e47844593dc91b7cbf218f3684` via handoff-docs-only checkpoint commit(s) on `origin/main`; no substantive code/config diff observed in this session.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -44,6 +44,8 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T01:36Z @ `f46cbbddc80ed8f0667a81ef3578b58329bc972f`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced via handoff-docs-only commit.
+- 2026-11-14T01:35Z @ `8028230aa3e752e47844593dc91b7cbf218f3684`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced via handoff-docs-only commit.
 - 2026-11-14T00:50Z @ `235ca6a682e153ad919e674af338f3fc9e275414`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced via handoff-docs-only commit.
 - 2026-11-14T00:48Z @ `8d38d8d1fa34598c60353776eb87d2f7aae199ff`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced via handoff-docs-only commit.
 - 2026-11-14T00:47Z @ `df8eeaa16ebdd3e8aeb054843ce9c263d9a9e9eb`, 00:45Z @ `edbfa8e7f77c026fe097420775ad66e19281cde6`, 00:41Z @ `29799a1c7fa16299c209b4f7692f1ac65b96e223`, 00:39Z @ `10a4e331352f0a2fc9054d3ec688ffca9ddb5461`, 00:34Z @ `81da2b0ade394ace5e1b1fef9b29406a96d21d17`: standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Each advanced HEAD by handoff-docs-only commit.
