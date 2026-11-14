@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T11:28:34Z @ `7a2c24ed0f41a48996a3ec676d67eefb6fa2cba7` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T12:14:30Z @ `f9611589617b47828eeb121876052c8dde9051e9` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `7a2c24ed0f41a48996a3ec676d67eefb6fa2cba7`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 11:26:38Z block (`a8190ca32e026beae7e94dc3bfaa52b99dc117a9`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made by this session. HEAD advanced from `a8190ca32e026beae7e94dc3bfaa52b99dc117a9` by continuity-docs-only checkpoint commit `7a2c24ed0` (`chore(kilo): checkpoint agent session`; diff = `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only); no source/protocol/state changes. After this handoff update, only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` should differ from HEAD.
+**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `f9611589617b47828eeb121876052c8dde9051e9`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 11:28:34Z block (`7a2c24ed0f41a48996a3ec676d67eefb6fa2cba7`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made by this session. After this handoff update, only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` should differ from HEAD.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `7a2c24ed0f41a48996a3ec676d67eefb6fa2cba7` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at receipt (no uncommitted changes). HEAD advanced from `a8190ca32e026beae7e94dc3bfaa52b99dc117a9` by continuity-docs-only checkpoint commit `7a2c24ed0`; no source/protocol/state changes. After this handoff update, only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` should differ from HEAD.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `f9611589617b47828eeb121876052c8dde9051e9` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at receipt (no uncommitted changes). After this handoff update, only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` should differ from HEAD.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
