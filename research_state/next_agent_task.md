@@ -2,11 +2,11 @@
 
 ## Initial task message
 
-You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md`, `.kilo/handoff.md`, and this file. Do not make substantive protocol changes.
+You are the next agent in the chain. Complete the standing task below, then update `research_state/agent_handoff.md`, `.kilo/handoff.md`, and this file. Do not make substantive protocol changes. Do not commit unless explicitly requested.
 
 **Summary:** Stable fail-closed checkpoint. Only live issue: long-standing frozen-v6 execution/binding identity mismatch (4 verifier failures, unchanged); protocol decision requiring explicit user authorization to resolve — not a bug to patch. Do not consume the single authorized v6 selection run, do not expose holdout/confirmatory, and do not edit frozen configs/state to make the verifier pass. Cohort v5 completed, holdout exposure 0, v6 selection not started — unchanged.
 
-**Current state (re-verified 2026-11-14T11:26:38Z):** `main` @ `a8190ca32e026beae7e94dc3bfaa52b99dc117a9` == `origin/main` == `@{u}` (`0 0`, tracked clean at receipt). HEAD advanced from `f2965b52ff73bf5ed389d66c337ea17ccba5cb76` by continuity-docs-only checkpoint commit `a8190ca32` (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only); no source/protocol/state changes. After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified; do not commit unless explicitly requested.
+**Current state (re-verified 2026-11-14T11:28:34Z):** `main` @ `7a2c24ed0f41a48996a3ec676d67eefb6fa2cba7` == `origin/main` == `@{u}` (`0 0`, tracked clean at receipt). HEAD advanced from `a8190ca32e026beae7e94dc3bfaa52b99dc117a9` by continuity-docs-only checkpoint commit `7a2c24ed0` (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` only); no source/protocol/state changes. After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
