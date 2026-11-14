@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T07:24:06Z @ `d38afe31cd590e373ee5b51ef94bf71c652a6d96` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T07:27:40Z @ `4037d984bfca75c158a91dc4c8443507916476a0` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `d38afe31cd590e373ee5b51ef94bf71c652a6d96`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 06:42:05Z block (`927c61a709b6ec183f059152310075404f23cc1f`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made by this session.
+**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `4037d984bfca75c158a91dc4c8443507916476a0`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 07:24:06Z block (`d38afe31cd590e373ee5b51ef94bf71c652a6d96`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made by this session.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `d38afe31cd590e373ee5b51ef94bf71c652a6d96` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at check. HEAD advanced from `927c61a709b6ec183f059152310075404f23cc1f`; the checkpoint diff is continuity-docs-only (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`), with no source/protocol/state changes. After this handoff update, only those three continuity docs should differ from HEAD.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `4037d984bfca75c158a91dc4c8443507916476a0` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at receipt. HEAD advanced from `d38afe31cd590e373ee5b51ef94bf71c652a6d96`; the checkpoint diff is continuity-docs-only (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`), with no source/protocol/state changes. After this handoff update, only those three continuity docs should differ from HEAD.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -41,10 +41,12 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T07:24:06Z @ `d38afe31c`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `927c61a709b6ec183f059152310075404f23cc1f` via continuity-docs-only commit.
 - 2026-11-14T06:42:05Z @ `927c61a70`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `4350cd5110b8c703402ce0dca1602a807a59eb16` via continuity-docs-only commit.
 - 2026-11-14T06:39:25Z @ `4350cd51`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `0ff3d967697793c7c7d7cf3b4f79d6db421f958f`.
 - 2026-11-14T06:38:27Z @ `0ff3d9676`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `91077f87ec3d2f3798852487dff71ab1aaf5e71c`.
 - 2026-11-14T06:37:15Z @ `91077f87e`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `9cbcfd6a58a26eb1b3be602206a754e82fcadae7`.
+- 2026-11-14T06:27:43Z–06:36Z @ `c8d328752…`→`9cbcfd6a5…` (3 sessions): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; handoff-docs-only advances.
 - 2026-11-14T05:26Z–06:26:55Z @ `d41b376a…`→`5c83e91359b26d347117c95c9344ec3cbf8cc51a` (6 sessions): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; handoff-docs-only advances.
 
 (End of file)

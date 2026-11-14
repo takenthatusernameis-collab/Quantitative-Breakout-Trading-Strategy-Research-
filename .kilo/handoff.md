@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T07:24:06Z @ `d38afe31cd590e373ee5b51ef94bf71c652a6d96` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T07:27:40Z @ `4037d984bfca75c158a91dc4c8443507916476a0` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `d38afe31cd590e373ee5b51ef94bf71c652a6d96`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 06:42:05Z block (`927c61a709b6ec183f059152310075404f23cc1f`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made by this session.
+**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `4037d984bfca75c158a91dc4c8443507916476a0`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 07:24:06Z block (`d38afe31cd590e373ee5b51ef94bf71c652a6d96`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made by this session.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `d38afe31cd590e373ee5b51ef94bf71c652a6d96` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at check. HEAD advanced from `927c61a709b6ec183f059152310075404f23cc1f`; prior diff was continuity-docs-only (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`), no source/protocol/state changes. After this handoff update, only those three continuity docs should differ from HEAD.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `4037d984bfca75c158a91dc4c8443507916476a0` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at receipt. HEAD advanced from `d38afe31cd590e373ee5b51ef94bf71c652a6d96`; that checkpoint diff was continuity-docs-only (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`), no source/protocol/state changes. After this handoff update, only those three continuity docs should differ from HEAD.
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed). Failures (4, unchanged): (1) `the code-hash constraint does not record the authorized code hash of record`, (2) `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, (3) `the versioned binding's hashed engine digest does not recompute`, (4) `the versioned binding's composite run code identity does not recompute`.
@@ -32,12 +32,12 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T07:24:06Z @ `d38afe31c`: same 4 failures, manifest MATCH, no drift, v6 unconsumed; `NO_PROMP_CHANGE_JUSTIFIED`.
 - 2026-11-14T06:42:05Z @ `927c61a70`: same 4 failures, manifest MATCH, no drift, v6 unconsumed; `NO_PROMP_CHANGE_JUSTIFIED`.
 - 2026-11-14T06:39:25Z @ `4350cd51`: same 4 failures, manifest MATCH, no drift, v6 unconsumed; `NO_PROMP_CHANGE_JUSTIFIED`.
 - 2026-11-14T06:38:27Z @ `0ff3d9676`: same 4 failures, manifest MATCH, no drift, v6 unconsumed; `NO_PROMP_CHANGE_JUSTIFIED`.
 - 2026-11-14T06:37:15Z @ `91077f87e`: same 4 failures, manifest MATCH, no drift, v6 unconsumed; `NO_PROMP_CHANGE_JUSTIFIED`.
-- 2026-11-14T06:33:20Z @ `9cbcfd6a5…`: same 4 failures, manifest MATCH, no drift, v6 unconsumed; `NO_PROMP_CHANGE_JUSTIFIED`.
-- 2026-11-14T06:27:43Z @ `c8d328752…`: same 4 failures, manifest MATCH, no drift, v6 unconsumed; `NO_PROMP_CHANGE_JUSTIFIED`.
+- 2026-11-14T06:27:43Z–06:33:20Z @ `9cbcfd6a5…`→`c8d328752…`: same 4 failures, manifest MATCH, no drift, v6 unconsumed; handoff-docs-only advances.
 - 2026-11-14T05:26Z–06:26:55Z @ `d41b376a…`→`5c83e913…` (6 sessions): same 4 failures, manifest MATCH, no drift, v6 unconsumed; handoff-docs-only advances.
 
 (End of file)
