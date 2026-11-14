@@ -2,12 +2,12 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T15:32:34Z @ `29f053e51ad66393f09f9c0b706961f5f5c665dc` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T15:36:10Z @ `d540ba228ec45da85fe80d03109af73001dd3a1f` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** repeated standing repository checks at live HEAD `29f053e51ad66393f09f9c0b706961f5f5c665dc`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state. HEAD unchanged from prior durable handoff session. Recorded state and verifier outcome unchanged from prior handoffs. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** repeated standing repository checks at live HEAD `d540ba228ec45da85fe80d03109af73001dd3a1f`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state. HEAD advanced from prior durable handoff session (`29f053e51...`) to `d540ba228...` (continuity docs committed on `origin/main`); `HEAD==origin/main==@{u}` (`0 0`). Tracked tree clean at receipt. Recorded state and verifier outcome unchanged. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 ### Git
-- `HEAD==origin/main==@{u}==29f053e51ad66393f09f9c0b706961f5f5c665dc` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt and after verifier.
+- `HEAD==origin/main==@{u}==d540ba228ec45da85fe80d03109af73001dd3a1f` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt.
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -39,15 +39,8 @@ Repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T15:36:10Z (`d540ba228...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `29f053e51...`.
 - 2026-11-14T15:32:34Z (`29f053e51...`): 4 failures unchanged, manifest MATCH, no drift; HEAD unchanged at check.
-- 2026-11-14T15:29:09Z (`6b8d40af...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `001186c9...`.
-- 2026-11-14T15:24:37Z (`001186c9...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `5600049b...`.
-- 2026-11-14T15:19:30Z (`5600049b...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `8daf33bc...`.
-- 2026-11-14T14:43:03Z (`8daf33bc...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `63b1ff25d...`.
-- 2026-11-14T14:42:23Z (`63b1ff25d...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `abee15ef...`.
-- 2026-11-14T14:40:56Z (`abee15ef...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `323bbc58...`.
-- 2026-11-14T14:37:08Z (`323bbc58...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `79e5012c...`.
-- 2026-11-14T14:50:00Z (`79e5012c...`), 14:45:00Z (`a4179f709...`), 14:40:00Z (`083311109...`): 4 failures unchanged, manifest MATCH, no drift.
-- 2026-11-14T14:25:10Z (`f85bb4db...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `b8bfc2b65...`.
+- 2026-11-14T15:29:09Z (`6b8d40af...`), 15:24:37Z (`001186c9...`), 15:19:30Z (`5600049b...`), 14:43:03Z (`8daf33bc...`), 14:42:23Z (`63b1ff25d...`), 14:40:56Z (`abee15ef...`), 14:37:08Z (`323bbc58...`), 14:50:00Z (`79e5012c...`), 14:45:00Z (`a4179f709...`), 14:40:00Z (`083311109...`), 14:25:10Z (`f85bb4db...`): same fail-closed checkpoint, no drift.
 - 2026-11-14T14:21:19Z (`b8bfc2b65...`): 4 failures unchanged, manifest MATCH; live `campaign_authorization.json` code_hash rotated.
-- Earlier 2026-11-14 sessions: same repeated fail-closed checkpoint (HEAD advanced via continuity commits). `NO_PROMPT_CHANGE_JUSTIFIED` throughout.
+- Earlier 2026-11-14 sessions: repeated fail-closed checkpoints, `NO_PROMPT_CHANGE_JUSTIFIED`.
