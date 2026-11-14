@@ -1,28 +1,31 @@
-# .kilo/handoff
+# Agent handoff (durable)
 
-## HANDOFF — 2026-11-14T02:48:37Z @ `3bded994119fd4998c82086b69e91d0599167844`
+This file is the repo-resident continuity surface for cross-agent handoff.
 
-**Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
+## HANDOFF — 2026-11-14T02:52:50Z @ `35f25de70a82a9da682963b8e206c8b27b8bfcd7` (kilo, standing cheap checks + v6 execution-integrity re-verification)
+
+**Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `HEAD == origin/main == @{u} == 3bded994119fd4998c82086b69e91d0599167844` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0` (0 ahead / 0 behind).
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `35f25de70a82a9da682963b8e206c8b27b8bfcd7` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
 - Tracked tree clean at check start (handoff files updated this session only).
 
-### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
-- `ok:false`, exit 1, 4 failures unchanged verbatim:
+### Verifier
+- Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
+- Failures (4, unchanged verbatim):
   1. `the code-hash constraint does not record the authorized code hash of record`
   2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
   3. `the versioned binding's hashed engine digest does not recompute`
   4. `the versioned binding's composite run code identity does not recompute`
 - `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - Computed: `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_run_id==v6-selection-20261022`, `selection_authorization_campaign_id==v6-campaign`, `selection_authorization_manifest_hash==f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`, `selection_authorization_sha256==14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b`, `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `evaluated_constituents==7`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
-- No change vs prior recorded values.
+- No change vs prior recorded values (manifest MATCH, same 4 failures, same digests).
 
-### Identity (frozen, fail-closed mismatch — do not paper over)
-- Binding `configs/research_v6_selection_execution_binding_1.json` (frozen 2026-11-04, `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`): `code_identity.hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `code_identity.execution_path_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961`, `manifest_hash==b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`.
-- Authorization `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `hashed_set_digest==3e8e41…`, `execution_path_digest==null`, `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`); `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `consumed` absent (unconsumed), `no_execution_in_this_session==true`.
-- Live `research_state/campaign_authorization.json`: `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (`authorized==true`, `authorized_at_utc==2026-11-12T18:12:22.943361+00:00`; rotates on refresh).
-- Effective mismatch: auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`. Protocol decision required; do not edit frozen artifacts without explicit user authorization. `NO_PROMPT_CHANGE_JUSTIFIED`.
+### Identity (read from source of record; no drift)
+- `configs/research_v6_selection_execution_binding_1.json` (frozen 2026-11-04, `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`): `code_identity.hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `code_identity.execution_path_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961` (read directly from binding), `manifest_hash==b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e`.
+- `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `hashed_set_digest==3e8e41…`, `execution_path_digest==null`, `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`authorized_code_hash_status==RETAINED_AS_VALUE_OF_RECORD`); `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `consumed` absent (unconsumed), `no_execution_in_this_session==true` (inside `authorized_run`).
+- `research_state/campaign_authorization.json`: `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (`authorized==true`, `authorized_at_utc==2026-11-12T18:12:22.943361+00:00`) — **live value, rotates on refresh**.
+- Effective mismatch (fail-closed): auth-of-record `2efd3b…` vs frozen binding `3e8e41…` vs live `8cd1…`. Do not edit frozen artifacts to paper over. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ### Cohort / v6 / holdout (no drift)
 - `research_state/continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
@@ -32,10 +35,18 @@
 ### Workflow diagnostics (informational)
 - Latest prior record (append-only log): `run_id==43474467702`, `status==completed`, `conclusion==success`, `event==schedule`, `created_at==2026-11-13T17:36:29Z`. No protocol/data impact.
 
-### Hard constraints
+### Hard constraints (standing)
 - Do **not** consume `authorized_run.run_id==v6-selection-20261022` / `campaign_id==v6-campaign` and do **not** expose holdout/confirmatory (pre-`2027-01-20T02:00:00Z`, `holdout_exposed_count` must remain 0).
 - Do **not** edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, `configs/research_v6_selection_authorization_1.json`, or `research_state/campaign_authorization.json` to paper over the digest mismatch without explicit user authorization.
 - Keep diffs minimal/mechanical; commit handoff-only changes only if explicitly requested.
 
-### Next agent
-See `research_state/next_agent_task.md` for the copy/paste task (standing cheap checks + execution-integrity re-verification only).
+### Next task
+- See `research_state/next_agent_task.md`.
+
+## Prior sessions (condensed)
+- 2026-11-14T02:48Z @ `3bded994119fd4998c82086b69e91d0599167844`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced by handoff-docs-only commit.
+- 2026-11-14T02:46Z @ `3ddc617c2f942c7881036b116497fc3032c5abc6`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced by handoff-docs-only commit.
+- 2026-11-14T02:44Z @ `17141d773a73db4b73188b9b33de6f47680bdd94`, 01:42Z @ `afac08148668f4f730e54678f912fcd1deb80b63`, 01:40Z @ `b58cb804e72d9e7a6c4516329b51ea294a730f2f` and `717fe75ee179510afc6e486147af80f76d091858`, 01:36Z @ `f46cbbddc80ed8f0667a81ef3578b58329bc972f`, 01:35Z @ `8028230aa3e752e47844593dc91b7cbf218f3684`, 00:50Z @ `235ca6a682e153ad919e674af338f3fc9e275414`, 00:48Z @ `8d38d8d1fa34598c60353776eb87d2f7aae199ff`, 00:47Z @ `df8eeaa16ebdd3e8aeb054843ce9c263d9a9e9eb`, 00:45Z @ `edbfa8e7f77c026fe097420775ad66e19281cde6`, 00:41Z @ `29799a1c7fa16299c209b4f7692f1ac65b96e223`, 00:39Z @ `10a4e331352f0a2fc9054d3ec688ffca9ddb5461`, 00:34Z @ `81da2b0ade394ace5e1b1fef9b29406a96d21d17`: standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Each advanced HEAD by handoff-docs-only commit.
+- 2026-11-13T23:44Z @ `4d10349bbaf349c14a6bf6284e80ffe9b8edffa7`, 23:43Z @ `04688df2dded7f5ba3cc5aebf69f4ed709cc94ff`, 23:39Z @ `ef9a15137faaf8068124a24daf91736747c54c92`, 23:38Z @ `d4ce8d7c4f05474ed2f6aabf0fd90e8731f30aca`/`797391412f1b15486e63311028aab69a192139df`, 23:32Z @ `2ce909f53422180a5bdbd1c2eae3e1ca7a2aa965`, 23:02Z @ `2d27863a4322a3f32252823d2226a5e8eafcda63`, and earlier 2026-11-13 sessions (17:37Z–22:59Z): identical standing-check results; each advanced HEAD by checkpoint/handoff-docs-only commits.
+
+(End of file)
