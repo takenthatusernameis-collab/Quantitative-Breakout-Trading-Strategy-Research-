@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T13:16:02Z @ `162a4d977ffa7ad839172b25ab29db9c1f3e7257` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T13:18:25Z @ `fd550d109b6fc3753bd9a73604417d76bdea9a54` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** completed prior durable task (`research_state/next_agent_task.md`): repeated standing repository checks at live HEAD `162a4d977ffa7ad839172b25ab29db9c1f3e7257`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state. No drift vs the prior receipt at `f6196e870018224b236d1305828ac5df3570051f`; HEAD advanced via checkpoint commit, but the recorded state and verifier outcome are unchanged. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` should differ from HEAD.
+**Completed:** completed prior durable task (`research_state/next_agent_task.md`): repeated standing repository checks at live HEAD `fd550d109b6fc3753bd9a73604417d76bdea9a54`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state. No drift vs the prior receipt at `162a4d977ffa7ad839172b25ab29db9c1f3e7257`; HEAD advanced via checkpoint commit, but the recorded state and verifier outcome are unchanged. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` should differ from HEAD.
 
 ### Git
-- `HEAD==origin/main==@{u}==162a4d977ffa7ad839172b25ab29db9c1f3e7257` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt and after the verifier.
+- `HEAD==origin/main==@{u}==fd550d109b6fc3753bd9a73604417d76bdea9a54` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt and after the verifier.
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -21,7 +21,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 
 ### Identity (source of record; no drift)
 - Binding `configs/research_v6_selection_execution_binding_1.json` (frozen, `IMPLEMENTATION_BOUND_NOT_RUN`): `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961` (≠ authorization `6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`).
-- Authorization `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (retained), `execution_path_digest==null`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `no_execution_in_this_session==true`; no `consumed` field (run unconsumed).
+- Authorization `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`; top-level `authorized_code_hash` absent/`None`), `execution_path_digest==null`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `no_execution_in_this_session==true`; no `consumed` field (run unconsumed).
 - `research_state/campaign_authorization.json`: `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (live, rotates on refresh).
 - Mismatch (fail-closed, unchanged): `2efd3b...` vs `3e8e41...` vs live canonical `8cd175...`. **`NO_PROMPT_CHANGE_JUSTIFIED`**.
 
@@ -39,9 +39,8 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T12:30:30Z (`f6196e870...`): same checks; 4 failures; manifest MATCH; no drift.
-- 2026-11-14T12:29:15Z (`fea05b8e6...`): same checks; 4 failures; manifest MATCH; no drift.
-- 2026-11-14T12:14:30Z–12:26:59Z: same repeated fail-closed checkpoint.
-- 2026-11-14T05:26Z–11:28:34Z: same. `NO_PROMPT_CHANGE_JUSTIFIED` throughout.
+- 2026-11-14T13:16:02Z (`162a4d977...`): same checks; 4 failures; manifest MATCH; no drift.
+- 2026-11-14T12:29:15Z–12:33:43Z: same repeated fail-closed checkpoint (`fea05b8e6...`/`f6196e870...`/`9a17beebb...`).
+- 2026-11-14T05:26Z–12:26:59Z: same. `NO_PROMPT_CHANGE_JUSTIFIED` throughout.
 
 (End of file)
