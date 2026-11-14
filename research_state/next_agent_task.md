@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **Summary:** The frozen v6 execution/binding identity mismatch remains unresolved (4 verifier failures, unchanged). Resolving it requires explicit user authorization; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-14T23:08Z):** `main` @ `5a08db09db924af569f4333f9e9df104b31b067a` == `origin/main` == `@{u}` (`0 0`). Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `63b6a95abe52ebf33ddb4ff3771999a793b269b0` (intervening commits updated only continuity docs). After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
+**Current state (re-verified 2026-11-14T23:09Z):** `main` @ `d500394ec9055bfb7467edd13980ee62a52aab0a` == `origin/main` == `@{u}` (`0 0`). Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `5a08db09db924af569f4333f9e9df104b31b067a` via `d500394ec chore(kilo): checkpoint agent session` (intervening commit updated only continuity docs). After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
@@ -20,7 +20,7 @@ Identity (source of record): binding `configs/research_v6_selection_execution_bi
 
 No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 not started (`v6_selection_ledger.json`, `v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorization unconsumed). `./check_progress.sh` -> `497664/497664`, `report_exists: True`, completed v0..v5, next 6.
 
-## Task (cheap checks + execution-integrity re-verification only)
+## Task (standing checks + execution-integrity re-verification only)
 
 1. Confirm `git rev-parse HEAD` == `origin/main` == `@{u}`. Record HEAD, upstream counts, and tracked-tree state. At receipt expect a clean tree.
 2. Run `PYTHONPATH=src python3 scripts/verify_v6_execution.py`; report exact `ok`/exit, `failures`, and key digests/hashes (`manifest_hash` vs `recomputed_manifest_hash`, `canonical_hashed_set_digest`, `v6_execution_path_canonical_digest`, `selection_authorization_*`, `effective_execution_authorization_source`). Quote any change from the four known failures verbatim.
