@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T02:44:00Z @ `17141d773a73db4b73188b9b33de6f47680bdd94` (kilo, standing cheap checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T02:46:24Z @ `3ddc617c2f942c7881036b116497fc3032c5abc6` (kilo, standing cheap checks + v6 execution-integrity re-verification)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `17141d773a73db4b73188b9b33de6f47680bdd94` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `3ddc617c2f942c7881036b116497fc3032c5abc6` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
 - Tracked tree clean at check start (0 uncommitted changes).
 
 ### Verifier
@@ -44,6 +44,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T02:44Z @ `17141d773a73db4b73188b9b33de6f47680bdd94`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced via handoff-docs-only commit `17141d773`.
 - 2026-11-14T01:42Z @ `afac08148668f4f730e54678f912fcd1deb80b63`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced via handoff-docs-only commit `afac08148`.
 - 2026-11-14T01:40Z @ `b58cb804e72d9e7a6c4516329b51ea294a730f2f`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced via handoff-docs-only commit.
 - 2026-11-14T01:40Z @ `717fe75ee179510afc6e486147af80f76d091858`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH (`92872727...`); no cohort/state drift (`next_cohort_index==6`, `current_cohort.cohort_index==5 completed==true`, `holdout_exposed_count==0`); v6 selection NOT started; authorized run `v6-selection-20261022` unconsumed; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced via handoff-docs-only commit `717fe75e`.
