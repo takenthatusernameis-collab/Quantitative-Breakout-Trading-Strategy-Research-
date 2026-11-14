@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T01:40Z @ `717fe75ee179510afc6e486147af80f76d091858` (kilo, standing cheap checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T01:42Z @ `afac08148668f4f730e54678f912fcd1deb80b63` (kilo, standing cheap checks + v6 execution-integrity re-verification)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `717fe75ee179510afc6e486147af80f76d091858` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `b58cb804e72d9e7a6c4516329b51ea294a730f2f` via a handoff-docs-only checkpoint commit (`717fe75e`, 3 files: `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`); no substantive code/config diff.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `afac08148668f4f730e54678f912fcd1deb80b63` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
+- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `717fe75ee179510afc6e486147af80f76d091858` via handoff-docs-only checkpoint commit `afac08148` ("chore(kilo): checkpoint agent session", 3 files: `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`); no substantive code/config diff.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
