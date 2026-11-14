@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **Summary:** The frozen v6 execution/binding identity mismatch remains unresolved (4 verifier failures, unchanged). Resolving it requires explicit user authorization; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-14T19:23:39Z):** `main` @ `3d602b4ff137601e6a8aff5cc70c1f568f0d6047` == `origin/main` == `@{u}` (`0 0`). Tracked tree clean at receipt. HEAD advanced from prior receipt `f6e4636aab1880088a0a6a3c9ee96c70cbebdcd0`. After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
+**Current state (re-verified 2026-11-14T19:26:12Z):** `main` @ `48ba36c21760d73988fcfe5b7a5f31fdb6daed14` == `origin/main` == `@{u}` (`0 0`). Tracked tree clean at receipt/check. HEAD advanced from prior receipt `3d602b4ff137601e6a8aff5cc70c1f568f0d6047`. After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
@@ -18,7 +18,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 Identity (source of record): binding `configs/research_v6_selection_execution_binding_1.json` `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961` (do not confuse with authorization `6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`). Authorization `authorized_run.code_identity`: `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`), `execution_path_digest==null`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `no_execution_in_this_session==true`, no `consumed` (unconsumed). `research_state/campaign_authorization.json` `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (live/rotating). Mismatch: `2efd3b...` vs `3e8e41...` vs canonical `8cd175...`. **`NO_PROMPT_CHANGE_JUSTIFIED`.**
 
-No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 not started (`research_state/v6_selection_ledger.json`, `research_state/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorization unconsumed). `./check_progress.sh` -> `497664/497664`, `report_exists: True`, completed v0..v5, next 6.
+No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 not started (`v6_selection_ledger.json`, `v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorization unconsumed). `./check_progress.sh` -> `497664/497664`, `report_exists: True`, completed v0..v5, next 6.
 
 ## Task (cheap checks + execution-integrity re-verification only)
 
@@ -32,4 +32,4 @@ No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261
 
 **Hard constraints:** no BRAIN-003/holdout exposure before `2027-01-20T02:00:00Z`; no consuming `v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
-(End of file - total 34 lines)
+(End of file - total 35 lines)
