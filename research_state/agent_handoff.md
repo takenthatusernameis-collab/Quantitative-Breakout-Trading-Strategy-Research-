@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T02:39:37Z @ `73790ab63711d63ecb0d08d1451cdac60155afe0` (kilo, standing cheap checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T02:44:00Z @ `17141d773a73db4b73188b9b33de6f47680bdd94` (kilo, standing cheap checks + v6 execution-integrity re-verification)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `73790ab63711d63ecb0d08d1451cdac60155afe0` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `6a0c31d51f5e62271941d5423078bd417753cd36` via handoff-docs-only checkpoint commit `73790ab6` ("chore(kilo): checkpoint agent session"); no substantive code/config diff.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `17141d773a73db4b73188b9b33de6f47680bdd94` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
+- Tracked tree clean at check start (0 uncommitted changes).
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
