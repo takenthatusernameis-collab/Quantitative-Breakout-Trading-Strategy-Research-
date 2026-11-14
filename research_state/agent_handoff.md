@@ -2,12 +2,12 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T21:13:01Z @ `275961688ffec3a3397caf0ba8c29686aa67064d` (kilo, standing checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T21:15:35Z @ `5cedf1123ad138253118447d92f880d26de69fc8` (kilo, standing checks + v6 execution-integrity re-verification)
 
-**Completed:** standing repository checks at live HEAD `275961688ffec3a3397caf0ba8c29686aa67064d`; re-ran the v6 execution-integrity verifier and re-confirmed cohort, authorization, binding, holdout and v6 state. HEAD advanced from the prior handoff receipt `9e51654a4e65f4f631f4034b23e08312ac77f8dd` (intervening checkpoint commit); `HEAD==origin/main==@{u}==275961688ffec3a3397caf0ba8c29686aa67064d` (`0 0`). Tracked tree clean at receipt/check. State and verifier outcome unchanged: 4 fail-closed failures, manifest MATCH. No protocol/state change, no frozen artifact edited, no v6 run consumed, no holdout/confirmatory exposed, no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** standing repository checks at live HEAD `5cedf1123ad138253118447d92f880d26de69fc8`; re-ran the v6 execution-integrity verifier and re-confirmed cohort, authorization, binding, holdout and v6 state. HEAD advanced from the prior handoff receipt `275961688ffec3a3397caf0ba8c29686aa67064d` (intervening checkpoint commit); `HEAD==origin/main==@{u}==5cedf1123ad138253118447d92f880d26de69fc8` (`0 0`). Tracked tree clean at receipt/check. State and verifier outcome unchanged: 4 fail-closed failures, manifest MATCH. No protocol/state change, no frozen artifact edited, no v6 run consumed, no holdout/confirmatory exposed, no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 ### Git
-- `HEAD==origin/main==@{u}==275961688ffec3a3397caf0ba8c29686aa67064d` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt/check. HEAD advanced from receipt `9e51654a...` (intervening checkpoint commit).
+- `HEAD==origin/main==@{u}==5cedf1123ad138253118447d92f880d26de69fc8` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt/check. HEAD advanced from receipt `275961688ffec3a3397caf0ba8c29686aa67064d` (intervening checkpoint commit).
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
