@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T06:38:27Z @ `0ff3d967697793c7c7d7cf3b4f79d6db421f958f` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T06:39:25Z @ `4350cd5110b8c703402ce0dca1602a807a59eb16` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `0ff3d967697793c7c7d7cf3b4f79d6db421f958f`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 06:37:15Z block (`91077f87ec3d2f3798852487dff71ab1aaf5e71c`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made.
+**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `4350cd5110b8c703402ce0dca1602a807a59eb16`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 06:38:27Z block (`0ff3d967697793c7c7d7cf3b4f79d6db421f958f`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `0ff3d967697793c7c7d7cf3b4f79d6db421f958f` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at check. HEAD advanced from prior block `91077f87ec3d2f3798852487dff71ab1aaf5e71c`; `git diff --name-status 91077f87e..0ff3d9676` shows only continuity documents (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`), no source/protocol/state changes.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `4350cd5110b8c703402ce0dca1602a807a59eb16` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at check. HEAD advanced from `0ff3d967697793c7c7d7cf3b4f79d6db421f958f`; `git diff --name-status 0ff3d9676..4350cd51` shows only continuity documents (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`), no source/protocol/state changes.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -41,9 +41,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T06:39:25Z @ `4350cd51`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `0ff3d967697793c7c7d7cf3b4f79d6db421f958f`.
+- 2026-11-14T06:38:27Z @ `0ff3d9676`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `91077f87ec3d2f3798852487dff71ab1aaf5e71c`.
 - 2026-11-14T06:37:15Z @ `91077f87e`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `9cbcfd6a58a26eb1b3be602206a754e82fcadae7`.
-- 2026-11-14T06:33:20Z @ `9cbcfd6a5`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `c8d3287524577d9646a4ea09de9919eb159b8e66`.
-- 2026-11-14T06:27:43Z @ `c8d3287525`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `5c83e91359b26d347117c95c9344ec3cbf8cc51a`.
 - 2026-11-14T05:26Z–06:26:55Z @ `d41b376a…`→`5c83e91359b26d347117c95c9344ec3cbf8cc51a` (6 sessions): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; handoff-docs-only advances.
-
-(End of file)
