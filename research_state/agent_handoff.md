@@ -2,12 +2,12 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T15:29:09Z @ `6b8d40afb9396c58072ab292797bf1ddd70c2be8` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T15:32:34Z @ `29f053e51ad66393f09f9c0b706961f5f5c665dc` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** repeated standing repository checks at live HEAD `6b8d40afb9396c58072ab292797bf1ddd70c2be8`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state. HEAD advanced from prior handoff `001186c9eb926436a0d1958291d334b3258ea1d7` via checkpoint commits carrying only continuity docs; recorded state and verifier outcome unchanged. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** repeated standing repository checks at live HEAD `29f053e51ad66393f09f9c0b706961f5f5c665dc`, re-ran v6 execution-integrity verifier, re-confirmed cohort/authorization/holdout/v6 selection state. HEAD unchanged from prior durable handoff session. Recorded state and verifier outcome unchanged from prior handoffs. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 ### Git
-- `HEAD==origin/main==@{u}==6b8d40afb9396c58072ab292797bf1ddd70c2be8` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt and after verifier.
+- `HEAD==origin/main==@{u}==29f053e51ad66393f09f9c0b706961f5f5c665dc` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt and after verifier.
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -22,7 +22,7 @@ Repo-resident continuity surface for cross-agent handoff.
 ### Identity (source of record; no drift)
 - Binding `configs/research_v6_selection_execution_binding_1.json` (frozen, `IMPLEMENTATION_BOUND_NOT_RUN`): `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961` (≠ authorization `6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`).
 - Authorization `configs/research_v6_selection_authorization_1.json` `authorized_run.code_identity`: `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`; top-level `authorized_code_hash` absent/`None`), `execution_path_digest==null`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, `no_execution_in_this_session==true`; no `consumed` field (run unconsumed).
-- `research_state/campaign_authorization.json`: `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (live; unchanged from prior handoff).
+- `research_state/campaign_authorization.json`: `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (live/rotating; unchanged at this check).
 - Mismatch (fail-closed, unchanged): `2efd3b...` vs `3e8e41...` vs live canonical `8cd175...`. **`NO_PROMPT_CHANGE_JUSTIFIED`.**
 
 ### Cohort / v6 / holdout (no drift)
@@ -39,6 +39,7 @@ Repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-14T15:32:34Z (`29f053e51...`): 4 failures unchanged, manifest MATCH, no drift; HEAD unchanged at check.
 - 2026-11-14T15:29:09Z (`6b8d40af...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `001186c9...`.
 - 2026-11-14T15:24:37Z (`001186c9...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `5600049b...`.
 - 2026-11-14T15:19:30Z (`5600049b...`): 4 failures unchanged, manifest MATCH, no drift; HEAD advanced from `8daf33bc...`.
