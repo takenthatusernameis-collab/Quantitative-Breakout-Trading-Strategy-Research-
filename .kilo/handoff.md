@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T02:56:11Z @ `badc0d7989f1b6951878d217ffa130d7e48d0e37` (kilo, standing cheap checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T02:57:10Z @ `67343ef790d110e1b072ddb1d3d0c49b43837d29` (kilo, standing cheap checks + v6 execution-integrity re-verification)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `badc0d7989f1b6951878d217ffa130d7e48d0e37` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `67343ef790d110e1b072ddb1d3d0c49b43837d29` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`.
 - Tracked tree clean at check start (handoff files updated this session only).
 
 ### Verifier
@@ -32,9 +32,6 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - `research_state/checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
 - v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorized run unconsumed). No holdout/confirmatory exposed.
 
-### Workflow diagnostics (informational)
-- Latest prior record (append-only log): `run_id==43474467702`, `status==completed`, `conclusion==success`, `event==schedule`, `created_at==2026-11-13T17:36:29Z`. No protocol/data impact.
-
 ### Hard constraints (standing)
 - Do **not** consume `authorized_run.run_id==v6-selection-20261022` / `campaign_id==v6-campaign` and do **not** expose holdout/confirmatory (pre-`2027-01-20T02:00:00Z`, `holdout_exposed_count` must remain 0).
 - Do **not** edit frozen `configs/research_v6_execution.json`, `configs/research_v6_selection_execution_binding_1.json`, `configs/research_v6_selection_authorization_1.json`, or `research_state/campaign_authorization.json` to paper over the digest mismatch without explicit user authorization.
@@ -44,10 +41,8 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T02:52:50Z @ `35f25de70a82a9da682963b8e206c8b27b8bfcd7`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced by handoff-docs-only commit.
-- 2026-11-14T02:48Z @ `3bded994119fd4998c82086b69e91d0599167844`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced by handoff-docs-only commit.
-- 2026-11-14T02:46Z @ `3ddc617c2f942c7881036b116497fc3032c5abc6`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced by handoff-docs-only commit.
-- 2026-11-14T02:44Z @ `17141d773a73db4b73188b9b33de6f47680bdd94`, 01:42Z @ `afac08148668f4f730e54678f912fcd1deb80b63`, 01:40Z @ `b58cb804e72d9e7a6c4516329b51ea294a730f2f` and `717fe75ee179510afc6e486147af80f76d091858`, 01:36Z @ `f46cbbddc80ed8f0667a81ef3578b58329bc972f`, 01:35Z @ `8028230aa3e752e47844593dc91b7cbf218f3684`, 00:50Z @ `235ca6a682e153ad919e674af338f3fc9e275414`, 00:48Z @ `8d38d8d1fa34598c60353776eb87d2f7aae199ff`, 00:47Z @ `df8eeaa16ebdd3e8aeb054843ce9c263d9a9e9eb`, 00:45Z @ `edbfa8e7f77c026fe097420775ad66e19281cde6`, 00:41Z @ `29799a1c7fa16299c209b4f7692f1ac65b96e223`, 00:39Z @ `10a4e331352f0a2fc9054d3ec688ffca9ddb5461`, 00:34Z @ `81da2b0ade394ace5e1b1fef9b29406a96d21d17`: standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Each advanced HEAD by handoff-docs-only commit.
-- 2026-11-13T23:44Z @ `4d10349bbaf349c14a6bf6284e80ffe9b8edffa7`, 23:43Z @ `04688df2dded7f5ba3cc5aebf69f4ed709cc94ff`, 23:39Z @ `ef9a15137faaf8068124a24daf91736747c54c92`, 23:38Z @ `d4ce8d7c4f05474ed2f6aabf0fd90e8731f30aca`/`797391412f1b15486e63311028aab69a192139df`, 23:32Z @ `2ce909f53422180a5bdbd1c2eae3e1ca7a2aa965`, 23:02Z @ `2d27863a4322a3f32252823d2226a5e8eafcda63`, and earlier 2026-11-13 sessions (17:37Z–22:59Z): identical standing-check results; each advanced HEAD by checkpoint/handoff-docs-only commits.
+- 2026-11-14T02:56:11Z @ `badc0d7989f1b6951878d217ffa130d7e48d0e37`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. HEAD advanced by handoff-docs-only commit.
+- 2026-11-14T02:52:50Z @ `35f25de70a82a9da682963b8e206c8b27b8bfcd7`, 02:48Z @ `3bded994119fd4998c82086b69e91d0599167844`, 02:46Z @ `3ddc617c2f942c7881036b116497fc3032c5abc6`, 02:44Z @ `17141d773a73db4b73188b9b33de6f47680bdd94`, 01:42Z @ `afac08148668f4f730e54678f912fcd1deb80b63`, 01:40Z @ `b58cb804e72d9e7a6c4516329b51ea294a730f2f`/`717fe75ee179510afc6e486147af80f76d091858`, 01:36Z @ `f46cbbddc80ed8f0667a81ef3578b58329bc972f`, 01:35Z @ `8028230aa3e752e47844593dc91b7cbf218f3684`, 00:50Z @ `235ca6a682e153ad919e674af338f3fc9e275414`, 00:48Z @ `8d38d8d1fa34598c60353776eb87d2f7aae199ff`, 00:47Z @ `df8eeaa16ebdd3e8aeb054843ce9c263d9a9e9eb`, 00:45Z @ `edbfa8e7f77c026fe097420775ad66e19281cde6`, 00:41Z @ `29799a1c7fa16299c209b4f7692f1ac65b96e223`, 00:39Z @ `10a4e331352f0a2fc9054d3ec688ffca9ddb5461`, 00:34Z @ `81da2b0ade394ace5e1b1fef9b29406a96d21d17`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`. Each advanced HEAD by handoff-docs-only commit.
+- 2026-11-13 (17:37Z–23:44Z, many sessions @ `4d10349`…`2d27863` and earlier): identical standing-check results; each advanced HEAD by checkpoint/handoff-docs-only commits.
 
 (End of file)
