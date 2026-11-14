@@ -1,12 +1,12 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-14T00:47Z @ `df8eeaa16ebdd3e8aeb054843ce9c263d9a9e9eb`
+## HANDOFF — 2026-11-14T00:48Z @ `8d38d8d1fa34598c60353776eb87d2f7aae199ff`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == df8eeaa16ebdd3e8aeb054843ce9c263d9a9e9eb` (main). 0 ahead / 0 behind.
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `edbfa8e7f77c026fe097420775ad66e19281cde6` via handoff-docs-only commit `df8eeaa16` (`chore(kilo): checkpoint agent session`, touched only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`). No substantive code/config diff.
+- `HEAD == origin/main == @{u} == 8d38d8d1fa34598c60353776eb87d2f7aae199ff` (main). 0 ahead / 0 behind.
+- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `df8eeaa16ebdd3e8aeb054843ce9c263d9a9e9eb` via handoff-docs-only commit `8d38d8d1f` (`chore(kilo): checkpoint agent session`, touched only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`). No substantive code/config diff.
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
 - `ok:false`, exit 1, 4 failures unchanged verbatim:
