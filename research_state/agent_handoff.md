@@ -2,12 +2,12 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T06:33:20Z @ `9cbcfd6a58a26eb1b3be602206a754e82fcadae7` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
+## HANDOFF — 2026-11-14T06:37:15Z @ `91077f87ec3d2f3798852487dff71ab1aaf5e71c` (kilo, standing checks + v6 execution-integrity re-verification; prior durable task complete)
 
-**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `9cbcfd6a58a26eb1b3be602206a754e82fcadae7`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 06:27Z block (`c8d3287524577d9646a4ea09de9919eb159b8e66`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made.
+**Completed:** completed the prior durable task in `research_state/next_agent_task.md`: repeated standing repository checks at live HEAD `91077f87ec3d2f3798852487dff71ab1aaf5e71c`, re-ran the v6 execution-integrity verifier, and re-confirmed cohort, authorization, holdout, and v6 selection state. No drift vs 06:33:20Z block (`9cbcfd6a58a26eb1b3be602206a754e82fcadae7`); no substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed; no commit made.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `9cbcfd6a58a26eb1b3be602206a754e82fcadae7` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at check. HEAD advanced from prior block `c8d3287524577d9646a4ea09de9919eb159b8e66`; `git diff --name-status c8d3287524577d9646a4ea09de9919eb159b8e66..9cbcfd6a58a26eb1b3be602206a754e82fcadae7` shows only continuity documents (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`), no source/protocol/state changes.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `91077f87ec3d2f3798852487dff71ab1aaf5e71c` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0`. Tracked tree clean at check. HEAD advanced from prior block `9cbcfd6a58a26eb1b3be602206a754e82fcadae7`; `git diff --name-status 9cbcfd6a5..91077f87e` shows only continuity documents (`.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`), no source/protocol/state changes.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -29,7 +29,8 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 ### Cohort / v6 / holdout (no drift)
 - `research_state/continuous_universe_state.json`: `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `updated_utc==2026-10-21T21:45:00+00:00`.
 - `research_state/checkpoint_v5.json`: `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`.
-- v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorized run unconsumed). No holdout/confirmatory exposed.
+- v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present; auth `authorized_run.consumed` absent / unconsumed, `no_execution_in_this_session==true`). No holdout/confirmatory exposed.
+- Authorization fields live under `authorized_run` (`run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`); no top-level `run_id`/`campaign_id`.
 
 ### Verification scope / constraints
 - Repository/docs continuity only; no protocol implementation or research execution. `pytest --collect-only` not run (unavailable in prior blocks); v6 execution verifier run with fail-closed result unchanged.
@@ -40,8 +41,9 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T06:27:43Z @ `c8d3287524577d9646a4ea09de9919eb159b8e66`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `5c83e91359b26d347117c95c9344ec3cbf8cc51a`.
-- 2026-11-14T06:26:55Z @ `5c83e91359b26d347117c95c9344ec3cbf8cc51a`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `742ac29845f52f4da172651208b2d2fa3acfc0e0`.
+- 2026-11-14T06:33:20Z @ `9cbcfd6a5`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `c8d3287524577d9646a4ea09de9919eb159b8e66`.
+- 2026-11-14T06:27:43Z @ `c8d3287525`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `5c83e91359b26d347117c95c9344ec3cbf8cc51a`.
+- 2026-11-14T06:26:55Z @ `5c83e9135`: identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`. HEAD advanced from `742ac29845f52f4da172651208b2d2fa3acfc0e0`.
 - 2026-11-14T05:26Z–05:38:29Z @ `d41b376a…`→`742ac29845f52f4da172651208b2d2fa3acfc0e0` (5 sessions): identical standing checks; same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMP_CHANGE_JUSTIFIED`; handoff-docs-only advances.
 
 (End of file)
