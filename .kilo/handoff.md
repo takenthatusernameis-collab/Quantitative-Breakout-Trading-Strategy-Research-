@@ -1,12 +1,12 @@
 # .kilo/handoff
 
-## HANDOFF — 2026-11-14T02:46:24Z @ `3ddc617c2f942c7881036b116497fc3032c5abc6`
+## HANDOFF — 2026-11-14T02:48:37Z @ `3bded994119fd4998c82086b69e91d0599167844`
 
 **Status:** stable, fail-closed checkpoint. Standing v6 execution-integrity re-verification complete; no substantive protocol/state change.
 
 ### Git
-- `HEAD == origin/main == @{u} == 3ddc617c2f942c7881036b116497fc3032c5abc6` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0` (0 ahead / 0 behind).
-- Tracked tree clean at check start (0 uncommitted changes).
+- `HEAD == origin/main == @{u} == 3bded994119fd4998c82086b69e91d0599167844` (main). `rev-list --left-right --count HEAD...origin/main` == `0 0` (0 ahead / 0 behind).
+- Tracked tree clean at check start (handoff files updated this session only).
 
 ### Verifier (`PYTHONPATH=src python3 scripts/verify_v6_execution.py`)
 - `ok:false`, exit 1, 4 failures unchanged verbatim:
@@ -30,7 +30,7 @@
 - v6 selection NOT started (`research_state/v6_selection_ledger.json` / `research/v6_selected_configurations_manifest.json` / `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorized run unconsumed). No holdout/confirmatory exposed.
 
 ### Workflow diagnostics (informational)
-- Latest record (append-only log): `run_id==43474467702`, `status==completed`, `conclusion==success`, `event==schedule`, `created_at==2026-11-13T17:36:29Z`. No protocol/data impact.
+- Latest prior record (append-only log): `run_id==43474467702`, `status==completed`, `conclusion==success`, `event==schedule`, `created_at==2026-11-13T17:36:29Z`. No protocol/data impact.
 
 ### Hard constraints
 - Do **not** consume `authorized_run.run_id==v6-selection-20261022` / `campaign_id==v6-campaign` and do **not** expose holdout/confirmatory (pre-`2027-01-20T02:00:00Z`, `holdout_exposed_count` must remain 0).
