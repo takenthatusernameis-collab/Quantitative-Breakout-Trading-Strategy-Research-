@@ -2,13 +2,13 @@
 
 This file is the repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T00:34Z @ `3eacebef374bc8f4cccc746da36274e1e35250de` (kilo, standing cheap checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T00:39Z @ `81da2b0ade394ace5e1b1fef9b29406a96d21d17` (kilo, standing cheap checks + v6 execution-integrity re-verification)
 
 **Completed:** standing cheap checks + v6 execution-integrity re-verification. No substantive protocol/state change; no frozen artifacts edited; no v6 run consumed; no holdout/confirmatory exposed.
 
 ### Git
-- `git rev-parse HEAD` == `origin/main` == `@{u}` == `3eacebef374bc8f4cccc746da36274e1e35250de` (main). 0 ahead / 0 behind.
-- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `041dc7018df084e8932262d374d24b960e9d51cb` (checkpoint/handoff docs commit). No substantive code/config diff.
+- `git rev-parse HEAD` == `origin/main` == `@{u}` == `81da2b0ade394ace5e1b1fef9b29406a96d21d17` (main). 0 ahead / 0 behind.
+- Tracked tree clean at check start (0 uncommitted changes). HEAD advanced from prior recorded `3eacebef374bc8f4cccc746da36274e1e35250de` (checkpoint/handoff docs commit). No substantive code/config diff.
 
 ### Verifier
 - Command: `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -44,11 +44,7 @@ This file is the repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T00:34Z @ `041dc7018df084e8932262d374d24b960e9d51cb`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
-- 2026-11-13T23:44Z @ `4d10349bbaf349c14a6bf6284e80ffe9b8edffa7`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
-- 2026-11-13T23:43Z @ `04688df2dded7f5ba3cc5aebf69f4ed709cc94ff`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started.
-- 2026-11-13T23:39Z @ `ef9a15137faaf8068124a24daf91736747c54c92`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started.
-- 2026-11-13T23:38Z @ `d4ce8d7c4f05474ed2f6aabf0fd90e8731f30aca` and `797391412f1b15486e63311028aab69a192139df`: standing checks; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started.
-- 2026-11-13T23:32Z @ `2ce909f53422180a5bdbd1c2eae3e1ca7a2aa965`, 23:02Z @ `2d27863a4322a3f32252823d2226a5e8eafcda63`, and earlier 2026-11-13 sessions (17:37Z–22:59Z): identical standing-check results; each advanced HEAD by checkpoint/handoff-docs-only commits.
+- 2026-11-14T00:34Z @ `3eacebef374bc8f4cccc746da36274e1e35250de`: standing check; `ok:false` exit 1, same 4 failures unchanged; manifest MATCH; no drift; v6 unconsumed/not started; `NO_PROMPT_CHANGE_JUSTIFIED`.
+- 2026-11-13T23:44Z @ `4d10349bbaf349c14a6bf6284e80ffe9b8edffa7`, 23:43Z @ `04688df2dded7f5ba3cc5aebf69f4ed709cc94ff`, 23:39Z @ `ef9a15137faaf8068124a24daf91736747c54c92`, 23:38Z @ `d4ce8d7c4f05474ed2f6aabf0fd90e8731f30aca` and `797391412f1b15486e63311028aab69a192139df`, 23:32Z @ `2ce909f53422180a5bdbd1c2eae3e1ca7a2aa965`, 23:02Z @ `2d27863a4322a3f32252823d2226a5e8eafcda63`, and earlier 2026-11-13 sessions (17:37Z–22:59Z): identical standing-check results; each advanced HEAD by checkpoint/handoff-docs-only commits.
 
 (End of file)
