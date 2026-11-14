@@ -6,7 +6,7 @@ You are the next agent in the chain. Complete the standing task below, then upda
 
 **Summary:** Stable fail-closed checkpoint. Only live issue: long-standing frozen-v6 execution/binding identity mismatch (4 verifier failures, unchanged); protocol decision requiring explicit user authorization to resolve — not a bug to patch. Do not consume the single authorized v6 selection run, do not expose holdout/confirmatory, and do not edit frozen configs/state to make the verifier pass. Cohort v5 completed, holdout exposure 0, v6 selection not started — unchanged.
 
-**Current state (re-verified 2026-11-14T07:31:02Z):** `main` @ `52d6a9112815bef518f5994372f83cdffb79cdd3` == `origin/main` == `@{u}` (`0 0`, tracked clean). HEAD advanced from `6210a27c5cf73569c9b64b8790251e30baedde7c` by a continuity-docs-only checkpoint (`52d6a9112815bef518f5994372f83cdffb79cdd3`, `chore(kilo): checkpoint agent session`). After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified; do not commit unless explicitly requested.
+**Current state (re-verified 2026-11-14T07:34:37Z):** `main` @ `08cb2736b46c088ddd76e05023954a05e1a5daf8` == `origin/main` == `@{u}` (`0 0`, tracked clean). HEAD advanced from `52d6a9112815bef518f5994372f83cdffb79cdd3` by a continuity-docs-only checkpoint (`08cb2736b46c088ddd76e05023954a05e1a5daf8`, `chore(kilo): checkpoint agent session`). After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified; do not commit unless explicitly requested.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
