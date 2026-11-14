@@ -2,12 +2,12 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-14T21:15:35Z @ `5cedf1123ad138253118447d92f880d26de69fc8` (kilo, standing checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-14T21:16:37Z @ `9613d60e455cd5ffcdc7b2693a22c71503c9204c` (kilo, standing checks + v6 execution-integrity re-verification)
 
-**Completed:** standing repository checks at live HEAD `5cedf1123ad138253118447d92f880d26de69fc8`; re-ran the v6 execution-integrity verifier and re-confirmed cohort, authorization, binding, holdout and v6 state. HEAD advanced from the prior handoff receipt `275961688ffec3a3397caf0ba8c29686aa67064d` (intervening checkpoint commit); `HEAD==origin/main==@{u}==5cedf1123ad138253118447d92f880d26de69fc8` (`0 0`). Tracked tree clean at receipt/check. State and verifier outcome unchanged: 4 fail-closed failures, manifest MATCH. No protocol/state change, no frozen artifact edited, no v6 run consumed, no holdout/confirmatory exposed, no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** standing repository checks at live HEAD `9613d60e455cd5ffcdc7b2693a22c71503c9204c`; re-ran the v6 execution-integrity verifier and re-confirmed cohort, authorization, binding, holdout and v6 state. HEAD advanced from the prior handoff receipt `5cedf1123ad138253118447d92f880d26de69fc8` (intervening checkpoint commit at `9613d60e4...`); `HEAD==origin/main==@{u}==9613d60e455cd5ffcdc7b2693a22c71503c9204c` (`0 0`). Tracked tree clean at receipt/check. State and verifier outcome unchanged: 4 fail-closed failures, manifest MATCH. No protocol/state change, no frozen artifact edited, no v6 run consumed, no holdout/confirmatory exposed, no commit made in this session. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 ### Git
-- `HEAD==origin/main==@{u}==5cedf1123ad138253118447d92f880d26de69fc8` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt/check. HEAD advanced from receipt `275961688ffec3a3397caf0ba8c29686aa67064d` (intervening checkpoint commit).
+- `HEAD==origin/main==@{u}==9613d60e455cd5ffcdc7b2693a22c71503c9204c` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt/check. HEAD advanced from receipt `5cedf1123ad138253118447d92f880d26de69fc8` (intervening checkpoint commit).
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -40,8 +40,9 @@ Repo-resident continuity surface for cross-agent handoff.
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
-- 2026-11-14T21:13:01Z current: HEAD at `275961688ffec3a3397caf0ba8c29686aa67064d` (advanced from receipt `9e51654a...`); checks re-run; 4 failures unchanged; manifest MATCH.
-- 2026-11-14T21:09:22Z: HEAD at `9e51654a4e65f4f631f4034b23e08312ac77f8dd` (advanced from receipt `2398eb286...`); checks re-run; 4 failures unchanged; manifest MATCH.
+- 2026-11-14T21:15:35Z current: HEAD at `5cedf1123ad138253118447d92f880d26de69fc8` (advanced from receipt `275961688...`); checks re-run; 4 failures unchanged; manifest MATCH.
+- 2026-11-14T21:13:01Z (`275961688ffec3a3397caf0ba8c29686aa67064d`): HEAD advanced from `9e51654a4e65f4f631f4034b23e08312ac77f8dd`; checks re-run; 4 failures unchanged; manifest MATCH.
+- 2026-11-14T21:09:22Z (`9e51654a4e65f4f631f4034b23e08312ac77f8dd`): HEAD advanced from `2398eb286...`; checks re-run; 4 failures unchanged; manifest MATCH.
 - 2026-11-14T20:23:40Z (`2398eb2865953b1887e938b2c6a0b73846251970`): HEAD advanced from receipt `7bb8adb08...`; 4 failures unchanged; manifest MATCH.
 - 2026-11-14T20:21:40Z (`7bb8adb08664a16ee1a311b8ac59d23a4b3e8448`): HEAD advanced from receipt `377d2c430c3b54cf14e090ab79ace3863b76d3d5`; 4 failures unchanged; manifest MATCH.
 - 2026-11-14T20:19:25Z (`377d2c430c3b54cf14e090ab79ace3863b76d3d5`): HEAD advanced from `588927a41248d4f4fe42f02f02d05dcaa204c679`; 4 failures unchanged; manifest MATCH.
