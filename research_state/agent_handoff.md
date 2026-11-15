@@ -2,9 +2,9 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync.
 
-## Latest — 2026-11-15T10:43Z @ `acf2c1bcc395666bf09806d7d26a8edc47c8dedf` (kilo, standing checks re-verified + handoff refresh)
+## Latest — 2026-11-15T10:48Z @ `48e6878f02cb52d493ea96abbfdd9e41bd93a574` (kilo, standing checks re-verified + handoff refresh)
 
-- **Git:** `HEAD==origin/main==@{u}==acf2c1bcc395666bf09806d7d26a8edc47c8dedf` (main, 0 0). HEAD advanced from prior handoff receipt `f82c8069a0dd6e27c7292d3c618dc398ef4736f6`; intervening diff = continuity-doc checkpoint (`acf2c1bcc`) only (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`). Tracked tree clean at receipt/check; after this update only continuity docs modified.
+- **Git:** `HEAD==origin/main==@{u}==48e6878f02cb52d493ea96abbfdd9e41bd93a574` (main, 0 0). HEAD advanced from prior handoff receipt `acf2c1bcc395666bf09806d7d26a8edc47c8dedf`; intervening diff = continuity-doc checkpoint only. Tracked tree clean at receipt/check; after this update only continuity docs modified.
 - **Verifier:** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1). 2 failures remain (frozen protocol constraint only), verbatim: (1) `the code-hash constraint does not record the authorized code hash of record`, (2) `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Key values: `canonical_hashed_set_digest==8cd17522...`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_path==configs/research_v6_selection_authorization_1.json` (run `v6-selection-20261022`, campaign `v6-campaign`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`), `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - **Root cause (unchanged):** frozen protocol `configs/research_v6_execution.json` `code_hash_constraint` records snapshot/other hashes vs live canonical `8cd17522...`; binding already bound to live identity (`hashed_set_digest==8cd17522...`, `run_code_identity==cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e`). Clearing 1–2 requires explicit user authorization to edit frozen artifacts. **`NO_PROMPT_CHANGE_JUSTIFIED`.**
 - **Identity (no drift):** binding `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, `code_identity.run_code_identity==cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e` (distinct from authorization `authorized_run.code_identity.run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2`, `hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`); auth `max_runs==1`, unconsumed. Live `research_state/campaign_authorization.json` `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (rotating).
@@ -12,9 +12,9 @@
 - **Constraints:** no consuming `v6-selection-20261022`; no holdout/confirmatory exposure pre-`2027-01-20T02:00:00Z`; no edits to frozen v6 artifacts or `campaign_authorization.json` without explicit authorization. No commit made. **`NO_PROMPT_CHANGE_JUSTIFIED`.**
 
 ## Prior (condensed)
+- 2026-11-15T10:43Z (`acf2c1bcc...`): standing checks re-verified, 2 failures (protocol constraint, unchanged), binding live-bound, manifest `92872727...` MATCH.
 - 2026-11-15T10:42Z (`f82c8069a...`): standing checks re-verified, 2 failures (protocol constraint, unchanged), binding live-bound, manifest `92872727...` MATCH.
-- 2026-11-15T10:41Z (`dd1a345ef...`): standing checks re-verified, 2 failures (protocol constraint, unchanged), binding live-bound, manifest `92872727...` MATCH.
-- 2026-11-15T10:39Z→10:06Z: successive fail-closed standing checks; 2/4 failures across HEADs, manifest MATCH.
+- 2026-11-15T10:41Z→10:06Z: successive fail-closed standing checks; 2/4 failures across HEADs, manifest MATCH.
 - 2026-11-15T10:01Z→04:06Z: successive fail-closed standing checks; 4/2 failures across HEADs, manifest MATCH. Older: see git history.
 
 (End of file)
