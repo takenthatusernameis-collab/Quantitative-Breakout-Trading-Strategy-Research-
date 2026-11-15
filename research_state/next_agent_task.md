@@ -4,9 +4,9 @@
 
 You are the next agent in the chain. Read `research_state/agent_handoff.md` first, then complete the standing task below. This is a stable fail-closed checkpoint, not a request to change the protocol or make the verifier pass. Do not consume the authorized v6 run, expose holdout/confirmatory data, or edit frozen artifacts without explicit user authorization. Do not commit unless explicitly requested.
 
-**Summary:** The frozen v6 execution identity mismatch remains unresolved (2 verifier failures, unchanged from the 10:48Z check). Resolving it requires explicit user authorization to edit frozen artifacts; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, and the single authorized v6 selection run is still unconsumed.
+**Summary:** The frozen v6 execution identity mismatch remains unresolved (2 verifier failures, unchanged from the 11:40Z check). Resolving it requires explicit user authorization to edit frozen artifacts; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-15T10:48Z):** `main` @ `48e6878f02cb52d493ea96abbfdd9e41bd93a574` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `acf2c1bcc395666bf09806d7d26a8edc47c8dedf`; intervening diff = continuity-doc checkpoint only. Tracked tree clean at receipt/check; after this handoff update expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` (and `.kilo/next_task.md`) modified.
+**Current state (re-verified 2026-11-15T11:40Z):** `main` @ `2068f13b851b91ba2adde90280c9ecace92caf16` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `d7eeb247e8204b0b86ec8dad51796914410d3f54`; intervening diff = `chore(kilo): checkpoint agent session` (continuity-doc checkpoint only). Tracked tree clean at receipt/check; after this handoff update expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` (and `.kilo/next_task.md`) modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 2 failures:
 1. `the code-hash constraint does not record the authorized code hash of record`
