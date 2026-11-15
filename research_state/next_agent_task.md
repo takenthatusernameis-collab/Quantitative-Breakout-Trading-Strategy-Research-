@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **Summary:** The frozen v6 execution/binding identity mismatch remains unresolved (4 verifier failures, unchanged). Resolving it requires explicit user authorization; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-15T00:04Z):** `main` @ `2b1d2feb32d07730b0959d53d8ad53c67f621e3b` == `origin/main` == `@{u}` (`0 0`). Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `59e9105f8b565cb619498fff6ccdd7e922bf7a04` via `2b1d2feb3 chore(kilo): checkpoint agent session` (continuity docs only). After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
+**Current state (re-verified 2026-11-15T00:04Z):** `main` @ `1b89b7edcab138c38ef6f29a88ea8b0747537fdc` == `origin/main` == `@{u}` (`0 0`). Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `2b1d2feb32d07730b0959d53d8ad53c67f621e3b` via `1b89b7edc chore(kilo): checkpoint agent session` (continuity docs only). After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
