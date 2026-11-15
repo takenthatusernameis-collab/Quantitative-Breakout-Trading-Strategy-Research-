@@ -41,10 +41,10 @@
     "algorithm": "canonical_source_digest_v1",
     "portable": true,
     "hashed_set_root": "src/breakout_research",
-    "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "hashed_set_digest": "8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e",
     "execution_path_root": "src/v6_campaign",
     "execution_path_digest": "37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72",
-    "run_code_identity": "647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961"
+    "run_code_identity": "cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e"
   },
   "scope_binding": {
     "candidate_freeze_hash": "3b482a4f25c575cbe1e2bd9a8d787a76caf34be0e76de03b0e14b0daa70fbec4",
@@ -79,5 +79,5 @@
       "manifest_hash"
     ]
   },
-  "manifest_hash": "b9090900d1ef6304b022ab18332e01ebea8c0f2a1e259710565c5006f3c6332e"
+  "manifest_hash": "af393e0395b5ce9494f6629b0c8137ed9ed88fcbca2ce67abb6812e6da98019c"
 }
