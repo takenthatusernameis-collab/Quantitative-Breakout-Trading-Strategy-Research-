@@ -2,11 +2,11 @@
 
 ## Initial task message
 
-You are the next agent in the chain. Read `research_state/agent_handoff.md` first, then complete the standing task below. This is a stable fail-closed checkpoint, not a request to change the protocol or make the verifier pass. Do not consume the authorized v6 run, expose holdout/confirmatory data, or edit frozen artifacts without explicit user authorization. Do not commit unless explicitly requested.
+You are the next agent in the chain. Read `research_state/agent_handoff.md` (authoritative; `.kilo/handoff.md` is a synced copy) first, then complete the standing task below. This is a stable fail-closed checkpoint, not a request to change the protocol or make the verifier pass. Do not consume the authorized v6 run, expose holdout/confirmatory data, or edit frozen artifacts without explicit user authorization. Do not commit unless explicitly requested.
 
 **Summary:** The frozen v6 execution identity mismatch remains unresolved (2 verifier failures, unchanged). Resolving it requires explicit user authorization to edit frozen artifacts; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, acceptance tests are green (19 passed), and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-15T14:53Z):** `main` @ `1f707af6186bcb82469550f55b91ba9383d572ca` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `a9ca2287f814d14f7354e2742840cb577e042fca` via continuity-doc checkpoint commit `1f707af chore(kilo): checkpoint agent session` (1 commit). Tracked tree clean at receipt/check; after this handoff update expect only continuity docs modified.
+**Current state (re-verified 2026-11-15T14:55Z):** `main` @ `4a9c0528e4d3182606cd7a849e54b891e5e89d4c` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `1f707af6186bcb82469550f55b91ba9383d572ca` via continuity-doc checkpoint commit `4a9c0528 chore(kilo): checkpoint agent session` (1 commit, 3 continuity docs). Tracked tree clean at receipt/check; after this handoff update expect only continuity docs modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 2 failures (unchanged):
 1. `the code-hash constraint does not record the authorized code hash of record`
@@ -16,9 +16,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 Acceptance tests: `PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> 19 passed, exit 0.
 
-Identity (no drift): binding `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, `code_identity.run_code_identity==cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e` (distinct from authorization `code_identity` values of record `run_code_identity==6bda27fa538ee8a1...`, `authorized_code_hash==2efd3b18...`, `hashed_set_digest==3e8e4169...`); `authorized_run.max_runs==1`, `authorized_run.authorized==true`, unconsumed. Live `research_state/campaign_authorization.json` `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (rotating). **`NO_PROMPT_CHANGE_JUSTIFIED`.**
+Identity (no drift): binding `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, `code_identity.run_code_identity==cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e` (distinct from authorization `code_identity` values of record `run_code_identity==6bda27fa538ee8a1...`, `authorized_code_hash==2efd3b18...`, `hashed_set_digest==3e8e4169...`); authorization `authorized_run.authorized==true`, `max_runs==1`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, unconsumed. Live `research_state/campaign_authorization.json` `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (rotating). **`NO_PROMPT_CHANGE_JUSTIFIED`.**
 
-No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 not started (`research_state/v6_selection_ledger.json`, `research_state/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; authorization unconsumed). `./check_progress.sh` -> `records: 497664 total: 497664`, `report_exists: True`, completed v0..v5, next 6.
+No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 not started (`research_state/v6_selection_ledger.json`, `research_state/v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorization unconsumed). `./check_progress.sh` -> `records: 497664 total: 497664`, `report_exists: True`, completed v0..v5, next 6.
 
 ## Task (standing checks + execution-integrity re-verification only)
 
