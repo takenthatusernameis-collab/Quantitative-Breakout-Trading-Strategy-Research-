@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **Summary:** The frozen v6 execution/binding identity mismatch remains unresolved (4 verifier failures, unchanged). Resolving it requires explicit user authorization; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-15T01:10Z):** `main` @ `3a679cb6edd553bdfb49c1c568b319ffbf8737d4` == `origin/main` == `@{u}` (`0 0`). Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `876cb38cb357a073f800d5469a50f61f597f0c64` via `3a679cb6e chore(kilo): checkpoint agent session` (continuity docs only). After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
+**Current state (re-verified 2026-11-15T01:15:02Z):** `main` @ `45a01753f13e7941998fe484f117859a0c46ba39` == `origin/main` == `@{u}` (`0 0`). Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `3a679cb6edd553bdfb49c1c568b319ffbf8737d4` via `45a01753f chore(kilo): checkpoint agent session` (continuity docs only). After this handoff update, expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and this file modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged:
 1. `the code-hash constraint does not record the authorized code hash of record`
@@ -39,5 +39,3 @@ The fix is mechanical and fully determined by the verifier, but it edits a froze
 - Re-pointing `configs/research_v6_execution.json` `code_hash_constraint` to `8cd17522...` clears failures 1–4 only if the binding's `hashed_set_digest`/`run_code_identity` are also re-derived to `8cd17522...`/`cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e` and the `manifest_hash` recomputed. That is a substantive amendment of frozen artifacts plus an amendment of the authorization's `authorized_code_hash`, and it must not be done without an explicit user instruction naming those artifacts.
 
 **Hard constraints:** no BRAIN-003/holdout exposure before `2027-01-20T02:00:00Z`; no consuming `v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
-
-(End of file - total 41 lines)
