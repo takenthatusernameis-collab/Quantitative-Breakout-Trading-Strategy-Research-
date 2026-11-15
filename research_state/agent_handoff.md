@@ -2,9 +2,9 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync.
 
-## Latest — 2026-11-15T18:47Z @ `4d03f03d5243f63456dd237fdc04bee841f2378c` (kilo, baseline re-verify only, read-only)
+## Latest — 2026-11-15T18:50Z @ `ccbcb6611cd04d4287b64f79b7c25919a34e2804` (kilo, baseline re-verify only, read-only)
 
-- **Git:** `HEAD==origin/main==@{u}==4d03f03d` (main). Tree clean. Last commit `4d03f03d` (`chore(kilo): checkpoint agent session`) touched only handoff/next_task files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) — no code/state drift vs `e530642b`. No commit made by this session (not requested).
+- **Git:** `HEAD==origin/main==@{u}==ccbcb661` (main). Tree clean at verification. Last commit `ccbcb661` (`chore(kilo): checkpoint agent session`) touched only handoff/next_task files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) — no code/state drift vs prior. No commit made by this session (not requested). No remediation authorization provided; no state/frozen artifacts modified.
 - **Baseline re-verified (read-only, no drift vs prior):** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures unchanged: (1) code-hash constraint does not record authorized code hash of record; (2) records another canonical tree digest, recomputed `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, selection `v6-selection-20261022`/`v6-campaign`/manifest `f1b012b6...`. `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> 19 passed (exit 0). `./check_progress.sh` -> `records: 497664 total: 497664`, next 6.
 - **Identity/cohort/v6 (no drift):** binding `run_code_identity==cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e`; v6 selection authorization intact/unconsumed; `continuous_universe_state` `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, cohort 5 `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`; v6 not started (`v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent). `NO_PROMPT_CHANGE_JUSTIFIED`.
 - **BRAIN-003 (evidence, read-only):**
@@ -34,7 +34,7 @@ Treat `research_state/checkpoint.json`, `research/candidate_manifest_v2.json`, a
 
 ## Initial task message for the next agent
 
-Baseline re-verified at `4d03f03d` (HEAD==origin/main==@{u}, clean; last commit touched only handoff/next_task files): verifier `ok:false` exit 1, 2 known failures unchanged (manifest MATCH `928727279a...`); pytest 19 passed; 497664/497664 next 6; cohort v5 complete/`checkpoint_v5.holdout_exposed_count==0`; v6 intact/unconsumed/not started; binding `cfd1cc2d...`; `NO_PROMPT_CHANGE_JUSTIFIED`. No commit made.
+Baseline re-verified at `ccbcb661` (HEAD==origin/main==@{u}, clean): verifier `ok:false` exit 1, 2 known failures unchanged (code-hash constraint vs authorized record / recomputed canonical `8cd17522...`; manifest MATCH `928727279a...`); pytest 19 passed (exit 0); 497664/497664 next 6; cohort v5 complete/`checkpoint_v5.holdout_exposed_count==0`; v6 intact/unconsumed/not started; binding `cfd1cc2d...`; `NO_PROMPT_CHANGE_JUSTIFIED`. No commit made. No remediation authorization provided.
 
 BRAIN-003 remains UNREMEDIATED (read-only): 42 fold-4 holdout rows in e3d5e5f4 `shard_000455.jsonl` reuse consumed v1 window (707f7a50) — **no valid v2 confirmatory claim**; `checkpoint.json` (22750, holdout_exposed_count 0) unreconciled vs manifest 22792; `research/candidate_manifest_v2.json` frozen but internally inconsistent/untrusted. Do **not** re-run holdout, do **not** edit frozen/state artifacts, do **not** expose/consume v6.
 
