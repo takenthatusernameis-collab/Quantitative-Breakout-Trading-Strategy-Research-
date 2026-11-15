@@ -6,9 +6,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **Summary:** The frozen v6 execution/binding identity mismatch remains unresolved (4 verifier failures, unchanged). Resolving it requires explicit user authorization; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-15T08:04Z):** `main` @ `d56fb5d7afc67d5bcea80f3bab01153e358b1387` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `461abb591db77a41d5061d99bdd1b80abda88e54` to `d56fb5d7afc67d5bcea80f3bab01153e358b1387` (continuity-doc checkpoints only). Tracked tree clean at receipt/check; after this handoff update expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` modified.
+**Current state (re-verified 2026-11-15T08:51Z):** `main` @ `e06ba59552b8433afb72f79029d6472438d219b0` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `d56fb5d7afc67d5bcea80f3bab01153e358b1387` to `e06ba59552b8433afb72f79029d6472438d219b0` (continuity-doc checkpoints only). Tracked tree clean at receipt/check; after this handoff update expect only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` modified.
 
-`PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged (re-verified 2026-11-15T08:04Z):
+`PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 4 failures unchanged (re-verified 2026-11-15T08:51Z):
 1. `the code-hash constraint does not record the authorized code hash of record`
 2. `the code-hash constraint records another canonical tree digest, recomputed 8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`
 3. `the versioned binding's hashed engine digest does not recompute`
@@ -18,7 +18,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 Identity (source of record): binding `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, `code_identity.run_code_identity==647dc464a731f73bbca840086b645fef3bf742866cfd16a86829c1167969b961` (≠ authorization `6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`), `hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `execution_path_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`. Authorization `authorized_run.code_identity`: `run_code_identity==6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b`, `hashed_set_digest==3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff`, `authorized_code_hash==2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2` (`RETAINED_AS_VALUE_OF_RECORD`), `execution_path_digest==null`, `run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`, no `consumed` (unconsumed), `authorization_status==PREREGISTERED_SELECTION_AUTHORIZATION_ONE_BOUNDED_RUN`. `research_state/campaign_authorization.json` `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (live/rotating). Mismatch: `2efd3b...` vs `3e8e41...` vs canonical `8cd175...`. **`NO_PROMPT_CHANGE_JUSTIFIED`.**
 
-No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 not started (`v6_selection_ledger.json`, `v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorization unconsumed). `./check_progress.sh` -> `497664/497664`, `report_exists: True`, completed v0..v5, next 6. (Re-verified 2026-11-15T08:04Z.)
+No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 not started (`v6_selection_ledger.json`, `v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; `src/v6_campaign/` present; authorization unconsumed). `./check_progress.sh` -> `497664/497664`, `report_exists: True`, completed v0..v5, next 6. (Re-verified 2026-11-15T08:51Z.)
 
 ## Task (standing checks + execution-integrity re-verification only)
 
@@ -36,16 +36,6 @@ Mechanical but edits frozen artifacts — needs explicit authorization naming ar
 - `configs/research_v6_execution.json` `code_hash_constraint` records snapshot `2efd3b...`/`3e8e41...` vs live `8cd17522...`.
 - Binding `run_code_identity==647dc464...` recomputes from `3e8e41...`+`37ba6eb3...`; live digests would yield `cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e`.
 - Clearing failures 1–4 requires re-pointing protocol constraint to `8cd17522...`, re-deriving binding `hashed_set_digest`/`run_code_identity` and recomputing `manifest_hash`(es), and amending authorization `authorized_code_hash` — substantive frozen-artifact changes. Do not do without explicit user instruction.
-
-**Hard constraints:** no BRAIN-003/holdout exposure before `2027-01-20T02:00:00Z`; no consuming `v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
-
-## If the user wants the mismatch resolved (requires their explicit go-ahead)
-
-The fix is mechanical and fully determined by the verifier, but it edits a frozen artifact, so it needs explicit authorization first:
-
-- Frozen `configs/research_v6_execution.json` `code_hash_constraint` currently records `authorized_code_hash==2efd3b18...` and `canonical_hashed_set_digest==3e8e4169...`, the publication-time snapshot of the authorization, while the live tree digests to `8cd17522...`.
-- The binding is already internally consistent with that same snapshot: its `run_code_identity==647dc464...` recomputes exactly from hashed-set digest `3e8e4169...` plus the live v6 path digest `37ba6eb3...`. So the binding is not corrupt; the frozen protocol's snapshot is stale.
-- Re-pointing `configs/research_v6_execution.json` `code_hash_constraint` to `8cd17522...` clears failures 1–4 only if the binding's `hashed_set_digest`/`run_code_identity` are also re-derived to `8cd17522...`/`cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e` and the `manifest_hash` recomputed. That is a substantive amendment of frozen artifacts plus an amendment of the authorization's `authorized_code_hash`, and it must not be done without an explicit user instruction naming those artifacts.
 
 **Hard constraints:** no BRAIN-003/holdout exposure before `2027-01-20T02:00:00Z`; no consuming `v6-selection-20261022`; no substantive edits to frozen protocol/binding/authorization artifacts without explicit authorization.
 
