@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **Summary:** The frozen v6 execution identity mismatch remains unresolved (2 verifier failures, unchanged). Resolving it requires explicit user authorization to edit frozen artifacts; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, acceptance tests are green (19 passed), and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-15T13:49Z):** `main` @ `a807eb358f2df36149bc74e8c9c9695a07384279` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `fdafac9bdafd75fb9aa11e80d85d387d0dc55d7f`; intervening diff = `chore(kilo): checkpoint agent session` (continuity-doc checkpoint only). Tracked tree clean at receipt/check; after this handoff update expect only continuity docs modified.
+**Current state (re-verified 2026-11-15T13:52Z):** `main` @ `32624c4746901bb7331ccfb5ed07c7679bc61972` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `a807eb358f2df36149bc74e8c9c9695a07384279`; intervening diff = `chore(kilo): checkpoint agent session` (continuity-doc checkpoint only). Tracked tree clean at receipt/check; after this handoff update expect only continuity docs modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 2 failures (unchanged):
 1. `the code-hash constraint does not record the authorized code hash of record`
@@ -14,7 +14,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Key values: `canonical_hashed_set_digest==8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `recomputed_inherited_blocks_digest==0d1319544b415433ebf8f5d3dbafcf4d7a43abc36b857df9764a524ef3de4433`, `selection_authorization_path==configs/research_v6_selection_authorization_1.json` (run `v6-selection-20261022`, campaign `v6-campaign`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`), `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 
-Acceptance tests: `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> 19 passed, exit 0.
+Acceptance tests: `PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> 19 passed, exit 0.
 
 Identity (no drift): binding `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, `code_identity.run_code_identity==cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e` (distinct from authorization `run_code_identity==6bda27fa538ee8a1...`, `authorized_code_hash==2efd3b18...`, `hashed_set_digest==3e8e4169...` retained as values of record); auth `authorized_run.max_runs==1`, `authorized==true`, `no_execution_in_this_session==true`, unconsumed. Live `research_state/campaign_authorization.json` `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (rotating). **`NO_PROMPT_CHANGE_JUSTIFIED`.**
 
@@ -26,7 +26,7 @@ No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261
 2. Run `PYTHONPATH=src python3 scripts/verify_v6_execution.py`; report exact `ok`/exit, `failures`, and key digests/hashes (`manifest_hash` vs `recomputed_manifest_hash`, `canonical_hashed_set_digest`, `v6_execution_path_canonical_digest`, `selection_authorization_*`, `effective_execution_authorization_source`). Quote any change from the two known failures verbatim.
 3. Confirm no cohort/state drift (`continuous_universe_state.json` `current_cycle_id`/`updated_utc`, `next_cohort_index`, `current_cohort.cohort_index`/`completed`) and `checkpoint_v5.json` `holdout_exposed_count==0`. Confirm v6 has not started (`v6_selection_ledger.json`, `v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; authorization unconsumed).
 4. Read binding `code_identity.run_code_identity` from `configs/research_v6_selection_execution_binding_1.json` and keep it distinct from the authorization's `run_code_identity`. Report `campaign_authorization.json` `code_hash` as a rotating live value.
-5. Run `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` and confirm 19 passed, exit 0.
+5. Run `PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` and confirm 19 passed, exit 0.
 6. **Do NOT** consume the authorized v6 run (`run_id==v6-selection-20261022`, `campaign_id==v6-campaign`, `max_runs==1`) and **Do NOT** expose holdout/confirmatory data before `2027-01-20T02:00:00Z`; `holdout_exposed_count` must remain 0.
 7. **Do NOT** edit frozen v6 execution/binding/authorization artifacts or `campaign_authorization.json` to hide the mismatch without explicit user authorization.
 8. Update `research_state/agent_handoff.md`, `.kilo/handoff.md`, and this file with the new timestamp, HEAD, verifier result, cohort/v6 state, and diffs. Commit **only** if explicitly requested. Keep changes minimal/mechanical and condense older handoff sections when needed.
