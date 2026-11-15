@@ -2,9 +2,9 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-15T02:02:14Z @ `6861ef4a3c4c19bb500f86d8470a503a008a2a1a` (kilo, standing checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-15T02:05:10Z @ `773f059da98df2f6fa5b6cc0b6946b72c6c8d0a1` (kilo, standing checks + v6 execution-integrity re-verification)
 
-**Completed:** standing repository checks at live HEAD `6861ef4a3c4c19bb500f86d8470a503a008a2a1a`; re-ran the v6 execution-integrity verifier and re-confirmed cohort, authorization, binding, holdout and v6 state. HEAD advanced from prior handoff receipt `fe263f496c596fc24319f538d180e4d760bb3ed8` (continuity-doc checkpoint history). `HEAD==origin/main==@{u}==6861ef4a3c4c19bb500f86d8470a503a008a2a1a` (`0 0`). Tracked tree clean at receipt/check. State and verifier outcome unchanged: 4 fail-closed failures, manifest MATCH. No protocol/state change, no frozen artifact edited, no v6 run consumed, no holdout/confirmatory exposed. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** standing repository checks at live HEAD `773f059da98df2f6fa5b6cc0b6946b72c6c8d0a1`; re-ran the v6 execution-integrity verifier and re-confirmed cohort, authorization, binding, holdout and v6 state. HEAD advanced from prior handoff receipt `6861ef4a3c4c19bb500f86d8470a503a008a2a1a` (continuity-doc checkpoint history). `HEAD==origin/main==@{u}==773f059da98df2f6fa5b6cc0b6946b72c6c8d0a1` (`0 0`). Tracked tree clean at receipt/check. State and verifier outcome unchanged: 4 fail-closed failures, manifest MATCH. No protocol/state change, no frozen artifact edited, no v6 run consumed, no holdout/confirmatory exposed. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 
 ### Root cause (unchanged, traced previously)
@@ -12,7 +12,7 @@ All four failures descend from one mismatch. `configs/research_v6_execution.json
 
 
 ### Git
-- `HEAD==origin/main==@{u}==6861ef4a3c4c19bb500f86d8470a503a008a2a1a` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `fe263f496c596fc24319f538d180e4d760bb3ed8`.
+- `HEAD==origin/main==@{u}==773f059da98df2f6fa5b6cc0b6946b72c6c8d0a1` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `6861ef4a3c4c19bb500f86d8470a503a008a2a1a`. `git diff --stat 6861ef4a..HEAD` = only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`.
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -45,6 +45,7 @@ All four failures descend from one mismatch. `configs/research_v6_execution.json
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-15T02:05:10Z (`773f059da98df2f6fa5b6cc0b6946b72c6c8d0a1`): standing checks + v6 execution-integrity re-verification at live HEAD `773f059d...`; HEAD advanced from prior receipt `6861ef4a...`; 4 failures unchanged; manifest MATCH.
 - 2026-11-15T02:02:14Z (`6861ef4a3c4c19bb500f86d8470a503a008a2a1a`): standing checks + v6 execution-integrity re-verification at live HEAD `6861ef4a...`; HEAD advanced from prior receipt `fe263f496...`; 4 failures unchanged; manifest MATCH.
 - 2026-11-15T02:00:52Z (`fe263f496c596fc24319f538d180e4d760bb3ed8`): standing checks + v6 execution-integrity re-verification at live HEAD `fe263f496...`; HEAD advanced from prior receipt `bcfe132d274a...`; 4 failures unchanged; manifest MATCH.
 - 2026-11-15T01:58Z (`bcfe132d274a5c023d818d6b3bb5eec45a576dc8`): standing checks + v6 execution-integrity re-verification at live HEAD `bcfe132d...`; HEAD advanced from prior receipt `1238567a...`; 4 failures unchanged; manifest MATCH.
