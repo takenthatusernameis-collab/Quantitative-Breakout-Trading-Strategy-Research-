@@ -2,9 +2,9 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md`.
 
-## Latest — 2026-11-15T20:36Z @ `4f1b881939a6332b6ede69601f17998ab250873f` (kilo, baseline re-verify only, read-only; no remediation authorization provided)
+## Latest — 2026-11-15T20:39Z @ `b54096209d4cce65c4959d6cbb5c4fc5adbe9f48` (kilo, baseline re-verify only, read-only; no remediation authorization provided)
 
-- **Git:** `HEAD==4f1b8819` on `main` (tracking `origin/main`; tree clean at verification). `git diff 1865d1665 HEAD` and vs `89746ae61`/`3d73bea2c` show only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` changed — no code/state drift. No commit made by this session (not requested). No remediation authorization provided; no state/frozen artifacts modified.
+- **Git:** `HEAD==b54096209` on `main` (tracking `origin/main`; tree clean at verification). `git diff 4f1b881939 HEAD` shows only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` changed since prior checkpoint — no code/state drift. No commit made by this session (not requested). No remediation authorization provided; no state/frozen artifacts modified.
 - **Baseline re-verified (read-only, no drift vs prior):** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures unchanged: (1) code-hash constraint does not record authorized code hash of record; (2) records another canonical tree digest, recomputed `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, selection `v6-selection-20261022`/`v6-campaign`/manifest `f1b012b6...`. `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> 19 passed (exit 0). `./check_progress.sh` -> `records: 497664 total: 497664`, next 6.
 - **Identity/cohort/v6 (no drift):** binding `run_code_identity==cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e`; v6 selection authorization intact/unconsumed; `continuous_universe_state` `current_cycle_id==v5-selection-20261021`, `next_cohort_index==6`, cohort 5 `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`; v6 not started (`v6_selection_ledger.json`/`v6_selected_configurations_manifest.json`/`src/v6_confirmatory/` absent). `NO_PROMPT_CHANGE_JUSTIFIED`.
 - **BRAIN-003 (evidence, read-only, UNREMEDIATED):**
@@ -26,7 +26,19 @@ Treat `research_state/checkpoint.json`, `research/candidate_manifest_v2.json`, a
 
 **Authorization request:** authorize by name (A) shard move/quarantine paths and any rewrites of `research/results_manifest.json`/`research_state/checkpoint.json`; (B) new superseding disposition artifact vs amend frozen `research/candidate_manifest_v2.json` (+ downstream impact); (C) any code/test edits. If any step implies re-exposing holdout or creating a confirmatory window, STOP.
 
+## Initial task message for the next agent
+
+Baseline re-verified at `b54096209` (main, clean, no code/state drift vs `4f1b8819`; only the 4 handoff/next_task files changed in prior checkpoint): verifier `ok:false` exit 1, 2 known failures unchanged (code-hash constraint vs authorized record / recomputed canonical `8cd17522...`; manifest MATCH `928727279a...`); pytest 19 passed (exit 0); `./check_progress.sh` 497664/497664 next 6; cohort v5 complete/`next_cohort_index==6`, `checkpoint_v5.holdout_exposed_count==0`; v6 `v6-selection-20261022` intact/unconsumed/not started (no start before `2027-01-20T02:00:00Z`); binding `cfd1cc2d...`; `NO_PROMPT_CHANGE_JUSTIFIED`. No commit made. No remediation authorization provided.
+
+**BRAIN-003 remains UNREMEDIATED (read-only):** 42 fold-4 holdout rows in e3d5e5f4 `shard_000455.jsonl` reuse consumed v1 window (707f7a50) — **no valid v2 confirmatory claim**; `research_state/checkpoint.json` (22750, `holdout_exposed_count==0`) unreconciled vs `research/results_manifest.json` 22792; `research/candidate_manifest_v2.json` frozen but internally inconsistent/untrusted. Do **not** re-run holdout, do **not** edit frozen/state artifacts, do **not** expose/consume v6.
+
+**Next agent:** obtain explicit user authorization before any remediation. If authorized, execute ONLY named actions (quarantine/move shard(s), rewrite `research/results_manifest.json` and/or `research_state/checkpoint.json`, create superseding disposition artifact vs amend frozen `candidate_manifest_v2.json`, and/or code/test fixes) exactly as authorized and document provenance. If any step implies re-exposing holdout or creating/consuming a confirmatory window, stop and refuse. After action, re-verify baseline and update `research_state/agent_handoff.md` + `.kilo/handoff.md` and `research_state/next_agent_task.md` + `.kilo/next_task.md`. No commit unless explicitly requested.
+
+**Hard constraints:** no consuming `v6-selection-20261022`; no holdout/confirmatory exposure before `2027-01-20T02:00:00Z`; no valid v2 claim from consumed-window rows; no substantive edits to frozen protocol/binding/authorization artifacts or campaign state without explicit authorization. No prompt changes justified.
+
+
 ## Prior (condensed)
+- 2026-11-15T20:39Z (`b54096209`): baseline re-verified (no drift vs 4f1b8819); 2 verifier failures; BRAIN-003 UNREMEDIATED. No remediation authorization provided; read-only only.
 - 2026-11-15T20:36Z (`4f1b8819`): baseline re-verified (no drift vs 1865d1665); 2 verifier failures; BRAIN-003 UNREMEDIATED. No remediation authorization provided; read-only only.
 - 2026-11-15T19:57Z (`1865d1665`): baseline re-verified (no drift vs 89746ae61); 2 verifier failures; BRAIN-003 UNREMEDIATED. No remediation authorization provided.
 - 2026-11-15T19:42Z (`89746ae61`): baseline re-verified (no drift); 2 verifier failures; BRAIN-003 UNREMEDIATED.
@@ -37,13 +49,3 @@ Treat `research_state/checkpoint.json`, `research/candidate_manifest_v2.json`, a
 - 2026-11-15T18:50Z (`ccbcb661`): baseline re-verified (no drift); 2 verifier failures; BRAIN-003 UNREMEDIATED.
 - 2026-11-15T18:47Z (`4d03f03d`): baseline re-verified; BRAIN-003 UNREMEDIATED. 2026-11-15T18:44Z (`e530642b`): evidenced.
 - 2026-11-15T17:31Z (`2bd0ad851`): material drift found (e3d5e5f4 42 holdout rows, unreconciled). Earlier 2026-11-15: repeated re-verification, same 2 failures.
-
-## Initial task message for the next agent
-
-Baseline re-verified at `4f1b8819` (main, clean, no code/state drift vs `1865d1665`/`89746ae61`/`3d73bea2c`; only the 4 handoff/next_task files changed across recent checkpoints): verifier `ok:false` exit 1, 2 known failures unchanged (code-hash constraint vs authorized record / recomputed canonical `8cd17522...`; manifest MATCH `928727279a...`); pytest 19 passed (exit 0); `./check_progress.sh` 497664/497664 next 6; cohort v5 complete/`next_cohort_index==6`, `checkpoint_v5.holdout_exposed_count==0`; v6 `v6-selection-20261022` intact/unconsumed/not started (no start before `2027-01-20T02:00:00Z`); binding `cfd1cc2d...`; `NO_PROMPT_CHANGE_JUSTIFIED`. No commit made. No remediation authorization provided.
-
-**BRAIN-003 remains UNREMEDIATED (read-only):** 42 fold-4 holdout rows in e3d5e5f4 `shard_000455.jsonl` reuse consumed v1 window (707f7a50) — **no valid v2 confirmatory claim**; `research_state/checkpoint.json` (22750, `holdout_exposed_count==0`) unreconciled vs `research/results_manifest.json` 22792; `research/candidate_manifest_v2.json` frozen but internally inconsistent/untrusted. Do **not** re-run holdout, do **not** edit frozen/state artifacts, do **not** expose/consume v6.
-
-**Next agent:** obtain explicit user authorization before any remediation. If authorized, execute ONLY named actions (quarantine/move shard(s), rewrite `research/results_manifest.json` and/or `research_state/checkpoint.json`, create superseding disposition artifact vs amend frozen `candidate_manifest_v2.json`, and/or code/test fixes) exactly as authorized and document provenance. If any step implies re-exposing holdout or creating/consuming a confirmatory window, stop and refuse. After action, re-verify baseline and update `research_state/agent_handoff.md` + `.kilo/handoff.md` and `research_state/next_agent_task.md` + `.kilo/next_task.md`. No commit unless explicitly requested.
-
-**Hard constraints:** no consuming `v6-selection-20261022`; no holdout/confirmatory exposure before `2027-01-20T02:00:00Z`; no valid v2 claim from consumed-window rows; no substantive edits to frozen protocol/binding/authorization artifacts or campaign state without explicit authorization. No prompt changes justified.
