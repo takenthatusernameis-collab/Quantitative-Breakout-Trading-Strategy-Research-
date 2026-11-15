@@ -2,9 +2,9 @@
 
 Repo-resident continuity surface for cross-agent handoff.
 
-## HANDOFF — 2026-11-15T02:11:16Z @ `2d2f56e87b4637d2d01b4b65948d7c5b0d2379aa` (kilo, standing checks + v6 execution-integrity re-verification)
+## HANDOFF — 2026-11-15T02:59:58Z @ `170d61d441d7165cefd5233f45839041fa45b4fb` (kilo, standing checks + v6 execution-integrity re-verification)
 
-**Completed:** standing repository checks at live HEAD `2d2f56e87b4637d2d01b4b65948d7c5b0d2379aa`; re-ran the v6 execution-integrity verifier and re-confirmed cohort, authorization, binding, holdout and v6 state. HEAD advanced from prior handoff receipt `fbc813139dde37aafb1a7430b773d1abd7a55a08` (continuity-doc checkpoint history). `HEAD==origin/main==@{u}==2d2f56e87b4637d2d01b4b65948d7c5b0d2379aa` (`0 0`). Tracked tree clean at receipt/check. State and verifier outcome unchanged: 4 fail-closed failures, manifest MATCH. No protocol/state change, no frozen artifact edited, no v6 run consumed, no holdout/confirmatory exposed. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
+**Completed:** standing repository checks at live HEAD `170d61d441d7165cefd5233f45839041fa45b4fb`; re-ran the v6 execution-integrity verifier and re-confirmed cohort, authorization, binding, holdout and v6 state. HEAD advanced from prior handoff receipt `2d2f56e87b4637d2d01b4b65948d7c5b0d2379aa` (continuity-doc checkpoint history). `HEAD==origin/main==@{u}==170d61d441d7165cefd5233f45839041fa45b4fb` (`0 0`). Tracked tree clean at receipt/check. State and verifier outcome unchanged: 4 fail-closed failures, manifest MATCH. No protocol/state change, no frozen artifact edited, no v6 run consumed, no holdout/confirmatory exposed. After this update only `.kilo/handoff.md`, `research_state/agent_handoff.md`, and `research_state/next_agent_task.md` differ from HEAD.
 
 
 ### Root cause (unchanged, traced previously)
@@ -12,7 +12,7 @@ All four failures descend from one mismatch. `configs/research_v6_execution.json
 
 
 ### Git
-- `HEAD==origin/main==@{u}==2d2f56e87b4637d2d01b4b65948d7c5b0d2379aa` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `fbc813139dde37aafb1a7430b773d1abd7a55a08`. `git diff --stat fbc813139dde37aafb1a7430b773d1abd7a55a08..HEAD` = only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`.
+- `HEAD==origin/main==@{u}==170d61d441d7165cefd5233f45839041fa45b4fb` (main). `rev-list --left-right --count HEAD...origin/main == 0 0`. Tracked tree clean at receipt/check. HEAD advanced from prior handoff receipt `2d2f56e87b4637d2d01b4b65948d7c5b0d2379aa`. `git diff --stat 2d2f56e87b4637d2d01b4b65948d7c5b0d2379aa..HEAD` = only `.kilo/handoff.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`.
 
 ### Verifier
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed).
@@ -45,6 +45,7 @@ All four failures descend from one mismatch. `configs/research_v6_execution.json
 - See `research_state/next_agent_task.md`.
 
 ## Prior sessions (condensed)
+- 2026-11-15T02:59:58Z (`170d61d441d7165cefd5233f45839041fa45b4fb`): standing checks + v6 execution-integrity re-verification at live HEAD `170d61d4...`; HEAD advanced from prior receipt `2d2f56e8...`; 4 failures unchanged; manifest MATCH.
 - 2026-11-15T02:11:16Z (`2d2f56e87b4637d2d01b4b65948d7c5b0d2379aa`): standing checks + v6 execution-integrity re-verification at live HEAD `2d2f56e8...`; HEAD advanced from prior receipt `fbc81313...`; 4 failures unchanged; manifest MATCH.
 - 2026-11-15T02:08:36Z (`fbc813139dde37aafb1a7430b773d1abd7a55a08`): standing checks + v6 execution-integrity re-verification at live HEAD `fbc81313...`; HEAD advanced from prior receipt `9564b927...`; 4 failures unchanged; manifest MATCH.
 - 2026-11-15T02:06:02Z (`9564b927ebd3c0d9d584abe226526886c532fece`): standing checks + v6 execution-integrity re-verification at live HEAD `9564b927...`; HEAD advanced from prior receipt `773f059da...`; 4 failures unchanged; manifest MATCH.
