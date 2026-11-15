@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **Summary:** The frozen v6 execution identity mismatch remains unresolved (2 verifier failures, unchanged). Resolving it requires explicit user authorization to edit frozen artifacts; do not patch it by editing frozen artifacts or state. Cohort v5 is complete, holdout exposure is 0, and the single authorized v6 selection run is still unconsumed.
 
-**Current state (re-verified 2026-11-15T12:46Z):** `main` @ `5480f2278d909edcc7a11da3932d6c2ae9aeb607` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `2c563a254947541e97d209f3a942bc51b66ff4b9`; intervening diff = `chore(kilo): checkpoint agent session` (continuity-doc checkpoint only). Tracked tree clean at receipt/check; after this handoff update expect only continuity docs modified.
+**Current state (re-verified 2026-11-15T12:51Z):** `main` @ `392665e186ea46f377daf9ac0de949b951921b44` == `origin/main` == `@{u}` (`0 0`). HEAD advanced from prior handoff receipt `5480f2278d909edcc7a11da3932d6c2ae9aeb607`; intervening diff = `chore(kilo): checkpoint agent session` (continuity-doc checkpoint only). Tracked tree clean at receipt/check; after this handoff update expect only continuity docs modified.
 
 `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1, fail-closed), 2 failures (unchanged):
 1. `the code-hash constraint does not record the authorized code hash of record`
@@ -15,8 +15,6 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 `manifest_hash==recomputed_manifest_hash==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH). Key values: `canonical_hashed_set_digest==8cd17522...`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `selection_authorization_path==configs/research_v6_selection_authorization_1.json` (run `v6-selection-20261022`, campaign `v6-campaign`, manifest `f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990`), `effective_execution_authorization_source==configs/research_v6_execution_amendment_1.json`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 
 Identity (no drift): binding `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`, `code_identity.run_code_identity==cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e` (distinct from authorization `run_code_identity==6bda27fa538ee8a1...`, `authorized_code_hash==2efd3b18...`, `hashed_set_digest==3e8e4169...` retained as values of record); auth `authorized_run.max_runs==1`, `authorized==true`, `no_execution_in_this_session==true`, unconsumed. Live `research_state/campaign_authorization.json` `code_hash==13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3` (rotating). **`NO_PROMPT_CHANGE_JUSTIFIED`.**
-
-No drift: `continuous_universe_state.json` `current_cycle_id==v5-selection-20261021`, `updated_utc==2026-10-21T21:45:00+00:00`, `next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`; `checkpoint_v5.json` `holdout_exposed_count==0`, `completed_records==193536`, `pilot_passed==true`. v6 not started (`v6_selection_ledger.json`, `v6_selected_configurations_manifest.json`, `src/v6_confirmatory/` absent; `src/v6_campaign/` present; run unconsumed). `./check_progress.sh` -> `497664/497664`, `report_exists: True`, completed v0..v5, next 6.
 
 ## Task (standing checks + execution-integrity re-verification only)
 
