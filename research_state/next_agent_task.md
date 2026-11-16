@@ -4,8 +4,8 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 
 **First action: perform read-only baseline re-verification and report drift. Do not edit any file until that baseline report is complete.** This is a fail-closed BRAIN-003 remediation gate, not a request to re-run holdout, make the verifier pass, or change protocol. Do not consume `v6-selection-20261022`, do not expose holdout/confirmatory data, and do not edit frozen/state artifacts without explicit user authorization. Do not commit unless explicitly requested. **When you finish, mirror the authoritative handoff into `.kilo/handoff.md` byte-for-byte and verify with `diff`.**
 
-**Baseline to verify (re-verified 2026-11-16T07:24Z @ `45a341171`, read-only, no material drift vs `8e85f3cf8`):**
-- `main` clean; `HEAD==origin/main==local==45a341171bd5e64eacb595ffec5a0566b5d195b5`; `HEAD` advanced one checkpoint commit from `8e85f3cf8` (`chore(kilo): checkpoint agent session`), diff limited to the four handoff/next-task files, no code/state artifact drift.
+**Baseline to verify (re-verified 2026-11-16T07:28Z @ `4495be7f8`, read-only, no material drift vs `45a341171`):**
+- `main` clean; `HEAD==origin/main==local==4495be7f87c2d7f6d75f0436db8908410f6514a4`; `HEAD` advanced one checkpoint commit from `45a341171` (`chore(kilo): checkpoint agent session`), diff limited to the four handoff/next-task files, no code/state artifact drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` exit 1; same 2 failures: code-hash constraint does not record authorized code hash of record; records another canonical tree digest (`8cd17522...`). `manifest_hash==recomputed==928727279a...` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> pytest unavailable (`No module named pytest`, exit 1).
 - `./check_progress.sh` -> `records: 497664 total: 497664`, completed 6, `next: 6`.
