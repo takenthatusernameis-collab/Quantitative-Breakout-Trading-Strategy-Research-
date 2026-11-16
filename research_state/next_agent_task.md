@@ -4,9 +4,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 
 **First action: perform read-only baseline re-verification and report drift. Do not edit any file until that baseline report is complete.** Fail-closed BRAIN-003 remediation gate: not a request to re-run holdout, make the verifier pass, or change protocol. Do not consume `v6-selection-20261022`, do not expose holdout/confirmatory data, and do not edit frozen/state artifacts without explicit user authorization. Do not commit unless explicitly requested. **When you finish, mirror the authoritative handoff into `.kilo/handoff.md` byte-for-byte and verify with `diff`.**
 
-**Baseline to verify (re-verified 2026-11-16T08:32Z @ `f379c4f0a`, read-only):**
-- `main` clean; `HEAD==f379c4f0a62809f94d445e6c699323ee4e5237db`. `git status --short` empty. Prior checkpoint commit changed only the 4 handoff/next-task files (no code/state artifact drift).
-- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false`; same 2 failures (no authorized code-hash recorded; recomputed canonical tree digest `8cd17522...`). `manifest_hash==recomputed==928727279a...` (MATCH).
+**Baseline to verify (re-verified 2026-11-16T09:19Z @ `bafb76c77`, read-only):**
+- `main` clean; `HEAD==origin/main==local==bafb76c77405e5199a484253d6c6861023519085`. `git status --short` empty. Prior checkpoint commit `bafb76c77` changed only the 2 `research_state` handoff/next-task files (no code/state artifact drift); `.kilo` mirrors were stale from that commit and re-synced this session.
+- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` exit 1; same 2 failures (no authorized code-hash recorded; recomputed canonical tree digest `8cd17522...`). `manifest_hash==recomputed==928727279a...` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
 - Binding `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; authority: `max_runs==1`, `confirmatory_evaluation_authorized==false`, `holdout_reads_authorized==false`, `amendment_of_a_frozen_artifact_authorized==false`, `candle_fetch_authorized==false`, `second_v6_selection_run_authorized==false`.
@@ -28,4 +28,4 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 
 **Hard constraints:** no consuming `v6-selection-20261022`; no holdout/confirmatory exposure before `2027-01-20T02:00:00Z`; no valid v2 claim from consumed-window rows; no substantive edits to frozen/protocol/binding/authorization/campaign state without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-**Session record (2026-11-16T08:32Z @ `f379c4f0a`):** read prior durable handoff (`6e9105fcf`); read-only baseline re-verification completed; drift observed is HEAD advanced to `f379c4f0a` by checkpoint commit touching only 4 handoff/next-task files. No remediation authorization -> task 2 BLOCKED. Handoffs refreshed; mirrors synced.
+**Session record (2026-11-16T09:19Z @ `bafb76c77`):** read prior durable handoff (`f379c4f0a`); read-only baseline re-verification completed; drift observed is HEAD advanced to `bafb76c77` by checkpoint commit touching only 2 `research_state` handoff files (`.kilo` mirrors stale from that commit, re-synced this session). No remediation authorization -> task 2 BLOCKED. Handoffs refreshed; mirrors synced.
