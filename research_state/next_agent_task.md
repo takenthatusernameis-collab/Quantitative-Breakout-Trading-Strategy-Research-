@@ -4,8 +4,8 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 
 **First action: perform read-only baseline re-verification and report drift. Do not edit any file until that baseline report is complete.** This is a fail-closed BRAIN-003 remediation gate, not a request to re-run holdout, make the verifier pass, or change protocol. Do not consume `v6-selection-20261022`, do not expose holdout/confirmatory data, and do not edit frozen/state artifacts without explicit user authorization. Do not commit unless explicitly requested. **When you finish, mirror the authoritative handoff into `.kilo/handoff.md` byte-for-byte and verify with `diff`.**
 
-**Baseline to verify (re-verified 2026-11-16T08:17Z @ `820641428`, read-only, no material drift vs `4495be7f8`):**
-- `main` clean; `HEAD==origin/main==local==820641428f6b3bccbb7cad433238fc90e0fcafbc`; `HEAD` advanced one checkpoint commit from `4495be7f8` (`chore(kilo): checkpoint agent session`), diff limited to the four handoff/next-task files, no code/state artifact drift.
+**Baseline to verify (re-verified 2026-11-16T08:19Z @ `a29af0efb`, read-only, no material drift vs `820641428`):**
+- `main` clean; `HEAD==origin/main==local==a29af0efbc784003c7dc670d41b1799ab7433741`; `HEAD` advanced one checkpoint commit from `820641428` (`chore(kilo): checkpoint agent session`), diff limited to the four handoff/next-task files, no code/state artifact drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` exit 1; same 2 failures: code-hash constraint does not record authorized code hash of record; records another canonical tree digest (`8cd17522...`). `manifest_hash==recomputed==928727279a...` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> pytest unavailable (`No module named pytest`, exit 1).
 - `./check_progress.sh` -> `records: 497664 total: 497664`, completed 6, `next: 6`.
@@ -32,3 +32,5 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 **Authorization still required:** (A) exact shard move/quarantine paths and rewrites of `research/results_manifest.json`/`research_state/checkpoint.json`; (B) new superseding disposition artifact vs amend frozen `research/candidate_manifest_v2.json`; (C) any code/test edits. If no remediation authorization is provided, complete task 1 and report blocked on task 2.
 
 **Hard constraints:** no consuming `v6-selection-20261022`; no holdout/confirmatory exposure before `2027-01-20T02:00:00Z`; no valid v2 claim from consumed-window rows; no substantive edits to frozen protocol/binding/authorization artifacts or campaign state without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`.
+
+**Session record (2026-11-16T08:19Z @ `a29af0efb`):** prior durable-handoff task read and completed. Read-only baseline re-verification executed — no material drift vs `820641428` (only drift = harness checkpoint commit `820641428`→`a29af0efb`, handoff/next-task files only). Mirrors `.kilo/handoff.md`/`.kilo/next_task.md` verified already byte-identical to authoritative copies (no stale-mirror drift this session). No remediation authorization provided — task 2 remains BLOCKED. Handoff/next-task refreshed and mirrors re-synced.
