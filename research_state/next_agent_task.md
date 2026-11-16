@@ -4,8 +4,8 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 
 **First action: perform read-only baseline re-verification and report drift. Do not edit any file until that baseline report is complete.** Fail-closed BRAIN-003 remediation gate: not a request to re-run holdout, make the verifier pass, or change protocol. Do not consume `v6-selection-20261022`, do not expose holdout/confirmatory data, and do not edit frozen/state artifacts without explicit user authorization. Do not commit unless explicitly requested. **When you finish, mirror both authoritative files into `.kilo/handoff.md` and `.kilo/next_task.md` byte-for-byte and verify each pair with `diff`.**
 
-**Baseline to verify (re-verified 2026-11-16T14:56Z @ `42b890972`, read-only):**
-- `main` clean; `HEAD==origin/main==local==42b890972`. Drift since prior record (`234624a04`) is one checkpoint commit `42b890972` touching only the 4 handoff/next-task files; no research code/result/campaign-state drift. Mirrors re-synced byte-identical this session.
+**Baseline to verify (re-verified 2026-11-16T14:57Z @ `42eec04d`, read-only):**
+- `main` clean; `HEAD==origin/main==local==42eec04d`. Drift since prior record (`42b890972`) is one checkpoint commit `42eec04d` touching only the 4 handoff/next-task files; no research code/result/campaign-state drift. Mirrors re-synced byte-identical this session.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (no authorized code-hash recorded; recomputed canonical tree digest `8cd17522...`). `manifest_hash==recomputed==928727279a...` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
@@ -28,7 +28,8 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 
 **Hard constraints:** no consuming `v6-selection-20261022`; no holdout/confirmatory exposure before `2027-01-20T02:00:00Z`; no valid v2 claim from consumed-window rows; no substantive edits to frozen/protocol/binding/authorization/campaign state without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-**Session record (2026-11-16T14:56Z @ `42b890972`):** read prior durable handoff (`234624a04`); read-only baseline re-verification completed; drift = one checkpoint commit `42b890972` touching only the 4 handoff/next-task files (no research code/result/campaign-state drift). Verifier ok:false, same 2 failures; manifest_hash MATCH. No remediation authorization -> task 2 BLOCKED. Handoffs refreshed; mirrors synced.
+**Session record (2026-11-16T14:57Z @ `42eec04d`):** read prior durable handoff (`42b890972`); read-only baseline re-verification completed; drift = one checkpoint commit `42eec04d` touching only the 4 handoff/next-task files (no research code/result/campaign-state drift). Verifier ok:false, same 2 failures; manifest_hash MATCH. No remediation authorization -> task 2 BLOCKED. Handoffs refreshed; mirrors synced.
+**Session record (2026-11-16T14:56Z @ `42b890972`):** read prior durable handoff (`234624a04`); read-only baseline re-verification completed; drift = one checkpoint commit `42b890972` touching only the 4 handoff/next-task files; no research code/result/campaign-state drift. Verifier ok:false, same 2 failures; manifest_hash MATCH. No remediation auth -> task 2 BLOCKED. Handoffs refreshed; mirrors synced.
 **Session record (2026-11-16T14:54Z @ `234624a04`):** prior checkpoint-only drift from `ad0cd0fb1`; read-only re-verify; blocked on remediation auth.
 **Session record (2026-11-16T14:49Z @ `ad0cd0fb1`):** prior checkpoint-only drift from `92fb9c669`; read-only re-verify; blocked.
 **Session record (2026-11-16T14:48Z @ `92fb9c669`):** prior checkpoint-only drift from `e4eca1148`; blocked.
