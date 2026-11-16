@@ -10,7 +10,7 @@
 - **BRAIN-003 (evidence carried forward, read-only, UNREMEDIATED):** 42 fold-4 holdout rows in `research/results_shards/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl` (window `1773241920000..1792162800000`, same consumed end as v1 `707f7a50.../shard_000000.jsonl`) — **forbidden reuse; no valid v2 confirmatory claim** per `reports/holdout_disposition_v2.md`. `research_state/checkpoint.json` (e3d5e5f4) `completed_records==22750`, `holdout_exposed_count==0` vs `research/results_manifest.json` `total_records==22792` (delta 42) — unreconciled. `research/candidate_manifest_v2.json` frozen but internally inconsistent/untrusted (top-level `ALL_REJECTED_ON_HOLDOUT` vs per-candidate `CANDIDATE_PENDING_HOLDOUT`/`holdout_verdict REJECTED_ON_HOLDOUT`, no read-only-attributed evaluator provenance). Not edited. **Prior agent task (baseline re-verification, task item 1) COMPLETED; mutation steps (a)–(d) remain BLOCKED pending explicit user authorization naming exact files/actions.**
 - **Provenance (read-only):** `holdout_exposed_count` maintained at zero in campaign runner/checkpoint paths and surfaced by `src/v3_confirmatory/*`; `candidate_manifest_v2` referenced as frozen scope/input by v2-v5/candidate-freeze/verify scripts. Exact writer of the 42 rows and conflicting manifest statuses not established — requires authorized code-path investigation.
 
-## Current — 2026-11-15T23:45Z @ `9b63d975e` (this session)
+## Current — 2026-11-16T00:24Z @ `9b63d975e` (this session)
 
 - **Prior agent task status:** Baseline re-verification (task 1) **COMPLETED**; BRAIN-003 remediation mutations (task 2 a–d) **BLOCKED** — no explicit user authorization provided for any mutation step. No code/state artifacts edited this session.
 - **Verification re-confirmed:** git clean @ `9b63d975e`, verifier `ok:false` (2 failures unchanged), manifest MATCH, pytest unavailable, progress 497664/497664 next 6, v5 complete `next_cohort_index==6`, v6 unconsumed/not started (no start before `2027-01-20T02:00:00Z`), binding `cfd1cc2d...` unchanged. `NO_PROMPT_CHANGE_JUSTIFIED`.
@@ -42,6 +42,8 @@ Baseline re-verified at `9b63d975e` (main, clean, read-only; `HEAD==remote==loca
 **Hard constraints:** no consuming `v6-selection-20261022`; no holdout/confirmatory exposure before `2027-01-20T02:00:00Z`; no valid v2 claim from consumed-window rows; no substantive edits to frozen protocol/binding/authorization artifacts or campaign state without explicit authorization. No prompt changes justified.
 
 ## Prior (condensed)
+- 2026-11-16T00:24Z (`9b63d975e`): baseline re-verified (read-only); no drift vs `e80546ced`; 2 verifier failures; BRAIN-003 UNREMEDIATED. No remediation authorization provided; prior task (re-verification) completed, remediation blocked.
+- 2026-11-15T23:45Z (`9b63d975e`): baseline re-verified (read-only); no drift vs `e80546ced`; 2 verifier failures; BRAIN-003 UNREMEDIATED. No remediation authorization provided; prior task (re-verification) completed, remediation blocked.
 - 2026-11-15T23:41Z (`9b63d975e`): baseline re-verified (read-only); no drift vs `e80546ced`; 2 verifier failures; BRAIN-003 UNREMEDIATED. No remediation authorization provided.
 - 2026-11-15T23:38Z (`0a39d730d`): baseline re-verified (read-only); no drift vs `e80546ced`; 2 verifier failures; BRAIN-003 UNREMEDIATED. No remediation authorization provided.
 - 2026-11-15T23:34Z (`0a39d730d`): baseline re-verified (read-only); no drift vs `e80546ced`; 2 verifier failures; BRAIN-003 UNREMEDIATED. No remediation authorization provided.
