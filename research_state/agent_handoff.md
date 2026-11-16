@@ -34,6 +34,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 
 ## Prior (condensed)
 - 2026-11-16T15:51Z (`d45921ab9`): read prior durable handoff (`11c24a090`); read-only baseline re-verify completed; drift limited to handoff files (HEAD `11c24a090`->`d45921ab9`); no research code/result/campaign-state drift. Verifier ok:false, same 2 failures; manifest_hash MATCH. No remediation auth -> blocked on task 2. Handoffs refreshed; mirrors synced.
+- 2026-11-16T15:55Z (`faef182fd`): read prior durable handoff (`d45921ab9`); read-only baseline re-verify completed; drift limited to handoff files (HEAD `d45921ab9`->`faef182fd`); no research code/result/campaign-state drift. Verifier ok:false, same 2 failures; manifest_hash MATCH. pytest unavailable. check_progress 497664/497664, 6 completed, next 6. No remediation auth -> blocked on task 2. Handoffs refreshed; mirrors synced.
 - 2026-11-16T15:49Z (`5c07f4fcf`): read prior durable handoff (`55351c2e7`); read-only baseline re-verify completed; drift limited to handoff/next-task files; no research code/result/campaign-state drift. Verifier ok:false, same 2 failures; manifest_hash MATCH. No remediation auth -> blocked on task 2. Handoffs refreshed; mirrors synced.
 - 2026-11-16T15:43Z (`55351c2e7`): read prior (`ebf2a79bb`); read-only re-verify; checkpoint-only drift touching `research_state/agent_handoff.md`; blocked on task 2.
 - 2026-11-16T15:00Z (`ebf2a79bb`): read prior (`42eec04d`); read-only re-verify; 4 handoff-file drift; blocked.
