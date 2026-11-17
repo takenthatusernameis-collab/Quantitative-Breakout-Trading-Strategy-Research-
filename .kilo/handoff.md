@@ -64,4 +64,6 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 - 2026-11-17T15:20:35Z (`f6136178ff`): read prior handoff (`3a280e998`); read-only baseline re-verify completed (ok:false, same 2 failures; manifest_hash MATCH; pytest unavailable; check_progress 497664/497664, completed 6, next 6). Drift: HEAD `3a280e998` -> `f6136178ff` (handoff/mirror only); remote/local in sync; no research drift. No remediation auth -> task 2 BLOCKED. Tasks 1,3 COMPLETED.
 - Earlier chain (2026-11-15 through 2026-11-17T15:16:48Z): repeated read-only re-verifies (all ok:false, same 2 failures, manifest_hash MATCH, pytest unavailable, check_progress 497664/497664, completed 6, next 6); task 2 BLOCKED (no remediation authorization); tasks 1 and 3 COMPLETED. See git history / prior handoffs for full detail.
 
-(End of file - total 64 lines)
+**Session record (2026-11-17T17:14:42Z @ `9470c946`):** read prior durable handoff (`8a2c52cf`); read-only baseline re-verification completed (ok:false, same 2 failures; manifest_hash MATCH; pytest unavailable; check_progress 497664/497664, completed 6, next 6). Drift: HEAD `8a2c52cf` -> `9470c946` observed (remote/local in sync; working tree clean; no research drift observed). No commit requested. BRAIN-003 UNREMEDIATED. No remediation authorization -> task 2 BLOCKED. Task 1 COMPLETED; task 3 COMPLETED (mirrors re-synced this session).
+
+(End of file - total 65 lines)
