@@ -4,8 +4,8 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` (aut
 
 **First action: perform read-only baseline re-verification and report drift. Do not edit any file until that baseline report is complete.** Fail-closed BRAIN-003 remediation gate: not a request to re-run holdout, make the verifier pass, or change protocol. Do not consume `v6-selection-20261022`, do not expose holdout/confirmatory data, and do not edit frozen/state artifacts without explicit user authorization. Do not commit unless explicitly requested. **When you finish, mirror both authoritative files into `.kilo/handoff.md` and `.kilo/next_task.md` byte-for-byte and verify each pair with `diff`.**
 
-**Baseline to verify (re-verified 2026-11-17T09:28:01Z @ `c5c59a7`, read-only):**
-- `HEAD==e18f5b53439403ab1d78971ef30dd2e3f737ef41` on `main` at verification time (prior handoff recorded `c1b3ba7b6f7fa13185e0715092384c7a74cd78b2`; confirm remote/local sync and any drift).
+**Baseline to verify (re-verified 2026-11-17T13:06:01Z @ `c9281fd98384af1ab97f2285f240b3c820d8342c`, read-only):**
+- `HEAD==c9281fd98384af1ab97f2285f240b3c820d8342c` on `main` at verification time (prior handoff recorded `770272ea4e3e8b7320f485ff872988f71ac15589`; confirm remote/local sync and any drift).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (no authorized code-hash recorded; recomputed canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`). `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
