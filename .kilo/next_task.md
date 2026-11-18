@@ -4,9 +4,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18 @ `2d6f12b04`)
+## Baseline at handoff (2026-11-18 @ `9d9af43d`)
 
-- `HEAD==2d6f12b040e3937e754867bacb6c0d539340ed5b` on `main`. Prior durable handoff recorded `HEAD==a15b38465...`; drift `a15b38465 -> 2d6f12b04` observed via handoff-only commit `2d6f12b04` (only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`; no research code, result, or campaign-state drift).
+- `HEAD==9d9af43d969475d5ad9e08813b798017a9297d31` on `main`. Prior durable handoff recorded `HEAD==1fef9b357...`; drift `1fef9b357 -> 9d9af43d` observed via commit `9d9af43d` (only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; `.kilo/` mirrors were stale, now resynced byte-for-byte and diff-verified; no research code, result, or campaign-state drift).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
