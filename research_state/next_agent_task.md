@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 ## Baseline at handoff (2026-11-18)
 
-- `HEAD==14083506efa57bc0faae2f0b0d9b7a92c3ee8fc9` on `main`. The prior durable handoff recorded `HEAD==0abbfb99e25268d1dec378f3e1fd3003f91dff0a`; drift is handoff-only via `14083506e` (touches only the 4 handoff files). No research code, result, or campaign-state drift was observed.
+- `HEAD==f415ff0f58e7d7cc7e45a1540fac9b6103de326a` on `main`. The prior durable handoff recorded `HEAD==14083506efa57bc0faae2f0b0d9b7a92c3ee8fc9`; drift is handoff-only via `f415ff0f5` (touches only the 4 handoff files). No research code, result, or campaign-state drift was observed.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` returns `ok:false` (exit 1) with the same two failures: the code-hash constraint does not record the authorized code hash of record, and it records another canonical tree digest (`8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`).
 - The manifest hashes match: `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` fails because `pytest` is not installed.
@@ -49,3 +49,5 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - Commit only when explicitly requested.
 
 No remediation authorization was provided this session, so task 2 remains BLOCKED.
+
+(End of file - total 51 lines)
