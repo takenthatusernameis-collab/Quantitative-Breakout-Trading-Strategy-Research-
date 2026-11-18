@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 ## Baseline at handoff (2026-11-18)
 
-- `HEAD==671beec81482e5165ffd9a5d4cecc3be97af256f` on `main`. The prior durable handoff recorded `HEAD==59fcaab420e02395e3212418b2c481e4a0f02948`; drift is handoff-only via `671beec81` (touches only the 4 handoff files). No research code, result, or campaign-state drift was observed.
+- `HEAD==0abbfb99e25268d1dec378f3e1fd3003f91dff0a` on `main`. The prior durable handoff recorded `HEAD==671beec81482e5165ffd9a5d4cecc3be97af256f`; drift is handoff-only via `0abbfb99e` (touches only the 4 handoff files). No research code, result, or campaign-state drift was observed.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` returns `ok:false` (exit 1) with the same two failures: the code-hash constraint does not record the authorized code hash of record, and it records another canonical tree digest (`8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`).
 - The manifest hashes match: `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` fails because `pytest` is not installed.
@@ -20,7 +20,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 - `research/results_shards/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl` contains 42/42 rows with `is_holdout==true` (13 unique `config_id`s), reusing the consumed v1 holdout window.
 - `research_state/checkpoint.json` reports `completed_records==22750`, while `research/results_manifest.json` reports `22792` (delta 42).
-- `research/candidate_manifest_v2.json` is frozen with `candidate_status==ALL_REJECTED_ON_HOLDOUT`; it is untrusted for v2 confirmation until BRAIN-003 is resolved.
+- `research/candidate_manifest_v2.json` is frozen with `candidate_status==ALL_REJECTED_ON_HOLDOUT` (14 candidates); it is untrusted for v2 confirmation until BRAIN-003 is resolved.
 
 ## Your task
 
