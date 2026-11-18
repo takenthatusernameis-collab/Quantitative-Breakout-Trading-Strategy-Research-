@@ -4,18 +4,18 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18T15:55:57Z @ `17b3bbd46`)
+## Baseline at handoff (2026-11-18T16:00:55Z @ `67b5dca25`)
 
-- `HEAD==17b3bbd46134c7b8c7b8a7b8c7b8a7b8c7b8a7b8c` on `main` (`origin/main` aligned). Prior durable handoff recorded `HEAD==1cc32467...`; drift `1cc32467` -> `17b3bbd46` via handoff-only checkpoint commits `1cc32467`/`17b3bbd46` (only `research_state/agent_handoff.md`, `research_state/next_agent_task.md`, `.kilo/handoff.md`, `.kilo/next_task.md`); no research code/result/campaign-state drift.
+- `HEAD==67b5dca25b65fc4f5cde6829185fa435bdb1f3ed` on `main` (`origin/main` aligned). Prior durable handoff recorded `HEAD==17b3bbd46...`; drift `17b3bbd46` -> `67b5dca25` via handoff-only checkpoint commit `67b5dca25` (only `research_state/agent_handoff.md`, `research_state/next_agent_task.md`, `.kilo/handoff.md`, `.kilo/next_task.md`); no research code/result/campaign-state drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
-- `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6 (`0f52f6c9...`, `be4223dc...`, `v2-selection-20261019`, `v3-selection-20261020`, `v4-selection-20261021`, `v5-selection-20261021`), `next: 6`.
+- `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6 (`0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d`, `be4223dcef25aaa0043a466fcd9044b4e6a7387eff7efd487561b9c1f873c1ae`, `v2-selection-20261019`, `v3-selection-20261020`, `v4-selection-20261021`, `v5-selection-20261021`), `next: 6`.
 - `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; v6 may not start before `2027-01-20T02:00:00Z`.
 - v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5` (completed), `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
 - v6 `v6-selection-20261022` intact/unconsumed/not started; no selection output dir; only pre-run `research/v6_evidence/` JSONs present.
 - `research/results_manifest.json` `total_records==22792`, `len(shards)==456`. `NO_PROMPT_CHANGE_JUSTIFIED`.
-- Mirrors: `.kilo/handoff.md` and `.kilo/next_task.md` were re-synced at `17b3bbd46` and verified with `diff`; check them again before relying on them (`diff -q` each pair).
+- Mirrors: `.kilo/handoff.md` and `.kilo/next_task.md` were re-synced at `67b5dca25` and verified with `diff`; check them again before relying on them (`diff -q` each pair).
 
 ## BRAIN-003 — UNREMEDIATED (invalid for v2 confirmation)
 
@@ -48,6 +48,6 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - No substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-No remediation authorization was provided in the prior session (nor the one before it), so task 2 remains BLOCKED. Tasks 1 and 3 were completed at `17b3bbd46`; the next agent must still perform the read-only baseline re-verification and report any drift before editing.
+No remediation authorization was provided in the prior session (nor the one before it), so task 2 remains BLOCKED. Tasks 1 and 3 were completed at `67b5dca25`; the next agent must still perform the read-only baseline re-verification and report any drift before editing.
 
 (End of file - total 51 lines)
