@@ -6,9 +6,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **State of play:** the only outstanding substantive work is the fail-closed BRAIN-003 data-integrity remediation. It has been BLOCKED for many sessions because no session has received authorization naming exact files/actions (A)/(B)/(C). Repeating read-only verification indefinitely adds no value. If the user's instruction is again only "read the handoff and continue", do task 3 (refresh + mirror) and then surface the concrete authorization request in step 2 to the user verbatim instead of looping silently.
 
-## Baseline at handoff (2026-11-18T20:46Z @ `1dd35081a`)
+## Baseline at handoff (2026-11-18T20:49Z @ `1dd35081a`)
 
-- `HEAD==1dd35081a` on `main` (`origin/main` aligned, working tree clean at start). Prior durable handoff recorded `HEAD==bf7ebc3cd...`; drift `bf7ebc3cd` -> `1dd35081a` via handoff-only checkpoint commit touching only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`; no research code/result/campaign-state drift.
+- `HEAD==1dd35081a` on `main` (`origin/main` aligned, working tree clean at start). Prior durable handoff recorded `HEAD==1dd35081a...`; no drift from prior handoff (HEAD unchanged); no research code/result/campaign-state drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`. `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
