@@ -4,15 +4,15 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18 @ `9d9af43d`)
+## Baseline at handoff (2026-11-18 @ `39a4bf13b`)
 
-- `HEAD==9d9af43d969475d5ad9e08813b798017a9297d31` on `main`. Prior durable handoff recorded `HEAD==1fef9b357...`; drift `1fef9b357 -> 9d9af43d` observed via commit `9d9af43d` (only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; `.kilo/` mirrors were stale, now resynced byte-for-byte and diff-verified; no research code, result, or campaign-state drift).
-- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`.
+- `HEAD==39a4bf13bb96dedbde2f63ef103be8a3e878e5c4` on `main`. Prior durable handoff recorded `HEAD==5cac3bc08...`; drift `5cac3bc08 -> 39a4bf13b` via commit `39a4bf13b` (handoff-only `research_state/agent_handoff.md`; `.kilo/handoff.md` stale, resynced this session; no research code, result, or campaign-state drift).
+- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
 - `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; v6 may not start before `2027-01-20T02:00:00Z`.
-- v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5`, `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
+- v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5` (completed), `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
 - v6 `v6-selection-20261022` intact/unconsumed/not started; no selection output dir; only pre-run `research/v6_evidence/` JSONs present.
 - `research/results_manifest.json` `total_records==22792`, `shards==456`. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
