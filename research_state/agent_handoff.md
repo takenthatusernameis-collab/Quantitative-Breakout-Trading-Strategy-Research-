@@ -83,4 +83,8 @@ Read prior durable handoff (@`1cd68cab8`); read-only baseline re-verification co
 - 2026-11-18T00:55:54Z (`f6bf367c1`): drift `9b0dfbef` -> `f6bf367c1`; same baseline/BRAIN-003; `.kilo` mirrors refreshed; task 2 BLOCKED. Tasks 1,3 COMPLETED.
 - Earlier chain (2026-11-15 through 2026-11-18T00:52:56Z): repeated read-only re-verifies; same baseline/BRAIN-003; task 2 BLOCKED (no remediation authorization); tasks 1 and 3 COMPLETED. (Full per-session detail in git history of this file.)
 
+## Session record (2026-11-18T01:53:51Z @ `179d6f7f2`)
+
+Read prior durable handoff (@`6d95faaef`); read-only baseline re-verification completed (ok:false, same 2 failures; manifest_hash MATCH; pytest unavailable; check_progress 497664/497664, completed 6, next 6). Drift: HEAD `6d95faaef` -> `179d6f7f2` observed (handoff-only checkpoint commit; no research code/result/campaign-state artifact drift observed). `.kilo` mirrors matched authoritative at start and refreshed this session. BRAIN-003 UNREMEDIATED (42/42 holdout rows in `e3d5e5f.../shard_000455.jsonl`, 13 config_ids; `checkpoint.json` completed_records==22750 vs manifest 22792 delta 42; `candidate_manifest_v2.json` frozen/untrusted). No remediation authorization -> task 2 BLOCKED. Task 1 COMPLETED; task 3 COMPLETED (mirrors re-synced and diff-verified this session).
+
 (End of file)
