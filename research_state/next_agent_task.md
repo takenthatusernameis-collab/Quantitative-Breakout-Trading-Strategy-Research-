@@ -4,9 +4,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18T06:49Z @ `aac21a4c3`)
+## Baseline at handoff (2026-11-18T07:39Z @ `1d500fe3c`)
 
-- `HEAD==aac21a4c374425c53b2d6e4f4afc4cec0b499e49` on `main`. Prior durable handoff recorded `HEAD==7521923b9f12e25fe322100a825d2f29c47e8ac8`; drift `7521923b9 -> aac21a4c3` via commit `aac21a4c3` (handoff-only checkpoint of the 4 handoff/next-task files; mirrors diff-verified this session; no research code, result, or campaign-state drift).
+- `HEAD==1d500fe3cff17ada49002f94d3db00a1f9b15a27` on `main`. Prior durable handoff recorded `HEAD==1739ff5910b4fe4a10cc09ec02a67f2d2086ca3b`; drift `1739ff591 -> 1d500fe3c` via commit `1d500fe3c` (handoff-only checkpoint of the 4 handoff/next-task files; mirrors diff-verified this session; no research code, result, or campaign-state drift).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
