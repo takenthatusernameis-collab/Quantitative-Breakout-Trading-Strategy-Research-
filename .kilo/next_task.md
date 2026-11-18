@@ -4,9 +4,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18T07:46Z @ `d712de8de`)
+## Baseline at handoff (2026-11-18T07:50Z @ `0bac50d75`)
 
-- `HEAD==d712de8de5dc3ad679a0f1b590c6ce458d07a466` on `main`. Prior durable handoff recorded `HEAD==a9a1adbf4dba3aa56f051413665bcd1128318309`; drift `a9a1adbf4 -> d712de8de` (HEAD/origin aligned; no research code/result/campaign-state drift).
+- `HEAD==0bac50d754f370c832dcc136388d342b3c52930a` on `main` (`origin/main` aligned, working tree clean). Prior durable handoff recorded `HEAD==d712de8de5dc3ad679a0f1b590c6ce458d07a466`; drift `d712de8de -> 0bac50d75` via handoff-only checkpoint commit `0bac50d75`; no research code/result/campaign-state drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
@@ -47,4 +47,4 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - No substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-No remediation authorization was provided in the prior session; task 2 remains BLOCKED. Tasks 1 and 3 were completed at `d712de8de`; the next agent must still perform the read-only baseline re-verification and report any drift before editing.
+No remediation authorization was provided in the prior session; task 2 remains BLOCKED. Tasks 1 and 3 were completed at `0bac50d75`; the next agent must still perform the read-only baseline re-verification and report any drift before editing.
