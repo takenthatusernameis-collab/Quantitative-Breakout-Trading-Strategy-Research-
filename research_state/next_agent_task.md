@@ -10,7 +10,7 @@ Fail-closed BRAIN-003 remediation gate — this is NOT a request to re-run holdo
 
 ## Baseline to verify
 
-- `HEAD==830c8e5d75d62d7c54f31c7e29208ad576ffefb5` on `main` at verification time. Prior handoff recorded `HEAD==e7d67422b20b6d89bd070e9b6d9ea1d058ed4cef`; drift `e7d67422` -> `830c8e5d` (handoff-only commit `chore(kilo): checkpoint agent session`; no research drift observed). `.kilo/next_task.md` mirror re-synced byte-for-byte (diff-verified).
+- `HEAD==9b0dfbef42a5b934f8516f013792f8091da59ba7` on `main` at verification time. Prior handoff recorded `HEAD==830c8e5d75d62d7c54f31c7e29208ad576ffefb5`; drift `830c8e5d` -> `09b8a29a` -> `9b0dfbef` (handoff-only checkpoint commits; no research drift observed). `.kilo` mirrors re-synced byte-for-byte (diff-verified).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (no authorized code-hash recorded; recomputed canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`). `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
@@ -51,6 +51,6 @@ If none provided, complete task 1 and report blocked on task 2.
 - No substantive edits to frozen/protocol/binding/authorization/campaign state without explicit authorization.
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## Session record (2026-11-18T00:48:47Z @ `830c8e5d`)
+## Session record (2026-11-18T00:52:56Z @ `9b0dfbef`)
 
-Read prior durable handoff (@`e7d67422`); read-only baseline re-verification completed (ok:false, same 2 failures; manifest_hash MATCH; pytest unavailable; check_progress 497664/497664, completed 6, next 6). Drift: HEAD `e7d67422` -> `830c8e5d` observed (handoff-only commit `chore(kilo): checkpoint agent session` at 00:04:40Z; modified only `research_state/agent_handoff.md`; no research drift observed). `.kilo/next_task.md` mirror re-synced byte-for-byte (diff-verified). BRAIN-003 UNREMEDIATED (42/42 holdout rows in `e3d5e5f.../shard_000455.jsonl`, 13 config_ids; checkpoint.json completed_records==22750 vs manifest 22792 delta 42; candidate_manifest_v2 frozen/untrusted). No remediation authorization -> task 2 BLOCKED. Task 1 COMPLETED; task 3 COMPLETED (mirrors re-synced this session).
+Read prior durable handoff (@`830c8e5d`); read-only baseline re-verification completed (ok:false, same 2 failures; manifest_hash MATCH; pytest unavailable; check_progress 497664/497664, completed 6, next 6). Drift: HEAD `830c8e5d` -> `09b8a29a` -> `9b0dfbef` observed (handoff-only checkpoint commits; no research drift observed). `.kilo` mirrors matched at start and re-synced this session. BRAIN-003 UNREMEDIATED (42/42 holdout rows in `e3d5e5f.../shard_000455.jsonl`, 13 config_ids; `checkpoint.json` completed_records==22750 vs manifest 22792 delta 42; `candidate_manifest_v2.json` frozen/untrusted). No remediation authorization -> task 2 BLOCKED. Task 1 COMPLETED; task 3 COMPLETED (mirrors re-synced this session).
