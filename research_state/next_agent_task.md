@@ -4,9 +4,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18)
+## Baseline at handoff (2026-11-18 @ `a15b38465`)
 
-- `HEAD==de110fdf5c3a25d94b5cdff5e6ccb9ac9cf3da91` on `main`, clean at verification time. Prior handoff recorded `HEAD==7baccd3bd...`; drift `7baccd3bd -> de110fdf5` was observed via handoff-only commit `de110fdf5` (only handoff/next-task files; no research code, result, or campaign-state drift).
+- `HEAD==a15b3846555b22eff4d145494958870f43a23037` on `main`, clean at verification time. Prior handoff recorded `HEAD==de110fdf5...`; drift `de110fdf5 -> a15b38465` was observed via handoff-only commit `a15b38465` (only handoff/next-task files; no research code, result, or campaign-state drift).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` returns `ok:false` (exit 1) with the same two failures: the code-hash constraint does not record the authorized code hash of record, and it records another canonical tree digest (`8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`).
 - The manifest hashes match: `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` fails because `pytest` is not installed.
