@@ -8,11 +8,11 @@ Fail-closed BRAIN-003 remediation gate — this is NOT a request to re-run holdo
 
 ## Baseline to verify
 
-- `HEAD==ca1dec78d8bb37f06c3351f341faed389aeee5e3` on `main` at verification time. Prior handoff recorded `HEAD==0284335bf8b87fc7357178c0ede1d1a8c8eacbdc`; drift `0284335bf` -> `ca1dec78d` observed (non-handoff commit `chore: capture completed workflow run diagnostics` adding only `research_state/workflow_run_diagnostics.jsonl`; no research code/result/campaign-state drift observed).
+- `HEAD==c876a11df9a1708fdd40e825ec47f07dc90d691a` on `main` at verification time. Prior handoff recorded `HEAD==ca1dec78d8bb37f06c3351f341faed389aeee5e3`; drift `ca1dec78d` -> `faf42446a` -> `c876a11df` observed (handoff-only checkpoint commits; no research code/result/campaign-state drift observed).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (no authorized code-hash recorded; recomputed canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`). `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
-- Binding `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; authority `max_runs==1`, all other flags false (`confirmatory_evaluation_authorized`, `candle_fetch_authorized`, `second_v6_selection_run_authorized`, `amendment_of_a_frozen_artifact_authorized`, `holdout_reads_authorized` all false).
+- Binding `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; authority as recorded in binding (no start before `2027-01-20T02:00:00Z`; no confirmatory/holdout/candle/second-run/frozen-artifact-amendment authorization implied).
 - v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5` done; `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
 - v6 `v6-selection-20261022` intact/unconsumed/not started; no start before `2027-01-20T02:00:00Z`; authorization-declared outputs absent (only pre-run `research/v6_evidence/` JSONs; no selection output dir).
 - `research/results_manifest.json` `total_records==22792`, `shards==456` entries. `NO_PROMPT_CHANGE_JUSTIFIED`.
@@ -49,20 +49,6 @@ If none provided, complete task 1 and report blocked on task 2. (No remediation 
 - No substantive edits to frozen/protocol/binding/authorization/campaign state without explicit authorization.
 - `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## Authorization still required
+## Session record (2026-11-18 @ `c876a11df`)
 
-(A) exact shard move/quarantine paths and rewrites of `research/results_manifest.json`/`research_state/checkpoint.json`;
-(B) new superseding disposition artifact vs amend frozen `research/candidate_manifest_v2.json`;
-(C) any code/test edits.
-If none provided, complete task 1 and report blocked on task 2. (No remediation authorization was provided this session; task 2 remains BLOCKED.)
-
-## Hard constraints
-- No consuming `v6-selection-20261022`.
-- No holdout/confirmatory exposure before `2027-01-20T02:00:00Z`.
-- No valid v2 claim from consumed-window rows.
-- No substantive edits to frozen/protocol/binding/authorization/campaign state without explicit authorization.
-- `NO_PROMPT_CHANGE_JUSTIFIED`.
-
-## Session record (2026-11-18 @ `ca1dec78d`)
-
-Read prior durable handoff (@`0284335bf`); read-only baseline re-verification completed (ok:false, same 2 failures; manifest_hash MATCH; pytest unavailable; check_progress 497664/497664, completed 6, next 6). Drift: HEAD `0284335bf` -> `ca1dec78d` observed (non-handoff commit `chore: capture completed workflow run diagnostics`; only `research_state/workflow_run_diagnostics.jsonl` added; no research code/result/campaign-state artifact drift observed). BRAIN-003 UNREMEDIATED (42/42 holdout rows in `e3d5e5f.../shard_000455.jsonl`, 13 config_ids; `checkpoint.json` completed_records==22750 vs manifest 22792 delta 42; `candidate_manifest_v2.json` frozen/untrusted). No remediation authorization -> task 2 BLOCKED. Task 1 COMPLETED; task 3 COMPLETED (handoff/next-task updated and mirrors diff-verified this session).
+Read prior durable handoff (@`ca1dec78d`); read-only baseline re-verification completed (v6 verifier ok:false, same 2 failures; manifest_hash MATCH; pytest unavailable; check_progress 497664/497664, completed 6, next 6). Drift: HEAD `ca1dec78d` -> `c876a11df` via `faf42446a`,`c876a11df` observed (handoff-only checkpoint commits; no research code/result/campaign-state artifact drift observed). BRAIN-003 UNREMEDIATED (42/42 holdout rows in `e3d5e5f.../shard_000455.jsonl`, 13 config_ids; `checkpoint.json` completed_records==22750 vs manifest 22792 delta 42; `candidate_manifest_v2.json` frozen/untrusted). No remediation authorization -> task 2 BLOCKED. Task 1 COMPLETED; task 3 COMPLETED (handoff/next-task updated and mirrors diff-verified this session).
