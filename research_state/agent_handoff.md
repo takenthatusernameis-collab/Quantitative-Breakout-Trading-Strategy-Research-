@@ -87,3 +87,6 @@ Read prior durable handoff (@`683f9d102`); read-only baseline re-verification co
 
 - 2026-11-18 (`683f9d102`..`6c4827081` chain): repeated read-only re-verifies; same baseline/BRAIN-003; task 2 BLOCKED; tasks 1,3 COMPLETED.
 - 2026-11-18 earlier chain: same. (Full per-session detail in git history of this file.)
+## Session record (2026-11-18T11:42Z @ `34641b416`)
+
+Read prior durable handoff (@`76a64bdf0`); read-only baseline re-verification completed (v6 verifier ok:false, same 2 failures, recomputed `8cd17522...`, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; manifest_hash MATCH `92872727...`; pytest unavailable; check_progress 497664/497664, completed 6, next 6; binding IMPLEMENTATION_BOUND_NOT_RUN; v5 complete next_cohort_index==6, cohort 5 complete, checkpoint_v5 holdout_exposed==0/completed==193536; v6 unconsumed, only pre-run `research/v6_evidence/` JSONs; manifest 22792/456). Drift: `76a64bdf0` -> `34641b416` via handoff-only checkpoint commit `34641b416` (HEAD/origin/main aligned); no research code/result/campaign-state artifact drift observed. BRAIN-003 UNREMEDIATED. No remediation authorization -> task 2 BLOCKED. Task 1 COMPLETED; task 3 COMPLETED (handoff/next-task updated and mirrors diff-verified this session).
