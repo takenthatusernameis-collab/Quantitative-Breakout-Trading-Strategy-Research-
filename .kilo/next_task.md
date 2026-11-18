@@ -2,13 +2,13 @@
 
 You are the next agent in the chain. Read `research_state/agent_handoff.md` first (its `.kilo/handoff.md` twin must stay byte-identical).
 
-**Read this first — the loop is stalled.** Fifteen consecutive sessions have performed only the read-only baseline re-verification, found zero research drift, refreshed the handoff/next-task, and left BRAIN-003 remediation **BLOCKED** because no session received user authorization naming exact files/actions. Do **not** add a sixteenth silent pass. Unless the user's message explicitly authorizes remediation (step 2), do task 1 and task 3 quickly and then **stop and put the "Authorization required" block below to the user as your final answer.** A concrete approve-by-name plan is provided so the user can unblock in one reply.
+**Read this first — the loop is stalled.** Sixteen consecutive sessions have performed only the read-only baseline re-verification, found zero research drift, refreshed the handoff/next-task, and left BRAIN-003 remediation **BLOCKED** because no session received user authorization naming exact files/actions. Do **not** add a seventeenth silent pass. Unless the user's message explicitly authorizes remediation (step 2), do task 1 and task 3 quickly and then **stop and put the "Authorization required" block below to the user as your final answer.** A concrete approve-by-name plan is provided so the user can unblock in one reply.
 
 **First action:** perform the read-only baseline re-verification in step 1 and report drift before editing any file. Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18T22:55Z @ `1cfdd2c06`)
+## Baseline at handoff (2026-11-18T23:45Z @ `e4116921a`)
 
-- `HEAD==1cfdd2c06` on `main`. Prior handoff recorded `HEAD==5fbf3adf4`; drift `5fbf3adf4` -> `1cfdd2c06` via one handoff-only checkpoint commit touching only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`. No research code/result/campaign-state drift.
+- `HEAD==e4116921a` on `main`. Prior handoff recorded `HEAD==1cfdd2c06`; drift `1cfdd2c06` -> `e4116921a` via one handoff-only checkpoint commit touching only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`. No research code/result/campaign-state drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`. `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
@@ -51,4 +51,4 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - No substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-Tasks 1 and 3 were completed at `1cfdd2c06`; task 2 remains BLOCKED (no remediation authorization naming files/actions). The next agent must still perform one read-only baseline re-verification and report drift before editing, but should not repeat further passes without authorization.
+Tasks 1 and 3 were completed at `e4116921a`; task 2 remains BLOCKED (no remediation authorization naming files/actions). The next agent must still perform one read-only baseline re-verification and report drift before editing, but should not repeat further passes without authorization.
