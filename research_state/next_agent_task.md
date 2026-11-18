@@ -4,7 +4,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18T11:47:18Z @ `9fb3014c6`)
+## Baseline at handoff (2026-11-18T11:51:07Z @ `9fb3014c6`)
 
 - `HEAD==9fb3014c6d489c2f31c9fd691b2a34a60223139b` on `main` (`origin/main` aligned). Prior durable handoff recorded `HEAD==e346517b7...`; drift `e346517b7 -> 9fb3014c6` via handoff-only checkpoint commit `9fb3014c6`; no research code/result/campaign-state drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
