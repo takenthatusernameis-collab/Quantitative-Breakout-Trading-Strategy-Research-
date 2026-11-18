@@ -4,9 +4,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18T19:40Z @ `59ba54553`)
+## Baseline at handoff (2026-11-18T19:44Z @ `9d1934c50`)
 
-- `HEAD==59ba54553e9cdb7019dbb45f9648e4b77ab6491c` on `main` (`origin/main` aligned, working tree clean at start). Prior durable handoff recorded `HEAD==cb180e889...`; drift `cb180e889` -> `59ba54553` via handoff-only checkpoint commit touching only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`; no research code/result/campaign-state drift.
+- `HEAD==9d1934c50fcd835bcb4b461874ce32c83910aea7` on `main` (`origin/main` aligned, working tree clean at start). Prior durable handoff recorded `HEAD==59ba54553...`; drift `59ba54553` -> `9d1934c50` via handoff-only checkpoint commit touching only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`; no research code/result/campaign-state drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`. `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
@@ -48,4 +48,4 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - No substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-No remediation authorization was provided in this session (nor the several before it), so task 2 remains BLOCKED. Tasks 1 and 3 were completed at `59ba54553`; the next agent must still perform the read-only baseline re-verification and report any drift before editing.
+No remediation authorization was provided in this session (nor the several before it), so task 2 remains BLOCKED. Tasks 1 and 3 were completed at `9d1934c50`; the next agent must still perform the read-only baseline re-verification and report any drift before editing. If the only user instruction remains "read the handoff and continue", the correct action is: re-verify read-only, refresh handoff/next-task, and stop without touching research artifacts.
