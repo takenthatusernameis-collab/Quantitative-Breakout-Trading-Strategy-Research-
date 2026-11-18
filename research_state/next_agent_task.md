@@ -4,9 +4,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **First action: perform the read-only baseline re-verification below and report any drift before editing any file.** Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
 
-## Baseline at handoff (2026-11-18T07:39Z @ `1d500fe3c`)
+## Baseline at handoff (2026-11-18T07:41Z @ `683f9d102`)
 
-- `HEAD==1d500fe3cff17ada49002f94d3db00a1f9b15a27` on `main`. Prior durable handoff recorded `HEAD==1739ff5910b4fe4a10cc09ec02a67f2d2086ca3b`; drift `1739ff591 -> 1d500fe3c` via commit `1d500fe3c` (handoff-only checkpoint of the 4 handoff/next-task files; mirrors diff-verified this session; no research code, result, or campaign-state drift).
+- `HEAD==683f9d1023badaefe0aca08be77c2e4cf7b13588` on `main`. Prior durable handoff recorded `HEAD==1d500fe3cff17ada49002f94d3db00a1f9b15a27`; drift `1d500fe3c -> 683f9d102` via commit `683f9d102` (handoff-only checkpoint of the 4 handoff/next-task files; mirrors diff-verified this session; no research code, result, or campaign-state drift).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
@@ -47,4 +47,4 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - No substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-No remediation authorization was provided this session; task 2 remains BLOCKED.
+No remediation authorization was provided in the prior session; task 2 remains BLOCKED. Tasks 1 and 3 were completed at `683f9d102`; the next agent must still perform the read-only baseline re-verification and report any drift before editing.
