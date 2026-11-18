@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 ## Baseline at handoff (2026-11-18T07:41Z @ `683f9d102`)
 
-- `HEAD==683f9d1023badaefe0aca08be77c2e4cf7b13588` on `main`. Prior durable handoff recorded `HEAD==1d500fe3cff17ada49002f94d3db00a1f9b15a27`; drift `1d500fe3c -> 683f9d102` via commit `683f9d102` (handoff-only checkpoint of the 4 handoff/next-task files; mirrors diff-verified this session; no research code, result, or campaign-state drift).
+- `HEAD==a9a1adbf4dba3aa56f051413665bcd1128318309` on `main`. Prior durable handoff recorded `HEAD==683f9d1023badaefe0aca08be77c2e4cf7b13588`; drift `683f9d102 -> a9a1adbf4` (HEAD/origin aligned; no research code/result/campaign-state drift).
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (exit 1).
