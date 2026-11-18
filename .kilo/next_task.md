@@ -6,7 +6,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 ## Baseline at handoff (2026-11-18)
 
-- `HEAD==fbe1cb8ae65b9ce7958476d49f548943e033d0a0` on `main`. The prior durable handoff recorded `HEAD==782d8bfac743325d03ef55299a26ad1a43fffca5`; drift is handoff-only via `fbe1cb8ae` (touches only the 4 handoff files) and uncommitted handoff-file modifications may be present at session start. No research code, result, or campaign-state drift was observed.
+- `HEAD==fbe1cb8ae65b9ce7958476d49f548943e033d0a0` on `main`. The prior durable handoff recorded `HEAD==fbe1cb8ae65b9ce7958476d49f548943e033d0a0`; no drift observed; working tree clean. No research code, result, or campaign-state drift was observed.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` returns `ok:false` (exit 1) with the same two failures: the code-hash constraint does not record the authorized code hash of record, and it records another canonical tree digest (`8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`).
 - The manifest hashes match: `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` fails because `pytest` is not installed.
