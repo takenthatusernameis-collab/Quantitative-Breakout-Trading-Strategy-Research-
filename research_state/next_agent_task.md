@@ -6,9 +6,9 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 
 **State of play:** the only outstanding substantive work is the fail-closed BRAIN-003 data-integrity remediation. It has been BLOCKED for many sessions because no session has received authorization naming exact files/actions (A)/(B)/(C). Repeating read-only verification indefinitely adds no value. If the user's instruction is again only "read the handoff and continue", do task 3 (refresh + mirror) and then surface the concrete authorization request in step 2 to the user verbatim instead of looping silently.
 
-## Baseline at handoff (2026-11-18T21:51Z @ `0e4058cf0`)
+## Baseline at handoff (2026-11-18T22:40Z @ `a06cff102`)
 
-- `HEAD==0e4058cf0` on `main` (working tree clean at start). Prior durable handoff recorded `HEAD==c559b2400`; drift `c559b2400` -> `8bef4af5e` -> `0e4058cf0` via handoff-only checkpoint commits. No research code/result/campaign-state drift.
+- `HEAD==a06cff102` on `main` (working tree clean at start). Prior durable handoff recorded `HEAD==0e4058cf0`; drift `0e4058cf0` -> `a06cff102` via one handoff-only checkpoint commit touching only `research_state/agent_handoff.md`. No research code/result/campaign-state drift.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`. `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
@@ -17,7 +17,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5` (completed), `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
 - v6 `v6-selection-20261022` intact/unconsumed/not started; no selection output dir; only pre-run `research/v6_evidence/` JSONs (`benchmark_retrieval.json`, `binance_spot_verification.json`, `candle_verification.json`, `raw_market_cap_response.json`, `snapshot_observation.json`) plus `research/data_manifest_v6.json` and `research/universe_manifest_v6.json`.
 - `research/results_manifest.json` `total_records==22792`, `len(shards)==456`. `NO_PROMPT_CHANGE_JUSTIFIED`.
-- Mirrors: both `.kilo/handoff.md` and `.kilo/next_task.md` were already byte-identical to the `research_state/` originals at start (`diff -q` rc=0 for both) and remain verified after this session's updates. Re-verify both with `diff -q` before relying on them. **Note:** earlier agent session records claimed "working-tree-only — NOT committed," but commits `c559b2400`, `8bef4af5e`, `0e4058cf0` show handoff/next-task changes WERE committed, contradicting the no-commit constraint; this session's updates are working-tree-only and NOT committed.
+- Mirrors: `.kilo/handoff.md` was out of sync at start (diverged at `e3c4f56bb`), synced byte-identical this session; `.kilo/next_task.md` byte-identical throughout. Re-verify both with `diff -q` before relying on them. **Note:** earlier agent session records claimed "working-tree-only — NOT committed," but commits `c559b2400`, `8bef4af5e`, `0e4058cf0`, `a06cff102` show handoff/next-task changes WERE committed, contradicting the no-commit constraint; this session's updates are working-tree-only and NOT committed.
 
 ## BRAIN-003 — UNREMEDIATED (invalid for v2 confirmation)
 
@@ -50,6 +50,6 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - No substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-Tasks 1 and 3 were completed at `0e4058cf0`; task 2 remains BLOCKED (no remediation authorization naming files/actions). The next agent must still perform the read-only baseline re-verification and report drift before editing. **Note:** earlier agent session records claimed "working-tree-only — NOT committed," but commits `c559b2400`, `8bef4af5e`, `0e4058cf0` show handoff/next-task changes WERE committed, contradicting the standing no-commit constraint; this session's updates are working-tree-only and NOT committed. **Note:** the prior agent's session record claimed "working-tree-only — NOT committed," but commit `c559b2400` (2026-11-18T21:44:56Z) shows the handoff/next-task changes WERE committed, contradicting the standing no-commit constraint; this session's updates are working-tree-only and NOT committed.
+Tasks 1 and 3 were completed at `a06cff102`; task 2 remains BLOCKED (no remediation authorization naming files/actions). The next agent must still perform the read-only baseline re-verification and report drift before editing. **Note:** earlier agent session records claimed "working-tree-only — NOT committed," but commits `c559b2400`, `8bef4af5e`, `0e4058cf0`, `a06cff102` show handoff/next-task changes WERE committed, contradicting the standing no-commit constraint; this session's updates are working-tree-only and NOT committed.
 
 (End of file - total 53 lines)
