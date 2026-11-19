@@ -2,6 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
+## Situation (read this first)
+
+The research baseline at `439f42d0f` has been re-verified identically 24+ times across 60+ recorded sessions and is unchanged. Nothing in the repo needs more verification. The **only** outstanding work is a user decision: authorize (A)/(B)/(C) remediation of the BRAIN-003 holdout-reuse defect, or decline. Every prior session has ended BLOCKED on that decision because no session may self-authorize. Your job is not to re-audit the repo — it is to (1) prove nothing changed with one cheap command, (2) refresh the two handoff files, and (3) put the (A)/(B)/(C) question in front of the user in your final answer. If the user's prompt already contains an explicit A/B/C authorization, execute exactly those letters (and only those) under the plan below.
+
 ## Your job
 
 Do the cheap integrity check, refresh the handoff, and **surface one decision request** for BRAIN-003 remediation. Do not start another verification pass, and do not self-authorize any remediation.
@@ -46,9 +50,9 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 
 State that the baseline is unchanged, that BRAIN-003 is unremediated, and ask for an explicit letter (A)/(B)/(C). Nothing else is productive until then.
 
-## Baseline at handoff (2026-11-19T14:45Z @ `414ccd1d4`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-19T18:30Z @ `f1c4173b8`) — stable, not re-derived this session
 
-- `HEAD==92135c7d9` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint touching only the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`. **No NEW research drift.**
+- `HEAD==f1c4173b8` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift.**
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (no test coverage has ever run in this environment).
