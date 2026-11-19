@@ -2,14 +2,14 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
-## Latest — 2026-11-19T23:44Z @ `13f68210e` (kilo; read prior durable handoff @ `fca2d7c83`; cheap drift check + mirror verify — **CLEAN**)
+## Latest — 2026-11-19T23:44Z @ `120a23058` (kilo; read prior durable handoff @ `13f68210e`; cheap drift check + mirror verify — **CLEAN**)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `fca2d7c83` -> `13f68210e` via harness checkpoint. No research code/result/campaign-state artifact edited.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `13f68210e` -> `120a23058` via harness checkpoint. No research code/result/campaign-state artifact edited.
 - **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after this session's edits.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
 
-Previous Latest @ `fca2d7c83` (2026-11-19T23:43Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `ceb0c1cd8` -> `fca2d7c83`. No research artifacts edited; no commit.
+Previous Latest @ `13f68210e` (2026-11-19T23:44Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `fca2d7c83` -> `13f68210e`. No research artifacts edited; no commit.
 
 Previous Latest @ `7bc0651f8` (2026-11-19T23:40Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `d12a9088d` -> `7bc0651f8`. No research artifacts edited; no commit.
 
