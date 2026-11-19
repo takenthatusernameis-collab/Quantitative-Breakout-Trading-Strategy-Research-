@@ -2,16 +2,16 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
-## Latest — 2026-11-19T22:41Z @ `f37290bd3` (kilo; read prior durable handoff @ `fa9a46a21`; cheap drift check + mirror verify — **CLEAN**)
+## Latest — 2026-11-19T22:41Z @ `a2548fe03` (kilo; read prior durable handoff @ `f37290bd3`; cheap drift check + mirror verify — **CLEAN**)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `fa9a46a21` -> `f37290bd3` via harness checkpoint. No research code/result/campaign-state artifact edited.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `f37290bd3` -> `a2548fe03` via harness checkpoint. No research code/result/campaign-state artifact edited.
 - **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after this session's edits.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
 
 ## Session log (folded; all CLEAN, all task 2 BLOCKED)
 
-Every session from 2026-11-19T10:27Z through 2026-11-19T22:39Z recorded the same outcome: cheap drift check CLEAN (delta confined to the four handoff files plus `workflow_run_diagnostics.jsonl`); mirrors verified with `diff -q`; task 1 COMPLETED, task 3 COMPLETED, task 2 (BRAIN-003) BLOCKED for lack of an explicit A/B/C authorization from the user; no substantive research edits and no session-authored research commits. Checkpoints (`ca45fbdc3`, `c8d28c560`, `41b76d350`, `26a3b9121`, `046e016a1`, `af614299d`, `f1c4173b8`, `cb83b109c`, `28df2c2cb`, `40cde2389`, `aa4b8f393`, `1e6c30667`, `a1417e630`, `513b14d4`, `e266bea17`, `cae723fca`, `02f6ea79a`, `70dd0bee3`, `24126ac5`, `f840b99f9`, `5e38bc608`, `456a8d00f`, `6e74d0870`, `1152ede7e`, `c2403939f`, `481c59270`, `d3b4d7b53`, `7f8e1eceb`, `4487afa9`, `fa9a46a21`) were handoff-only. Several sessions found `.kilo/handoff.md` stale (rc=1) despite a prior rc=0 claim — always run `diff -q` yourself.
+Every session from 2026-11-19T10:27Z through 2026-11-19T22:41Z recorded the same outcome: cheap drift check CLEAN (delta confined to the four handoff files plus `workflow_run_diagnostics.jsonl`); mirrors verified with `diff -q`; task 1 COMPLETED, task 3 COMPLETED, task 2 (BRAIN-003) BLOCKED for lack of an explicit A/B/C authorization from the user; no substantive research edits and no session-authored research commits. Checkpoints (`ca45fbdc3`, `c8d28c560`, `41b76d350`, `26a3b9121`, `046e016a1`, `af614299d`, `f1c4173b8`, `cb83b109c`, `28df2c2cb`, `40cde2389`, `aa4b8f393`, `1e6c30667`, `a1417e630`, `513b14d4`, `e266bea17`, `cae723fca`, `02f6ea79a`, `70dd0bee3`, `24126ac5`, `f840b99f9`, `5e38bc608`, `456a8d00f`, `6e74d0870`, `1152ede7e`, `c2403939f`, `481c59270`, `d3b4d7b53`, `7f8e1eceb`, `4487afa9`, `fa9a46a21`, `f37290bd3`) were handoff-only. Several sessions found `.kilo/handoff.md` stale (rc=1) despite a prior rc=0 claim — always run `diff -q` yourself.
 
 ## Remediation plan (NOT executed; requires explicit authorization)
 
