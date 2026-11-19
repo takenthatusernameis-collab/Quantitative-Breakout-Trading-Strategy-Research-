@@ -4,7 +4,7 @@ Read `research_state/agent_handoff.md` first (its `.kilo/handoff.md` twin must s
 
 ## Stop the verification loop — your job is a decision handoff, not a 25th re-run
 
-The baseline below has now been reproduced **identically 22 consecutive times** (latest `1584582d3`, 2026-11-19T01:22Z; cheap re-confirm only) with zero research drift. Re-running the full suite again produces no new information. Therefore:
+The baseline below has now been reproduced **identically 22 consecutive times** (latest `9a586a1c8`, 2026-11-19T01:58Z; cheap re-confirm only) with zero research drift. Re-running the full suite again produces no new information. Therefore:
 
 1. **Cheap drift check only (do this first, it takes one command block):**
    - `git log --oneline -3`, `git rev-parse HEAD`, `git status --porcelain`;
@@ -16,9 +16,9 @@ The baseline below has now been reproduced **identically 22 consecutive times** 
 4. **Surface the authorization decision as your final answer** (block at the bottom). Do **not** edit research artifacts, do not consume `v6-selection-20261022`, do not touch holdout data, do not commit.
 5. Update `research_state/agent_handoff.md` + this file and mirror both pairs byte-for-byte, then verify with `diff -q`.
 
-## Baseline at handoff (2026-11-19T01:58Z @ `9a586a1c8`) — 22x stable
+## Baseline at handoff (2026-11-19T02:00Z @ `c809093f7`) — 22x stable
 
-- `HEAD==9a586a1c8` on `main`, working tree clean. Prior handoff recorded `HEAD==1584582d3`; drift `1584582d3` -> `9a586a1c8` is two commits: (1) `28e41f231` handoff-only checkpoint touching the four handoff files; (2) `9a586a1c8` workflow-error-capture adding `research_state/workflow_run_diagnostics.jsonl` (1 line, 30 entries of workflow run diagnostics). **This is a real finding: a file outside the four handoff files changed.** Note that checkpoint touched both the handoff pair and the next_task pair — re-sync both pairs every session.
+- `HEAD==c809093f7` on `main`, working tree clean. Prior handoff recorded `HEAD==9a586a1c8`; drift `9a586a1c8` -> `c809093f7` is one commit: `c809093f7` handoff-only checkpoint touching the four handoff files. **Clean delta: only the four handoff files changed.** Note that checkpoint touched both the handoff pair and the next_task pair — re-sync both pairs every session.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also: `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable; no test coverage has ever run in this environment).
@@ -51,4 +51,4 @@ Any step that would re-expose holdout data or create/consume a confirmatory wind
 - Both `.kilo` mirrors must stay byte-identical to their `research_state/` originals.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-Tasks 1 and 3 were completed at `9a586a1c8`; task 2 remains BLOCKED. Nothing further is productive until the user answers (A)/(B)/(C).
+Tasks 1 and 3 were completed at `c809093f7`; task 2 remains BLOCKED. Nothing further is productive until the user answers (A)/(B)/(C).
