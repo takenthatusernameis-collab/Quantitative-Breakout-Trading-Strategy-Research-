@@ -2,12 +2,12 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
-## Latest — 2026-11-19T21:39Z @ `456a8d00f` (kilo; read prior durable handoff @ `5e38bc608`; cheap drift check + mirror verify — **CLEAN**)
+## Latest — 2026-11-19T21:38Z @ `6e74d0870` (kilo; read prior durable handoff @ `456a8d00f`; cheap drift check + mirror verify — **CLEAN**)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `research_state/workflow_run_diagnostics.jsonl` (+2 lines, pre-acknowledged); `git status --porcelain` empty at session start. HEAD advanced `5e38bc608` -> `456a8d00f` via harness checkpoint commit touching only the four handoff files. No research code/result/campaign-state artifact edited.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at session start. HEAD advanced `456a8d00f` -> `6e74d0870` via harness checkpoint. No research code/result/campaign-state artifact edited.
 - **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after this session's edits.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (user prompt contained no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session (HEAD advance is harness checkpoint only).
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
+- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
 
 ## Session log (folded; all CLEAN, all task 2 BLOCKED)
 
