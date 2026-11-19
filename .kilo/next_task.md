@@ -16,9 +16,9 @@ The baseline below has now been reproduced **identically 22 consecutive times** 
 4. **Surface the authorization decision as your final answer** (block at the bottom). Do **not** edit research artifacts, do not consume `v6-selection-20261022`, do not touch holdout data, do not commit.
 5. Update `research_state/agent_handoff.md` + this file and mirror both pairs byte-for-byte, then verify with `diff -q`.
 
-## Baseline at handoff (2026-11-19T02:03Z @ `5ad686c47`) — 22x stable
+## Baseline at handoff (2026-11-19T02:10Z @ `439f42d0f`) — 22x stable
 
-- `HEAD==5ad686c47` on `main`, working tree clean. Prior handoff recorded `HEAD==c809093f7`; drift `c809093f7` -> `5ad686c47` is one commit: `5ad686c47` handoff-only checkpoint touching the four handoff files. **Clean delta: only the four handoff files changed.** Note that checkpoint touched both the handoff pair and the next_task pair — re-sync both pairs every session.
+- `HEAD==439f42d0f` on `main`, working tree clean. Prior handoff recorded `HEAD==5ad686c47`; drift `5ad686c47` -> `439f42d0f` is one commit: `439f42d0f` handoff-only checkpoint touching the four handoff files. **Clean delta: only the four handoff files changed.** Note that checkpoint touched both the handoff pair and the next_task pair — re-sync both pairs every session.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also: `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable; no test coverage has ever run in this environment).
