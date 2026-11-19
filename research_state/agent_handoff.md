@@ -2,6 +2,16 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff`).
 
+## Latest — 2026-11-19T10:42Z @ `c9fbfe87a` (kilo; read prior durable handoff @`e25317c3e`; mirrors verified rc=0; cheap drift check + mirror verify only — **CLEAN**)
+
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists ONLY the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at start. No research artifact edited this session.
+- **Mirror sync:** both mirror pairs rc=0 at start; re-verified after edits.
+- **Prior agent task (from prior durable handoff @ `e25317c3e`):** (1) cheap drift verification — **COMPLETED** (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter from user; fail-closed). (3) handoff/next-task refresh + mirror sync — **COMPLETED** here.
+- **Git:** `HEAD==c9fbfe87a` on `main`, working tree clean at start. Baseline research HEAD `439f42d0f`; drift is handoff-only checkpoint commits plus the pre-acknowledged `workflow_run_diagnostics.jsonl`. **Clean delta: no NEW research drift.**
+- **No remediation authorization received:** no A/B/C letter from the user, so task 2 stays **BLOCKED** by the handoff's explicit rule. No commit made by this session.
+- **Baseline (unchanged, not re-run per cheap-check rule):** same as prior entry.
+- **BRAIN-003 (read-only, UNREMEDIATED):** unchanged.
+
 ## Latest — 2026-11-19T10:41Z @ `e25317c3e` (kilo; read prior durable handoff @`70621372b`; mirrors verified rc=0; cheap drift check + mirror verify only — **CLEAN**)
 
 - **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists ONLY the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` (real drift from session `9a586a1c8`, already committed); `git status --porcelain` empty at start. No research artifact edited this session.
