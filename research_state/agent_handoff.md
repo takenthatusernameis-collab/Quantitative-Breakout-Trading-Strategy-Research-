@@ -2,6 +2,14 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff`).
 
+## Latest — 2026-11-19T13:37Z @ `d398120a5` (kilo; read prior durable handoff @ `d061fe90b`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
+
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists ONLY the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research artifact edited this session.
+- **Mirror sync:** both mirror pairs rc=0 at start; re-verified after edits — both pairs rc=0.
+- **Prior agent task (from prior durable handoff @ `d061fe90b`):** (1) cheap drift verification — **COMPLETED** (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter from user; fail-closed). (3) handoff/next-task refresh + mirror sync — **COMPLETED** here.
+- **Git:** `HEAD==d398120a5` on `main` (working tree clean at start). Baseline research HEAD `439f42d0f`. `d398120a5` is a harness checkpoint child of `d061fe90b` (handoff-only). **Clean delta: no NEW research drift.**
+- **No remediation authorization received:** no A/B/C letter from the user, so task 2 stays **BLOCKED**. No commit made by this session.
+
 ## Latest — 2026-11-19T13:35Z @ `d061fe90b` (kilo; read prior durable handoff @ `77e24caad`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
 
 - **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists ONLY the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research artifact edited this session.
@@ -237,11 +245,11 @@ Any reply that does not name A/B/C leaves task 2 BLOCKED and research artifacts 
 
 ## Initial task message for the next agent
 
-See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` synced). The baseline is stable through `d061fe90b`, so the next agent should run only the **cheap** drift check (`git rev-parse HEAD`/`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files, plus `diff -q` on both mirror pairs — and re-sync `research_state/` -> `.kilo/` first if either pair is rc=1) and then stop and surface the (A)/(B)/(C) authorization decision — no further full verification pass. BRAIN-003 remediation is fail-closed and remains BLOCKED without explicit authorization naming exact files/actions; update handoff/next-task and mirror+diff after work; do not consume v6, do not expose holdout/confirmatory data, do not commit unless requested. `NO_PROMPT_CHANGE_JUSTIFIED`.
+See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` synced). The baseline is stable through `d398120a5`, so the next agent should run only the **cheap** drift check (`git rev-parse HEAD`/`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files, plus `diff -q` on both mirror pairs — and re-sync `research_state/` -> `.kilo/` first if either pair is rc=1) and then stop and surface the (A)/(B)/(C) authorization decision — no further full verification pass. BRAIN-003 remediation is fail-closed and remains BLOCKED without explicit authorization naming exact files/actions; update handoff/next-task and mirror+diff after work; do not consume v6, do not expose holdout/confirmatory data, do not commit unless requested. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## Baseline to verify
 
-- `HEAD==d061fe90b` on `main` (working tree clean at start except this session's own handoff edits). Prior durable handoff recorded `HEAD==77e24caad`; drift is handoff-only checkpoint commits touching only the four handoff files plus the pre-acknowledged `workflow_run_diagnostics.jsonl`. **Clean delta vs baseline `439f42d0f`: no NEW research drift.**
+- `HEAD==d398120a5` on `main` (working tree clean at start except this session's own handoff edits). Prior durable handoff recorded `HEAD==d061fe90b`; drift is handoff-only checkpoint commits touching only the four handoff files plus the pre-acknowledged `workflow_run_diagnostics.jsonl`. **Clean delta vs baseline `439f42d0f`: no NEW research drift.**
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (recomputed canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`). `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
