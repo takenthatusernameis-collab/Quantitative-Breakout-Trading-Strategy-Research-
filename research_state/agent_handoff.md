@@ -2,72 +2,16 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
-## Latest — 2026-11-19T19:32Z @ `ca45fbdc3` (kilo; read prior durable handoff @ `c8d28c560`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
+## Latest — 2026-11-19T19:34Z @ `24257c10f` (kilo; read prior durable handoff @ `ca45fbdc3`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at session start. No research code/result/campaign-state artifact edited.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at session start. HEAD advanced `ca45fbdc3` -> `24257c10f` via a harness checkpoint commit (handoff files only). No research code/result/campaign-state artifact edited.
 - **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after edits.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — BLOCKED (no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED. No commit made.
-
-## Latest — 2026-11-19T19:31Z @ `c8d28c560` (kilo; read prior durable handoff @ `41b76d350`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at session start. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after edits.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — BLOCKED (no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED. No commit made.
-
-## Latest — 2026-11-19T18:41Z @ `41b76d350` (kilo; read prior durable handoff @ `26a3b9121`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after edits.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — BLOCKED (no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED. No commit made.
-
-## Latest — 2026-11-19T18:37Z @ `26a3b9121` (kilo; read prior durable handoff @ `046e016a1`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after edits.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — BLOCKED (no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED. No commit made.
-
-## Latest — 2026-11-19T18:36Z @ `046e016a1` (kilo; read prior durable handoff @ `af614299d`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after edits.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — BLOCKED (no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED. No commit made.
-
-## Latest — 2026-11-19T18:35Z @ `af614299d` (kilo; read prior durable handoff @ `f1c4173b8`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after edits.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — BLOCKED (no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED. No commit made.
-
-## Latest — 2026-11-19T18:35Z @ `f1c4173b8` (kilo; read prior durable handoff @ `f1c4173b8`; mirrors rc=1 at start -> re-synced; cheap drift check + mirror verify only — **CLEAN**)
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` confined to four handoff files plus pre-acknowledged `workflow_run_diagnostics.jsonl`; `git status --porcelain` showed only the two handoff files modified. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** both pairs rc=1 at start (prior sync claim false); re-synced `research_state/` -> `.kilo/`, re-verified rc=0.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — BLOCKED (no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED. No commit made.
-
-## Latest — 2026-11-19T18:30Z @ `f1c4173b8` (kilo; read prior durable handoff @ `414ccd1d4`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists ONLY the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` from session `9a586a1c8`; `git status --porcelain` empty at session start. No research code/result/campaign-state artifact edited.
-- **Delta since `414ccd1d4`:** `07b67f9bc` (harness checkpoint, handoff files only) and `f1c4173b8` (adds exactly 1 line to `research_state/workflow_run_diagnostics.jsonl` — the pre-acknowledged diagnostics channel). Both non-substantive.
-- **Mirror sync:** both mirror pairs `diff -q` rc=0 at start; re-verified rc=0 after this session's edits.
-- **Prior agent task (from prior durable handoff @ `414ccd1d4`):** (1) cheap drift verification — **COMPLETED** (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter from the user; fail-closed; research artifacts untouched). (3) handoff/next-task refresh + mirror sync — **COMPLETED** here.
-- **Environment note:** stale pid files `run_cohort0_resume.pid` (38373) and `complete_cohort0.pid` (51025) exist but both processes are dead; no live campaign writer. Working tree clean, so no state mutation — no action needed.
-- **No remediation authorization received:** no A/B/C letter from the user, so task 2 stays **BLOCKED**. No commit made by this session (commit only on explicit request). Prior `414ccd1d4`/`92135c7d9` entries folded into the compacted history below.
+- **No remediation authorization received:** task 2 stays BLOCKED. No commit made (HEAD advance is harness checkpoint only).
 
 ## Recent session log (folded; all CLEAN, all task 2 BLOCKED)
 
-Every session from 2026-11-19T10:27Z through 2026-11-19T18:30Z (`83b7a491`, `5979d12af`, `e7792153`, `212e53244`, `70621372b`, `b65b20436`, `1c8cc6008`/`c9fbfe87a`/`e25317c3e`, `f1068ed33` ×2, `64d8341cb`, `8bf7e493f`, `e6a9c6872`, `41c8b48c6`, `40557b072`, `2ede80b92`, `26681af82`, `bcd769bd6`, `dd4a62c26`, `9cd10febe`, `20a51c067`, `1b2ffb4ff`, `c889da75d`, `8a9e8b6f1`, `77e24caad`, `d061fe90b`, `d398120a5`, `dcb2bbefb`, `f2ef6fee2`, `bbc2353dd`, `9b6490d4f`, `2d90a761e`, `261d63cbc`, `414ccd1d4`, `92135c7d9`, `f1c4173b8`) recorded the same outcome:
-
-- cheap drift check CLEAN — `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus the pre-acknowledged `workflow_run_diagnostics.jsonl`;
-- mirrors verified with `diff -q`; **several sessions found `.kilo/handoff.md` stale (rc=1) despite the prior session claiming rc=0** (`1b2ffb4ff`, `e6a9c6872`, `8bf7e493f`, `83b7a491`) — always re-check yourself;
-- task 1 COMPLETED, task 3 COMPLETED, task 2 (BRAIN-003) **BLOCKED** for lack of an explicit A/B/C authorization from the user;
-- no substantive research edits and no session-authored commits (`89b4e9c58`, `261d63cbc`, `2d90a761e`, `e562806f`, `9b6490d4f`, … were harness checkpoint commits).
+Every session from 2026-11-19T10:27Z through 2026-11-19T19:32Z recorded the same outcome: cheap drift check CLEAN (delta confined to the four handoff files plus `workflow_run_diagnostics.jsonl`); mirrors verified with `diff -q`; task 1 COMPLETED, task 3 COMPLETED, task 2 (BRAIN-003) BLOCKED for lack of an explicit A/B/C authorization from the user; no substantive research edits and no session-authored research commits (prior `ca45fbdc3`, `c8d28c560`, `41b76d350`, `26a3b9121`, `046e016a1`, `af614299d`, `f1c4173b8` were handoff-only checkpoint commits). Several sessions previously found `.kilo/handoff.md` stale (rc=1) despite a prior rc=0 claim — always run `diff -q` yourself.
 
 ## Remediation plan (NOT executed; requires explicit authorization)
 
@@ -94,7 +38,7 @@ See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byt
 
 ## Baseline to verify
 
-- `HEAD==ca45fbdc3` on `main` (working tree clean at start except this session's handoff edits). Prior durable handoff recorded `HEAD==c8d28c560`; drift is handoff-only checkpoint commits plus one diagnostics line touching only the four handoff files and `workflow_run_diagnostics.jsonl`. **Clean delta vs baseline `439f42d0f`: no NEW research drift.**
+- `HEAD==24257c10f` on `main` (working tree clean at start except this session's handoff edits). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **Clean delta vs baseline `439f42d0f`: no NEW research drift.**
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (recomputed canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`). `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
@@ -121,9 +65,7 @@ See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byt
 
 ## Session history (compacted; superseded by "Latest" above)
 
-All sessions below performed only read-only baseline re-verification with **identical results** (v6 verifier `ok:false` exit 1, same 2 code-hash failures, recomputed `8cd17522...`, `manifest_hash==recomputed==92872727...` MATCH, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, pytest unavailable, `check_progress` 497664/497664 completed 6 next 6, binding `IMPLEMENTATION_BOUND_NOT_RUN`, v5 complete, v6 unconsumed, manifest `total_records` 22792 / 456 shards, BRAIN-003 shard 42/42 holdout with 13 config_ids, `checkpoint.json` 22750 vs 22792 delta 42, `candidate_manifest_v2` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates) and reported **no research code/result/campaign-state drift**. In every session task 1 COMPLETED, task 3 COMPLETED, and task 2 (BRAIN-003 remediation) remained **BLOCKED** for lack of explicit user authorization naming files/actions (A)/(B)/(C).
-
-Recorded HEADs, oldest to newest: `1dd35081a`, `bf7ebc3cd`, `902daab6a`, `55ed16847`, `0e837c614`, `06c6153d5` (2026-11-18T19:45-20:49Z); `07ed1a56f`, `15cd9c54b`, `c559b2400`, `8bef4af5e`, `0e4058cf0` (21:40-21:51Z); `a06cff102` (22:40Z); `66abdf11a` (22:47Z); `c5f5b5ee3` (22:44Z), `5fbf3adf4` (22:46Z), `1cfdd2c06` (22:52Z); `e4116921a` (23:40Z); `83d0f4cf1` (23:50Z); `224120f0c` (23:51Z); `07f928029` (23:52Z); `f5e2ea35f` (23:54Z); `84af45e62` (00:43Z); `6afca37ce` (00:44Z); `11b454601` (01:13Z); `377305aff` (01:18Z); `1584582d3` (01:22Z); `28e41f231` (01:24Z, handoff-only checkpoint); `9a586a1c8` (01:55Z, workflow-error-capture adding `research_state/workflow_run_diagnostics.jsonl` — **the only real research-adjacent drift, pre-acknowledged**); `c809093f7` (02:00Z); `5ad686c47` (02:03Z); `439f42d0f` (02:06Z, **baseline research HEAD**); `d7c140c77` (02:15Z); `9f79e4385` (02:51Z); `d9c14f0df` (02:58Z); `19669eb15` (03:01Z); `f32406591` (03:03Z); `d92757d81` (03:06Z); `7421d7b00` (03:09Z); `007d60475` (03:10Z); `31fba53c2` (03:12Z); `62e05de4b` (03:15Z); `ee682028e` (03:18Z); `9d131bbaa` (04:14Z); `2661f414e` (04:17Z); `66334bbc4`; `b03f2530d` (05:02Z); `deed1c7e3` (05:06Z); `409f812c4` (05:11Z); `dc7bc46c6` (06:00Z); `00069e92d` (07:13Z); `1895529344e` (07:16Z); `1b2f2412e` (09:31Z); `420a24460` (09:33Z); `7a8093448` (09:35Z); `83b7a491` (10:27Z); `5979d12af` (10:30Z); `e7792153` (10:33Z); `212e53244` (10:35Z); `70621372b` (10:38Z); `b65b20436` (10:44Z); `1c8cc6008`/`c9fbfe87a`/`e25317c3e` (10:41-11:27Z); `f1068ed33` (11:28-11:33Z); `64d8341cb` (11:35Z); `8bf7e493f` (11:36Z); `e6a9c6872` (11:39Z); `41c8b48c6` (11:40Z); `40557b072` (11:42Z); `2ede80b92` (12:30Z); `26681af82` (12:32Z); `bcd769bd6` (12:33Z); `dd4a62c26` (12:34Z); `9cd10febe` (12:35Z); `20a51c067` (12:40Z); `1b2ffb4ff` (13:28Z); `c889da75d` (13:32Z); `8a9e8b6f1` (13:33Z); `77e24caad` (13:33Z); `d061fe90b` (13:35Z); `d398120a5` (13:37Z); `dcb2bbefb` (13:39Z); `f2ef6fee2` (13:41Z); `bbc2353dd` (13:42Z)... (line truncated to 2000 chars)
+All sessions performed only read-only baseline re-verification with **identical results** (v6 verifier `ok:false` exit 1, same 2 code-hash failures, recomputed `8cd17522...`, `manifest_hash==recomputed==92872727...` MATCH, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, pytest unavailable, `check_progress` 497664/497664 completed 6 next 6, binding `IMPLEMENTATION_BOUND_NOT_RUN`, v5 complete, v6 unconsumed, manifest `total_records` 22792 / 456 shards, BRAIN-003 shard 42/42 holdout with 13 config_ids, `checkpoint.json` 22750 vs 22792 delta 42, `candidate_manifest_v2` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates) and reported **no research code/result/campaign-state drift**. In every session task 1 COMPLETED, task 3 COMPLETED, and task 2 (BRAIN-003 remediation) remained **BLOCKED** for lack of explicit user authorization naming files/actions (A)/(B)/(C).
 
 **Constraint note (important):** several earlier session records claimed their handoff/next-task edits were "working-tree-only — NOT committed," but commits `c559b2400`, `8bef4af5e`, `0e4058cf0`, `a06cff102`, `66abdf11a`, `83d0f4cf1` show those edits WERE committed by the session harness/checkpoint step, contradicting the standing no-commit constraint. Treat "NOT committed" claims in this file as unreliable and check `git log` instead. Likewise treat "mirrors verified" claims as unreliable — several sessions found `.kilo/handoff.md` stale while the prior session claimed rc=0. Always run `diff -q` yourself.
 
