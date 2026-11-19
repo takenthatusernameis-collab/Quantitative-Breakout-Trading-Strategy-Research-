@@ -4,7 +4,11 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-Prove nothing changed with one cheap drift check, refresh the two handoff files, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop.
+Prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop.
+
+## Do not repeat read-only verification
+
+The full baseline (v6 verifier, `check_progress.sh`, BRAIN-003 spot checks) has been reproduced identically 25+ times. Re-running it adds nothing. Only a **dirty** drift delta (any path outside the allowed list) justifies re-running it.
 
 ## Situation (read this first)
 
@@ -48,11 +52,11 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 
 ## Step 3 — your final answer is the decision request
 
-State that the baseline is unchanged, that BRAIN-003 is unremediated, and ask for an explicit letter (A)/(B)/(C). Nothing else is productive until then.
+State that the baseline is unchanged, that BRAIN-003 is unremediated, and ask for an explicit letter (A)/(B)/(C). Nothing else is productive until then. Do not self-authorize; do not edit `research_state/checkpoint.json`, `research/candidate_manifest_v2.json`, any results shard, or any protocol/binding/authorization artifact.
 
-## Baseline at handoff (2026-11-19T21:39Z @ `456a8d00f`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-19T21:41Z @ `1152ede7e`) — stable, not re-derived this session
 
-- `HEAD==6e74d0870` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line (+2 lines total). **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
+- `HEAD==1152ede7e` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line (+2 lines total). **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (no test coverage has ever run in this environment).
