@@ -19,7 +19,7 @@ diff -q research_state/agent_handoff.md .kilo/handoff.md
 diff -q research_state/next_agent_task.md .kilo/next_task.md
 ```
 
-If `git diff --name-only 439f42d0f..HEAD` lists **only** `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`, then research code/results/campaign state are byte-identical to the verified baseline and no drift is possible — stop verifying.
+If `git diff --name-only 439f42d0f..HEAD` lists **only** `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` (plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` real drift), then research code/results/campaign state are byte-identical to the verified baseline and no drift is possible — stop verifying.
 
 If **any other path** appears, that is real drift: report it immediately (it outranks everything below) and re-run the full baseline only then.
 
@@ -33,9 +33,9 @@ Update `research_state/agent_handoff.md` (new "Latest" entry; fold the previous 
 
 State the baseline is unchanged, BRAIN-003 is still unremediated, and ask for an explicit letter. Nothing else is productive until then.
 
-## Baseline at handoff (2026-11-19T07:13Z @ `00069e92d`) — stable
+## Baseline at handoff (2026-11-19T09:25Z @ `0940c8453`) — stable
 
-- `HEAD==00069e92d` on `main`, working tree clean. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint touching only the four handoff files. **No research drift.**
+- `HEAD==0940c8453` on `main`, working tree clean. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint touching only the four handoff files plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` real drift. **No NEW research drift.**
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (no test coverage has ever run in this environment).
