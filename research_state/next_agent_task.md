@@ -1,24 +1,32 @@
 # Initial task message for the next agent
 
-You are the next agent in the chain. Read `research_state/agent_handoff.md` first (its `.kilo/handoff.md` twin must stay byte-identical).
+Read `research_state/agent_handoff.md` first (its `.kilo/handoff.md` twin must stay byte-identical).
 
-**Read this first — the loop is stalled.** Twenty consecutive sessions have performed only the read-only baseline re-verification, found zero research drift, refreshed the handoff/next-task, and left BRAIN-003 remediation **BLOCKED** because no session received user authorization naming exact files/actions. Do **not** add a twenty-first silent pass. Unless the user's message explicitly authorizes remediation (step 2), do task 1 and task 3 quickly and then **stop and put the "Authorization required" block below to the user as your final answer.** A concrete approve-by-name plan is provided so the user can unblock in one reply.
+## Stop the verification loop — your job is a decision handoff, not a 23rd re-run
 
-**First action:** perform the read-only baseline re-verification in step 1 and report drift before editing any file. Do not treat this message as remediation authorization. Do not consume `v6-selection-20261022`, expose holdout/confirmatory data, amend frozen artifacts, or commit unless the user explicitly authorizes it.
+The baseline below has now been reproduced **identically 22 consecutive times** (latest `11b454601`, 2026-11-19T01:14Z) with zero research drift. Re-running the full suite again produces no new information. Therefore:
 
-## Baseline at handoff (2026-11-18T23:54Z @ `f5e2ea35f`)
+1. **Cheap drift check only (do this first, it takes one command block):**
+   - `git log --oneline -3`, `git rev-parse HEAD`, `git status --porcelain`;
+   - `git diff --name-only <recorded HEAD>..HEAD` — must be only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` (a handoff checkpoint may touch only the handoff pair);
+   - `diff -q research_state/agent_handoff.md .kilo/handoff.md` and `diff -q research_state/next_agent_task.md .kilo/next_task.md` (both must exit 0).
+   If any path outside those four changed, **stop and report drift immediately** — that is a real finding and outranks everything below.
+2. **Only if the delta is clean or absent**, do **not** re-run `verify_v6_execution.py`, `check_progress.sh`, or the BRAIN-003 spot checks again. Go to step 4.
+3. Re-run the full baseline only if the cheap check shows a non-handoff change or the handoff's recorded HEAD is missing from `git log`.
+4. **Surface the authorization decision as your final answer** (block at the bottom). Do **not** edit research artifacts, do not consume `v6-selection-20261022`, do not touch holdout data, do not commit.
+5. Update `research_state/agent_handoff.md` + this file and mirror both pairs byte-for-byte, then verify with `diff -q`.
 
-- `HEAD==f5e2ea35f` on `main`. Prior handoff recorded `HEAD==07f928029`; drift `07f928029` -> `f5e2ea35f` via one handoff-only checkpoint commit touching only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`. No research code/result/campaign-state drift.
-- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: code-hash constraint does not record the authorized code hash of record; records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`. `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`.
+## Baseline at handoff (2026-11-19T01:14Z @ `11b454601`) — 22x stable
+
+- `HEAD==11b454601` on `main`, working tree clean. Prior handoff recorded `HEAD==6afca37ce`; drift = one handoff-only checkpoint commit touching only `.kilo/handoff.md` and `research_state/agent_handoff.md` (16 +/-). Note that checkpoint did **not** touch the next_task pair — re-sync both pairs every session.
+- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records another canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also: `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
-- `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
-- `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6 (`0f52f6c9d8fd2ab5b6cd2f232226ae71045e5a0d95e6a1b9cd4525a55e10b05d`, `be4223dcef25aaa0043a466fcd9044b4e6a7387eff7efd487561b9c1f873c1ae`, `v2-selection-20261019`, `v3-selection-20261020`, `v4-selection-20261021`, `v5-selection-20261021`), `next: 6`.
+- `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable; no test coverage has ever run in this environment).
+- `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6 (`0f52f6c9…`, `be4223dc…`, `v2-selection-20261019`, `v3-selection-20261020`, `v4-selection-20261021`, `v5-selection-20261021`), `next: 6`.
 - `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; v6 may not start before `2027-01-20T02:00:00Z`.
-- v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5` with `completed==true`, `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
-- v6 `v6-selection-20261022` intact/unconsumed/not started; no selection output dir; only pre-run `research/v6_evidence/` JSONs (`benchmark_retrieval.json`, `binance_spot_verification.json`, `candle_verification.json`, `raw_market_cap_response.json`, `snapshot_observation.json`) plus `research/data_manifest_v6.json` and `research/universe_manifest_v6.json`.
+- v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
+- v6 `v6-selection-20261022` intact/unconsumed/not started; no selection output dir; only pre-run `research/v6_evidence/` JSONs (`benchmark_retrieval.json`, `binance_spot_verification.json`, `candle_verification.json`, `raw_market_cap_response.json`, `snapshot_observation.json`) plus `research/data_manifest_v6.json`, `research/universe_manifest_v6.json`.
 - `research/results_manifest.json` `total_records==22792`, `len(shards)==456`. `NO_PROMPT_CHANGE_JUSTIFIED`.
-- Mirrors: both `.kilo/` mirrors were byte-identical to the `research_state/` originals at handoff time. Re-verify with `diff -q` before relying on them.
-- **Commit caveat:** earlier records claimed handoff edits were "working-tree-only — NOT committed," yet commits `c559b2400`, `8bef4af5e`, `0e4058cf0`, `a06cff102`, `66abdf11a`, `83d0f4cf1` prove those edits were committed by the checkpoint step. Treat such claims as unreliable and check `git log`.
 
 ## BRAIN-003 — UNREMEDIATED (invalid for v2 confirmation)
 
@@ -26,22 +34,13 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - `research_state/checkpoint.json` `completed_records==22750` vs `research/results_manifest.json` `total_records==22792` (delta 42), unreconciled; `holdout_exposed_count==0`.
 - `research/candidate_manifest_v2.json` frozen `frozen==true`, `candidate_status==ALL_REJECTED_ON_HOLDOUT` (14 candidates) — untrusted for v2 confirmation until BRAIN-003 resolved.
 
-## Your task
+## Authorization required (concrete plan; the user approves by letter — no session may self-authorize)
 
-1. Re-run the read-only baseline checks above and report drift (expected: none beyond handoff-only checkpoint commits). Do not edit files before that report.
-2. Execute remediation only if the user explicitly authorizes exact files/actions. Permitted only:
-   - (a) quarantine/annotate shard + update manifest inventory;
-   - (b) reconcile checkpoint without fabricating exposure;
-   - (c) add a superseding disposition artifact (prefer over amending frozen `research/candidate_manifest_v2.json`);
-   - (d) explicitly authorized code/test fix.
-   Stop/refuse if a step would re-expose holdout or create/consume a confirmatory window. If authorization is absent, restate the "Authorization required" block below to the user and do not modify research artifacts.
-3. Update `research_state/agent_handoff.md` and this file, mirror byte-for-byte to `.kilo/handoff.md` and `.kilo/next_task.md`, and verify each pair with `diff`. Do not commit unless explicitly requested.
+- **(A) Quarantine.** Move `research/results_shards/e3d5e5f…/shard_000455.jsonl` to `research/results_shards_quarantine/e3d5e5f…/shard_000455.jsonl`; mark that shard entry quarantined in `research/results_manifest.json`; reduce `total_records` 22792 -> 22750; leave `research_state/checkpoint.json` `completed_records==22750` so manifest and checkpoint reconcile with **no** invented exposure (`holdout_exposed_count` stays `0`).
+- **(B) Disposition.** Add a NEW `reports/holdout_disposition_v3.md` superseding `reports/holdout_disposition_v2.md`: v2 has no valid confirmatory claim (shard `shard_000455` reused the consumed v1 window); `research/candidate_manifest_v2.json` stays frozen/untouched, annotated untrusted. Recommended over amending the frozen manifest.
+- **(C) Code/tests (optional).** Provision `pytest`; fix the two `scripts/verify_v6_execution.py` code-hash failures by recording the authorized code hash of record and canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e` in `configs/research_v6_execution.json` (plus any tests the user names).
 
-## Authorization required (concrete plan; approve by letter)
-
-- **(A) Quarantine.** Move `research/results_shards/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl` to `research/results_shards_quarantine/e3d5e5f.../shard_000455.jsonl`; mark that shard entry quarantined in `research/results_manifest.json` and reduce `total_records` 22792 -> 22750; leave `research_state/checkpoint.json` at `completed_records==22750` so manifest and checkpoint reconcile with no invented exposure (`holdout_exposed_count` stays `0`).
-- **(B) Disposition.** Add a NEW `reports/holdout_disposition_v3.md` (superseding `holdout_disposition_v2.md`) stating v2 has no valid confirmatory claim (shard `shard_000455` reused the consumed v1 window) and that `research/candidate_manifest_v2.json` stays frozen/untouched, annotated as untrusted. Recommended over amending the frozen manifest.
-- **(C) Code/tests (optional).** Provision `pytest`; fix the two `scripts/verify_v6_execution.py` code-hash failures by recording the authorized code hash of record and the canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e` in `configs/research_v6_execution.json` (and any tests named by the user).
+Any step that would re-expose holdout data or create/consume a confirmatory window is forbidden — stop instead.
 
 ## Hard constraints
 
@@ -49,8 +48,7 @@ You are the next agent in the chain. Read `research_state/agent_handoff.md` firs
 - No holdout/confirmatory exposure before `2027-01-20T02:00:00Z`.
 - No valid v2 confirmation claim from consumed-window rows.
 - No substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
+- Both `.kilo` mirrors must stay byte-identical to their `research_state/` originals.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-Tasks 1 and 3 were completed at `f5e2ea35f`; task 2 remains BLOCKED (no remediation authorization naming files/actions). The next agent must still perform one read-only baseline re-verification and report drift before editing, but should not repeat further passes without authorization.
-
-(End of file - total 54 lines)
+Tasks 1 and 3 were completed at `11b454601`; task 2 remains BLOCKED. Nothing further is productive until the user answers (A)/(B)/(C).
