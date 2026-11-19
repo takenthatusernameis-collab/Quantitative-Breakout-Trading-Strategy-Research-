@@ -2,6 +2,20 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
+## Latest — 2026-11-19T20:44Z @ `f840b99f9` (kilo; read prior durable handoff @ `24126ac5`; cheap drift check + mirror verify — **CLEAN**)
+
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at session start. HEAD advanced `24126ac5` -> `f840b99f9` via harness checkpoint commit (handoff files only). No research code/result/campaign-state artifact edited.
+- **Mirror sync:** `.kilo/handoff.md` was stale (rc=1) at start — re-synced from `research_state/agent_handoff.md` (rc=0 after); `.kilo/next_task.md` was rc=0 at start and remains rc=0.
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (user prompt contained no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
+- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session (HEAD advance is harness checkpoint only).
+
+## Latest — 2026-11-19T20:43Z @ `24126ac5` (kilo; read prior durable handoff @ `70dd0bee3`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
+
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at session start. HEAD advanced `70dd0bee3` -> `24126ac5` via harness checkpoint commit (handoff files only). No research code/result/campaign-state artifact edited.
+- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after edits.
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (user prompt contained no A/B/C letter). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
+- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session (HEAD advance is harness checkpoint only).
+
 ## Latest — 2026-11-19T20:42Z @ `70dd0bee3` (kilo; read prior durable handoff @ `02f6ea79a`; mirrors rc=0 at start; cheap drift check + mirror verify only — **CLEAN**)
 
 - **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at session start. HEAD advanced `02f6ea79a` -> `70dd0bee3` via harness checkpoint commit (handoff files only). No research code/result/campaign-state artifact edited.
@@ -25,7 +39,7 @@
 
 ## Session log (folded; all CLEAN, all task 2 BLOCKED)
 
-Every session from 2026-11-19T10:27Z through 2026-11-19T20:40Z recorded the same outcome: cheap drift check CLEAN (delta confined to the four handoff files plus `workflow_run_diagnostics.jsonl`); mirrors verified with `diff -q`; task 1 COMPLETED, task 3 COMPLETED, task 2 (BRAIN-003) BLOCKED for lack of an explicit A/B/C authorization from the user; no substantive research edits and no session-authored research commits. Checkpoints (`ca45fbdc3`, `c8d28c560`, `41b76d350`, `26a3b9121`, `046e016a1`, `af614299d`, `f1c4173b8`, `cb83b109c`, `28df2c2cb`, `40cde2389`, `aa4b8f393`, `1e6c30667`, `a1417e630`, `513b14d4`, `e266bea17`, `cae723fca`) were handoff-only. Several sessions found `.kilo/handoff.md` stale (rc=1) despite a prior rc=0 claim — always run `diff -q` yourself.
+Every session from 2026-11-19T10:27Z through 2026-11-19T20:43Z recorded the same outcome: cheap drift check CLEAN (delta confined to the four handoff files plus `workflow_run_diagnostics.jsonl`); mirrors verified with `diff -q`; task 1 COMPLETED, task 3 COMPLETED, task 2 (BRAIN-003) BLOCKED for lack of an explicit A/B/C authorization from the user; no substantive research edits and no session-authored research commits. Checkpoints (`ca45fbdc3`, `c8d28c560`, `41b76d350`, `26a3b9121`, `046e016a1`, `af614299d`, `f1c4173b8`, `cb83b109c`, `28df2c2cb`, `40cde2389`, `aa4b8f393`, `1e6c30667`, `a1417e630`, `513b14d4`, `e266bea17`, `cae723fca`, `02f6ea79a`, `70dd0bee3`, `24126ac5`) were handoff-only. Several sessions found `.kilo/handoff.md` stale (rc=1) despite a prior rc=0 claim — always run `diff -q` yourself.
 
 ## Remediation plan (NOT executed; requires explicit authorization)
 
@@ -44,7 +58,7 @@ See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byt
 
 ## Baseline to verify
 
-- `HEAD==02f6ea79a` on `main` (working tree clean at start except this session's handoff edits). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **Clean delta vs baseline `439f42d0f`: no NEW research drift.**
+- `HEAD==24126ac5` on `main` (working tree clean at start except this session's handoff edits). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **Clean delta vs baseline `439f42d0f`: no NEW research drift.**
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (recomputed canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`). `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
