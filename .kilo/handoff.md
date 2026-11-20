@@ -2,21 +2,20 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
-## Latest — 2026-11-20T04:00Z @ `0d06f5368` (kilo; read prior durable handoff @ `d18f55783`; cheap drift check + mirror verify — **CLEAN**)
+## Latest — 2026-11-20T04:06Z @ `0132f241d` (kilo; read prior durable handoff @ `13c9a3e0e`; cheap drift check + mirror verify — **CLEAN**)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `d18f55783` -> `0d06f5368` via harness checkpoint. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** both pairs rc=0 at session start; re-verified rc=0 after this session's edits.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `13c9a3e0e` -> `0132f241d` via harness checkpoint. No research code/result/campaign-state artifact edited.
+- **Mirror sync:** handoff mirror was stale at session start (rc=1); re-synced `research_state/` -> `.kilo/` and re-verified rc=0 after this session's edits.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
+
+## Previous Latest @ `13c9a3e0e` (2026-11-20T04:01Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `0d06f5368` -> `13c9a3e0e` via harness checkpoint. No research artifacts edited; no commit.
+
+## Previous Latest @ `0d06f5368` (2026-11-20T04:00Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `d18f55783` -> `0d06f5368` via harness checkpoint. No research artifacts edited; no commit.
 
 ## Previous Latest @ `d18f55783` (2026-11-20T03:56Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `587f6e2cb` -> `d18f55783` via harness checkpoint. No research artifacts edited; no commit.
 
 ## Previous Latest @ `587f6e2cb` (2026-11-20T03:08Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `1858d62e4` -> `587f6e2cb` via harness checkpoint. No research artifacts edited; no commit.
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `1858d62e4` -> `587f6e2cb` via harness checkpoint. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after this session's edits.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
 
 ## Previous Latest @ `1858d62e4` (2026-11-20T03:07Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `023a4639e` -> `1858d62e4` via harness checkpoint. No research artifacts edited; no commit.
 
@@ -92,7 +91,7 @@ Any reply that does not name A/B/C leaves task 2 BLOCKED and research artifacts 
 
 See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: confirm the handoff is intact, run only the cheap drift check (`git rev-parse HEAD`; `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), `diff -q` both mirror pairs (re-sync `research_state/` -> `.kilo/` first if rc=1), then surface the BRAIN-003 (A)/(B)/(C) authorization decision and stop. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## Baseline at handoff (2026-11-20T03:00Z @ `94585f4b`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-20T04:06Z @ `0132f241d`) — stable, not re-derived this session
 
 - `HEAD==4cb6bc9f` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line (+2 lines total). **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (recomputed canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`). `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
