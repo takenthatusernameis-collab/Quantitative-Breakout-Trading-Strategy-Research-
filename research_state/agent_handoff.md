@@ -2,7 +2,14 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
-## Latest — 2026-11-20T11:04Z @ `0d629e243` (kilo; cheap drift check + mirror verify — **CLEAN**)
+## Latest — 2026-11-20T12:00Z @ `82e734bcc` (kilo; cheap drift check + mirror re-sync — **CLEAN**)
+
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited.
+- **Mirror sync:** `diff -q` rc=1 on both pairs at session start (stale mirrors); re-synced `research_state/` -> `.kilo/` (rc=0); re-verified rc=0 after edits.
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
+- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
+
+## Latest — 2026-11-20T11:04Z @ `0d629e243` (kilo; cheap drift check + mirror verify — **CLEAN**) (folded)
 
 - **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean at session start. No research code/result/campaign-state artifact edited.
 - **Mirror sync:** `diff -q` rc=0 on both pairs at session start; re-verified rc=0 after edits.
