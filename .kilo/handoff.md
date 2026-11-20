@@ -2,6 +2,20 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
+## Latest — 2026-11-20T03:04Z @ `4cb6bc9f` (kilo; read prior durable handoff @ `793399708`; cheap drift check + mirror verify — **CLEAN**)
+
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `793399708` -> `4cb6bc9f` via harness checkpoint. No research code/result/campaign-state artifact edited.
+- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after this session's edits.
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
+- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
+
+## Previous Latest @ `793399708` (2026-11-20T03:01Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `94585f4b` -> `793399708` via harness checkpoint. No research artifacts edited; no commit.
+
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `ffc18bd1b` -> `d33da4396` via harness checkpoint. No research code/result/campaign-state artifact edited.
+- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after this session's edits.
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
+- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
+
 ## Latest — 2026-11-20T03:01Z @ `793399708` (kilo; read prior durable handoff @ `94585f4b`; cheap drift check + mirror verify — **CLEAN**)
 
 - **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `94585f4b` -> `793399708` via harness checkpoint. No research code/result/campaign-state artifact edited.
@@ -55,7 +69,7 @@ See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byt
 
 ## Baseline at handoff (2026-11-20T03:00Z @ `94585f4b`) — stable, not re-derived this session
 
-- `HEAD==793399708` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line (+2 lines total). **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
+- `HEAD==4cb6bc9f` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line (+2 lines total). **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1); same 2 failures (recomputed canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`; `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`). `manifest_hash==recomputed==928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
