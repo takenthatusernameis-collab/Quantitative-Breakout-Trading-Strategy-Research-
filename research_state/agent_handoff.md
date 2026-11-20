@@ -2,10 +2,10 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep byte-identical to `.kilo/handoff.md` (verify with `diff -q`; do not trust prior sync claims).
 
-## Latest — 2026-11-20T21:46Z @ `71a3ce4b0` (kilo; cheap drift check + mirror re-sync — CLEAN)
+## Latest — 2026-11-20T21:49Z @ `3fb8b7c45` (kilo; cheap drift check + mirror re-sync — CLEAN)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited. HEAD advanced `43e93e3f0` -> `71a3ce4b0` via harness checkpoint only.
-- **Mirror integrity: CLEAN at session start** — pair 1 `research_state/agent_handoff.md` vs `.kilo/handoff.md` rc=0, pair 2 `research_state/next_agent_task.md` vs `.kilo/next_task.md` rc=0. Prior session's sync claim verified TRUE this time; re-synced only after this edit.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited. HEAD advanced `71a3ce4b0` -> `3fb8b7c45` via harness checkpoint only.
+- **Mirror integrity: CLEAN at session start and end** — pair 1 `research_state/agent_handoff.md` vs `.kilo/handoff.md` rc=0, pair 2 `research_state/next_agent_task.md` vs `.kilo/next_task.md` rc=0. Prior session's sync claim verified TRUE; re-synced after this edit.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean, re-verified). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
 
