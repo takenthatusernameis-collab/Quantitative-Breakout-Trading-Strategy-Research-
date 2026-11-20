@@ -4,7 +4,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-At HEAD `6153a3b6c` (handoff baseline unchanged; mirrors verified rc=0 at session start), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
+At HEAD `15207780b` (handoff baseline unchanged; mirrors verified rc=0 at session start), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
 
 ## Start here (copy-paste, ~30 seconds)
 
@@ -15,7 +15,7 @@ git rev-parse HEAD; git status --porcelain
 git diff --name-only 439f42d0f..HEAD
 ```
 
-Expected: both `rc=0`; `HEAD==6153a3b6c`; empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
+Expected: both `rc=0`; `HEAD==15207780b`; empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
 
 ## Stop condition
 
