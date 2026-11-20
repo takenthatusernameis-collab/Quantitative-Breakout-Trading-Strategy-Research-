@@ -2,14 +2,14 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
-## Latest — 2026-11-20T12:13Z @ `20e478250` (kilo; cheap drift check + mirror verify — **CLEAN**)
+## Latest — 2026-11-20T13:00Z @ `e74928845` (kilo; cheap drift check + mirror verify — **CLEAN**)
 
 - **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited.
-- **Mirror sync:** `diff -q` rc=0 on both pairs at session start; re-verified rc=0 after edits.
+- **Mirror sync:** both pairs rc=1 at session start (previous session's sync claim was false); re-synced `research_state/` -> `.kilo/` and re-verified rc=0 on both pairs after edits.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session. HEAD advanced `debd0576c` -> `20e478250` via harness checkpoint.
+- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session. HEAD advanced `20e478250` -> `e74928845` via harness checkpoint.
 
-## Session log (folded; all CLEAN, all task 2 BLOCKED) — previous Latest @ `debd0576c` (2026-11-20T12:12Z), `7728805fb` (2026-11-20T12:11Z)
+## Session log (folded; all CLEAN, all task 2 BLOCKED) — previous Latest @ `20e478250` (2026-11-20T12:13Z), `debd0576c` (2026-11-20T12:12Z), `7728805fb` (2026-11-20T12:11Z)
 
 - Latest @ `debd0576c` (2026-11-20T12:12Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED; no research artifacts edited; no session-authored commit. HEAD advanced `7728805fb` -> `debd0576c` via harness checkpoint.
 
