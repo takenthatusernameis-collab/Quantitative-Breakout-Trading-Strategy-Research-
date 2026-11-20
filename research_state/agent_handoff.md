@@ -2,14 +2,14 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep byte-identical to `.kilo/handoff.md` (verify with `diff -q`; do not trust prior sync claims).
 
-## Latest — 2026-11-20T20:51Z @ `c06eeb10a` (kilo; cheap drift check + mirror re-sync — CLEAN)
+## Latest — 2026-11-20T20:54Z @ `4b20933c3` (kilo; cheap drift check + mirror re-sync — CLEAN)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited. HEAD advanced `6f5f61774` -> `c06eeb10a` via harness checkpoint only.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited. HEAD advanced `c06eeb10a` -> `4b20933c3` via harness checkpoint only.
 - **Mirror integrity: CLEAN at session start** — pair 1 `research_state/agent_handoff.md` vs `.kilo/handoff.md` rc=0, pair 2 `research_state/next_agent_task.md` vs `.kilo/next_task.md` rc=0. Prior session's sync claim verified TRUE this time; re-synced only after this edit.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean, re-verified). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
 
-(Folded previous entry: 2026-11-20T20:49Z @ `6f5f61774` — drift CLEAN; mirrors rc=0 at session start; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits. Folded with 2026-11-20T20:46Z @ `24ac35124` — drift CLEAN; mirrors rc=0 at session start (pair 1 previously STALE at rc=1, re-synced); task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits. Folded with 2026-11-20T20:45Z @ `06e68b729` — drift CLEAN; mirror pair 1 found STALE (rc=1) despite CLEAN claim; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Folded previous entry: 2026-11-20T20:51Z @ `c06eeb10a` — drift CLEAN; mirrors rc=0 at session start; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits. Folded with 2026-11-20T20:49Z @ `6f5f61774` — drift CLEAN; mirrors rc=0 at session start; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits. Folded with 2026-11-20T20:46Z @ `24ac35124` — drift CLEAN; mirrors rc=0 at session start (pair 1 previously STALE at rc=1, re-synced); task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits. Folded with 2026-11-20T20:45Z @ `06e68b729` — drift CLEAN; mirror pair 1 found STALE (rc=1) despite CLEAN claim; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 ## Session log (folded; identical outcome in every session)
 
