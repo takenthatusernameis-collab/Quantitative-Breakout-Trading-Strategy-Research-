@@ -4,7 +4,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-At HEAD `c2c57c281` (handoff baseline unchanged), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors were verified rc=0 after the last edit, but the previous two sessions' sync claims were false — re-check with `diff -q` before trusting that.
+At HEAD `6c2e99a14` (handoff baseline unchanged), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors were verified rc=0 after the last edit, but the previous two sessions' sync claims were false — re-check with `diff -q` before trusting that.
 
 ## Do not repeat read-only verification
 
