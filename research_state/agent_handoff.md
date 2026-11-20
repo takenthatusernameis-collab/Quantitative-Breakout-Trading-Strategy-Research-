@@ -2,7 +2,7 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep byte-identical to `.kilo/handoff.md` (verify with `diff -q`; do not trust prior sync claims).
 
-## Latest — 2026-11-20T18:51Z @ `017a6f82e` (kilo; cheap drift check + mirror sync — **CLEAN**)
+## Latest — 2026-11-20T18:53Z @ `fd0065638` (kilo; cheap drift check + mirror sync — **CLEAN**)
 
 - **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty at session start; both mirror pairs `diff -q` rc=0 at session start. No research code/result/campaign-state artifact edited.
 - **Mirror sync:** both pairs re-synced `research_state/` -> `.kilo/` and re-verified rc=0 at session end.
