@@ -2,14 +2,14 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep in sync with `.kilo/handoff.md` (byte-identical; verify with `diff -q`).
 
-## Latest — 2026-11-20T00:52Z @ `939e4a842` (kilo; read prior durable handoff @ `50daba622`; cheap drift check + mirror verify — **CLEAN**)
+## Latest — 2026-11-20T00:54Z @ `4a54f2818` (kilo; read prior durable handoff @ `939e4a842`; cheap drift check + mirror verify — **CLEAN**)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `50daba622` -> `939e4a842` via harness checkpoint (added `research_state/workflow_run_diagnostics.jsonl` lines). No research code/result/campaign-state artifact edited.
-- **Mirror sync:** found `.kilo/handoff.md` stale (rc=1) despite prior claim; re-synced `research_state/` -> `.kilo/`; re-verified both pairs rc=0.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here (mirror sync actually performed; previous claim of rc=0 was false for the handoff.md pair).
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` lists only `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. HEAD advanced `939e4a842` -> `4a54f2818` via harness checkpoint. No research code/result/campaign-state artifact edited.
+- **Mirror sync:** both pairs rc=0 at start; re-verified rc=0 after this session's edits.
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C letter in the user prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched. No commit made by this session.
 
-Previous Latest @ `50daba622` (2026-11-19T23:47Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED (claim). HEAD advanced `a273b6d14` -> `50daba622`. No research artifacts edited; no commit.
+Previous Latest @ `939e4a842` (2026-11-20T00:52Z): cheap drift verification COMPLETED (clean); BRAIN-003 remediation BLOCKED (no A/B/C authorization); handoff/next-task refresh + mirror sync COMPLETED. HEAD advanced `50daba622` -> `939e4a842`. No research artifacts edited; no commit.
 
 ## Session log (folded; all CLEAN, all task 2 BLOCKED)
 
