@@ -4,15 +4,30 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-At HEAD `74788cd76` (handoff baseline unchanged), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
+At HEAD `985972c0c` (handoff baseline unchanged), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
+
+## Start here (copy-paste, ~30 seconds)
+
+```bash
+diff -q research_state/agent_handoff.md .kilo/handoff.md; echo "rc=$?"
+diff -q research_state/next_agent_task.md .kilo/next_task.md; echo "rc=$?"
+git rev-parse HEAD; git status --porcelain
+git diff --name-only 439f42d0f..HEAD
+```
+
+Expected: both `rc=0`; `HEAD==985972c0c`; empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
+
+## Stop condition
+
+Your session is **complete** when the drift delta is clean, the two handoff files are refreshed and mirrored (both `diff -q` rc=0), and your final answer asks the user for `A`, `B`, `C`, or a combination. Do not look for additional work: any further "analysis" of an unchanged baseline is wasted effort and has already been rejected 27+ times.
 
 ## Do not repeat read-only verification
 
-The full baseline (v6 verifier, `check_progress.sh`, BRAIN-003 spot checks) has been reproduced identically 26+ times. Re-running it adds nothing. Only a **dirty** drift delta (any path outside the allowed list) justifies re-running it.
+The full baseline (v6 verifier, `check_progress.sh`, BRAIN-003 spot checks) has been reproduced identically 27+ times. Re-running it adds nothing. Only a **dirty** drift delta (any path outside the allowed list) justifies re-running it.
 
 ## Situation (read this first)
 
-The research baseline at `439f42d0f` has been re-verified identically 26+ times across 60+ recorded sessions and is unchanged. Nothing in the repo needs more verification. The **only** outstanding work is a user decision: authorize (A)/(B)/(C) remediation of the BRAIN-003 holdout-reuse defect, or decline. No session may self-authorize. If the user's prompt already contains an explicit A/B/C authorization, execute exactly those letters (and only those) under the plan below; otherwise do not touch research artifacts.
+The research baseline at `439f42d0f` has been re-verified identically 27+ times across 60+ recorded sessions and is unchanged. Nothing in the repo needs more verification. The **only** outstanding work is a user decision: authorize (A)/(B)/(C) remediation of the BRAIN-003 holdout-reuse defect, or decline. No session may self-authorize. If the user's prompt already contains an explicit A/B/C authorization, execute exactly those letters (and only those) under the plan below; otherwise do not touch research artifacts.
 
 ## Step 0 — mirror integrity (before anything else)
 
@@ -41,7 +56,7 @@ If that list is **only** `.kilo/handoff.md`, `.kilo/next_task.md`, `research_sta
 
 If **any other path** appears, that is real drift: report it immediately (it outranks everything below) and only then re-run the full baseline (`scripts/verify_v6_execution.py`, `./check_progress.sh`, BRAIN-003 spot checks).
 
-Do **not** re-run those scripts on a clean delta. The baseline has been reproduced identically 26+ times across 60+ recorded sessions.
+Do **not** re-run those scripts on a clean delta. The baseline has been reproduced identically 27+ times across 60+ recorded sessions.
 
 ## Step 2 — refresh, then mirror
 
@@ -54,9 +69,9 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 
 State that the baseline is unchanged, that BRAIN-003 is unremediated, and ask for an explicit letter (A)/(B)/(C). Nothing else is productive until then. Do not self-authorize; do not edit `research_state/checkpoint.json`, `research/candidate_manifest_v2.json`, any results shard, or any protocol/binding/authorization artifact.
 
-## Baseline at handoff (2026-11-20T17:55Z @ `74788cd76`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-20T18:44Z @ `985972c0c`) — stable, not re-derived this session
 
-- `HEAD==74788cd76` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
+- `HEAD==985972c0c` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (no test coverage has ever run in this environment).
