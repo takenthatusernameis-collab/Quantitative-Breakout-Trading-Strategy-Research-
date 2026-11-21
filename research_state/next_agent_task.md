@@ -2,12 +2,12 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T14:48:39Z @ `fb5444ffd6f1cef4e9770d4d5ee2319ae847871e` (kilo; drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0)
+## Latest — 2026-11-21T14:49:57Z @ `6973f7dfde92989355769e36515794e82f790503` (kilo; drift CLEAN; BRAIN-003 remediation A+B+C re-verified complete; mirrors rc=0)
 
 All tasks complete. Nothing further is productive unless the user issues new instructions. Drift delta clean; mirrors rc=0 both pairs; BRAIN-003 remediation verified. Stop.
 
+(Fold previous entry: 2026-11-21T14:48:39Z @ `fb5444ffd6f1cef4e9770d4d5ee2319ae847871e` — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0.)
 (Fold previous entry: 2026-11-21T14:47:01Z @ `dfa7e2b5b98da17e29c7bdfee89e7e073d1ef2ff` — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0.)
-(Fold previous entry: 2026-11-21T14:46:28Z @ `b8216de52751d2f2b989b880d32e3f496d5a4670` — drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0.)
 
 ## Your job in one sentence
 
@@ -56,7 +56,7 @@ git rev-parse HEAD; git status --porcelain
 git diff --name-only 439f42d0f..HEAD
 ```
 
-Expected: both `rc=0`; HEAD at or after `d2e723454` (later checkpoints are fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
+Expected: both `rc=0`; HEAD at or after `6973f7dfd` (later checkpoints are fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
 
 ## Stop condition
 
@@ -106,9 +106,9 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 - `cp` both authoritative files over the `.kilo/` mirrors and `diff -q` both pairs (rc=0).
 - Do not commit unless explicitly asked.
 
-## Baseline at handoff (2026-11-21T13:54:49Z @ `d2e723454b585ec159fcaefa054e60b9ef4eb0f2`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-21T14:49:57Z @ `6973f7dfde92989355769e36515794e82f790503`) — stable, not re-derived this session
 
-- `HEAD==d2e723454b585ec159fcaefa054e60b9ef4eb0f2` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).**
+- `HEAD==6973f7dfde92989355769e36515794e82f790503` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).**
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures; `manifest_hash==recomputed_manifest_hash==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` (MATCH); `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
