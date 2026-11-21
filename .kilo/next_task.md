@@ -2,21 +2,18 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T04:02Z @ `b73b33e9f` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
+## Latest — 2026-11-21T04:03Z @ `5a355e5e3` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean. No research code/result/campaign-state artifact edited. HEAD advanced `e29767aa8` -> `b73b33e9f` via harness checkpoint only.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean. No research code/result/campaign-state artifact edited. HEAD advanced `b73b33e9f` -> `5a355e5e3` via harness checkpoint only.
 - **Mirror integrity: CLEAN at session start and end** — both pairs rc=0.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
+
+(Folded previous entry: 2026-11-21T04:02Z @ `b73b33e9f` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Folded previous entry: 2026-11-21T04:01Z @ `e29767aa8` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
-## Latest — 2026-11-21T04:00Z @ `b720802a7` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
-
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean. No research code/result/campaign-state artifact edited. HEAD advanced `492e3d587` -> `b720802a7` via harness checkpoint only.
-- **Mirror integrity: CLEAN at session start and end** — both pairs rc=0.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
-- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
+(Folded previous entry: 2026-11-21T04:00Z @ `b720802a7` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Folded previous entry: 2026-11-21T03:59Z @ `492e3d587` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
@@ -24,7 +21,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-At HEAD `b73b33e9f95fb5247e85b9596abef76930827d13` (handoff baseline unchanged; mirrors verified rc=0 at session start; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
+At HEAD `5a355e5e388477279e5e12769c01c09748bf36a1` (handoff baseline unchanged; mirrors verified rc=0 at session start; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
 
 ## Start here (copy-paste, ~30 seconds)
 
