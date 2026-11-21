@@ -2,15 +2,15 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T13:53:15Z @ `96a9c2b243948eb3f56402e0229060b03067d07e` (kilo; prior task complete — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0)
+## Latest — 2026-11-21T13:54:49Z @ `d2e723454b585ec159fcaefa054e60b9ef4eb0f2` (kilo; prior task complete — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0)
 
-- **Result: prior agent task (1) drift verification + (2) BRAIN-003 remediation (A+B+C) + (3) handoff/next-task refresh are all COMPLETE and re-verified clean.** `git diff --name-only 439f42d0f..HEAD` = the four handoff files plus `workflow_run_diagnostics.jsonl` plus the three remediation edits (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`) plus `reports/holdout_disposition_v3.md` + `research/results_shards_quarantine/`. `git status --porcelain` empty. HEAD advanced `e5fb4fdc` -> `96a9c2b2` via harness checkpoint only.
+- **Result: prior agent task (1) drift verification + (2) BRAIN-003 remediation (A+B+C) + (3) handoff/next-task refresh are all COMPLETE and re-verified clean.** `git diff --name-only 439f42d0f..HEAD` = the four handoff files plus `workflow_run_diagnostics.jsonl` plus the three remediation edits (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`) plus `reports/holdout_disposition_v3.md` + `research/results_shards_quarantine/`. `git status --porcelain` empty. HEAD at `d2e723454`.
 - **Mirrors byte-identical:** both `diff -q` pairs rc=0. `NO_PROMPT_CHANGE_JUSTIFIED`.
-- **BRAIN-003 remediation verified (A+B+C):** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0, no failures); `manifest_hash==recomputed_manifest_hash==f6cd994f...` MATCH. `research/results_manifest.json` `total_records==22750`, 456 shard entries = **455 active + 1 quarantined** (shard_000455 `"quarantined":true`, retained in array for audit but excluded from `total_records`); original `results_shards/` path holds shard_000000..000454 (000455 absent); `research/results_shards_quarantine/e3d5e5f.../shard_000455.jsonl` present. `checkpoint.json` `completed_records==22750` (delta 0), `holdout_exposed_count==0`. `reports/holdout_disposition_v3.md` records shard quarantined + v2 untrusted. `candidate_manifest_v2.json` `frozen==true`, `ALL_REJECTED_ON_HOLDOUT`, 14 candidates — untouched.
+- **BRAIN-003 remediation verified (A+B+C):** quarantined shard present, original `results_shards/` path absent; `total_records==22750`, 456 shard entries = 455 active + 1 quarantined; `checkpoint.json` `completed_records==22750` (delta 0), `holdout_exposed_count==0`; `reports/holdout_disposition_v3.md` present; `candidate_manifest_v2.json` `frozen==true`, `ALL_REJECTED_ON_HOLDOUT`, 14 candidates — untouched.
+
+(Fold previous entry: 2026-11-21T13:53:15Z @ `96a9c2b243948eb3f56402e0229060b03067d07e` — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0; task 1/2/3 COMPLETE.)
 
 (Fold previous entry: 2026-11-21T13:55:00Z @ `e5fb4fdcb7b9a559f19e23b6bf565a6707e07d41` — BRAIN-003 remediation A+B+C COMPLETE — verify_v6_execution.py ok:true; shard_000455 quarantined; manifest total_records 22750; checkpoint reconciled; candidate_manifest_v2 annotated untrusted.)
-
-(Fold previous entry: 2026-11-21T13:45:14Z @ `d0f8a864f84a37caad3a78ca6a20ae2ef2b1eed3` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Fold previous entry: 2026-11-21T12:56:00Z @ `cb658571579cfe999688c84218a1b102407cabd0` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
@@ -43,7 +43,7 @@ git rev-parse HEAD; git status --porcelain
 git diff --name-only 439f42d0f..HEAD
 ```
 
-Expected: both `rc=0`; HEAD at or after `96a9c2b2` (later checkpoints are fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
+Expected: both `rc=0`; HEAD at or after `d2e723454` (later checkpoints are fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
 
 ## Stop condition
 
@@ -93,9 +93,9 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 - `cp` both authoritative files over the `.kilo/` mirrors and `diff -q` both pairs (rc=0).
 - Do not commit unless explicitly asked.
 
-## Baseline at handoff (2026-11-21T13:53:15Z @ `96a9c2b243948eb3f56402e0229060b03067d07e`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-21T13:54:49Z @ `d2e723454b585ec159fcaefa054e60b9ef4eb0f2`) — stable, not re-derived this session
 
-- `HEAD==96a9c2b243948eb3f56402e0229060b03067d07e` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).**
+- `HEAD==d2e723454b585ec159fcaefa054e60b9ef4eb0f2` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).**
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures; `manifest_hash==recomputed_manifest_hash==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` (MATCH); `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
