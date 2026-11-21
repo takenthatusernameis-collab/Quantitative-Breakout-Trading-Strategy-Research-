@@ -15,7 +15,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-At HEAD `1663cee997bd5c6efc21271b797e082b80aca25e` (handoff baseline unchanged; mirrors verified rc=0 at session start; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
+At HEAD `3ef35d0129d0e1ec78f96706160f84ac5e8e3b8c` (handoff baseline unchanged; mirrors verified rc=0 at session start; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
 
 ## Start here (copy-paste, ~30 seconds)
 
