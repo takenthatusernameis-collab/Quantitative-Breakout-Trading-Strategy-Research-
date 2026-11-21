@@ -2,11 +2,13 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T13:55:00Z @ `e5fb4fdcb7b9a559f19e23b6bf565a6707e07d41` (kilo; BRAIN-003 remediation A+B+C COMPLETE — verify_v6_execution.py ok:true; shard_000455 quarantined; manifest total_records 22750; checkpoint reconciled; candidate_manifest_v2 annotated untrusted)
+## Latest — 2026-11-21T13:53:15Z @ `96a9c2b243948eb3f56402e0229060b03067d07e` (kilo; prior task complete — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0)
 
-- **Result: no NEW research drift beyond the authorized BRAIN-003 remediation.** `git diff --name-only 439f42d0f..HEAD` = the four handoff files plus `workflow_run_diagnostics.jsonl` plus the three remediation edits (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`) plus the shard deletion and `reports/holdout_disposition_v3.md` + `research/results_shards_quarantine/`. Working tree clean at session start; edits are uncommitted (no session commit per policy).
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) BRAIN-003 remediation (A)+(B)+(C) — COMPLETE. (3) handoff/next-task refresh + mirror sync — COMPLETE here (uncommitted; no session commit per policy).
-- **BRAIN-003 remediated:** shard_000455 moved to `research/results_shards_quarantine/` and marked `"quarantined": true`; `total_records` 22792->22750 reconciles with `checkpoint.json` `completed_records==22750`; `reports/holdout_disposition_v3.md` records v2 as untrusted/no valid confirmatory claim; `configs/research_v6_execution.json` code-hash constraint fixed; amendment `configs/research_v6_execution_amendment_1.json` re-bound; `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures.
+- **Result: prior agent task (1) drift verification + (2) BRAIN-003 remediation (A+B+C) + (3) handoff/next-task refresh are all COMPLETE and re-verified clean.** `git diff --name-only 439f42d0f..HEAD` = the four handoff files plus `workflow_run_diagnostics.jsonl` plus the three remediation edits (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`) plus `reports/holdout_disposition_v3.md` + `research/results_shards_quarantine/`. `git status --porcelain` empty. HEAD advanced `e5fb4fdc` -> `96a9c2b2` via harness checkpoint only.
+- **Mirrors byte-identical:** both `diff -q` pairs rc=0. `NO_PROMPT_CHANGE_JUSTIFIED`.
+- **BRAIN-003 remediation verified (A+B+C):** `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0, no failures); `manifest_hash==recomputed_manifest_hash==f6cd994f...` MATCH. `research/results_manifest.json` `total_records==22750`, 456 shard entries = **455 active + 1 quarantined** (shard_000455 `"quarantined":true`, retained in array for audit but excluded from `total_records`); original `results_shards/` path holds shard_000000..000454 (000455 absent); `research/results_shards_quarantine/e3d5e5f.../shard_000455.jsonl` present. `checkpoint.json` `completed_records==22750` (delta 0), `holdout_exposed_count==0`. `reports/holdout_disposition_v3.md` records shard quarantined + v2 untrusted. `candidate_manifest_v2.json` `frozen==true`, `ALL_REJECTED_ON_HOLDOUT`, 14 candidates — untouched.
+
+(Fold previous entry: 2026-11-21T13:55:00Z @ `e5fb4fdcb7b9a559f19e23b6bf565a6707e07d41` — BRAIN-003 remediation A+B+C COMPLETE — verify_v6_execution.py ok:true; shard_000455 quarantined; manifest total_records 22750; checkpoint reconciled; candidate_manifest_v2 annotated untrusted.)
 
 (Fold previous entry: 2026-11-21T13:45:14Z @ `d0f8a864f84a37caad3a78ca6a20ae2ef2b1eed3` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
@@ -41,7 +43,7 @@ git rev-parse HEAD; git status --porcelain
 git diff --name-only 439f42d0f..HEAD
 ```
 
-Expected: both `rc=0`; HEAD at or after `7d028cd5a` (later checkpoints are fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
+Expected: both `rc=0`; HEAD at or after `96a9c2b2` (later checkpoints are fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
 
 ## Stop condition
 
@@ -91,16 +93,16 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 - `cp` both authoritative files over the `.kilo/` mirrors and `diff -q` both pairs (rc=0).
 - Do not commit unless explicitly asked.
 
-## Baseline at handoff (2026-11-21T13:55:00Z @ `e5fb4fdcb7b9a559f19e23b6bf565a6707e07d41`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-21T13:53:15Z @ `96a9c2b243948eb3f56402e0229060b03067d07e`) — stable, not re-derived this session
 
-- `HEAD==e5fb4fdcb7b9a559f19e23b6bf565a6707e07d41` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).**
+- `HEAD==96a9c2b243948eb3f56402e0229060b03067d07e` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).**
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures; `manifest_hash==recomputed_manifest_hash==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` (MATCH); `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
 - Binding `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; v6 may not start before `2027-01-20T02:00:00Z`.
 - v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
 - v6 `v6-selection-20261022` intact/unconsumed/not started; no selection output dir; only pre-run `research/v6_evidence/` JSONs plus `research/data_manifest_v6.json`, `research/universe_manifest_v6.json`.
-- `research/results_manifest.json` `total_records==22750`, `len(shards)==455` (shard_000455 quarantined, not counted). `NO_PROMPT_CHANGE_JUSTIFIED`.
+- `research/results_manifest.json` `total_records==22750`; 456 shard entries = **455 active + 1 quarantined** (shard_000455 `"quarantined":true`, retained in array for audit but excluded from `total_records`). `NO_PROMPT_CHANGE_JUSTIFIED`.
 
 ## BRAIN-003 — REMEDIATED (A+B+C complete)
 
