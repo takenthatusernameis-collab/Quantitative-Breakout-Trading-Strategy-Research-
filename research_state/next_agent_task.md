@@ -2,11 +2,11 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T15:49:31Z @ `5c308511dd26d91ad10785ab5812108afcca72fa` (kilo; prior task COMPLETE — drift CLEAN; BRAIN-003 remediation A+B+C confirmed complete; mirrors rc=0)
+## Latest — 2026-11-21T15:51:48Z @ `b7fe0fc2adf37a6508ff94aa78705d1cd9bf249e` (kilo; prior task COMPLETE — drift CLEAN; BRAIN-003 remediation A+B+C confirmed complete; mirrors rc=0)
 
-- **Result: prior agent task complete.** Drift delta from baseline `439f42d0f` to HEAD `5c308511` is clean (only the four handoff files + `workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths), `git status --porcelain` is empty, both `diff -q` mirror pairs exit 0, and BRAIN-003 remediation (A+B+C) is confirmed complete (`total_records==22750`, 456 shard entries = 455 active + 1 quarantined, `checkpoint.completed_records==22750` delta 0, `holdout_exposed_count==0`, quarantined `shard_000455.jsonl` present with original `results_shards/` path absent, `reports/holdout_disposition_v3.md` present, `candidate_manifest_v2.json` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates). `NO_PROMPT_CHANGE_JUSTIFIED`.
+- **Result: prior agent task complete.** Drift delta from baseline `439f42d0f` to HEAD `b7fe0fc2a` is clean (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths), `git status --porcelain` is empty, both `diff -q` mirror pairs exit 0, and BRAIN-003 remediation (A+B+C) is confirmed complete (`total_records==22750`, 456 shard entries = 455 active + 1 quarantined, `checkpoint.completed_records==22750` delta 0, `holdout_exposed_count==0`, quarantined `shard_000455.jsonl` present with original `results_shards/` path absent, `reports/holdout_disposition_v3.md` present, `candidate_manifest_v2.json` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates). `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-(Fold previous entry: 2026-11-21T15:47:52Z @ `006061813023965b0e53f332a370296ab6911f4b` — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0.)
+(Fold previous entry: 2026-11-21T15:49:31Z @ `5c308511dd26d91ad10785ab5812108afcca72fa` — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0.)
 
 ## Your job in one sentence
 
