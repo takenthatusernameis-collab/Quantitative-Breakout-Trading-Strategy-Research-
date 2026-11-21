@@ -1,6 +1,10 @@
-## Latest — 2026-11-21T14:52:03Z @ `2eac95c032e2aba585a672c0bc2bb1e13d591ce0` (kilo; drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0)
+## Latest — 2026-11-21T14:53:00Z @ `0ea18ce78ea335c65e51928ec1280dbb7b06c61a` (kilo; prior task COMPLETE; drift CLEAN; BRAIN-003 A+B+C verified complete; mirrors rc=0)
 
-- **Result: prior agent task complete.** Cheap drift check clean (`git diff --name-only 439f42d0f..HEAD` = four handoff files + `workflow_run_diagnostics.jsonl` + BRAIN-003 remediation paths only); `git status --porcelain` empty; mirrors `diff -q` rc=0 both pairs. HEAD advanced `1beab6089` -> `2eac95c03` via harness checkpoint only. BRAIN-003 A+B+C verified complete. `NO_PROMPT_CHANGE_JUSTIFIED`. Stop.
+- **Result: prior agent task complete.** Cheap drift check clean: `git diff --name-only 439f42d0f..HEAD` = the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) + `research_state/workflow_run_diagnostics.jsonl` + BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/.../shard_000455.jsonl`). `git status --porcelain` empty; HEAD at `0ea18ce78` (harness checkpoint after `2eac95c03`). BRAIN-003 A+B+C re-confirmed: `total_records==22750`, 456 entries (455 active + 1 quarantined), `checkpoint.completed_records==22750` delta 0, `holdout_exposed_count==0`, quarantined shard present, original `results_shards/` path absent, `reports/holdout_disposition_v3.md` present, `candidate_manifest_v2.json` frozen/ALL_REJECTED_ON_HOLDOUT/14 — untouched. `NO_PROMPT_CHANGE_JUSTIFIED`. Stop.
+
+(Fold previous entry: 2026-11-21T14:52:03Z @ `2eac95c032e2aba585a672c0bc2bb1e13d591ce0` — drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0.)
+
+- **Result: prior agent task complete.** Cheap drift check clean; `git status --porcelain` empty; mirrors rc=0 both pairs. BRAIN-003 A+B+C verified complete. `NO_PROMPT_CHANGE_JUSTIFIED`. Stop.
 
 (Fold previous entry: 2026-11-21T14:51:33Z @ `1beab60895b5d64d9c38bf5204e824a8c0c1f186` — drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0.)
 
@@ -196,9 +200,9 @@
 
 ## Initial task message for the next agent
 
-See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: confirm the handoff is intact, run only the cheap drift check (`git rev-parse HEAD`; `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths), `diff -q` both mirror pairs (re-sync `research_state/` -> `.kilo/` first if rc=1), then confirm BRAIN-003 remediation is complete and stop. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `6973f7dfd` (drift delta clean; prior baseline `439f42d0f`).
+See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: confirm the handoff is intact, run only the cheap drift check (`git rev-parse HEAD`; `git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths), `diff -q` both mirror pairs (re-sync `research_state/` -> `.kilo/` first if rc=1), then confirm BRAIN-003 remediation is complete and stop. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `0ea18ce78` (drift delta clean; prior baseline `439f42d0f`).
 
-## Baseline at handoff (2026-11-21T14:49:57Z @ `6973f7dfde92989355769e36515794e82f790503`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-21T14:53:00Z @ `0ea18ce78ea335c65e51928ec1280dbb7b06c61a`) — stable, not re-derived this session
 
 - `HEAD==6973f7dfde92989355769e36515794e82f790503` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).** Keep this handoff folded: one "Latest" entry plus the compacted session log — append one entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures; `manifest_hash==recomputed_manifest_hash==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` (MATCH); `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`.

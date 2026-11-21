@@ -2,16 +2,26 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T14:52:03Z @ `2eac95c032e2aba585a672c0bc2bb1e13d591ce0` (kilo; drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0)
+## Latest — 2026-11-21T14:53:00Z @ `0ea18ce78ea335c65e51928ec1280dbb7b06c61a` (kilo; prior task COMPLETE — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0)
 
-All tasks complete. Nothing further is productive unless the user issues new instructions. Drift delta clean; mirrors rc=0 both pairs; BRAIN-003 remediation verified. Stop.
+## Initial task message for the next agent
 
-(Fold previous entry: 2026-11-21T14:51:33Z @ `1beab60895b5d64d9c38bf5204e824a8c0c1f186` — drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0.)
+Read `research_state/agent_handoff.md` first (its `.kilo/handoff.md` twin must be byte-identical). The prior agent task is COMPLETE and verified: the drift delta from baseline `439f42d0f` to HEAD `0ea18ce78` is clean (only the four handoff files + `workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths), `git status --porcelain` is empty, both `diff -q` mirror pairs exit 0, and BRAIN-003 remediation (A+B+C) is confirmed complete (`total_records==22750`, 456 shard entries = 455 active + 1 quarantined, `checkpoint.completed_records==22750` delta 0, `holdout_exposed_count==0`, quarantined `shard_000455.jsonl` present with original `results_shards/` path absent, `reports/holdout_disposition_v3.md` present, `candidate_manifest_v2.json` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates).
 
-All tasks complete. Nothing further is productive unless the user issues new instructions. Drift delta clean; mirrors rc=0 both pairs; BRAIN-003 remediation verified. Stop.
+Your job in one sentence: confirm the handoff is intact with the cheap drift check below, confirm BRAIN-003 remediation is still complete, then stop — nothing further is productive unless the user issues new instructions. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-(Fold previous entry: 2026-11-21T14:48:39Z @ `fb5444ffd6f1cef4e9770d4d5ee2319ae847871e` — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0.)
-(Fold previous entry: 2026-11-21T14:47:01Z @ `dfa7e2b5b98da17e29c7bdfee89e7e073d1ef2ff` — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0.)
+## Start here (copy-paste, ~30 seconds)
+
+```bash
+diff -q research_state/agent_handoff.md .kilo/handoff.md; echo "rc=$?"
+diff -q research_state/next_agent_task.md .kilo/next_task.md; echo "rc=$?"
+git rev-parse HEAD; git status --porcelain
+git diff --name-only 439f42d0f..HEAD
+```
+
+Expected: both `rc=0`; HEAD at or after `0ea18ce78` (later harness checkpoints are fine); empty status; delta = `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`, `research_state/workflow_run_diagnostics.jsonl`, plus the BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/.../shard_000455.jsonl`). Anything else is an exception — handle it before anything else.
+
+(Fold previous entry: 2026-11-21T14:52:03Z @ `2eac95c032e2aba585a672c0bc2bb1e13d591ce0` — drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0.)
 
 ## Your job in one sentence
 
