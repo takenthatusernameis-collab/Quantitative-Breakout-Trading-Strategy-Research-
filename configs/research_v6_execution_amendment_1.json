@@ -7,13 +7,13 @@
   "created_utc": "2026-10-22T12:52:00Z",
   "amends": {
     "file": "configs/research_v6_execution.json",
-    "manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
-    "sha256": "7080b749ea2cc0523e60391cb9a8a6cbc1284bf05c8d678b07ae32e979ed1923",
+    "manifest_hash": "f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4",
+    "sha256": "dc5a49cef951039066803c060a9b7e5aa81c2cd64bfb1b66568d171d4d37829e",
     "rule": "the v6 execution protocol is hash-bound and is not edited in place; this amendment supplies the effective execution-authorization block"
   },
   "problem": {
     "affected_artifact_path": "configs/research_v6_execution.json",
-    "affected_artifact_manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
+    "affected_artifact_manifest_hash": "f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4",
     "statement": "the frozen v6 execution protocol records execution_authorization.selection_authorization_present = false. That was true at its publication instant, when the v6 selection authorization did not exist, and it is stale now: the v6 selection authorization has been published. The flag is used in two places and both are wrong. The repository verifier scripts/verify_v6_execution.py refuses a published selection authorization, so it enforces a world state that has changed and a corrected effective rule would be refused. And the run gate, which reads the effective execution protocol, would resolve the block by the static flag and refuse the authorized run, never verifying that the authorization exists at all.",
     "repair": "the protocol is hash-bound and is not edited in place; the effective execution-authorization block is recorded by this amendment, and the run gate verifies the published selection authorization's identity instead of a static flag",
     "historical_statement": "the frozen protocol's execution_authorization.selection_authorization_present = false records the state of the chain at its publication instant. That block stays on disk, unchanged and visible.",
@@ -62,7 +62,7 @@
   "commit_before_run": "this amendment is committed to the repository before the authorized run starts; the run gate resolves the effective execution-authorization block from the committed tree, and a run that starts while this amendment is uncommitted, unreadable or does not recompute its own hash is refused",
   "related_artifacts": {
     "v6_execution_protocol": {
-      "manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
+      "manifest_hash": "f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4",
       "path": "configs/research_v6_execution.json"
     },
     "v6_selection_authorization": {
@@ -89,5 +89,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2, v3, v4 and v5 artifacts."
   },
-  "manifest_hash": "25397aeef22af011a2106333afb0ef1c336dbab780b2789b2db385b36337b2af"
+  "manifest_hash": "be6dd16a73811c4b6e8605d7bddf04e0bceb6713c4850a4abe4f37802db579f1"
 }

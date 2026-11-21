@@ -3,7 +3,7 @@
   "artifact_version": "v6-execution-protocol-1",
   "protocol_version": "v6-execution",
   "universe_version": "v6",
-  "manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026",
+  "manifest_hash": "f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4",
   "specification_hash": "4a07911a1e0a79e0489e0ff638526ffeef2f2d217696e80308c77b440dbeac9c",
   "created_utc": "2026-10-22T04:20:00Z",
   "specification_purpose": "Preregister how a future v6 grid run will be authorized and bounded. Design deliverable only; nothing runs.",
@@ -122,10 +122,10 @@
     "change_requires": "a published, versioned amendment that names the changed block and the artifacts it supersedes"
   },
   "code_hash_constraint": {
-    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "authorized_code_hash": "4bb02d54a1cb1f578577e627311b5e3f6ba119b591d66fd8dde58154ed2b6331",
     "authorized_code_hash_source": "research_state/campaign_authorization.json",
     "hashed_source_root": "src/breakout_research",
-    "canonical_hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "canonical_hashed_set_digest": "8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e",
     "canonical_digest_is_the_identity": true,
     "ordered_code_hash_is_not_an_identity": true,
     "v6_execution_root": "src/v6_campaign",

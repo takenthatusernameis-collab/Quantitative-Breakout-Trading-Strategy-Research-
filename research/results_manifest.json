@@ -26896,14 +26896,15 @@
         "ac4f064bb9d3e138bc5598464a13af5fb5cc58dfc3fc1b35544852f324bd6973",
         "75809a87f408b2095287dc76723ad6d57766fcf4a6f5b7742e74dc9e0ac09d0b"
       ],
-      "path": "research/results_shards/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl",
+      "path": "research/results_shards_quarantine/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl",
       "records": 42,
       "sha256": "c4c7de5a0b9bf203f379a3b62b46868d37b1be9460cda0f9e25695e76edfc770",
+      "quarantined": true,
       "shard_index": 455
     }
   ],
   "specification_hash": "2d22e70246cf023218ef6dd0cb655897836b310e1a6e6969d934f52d06e79085",
   "total_bytes": 19735754,
-  "total_records": 22792,
+  "total_records": 22750,
   "updated_utc": "2026-11-15T17:14:24.091119+00:00"
 }

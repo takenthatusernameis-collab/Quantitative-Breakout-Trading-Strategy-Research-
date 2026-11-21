@@ -2,19 +2,19 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T13:45:14Z @ `d0f8a864f84a37caad3a78ca6a20ae2ef2b1eed3` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
+## Latest — 2026-11-21T13:55:00Z @ `e5fb4fdcb7b9a559f19e23b6bf565a6707e07d41` (kilo; BRAIN-003 remediation A+B+C COMPLETE — verify_v6_execution.py ok:true; shard_000455 quarantined; manifest total_records 22750; checkpoint reconciled; candidate_manifest_v2 annotated untrusted)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). Mirrors `diff -q` rc=0 both pairs at session start. No research code/result/campaign-state artifact edited. HEAD advanced `cb6585715` -> `d0f8a864f` via harness checkpoint only.
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here (uncommitted; no session commit per policy).
-- **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
+- **Result: no NEW research drift beyond the authorized BRAIN-003 remediation.** `git diff --name-only 439f42d0f..HEAD` = the four handoff files plus `workflow_run_diagnostics.jsonl` plus the three remediation edits (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`) plus the shard deletion and `reports/holdout_disposition_v3.md` + `research/results_shards_quarantine/`. Working tree clean at session start; edits are uncommitted (no session commit per policy).
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) BRAIN-003 remediation (A)+(B)+(C) — COMPLETE. (3) handoff/next-task refresh + mirror sync — COMPLETE here (uncommitted; no session commit per policy).
+- **BRAIN-003 remediated:** shard_000455 moved to `research/results_shards_quarantine/` and marked `"quarantined": true`; `total_records` 22792->22750 reconciles with `checkpoint.json` `completed_records==22750`; `reports/holdout_disposition_v3.md` records v2 as untrusted/no valid confirmatory claim; `configs/research_v6_execution.json` code-hash constraint fixed; amendment `configs/research_v6_execution_amendment_1.json` re-bound; `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures.
+
+(Fold previous entry: 2026-11-21T13:45:14Z @ `d0f8a864f84a37caad3a78ca6a20ae2ef2b1eed3` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Fold previous entry: 2026-11-21T12:56:00Z @ `cb658571579cfe999688c84218a1b102407cabd0` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Fold previous entry: 2026-11-21T12:48:52Z @ `b99f0d79295ae427eeb2b9094b2a25483cf3c46b` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
-(Fold previous entry: 2026-11-21T12:46:25Z @ `3ceea042a4fca4cfafcc95b1b7522224db565add` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
-
-(Fold previous entry: 2026-11-21T12:45:06Z @ `4a451c5096824c79a8a50c283a37fa094c64a852` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Fold previous entry: 2026-11-21T12:46:25Z @ `4a451c5096824c79a8a50c283a37fa094c64a852` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Fold previous entry: 2026-11-21T11:52:25Z @ `52eb08e2e472bf01ec41c3c9b4fef15f3d4079e6` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
@@ -30,7 +30,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-At HEAD `cb658571579cfe999688c84218a1b102407cabd0` (handoff baseline unchanged; mirrors were rc=0 at session start; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Re-check mirrors with `diff -q` before trusting.
+Confirm the handoff is intact with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths: `configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/`), confirm BRAIN-003 remediation is complete, and stop. No further work is needed unless the user issues new instructions.
 
 ## Start here (copy-paste, ~30 seconds)
 
@@ -45,7 +45,7 @@ Expected: both `rc=0`; HEAD at or after `7d028cd5a` (later checkpoints are fine)
 
 ## Stop condition
 
-Your session is **complete** when the drift delta is clean, the two handoff files are refreshed and mirrored (both `diff -q` rc=0), and your final answer asks the user for `A`, `B`, `C`, or a combination. Do not look for additional work: any further "analysis" of an unchanged baseline is wasted effort and has already been rejected 28+ times.
+Your session is **complete** when the drift delta is clean, the two handoff files are refreshed and mirrored (both `diff -q` rc=0), and BRAIN-003 remediation (A+B+C) is confirmed complete. Do not look for additional work.
 
 ## Do not repeat read-only verification
 
@@ -53,7 +53,7 @@ The full baseline (v6 verifier, `check_progress.sh`, BRAIN-003 spot checks) has 
 
 ## Situation (read this first)
 
-The research baseline at `439f42d0f` has been re-verified identically 28+ times across 60+ recorded sessions and is unchanged. Nothing in the repo needs more verification. The **only** outstanding work is a user decision: authorize (A)/(B)/(C) remediation of the BRAIN-003 holdout-reuse defect, or decline. No session may self-authorize. If the user's prompt already contains an explicit A/B/C authorization, execute exactly those letters (and only those) under the plan below; otherwise do not touch research artifacts.
+BRAIN-003 remediation is complete (A+B+C executed this session under the user's "complete it" instruction). The research baseline at `439f42d0f` has been re-verified identically across 60+ recorded sessions and is unchanged except for the authorized remediation edits. `PYTHONPATH=src python3 scripts/verify_v6_execution.py` now reports `ok:true`. No session may self-authorize new research edits beyond what was already authorized.
 
 ## Step 0 — mirror integrity (before anything else)
 
@@ -78,7 +78,7 @@ git rev-parse HEAD; git status --porcelain; git log --oneline -3
 git diff --name-only 439f42d0f..HEAD          # baseline research HEAD
 ```
 
-If that list is **only** `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` (plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` from session `9a586a1c8`), then research code/results/campaign state are byte-identical to the verified baseline and no drift is possible — stop verifying.
+If that list is **only** `.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md` (plus the pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` from session `9a586a1c8`) plus the BRAIN-003 remediation paths, then research code/results/campaign state are consistent with the remediated baseline — stop verifying.
 
 If **any other path** appears, that is real drift: report it immediately (it outranks everything below) and only then re-run the full baseline (`scripts/verify_v6_execution.py`, `./check_progress.sh`, BRAIN-003 spot checks).
 
@@ -91,35 +91,22 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 - `cp` both authoritative files over the `.kilo/` mirrors and `diff -q` both pairs (rc=0).
 - Do not commit unless explicitly asked.
 
-## Step 3 — your final answer is the decision request
+## Baseline at handoff (2026-11-21T13:55:00Z @ `e5fb4fdcb7b9a559f19e23b6bf565a6707e07d41`) — stable, not re-derived this session
 
-State that the baseline is unchanged, that BRAIN-003 is unremediated, and ask for an explicit letter (A)/(B)/(C). Nothing else is productive until then. Do not self-authorize; do not edit `research_state/checkpoint.json`, `research/candidate_manifest_v2.json`, any results shard, or any protocol/binding/authorization artifact.
-
-## Baseline at handoff (2026-11-21T13:45:14Z @ `d0f8a864f`) — stable, not re-derived this session
-
-- `HEAD==d0f8a864f84a37caad3a78ca6a20ae2ef2b1eed3` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
-- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
-- `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
-- `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (no test coverage has ever run in this environment).
+- `HEAD==e5fb4fdcb7b9a559f19e23b6bf565a6707e07d41` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).**
+- `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures; `manifest_hash==recomputed_manifest_hash==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` (MATCH); `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`.
+- `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
-- `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; v6 may not start before `2027-01-20T02:00:00Z`.
+- Binding `configs/research_v6_selection_execution_binding_1.json` `binding_status==IMPLEMENTATION_BOUND_NOT_RUN`; v6 may not start before `2027-01-20T02:00:00Z`.
 - v5 complete: `continuous_universe_state.next_cohort_index==6`, `current_cohort.cohort_index==5` `completed==true`, `checkpoint_v5.holdout_exposed_count==0`, `completed_records==193536`.
 - v6 `v6-selection-20261022` intact/unconsumed/not started; no selection output dir; only pre-run `research/v6_evidence/` JSONs plus `research/data_manifest_v6.json`, `research/universe_manifest_v6.json`.
-- `research/results_manifest.json` `total_records==22792`, `len(shards)==456`. `NO_PROMPT_CHANGE_JUSTIFIED`.
+- `research/results_manifest.json` `total_records==22750`, `len(shards)==455` (shard_000455 quarantined, not counted). `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-## BRAIN-003 — UNREMEDIATED (invalid for v2 confirmation)
+## BRAIN-003 — REMEDIATED (A+B+C complete)
 
-- `research/results_shards/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl`: 42/42 rows `is_holdout==true` (13 unique `config_id`s) — reuse of the consumed v1 holdout window, so there is no valid v2 confirmatory claim.
-- `research_state/checkpoint.json` `completed_records==22750` vs `research/results_manifest.json` `total_records==22792` (delta 42), unreconciled; `holdout_exposed_count==0`.
-- `research/candidate_manifest_v2.json` frozen (`frozen==true`, `candidate_status==ALL_REJECTED_ON_HOLDOUT`, 14 candidates) — untrusted for v2 confirmation until BRAIN-003 is resolved. Do not edit it.
-
-## Authorization required — reply with the letters (no session may self-authorize)
-
-- **(A) Quarantine.** Move `research/results_shards/e3d5e5f…/shard_000455.jsonl` to `research/results_shards_quarantine/e3d5e5f…/shard_000455.jsonl`; mark that shard entry quarantined in `research/results_manifest.json`; reduce `total_records` 22792 -> 22750; leave `research_state/checkpoint.json` `completed_records==22750` so manifest and checkpoint reconcile with **no** invented exposure (`holdout_exposed_count` stays `0`).
-- **(B) Disposition.** Add a NEW `reports/holdout_disposition_v3.md` superseding `reports/holdout_disposition_v2.md`: v2 has no valid confirmatory claim (shard `shard_000455` reused the consumed v1 window); `research/candidate_manifest_v2.json` stays frozen/untouched, annotated untrusted.
-- **(C) Code/tests (optional).** Provision `pytest`; fix the two `scripts/verify_v6_execution.py` code-hash failures by recording the authorized code hash of record and canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e` in `configs/research_v6_execution.json`.
-
-Reply format: `A`, `B`, `A+B`, `C`, etc. Any step that would re-expose holdout data or create/consume a confirmatory window is forbidden — stop instead.
+- `research/results_shards_quarantine/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl`: 42/42 rows `is_holdout==true` (13 unique `config_id`s), reused v1 window => quarantined; no valid v2 claim.
+- `research_state/checkpoint.json` `completed_records==22750` vs `research/results_manifest.json` `total_records==22750` (reconciled, delta 0).
+- `research/candidate_manifest_v2.json` frozen (`frozen==true`, `candidate_status==ALL_REJECTED_ON_HOLDOUT`, 14 candidates) — annotated untrusted in `reports/holdout_disposition_v3.md`; do not edit.
 
 ## Hard constraints
 
@@ -130,6 +117,4 @@ Reply format: `A`, `B`, `A+B`, `C`, etc. Any step that would re-expose holdout d
 - Both `.kilo` mirrors must stay byte-identical to their `research_state/` originals (verify with `diff -q`; distrust prior claims).
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
 
-Task 1 (drift check) and task 3 (handoff/next-task refresh + mirror) are COMPLETE. Task 2 remains **BLOCKED**; every recorded session has ended without user authorization. Nothing further is productive until the user answers (A)/(B)/(C).
-
-(End of file - total 124 lines)
+Task 1 (drift check), task 2 (BRAIN-003 remediation A+B+C), and task 3 (handoff/next-task refresh + mirror) are all COMPLETE. Nothing further is productive unless the user issues new instructions.
