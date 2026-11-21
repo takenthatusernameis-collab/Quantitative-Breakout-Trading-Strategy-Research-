@@ -2,18 +2,18 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T06:45:22Z @ `d895e7ed5` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
+## Latest — 2026-11-21T06:46:26Z @ `c4c1507db` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). No research code/result/campaign-state artifact edited. HEAD advanced `5c3c336ef` -> `d895e7ed5` via harness checkpoint only.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). No research code/result/campaign-state artifact edited. HEAD advanced `d895e7ed5` -> `c4c1507db` via harness checkpoint only.
 - **Mirror integrity: rc=0 both pairs at session start and end** — `.kilo/` mirrors matched the `research_state/` originals.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here (uncommitted; no session commit per policy).
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
 
-(Fold previous entry: 2026-11-21T06:44:04Z @ `5c3c336ef` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Fold previous entry: 2026-11-21T06:45:22Z @ `d895e7ed5` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 ## Your job in one sentence
 
-At HEAD `d895e7ed5` (handoff baseline unchanged; mirrors were rc=0 at session start and end; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Re-check mirrors with `diff -q` before trusting.
+At HEAD `c4c1507db` (handoff baseline unchanged; mirrors were rc=0 at session start and end; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Re-check mirrors with `diff -q` before trusting.
 
 ## Start here (copy-paste, ~30 seconds)
 
@@ -24,7 +24,7 @@ git rev-parse HEAD; git status --porcelain
 git diff --name-only 439f42d0f..HEAD
 ```
 
-Expected: both `rc=0`; HEAD at or after `2a40484ac` (a later checkpoint like `5c3c336ef` is fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
+Expected: both `rc=0`; HEAD at or after `2a40484ac` (later checkpoints like `5c3c336ef`, `c4c1507db` are fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
 
 ## Stop condition
 
@@ -78,9 +78,9 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 
 State that the baseline is unchanged, that BRAIN-003 is unremediated, and ask for an explicit letter (A)/(B)/(C). Nothing else is productive until then. Do not self-authorize; do not edit `research_state/checkpoint.json`, `research/candidate_manifest_v2.json`, any results shard, or any protocol/binding/authorization artifact.
 
-## Baseline at handoff (2026-11-21T06:45:22Z @ `d895e7ed5`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-21T06:46:26Z @ `c4c1507db`) — stable, not re-derived this session
 
-- `HEAD==d895e7ed50389bcf7c9cd60a9e9606679fe1e746` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
+- `HEAD==c4c1507dbbbe2461bae8332f98bc50a9474249ff` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (no test coverage has ever run in this environment).
