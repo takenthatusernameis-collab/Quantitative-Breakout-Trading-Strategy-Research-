@@ -2,12 +2,14 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep byte-identical to `.kilo/handoff.md` (verify with `diff -q`; do not trust prior sync claims).
 
-## Latest — 2026-11-21T04:42Z @ `5d0b97986` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
+## Latest — 2026-11-21T04:43Z @ `b1ac97059` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean. No research code/result/campaign-state artifact edited. HEAD advanced `4f43aeee0` -> `5d0b97986` via harness checkpoint ("capture completed workflow run diagnostics") only.
-- **Mirror integrity: STALE at session start (rc=1 both pairs)** — `.kilo/` mirrors lagged the `research_state/` originals by one snapshot (04:05Z vs 04:06Z); re-synced `research_state/` -> `.kilo/` and verified rc=0 both pairs at session end. (Same stale-mirror pattern seen at `91b64b47f`, `2c7f05ffd`, `a83179780`, `e74928845` — distrust prior sync claims, always `diff -q`.)
-- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` shows only the four handoff files modified (uncommitted handoff refresh; allowed set). No research code/result/campaign-state artifact edited. HEAD advanced `5d0b97986` -> `b1ac97059` via harness checkpoint only.
+- **Mirror integrity: rc=0 both pairs at session start** — `.kilo/` mirrors matched the `research_state/` originals; re-synced `research_state/` -> `.kilo/` and verified rc=0 both pairs at session end.
+- **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here (uncommitted; no session commit per policy).
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
+
+(Folded previous entry: 2026-11-21T04:42Z @ `5d0b97986` — drift CLEAN; mirrors rc=0 at start/end; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Folded previous entry: 2026-11-21T04:06Z @ `4f43aeee0` — drift CLEAN; mirrors rc=0 at start/end; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
