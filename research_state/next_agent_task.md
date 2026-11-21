@@ -2,18 +2,18 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T04:06Z @ `4f43aeee0` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
+## Latest — 2026-11-21T04:42Z @ `5d0b97986` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean. No research code/result/campaign-state artifact edited. HEAD advanced `6aad491b6` -> `4f43aeee0` via harness checkpoint only.
-- **Mirror integrity: CLEAN at session start and end** — both pairs rc=0 (no re-sync needed).
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean. No research code/result/campaign-state artifact edited. HEAD advanced `4f43aeee0` -> `5d0b97986` via harness checkpoint ("capture completed workflow run diagnostics") only.
+- **Mirror integrity: STALE at session start (rc=1 both pairs)** — `.kilo/` mirrors lagged the `research_state/` originals by one snapshot (04:05Z vs 04:06Z); re-synced `research_state/` -> `.kilo/` and verified rc=0 both pairs at session end. (Same stale-mirror pattern seen at `91b64b47f`, `2c7f05ffd`, `a83179780`, `e74928845` — distrust prior sync claims, always `diff -q`.)
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
 
-(Folded previous entry: 2026-11-21T04:05Z @ `6aad491b6` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Folded previous entry: 2026-11-21T04:06Z @ `4f43aeee0` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 ## Your job in one sentence
 
-At HEAD `6aad491b6fcf964113321bdc0dbac0659d65e1c4` (handoff baseline unchanged; mirrors verified rc=0 at session start; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
+At HEAD `5d0b97986d38f48a509ff12748a2b71fcdce5722` (handoff baseline unchanged; mirrors were stale rc=1 at session start and re-synced; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors re-synced rc=0 at session end; re-check with `diff -q` before trusting.
 
 ## Start here (copy-paste, ~30 seconds)
 
@@ -24,7 +24,7 @@ git rev-parse HEAD; git status --porcelain
 git diff --name-only 439f42d0f..HEAD
 ```
 
-Expected: both `rc=0`; HEAD at or after `6aad491b6fcf964113321bdc0dbac0659d65e1c4` (a later checkpoint is fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
+Expected: both `rc=0`; HEAD at or after `5d0b97986d38f48a509ff12748a2b71fcdce5722` (a later checkpoint is fine); empty status; delta listed in Step 1 below. Anything else is an exception — handle it via Step 1 before anything else.
 
 ## Stop condition
 
