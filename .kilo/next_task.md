@@ -2,11 +2,13 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T12:48:00Z @ `de342645a53606ffaadad4061f9fa9e37cdc5447` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
+## Latest — 2026-11-21T12:48:52Z @ `b99f0d79295ae427eeb2b9094b2a25483cf3c46b` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). Mirrors `diff -q` rc=0 both pairs at session start and after edit. No research code/result/campaign-state artifact edited. HEAD advanced `3ceea042a` -> `de342645a` via harness checkpoint only.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). Mirrors `diff -q` rc=0 both pairs at session start and after edit. No research code/result/campaign-state artifact edited. HEAD advanced `de342645a` -> `b99f0d792` via harness checkpoint only.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here (uncommitted; no session commit per policy).
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
+
+(Fold previous entry: 2026-11-21T12:48:00Z @ `de342645a53606ffaadad4061f9fa9e37cdc5447` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Fold previous entry: 2026-11-21T12:46:25Z @ `3ceea042a4fca4cfafcc95b1b7522224db565add` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
@@ -91,9 +93,9 @@ Do **not** re-run those scripts on a clean delta. The baseline has been reproduc
 
 State that the baseline is unchanged, that BRAIN-003 is unremediated, and ask for an explicit letter (A)/(B)/(C). Nothing else is productive until then. Do not self-authorize; do not edit `research_state/checkpoint.json`, `research/candidate_manifest_v2.json`, any results shard, or any protocol/binding/authorization artifact.
 
-## Baseline at handoff (2026-11-21T12:48:00Z @ `de342645a53606ffaadad4061f9fa9e37cdc5447`) — stable, not re-derived this session
+## Baseline at handoff (2026-11-21T12:48:52Z @ `b99f0d79295ae427eeb2b9094b2a25483cf3c46b`) — stable, not re-derived this session
 
-- `HEAD==de342645a53606ffaadad4061f9fa9e37cdc5447` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
+- `HEAD==b99f0d79295ae427eeb2b9094b2a25483cf3c46b` on `main`; working tree clean at session start. Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift.** The handoff is kept folded: one "Latest" entry plus the compacted session log — do not re-expand it; append one new entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:false` (exit 1), same 2 failures: the code-hash constraint does not record the authorized code hash of record; it records canonical tree digest `8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e`. Also `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`, `historical_selection_authorization_present==false`, `v3_benchmark_candles_after_the_v6_cutoff==13`, `evaluated_constituents==7`.
 - `manifest_hash == recomputed_manifest_hash == 928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026` (MATCH).
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (no test coverage has ever run in this environment).
