@@ -2,18 +2,18 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T03:02Z @ `6e94ab6fd` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
+## Latest — 2026-11-21T03:07Z @ `3d80717de` (kilo; read prior handoff task + complete + mirror sync — CLEAN)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean. No research code/result/campaign-state artifact edited. HEAD advanced `b30a41cf9` -> `6e94ab6fd` via harness checkpoint only.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` clean. No research code/result/campaign-state artifact edited. HEAD advanced `6e94ab6fd` -> `3d80717de` via harness checkpoint only.
 - **Mirror integrity: CLEAN at session start and end** — both pairs rc=0.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
 
-(Folded previous entry: 2026-11-21T03:01Z @ `b30a41cf9` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Folded previous entry: 2026-11-21T03:02Z @ `6e94ab6fd` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 ## Your job in one sentence
 
-At HEAD `6e94ab6fd0c0b4931a8a15443a1eab4afbed6556` (handoff baseline unchanged; mirrors verified rc=0 at session start; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
+At HEAD `3d80717de3a2b1674324eb96404c6bfd7ce41c47` (handoff baseline unchanged; mirrors verified rc=0 at session start; the harness may have added one more checkpoint since — the invariant to check is the drift delta, not the exact hash), prove nothing changed with one cheap drift check (`git diff --name-only 439f42d0f..HEAD` confined to the four handoff files plus `workflow_run_diagnostics.jsonl`), refresh the two handoff files + mirror them, and put the BRAIN-003 (A)/(B)/(C) authorization question in front of the user — then stop. Mirrors verified rc=0 at session start and end; re-check with `diff -q` before trusting.
 
 ## Start here (copy-paste, ~30 seconds)
 
