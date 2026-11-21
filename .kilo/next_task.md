@@ -4,7 +4,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-Verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is still complete, refresh the handoff/next-task files only if needed, sync both `.kilo` mirrors, and stop. Do not do research work or edit research artifacts.
+Run the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is still complete, refresh the handoff/next-task files only if needed, sync both `.kilo` mirrors, and stop. Do not do research work or edit research artifacts.
 
 ## Start here
 
@@ -16,18 +16,18 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty status after the harness checkpoint; drift delta confined to the four handoff files plus `workflow_run_diagnostics.jsonl` plus BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/.../shard_000455.jsonl`); verifier `ok:true` exit 0. Anything else is an exception: report it and do not remediate without explicit authorization.
+Expected: both `diff -q` rc=0; empty `git status --porcelain` (clean tree after the harness checkpoint); drift delta confined to the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) plus `research_state/workflow_run_diagnostics.jsonl` plus BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/.../shard_000455.jsonl`); verifier `ok:true` exit 0. Anything else is an exception: report it and do not remediate without explicit authorization.
 
 ## Confirm BRAIN-003 A+B+C (no edits)
 
-- `research/results_shards_quarantine/.../shard_000455.jsonl` present; original `research/results_shards/` path absent.
+- `research/results_shards_quarantine/.../shard_000455.jsonl` present; the original `research/results_shards/e3d5e5f4.../shard_000455.jsonl` path absent (that directory has 455 shards).
 - `research/results_manifest.json` `total_records==22750`; 456 shard entries = 455 active + 1 quarantined.
 - `research_state/checkpoint.json` `completed_records==22750` (delta 0), `holdout_exposed_count==0`.
-- `research/candidate_manifest_v2.json` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates — untouched.
+- `research/candidate_manifest_v2.json` `frozen==true` / `ALL_REJECTED_ON_HOLDOUT` / 14 candidates — untouched.
 
 ## If a handoff refresh is needed
 
-Append one `## Latest` entry to `research_state/agent_handoff.md`, fold the previous `Latest` entry, update `research_state/next_agent_task.md`, then make `.kilo/handoff.md` and `.kilo/next_task.md` byte-identical to the `research_state/` originals. Verify with `diff -q` (rc=0 both pairs). Do not commit unless explicitly requested.
+Append one `## Latest` entry to `research_state/agent_handoff.md`, fold the previous `Latest` entry into a `(Fold previous entry: ...)` line, update `research_state/next_agent_task.md`, then make `.kilo/handoff.md` and `.kilo/next_task.md` byte-identical to the `research_state/` originals. Verify with `diff -q` (rc=0 both pairs). Do not commit unless explicitly requested.
 
 ## Stop condition
 
