@@ -2,11 +2,11 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T14:53:00Z @ `0ea18ce78ea335c65e51928ec1280dbb7b06c61a` (kilo; prior task COMPLETE — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0)
+## Latest — 2026-11-21T14:53:59Z @ `854912c12a95a58b0fc8a9d49da6b3077d404446` (kilo; prior task COMPLETE — drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0)
 
 ## Initial task message for the next agent
 
-Read `research_state/agent_handoff.md` first (its `.kilo/handoff.md` twin must be byte-identical). The prior agent task is COMPLETE and verified: the drift delta from baseline `439f42d0f` to HEAD `0ea18ce78` is clean (only the four handoff files + `workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths), `git status --porcelain` is empty, both `diff -q` mirror pairs exit 0, and BRAIN-003 remediation (A+B+C) is confirmed complete (`total_records==22750`, 456 shard entries = 455 active + 1 quarantined, `checkpoint.completed_records==22750` delta 0, `holdout_exposed_count==0`, quarantined `shard_000455.jsonl` present with original `results_shards/` path absent, `reports/holdout_disposition_v3.md` present, `candidate_manifest_v2.json` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates).
+Read `research_state/agent_handoff.md` first (its `.kilo/handoff.md` twin must be byte-identical). The prior agent task is COMPLETE and verified: the drift delta from baseline `439f42d0f` to HEAD `854912c12` is clean (only the four handoff files + `workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths), `git status --porcelain` is empty, both `diff -q` mirror pairs exit 0, and BRAIN-003 remediation (A+B+C) is confirmed complete (`total_records==22750`, 456 shard entries = 455 active + 1 quarantined, `checkpoint.completed_records==22750` delta 0, `holdout_exposed_count==0`, quarantined `shard_000455.jsonl` present with original `results_shards/` path absent, `reports/holdout_disposition_v3.md` present, `candidate_manifest_v2.json` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates).
 
 Your job in one sentence: confirm the handoff is intact with the cheap drift check below, confirm BRAIN-003 remediation is still complete, then stop — nothing further is productive unless the user issues new instructions. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
