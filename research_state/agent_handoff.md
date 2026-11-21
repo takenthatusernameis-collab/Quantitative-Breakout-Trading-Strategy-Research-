@@ -1,8 +1,8 @@
-## Latest — 2026-11-21T14:46:28Z @ `b8216de52751d2f2b989b880d32e3f496d5a4670` (kilo; drift CLEAN; BRAIN-003 remediation A+B+C complete; handoff/next-task refreshed + mirrors synced rc=0)
+## Latest — 2026-11-21T14:47:01Z @ `dfa7e2b5b98da17e29c7bdfee89e7e073d1ef2ff` (kilo; drift CLEAN; BRAIN-003 remediation A+B+C verified complete; mirrors rc=0)
 
-- **Result: prior agent task complete.** Drift delta clean (only handoff files + workflow_run_diagnostics.jsonl + BRAIN-003 remediation paths). Mirrors rc=0 both pairs. BRAIN-003 remediation A+B+C verified complete. HEAD at `b8216de52751d2f2b989b880d32e3f496d5a4670`. `NO_PROMPT_CHANGE_JUSTIFIED`.
+- **Result: prior agent task complete.** Drift delta clean (only handoff files + workflow_run_diagnostics.jsonl + BRAIN-003 remediation paths). Mirrors rc=0 both pairs. BRAIN-003 remediation A+B+C verified complete (manifest total_records==22750, checkpoint completed_records==22750 delta 0, holdout_exposed_count==0, shard_000455 quarantined, verify_v6_execution.py ok:true). HEAD at `dfa7e2b5b98da17e29c7bdfee89e7e073d1ef2ff`. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
-(Fold previous entry: 2026-11-21T13:54:49Z @ `d2e723454b585ec159fcaefa054e60b9ef4eb0f2` — drift CLEAN; BRAIN-003 remediation A+B+C re-verified complete; mirrors rc=0; task 1/2/3 COMPLETE.)
+(Fold previous entry: 2026-11-21T14:46:28Z @ `b8216de52751d2f2b989b880d32e3f496d5a4670` — drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0.)
 
 ## Latest — 2026-11-21T13:54:49Z @ `d2e723454b585ec159fcaefa054e60b9ef4eb0f2` (kilo; prior task completed — drift CLEAN; BRAIN-003 remediation A+B+C re-verified complete; handoff/next-task refreshed + mirrors synced rc=0)
 - **Result: prior agent task (1) drift verification + (2) BRAIN-003 remediation (A+B+C) + (3) handoff/next-task refresh are COMPLETE and re-verified clean.** `git diff --name-only 439f42d0f..HEAD` = the four handoff files plus `workflow_run_diagnostics.jsonl` plus the three remediation edits (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`) plus `reports/holdout_disposition_v3.md` + `research/results_shards_quarantine/`. `git status --porcelain` empty. HEAD at `d2e723454` (latest harness checkpoint).
