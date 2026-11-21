@@ -2,11 +2,13 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep byte-identical to `.kilo/handoff.md` (verify with `diff -q`; do not trust prior sync claims).
 
-## Latest — 2026-11-21T07:49:22Z @ `9fa3f790a` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
+## Latest — 2026-11-21T07:50:00Z @ `8675811df` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). Mirrors `diff -q` rc=0 both pairs at session start; re-verified rc=0 after edit. No research code/result/campaign-state artifact edited. HEAD advanced `cbb9cd099` -> `9fa3f790a` via harness checkpoint only.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). Mirrors `diff -q` rc=0 both pairs at session start; re-verified rc=0 after edit. No research code/result/campaign-state artifact edited. HEAD advanced `9fa3f790a` -> `8675811df` via harness checkpoint only.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here (uncommitted; no session commit per policy).
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
+
+(Fold previous entry: 2026-11-21T07:49:22Z @ `9fa3f790a` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Fold previous entry: 2026-11-21T07:45:41Z @ `901cb82a2` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
@@ -180,3 +182,5 @@ See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byt
 All sessions performed only read-only baseline re-verification with **identical results** (v6 verifier `ok:false` exit 1, same 2 code-hash failures, recomputed `8cd17522...`, `manifest_hash==recomputed==92872727...` MATCH, `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`, pytest unavailable, `check_progress` 497664/497664 completed 6 next 6, binding `IMPLEMENTATION_BOUND_NOT_RUN`, v5 complete, v6 unconsumed, manifest `total_records` 22792 / 456 shards, BRAIN-003 shard 42/42 holdout with 13 config_ids, `checkpoint.json` 22750 vs 22792 delta 42, `candidate_manifest_v2` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates) and reported **no research code/result/campaign-state drift**. In every session task 1 COMPLETED, task 3 COMPLETED, and task 2 (BRAIN-003 remediation) remained **BLOCKED** for lack of explicit user authorization naming actions (A)/(B)/(C).
 
 **Process note:** repeating read-only verification adds no further value — the baseline has now been reproduced identically 28+ times across 60+ sessions. The next productive step is user authorization for BRAIN-003 remediation; the concrete approve-by-name plan (A/B/C) above unblocks it with one reply. Until then: run only `git diff --name-only 439f42d0f..HEAD` (must list only the four handoff files plus `workflow_run_diagnostics.jsonl`), `diff -q` both mirror pairs, refresh this file + `research_state/next_agent_task.md`, re-mirror, then stop and surface (A)/(B)/(C).
+
+(End of file - total 182 lines)
