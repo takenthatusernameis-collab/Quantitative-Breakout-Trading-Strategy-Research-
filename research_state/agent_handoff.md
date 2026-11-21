@@ -1,8 +1,8 @@
-## Latest — 2026-11-21T14:51:33Z @ `1beab60895b5d64d9c38bf5204e824a8c0c1f186` (kilo; drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0)
+## Latest — 2026-11-21T14:52:03Z @ `2eac95c032e2aba585a672c0bc2bb1e13d591ce0` (kilo; drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0)
 
-- **Result: prior agent task complete.** Cheap drift check clean (`git diff --name-only 439f42d0f..HEAD` = four handoff files + `workflow_run_diagnostics.jsonl` + BRAIN-003 remediation paths only); `git status --porcelain` empty; mirrors `diff -q` rc=0 both pairs. BRAIN-003 A+B+C verified complete. `NO_PROMPT_CHANGE_JUSTIFIED`. Stop.
+- **Result: prior agent task complete.** Cheap drift check clean (`git diff --name-only 439f42d0f..HEAD` = four handoff files + `workflow_run_diagnostics.jsonl` + BRAIN-003 remediation paths only); `git status --porcelain` empty; mirrors `diff -q` rc=0 both pairs. HEAD advanced `1beab6089` -> `2eac95c03` via harness checkpoint only. BRAIN-003 A+B+C verified complete. `NO_PROMPT_CHANGE_JUSTIFIED`. Stop.
 
-(Fold previous entry: 2026-11-21T14:49:57Z @ `6973f7dfde92989355769e36515794e82f790503` — drift CLEAN; BRAIN-003 remediation A+B+C re-verified complete; mirrors rc=0.)
+(Fold previous entry: 2026-11-21T14:51:33Z @ `1beab60895b5d64d9c38bf5204e824a8c0c1f186` — drift CLEAN; BRAIN-003 remediation A+B+C complete; mirrors rc=0.)
 
 - **Result: prior agent task complete and re-verified.** Drift delta clean (`git diff --name-only 439f42d0f..HEAD` = only the four handoff files + `workflow_run_diagnostics.jsonl` + BRAIN-003 remediation paths: `configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/`). `git status --porcelain` empty; HEAD at `6973f7dfd`. Mirrors rc=0 both pairs at start. BRAIN-003 A+B+C verified: `shard_000455.jsonl` in quarantine, original `results_shards/` path absent (455 active shards), manifest `total_records==22750` (456 entries = 455+1 quarantined), checkpoint `completed_records==22750` delta 0, `holdout_exposed_count==0`, `verify_v6_execution.py ok:true` (exit 0, `manifest_hash==recomputed==f6cd994f...`), `candidate_manifest_v2.json` frozen/ALL_REJECTED_ON_HOLDOUT/14 candidates untouched. `NO_PROMPT_CHANGE_JUSTIFIED`.
 
