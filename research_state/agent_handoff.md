@@ -2,11 +2,11 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep byte-identical to `.kilo/handoff.md` (verify with `diff -q`; do not trust prior sync claims).
 
-## Latest — 2026-11-21T07:57:00Z @ `df07d2228` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
+## Latest — 2026-11-21T08:46:00Z @ `f8e7fe24e` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
 
-(Fold previous entry: 2026-11-21T07:56:00Z @ `66721d30d` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Fold previous entry: 2026-11-21T07:57:00Z @ `df07d2228` — drift CLEAN; mirrors rc=1 at start (both `.kilo/` mirrors stale, re-synced rc=0); task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). Mirrors `diff -q` rc=0 both pairs at session start; re-verified rc=0 after edit. No research code/result/campaign-state artifact edited. HEAD advanced `c9228b759` -> `66721d30d` via harness checkpoint only.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty (clean tree). Mirrors `diff -q` rc=1 at session start; re-synced `research_state/` -> `.kilo/` and re-verified rc=0 after edit. No research code/result/campaign-state artifact edited. HEAD advanced `df07d2228` -> `f8e7fe24e` via harness checkpoint only.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here (uncommitted; no session commit per policy).
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
 
