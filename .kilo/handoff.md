@@ -2,12 +2,14 @@
 
 **Authoritative copy:** `research_state/agent_handoff.md`. Keep byte-identical to `.kilo/handoff.md` (verify with `diff -q`; do not trust prior sync claims).
 
-## Latest — 2026-11-20T23:58Z @ `af81341bc` (kilo; cheap drift check + mirror sync + next-agent task — CLEAN)
+## Latest — 2026-11-20T23:59Z @ `25eb2b303` (kilo; cheap drift check + mirror sync + next-agent task — CLEAN)
 
-- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited. HEAD advanced `6cd073f60` -> `af81341bc` via harness checkpoint only.
+- **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` empty. No research code/result/campaign-state artifact edited. HEAD advanced `af81341bc` -> `25eb2b303` via harness checkpoint only.
 - **Mirror integrity: CLEAN at session start and end** — both pairs rc=0.
 - **Prior agent task:** (1) cheap drift verification — COMPLETED (clean). (2) gated BRAIN-003 remediation (A)–(C) — **BLOCKED** (no A/B/C authorization in the incoming prompt). (3) handoff/next-task refresh + mirror sync — COMPLETED here.
 - **No remediation authorization received:** task 2 stays BLOCKED; research artifacts untouched.
+
+(Folded previous entry: 2026-11-20T23:58Z @ `af81341bc` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 (Folded previous entry: 2026-11-20T23:58Z @ `6cd073f60` — drift CLEAN; mirrors rc=0; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
@@ -30,11 +32,11 @@
 
 (Folded previous entry: 2026-11-20T22:02Z @ `4d4ba91f` — drift CLEAN; mirrors rc=0 at session start; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
-(Folded previous entry: 2026-11-20T22:01Z @ `f063794bf` — drift CLEAN; mirrors rc=0 at session start and end; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Folded previous entry: 2026-11-20T22:01Z @ `f063794bf` — drift CLEAN; mirrors rc=0 at start and end; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
-(Folded previous entry: 2026-11-20T21:56Z @ `6153a3b6c` — drift CLEAN; mirrors rc=0 at session start and end; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Folded previous entry: 2026-11-20T21:56Z @ `6153a3b6c` — drift CLEAN; mirrors rc=0 at start and end; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
-(Folded previous entry: 2026-11-20T21:54Z @ `3a7876f93` — drift CLEAN; mirrors rc=0 at session start and end; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
+(Folded previous entry: 2026-11-20T21:54Z @ `3a7876f93` — drift CLEAN; mirrors rc=0 at start and end; task 1 COMPLETE, task 2 BLOCKED, task 3 COMPLETE; no research edits.)
 
 ## Session log (folded; identical outcome in every session)
 
@@ -42,7 +44,7 @@
 - **2026-11-20T18:51Z @ `017a6f82e`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
 - **2026-11-20T18:50Z @ `e580bb1ad`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
 - **2026-11-20T18:47Z–18:48Z @ `6b4f9d1e6`, `7de49c68b`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
-- **2026-11-20T18:44Z @ `985972c0c`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+- **2026-11-20T18:44Z @ `985972c0c`:** drift CLEN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
 - **2026-11-20T17:55Z @ `74788cd76`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
 - **2026-11-20T17:54Z @ `6dd39285b`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
 - **2026-11-20T17:54Z @ `cf575475a`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
