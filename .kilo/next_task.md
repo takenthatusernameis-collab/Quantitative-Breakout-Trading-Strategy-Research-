@@ -2,7 +2,7 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Latest — 2026-11-21T05:44:56Z @ `15274a8f9` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
+## Latest — 2026-11-21T05:46:05Z @ `9489112a4` (kilo; cheap drift verification — COMPLETED clean; handoff/next-task refresh + mirror sync — COMPLETED)
 
 - **Result: no NEW research drift.** `git diff --name-only 439f42d0f..HEAD` = exactly the four handoff files plus `research_state/workflow_run_diagnostics.jsonl`; `git status --porcelain` shows only the four handoff files modified (uncommitted handoff refresh; allowed set). No research code/result/campaign-state artifact edited. HEAD advanced `cad397fa3` -> `15274a8f9` via harness checkpoint only.
 - **Mirror integrity: rc=0 both pairs at session start** — `.kilo/` mirrors matched the `research_state/` originals; re-synced `research_state/` -> `.kilo/` and verified rc=0 both pairs at session end.
