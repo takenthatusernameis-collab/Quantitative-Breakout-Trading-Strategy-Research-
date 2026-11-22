@@ -1,6 +1,8 @@
-## Latest — 2026-11-22T06:03:53Z @ `fd14bf90a` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits)
+## Latest — 2026-11-22T06:05:44Z @ `ef2f161ba` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits)
 
-(Fold previous entry: 2026-11-22T06:01:54Z @ `dbd06a634` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits.)
+(Fold previous entry: 2026-11-22T06:03:53Z @ `fd14bf90a` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits.)
+
+(Folded previous entry: 2026-11-22T06:01:54Z @ `dbd06a634` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits.)
 
 (Folded) 2026-11-22T05:20:54Z @ `b9719ec18` and 05:18:26Z @ `993ea9d0c` — identical outcome to the entries above.
 
