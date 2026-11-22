@@ -1,3 +1,7 @@
+## Latest — 2026-11-22T05:22:48Z @ `9327665a` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits)
+
+(Fold previous entry: 2026-11-22T05:20:54Z @ `b9719ec18` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
+
 ## Latest — 2026-11-22T05:20:54Z @ `b9719ec18` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits)
 
 (Fold previous entry: 2026-11-22T05:18:26Z @ `993ea9d0c` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
