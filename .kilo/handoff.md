@@ -1,6 +1,6 @@
-## Latest — 2026-11-22T01:12:52Z @ `e43a81ee78cbbb7951d43cc2fc15daa239fbe94b` (kilo; drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
+## Latest — 2026-11-22T01:14:45Z @ `201ba545dab64aa6282aa0a94f02ecbafddaef29` (kilo; drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
 
-(Fold previous entry: 2026-11-22T01:10:18Z @ `724da7425bf5ef9d4e72c88b838eca3945d57491` — drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
+(Fold previous entry: 2026-11-22T01:12:52Z @ `e43a81ee78cbbb7951d43cc2fc15daa239fbe94b` — drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
 (Fold previous entry: 2026-11-22T00:17:29Z @ `8a62db79dd3a83b5e1ffedc92228b2e58bc822d9` — drift CLEAN; BRAIN-003 remediation A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0.)
 (Fold previous entry: 2026-11-22T00:14:32Z @ `6dee5921338be23b6e1986e330327fda09fc9cd5` — drift CLEAN; BRAIN-003 remediation A+B+C confirmed complete; mirrors rc=0; verifier ok:true exit 0.)
@@ -21,6 +21,8 @@
 (Fold previous entry: 2026-11-21T23:22:54Z @ `0804bdc72000b116a71f367a262be490f61d21aa` — drift CLEAN; BRAIN-003 remediation A+B+C re-verified complete; mirrors rc=0; no research edits.)
 
 ## Session log (folded; identical outcome in every session)
+
+- **2026-11-22T01:14:45Z @ `201ba545d`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C re-verified complete; handoff/next-task refreshed + mirrors synced; no research edits; no session commit.
 
 - **2026-11-22T00:14:32Z @ `6dee59213`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C confirmed complete; handoff/next-task refreshed + mirrors synced; no research edits; no session commit.
 
@@ -70,11 +72,11 @@
 
 ## Initial task message for the next agent
 
-See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `e43a81ee7` (drift delta clean; original drift baseline `439f42d0f`).
+See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `201ba545d` (drift delta clean; original drift baseline `439f42d0f`).
 
 ## Baseline at handoff (2026-11-21T22:27:10Z @ `022a29bfa916e106fa71a290dad1dc0104b4edf7`) — stable, not re-derived this session
 
-- `HEAD==e43a81ee78cbbb7951d43cc2fc15daa239fbe94b` on `main`; working tree clean at session start (the handoff/next-task refresh is uncommitted; no session commit per policy). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).** Keep this handoff folded: one "Latest" entry plus the compacted session log — append one entry and fold the previous one at the same time.
+- `HEAD==201ba545dab64aa6282aa0a94f02ecbafddaef29` on `main`; working tree clean at session start (the handoff/next-task refresh is uncommitted; no session commit per policy). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).** Keep this handoff folded: one "Latest" entry plus the compacted session log — append one entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures; `manifest_hash==recomputed_manifest_hash==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` (MATCH); `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable; pytest not provisioned).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
