@@ -2,6 +2,13 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
+## Current state (verified at session start, 2026-11-22T13:55Z @ `7432c4c91`)
+
+- Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths plus the exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json`, `run_holdout_campaign.py`).
+- Both mirror pairs rc=0; working tree clean.
+- Verifier `ok:false` exit 1 — known code-hash exception, NOT remediated.
+- BRAIN-003 A+B+C intact: quarantine shard present, active path absent (455 active), manifest total_records=22750, checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14.
+
 ## Your job in one sentence
 
 Run the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is still complete, refresh the handoff/next-task files only if needed, sync both `.kilo` mirrors, and stop. Do not do research work or edit research artifacts. Do NOT remediate the current verifier failure without explicit user authorization.
@@ -16,9 +23,9 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `c486251cf` (original drift baseline `439f42d0f`).
+Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `7432c4c91` (original drift baseline `439f42d0f`).
 
-## KNOWN EXCEPTION (as of 2026-11-22T13:00Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
+## KNOWN EXCEPTION (still present as of 2026-11-22T13:55Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
 A post-baseline checkpoint commit rewrote research-state outside the handoff's expected drift set:
 
@@ -27,7 +34,7 @@ A post-baseline checkpoint commit rewrote research-state outside the handoff's e
 - `research_state/pilot_evidence.json`: top-level `code_hash` rotated to `13172b2e87ab...` (nested `evidence.code_hash` still `4bb02d54...`).
 - `run_holdout_campaign.py`: added (holdout-enabled runner; NOT executed — `research/holdout_campaign_result.json` absent).
 
-The verifier now fails because `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash` (`4bb02d54...`) != `research_state/campaign_authorization.json` `code_hash` (`13172b2e...`).
+The verifier fails because `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash` (`4bb02d54...`) != `research_state/campaign_authorization.json` `code_hash` (`13172b2e...`).
 
 The correct fix is to restore the prior authorized state (re-bind `campaign_authorization.json`/`checkpoint.json`/`pilot_evidence.json` code_hash back to `4bb02d54...` and `authorized:true`, and decide whether `run_holdout_campaign.py` stays) — but that is a substantive research-state edit and is NOT authorized here. Report the exception and stop; do not edit these artifacts.
 
