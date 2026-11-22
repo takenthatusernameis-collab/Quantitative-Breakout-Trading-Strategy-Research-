@@ -1,12 +1,12 @@
-## Latest — 2026-11-22T02:16:57Z @ `589de2d25` (kilo; drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
+## Latest — 2026-11-22T02:17:55Z @ `98e7354d7` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
 
-(Fold previous entry: 2026-11-22T02:15:28Z @ `70fdaaaff` — drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
+(Fold previous entry: 2026-11-22T02:16:57Z @ `589de2d25` — drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
-(Fold previous entry: 2026-11-22T02:14:28Z @ `7a0d2252b` — drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
-
-(Folded prior entries, identical outcome: 02:13:30Z @ `df16de6db1701acb5ce16b4046d49cfefd597968`, 02:15:00Z @ `b519a5802ec0967e30653ee26f0a92f03e030919`, 02:12:04Z @ `3a577e6bf4486018e548268bea66def7d522da2f`, 02:11:05Z @ `312bf83808d23b2c58632ad25bab442f9643eb0a`, 01:14:45Z @ `201ba545dab64aa6282aa0a94f02ecbafddaef29`, 00:17:29Z @ `8a62db79dd3a83b5e1ffedc92228b2e58bc822d9`, 00:14:32Z @ `6dee5921338be23b6e1986e330327fda09fc9cd5`, 00:11:53Z @ `974aca57153895814b2ef8e0f94b33a10f2655ea`, 00:10:57Z @ `d525b7fe37a29185a61a76ae486fa3f2f825f7f3`, 00:10:01Z @ `552ca798342b22748405bc3f9031c3244f6d26d6`, 00:09:33Z @ `90972fc0cacdfcccb3948ff581f7fbaabef24f99`, 2026-11-21T23:30:50Z @ `9c2ad66f27cd6c0ee185b781ef9a8b6f08330f09`, 23:29:07Z @ `79c56dc519d99441da233c6b5ca6b28477764c08`, 23:27:15Z @ `dd28ead17301ccf549e6e28200a066f27e5f95af`, 23:22:54Z @ `0804bdc72000b116a71f367a262be490f61d21aa` — all: drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
+(Folded prior entries, identical outcome in every session: 02:15:28Z @ `70fdaaaff`, 02:14:28Z @ `7a0d2252b`, 01:16:09Z @ `aa4824851`, 01:14:45Z @ `201ba545d`, 00:14:32Z @ `6dee59213`, 00:13:41Z @ `67e6ad3cf`, 01:12:52Z @ `e43a81ee7`, 2026-11-21T23:29:07Z @ `79c56dc51`, 23:27:15Z @ `dd28ead17301ccf549e6e28200a066f27e5f95af`, 23:22:54Z @ `0804bdc72000b116a71f367a262be490f61d21aa`, plus all 00:54Z–13:00Z group and 10:27Z–23:44Z group — all: drift CLEAN; BRAIN-003 A+B+C complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
 ## Session log (folded; identical outcome in every session)
+
+- **2026-11-22T02:17:55Z @ `98e7354d7`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C re-confirmed complete (quarantined shard present at `research/results_shards_quarantine/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl`, original `research/results_shards/` path absent; manifest total_records=22750 = checkpoint completed_records=22750, delta 0, holdout_exposed_count=0; candidate_manifest_v2.json frozen/ALL_REJECTED_ON_HOLDOUT/14); verifier ok:true exit 0, failures=[]; handoff refreshed + mirrors synced; no research edits; no session commit.
 
 - **2026-11-22T02:16:57Z @ `589de2d25`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C re-verified complete; verifier ok:true exit 0; handoff compacted (one Latest + folded entries) + mirrors synced; no research edits; no session commit.
 
@@ -31,31 +31,57 @@
 - **2026-11-21T23:26:00Z @ `543df2ca4`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C confirmed complete; handoff/next-task refreshed + mirrors synced; no research edits; no session commit.
 
 - **2026-11-21T16:56:12Z @ `a59a6f26f`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C confirmed complete; handoff/next-task refreshed + mirrors synced; no research edits; no session commit.
+
 - **2026-11-21T01:03Z @ `b72c13247`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T18:53Z @ `fd0065638`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T18:51Z @ `017a6f82e`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T18:50Z @ `e580bb1ad`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T18:47Z–18:48Z @ `6b4f9d1e6`, `7de49c68b`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T18:44Z @ `985972c0c`:** drift CLEN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:55Z @ `74788cd76`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:54Z @ `6dd39285b`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:54Z @ `cf575475a`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:53Z @ `aa41d466c`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:51Z @ `5bc706358`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:49Z @ `b8be62171`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:44Z @ `6c2e99a14`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:05Z @ `c2c57c281`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T17:00Z @ `d04f6b9cf`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; no research edits; no session commit.
+
 - **2026-11-20T16:55Z @ `1425781293`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; handoff compacted; no research edits; no session commit.
+
 - **2026-11-20T16:51Z @ `139c90a49`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; handoff compacted; no research edits; no session commit.
+
 - **2026-11-20T16:46Z @ `d04e0dc91`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; handoff compacted; no research edits; no session commit.
+
 - **2026-11-20T13:08Z @ `764db5bc`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; handoff compacted; no research edits; no session commit.
+
 - **2026-11-20T13:07Z @ `4e909830`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; handoff compacted; no research edits; no session commit.
+
 - **2026-11-20T13:05Z @ `12802adf2`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 BLOCKED; handoff compacted; no research edits; no session commit.
+
 - **2026-11-20T13:03Z @ `cd040b8ca`:** drift CLEAN; mirror handoff pair stale (rc=1) and re-synced; BRAIN-003 BLOCKED; handoff compacted; no research edits; no session commit.
+
 - **2026-11-20T13:02Z @ `1e8c9494e`:** drift CLEAN; mirror handoff pair stale (rc=1) and re-synced; BRAIN-003 BLOCKED; handoff compacted; no research edits; no session commit.
+
 - **2026-11-20T00:54Z–13:00Z (`e74928845`, `20e478250`, `debd0576c`, `7728805fb`, `be89df680`, `7373112b3`, `465a60b95`, `08683ed42`, `9076e6c753`, `0d629e243`, `82e734bcc`, `7f9462970`, `312cf4746`, `e5c8d4085`, `8c79c9aab`, `6c161f639`, `58876d396`, `a83179780`, `8f4f89e27`, `c2d9d410f`, `915a17b61`, `686f441d6`, `66b631dd7`, `2c7f05ffd`, `9a65d4c9c`, `4ebe32958`, `38870cc97`, `91b64b47f`, `7ed89ec89`, plus the 00:54Z–00:56Z group at `d4332f5f5`, `4ff718d9e`, `34b4595f7`, `4a54f2818`): all identical — cheap drift check CLEAN; task 1 and task 3 COMPLETED; task 2 BLOCKED for lack of A/B/C authorization; no substantive research edits; no session-authored research commit; HEAD advanced only via harness checkpoints.
+
 - **2026-11-19T10:27Z–23:44Z** (`120a23058`, `13f68210e`, `7bc0651f8`, `5b87a6fac`, `70c1bb775`, `910090a25`, `6ad9f2f6a`, `6f3a30783`, `de3b24921`, `49ac51900`, `ab642eabc`, `a0f300c9b`, `03913ce6c`, `59fbec234`, `0f0df253d`, `ffc18bd1b`, `793399708`, `94585f4b`, `4cb6bc9f`, `023a4639e`, `1858d62e4`, `587f6e2cb`, `d18f55783`, `0d06f5368`, `13c9a3e0e`, `0132f241d`, `e5b5b6295`, `69f627b4f`): same outcome, no exceptions.
+
 - **Reliability notes (still governing):** "NOT committed" claims in old entries are contradicted by checkpoint commits `c559b2400`, `8bef4af5e`, `0e4058cf0`, `a06cff102`, `66abdf11a`, `83d0f4cf1`; "mirrors verified" claims have been false at least at `91b64b47f`, `2c7f05ffd`, `a83179780`, and now `e74928845`. Always run `diff -q` and `git log` yourself.
 
 ## Remediation plan (EXECUTED — A+B+C complete)
@@ -70,7 +96,7 @@ See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byt
 
 ## Baseline at handoff (2026-11-21T22:27:10Z @ `022a29bfa916e106fa71a290dad1dc0104b4edf7`) — stable, not re-derived this session
 
-- `HEAD==aa48248512c1aa329713f7d2b650839350e4dbac` on `main`; working tree clean at session start (the handoff/next-task refresh is uncommitted; no session commit per policy). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).** Keep this handoff folded: one "Latest" entry plus the compacted session log — append one entry and fold the previous one at the same time.
+- `HEAD==98e7354d71e9e2d1314a834981ab493d6f029e9d` on `main`; working tree clean at session start (the handoff/next-task refresh is uncommitted; no session commit per policy). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).** Keep this handoff folded: one "Latest" entry plus the compacted session log — append one entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures; `manifest_hash==recomputed_manifest_hash==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` (MATCH); `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable; pytest not provisioned).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
