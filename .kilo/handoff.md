@@ -1,10 +1,12 @@
-## Latest — 2026-11-22T04:19:06Z @ `ae2a1d651` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
+## Latest — 2026-11-22T05:14:04Z @ `eca39daff` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
 
-(Fold previous entry: 2026-11-22T04:18:03Z @ `0b3a95ba7` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
+(Fold previous entry: 2026-11-22T04:19:06Z @ `ae2a1d651` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
 (Folded prior entries, identical outcome in every session: 2026-11-22T04:16:10Z @ `0d8ba1563`, 04:15:11Z @ `6433c2c41`, 03:16:34Z @ `d5ae93a67`, 03:15:33Z @ `cf4b37058`, 03:12:13Z @ `308ba23d0`, 02:17:55Z @ `98e7354d7`, 02:16:57Z @ `589de2d25`, 02:15:28Z @ `70fdaaaff`, 02:14:28Z @ `7a0d2252b`, 01:16:09Z @ `aa4824851`, 01:14:45Z @ `201ba545d`, 00:14:32Z @ `6dee59213`, 00:13:41Z @ `67e6ad3cf`, 01:12:52Z @ `e43a81ee7`, 2026-11-21T23:29:07Z @ `79c56dc51`, 23:27:15Z @ `dd28ead17301ccf549e6e28200a066f27e5f95af`, 23:22:54Z @ `0804bdc72000b116a71f367a262be490f61d21aa`, plus all 00:54Z–13:00Z group and 10:27Z–23:44Z group — all: drift CLEAN; BRAIN-003 A+B+C complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
 ## Session log (folded; identical outcome in every session)
+
+- **2026-11-22T05:14:04Z @ `eca39daff`:** drift CLEAN (`git diff --name-only 439f42d0f..HEAD` = four handoff files + `workflow_run_diagnostics.jsonl` + BRAIN-003 remediation paths, nothing else); mirrors rc=0 both pairs at start; BRAIN-003 A+B+C re-confirmed complete (455 active shards in `research/results_shards/e3d5e5f4.../` = shard_000000..000454, shard_000455 absent from `research/results_shards/`, present in `research/results_shards_quarantine/e3d5e5f4.../shard_000455.jsonl`; manifest total_records=22750 = checkpoint completed_records=22750, delta 0, holdout_exposed_count=0; 456 shard entries = 455 active + 1 quarantined; candidate_manifest_v2.json frozen/ALL_REJECTED_ON_HOLDOUT/14); verifier ok:true exit 0, failures=[], manifest_hash==recomputed==f6cd994f...; handoff/next-task refreshed + mirrors re-synced; no research edits; no session commit.
 
 - **2026-11-22T04:19:06Z @ `ae2a1d651`:** drift CLEAN (`git diff --name-only 439f42d0f..HEAD` = four handoff files + `workflow_run_diagnostics.jsonl` + BRAIN-003 remediation paths, nothing else); mirrors rc=0 both pairs at start; BRAIN-003 A+B+C re-confirmed complete (455 active shards in `research/results_shards/e3d5e5f4.../` = shard_000000..000454, shard_000455 absent from `research/results_shards/`, present in `research/results_shards_quarantine/e3d5e5f4.../shard_000455.jsonl`; manifest total_records=22750 = checkpoint completed_records=22750, delta 0, holdout_exposed_count=0; 456 shard entries = 455 active + 1 quarantined; candidate_manifest_v2.json frozen/ALL_REJECTED_ON_HOLDOUT/14); verifier ok:true exit 0, failures=[], manifest_hash==recomputed==f6cd994f...; handoff/next-task refreshed + mirrors re-synced; no research edits; no session commit.
 
@@ -104,7 +106,7 @@
 
 ## Initial task message for the next agent
 
-See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `ae2a1d651` (drift delta clean; original drift baseline `439f42d0f`).
+See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `eca39daff` (drift delta clean; original drift baseline `439f42d0f`).
 
 ## Baseline at handoff (2026-11-21T22:27:10Z @ `022a29bfa916e106fa71a290dad1dc0104b4edf7`) — stable, not re-derived this session
 
