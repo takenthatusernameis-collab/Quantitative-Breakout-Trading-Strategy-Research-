@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-22T17:02:54Z @ `512a506330`)
+## Current state (verified at session start, 2026-11-22T17:04:21Z @ `b970ce814`)
 
-- Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths plus the exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py` added). No research edits; working tree clean.
-- Mirror pair `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0; `.kilo/handoff.md` vs `research_state/agent_handoff.md` rc=0 at session start (already byte-identical, no re-sync needed).
+- Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths plus the exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py` added). No research edits; working tree clean (`git status --porcelain` empty).
+- Mirror pair `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0; `.kilo/handoff.md` vs `research_state/agent_handoff.md` rc=0 (byte-identical at session start, no re-sync needed).
 - Verifier `ok:false` exit 1 — known code-hash exception, NOT remediated.
 - BRAIN-003 A+B+C intact: quarantine shard present, active path absent (455 active), manifest total_records=22750, checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14.
 
@@ -23,11 +23,11 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `512a506330` (original drift baseline `439f42d0f`).
+Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `b970ce814` (original drift baseline `439f42d0f`; original baseline `c486251cf`).
 
-## KNOWN EXCEPTION (still present as of 2026-11-22T17:02:54Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
+## KNOWN EXCEPTION (still present as of 2026-11-22T17:04:21Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
-A post-baseline checkpoint commit rewrote research-state outside the handoff's expected drift set:
+A post-baseline checkpoint commit (2026-11-22T11:11:36Z, `6a870b604`) rewrote research-state outside the handoff's expected drift set:
 
 - `research_state/campaign_authorization.json`: `authorized` flipped `true`→`false`; `code_hash` rotated `4bb02d54a1cb...`→`13172b2e87ab...`; added `reasons: ["evidence.code_hash mismatch","checkpoint_state.code_hash mismatch"]`; `evidence_digest` → `a3745961...`.
 - `research_state/checkpoint.json`: `code_hash` rotated to `13172b2e87ab...` (counters untouched: `completed_records==22750`).
@@ -40,7 +40,7 @@ The correct fix is to restore the prior authorized state (re-bind `campaign_auth
 
 ## Confirm BRAIN-003 A+B+C (no edits)
 
-- `research/results_shards_quarantine/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl` present; the original `research/results_shards/e3d5e5f4.../shard_000455.jsonl` path absent (that directory has 455 shards).
+- `research/results_shards_quarantine/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl` present (42 records, `quarantined:true`); the original `research/results_shards/e3d5e5f4.../shard_000455.jsonl` path absent (that directory has 455 shards).
 - `research/results_manifest.json` `total_records==22750`; 456 shard entries = 455 active + 1 quarantined.
 - `research_state/checkpoint.json` `completed_records==22750` (delta 0), `holdout_exposed_count==0`.
 - `research/candidate_manifest_v2.json` `frozen==true` / `ALL_REJECTED_ON_HOLDOUT` / 14 candidates — untouched.
