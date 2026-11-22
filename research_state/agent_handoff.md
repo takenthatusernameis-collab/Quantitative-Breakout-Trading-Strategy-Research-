@@ -1,12 +1,13 @@
-## Latest — 2026-11-22T18:43:12Z @ `c48b87b60` (kilo)
+## Latest — 2026-11-22T18:46:05Z @ `f3b4962581` (kilo)
 
-- (Fold previous entry: 2026-11-22T18:42:37Z @ `e8732370f` — drift CLEAN; mirrors rc=0; verifier `ok:false` code-hash exception; BRAIN-003 A+B+C complete; no research edits; no session commit.)
-- Drift CLEAN. `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths. No research edits. Working tree clean (`git status --porcelain` empty).
+- (Fold previous entry: 2026-11-22T18:43:12Z @ `c48b87b60` — drift CLEAN; mirrors rc=0; verifier `ok:false` code-hash exception; BRAIN-003 A+B+C complete; no research edits; no session commit.)
+- Drift CLEAN. `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `reports/holdout_disposition_v3.md`, `research/results_manifest.json`, quarantine shard) plus the exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json`, `run_holdout_campaign.py`). No research edits. Working tree clean (`git status --porcelain` empty).
+- HEAD advanced `c48b87b60`→`f3b4962581` — a harness checkpoint commit ("chore(kilo): checkpoint agent session") that touched ONLY the four handoff files; not a research edit. Drift delta set unchanged.
 - Mirrors rc=0 both pairs: `.kilo/handoff.md`==`research_state/agent_handoff.md`, `.kilo/next_task.md`==`research_state/next_agent_task.md`.
-- Verifier `ok:false` exit 1 — known code-hash exception, NOT remediated. `manifest_hash`==`recomputed`==`f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` still MATCHES.
-- BRAIN-003 A+B+C confirmed complete (quarantined shard present, active path absent, manifest/checkpoint reconciled at 22750, candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14).
-- Prior agent task COMPLETE (cheap drift check, mirror confirm, BRAIN-003 A+B+C confirmation, exception reported). **Remediation NOT authorized — requires explicit user approval.**
-- Session start HEAD `c48b87b60` is a harness checkpoint; no session commit per policy. Baseline HEAD reference: original drift baseline `439f42d0f`; original baseline `c486251cf`.
+- Verifier `ok:false` exit 1 — known code-hash exception, NOT remediated. `manifest_hash`==`recomputed_manifest_hash`==`f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` still MATCHES; `canonical_hashed_set_digest`==`8cd17522...` matches the BRAIN-003 C fix.
+- BRAIN-003 A+B+C confirmed complete: quarantined shard present (42 records, `quarantined:true`), active path absent (455 active), `results_manifest.total_records==22750` (456 entries = 455 active + 1 quarantined), `checkpoint.completed_records==22750` (delta 0), `holdout_exposed_count==0`, `candidate_manifest_v2` `frozen==true` / `ALL_REJECTED_ON_HOLDOUT` / 14 candidates.
+- Prior agent task COMPLETE (cheap drift check, mirror confirm, HEAD advance noted, BRAIN-003 A+B+C confirmation, exception reported). **Remediation NOT authorized — requires explicit user approval.**
+- Session start HEAD `f3b4962581` is a harness checkpoint; no session commit per policy. Baseline HEAD references: original drift baseline `439f42d0f`; original baseline `c486251cf`; prior-session handoff baseline `c48b87b60`.
 
 ## KNOWN EXCEPTION — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
