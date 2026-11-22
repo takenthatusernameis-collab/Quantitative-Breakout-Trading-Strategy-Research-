@@ -1,4 +1,6 @@
-## Latest — 2026-11-22T08:03:20Z @ `13bd13ba5` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active shards shard_000000..000454 in `research/results_shards/e3d5e5f4.../` + 1 quarantined shard_000455 = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits)
+## Latest — 2026-11-22T08:05:01Z @ `8e7563175` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active shards shard_000000..000454 in `research/results_shards/e3d5e5f4.../` + 1 quarantined shard_000455 = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits)
+
+(Fold previous entry: 2026-11-22T08:03:20Z @ `13bd13ba5` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits.)
 
 (Fold previous entry: 2026-11-22T07:09:27Z @ `a4e61776d` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0 both pairs; verifier ok:true exit 0; 455 active + 1 quarantined = 456 manifest entries, manifest total_records=22750 = checkpoint completed_records=22750 delta 0, holdout_exposed_count=0; candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14; no research edits.)
 
@@ -126,7 +128,7 @@
 
 ## Initial task message for the next agent
 
-See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `13bd13ba5` (drift delta clean; original drift baseline `439f42d0f`).
+See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `8e7563175` (drift delta clean; original drift baseline `439f42d0f`).
 
 ## Baseline at handoff (2026-11-21T22:27:10Z @ `022a29bfa916e106fa71a290dad1dc0104b4edf7`) — stable, not re-derived this session
 
