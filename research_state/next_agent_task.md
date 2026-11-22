@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-22T14:02:26Z @ `6a59055cd308db89b7b37b1c1db8ce5490819839`)
+## Current state (verified at session start, 2026-11-22T14:55:24Z @ `4f31120ee62e430beb46e807afbcada6d768e7b9`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths plus the exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json`, `run_holdout_campaign.py`).
-- Both mirror pairs rc=0; working tree clean.
+- Mirror pair `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0; `.kilo/handoff.md` vs `research_state/agent_handoff.md` was rc=1 at session start (stale mirror), re-synced; both pairs now rc=0; working tree clean.
 - Verifier `ok:false` exit 1 — known code-hash exception, NOT remediated.
 - BRAIN-003 A+B+C intact: quarantine shard present, active path absent (455 active), manifest total_records=22750, checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14.
 
@@ -23,7 +23,7 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `6a59055cd308db89b7b37b1c1db8ce5490819839` (original drift baseline `439f42d0f`).
+Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `4f31120ee62e430beb46e807afbcada6d768e7b9` (original drift baseline `439f42d0f`).
 
 ## KNOWN EXCEPTION (still present as of 2026-11-22T13:55Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
