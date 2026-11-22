@@ -1,10 +1,12 @@
-## Latest — 2026-11-22T03:13:00Z @ `b172b44f8` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
+## Latest — 2026-11-22T03:15:33Z @ `cf4b37058` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
 
-(Fold previous entry: 2026-11-22T03:12:13Z @ `308ba23d0` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
+(Fold previous entry: 2026-11-22T03:13:00Z @ `b172b44f8` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
-(Folded prior entries, identical outcome in every session: 02:17:55Z @ `98e7354d7`, 02:16:57Z @ `589de2d25`, 02:15:28Z @ `70fdaaaff`, 02:14:28Z @ `7a0d2252b`, 01:16:09Z @ `aa4824851`, 01:14:45Z @ `201ba545d`, 00:14:32Z @ `6dee59213`, 00:13:41Z @ `67e6ad3cf`, 01:12:52Z @ `e43a81ee7`, 2026-11-21T23:29:07Z @ `79c56dc51`, 23:27:15Z @ `dd28ead17301ccf549e6e28200a066f27e5f95af`, 23:22:54Z @ `0804bdc72000b116a71f367a262be490f61d21aa`, plus all 00:54Z–13:00Z group and 10:27Z–23:44Z group — all: drift CLEAN; BRAIN-003 A+B+C complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
+(Folded prior entries, identical outcome in every session: 03:12:13Z @ `308ba23d0`, 02:17:55Z @ `98e7354d7`, 02:16:57Z @ `589de2d25`, 02:15:28Z @ `70fdaaaff`, 02:14:28Z @ `7a0d2252b`, 01:16:09Z @ `aa4824851`, 01:14:45Z @ `201ba545d`, 00:14:32Z @ `6dee59213`, 00:13:41Z @ `67e6ad3cf`, 01:12:52Z @ `e43a81ee7`, 2026-11-21T23:29:07Z @ `79c56dc51`, 23:27:15Z @ `dd28ead17301ccf549e6e28200a066f27e5f95af`, 23:22:54Z @ `0804bdc72000b116a71f367a262be490f61d21aa`, plus all 00:54Z–13:00Z group and 10:27Z–23:44Z group — all: drift CLEAN; BRAIN-003 A+B+C complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
 ## Session log (folded; identical outcome in every session)
+
+- **2026-11-22T03:15:33Z @ `cf4b37058`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C re-confirmed complete (455 active shards across 8 nested dirs, shard_000455 absent from `research/results_shards/`, present in `research/results_shards_quarantine/e3d5e5f4.../shard_000455.jsonl`; manifest total_records=22750 = checkpoint completed_records=22750, delta 0, holdout_exposed_count=0; 456 shard entries = 455 active + 1 quarantined; candidate_manifest_v2.json frozen/ALL_REJECTED_ON_HOLDOUT/14); verifier ok:true exit 0, failures=[]; handoff refreshed + mirrors synced; no research edits; no session commit.
 
 - **2026-11-22T03:13:00Z @ `b172b44f8`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C re-confirmed complete (455 active shards, shard_000455 absent from `research/results_shards/`, present in `research/results_shards_quarantine/` with 42/42 holdout rows across 13 config_ids; manifest total_records=22750 = checkpoint completed_records=22750, delta 0, holdout_exposed_count=0; candidate_manifest_v2.json frozen/ALL_REJECTED_ON_HOLDOUT/14); verifier ok:true exit 0, failures=[]; handoff refreshed + mirrors synced; no research edits; no session commit.
 
