@@ -16,7 +16,7 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain` (clean tree after the harness checkpoint); drift delta confined to the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) plus `research_state/workflow_run_diagnostics.jsonl` plus BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/.../shard_000455.jsonl`); verifier `ok:true` exit 0. Current baseline HEAD: `308ba23d0`. Anything else is an exception: report it and do not remediate without explicit authorization.
+Expected: both `diff -q` rc=0; empty `git status --porcelain` (clean tree after the harness checkpoint); drift delta confined to the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) plus `research_state/workflow_run_diagnostics.jsonl` plus BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/.../shard_000455.jsonl`); verifier `ok:true` exit 0. Current baseline HEAD: `b172b44f8`. Anything else is an exception: report it and do not remediate without explicit authorization.
 
 ## Confirm BRAIN-003 A+B+C (no edits)
 

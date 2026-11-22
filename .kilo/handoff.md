@@ -1,10 +1,12 @@
-## Latest — 2026-11-22T03:12:13Z @ `308ba23d0` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
+## Latest — 2026-11-22T03:13:00Z @ `b172b44f8` (kilo; drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
 
-(Fold previous entry: 2026-11-22T03:11:45Z @ `957b86d8a` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
+(Fold previous entry: 2026-11-22T03:12:13Z @ `308ba23d0` — drift CLEAN; BRAIN-003 A+B+C re-confirmed complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
 (Folded prior entries, identical outcome in every session: 02:17:55Z @ `98e7354d7`, 02:16:57Z @ `589de2d25`, 02:15:28Z @ `70fdaaaff`, 02:14:28Z @ `7a0d2252b`, 01:16:09Z @ `aa4824851`, 01:14:45Z @ `201ba545d`, 00:14:32Z @ `6dee59213`, 00:13:41Z @ `67e6ad3cf`, 01:12:52Z @ `e43a81ee7`, 2026-11-21T23:29:07Z @ `79c56dc51`, 23:27:15Z @ `dd28ead17301ccf549e6e28200a066f27e5f95af`, 23:22:54Z @ `0804bdc72000b116a71f367a262be490f61d21aa`, plus all 00:54Z–13:00Z group and 10:27Z–23:44Z group — all: drift CLEAN; BRAIN-003 A+B+C complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
 ## Session log (folded; identical outcome in every session)
+
+- **2026-11-22T03:13:00Z @ `b172b44f8`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C re-confirmed complete (455 active shards, shard_000455 absent from `research/results_shards/`, present in `research/results_shards_quarantine/` with 42/42 holdout rows across 13 config_ids; manifest total_records=22750 = checkpoint completed_records=22750, delta 0, holdout_exposed_count=0; candidate_manifest_v2.json frozen/ALL_REJECTED_ON_HOLDOUT/14); verifier ok:true exit 0, failures=[]; handoff refreshed + mirrors synced; no research edits; no session commit.
 
 - **2026-11-22T03:12:13Z @ `308ba23d0`:** drift CLEAN; mirrors rc=0 at start and end; BRAIN-003 A+B+C re-confirmed complete (455 active shards, shard_000455 absent from `research/results_shards/`, present in `research/results_shards_quarantine/` with 42/42 holdout rows across 13 config_ids; manifest total_records=22750 = checkpoint completed_records=22750, delta 0, holdout_exposed_count=0; candidate_manifest_v2.json frozen/ALL_REJECTED_ON_HOLDOUT/14); verifier ok:true exit 0, failures=[]; handoff refreshed + mirrors synced; no research edits; no session commit.
 
@@ -94,11 +96,11 @@
 
 ## Initial task message for the next agent
 
-See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `308ba23d0` (drift delta clean; original drift baseline `439f42d0f`).
+See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `b172b44f8` (drift delta clean; original drift baseline `439f42d0f`).
 
 ## Baseline at handoff (2026-11-21T22:27:10Z @ `022a29bfa916e106fa71a290dad1dc0104b4edf7`) — stable, not re-derived this session
 
-- `HEAD==98e7354d71e9e2d1314a834981ab493d6f029e9d` on `main`; working tree clean at session start (the handoff/next-task refresh is uncommitted; no session commit per policy). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).** Keep this handoff folded: one "Latest" entry plus the compacted session log — append one entry and fold the previous one at the same time.
+- `HEAD==b172b44f8b26182ca86947ef9374cb0206f0a5a2` on `main`; working tree clean at session start (the handoff/next-task refresh is uncommitted; no session commit per policy). Baseline research HEAD `439f42d0f`; every commit since is a handoff-only checkpoint plus one pre-acknowledged `research_state/workflow_run_diagnostics.jsonl` line. **No NEW research drift beyond the authorized BRAIN-003 remediation (A+B+C).** Keep this handoff folded: one "Latest" entry plus the compacted session log — append one entry and fold the previous one at the same time.
 - `PYTHONPATH=src python3 scripts/verify_v6_execution.py` -> `ok:true` (exit 0), no failures; `manifest_hash==recomputed_manifest_hash==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` (MATCH); `evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z`; `v6_execution_path_canonical_digest==37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72`; `historical_selection_authorization_present==false`; `v3_benchmark_candles_after_the_v6_cutoff==13`; `evaluated_constituents==7`.
 - `python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q` -> `No module named pytest` (unavailable; pytest not provisioned).
 - `./check_progress.sh` -> `report_exists: True`, `records: 497664 total: 497664`, completed 6, `next: 6`.
