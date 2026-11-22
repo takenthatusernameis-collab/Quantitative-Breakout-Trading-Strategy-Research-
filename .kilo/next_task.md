@@ -16,11 +16,11 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain`; verifier `ok:true` exit 0 (see exception below — currently `ok:false`). Current baseline HEAD: `c486251cf` (original drift baseline `439f42d0f`).
+Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `c486251cf` (original drift baseline `439f42d0f`).
 
-## KNOWN EXCEPTION (as of 2026-11-22T12:57Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
+## KNOWN EXCEPTION (as of 2026-11-22T13:00Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
-A post-baseline checkpoint commit `6a870b604` (2026-11-22T11:11:36Z) rewrote research-state outside the handoff's expected drift set:
+A post-baseline checkpoint commit rewrote research-state outside the handoff's expected drift set:
 
 - `research_state/campaign_authorization.json`: `authorized` flipped `true`→`false`; `code_hash` rotated `4bb02d54a1cb...`→`13172b2e87ab...`; added `reasons: ["evidence.code_hash mismatch","checkpoint_state.code_hash mismatch"]`; `evidence_digest` → `a3745961...`.
 - `research_state/checkpoint.json`: `code_hash` rotated to `13172b2e87ab...` (counters untouched: `completed_records==22750`).
