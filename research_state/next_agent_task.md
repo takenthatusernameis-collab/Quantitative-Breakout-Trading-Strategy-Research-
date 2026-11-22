@@ -18,7 +18,7 @@ PYTHONPATH=src python3 scripts/verify_v6_execution.py
 
 Expected: both `diff -q` rc=0; empty `git status --porcelain`; verifier `ok:true` exit 0 (see exception below — currently `ok:false`). Current baseline HEAD: `b98d29918` (original drift baseline `439f42d0f`).
 
-## KNOWN EXCEPTION (as of 2026-11-22T11:55Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
+## KNOWN EXCEPTION (as of 2026-11-22T11:59Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
 A post-baseline checkpoint commit `6a870b604` (2026-11-22T11:11:36Z) rewrote research-state outside the handoff's expected drift set:
 
