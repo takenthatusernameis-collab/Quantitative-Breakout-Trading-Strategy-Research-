@@ -1,4 +1,8 @@
-## Latest — 2026-11-22T19:44:06Z @ `18db38df8` (kilo)
+## Latest — 2026-11-22T19:44:57Z @ `3a560b8db` (kilo)
+
+- Drift CLEAN. `git diff --name-only 439f42d0f..HEAD` unchanged set (four handoff files + `workflow_run_diagnostics.jsonl` + BRAIN-003 remediation/exception paths). Working tree clean. HEAD advanced to `3a560b8db` (checkpoint). Mirrors rc=0 both pairs. Verifier `ok:false` code-hash exception unchanged, NOT remediated. BRAIN-003 A+B+C intact. Prior agent task COMPLETE. No research edits; no remediation without authorization.
+
+- (Fold previous entry: 2026-11-22T19:44:06Z @ `18db38df8` — drift CLEAN; mirrors rc=0; verifier `ok:false` code-hash exception; BRAIN-003 A+B+C complete; no research edits; no session commit.)
 
 - (Fold previous entry: 2026-11-22T18:53:14Z @ `f4b2ff778` — drift CLEAN; mirrors rc=0; verifier `ok:false` code-hash exception; BRAIN-003 A+B+C complete; no research edits; no session commit.)
 - Drift CLEAN. `git diff --name-only 439f42d0f..HEAD` lists exactly: the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) + `research_state/workflow_run_diagnostics.jsonl` + BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `reports/holdout_disposition_v3.md`, `research/results_manifest.json`, `research/results_shards_quarantine/.../shard_000455.jsonl`) + exception paths (`research_state/campaign_authorization.json`, `research_state/checkpoint.json`, `research_state/pilot_evidence.json`, `run_holdout_campaign.py`). No research edits. Working tree clean (`git status --porcelain` empty).
