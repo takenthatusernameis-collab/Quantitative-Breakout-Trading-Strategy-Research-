@@ -2,7 +2,7 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-22T13:56Z @ `97555104e326981e667f5fd028c72f29e961026`)
+## Current state (verified at session start, 2026-11-22T13:58:07Z @ `bcab837d6c11382757c3cb55029a2baabe377859`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths plus the exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json`, `run_holdout_campaign.py`).
 - Both mirror pairs rc=0; working tree clean.
@@ -23,7 +23,7 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `97555104e326981e667f5fd028c72f29e961026` (original drift baseline `439f42d0f`).
+Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `bcab837d6c11382757c3cb55029a2baabe377859` (original drift baseline `439f42d0f`).
 
 ## KNOWN EXCEPTION (still present as of 2026-11-22T13:55Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
