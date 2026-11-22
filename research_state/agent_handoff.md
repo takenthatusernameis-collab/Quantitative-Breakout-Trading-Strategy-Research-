@@ -150,3 +150,8 @@ Every session on 2026-11-21/22 reproduced the same read-only verification and st
 ## Initial task message for the next agent
 
 See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: run the cheap drift check (`git diff --name-only 439f42d0f..HEAD` — expect only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths), confirm both mirror pairs (`diff -q` both, rc=0), confirm BRAIN-003 A+B+C is still complete (quarantined shard present, active path absent, manifest/checkpoint reconciled at 22750, candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14), note the verifier `ok:false` code-hash exception is NOT to be remediated without explicit authorization, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`.
+- (Fold previous entry: 2026-11-22T22:56:28Z @ `db74098a8` — Drift CLEAN; mirrors rc=0 both pairs; verifier `ok:false` code-hash exception NOT remediated; BRAIN-003 A+B+C intact; no research edits; no session commit.)
+
+## Latest — 2026-11-22T23:52:43Z @ `d42918242` (kilo)
+
+- Drift CLEAN. `git diff --name-only 439f42d0f..HEAD` lists exactly the expected 14 paths. Working tree clean (`git status --porcelain` empty). HEAD `d42918242`. Mirrors rc=0 both pairs (byte-identical). Verifier `ok:false` — known code-hash constraint exception, NOT remediated. BRAIN-003 A+B+C intact. Prior agent task COMPLETE. No research edits; no remediation without authorization.
