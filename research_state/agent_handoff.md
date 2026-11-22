@@ -1,5 +1,6 @@
-## Latest — 2026-11-22T02:15:00Z @ `b519a5802ec0967e30653ee26f0a92f03e030919` (kilo; drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
+## Latest — 2026-11-22T02:13:30Z @ `df16de6db1701acb5ce16b4046d49cfefd597968` (kilo; drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits)
 
+(Fold previous entry: 2026-11-22T02:15:00Z @ `b519a5802ec0967e30653ee26f0a92f03e030919` — drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 (Fold previous entry: 2026-11-22T02:12:04Z @ `3a577e6bf4486018e548268bea66def7d522da2f` — drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 (Fold previous entry: 2026-11-22T02:11:05Z @ `312bf83808d23b2c58632ad25bab442f9643eb0a` — drift CLEAN; BRAIN-003 A+B+C re-verified complete; mirrors rc=0; verifier ok:true exit 0; no research edits.)
 
@@ -77,7 +78,7 @@
 
 ## Initial task message for the next agent
 
-See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `201ba545d` (drift delta clean; original drift baseline `439f42d0f`).
+See `research_state/next_agent_task.md` (authoritative; `.kilo/next_task.md` byte-identical synced copy). One-line job: verify the handoff is intact with the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is complete, refresh the handoff/next-task files only if needed, re-sync both `.kilo` mirrors, and stop. No research edits and no remediation without explicit authorization. `NO_PROMPT_CHANGE_JUSTIFIED`. Baseline HEAD reference: `df16de6db` (drift delta clean; original drift baseline `439f42d0f`).
 
 ## Baseline at handoff (2026-11-21T22:27:10Z @ `022a29bfa916e106fa71a290dad1dc0104b4edf7`) — stable, not re-derived this session
 
