@@ -4,7 +4,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Your job in one sentence
 
-Run the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is still complete, refresh the handoff/next-task files only if needed, sync both `.kilo` mirrors, and stop. Do not do research work or edit research artifacts.
+Run the cheap drift check, confirm BRAIN-003 remediation (A+B+C) is still complete, refresh the handoff/next-task files only if needed, sync both `.kilo` mirrors, and stop. Do not do research work or edit research artifacts. Do NOT remediate the current verifier failure without explicit user authorization.
 
 ## Start here
 
@@ -16,7 +16,20 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta confined to the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) plus `research_state/workflow_run_diagnostics.jsonl` plus BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `research/results_manifest.json`, `reports/holdout_disposition_v3.md`, `research/results_shards_quarantine/.../shard_000455.jsonl`); verifier `ok:true` exit 0. Current baseline HEAD: `090dde68f` (original drift baseline `439f42d0f`). Anything else is an exception: report it and do not remediate without explicit authorization.
+Expected: both `diff -q` rc=0; empty `git status --porcelain`; verifier `ok:true` exit 0 (see exception below — currently `ok:false`). Current baseline HEAD: `e39e2e166` (original drift baseline `439f42d0f`).
+
+## KNOWN EXCEPTION (as of 2026-11-22T11:52Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
+
+A post-baseline checkpoint commit `6a870b604` (2026-11-22T11:11:36Z) rewrote research-state outside the handoff's expected drift set:
+
+- `research_state/campaign_authorization.json`: `authorized` flipped `true`→`false`; `code_hash` rotated `4bb02d54a1cb...`→`13172b2e87ab...`; added `reasons: ["evidence.code_hash mismatch","checkpoint_state.code_hash mismatch"]`; `evidence_digest` → `a3745961...`.
+- `research_state/checkpoint.json`: `code_hash` rotated to `13172b2e87ab...` (counters untouched: `completed_records==22750`).
+- `research_state/pilot_evidence.json`: top-level `code_hash` rotated to `13172b2e87ab...` (nested `evidence.code_hash` still `4bb02d54...`).
+- `run_holdout_campaign.py`: added (holdout-enabled runner; NOT executed — `research/holdout_campaign_result.json` absent).
+
+The verifier now fails because `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash` (`4bb02d54...`) != `research_state/campaign_authorization.json` `code_hash` (`13172b2e...`).
+
+The correct fix is to restore the prior authorized state (re-bind `campaign_authorization.json`/`checkpoint.json`/`pilot_evidence.json` code_hash back to `4bb02d54...` and `authorized:true`, and decide whether `run_holdout_campaign.py` stays) — but that is a substantive research-state edit and is NOT authorized here. Report the exception and stop; do not edit these artifacts.
 
 ## Confirm BRAIN-003 A+B+C (no edits)
 
@@ -24,7 +37,7 @@ Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta confi
 - `research/results_manifest.json` `total_records==22750`; 456 shard entries = 455 active + 1 quarantined.
 - `research_state/checkpoint.json` `completed_records==22750` (delta 0), `holdout_exposed_count==0`.
 - `research/candidate_manifest_v2.json` `frozen==true` / `ALL_REJECTED_ON_HOLDOUT` / 14 candidates — untouched.
-- `verify_v6_execution.py` `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4`, `failures==[]`.
+- (Verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` still holds; only the code-hash constraint check fails.)
 
 ## If a handoff refresh is needed
 
@@ -32,7 +45,7 @@ Append one `## Latest` entry to `research_state/agent_handoff.md`, fold the prev
 
 ## Stop condition
 
-Complete when drift delta is clean, both mirror pairs rc=0, verifier is ok, and BRAIN-003 A+B+C is confirmed complete. Do not look for additional work.
+Complete when drift delta is accounted for (clean OR the exception above is reported), both mirror pairs rc=0, and BRAIN-003 A+B+C is confirmed complete. Do not look for additional work. Do not remediate the code-hash exception without explicit authorization.
 
 ## Hard constraints
 
