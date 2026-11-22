@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-22T18:47:29Z @ `b59e3eed`)
+## Current state (verified at session start, 2026-11-22T18:50:03Z @ `ff7302d2`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths plus the exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py` added). No research edits; working tree clean (`git status --porcelain` empty).
-- HEAD advanced `f3b4962581`→`b59e3eed` — a harness checkpoint commit that touched ONLY the four handoff files (not a research edit); drift delta set unchanged.
+- HEAD advanced `b59e3eed`→`ff7302d2` — a harness checkpoint commit that touched ONLY the four handoff files (not a research edit); drift delta set unchanged.
 - Mirror pair `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0; `.kilo/handoff.md` vs `research_state/agent_handoff.md` rc=0 (byte-identical at session start, no re-sync needed).
 - Verifier `ok:false` exit 1 — known code-hash exception, NOT remediated.
 - BRAIN-003 A+B+C intact: quarantine shard present (42 records), active path absent (455 active), manifest total_records=22750, checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14.
@@ -24,9 +24,9 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `b59e3eed` (original drift baseline `439f42d0f`; original baseline `c486251cf`; prior-session handoff baseline `f3b4962581`).
+Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `ff7302d2` (original drift baseline `439f42d0f`; original baseline `c486251cf`; prior-session handoff baseline `f3b4962581`).
 
-## KNOWN EXCEPTION (still present as of 2026-11-22T18:47:29Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
+## KNOWN EXCEPTION (still present as of 2026-11-22T18:50:03Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
 A post-baseline checkpoint commit (2026-11-22T11:11:36Z, `6a870b604`) rewrote research-state outside the handoff's expected drift set:
 
