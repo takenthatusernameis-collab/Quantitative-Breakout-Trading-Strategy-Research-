@@ -1,3 +1,9 @@
+## Latest — 2026-11-22T21:48:28Z @ `e486f57f` (kilo)
+
+- Drift CLEAN. `git diff --name-only 439f42d0f..HEAD` lists exactly: the four handoff files + `research_state/workflow_run_diagnostics.jsonl` + BRAIN-003 remediation/exception paths. Working tree clean (`git status --porcelain` empty). HEAD at `e486f57f`. Mirrors rc=0 both pairs. Verifier `ok:false` — known code-hash constraint exception, NOT remediated (`manifest_hash`==`recomputed_manifest_hash`==`f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4`; only failure "the code-hash constraint does not record the authorized code hash of record"). BRAIN-003 A+B+C intact. Prior agent task COMPLETE. No research edits; no remediation without authorization.
+
+- (Fold previous entry: 2026-11-22T21:47:52Z @ `d7d1bb299` — Drift CLEAN; mirrors rc=0 both pairs; verifier `ok:false` code-hash exception NOT remediated; BRAIN-003 A+B+C intact; no research edits; no session commit.)
+
 ## Latest — 2026-11-22T21:47:52Z @ `d7d1bb299` (kilo)
 
 - Drift CLEAN. `git diff --name-only 439f42d0f..HEAD` lists exactly: the four handoff files + `research_state/workflow_run_diagnostics.jsonl` + BRAIN-003 remediation/exception paths. Working tree clean (`git status --porcelain` empty). HEAD at `d7d1bb299` (checkpoint; touched ONLY the four handoff files per `git show --stat`). Mirrors rc=0 both pairs. Verifier `ok:false` — known code-hash constraint exception, NOT remediated (`manifest_hash`==`recomputed_manifest_hash`==`f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4`; only failure "the code-hash constraint does not record the authorized code hash of record"). BRAIN-003 A+B+C intact. Prior agent task COMPLETE. No research edits; no remediation without authorization.
