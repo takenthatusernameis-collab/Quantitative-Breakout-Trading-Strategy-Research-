@@ -2,7 +2,7 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-22T15:07:06Z @ `b912d8395ec988e93a7b2c1fe730ae6ebf902beb`)
+## Current state (verified at session start, 2026-11-22T15:08:38Z @ `9f883853fa30c4836db5d5496e6beaf09e02846d`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists only the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation paths plus the exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py` added). No research edits; working tree clean.
 - Mirror pair `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0; `.kilo/handoff.md` vs `research_state/agent_handoff.md` rc=0 at session start (already byte-identical, no re-sync needed).
