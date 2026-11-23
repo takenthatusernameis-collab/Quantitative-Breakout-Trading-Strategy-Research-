@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-23T06:29:19Z @ `3bef6d0d3e83a6bee03374fa7e9a8f29622966d3`)
+## Current state (verified at session start, 2026-11-23T06:30:26Z @ `e69c1625dfb67c8a86aa29a86aa29a86aa29a86aa29a86aa29a86`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists exactly (14 paths): the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) + `research_state/workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `reports/holdout_disposition_v3.md`, `research/results_manifest.json`, `research/results_shards_quarantine/.../shard_000455.jsonl`) + the exception paths (`research_state/campaign_authorization.json` authorized:false code_hash `13172b2e...`, `research_state/checkpoint.json` code_hash `13172b2e...`, `research_state/pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py`). No research edits; committed state clean vs baseline.
-- HEAD is `3bef6d0d3e83a6bee03374fa7e9a8f29622966d3` ("chore(kilo): checkpoint agent session"; touched ONLY the four handoff files per `git show --stat`; prior handoff recorded `5ccf2a07672bce8e7f1a63d0ecbad8efa3857838`, now one checkpoint ahead — normal). The four handoff files were refreshed below and left uncommitted (commit withheld pending explicit request).
+- HEAD is `e69c1625dfb67c8a86aa29a86aa29a86aa29a86aa29a86aa29a86` ("chore(kilo): checkpoint agent session"; touched ONLY the four handoff files per `git show --stat`; prior handoff recorded `3bef6d0d3e83a6bee03374fa7e9a8f29622966d3`, now one checkpoint ahead — normal). The four handoff files were refreshed below and left uncommitted (commit withheld pending explicit request).
 - Mirror pairs: `.kilo/handoff.md`==`research_state/agent_handoff.md` rc=0; `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0.
 - Verifier `ok:false` rc=1 — known code-hash constraint exception, NOT remediated (`manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds; only "the code-hash constraint does not record the authorized code hash of record").
 - BRAIN-003 A+B+C intact: quarantine shard present (42 records, manifest entry `quarantined:true`, all 42 rows `is_holdout:true`), active path absent (455 active), manifest total_records=22750 (455 active + 1 quarantined), checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/`ALL_REJECTED_ON_HOLDOUT`/14. All 14 candidates carry a recorded `holdout_verdict.status==REJECTED_ON_HOLDOUT`.
@@ -27,9 +27,9 @@ PYTHONPATH=src python3 scripts/verify_v6_execution.py
 PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py -q
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain` at session start; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (ok:false, only the known code-hash constraint failure); acceptance tests green (19 passed, `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py`). Current baseline HEAD: `3bef6d0d3e83a6bee03374fa7e9a8f29622966d3` (original drift baseline `439f42d0f`).
+Expected: both `diff -q` rc=0; empty `git status --porcelain` at session start; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (ok:false, only the known code-hash constraint failure); acceptance tests green (19 passed, `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py`). Current baseline HEAD: `e69c1625dfb67c8a86aa29a86aa29a86aa29a86aa29a86aa29a86` (original drift baseline `439f42d0f`).
 
-## KNOWN EXCEPTION (still present as of 2026-11-23T06:29:19Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
+## KNOWN EXCEPTION (still present as of 2026-11-23T06:30:26Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
 A post-baseline checkpoint commit (2026-11-22T11:11:36Z, `6a870b604`) rewrote research-state outside the handoff's expected drift set:
 
