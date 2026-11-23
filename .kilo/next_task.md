@@ -2,7 +2,7 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-23T19:16:55Z @ `ece668533108e06433782e8c8630747c6c74659f`)
+## Current state (verified at session start, 2026-11-23T20:03:19Z @ `d1cd1bc2781e04aa39163646222d7f0adcfb682d`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists exactly (14 paths): the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) + `research_state/workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `reports/holdout_disposition_v3.md`, `research/results_manifest.json`, `research/results_shards_quarantine/.../shard_000455.jsonl`) + the exception paths (`research_state/campaign_authorization.json` authorized:false code_hash `13172b2e...`, `research_state/checkpoint.json` code_hash `13172b2e...`, `research_state/pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py`). Working tree clean.
 - HEAD at verification is `ece668533108e06433782e8c8630747c6c74659f` (the harness session-start checkpoint commit "chore(kilo): checkpoint agent session"; prior handoff HEAD was `2aee505e`). The `.kilo/` mirrors are byte-identical to the `research_state/` originals after this refresh; the harness may checkpoint them at session end.
