@@ -2,7 +2,7 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-23T16:02:21Z @ `3099bf422e6d70bb1adc0c9bf790b0ab6046e2d6`)
+## Current state (verified at session start, 2026-11-23T16:04:21Z @ `74b75a2f47977461eb0569ae4d2e81f213c3b428`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists exactly (14 paths): the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) + `research_state/workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `reports/holdout_disposition_v3.md`, `research/results_manifest.json`, `research/results_shards_quarantine/.../shard_000455.jsonl`) + the exception paths (`research_state/campaign_authorization.json` authorized:false code_hash `13172b2e...`, `research_state/checkpoint.json` code_hash `13172b2e...`, `research_state/pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py`). No research edits; working tree clean vs baseline.
 - HEAD is `3099bf422e6d70bb1adc0c9bf790b0ab6046e2d6`. The `.kilo/` mirrors are byte-identical to the `research_state/` originals; the harness will checkpoint them at session end.
