@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-23T03:40:57Z @ `49916ebb3481a20f66bb0c43b93bdeb6f3e8b9a7`)
+## Current state (verified at session start, 2026-11-23T03:43:17Z @ `c9d3370a01b9427da9aadf30da629364e7c3e4f5`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists exactly (14 paths): the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) + `research_state/workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `reports/holdout_disposition_v3.md`, `research/results_manifest.json`, `research/results_shards_quarantine/.../shard_000455.jsonl`) + the exception paths (`research_state/campaign_authorization.json` authorized:false code_hash `13172b2e...`, `research_state/checkpoint.json` code_hash `13172b2e...`, `research_state/pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py`). No research edits; working tree clean (`git status --porcelain` empty).
-- HEAD is `49916ebb3481a20f66bb0c43b93bdeb6f3e8b9a7` ("chore(kilo): checkpoint agent session"; touched ONLY the four handoff files per `git show --stat`); working tree clean; drift delta set unchanged from prior sessions. (Prior handoff recorded `f2c8211a020540efe0ba8ad2c3d1a734670ac71c`; HEAD is one checkpoint ahead — normal.)
+- HEAD is `c9d3370a01b9427da9aadf30da629364e7c3e4f5` ("chore(kilo): checkpoint agent session"; touched ONLY the four handoff files per `git show --stat`); working tree clean; drift delta set unchanged from prior sessions. (Prior handoff recorded `49916ebb3481a20f66bb0c43b93bdeb6f3e8b9a7`; HEAD is one checkpoint ahead — normal.)
 - Mirror pairs: `.kilo/handoff.md`==`research_state/agent_handoff.md` rc=0; `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0.
 - Verifier `ok:false` rc=1 — known code-hash constraint exception, NOT remediated (`manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds; only "the code-hash constraint does not record the authorized code hash of record").
 - BRAIN-003 A+B+C intact: quarantine shard present (42 records, manifest entry `quarantined:true`, all 42 rows `is_holdout:true`), active path absent (455 active), manifest total_records=22750 (455 active + 1 quarantined), checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/`ALL_REJECTED_ON_HOLDOUT`/14. All 14 candidates carry a recorded `holdout_verdict.status==REJECTED_ON_HOLDOUT`.
@@ -66,5 +66,3 @@ Complete when drift delta is accounted for (clean OR the exception above is repo
 - No substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 - Both `.kilo` mirrors must stay byte-identical to their `research_state/` originals.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
-
-(End of file)
