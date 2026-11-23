@@ -2,13 +2,13 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-22T23:56:24Z @ `8844f1666`)
+## Current state (verified at session start, 2026-11-22T23:58:46Z @ `b53bbb17e`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists exactly (14 paths): the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) + `research_state/workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `reports/holdout_disposition_v3.md`, `research/results_manifest.json`, `research/results_shards_quarantine/.../shard_000455.jsonl`) + the exception paths (`research_state/campaign_authorization.json`, `research_state/checkpoint.json`, `research_state/pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py`). No research edits; working tree clean (`git status --porcelain` empty).
-- HEAD is `8844f1666` ("chore(kilo): checkpoint agent session"; touched ONLY the four handoff files per `git show --stat`); working tree clean; drift delta set unchanged from prior sessions. (Prior handoff recorded `93d101b00`; HEAD is one checkpoint ahead — handoff authored at `93d101b00`, then checkpointed as `8844f1666`.)
+- HEAD is `b53bbb17e` ("chore(kilo): checkpoint agent session"; touched ONLY the four handoff files per `git show --stat`); working tree clean; drift delta set unchanged from prior sessions. (Prior handoff recorded `8844f1666`; HEAD is one checkpoint ahead — handoff authored at `8844f1666`, then checkpointed as `b53bbb17e`.)
 - Mirror pairs: `.kilo/handoff.md`==`research_state/agent_handoff.md` rc=0; `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0 (re-synced this session).
 - Verifier `ok:false` — known code-hash constraint exception, NOT remediated (`manifest_hash==recomputed==f6cd994f...` holds; only "the code-hash constraint does not record the authorized code hash of record").
-- BRAIN-003 A+B+C intact: quarantine shard present (42 records), active path absent (455 active), manifest total_records=22750 (455 active + 1 quarantined), checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/`ALL_REJECTED_ON_HOLDOUT`/14. All 14 candidates carry a recorded `holdout_verdict.status==REJECTED_ON_HOLDOUT` (corrects the earlier "10 carry / 4 none" note).
+- BRAIN-003 A+B+C intact: quarantine shard present (42 records), active path absent (455 active), manifest total_records=22750 (455 active + 1 quarantined), checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/`ALL_REJECTED_ON_HOLDOUT`/14. All 14 candidates carry a recorded `holdout_verdict.status==REJECTED_ON_HOLDOUT`.
 
 ## Your job in one sentence
 
@@ -24,7 +24,7 @@ git diff --name-only 439f42d0f..HEAD
 PYTHONPATH=src python3 scripts/verify_v6_execution.py
 ```
 
-Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `8844f1666` (original drift baseline `439f42d0f`; original baseline `c486251cf`; prior-session handoff baselines `f4b2ff778`/`73353fc80`/`091237db7`/`e7b0b386`/`e10a61177`/`2cdddb22`/`36be40373`/`cb15e48f0`/`113997262`/`63c82c855`/`318c326cc`/`cdb500397`/`db74098a8`/`d42918242`/`e37e0cfe2`/`93d101b00`).
+Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (see exception below — currently `ok:false`). Current baseline HEAD: `b53bbb17e` (original drift baseline `439f42d0f`; original baseline `c486251cf`; prior-session handoff baselines `f4b2ff778`/`73353fc80`/`091237db7`/`e7b0b386`/`e10a61177`/`2cdddb22`/`36be40373`/`cb15e48f0`/`113997262`/`63c82c855`/`318c326cc`/`cdb500397`/`db74098a8`/`d42918242`/`e37e0cfe2`/`93d101b00`/`8844f1666`).
 
 ## KNOWN EXCEPTION (still present as of 2026-11-22T21:46:33Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
