@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-23T03:49:13Z @ `3a13db547a97043738793bb180f4181401702c52`)
+## Current state (verified at session start, 2026-11-23T03:50:22Z @ `d908231c2e6ce952e8823a859f17527a02a3aa74`)
 
 - Drift CLEAN: `git diff --name-only 439f42d0f..HEAD` lists exactly (14 paths): the four handoff files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`) + `research_state/workflow_run_diagnostics.jsonl` + the BRAIN-003 remediation paths (`configs/research_v6_execution.json`, `configs/research_v6_execution_amendment_1.json`, `reports/holdout_disposition_v3.md`, `research/results_manifest.json`, `research/results_shards_quarantine/.../shard_000455.jsonl`) + the exception paths (`research_state/campaign_authorization.json` authorized:false code_hash `13172b2e...`, `research_state/checkpoint.json` code_hash `13172b2e...`, `research_state/pilot_evidence.json` code_hash rotated to `13172b2e...`, `run_holdout_campaign.py`). No research edits; working tree clean (`git status --porcelain` empty).
-- HEAD is `3a13db547a97043738793bb180f4181401702c52` ("chore(kilo): checkpoint agent session"; touched ONLY the four handoff files per `git show --stat`); working tree clean; drift delta set unchanged from prior sessions. (Prior handoff recorded `8622488c21475494b809e6cad3bae3540ddab29b`; HEAD is one checkpoint ahead — normal.)
+- HEAD is `d908231c2e6ce952e8823a859f17527a02a3aa74` ("chore(kilo): checkpoint agent session"; touched ONLY the four handoff files per `git show --stat`); working tree clean; drift delta set unchanged from prior sessions. (Prior handoff recorded `3a13db547a97043738793bb180f4181401702c52`; HEAD is one checkpoint ahead — normal.)
 - Mirror pairs: `.kilo/handoff.md`==`research_state/agent_handoff.md` rc=0; `.kilo/next_task.md`==`research_state/next_agent_task.md` rc=0.
 - Verifier `ok:false` rc=1 — known code-hash constraint exception, NOT remediated (`manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds; only "the code-hash constraint does not record the authorized code hash of record").
 - BRAIN-003 A+B+C intact: quarantine shard present (42 records, manifest entry `quarantined:true`, all 42 rows `is_holdout:true`), active path absent (455 active), manifest total_records=22750 (455 active + 1 quarantined), checkpoint completed_records=22750 delta 0, holdout_exposed_count=0, candidate_manifest_v2 frozen/`ALL_REJECTED_ON_HOLDOUT`/14. All 14 candidates carry a recorded `holdout_verdict.status==REJECTED_ON_HOLDOUT`.
@@ -29,7 +29,7 @@ PYTHONPATH=src python3 -m pytest tests/test_campaign_resume.py tests/test_holdou
 
 Expected: both `diff -q` rc=0; empty `git status --porcelain`; drift delta limited to the four handoff files plus `workflow_run_diagnostics.jsonl` plus the BRAIN-003 remediation/exception paths; verifier `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds (ok:false, only the known code-hash constraint failure); acceptance tests green (19 passed, `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py`). Current baseline HEAD: `888905058` (original drift baseline `439f42d0f`).
 
-## KNOWN EXCEPTION (still present as of 2026-11-23T03:49:13Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
+## KNOWN EXCEPTION (still present as of 2026-11-23T03:50:22Z) — DO NOT REMEDIATE WITHOUT EXPLICIT AUTHORIZATION
 
 A post-baseline checkpoint commit (2026-11-22T11:11:36Z, `6a870b604`) rewrote research-state outside the handoff's expected drift set:
 
