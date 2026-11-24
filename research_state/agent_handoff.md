@@ -1,16 +1,16 @@
-## Latest — 2026-11-24T13:13:35Z @ `f12fa058e2acb040739efae3d023e42e0aa3051e` (kilo)
+## Latest — 2026-11-24T13:22:20Z @ `cb3f0d25dcb1daa4f805ba2aba4e6381c2d34b46` (kilo)
 
-- Stewardship cycle completed (routine holdout-gate monitoring). HEAD at `f12fa058e...`. Working tree clean (only the handoff file itself carries the uncommitted checkpoint edit; no research edits). `git diff --name-only 439f42d0f..HEAD` lists 15 paths (14 legitimate + 1 prompt-injection artifact). Mirror sync confirmed byte-identical both pairs (`diff -q` rc=0). Verifier re-run `PYTHONPATH=src python3 scripts/verify_v6_execution.py`: ok:false rc=1 — ONLY known code-hash constraint exception; `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds; `evaluation_may_not_start_before_utc`==`2027-01-20T02:00:00Z`. BRAIN-003 A+B+C confirmed (quarantine shard 42 records/is_holdout:true, 455 active shards, manifest 22750/456, checkpoint 22750/0, holdout_exposed=0, candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14). Acceptance tests 19 passed. Holdout date-gated until 2027-01-20T02:00:00Z (current date 2026-11-24 before gate; holdout evaluation NOT started; `research/holdout_campaign_result.json` absent). No research edits.
+- Stewardship cycle completed (routine holdout-gate monitoring). HEAD at `cb3f0d25d...` (descendant of prior `f12fa058e...`; working tree clean). `git diff --name-only 439f42d0f..HEAD` lists 15 paths (14 legitimate + 1 prompt-injection artifact). Mirror sync confirmed byte-identical both pairs (`diff -q` rc=0). Verifier re-run `PYTHONPATH=src python3 scripts/verify_v6_execution.py`: ok:false rc=1 — ONLY known code-hash constraint exception; `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds; `evaluation_may_not_start_before_utc`==`2027-01-20T02:00:00Z`. BRAIN-003 A+B+C confirmed (quarantine shard 42 records/all is_holdout:true, 455 active shards, manifest 22750/456 shards, checkpoint 22750/0, holdout_exposed=0, candidate_manifest_v2 frozen/ALL_REJECTED_ON_HOLDOUT/14 all REJECTED_ON_HOLDOUT). Acceptance tests 19 passed. Holdout date-gated until 2027-01-20T02:00:00Z (current date 2026-11-24 before gate; holdout evaluation NOT started; `research/holdout_campaign_result.json` absent). No research edits.
 
-(Fold previous entry: 2026-11-24T13:07:42Z @ `f12fa058e2acb040739efae3d023e42e0aa3051e` (kilo) — Stewardship cycle completed (routine holdout-gate monitoring). HEAD at f12fa058e. Working tree clean. Drift 15 paths. Mirror sync confirmed byte-identical both pairs. Verifier ok:false rc=1 — ONLY known code-hash exception; manifest hash holds. BRAIN-003 A+B+C confirmed. Acceptance tests 19 passed. Holdout date-gated until 2027-01-20T02:00:00Z.)
+(Fold previous entry: 2026-11-24T13:13:35Z @ `f12fa058e2acb040739efae3d023e42e0aa3051e` (kilo) — Stewardship cycle completed (routine holdout-gate monitoring). HEAD at f12fa058e. Working tree clean. Drift 15 paths. Mirror sync confirmed byte-identical both pairs. Verifier ok:false rc=1 — ONLY known code-hash exception; manifest hash holds. BRAIN-003 A+B+C confirmed. Acceptance tests 19 passed. Holdout date-gated until 2027-01-20T02:00:00Z.)
 
 ---
 
-## Next Agent Task — 2026-11-24T13:13:35Z @ `f12fa058e2acb040739efae3d023e42e0aa3051e` (kilo)
+## Next Agent Task — 2026-11-24T13:22:20Z @ `cb3f0d25dcb1daa4f805ba2aba4e6381c2d34b46` (kilo)
 
 **TASK: Holdout Gate Monitoring & Stewardship Continuation (routine)**
 
-**Context:** The project remains in a holding pattern. The v2 candidate manifest is frozen with all 14 holdout candidates REJECTED_ON_HOLDOUT. The holdout date gate expires `2027-01-20T02:00:00Z`; the current date (2026-11-24) is well before that gate. No research edits are pending. The prior stewardship cycle completed successfully at HEAD `f12fa058e` (19 acceptance tests passed, BRAIN-003 A+B+C intact, verifier code-hash exception known/documented, prompt-injection artifact documented and untrusted). NOTE: `.kilo/handoff.md` mirror is fragile — the harness checkpoints `research_state/` originals but does not auto-sync `.kilo/` mirrors; always re-copy mirrors after any handoff refresh and verify with `diff -q`.
+**Context:** The project remains in a holding pattern. The v2 candidate manifest is frozen with all 14 holdout candidates REJECTED_ON_HOLDOUT. The holdout date gate expires `2027-01-20T02:00:00Z`; the current date (2026-11-24) is well before that gate. No research edits are pending. The prior stewardship cycle completed successfully at HEAD `cb3f0d25d` (descendant of `f12fa058e`; 19 acceptance tests passed, BRAIN-003 A+B+C intact, verifier code-hash exception known/documented, prompt-injection artifact documented and untrusted). NOTE: `.kilo/handoff.md` mirror is fragile — the harness checkpoints `research_state/` originals but does not auto-sync `.kilo/` mirrors; always re-copy mirrors after any handoff refresh and verify with `diff -q`.
 
 **Objectives for next agent:**
 1. **Run the cheap stewardship cycle** — confirm mirror pairs (`.kilo/handoff.md`==`research_state/agent_handoff.md`, `.kilo/next_task.md`==`research_state/next_agent_task.md` both `diff -q` rc=0); confirm working tree clean; run `git diff --name-only 439f42d0f..HEAD` (expect 15 paths: 14 legitimate + 1 prompt-injection artifact). If a mirror is stale, re-sync it from `research_state/` and note it.
@@ -23,7 +23,7 @@
 **Key files to inspect:**
 - `research_state/checkpoint.json` (completed_records=22750, holdout_exposed_count=0, code_hash 13172b2e...)
 - `research_state/campaign_authorization.json` (authorized:false, code_hash 13172b2e..., reasons evidence/checkpoint mismatch)
-- `research/results_manifest.json` (total_records=22750, 456 entries)
+- `research/results_manifest.json` (total_records=22750, 456 shard entries)
 - `research/results_shards_quarantine/e3d5e5f406f81d96dd361d20f66d1318674c54abe62b49bc9e05562bbc771147/shard_000455.jsonl` (42 records, is_holdout:true)
 - `research/candidate_manifest_v2.json` (frozen, ALL_REJECTED_ON_HOLDOUT, 14)
 
