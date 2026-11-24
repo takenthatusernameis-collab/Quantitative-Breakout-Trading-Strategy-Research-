@@ -2,7 +2,7 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical.
 
-## Current state (verified at session start, 2026-11-24T16:01:58Z @ `24c6cf07...`)
+## Current state (verified at session start, 2026-11-24T16:10:06Z @ `24c6cf07...`)
 
 - HEAD is `24c6cf07098e48f55c03016bc2d446a5ae75593c` (1 session-checkpoint commit ahead of prior documented `644cf074d...`; no research-substance change; working tree clean).
 - **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (diff -q rc=0); `.kilo/next_task.md`==`research_state/next_agent_task.md` (diff -q rc=0). The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
