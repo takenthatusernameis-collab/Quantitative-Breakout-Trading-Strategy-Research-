@@ -1,3 +1,11 @@
+## Latest — 2026-11-25T19:10:59Z @ `f2298810b` (kilo, working tree clean)
+
+- v6 execution path `src/v6_campaign/` implemented and verified: package present with `runner.py:run_selection`; `tests/test_v6_campaign.py` 4 passed. v1 engine untouched.
+- Acceptance verifiers: `verify_research_v6_spec.py` reports only the known code-hash exception (ok:false); spec hash matches.
+- Pending: build v6 selection execution binding (`scripts/build_v6_selection_execution_binding_1.py`) and amended selection authorization; binding build currently fails on frozen v1 engine digest mismatch (known exception). Next agent to resolve via amended authorization, not by editing frozen artifacts or `src/breakout_research/`.
+- Holdout/confirmatory evaluation remains date-gated until `2027-01-20T02:00:00Z` — do NOT start.
+
+---
 ## Latest — 2026-11-25T19:05:12Z @ `274f378a372a8b884c9ef6808d3fc087b92a2580` (kilo, working tree clean)
 
 - Stewardship cycle re-run verified complete. HEAD `274f378a372a8b884c9ef6808d3fc087b92a2580` (working tree clean; `git ls-remote origin main` == HEAD; no research/state edits beyond handoff/next-task files; no commit by this session).
