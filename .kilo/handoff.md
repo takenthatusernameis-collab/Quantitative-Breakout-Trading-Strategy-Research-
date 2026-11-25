@@ -1,3 +1,15 @@
+## Latest — 2026-11-25T20:24:23Z @ `d05b18115` (kilo, working tree clean)
+
+- Stewardship cycle re-run verified complete. HEAD `d05b18115fb9ca18b806802880ce8e18e863c915` (working tree clean; no research/state edits beyond handoff/next-task files; no commit by this session).
+- Mirror confirm `diff -q` rc=0 both pairs (re-synced after this refresh).
+- `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, manifest_hash `7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d` recomputed and matches; `hashed_set_digest` `8cd17522...` and `execution_path_digest` `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
+- `tests/test_v6_campaign.py` 4 passed, exit 0.
+- `scripts/verify_research_v6_spec.py` reports ok:false with only the documented code-hash constraint exceptions (expected, not remediated).
+- v6 selection execution path remains complete (`src/v6_campaign/` with `runner.py:run_selection`; v1 engine untouched).
+- BRAIN-001 RESOLVED_VERIFIED; BRAIN-002+003+004+005 complete (per PLAN.md).
+- Holdout/confirmatory evaluation remains date-gated until `2027-01-20T02:00:00Z` — do NOT start.
+
+---
 ## Latest — 2026-11-25T20:21:39Z @ `c02458e0d` (kilo, working tree clean)
 
 - Stewardship cycle re-run verified complete. HEAD `c02458e0dfa0bec8184b1ede5059ac68e9e61c68` (working tree clean; no research/state edits beyond handoff/next-task files; no commit by this session).
