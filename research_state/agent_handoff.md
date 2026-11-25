@@ -1,3 +1,9 @@
+## Latest — 2026-11-25T10:43:00Z @ `ab325e6c9d4dc1215fca4ed9bcb71f7e10ef6ccd` (kilo, working tree clean)
+
+- **Stewardship cycle re-run verified complete.** HEAD advanced `baccd5563...`→`ab325e6c9...` (harness checkpoint); working tree clean; no research/state edits; no commit. Mirror confirm rc=0 both pairs. Drift known set accounted for. Verifier ok:false only known code-hash constraint exception; manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4 holds. Acceptance tests 19 passed. BRAIN-002 + BRAIN-003 confirmed. Holdout date-gated.
+
+(Fold previous entry: 2026-11-25T10:41:34Z @ `baccd5563b4e5443417522780d280b3461637c8d` — Stewardship cycle re-run verified complete. HEAD advanced `e224b6bac...`→`baccd5563...`; working tree clean; no research/state edits; no commit. Mirror confirm rc=0 both pairs. Drift known set accounted for. Verifier ok:false only known code-hash constraint exception; manifest_hash==recomputed holds. Acceptance tests 19 passed. BRAIN-002 + BRAIN-003 confirmed. Holdout date-gated.)
+
 ## Latest — 2026-11-25T10:41:34Z @ `baccd5563b4e5443417522780d280b3461637c8d` (kilo, working tree clean)
 
 - **Stewardship cycle re-run verified complete** (routine holdout-gate monitoring). HEAD advanced `e224b6bac...`→`baccd5563...` (harness checkpoint "chore(kilo): checkpoint agent session"; `git ls-remote origin main`==HEAD). Working tree clean; no research/state edits made; no commit made.
