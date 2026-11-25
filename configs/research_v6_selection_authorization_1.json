@@ -84,10 +84,10 @@
       "algorithm_description": "sha256 over the concatenation, for every *.py file under the root in ascending POSIX relative-path order, of the relative path, a newline, the sha256 hex digest of the file bytes, and a newline.",
       "portable": true,
       "hashed_set_root": "src/breakout_research",
-      "hashed_set_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+      "hashed_set_digest": "8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e",
       "execution_path_root": "src/v6_campaign",
-      "execution_path_digest": null,
-      "run_code_identity": "6bda27fa538ee8a1c21581db62d89a5bb714300ea19806d548692aca3506a30b",
+      "execution_path_digest": "37ba6eb321f706cb774f13133f3bff110fb4c1a1eed3b50e0463224d3f91aa72",
+      "run_code_identity": "cfd1cc2d034db5b5736fb3f26fb690fd773533f4e1f7144feb2bc857b46b8b7e",
       "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
       "authorized_code_hash_status": "RETAINED_AS_VALUE_OF_RECORD",
       "ordered_code_hash_is_portable": false,
@@ -309,5 +309,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, following the pattern of the other v2, v3, v4 and v5 artifacts."
   },
-  "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990"
+  "manifest_hash": "7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d"
 }

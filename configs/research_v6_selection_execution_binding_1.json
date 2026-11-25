@@ -15,8 +15,8 @@
   },
   "amends": {
     "path": "configs/research_v6_selection_authorization_1.json",
-    "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
-    "sha256": "14508bbc0cd049eab3b710e8c22c340f20afae99ebf6f98378ccc1977d25b27b",
+    "manifest_hash": "7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d",
+    "sha256": "43c5b11afe7ddf17cbf1cbdb9246a69b6c0bc2135464c0fdc3f1ea40fb335fd0",
     "scope": "execution package identity only; the original authorization remains the sole authority for one bounded selection run"
   },
   "execution_path": {
@@ -64,7 +64,7 @@
   },
   "authority": {
     "single_selection_run_authority_source": "configs/research_v6_selection_authorization_1.json",
-    "single_selection_run_authority_manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
+    "single_selection_run_authority_manifest_hash": "7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d",
     "max_runs": 1,
     "confirmatory_evaluation_authorized": false,
     "candle_fetch_authorized": false,
@@ -79,5 +79,5 @@
       "manifest_hash"
     ]
   },
-  "manifest_hash": "af393e0395b5ce9494f6629b0c8137ed9ed88fcbca2ce67abb6812e6da98019c"
+  "manifest_hash": "e9c2baa9392c80892790d8ffaba6740a19df4b0247182368b643b3c7e7733b9f"
 }

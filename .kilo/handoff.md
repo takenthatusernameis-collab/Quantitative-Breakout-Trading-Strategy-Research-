@@ -1,3 +1,10 @@
+## Latest — 2026-11-25T19:15:00Z @ `f2298810b` (kilo, working tree dirty: authorization+binding)
+
+- Amended v6 selection authorization code identity to canonical digest `8cd17522...`; recomputed manifest hash.
+- Built `configs/research_v6_selection_execution_binding_1.json` (manifest hash `e9c2baa9...`); binding build now passes.
+- v6 execution path present; tests 4 passed. Holdout gated until 2027-01-20.
+
+---
 ## Latest — 2026-11-25T19:10:59Z @ `f2298810b` (kilo, working tree clean)
 
 - v6 execution path `src/v6_campaign/` implemented and verified: package present with `runner.py:run_selection`; `tests/test_v6_campaign.py` 4 passed. v1 engine untouched.
