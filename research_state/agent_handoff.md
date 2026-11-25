@@ -1,3 +1,11 @@
+## Latest — 2026-11-25T20:15:23Z @ `417b582ee` (kilo, working tree dirty: verify_v6_selection_authorization_1 added)
+
+- Implemented the missing verifier `scripts/verify_v6_selection_authorization_1.py` (P0 from prior handoff); it recomputes the v6 selection authorization `manifest_hash` (matches `7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d`), confirms `code_identity.hashed_set_digest` == canonical source digest of `src/breakout_research/` (`8cd17522...`), confirms `code_identity.execution_path_digest` matches `src/v6_campaign/` (`37ba6eb3...`), confirms the binding amendment (`configs/research_v6_selection_execution_binding_1.json`) names the same authorization manifest hash and file digest (`43c5b11a...`), and confirms `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
+- `python3 scripts/verify_v6_selection_authorization_1.py` exits 0, no failures.
+- Full v6 acceptance re-run: `scripts/verify_research_v6_spec.py` reports ok:false with only the documented code-hash constraint exceptions (expected, not remediated); `tests/test_v6_campaign.py` 4 passed, exit 0.
+- v6 selection execution path remains complete (`src/v6_campaign/` with `runner.py:run_selection`; v1 engine untouched). Holdout/confirmatory evaluation remains date-gated until `2027-01-20T02:00:00Z` — do NOT start.
+
+---
 ## Latest — 2026-11-25T19:59:21Z @ `417b582ee` (kilo, working tree dirty: execution-amendment+confirmatory-protocol+runbook regenerated)
 
 - Completed the prior agent's v6 selection execution path task: `src/v6_campaign/` package present with `runner.py:run_selection`; `tests/test_v6_campaign.py` 4 passed; v1 engine untouched.
@@ -42,17 +50,21 @@ Mirror: `.kilo/handoff.md` must be byte-identical to this file (verify `diff -q 
 
 ## Next agent initial task message
 
-The v6 selection execution path is complete (`src/v6_campaign/` with `runner.py:run_selection`; `tests/test_v6_campaign.py` 4 passed; binding and execution-amendment chain consistent; confirmatory protocol and runbook bound to the republished authorization). The holdout/confirmatory evaluation remains date-gated until `2027-01-20T02:00:00Z` — do NOT start it.
+All v6 selection authorization work is complete:
+- `scripts/verify_v6_selection_authorization_1.py` implemented and exits 0 (manifest hash, code digests, binding amendment, RETAINED_AS_VALUE_OF_RECORD all confirmed).
+- `scripts/verify_research_v6_spec.py` reports ok:false with only the documented code-hash constraint exceptions (expected; not remediated without explicit authorization).
+- `tests/test_v6_campaign.py` 4 passed, exit 0.
+- v1 engine untouched; `src/breakout_research/` unmodified.
 
-**Next agent's concrete task (P0): Implement the missing verifier `scripts/verify_v6_selection_authorization_1.py`.**
+The holdout/confirmatory evaluation remains date-gated until `2027-01-20T02:00:00Z` — do NOT start it.
 
-The v6 selection authorization (`configs/research_v6_selection_authorization_1.json`) verification block references `scripts/verify_v6_selection_authorization_1.py` as its verifier script, but that file does not exist, so acceptance item "`python3 scripts/verify_v6_selection_authorization_1.py` passes" cannot be satisfied yet.
+**Next agent's concrete task (P0): Confirm the stewardship cycle is complete and await the holdout date gate.**
 
-Requirements:
-1. Create `scripts/verify_v6_selection_authorization_1.py` that validates the v6 selection authorization artifact: recompute its `manifest_hash` and confirm it matches the recorded value; confirm the recorded `code_identity.hashed_set_digest` equals the canonical source digest of `src/breakout_research/`; confirm `code_identity.execution_path_digest` matches `src/v6_campaign/`; confirm the binding amendment (`configs/research_v6_selection_execution_binding_1.json`) names the same authorization manifest hash and file digest; confirm `authorized_code_hash` is `RETAINED_AS_VALUE_OF_RECORD`.
-2. Run `python3 scripts/verify_v6_selection_authorization_1.py` and confirm it exits 0.
-3. Re-run the full v6 acceptance: `python3 scripts/verify_research_v6_spec.py` (ok:false with only the documented code-hash exception) and `tests/test_v6_campaign.py` (4 passed).
-4. Update this handoff with the result.
+1. Verify mirrors: `diff -q research_state/agent_handoff.md .kilo/handoff.md` (rc=0) and `diff -q research_state/next_agent_task.md .kilo/next_task.md` (rc=0).
+2. Confirm HEAD and clean tree: `git rev-parse HEAD`; `git status --porcelain`.
+3. Confirm acceptance tests green: `python3 -m pytest tests/test_v6_campaign.py -q` (4 passed).
+4. Confirm `scripts/verify_v6_selection_authorization_1.py` exits 0.
+5. Confirm holdout/confirmatory evaluation has NOT started (date-gated until `2027-01-20T02:00:00Z`).
 
 Constraints:
 - Do NOT start the holdout/confirmatory evaluation (date-gated until `2027-01-20T02:00:00Z`).
