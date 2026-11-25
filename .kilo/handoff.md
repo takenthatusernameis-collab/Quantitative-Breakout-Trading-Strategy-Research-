@@ -1,4 +1,15 @@
-## Latest — 2026-11-25T18:15:00Z @ `6e1dafa480aab3c7310d7d6e9c1bd702495519ab` (kilo, working tree clean)
+## Latest — 2026-11-25T18:57:36Z @ `3e34b4ccc95746ffb511ee549980551480da0a3d` (kilo, working tree clean)
+
+- Stewardship cycle re-run verified complete. HEAD `3e34b4ccc95746ffb511ee549980551480da0a3d` (working tree clean; `git ls-remote origin main` == HEAD; no research/state edits beyond handoff/next-task files; no commit by this session).
+- Mirror confirm `diff -q` rc=0 both pairs (re-synced after this refresh).
+- Acceptance tests `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` -> 36 passed, exit 0.
+- BRAIN-001 RESOLVED_VERIFIED; BRAIN-002+003+004+005 complete (per PLAN.md).
+- Holdout evaluation date-gated until `2027-01-20T02:00:00Z` — do NOT start.
+- Verifier `ok:false` — only known code-hash constraint exception; `manifest_hash==recomputed==d8b0cb7ef65de2a6410c6c7e72d62966ec58599d24e09d6fa66923695f7cbd7c` holds.
+
+---
+
+(Fold previous entry: 2026-11-25T18:15:00Z @ `6e1dafa480aab3c7310d7d6e9c1bd702495519ab` — Stewardship cycle re-run verified complete; HEAD `6e1dafa48...`; mirrors rc=0; verifier ok:false (known code-hash exception only); acceptance tests 36 passed; BRAIN-001 RESOLVED_VERIFIED; BRAIN-002+003+004+005 complete.)
 
 - Stewardship cycle re-run verified complete. HEAD `6e1dafa480aab3c7310d7d6e9c1bd702495519ab` (working tree clean; `git ls-remote origin main` == HEAD; no research/state edits beyond the four handoff/next-task files; no commit by this session).
 - Mirror confirm `diff -q` rc=0 both pairs (re-synced after this refresh).
