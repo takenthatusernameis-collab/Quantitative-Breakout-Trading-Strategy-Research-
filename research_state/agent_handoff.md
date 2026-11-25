@@ -1,4 +1,8 @@
-## Latest — 2026-11-25T01:32:58Z @ `10a73ced2` (kilo, working tree clean)
+## Latest — 2026-11-25T02:01:34Z @ `a07739a88` (kilo, working tree clean)
+
+- Stewardship cycle completed (routine holdout-gate monitoring). HEAD advanced from recorded `10a73ced2` to `a07739a88` via ONE harness checkpoint commit (`chore(kilo): checkpoint agent session`); that commit's delta is exactly the four handoff/next-task files — no research/state artifacts touched; working tree clean. Mirror sync `diff -q` rc=0 both pairs. Drift `git diff --name-only 439f42d0f..HEAD` lists 15 paths (unchanged set). Verifier `verify_v6_execution.py` ok:false — ONLY the known code-hash constraint exception; `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds; `evaluation_may_not_start_before_utc`==`2027-01-20T02:00:00Z`. Acceptance tests 19 passed (`pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py`). BRAIN-002 + BRAIN-003 intact (confirmed against live state): `campaign_authorization.json` authorized:true code_hash `13172b2e87ab...` spec_hash `2d22e702...` empty reasons; `pilot_evidence.json` top+nested code_hash `13172b2e...`; `checkpoint.json` completed_records 22750 / holdout_exposed_count 0 / code_hash `13172b2e...`; `compute_code_hash()`==`13172b2e87ab...`. Holdout date-gated.
+
+(Fold previous entry: 2026-11-25T01:32:58Z @ `10a73ced2` (kilo, working tree clean) — Stewardship cycle completed (routine holdout-gate monitoring). HEAD advanced `970a7624a4`→`10a73ced2`; mirror sync rc=0; drift 15 paths; verifier ok:false only known exception; manifest_hash holds; acceptance tests 19 passed; BRAIN-002 + BRAIN-003 intact; holdout date-gated.)
 
 - Stewardship cycle completed (routine holdout-gate monitoring). HEAD advanced from recorded `970a7624a4` to `10a73ced2` via ONE harness checkpoint commit (`chore(kilo): checkpoint agent session`); working tree clean, no research/state artifacts touched. Mirror sync `diff -q` rc=0 both pairs. Drift `git diff --name-only 439f42d0f..HEAD` lists 15 paths (unchanged set). Verifier `verify_v6_execution.py` ok:false — ONLY the known code-hash constraint exception; `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds; `evaluation_may_not_start_before_utc`==`2027-01-20T02:00:00Z`. Acceptance tests 19 passed. BRAIN-002 + BRAIN-003 intact. Holdout date-gated.
 
@@ -11,7 +15,5 @@
 (Fold previous entry: 2026-11-25T01:15:56Z @ `352b495ea` (kilo, working tree clean) — Stewardship cycle completed (routine holdout-gate monitoring). HEAD advanced from recorded `c6c46e9df` to `352b495ea` via ONE harness checkpoint commit; working tree clean. Mirror sync rc=0 both pairs. Drift lists 12 paths. Verifier ok:false — only known code-hash constraint exception; manifest_hash holds; evaluation_may_not_start_before_utc==2027-01-20T02:00:00Z. Acceptance tests 19 passed. BRAIN-002 + BRAIN-003 intact. Holdout date-gated.)
 
 (Fold previous entry: 2026-11-25T01:10:50Z @ `c6c46e9df` (kilo, working tree clean) — Stewardship cycle completed; HEAD advanced `445771989`→`c6c46e9df`; drift 15 paths; verifier ok:false only known exception; manifest_hash holds; acceptance tests 19 passed; BRAIN-002 + BRAIN-003 intact; holdout date-gated.)
-
-(Fold previous entry: 2026-11-25T01:03:30Z @ `445771989` (kilo, working tree clean) — Stewardship cycle completed; HEAD advanced `2958b90dd`→`445771989`; drift 15 paths; verifier ok:false only known exception; manifest_hash holds; acceptance tests 19 passed; BRAIN-002 intact; holdout date-gated.)
 
 ---
