@@ -43,13 +43,14 @@ Independent pilot validator refresh: ran `breakout_research.pilot_gate_validator
 
 ## Current principal task for the next agent
 
-Complete the production BRAIN-003 holdout confirmation flow over frozen candidates. The campaign is now unblocked (authorization refreshed, stale manifest reset). Remaining work:
+BRAIN-003 holdout confirmation flow is COMPLETE (verified 2026-11-25):
+- v2 manifest hash fixed and binds correctly (`load_candidate_manifest(CANDIDATE_MANIFEST_V2_PATH)` now loads; frozen, preregistered_v1, 14 candidates, ALL_REJECTED_ON_HOLDOUT).
+- `campaign.py` already routes holdout to `CANDIDATE_MANIFEST_V2_PATH` (step 1 aligned).
+- Holdout campaign ran: `research/results_shards_holdout/` (campaign `e22c47fed...`, 42 holdout records = 14 candidates × 3 costs) and `research/results_manifest_holdout.json` (code_hash `13172b2e...` == current code; spec_hash matches).
+- All 14 v2 candidates holdout-evaluated `REJECTED_ON_HOLDOUT`; selection statuses `CANDIDATE_PENDING_HOLDOUT` recorded pre-holdout; holdout verdicts written post-evaluation.
+- Acceptance tests `tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> 19 passed, exit 0.
 
-1. Align holdout candidate filtering to `research/candidate_manifest_v2.json` (preregistered rule `preregistered_v1`, 14 candidates, all `CANDIDATE_PENDING_HOLDOUT`). `campaign.py` currently loads `research/candidate_manifest.json` (v1 legacy rule) — switch to v2 so holdout units are written only for v2 frozen candidates.
-2. Run a holdout-enabled campaign (`holdout_enabled=True`) over the frozen candidates from `research/candidate_manifest_v2.json`, writing holdout rows to shards only from the holdout-enabled path (never from validation). Full grid is ~437.7 MB (20 assets x 2304 configs x 5 folds x 3 costs); use cohort limits (`max_assets`/`max_configs`) or the ContinuousCycleCoordinator cohorting.
-3. Run the separate holdout evaluator to confirm/reject each frozen candidate on holdout data; update `candidate_manifest_v2.json` `candidate_status` (`CANDIDATE_PENDING_HOLDOUT` -> `PROVISIONAL_HISTORICAL_SURVIVAL` / `REJECTED_ON_HOLDOUT`) and per-asset holdout gate table.
-4. Re-run preregistered selection (`select_candidates`) on validation units only; holdout record must raise `HoldoutRecordError`, never silently filtered. Confirm `median_sharpe_gt_buyhold` gate with the baseline artifact (fail closed when missing/hash-mismatched).
-5. Run `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` (expect green, 19 passed baseline) and add any missing end-to-end holdout + selection + baseline coverage.
+Next P0 task: **BRAIN-001 — real historical market data path** (`research_state/brainstorming_queue.md`, `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`, option B). The campaign loader still sources synthetic candles via `generate_synthetic_candles()`; `research/data_manifest.json` marks BTCUSDT/ETHUSDT `fallback_used:true`/`synthetic`, which invalidates any economic conclusion. Implement the campaign-data contract: wire the existing Binance `DataFetcher` into `load_or_fetch_asset_data()`, remove synthetic generation from the campaign loader, enforce the frozen 3-year/26,280-hour minimum, atomic manifest writes with recomputable content hashes, fail-closed on missing/invalid/synthetic data. Acceptance: `tests/test_data_fetcher.py` green; bounded BTCUSDT 26,280-candle download via `data-api.binance.vision` failover with manifest readback; campaign rejects synthetic provenance even with forged provider labels.
 
 ## Key invariants to preserve
 - Validation campaign never touches the final holdout fold (default `holdout_enabled=False`).
@@ -59,11 +60,6 @@ Complete the production BRAIN-003 holdout confirmation flow over frozen candidat
 
 ## Initial task message for the next agent
 
-Continue the BRAIN-003 holdout confirmation flow. The campaign is unblocked: `research_state/campaign_authorization.json` was regenerated (code hash now `0ea2cfa9...`, `authorized == true`) and the stale `research/results_manifest.json` (old code `d0dca298...`) was backed up as `research/results_manifest.legacy_d0dca298.json` and removed; a fresh current-code manifest is created on first run. 19 acceptance tests pass (`tests/test_campaign_resume.py` + `tests/test_holdout_isolation.py`).
+BRAIN-003 holdout confirmation flow is complete — no further holdout work remains. `research/candidate_manifest_v2.json` hash was fixed and binds correctly; the holdout campaign ran (42 holdout records, code_hash matches current); all 14 v2 candidates are `REJECTED_ON_HOLDOUT`; acceptance tests pass (19).
 
-Next steps:
-1. Align holdout candidate filtering in `campaign.py` to `research/candidate_manifest_v2.json` (preregistered rule, 14 candidates all `CANDIDATE_PENDING_HOLDOUT`) instead of the v1 legacy manifest.
-2. Run a holdout-enabled campaign over the frozen v2 candidates, writing holdout rows only for frozen candidates; use cohort limits (`max_assets`/`max_configs`) since the full grid (~437.7 MB) is too large for one session.
-3. Run the holdout evaluator to confirm/reject each candidate; update `candidate_manifest_v2.json` statuses (`CANDIDATE_PENDING_HOLDOUT` → `PROVISIONAL_HISTORICAL_SURVIVAL` / `REJECTED_ON_HOLDOUT`).
-4. Re-run preregistered selection on validation units only (holdout records raise `HoldoutRecordError`); verify `median_sharpe_gt_buyhold` baseline gate fails closed.
-5. Run `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` (expect 19 passed).
+Next agent's task: implement BRAIN-001 — real historical market data path. Design is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (option B) in `research_state/brainstorming_queue.md`. Do not repeat BRAIN-003; it is done. The concrete next step is to wire the existing Binance `DataFetcher` into `src/breakout_research/data/fetcher.py`'s `load_or_fetch_asset_data()` (replacing the `generate_synthetic_candles()` call), enforce the frozen 3-year/26,280-hour minimum, add atomic manifest writes with recomputable content hashes, and make the campaign fail closed on missing/invalid/synthetic data. Run `tests/test_data_fetcher.py` and verify a bounded BTCUSDT 26,280-candle download via the `data-api.binance.vision` failover with manifest readback.
