@@ -1,12 +1,14 @@
-## Latest — 2026-11-25T16:55:53Z @ `3d5cf4616...` (kilo, working tree has local edits — NOT committed)
+## Latest — 2026-11-25T17:01:45Z @ `4e302f7d9...` (kilo, working tree clean)
 
-- **BRAIN-003 holdout confirmation flow completed.** Fixed `research/candidate_manifest_v2.json`: `manifest_hash` did not match the recomputed hash (`0b1fa104...` vs `55293534...`), so `load_candidate_manifest(CANDIDATE_MANIFEST_V2_PATH)` raised hash mismatch and `campaign.py:337` holdout path failed closed. Recomputed and bound the hash via `save_candidate_manifest`; manifest now loads (frozen, preregistered_v1, 14 candidates, ALL_REJECTED_ON_HOLDOUT). V1 manifest untouched.
-- Holdout artifacts verified: `research/results_shards_holdout/` (campaign `e22c47fed...`, 42 holdout records = 14 candidates × 3 costs) and `research/results_manifest_holdout.json` (code_hash `13172b2e...` == current code; spec_hash matches). All 14 v2 candidates holdout-evaluated `REJECTED_ON_HOLDOUT`.
-- `campaign.py` already routes holdout to `CANDIDATE_MANIFEST_V2_PATH` (step 1 aligned); selection statuses `CANDIDATE_PENDING_HOLDOUT` recorded pre-holdout; holdout verdicts written post-evaluation (steps 3–4 complete).
-- Acceptance tests `tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> 19 passed, exit 0 (re-verified after fix).
-- Local edit: `research/candidate_manifest_v2.json` (hash fix). Not yet committed; `.kilo/handoff.md` re-synced below.
+- Stewardship cycle re-run verified complete. HEAD `4e302f7d9643377846b81b35cf75aac5393eafaa` (no new commits since last checkpoint); working tree clean; no research/state edits; no commit.
+- Mirror confirm `diff -q` rc=0 both pairs.
+- Drift delta accounted for: the four handoff/next-task files + `workflow_run_diagnostics.jsonl` + the PROMPT-INJECTION artifact (`"</rfl:parameter>.../.kilo/handoff.md"`) + BRAIN-003 holdout/remediation paths + exception paths (`campaign_authorization.json`, `checkpoint.json`, `pilot_evidence.json`, `run_holdout_campaign.py`, `research/candidate_manifest_v2.json`, `evaluate_holdout.py`).
+- Verifier `ok:false` — only the known code-hash constraint exception (`configs/research_v6_execution.json` `authorized_code_hash` `4bb02d54...` != `campaign_authorization.json` `code_hash` `13172b2e...`); `manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4` holds.
+- Acceptance tests `tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> 19 passed, exit 0.
+- BRAIN-002 + BRAIN-003 confirmed complete (no edits): `campaign_authorization.json` `authorized: true`, code_hash `13172b2e...`, specification_hash `2d22e702...`, empty reasons; `pilot_evidence.json` code_hash `13172b2e...`; `checkpoint.json` completed_records 22750 / holdout_exposed_count 0 / code_hash `13172b2e...`; `campaign.py:337` loads `candidate_manifest_v2.json` when `holdout_enabled=True`; `candidate_manifest_v2.json` frozen/`ALL_REJECTED_ON_HOLDOUT`/14 candidates, all `holdout_verdict.status==REJECTED_ON_HOLDOUT`; baseline artifact `577e87e2...json` hash-verified against `data_manifest.json`.
+- Holdout/confirmatory evaluation date-gated until `2027-01-20T02:00:00Z` — must NOT start.
 
-(Fold previous entry: 2026-11-25T16:55:19Z @ `22327a29132d05085ca555287f45ca633574dce4` — Stewardship cycle re-run verified complete. HEAD advanced `b43068d8a2...`→`22327a2913...` (harness checkpoint); working tree clean; no research/state edits; no commit. Mirror confirm rc=0 both pairs. Drift known set accounted for. Verifier ok:false only known code-hash constraint exception; manifest_hash==recomputed==f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4 holds. Acceptance tests 19 passed. BRAIN-002 + BRAIN-003 confirmed. Holdout date-gated.)
+(Fold previous entry: 2026-11-25T16:55:53Z @ `3d5cf4616...` — BRAIN-003 holdout confirmation flow completed. Fixed `candidate_manifest_v2.json` hash mismatch; manifest now loads (frozen, preregistered_v1, 14 candidates, ALL_REJECTED_ON_HOLDOUT). Holdout artifacts verified. Acceptance tests 19 passed. Local edit to `candidate_manifest_v2.json` (hash fix).)
 
 ---
 
