@@ -18,7 +18,7 @@
     "selected_configurations_manifest_hash": null,
     "selected_configurations_manifest_status": "NOT_YET_PUBLISHED",
     "selection_authorization_path": "configs/research_v6_selection_authorization_1.json",
-    "selection_authorization_manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
+    "selection_authorization_manifest_hash": "7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d",
     "in_scope_assets": 7,
     "in_scope_assets_list": [
       "FETUSDT",
@@ -241,7 +241,7 @@
     "authorizes_candle_read_before_window_exists": false,
     "authorizes_window_benchmark_retrieval": false,
     "code_identity_rule": "canonical_digest",
-    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
+    "authorized_code_hash": "13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3",
     "v1_paths_forbidden": true,
     "v2_paths_forbidden": true,
     "v3_paths_forbidden": true,
@@ -253,8 +253,8 @@
     "statement": "This protocol authorizes nothing. It preregisters how the confirmatory evaluation will be performed once the window exists. No candle inside the window may be read, no benchmark series may be retrieved, and no evaluation may be run, under this protocol."
   },
   "code_hash_constraint": {
-    "authorized_code_hash": "2efd3b18fe3f42f42fbd97cce5825d2cfccc6e463a56c1fb8d25d891ab9c35b2",
-    "canonical_source_digest": "3e8e4169522d962c004a9e649ea8c978e08f52f4d6102bb68737f7d4180ba0ff",
+    "authorized_code_hash": "13172b2e87ab5b5a8e7462c11ee31d9c1fc489f1a5350635a2f7743f7f6c00b3",
+    "canonical_source_digest": "8cd17522f0f8161c014d1b919ae65071a2dc4c85112dadbe8947bd00e37ae45e",
     "canonical_source_digest_algorithm": "canonical_source_digest_v1",
     "hashed_set_root": "src/breakout_research",
     "confirmatory_execution_code_must_live_outside_the_hashed_set": true,
@@ -273,7 +273,7 @@
   "supersedes": {
     "protocol_version": "v6",
     "selection_authorization_path": "configs/research_v6_selection_authorization_1.json",
-    "selection_authorization_manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990",
+    "selection_authorization_manifest_hash": "7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d",
     "reason": "The v6 selection run selects at most one configuration per asset of the frozen v6 candidate set. The confirmatory protocol evaluates exactly the published candidates on the v6 confirmatory window; the selection run remains the preceding, immutable step.",
     "v1_holdout_never_reused": true,
     "v2_v3_v4_v5_confirmatory_window_never_read": true
@@ -301,11 +301,11 @@
     },
     "v6_execution_protocol": {
       "path": "configs/research_v6_execution.json",
-      "manifest_hash": "928727279a3a354f3789d07e9735dd71f2a1fe241af88976b8e0fa1f38897026"
+      "manifest_hash": "f6cd994fb5f6443853763b2d94547c030c77c473c740e77adbf6e8e28e0709d4"
     },
     "v6_selection_authorization_1": {
       "path": "configs/research_v6_selection_authorization_1.json",
-      "manifest_hash": "f1b012b6208a1be8efa562b176a5ac3422931562e68f2dad47d2298cda12b990"
+      "manifest_hash": "7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d"
     }
   },
   "durability": {
@@ -326,5 +326,5 @@
     ],
     "note": "manifest_hash is the sha256 of the document body with manifest_hash removed, so the document does not hash itself into a cycle."
   },
-  "manifest_hash": "71f7322f66147cb63f0e05da6f8ff816331fcda8c0829d07a6a3a2b2f5928ad4"
+  "manifest_hash": "a9d383c5330e4bba0478de7aaf11fd54faa363bbcaa9c47c018885c91ac3f34c"
 }
