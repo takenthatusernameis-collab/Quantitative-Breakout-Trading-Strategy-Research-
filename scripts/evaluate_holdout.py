@@ -8,18 +8,21 @@ This script evaluates only the final holdout fold (fold 4) for the
 import hashlib
 import json
 import os
+import sys
 from datetime import datetime, timezone
 from typing import Any, Dict, List
 
-from src.breakout_research.config import (
+sys.path.insert(0, 'src')
+
+from breakout_research.config import (
     load_research_spec, load_universe_manifest, load_config_manifest,
     get_eligible_assets, get_configurations, compute_code_hash,
     CostScenario,
 )
-from src.breakout_research.data.fetcher import load_or_fetch_asset_data, DataUnavailableError
-from src.breakout_research.backtest.backtester import run_fold_backtest
-from src.breakout_research.candidate_freeze import load_candidate_manifest, CANDIDATE_MANIFEST_V2_PATH, save_candidate_manifest
-from src.breakout_research.backtest.shards import ResultStore, compute_experiment_id
+from breakout_research.data.fetcher import load_or_fetch_asset_data, DataUnavailableError
+from breakout_research.backtest.backtester import run_fold_backtest
+from breakout_research.candidate_freeze import load_candidate_manifest, CANDIDATE_MANIFEST_V2_PATH, save_candidate_manifest
+from breakout_research.backtest.shards import ResultStore, compute_experiment_id
 
 
 # v2 promotion rule constants (from src/v2_confirmatory/report.py)
@@ -123,6 +126,8 @@ def criteria_agreement(specification_status: str, baseline_outcome: str) -> str:
 DATA_MANIFEST_PATH = "research/data_manifest.json"
 SHARD_ROOT = "research/results_shards"
 MANIFEST_PATH = "research/results_manifest.json"
+HOLDOUT_MANIFEST_PATH = "research/results_manifest_holdout.json"
+HOLDOUT_SHARD_ROOT = "research/results_shards_holdout"
 
 
 def _read_json_file(path: str) -> Dict[str, Any]:
@@ -236,8 +241,8 @@ def main():
         spec_hash=protocol_hash,
         code_hash=code_hash,
         data_manifest_hash=data_manifest_hash,
-        shard_root=SHARD_ROOT,
-        manifest_path=MANIFEST_PATH,
+        shard_root=HOLDOUT_SHARD_ROOT,
+        manifest_path=HOLDOUT_MANIFEST_PATH,
     )
 
     completed_ids, total_bytes = store.reconcile()
