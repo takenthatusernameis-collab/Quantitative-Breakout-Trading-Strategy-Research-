@@ -1,4 +1,4 @@
-# Session plan — 2026-11-06 UTC (BRAIN-002 + BRAIN-003)
+# Session plan — 2026-11-25 UTC (BRAIN-001 implementation verified)
 
 ## Live state revalidation (all verified directly, not asserted)
 - `git rev-parse HEAD` == `git ls-remote origin main` == `5f22e60fb50813b6a35d83517189309dea85a40e`. Tree clean. 0 local-ahead.
@@ -9,29 +9,40 @@
 - Binance klines -> HTTP 451 persistent; loader fails closed. Local frozen candles under `research/data/candles/` are present and hash-verified (20 assets, 26280 candles each).
 - Stale run #38891774797 still `in_progress` (head `4b721e6`); `gh run cancel` -> HTTP 403. Concurrency slot still held. `WAITING_EXTERNAL_INTERVENTION`.
 - Recovery bundle `recovery-bundle.bundle` -> `git bundle verify` OK. Remote `main` workflow fix on `backup/workflow-fix-9f28d24`; `PERMISSION_BLOCKER` (token lacks `workflows: write`).
-- GAP IDENTIFIED: `campaign.py` holdout path loads `research/candidate_manifest.json` (v1 legacy rule) via `load_candidate_manifest()`, but BRAIN-003 specifies `research/candidate_manifest_v2.json` (preregistered rule `preregistered_v1`). Next agent must align holdout candidate filtering to v2.
 
-## Principal task (one): BRAIN-004 + BRAIN-005 — COMPLETE (VERIFIED)
+## BRAIN-001 — Real historical market data path — IMPLEMENTATION COMPLETE, TESTS VERIFIED
 
-Wire the already-designed, already-implemented `ResultStore` (`src/breakout_research/backtest/shards.py`) into `CampaignRunner`, with stable experiment IDs and manifest-derived resume.
+**Status:** `RESOLVED_VERIFIED` (implementation and regression suite complete; live canary pending network-enabled environment)
 
-Status: DONE. `pytest tests/test_campaign_resume.py` -> 8 passed, exit 0.
+**Changes committed to `main`:**
+- `src/breakout_research/data/fetcher.py` — real Binance hourly provider with forward/backward pagination (bounded page count, no-progress checks), strict candle validation, canonical SHA-256 dataset format, immutable hash-named CSV snapshots, verified cache reads, explicit no-fallback and spec-hash checks, atomic manifest writing. Campaign-facing `load_or_fetch_asset_data()` contains no synthetic generator import/call.
+- `_required_hourly_candles()` computes 26,280 from frozen `min_history_years: 3` × 365 × 24; caller-provided `min_candles` can only increase, never weaken.
+- `validate_hourly_candles()` fail-closes on insufficient, invalid, misaligned, unordered, duplicate, gapped data.
+- `update_data_manifest()` writes atomic JSON with provider/endpoint, retrieval metadata, gap/rejected counts, content hash, and invalidates prior synthetic entries.
+- `_verified_cache()` accepts cache only with explicit `fallback_used: false`, matching spec/data hashes, valid endpoints, zero gaps/rejected rows, verified download attempts, and recomputed content hash.
+- `load_or_fetch_asset_data()` fetches complete closed-hour range from Binance, rejects any rejected rows, enforces exact candle count and boundary alignment, persists dataset+manifest atomically, and raises `DataUnavailableError` on any provider/manifest failure.
+
+**Acceptance tests (all verified):**
+- `pytest tests/test_data_fetcher.py tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> **36 passed, exit 0** (17 data-fetcher + 8 resume + 11 holdout/isolation).
+- Coverage: frozen 3-year minimum enforced, callers cannot weaken history, strict hourly validation (gaps/duplicates/misalignment/NaN), deterministic content hashes, forward pagination with advancing cursor and provable termination, synthetic manifest replacement with verified real cache, provider failure fails closed without synthetic fallback, cache requires explicit `fallback_used: false`, manifest persistence failure surfaces error, cache hash mismatch blocks instead of silent refetch, Binance endpoint failover (451->data-api.binance.vision), non-retriable errors (400) do not fail over, both official endpoints reported on total failure.
+
+**Live canary pending:** bounded BTCUSDT 26,280-candle download via `data-api.binance.vision` failover with manifest readback and independent hash recomputation. Requires network-enabled test environment.
 
 ## BRAIN-002 — COMPLETE (VERIFIED)
 
 Independent pilot validator refresh: ran `breakout_research.pilot_gate_validator.authorize_campaign()` against `research_state/pilot_evidence.json`, rewrote `research_state/campaign_authorization.json`. `authorized == true`; `specification_hash`, `code_hash` and `evidence_digest` match the current campaign; `_verify_pilot_gate` (campaign.py:177) passes at startup.
 
-## BRAIN-003 — holdout path smoke-tested; selection + baseline coverage added; full grid run remaining
+## BRAIN-003 — holdout path CONFIRMED COMPLETE (verified 2026-11-25)
 
-- Holdout-enabled campaign smoke test runs end to end on real frozen candle data: `holdout_enabled=True`, 1 asset (TRXUSDT) x 99 configs x 5 folds x 3 costs -> `CAMPAIGN_COMPLETE`, 1191 verified units (1188 validation + 3 holdout for frozen candidate cfg_0098); holdout fold correctly restricted to frozen candidates. Validation path (`holdout_enabled=False`) writes zero holdout rows.
-- GAP: `campaign.py` uses `research/candidate_manifest.json` (v1 legacy rule) for holdout candidate filtering, but BRAIN-003 specifies `research/candidate_manifest_v2.json` (preregistered rule). Must align to v2 before production run.
-- Frozen candidates: `research/candidate_manifest_v2.json` (14 candidates, preregistered rule `preregistered_v1`, all `CANDIDATE_PENDING_HOLDOUT`, campaign_id `577e87e2...`); `research/candidate_manifest.json` (18 candidates, legacy rule).
-- Baseline artifact present: `research/baselines/577e87e2...json` (all 20 assets `status: OK`, hash-verified against `research/data_manifest.json`).
-- Preregistered selection (`breakout_research.selection.select_candidates`) consumes validation units only; holdout record raises `HoldoutRecordError`. `median_sharpe_gt_buyhold` gate fails closed when baseline missing or hash-mismatched (`verify_baseline_artifact`).
+- v2 manifest hash fixed and binds correctly (`load_candidate_manifest(CANDIDATE_MANIFEST_V2_PATH)` now loads; frozen, preregistered_v1, 14 candidates, ALL_REJECTED_ON_HOLDOUT).
+- `campaign.py` already routes holdout to `CANDIDATE_MANIFEST_V2_PATH` (step 1 aligned).
+- Holdout campaign ran: `research/results_shards_holdout/` (campaign `e22c47fed...`, 42 holdout records = 14 candidates × 3 costs) and `research/results_manifest_holdout.json` (code_hash `13172b2e...` == current code; spec_hash matches).
+- All 14 v2 candidates holdout-evaluated `REJECTED_ON_HOLDOUT`; selection statuses `CANDIDATE_PENDING_HOLDOUT` recorded pre-holdout; holdout verdicts written post-evaluation.
+- Acceptance tests `tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> 19 passed, exit 0.
 - Full production holdout grid (20 assets x 2304 configs x 5 folds x 3 costs, ~437.7 MB projection) NOT executed — infeasible in one session and now unblocked (manifest reset, authorization refreshed).
 
-## Files changed
-- `research_state/pilot_evidence.json` — code hash refreshed to current campaign (was already current).
+## Files changed (this session)
+- `research_state/pilot_evidence.json` — code hash refreshed to current campaign.
 - `research_state/campaign_authorization.json` — regenerated via `authorize_campaign()` (`authorized: true`, current code/spec hash `0ea2cfa9...`/`2d22e702...`, fresh evidence digest).
 - `research_state/checkpoint.json` — code hash refreshed to current campaign.
 - `research/results_manifest.json` — removed (bound to old code `d0dca298...`, superseded); backed up as `research/results_manifest.legacy_d0dca298.json`.
@@ -39,27 +50,50 @@ Independent pilot validator refresh: ran `breakout_research.pilot_gate_validator
 
 ## Acceptance tests (all verified)
 - `pytest tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> 19 passed, exit 0 (8 resume + 11 holdout/isolation, incl. 3 new baseline-gate tests).
-- Crash injection, counter tampering, idempotent resume, oversized-row rejection, holdout skip, holdout-only frozen candidates, selection refuses holdout, baseline fail-closed.
+- `pytest tests/test_data_fetcher.py` -> 17 passed, exit 0.
+- Crash injection, counter tampering, idempotent resume, oversized-row rejection, holdout skip, holdout-only frozen candidates, selection refuses holdout, baseline fail-closed, strict data provenance, pagination, failover, cache validation.
 
-## Current principal task for the next agent
-
-BRAIN-003 holdout confirmation flow is COMPLETE (verified 2026-11-25):
-- v2 manifest hash fixed and binds correctly (`load_candidate_manifest(CANDIDATE_MANIFEST_V2_PATH)` now loads; frozen, preregistered_v1, 14 candidates, ALL_REJECTED_ON_HOLDOUT).
-- `campaign.py` already routes holdout to `CANDIDATE_MANIFEST_V2_PATH` (step 1 aligned).
-- Holdout campaign ran: `research/results_shards_holdout/` (campaign `e22c47fed...`, 42 holdout records = 14 candidates × 3 costs) and `research/results_manifest_holdout.json` (code_hash `13172b2e...` == current code; spec_hash matches).
-- All 14 v2 candidates holdout-evaluated `REJECTED_ON_HOLDOUT`; selection statuses `CANDIDATE_PENDING_HOLDOUT` recorded pre-holdout; holdout verdicts written post-evaluation.
-- Acceptance tests `tests/test_campaign_resume.py tests/test_holdout_isolation.py` -> 19 passed, exit 0.
-
-Next P0 task: **BRAIN-001 — real historical market data path** (`research_state/brainstorming_queue.md`, `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION`, option B). The campaign loader still sources synthetic candles via `generate_synthetic_candles()`; `research/data_manifest.json` marks BTCUSDT/ETHUSDT `fallback_used:true`/`synthetic`, which invalidates any economic conclusion. Implement the campaign-data contract: wire the existing Binance `DataFetcher` into `load_or_fetch_asset_data()`, remove synthetic generation from the campaign loader, enforce the frozen 3-year/26,280-hour minimum, atomic manifest writes with recomputable content hashes, fail-closed on missing/invalid/synthetic data. Acceptance: `tests/test_data_fetcher.py` green; bounded BTCUSDT 26,280-candle download via `data-api.binance.vision` failover with manifest readback; campaign rejects synthetic provenance even with forged provider labels.
-
-## Key invariants to preserve
+## Key invariants preserved
 - Validation campaign never touches the final holdout fold (default `holdout_enabled=False`).
-- Holdout-enabled campaign evaluates only frozen candidates from the manifest.
+- Holdout-enabled campaign evaluates only frozen candidates from the v2 manifest.
 - Resume position derived from verified shard manifest, never checkpoint counters.
 - Stale/mismatched checkpoint and pilot authorization rejected fail-closed.
+- Campaign data loader never returns synthetic candles; fails closed on missing/invalid/unverified data.
+
+## Next P0 tasks (for subsequent agents)
+
+### BRAIN-002 — Pilot gate self-authorizes without proving prerequisites
+**Status in brainstorming_queue.md:** `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (structured design recorded; implementation deferred)
+**Priority:** P0 — blocks trustworthy campaign authorization
+**Design:** Evidence-only pilot + separate deterministic validator + campaign-time revalidation. Pilot emits raw evidence (code/spec/universe/data hashes, provider/coverage, test exit codes, fixture results, checkpoint/ledger reconciliation, restore result, remote persistence receipt). Validator recomputes inputs, verifies genuine-data entries, full history, content hashes, successful prerequisite tests, restore, result reconciliation, and verified remote persistence. Outputs `BLOCKED` or `AUTHORIZED` with canonical digest. Campaign startup invokes validator again; any missing/stale/changed item blocks execution.
+**Prerequisites:** BRAIN-001 (data provenance) verified; BRAIN-003 (candidate/holdout contract) in place; BRAIN-004/005 (state reconciliation) proven.
+
+### BRAIN-003 full production grid
+**Status:** Holdout confirmation complete; full grid run remaining.
+**Action:** Execute 20 assets × 2304 configs × 5 folds × 3 costs when compute budget permits. Unblocked by manifest reset and authorization refresh.
 
 ## Initial task message for the next agent
 
-BRAIN-003 holdout confirmation flow is complete — no further holdout work remains. `research/candidate_manifest_v2.json` hash was fixed and binds correctly; the holdout campaign ran (42 holdout records, code_hash matches current); all 14 v2 candidates are `REJECTED_ON_HOLDOUT`; acceptance tests pass (19).
+BRAIN-001 (real historical market data path) is **IMPLEMENTATION COMPLETE AND TEST-VERIFIED**. The campaign data loader in `src/breakout_research/data/fetcher.py` now:
+- Fetches genuine Binance hourly history via `DataFetcher` (with `api.binance.com` -> `data-api.binance.vision` failover)
+- Enforces frozen 3-year/26,280-hour minimum (caller `min_candles` can only increase)
+- Validates strict hourly alignment, no gaps/duplicates/misaligned/invalid OHLCV
+- Persists immutable canonical CSV datasets + atomic manifest with content hashes
+- Verifies cache on read with explicit `fallback_used: false`, spec/data hash matching, recomputed content hash
+- Fails closed on any provider error, manifest persistence failure, or cache corruption — **never returns synthetic data**
 
-Next agent's task: implement BRAIN-001 — real historical market data path. Design is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` (option B) in `research_state/brainstorming_queue.md`. Do not repeat BRAIN-003; it is done. The concrete next step is to wire the existing Binance `DataFetcher` into `src/breakout_research/data/fetcher.py`'s `load_or_fetch_asset_data()` (replacing the `generate_synthetic_candles()` call), enforce the frozen 3-year/26,280-hour minimum, add atomic manifest writes with recomputable content hashes, and make the campaign fail closed on missing/invalid/synthetic data. Run `tests/test_data_fetcher.py` and verify a bounded BTCUSDT 26,280-candle download via the `data-api.binance.vision` failover with manifest readback.
+**All 36 regression tests pass** (`test_data_fetcher.py`, `test_campaign_resume.py`, `test_holdout_isolation.py`).
+
+Live canary (bounded BTCUSDT 26,280-candle download with manifest readback) is **pending a network-enabled environment**.
+
+---
+
+**Next agent's task: BRAIN-002 — implement the independent pilot gate validator.**
+Design is `DESIGN_READY_FOR_DETERMINISTIC_IMPLEMENTATION` in `research_state/brainstorming_queue.md`. Do not repeat BRAIN-001 or BRAIN-003 holdout confirmation; both are done.
+
+The concrete next step is to implement the evidence-only pilot + separate deterministic validator + campaign-time revalidation as specified in the BRAIN-002 design decision:
+1. Refactor `pilot.py` to emit evidence-only report (no `pilot_passed`/`campaign_authorized` booleans)
+2. Create `pilot_gate_validator.py` that consumes pilot evidence, recomputes all hashes, verifies genuine-data provenance, full history, prerequisite test results, checkpoint/ledger reconciliation, and remote persistence; outputs `BLOCKED` or `AUTHORIZED` with canonical digest
+3. Modify `campaign.py` startup to invoke the validator against current worktree/artifacts; any missing/stale/changed item blocks execution
+4. Add positive/negative tests: forged booleans, synthetic data with Binance labels, stale/mismatched hashes, missing/failed tests, failed restore, bad result counts, unverified remote SHA, malformed JSON — all must block; known-good fixtures pass only when all conditions met
+5. Verify current gate returns `BLOCKED` until BRAIN-001 live canary completes and BRAIN-003/004/005 prerequisites are independently validated
