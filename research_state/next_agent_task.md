@@ -2,7 +2,7 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T12:45:32Z @ `ede28e528c56a00b11b7d1e81f9fb1bb45c60e66`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T12:50:00Z @ `e909d13b898ce07cdef21b69c60cbee0b23dd296`)
 
 - HEAD is `ede28e528c56a00b11b7d1e81f9fb1bb45c60e66` (working tree clean at session start; `git status --porcelain` empty (0 lines); `git ls-remote origin main` == HEAD).
 - Drift delta accounted for: HEAD moved `3cc630eedbf505ba410a98f46d14872ee133d622` -> `ede28e528c56a00b11b7d1e81f9fb1bb45c60e66`; one commit between — `ede28e528 chore(kilo): checkpoint agent session` — and `git diff --name-only 3cc630eed..HEAD` is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
