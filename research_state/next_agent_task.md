@@ -2,19 +2,19 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T12:42:20Z @ `5240478abe23f574b58f2dfbb0f310630129f6b0`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T12:44:51Z @ `3cc630eedbf505ba410a98f46d14872ee133d622`)
 
-- HEAD is `5240478abe23f574b58f2dfbb0f310630129f6b0` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `5650266d6fb5aad4cc6db549d17b0ca75509654a` advanced via commit `5240478abe23f574b58f2dfbb0f310630129f6b0` touching only the four handoff/next-task files — no research/state edits).
-- Drift delta accounted for: HEAD moved `3f8fb0f29754d4d9b16b05583168b52c75785582` -> `5650266d6fb5aad4cc6db549d17b0ca75509654a` -> `5240478abe23f574b58f2dfbb0f310630129f6b0`; `git diff --name-only 3f8fb0f2..HEAD` is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
+- HEAD is `3cc630eedbf505ba410a98f46d14872ee133d622` (working tree clean at session start; `git status --porcelain` empty (0 lines); `git ls-remote origin main` == HEAD).
+- Drift delta accounted for: HEAD moved `5240478abe23f574b58f2dfbb0f310630129f6b0` -> `3cc630eedbf505ba410a98f46d14872ee133d622`; one commit between — `3cc630eed chore(kilo): checkpoint agent session` — and `git diff --name-only 5240478ab..HEAD` is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
 - **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify rc=0; re-sync after this refresh).
-- Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
+- Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD` (value of record `13172b2e87ab...`).
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total).
-- Spec verifier `scripts/verify_research_v6_spec.py` `ok:false` — known code-hash constraint exception, NOT remediated (recorded hashed-set canonical digest `3e8e4169...` vs recomputed `8cd17522...`; recorded authorized ordered code hash != value of record `13172b2e...`).
+- Spec verifier `scripts/verify_research_v6_spec.py` exits 1, `ok:false`, 2 failures — known code-hash constraint exception, NOT remediated (recorded hashed-set canonical digest `3e8e4169...` vs recomputed `8cd17522...`; recorded authorized ordered code hash != value of record `13172b2e...`).
 - BRAIN-001 RESOLVED_VERIFIED — real historical market data path complete (`tests/test_data_fetcher.py` 17 passed; `research/data_manifest.json` shows real Binance provenance — `data-api.binance.vision/api/v3/klines` endpoint, 1h interval, content hashes, `provenance_ok`; frozen 3-year/26,280-hour minimum enforced; fail-closed on missing/invalid/synthetic data).
 - BRAIN-002 + BRAIN-003 + BRAIN-004 + BRAIN-005 complete (per PLAN.md): acceptance tests green (36 passed); holdout campaign ran (42 holdout records, code_hash matches current); all 14 v2 candidates `REJECTED_ON_HOLDOUT`; `campaign.py:337` loads `research/candidate_manifest_v2.json` when `holdout_enabled=True` (v2 alignment complete).
-- Holdout evaluation is date-gated: `evaluation_may_not_start_before_utc` == `2027-01-20T02:00:00Z`. Current date (2026-11-26) is before that gate, so holdout/confirmatory evaluation must NOT start (`research/holdout_campaign_result.json` absent).
+- Holdout evaluation is date-gated: `evaluation_may_not_start_before_utc` == `2027-01-20T02:00:00Z` (v6). Current date (2026-11-26) is before that gate, so holdout/confirmatory evaluation must NOT start (`research/holdout_campaign_result.json` absent).
 - `campaign_authorization.json`: `authorized: true`, `code_hash 13172b2e87ab...`, `reasons: []` (BRAIN-002 remediated at `1ce6ac8c2`; do not regress).
-- v6 selection execution path complete: `src/v6_campaign/` with `runner.py:run_selection`; `tests/test_v6_campaign.py` 4 passed; v1 engine untouched; `src/breakout_research/` unmodified.
+- v6 selection execution path complete: `src/v6_campaign/runner.py:run_selection` (line 533); `tests/test_v6_campaign.py` 4 passed; v1 engine untouched; `src/breakout_research/` unmodified.
 
 ## Next substantive task
 
@@ -26,7 +26,7 @@ The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (00
 - Do NOT delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Do NOT make substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 
-Your job: confirm the stewardship cycle is complete (HEAD `5240478ab`, mirrors rc=0, acceptance tests green), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
+Your job: confirm the stewardship cycle is complete (HEAD `3cc630ee`, mirrors rc=0, acceptance tests green), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
 
 ## Start here
 
