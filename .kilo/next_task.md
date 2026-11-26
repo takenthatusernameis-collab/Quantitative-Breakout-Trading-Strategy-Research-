@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T09:48:35Z @ `0f54bfb7d37ac5f889684465869f7046ac9a1485`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T10:34:24Z @ `0be118597a2576ef436d8ac88eab7531db308d0b`)
 
-- HEAD is `0f54bfb7d37ac5f889684465869f7046ac9a1485` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `559e403ea99e01e0605f791c51b0644c7490c0f3` advanced via commit `0f54bfb7d37ac5f889684465869f7046ac9a1485` touching only the four handoff/next-task files — no research/state edits).
-- Drift delta accounted for: HEAD moved `559e403ea99e01e0605f791c51b0644c7490c0f3` -> `0f54bfb7d37ac5f889684465869f7046ac9a1485`; the delta is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
+- HEAD is `0be118597a2576ef436d8ac88eab7531db308d0b` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `559e403ea99e01e0605f791c51b0644c7490c0f3` advanced via commit `0be118597a2576ef436d8ac88eab7531db308d0b` touching only the four handoff/next-task files — no research/state edits).
+- Drift delta accounted for: HEAD moved `559e403ea99e01e0605f791c51b0644c7490c0f3` -> `0be118597a2576ef436d8ac88eab7531db308d0b`; the delta is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
 - **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify rc=0; re-sync after this refresh).
 - Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total).
