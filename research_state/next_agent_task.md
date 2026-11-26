@@ -2,17 +2,18 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at session completion, 2026-11-26T02:19:12Z @ `06e4799170`)
+## Current state (verified at session completion, 2026-11-26T02:21:22Z @ `32b6ca48a`)
 
-- HEAD is `06e479917094e536f2da8d190dcae87cbd3cad7b` (working tree clean; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; no research/state edits beyond handoff/next-task files; no commit by this session — HEAD advanced via harness checkpoint from `7594712a6`).
-- **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (verified rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify with `diff -q`; re-sync after this refresh).
-- Drift: `git diff --name-only 7594712a6..HEAD` lists only the four handoff/next-task files (no research/state edits, no injection-artifact path in this delta).
-- Verifier `ok:false` — known code-hash constraint exception, NOT remediated (`configs/research_v6_execution.json` `authorized_code_hash` `4bb02d54...` != `research_state/campaign_authorization.json` `code_hash` `13172b2e...`).
+- HEAD is `32b6ca48a0bdc07a97231432dc7a9173bce7b5c2` (working tree clean; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; no research/state edits beyond handoff/next-task files; no commit by this session — HEAD advanced via harness checkpoint from `1dcf428ef1`).
+- **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (re-synced this refresh; verify rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify with `diff -q`; re-sync after this refresh).
+- Drift: `git diff --name-only 1dcf428ef1..HEAD` lists only `research_state/agent_handoff.md` (the 02:20:01Z entry, 17 lines); no research/state edits, no injection-artifact path in this delta.
+- Verifier `ok:true` — `scripts/verify_v6_selection_authorization_1.py` exits 0, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
+- Spec verifier `scripts/verify_research_v6_spec.py` `ok:false` — known code-hash constraint exception, NOT remediated (recorded hashed-set canonical digest `3e8e4169...` vs recomputed `8cd17522...`; recorded authorized ordered code hash != value of record `13172b2e...`).
 - BRAIN-001 RESOLVED_VERIFIED — real historical market data path complete: `tests/test_data_fetcher.py` 17 passed locally; `research/data_manifest.json` shows real Binance provenance (`provider: binance`, `fallback_used: false`, 26280 candles) for all assets; 18 candle CSV files present locally under `research/data/candles/`; frozen 3-year/26,280-hour minimum enforced; fail-closed on missing/invalid/synthetic data.
 - BRAIN-002 + BRAIN-003 + BRAIN-004 + BRAIN-005 complete (per PLAN.md): acceptance tests green (36 passed: test_campaign_resume + test_holdout_isolation + test_data_fetcher); holdout campaign ran (42 holdout records, code_hash matches current); all 14 v2 candidates `REJECTED_ON_HOLDOUT`; `campaign.py:337` loads `research/candidate_manifest_v2.json` when `holdout_enabled=True` (v2 alignment complete).
-- Holdout evaluation is date-gated: `evaluation_may_not_start_before_utc` == `2027-01-20T02:00:00Z`. Current date is before that gate, so holdout/confirmatory evaluation must NOT start (`research/holdout_campaign_result.json` absent, confirming it has not started).
-- `campaign_authorization.json`: `authorized: true` (BRAIN-002 remediated at `1ce6ac8c2`; do not regress).
-- **v6 selection authorization verifier complete:** `scripts/verify_v6_selection_authorization_1.py` implemented and exits 0 (manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`). Full v6 acceptance re-run: `verify_research_v6_spec.py` ok:false with only the documented code-hash exceptions; `tests/test_v6_campaign.py` 4 passed. v1 engine untouched; `src/breakout_research/` unmodified.
+- Holdout evaluation is date-gated: `evaluation_may_not_start_before_utc` == `2027-01-20T02:00:00Z`. Current date (2026-11-26) is before that gate, so holdout/confirmatory evaluation must NOT start (`research/holdout_campaign_result.json` absent, confirming it has not started).
+- `campaign_authorization.json`: `authorized: true`, `code_hash 13172b2e87ab...`, `reasons: []` (BRAIN-002 remediated at `1ce6ac8c2`; do not regress).
+- v6 selection execution path complete: `src/v6_campaign/` with `runner.py:run_selection`; `tests/test_v6_campaign.py` 4 passed; v1 engine untouched; `src/breakout_research/` unmodified.
 
 ## Next substantive task
 
@@ -24,7 +25,7 @@ The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (00
 - Do NOT delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Do NOT make substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 
-Your job: confirm the stewardship cycle is complete (HEAD `06e4799170...`, mirrors rc=0, acceptance tests green), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
+Your job: confirm the stewardship cycle is complete (HEAD `32b6ca48a...`, mirrors rc=0, acceptance tests green), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
 
 ## Start here
 
@@ -57,7 +58,7 @@ A post-baseline checkpoint commit (2026-11-22T11:11:36Z, `6a870b604`) rewrote re
 - `research_state/pilot_evidence.json`: top-level `code_hash` rotated to `13172b2e87ab...` (nested `evidence.code_hash` also `13172b2e...`).
 - `run_holdout_campaign.py`: added (holdout-enabled runner; NOT executed — `research/holdout_campaign_result.json` absent).
 
-The verifier fails because `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash` (`4bb02d54...`) != `research_state/campaign_authorization.json` `code_hash` (`13172b2e...`).
+The spec verifier fails because `configs/research_v6_execution.json` `code_hash_constraint.authorized_code_hash` (`4bb02d54...`) != `research_state/campaign_authorization.json` `code_hash` (`13172b2e...`), and because the recorded hashed-set canonical digest (`3e8e4169...`) differs from the recomputed canonical source digest (`8cd17522...`).
 
 Report the exception and stop; do not edit these artifacts.
 
