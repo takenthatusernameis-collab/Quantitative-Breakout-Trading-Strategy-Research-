@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T11:45:39Z @ `17fa8311497b1cc1773db6cb7ec869152d74b862`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T12:36:50Z @ `3659101fa907aa8f3ba7a4c22641ffa37a2cb650`)
 
-- HEAD is `17fa8311497b1cc1773db6cb7ec869152d74b862` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `b931434e90d23e65189e896ba0650e961a147209` advanced via commit `17fa8311497b1cc1773db6cb7ec869152d74b862` touching only the four handoff/next-task files — no research/state edits).
-- Drift delta accounted for: HEAD moved `b931434e90d23e65189e896ba0650e961a147209` -> `17fa8311497b1cc1773db6cb7ec869152d74b862`; `git diff --name-only b931434e..HEAD` is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
+- HEAD is `3659101fa907aa8f3ba7a4c22641ffa37a2cb650` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `17fa8311497b1cc1773db6cb7ec869152d74b862` advanced via commit `3659101fa907aa8f3ba7a4c22641ffa37a2cb650` touching only the four handoff/next-task files — no research/state edits).
+- Drift delta accounted for: HEAD moved `17fa8311497b1cc1773db6cb7ec869152d74b862` -> `3659101fa907aa8f3ba7a4c22641ffa37a2cb650`; `git diff --name-only 17fa8311..HEAD` is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
 - **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify rc=0; re-sync after this refresh).
 - Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total).
@@ -26,7 +26,7 @@ The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (00
 - Do NOT delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Do NOT make substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 
-Your job: confirm the stewardship cycle is complete (HEAD `17fa83114...`, mirrors rc=0, acceptance tests green), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
+Your job: confirm the stewardship cycle is complete (HEAD `3659101fa9...`, mirrors rc=0, acceptance tests green), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
 
 ## Start here
 
