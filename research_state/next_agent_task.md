@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T08:47:19Z @ `b016a127e`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T09:34:07Z @ `bf716c0f9`)
 
-- HEAD is `b016a127ef78abd86279c8064381d6d9901211cc` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `719a636e5` advanced via commit `b016a127e` touching only the four handoff/next-task files — no research/state edits).
-- Drift delta accounted for: HEAD moved `719a636e5` -> `b016a127e`; the delta is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
+- HEAD is `bf716c0f9f9d83219457208e39b391d97eae85eb22` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `b016a127e` advanced via commit `bf716c0f9` touching only the four handoff/next-task files — no research/state edits).
+- Drift delta accounted for: HEAD moved `b016a127e` -> `bf716c0f9`; the delta is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
 - **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify rc=0; re-sync after this refresh).
 - Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total).
@@ -26,7 +26,7 @@ The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (00
 - Do NOT delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Do NOT make substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 
-Your job: confirm the stewardship cycle is complete (HEAD `b016a127e...`, mirrors rc=0, acceptance tests green), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
+Your job: confirm the stewardship cycle is complete (HEAD `bf716c0f9...`, mirrors rc=0, acceptance tests green), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
 
 ## Start here
 
