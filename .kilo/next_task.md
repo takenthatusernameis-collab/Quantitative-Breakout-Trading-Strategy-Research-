@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T18:55:23Z @ `648e56c25b4ed1760962c6f2005f360ea4c5e5fa`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T18:56:34Z @ `da8cb4f75ed871dda5a1808714b77b6b81d6102d`)
 
-- HEAD is `648e56c25b4ed1760962c6f2005f360ea4c5e5fa` (working tree clean at session start; `git status --porcelain` empty (0 lines); `git ls-remote origin main` == HEAD).
-- Drift delta accounted for: HEAD moved `bc95c6c926c6838e3c751f714a372eb433e369dd` -> `648e56c25b4ed1760962c6f2005f360ea4c5e5fa`; exactly one commit in between — `20919030f chore(kilo): checkpoint agent session` — and `git diff --name-only bc95c6c926c6838e3c751f714a372eb433e369dd..HEAD` is solely the four handoff/next-task files; no injection-artifact path and no research/state substantive edit in this delta.
+- HEAD is `da8cb4f75ed871dda5a1808714b77b6b81d6102d` (working tree clean at session start; `git status --porcelain` empty (0 lines); `git ls-remote origin main` == HEAD).
+- Drift delta accounted for: HEAD moved `648e56c25b4ed1760962c6f2005f360ea4c5e5fa` -> `da8cb4f75ed871dda5a1808714b77b6b81d6102d`; exactly two commits in between — `92ec9f353` and `da8cb4f75` (both `chore(kilo): checkpoint agent session`) — and `git diff --name-only 648e56c25..HEAD` is solely the four handoff/next-task files; no injection-artifact path and no research/state substantive edit in this delta.
 - **Mirror sync:** both pairs byte-identical (`diff -q` rc=0 both). Re-copy mirrors after every refresh and verify rc=0 both.
 - Stewardship cycle re-run complete (re-verified 2026-11-26T18:55:23Z): `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee6264e7d2df2190588c82f9b2eac059a0d2b73dbe70da0d89eef71ffe8d` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD` (value of record `13172b2e87ab...`).
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total). NOTE: pytest 9.2.0 / numpy 2.5.5 / requests 2.31.0 were already importable in this runner; if a future runner lacks them, `pip install pytest numpy requests` into the user site is required before the suite will run (does not modify repo files).
@@ -26,7 +26,7 @@ The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (00
 - Do NOT delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Do NOT make substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 
-Your job: confirm the stewardship cycle is complete (HEAD `20919030f`, mirrors rc=0 both pairs, acceptance tests green — install pytest/numpy/requests first if missing), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
+Your job: confirm the stewardship cycle is complete (HEAD `da8cb4f75`, mirrors rc=0 both pairs, acceptance tests green — install pytest/numpy/requests first if missing), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
 
 ## Start here
 
