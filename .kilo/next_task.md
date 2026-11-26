@@ -2,9 +2,9 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T04:26:22Z @ `077d1f5e6`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T04:28:21Z @ `bdb634aa9`)
 
-- HEAD is `077d1f5e695c229edf1a518203d49c063bea4bb3` (working tree clean; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; no research/state edits beyond handoff/next-task files; no commit by this session).
+- HEAD is `bdb634aa9b5ae4276a98bd457a9e6fd21dce3b0c` (working tree clean; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; no research/state edits beyond handoff/next-task files; no commit by this session).
 - **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify rc=0; re-sync after this refresh).
 - Drift: `git diff --name-only abd2b57c1..HEAD` lists only the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
 - Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
