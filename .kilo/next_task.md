@@ -2,9 +2,9 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T05:22:03Z @ `745c8191c`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T05:25:19Z @ `8fc50b747`)
 
-- HEAD is `745c8191c30607a884feae0e1221325c8b74b286` (working tree clean; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; no research/state edits beyond handoff/next-task files; no commit by this session — HEAD advanced via harness checkpoint from `c2f8ea556`).
+- HEAD is `8fc50b747c55c46d46f706a2907063fa516c6cb7` (working tree clean; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; no research/state edits beyond handoff/next-task files; no commit by this session — HEAD advanced via harness checkpoint from `c2f8ea556`).
 - Drift delta `c2f8ea556..HEAD` accounted for: only the handoff/next-task files (`.kilo/handoff.md`, `.kilo/next_task.md`, `research_state/agent_handoff.md`, `research_state/next_agent_task.md`); no research/state edits, no injection-artifact path in this delta.
 - **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify rc=0; re-sync after this refresh).
 - Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
