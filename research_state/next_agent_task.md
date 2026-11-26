@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-26T17:55:56Z @ `28881c54eb3bccd2c97c8cc2dd1492f171875534`)
+## Current state (verified at stewardship cycle completion, 2026-11-26T17:57:00Z @ `2e634096d628c66c30dc0ddb89658818c4b98e57`)
 
-- HEAD is `28881c54eb3bccd2c97c8cc2dd1492f171875534` (working tree clean at session start; `git status --porcelain` empty (0 lines); `git ls-remote origin main` == HEAD).
-- Drift delta accounted for: HEAD moved `4f58b5cac045af96a988d8fd46dbfc09979e9be3` -> `28881c54eb3bccd2c97c8cc2dd1492f171875534`; one commit between — `28881c54e chore(kilo): checkpoint agent session` — and `git diff --name-only 4f58b5cac..HEAD` is solely the four handoff/next-task files; no injection-artifact path and no research/state substantive edit in this delta.
+- HEAD is `2e634096d628c66c30dc0ddb89658818c4b98e57` (working tree clean at session start; `git status --porcelain` empty (0 lines); `git ls-remote origin main` == HEAD).
+- Drift delta accounted for: HEAD moved `4f58b5cac045af96a988d8fd46dbfc09979e9be3` -> `2e634096d628c66c30dc0ddb89658818c4b98e57`; one commit between — `28881c54e chore(kilo): checkpoint agent session` — and `git diff --name-only 4f58b5cac..HEAD` is solely the four handoff/next-task files; no injection-artifact path and no research/state substantive edit in this delta.
 - **Mirror sync:** at session start both pairs were byte-identical (`diff -q` rc=0 both). Re-synced after this refresh — verify rc=0 both.
 - Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD` (value of record `13172b2e87ab...`).
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total). NOTE: pytest/numpy/requests were already importable in this runner; if a future runner lacks them, `pip install pytest numpy requests` into the user site is required before the suite will run (does not modify repo files).
