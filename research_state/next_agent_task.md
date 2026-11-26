@@ -4,7 +4,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Current state (verified at stewardship cycle completion, 2026-11-26T09:34:07Z @ `bf716c0f9`)
 
-- HEAD is `1ec58f049fcdc0a7d588508a6d89077b9c3ffa84` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `b016a127e` advanced via commit `bf716c0f9` touching only the four handoff/next-task files — no research/state edits).
+- HEAD is `6d109f0013325a2d410ff0211918290bf1f271ae` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD; prior HEAD `b016a127e` advanced via commit `bf716c0f9` touching only the four handoff/next-task files — no research/state edits).
 - Drift delta accounted for: HEAD moved `b016a127e` -> `bf716c0f9`; the delta is solely the four handoff/next-task files; no research/state edits, no injection-artifact path in this delta.
 - **Mirror sync:** `.kilo/handoff.md`==`research_state/agent_handoff.md` (rc=0). `.kilo/next_task.md`==`research_state/next_agent_task.md` (verify rc=0; re-sync after this refresh).
 - Stewardship cycle re-run complete: `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding amendment names same manifest hash and file digest `43c5b11a...`; `authorized_code_hash_status` is `RETAINED_AS_VALUE_OF_RECORD`.
