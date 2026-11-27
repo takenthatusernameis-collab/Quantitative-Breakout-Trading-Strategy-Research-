@@ -2,12 +2,12 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-27T03:25:30Z @ `a8289173c29da3d9d5bf7a9dae81c83b8905d797`)
+## Current state (verified at stewardship cycle completion, 2026-11-27T03:27:46Z @ `5d1e71c70c3c10290d5183b9c0be49db1a640604`)
 
-- HEAD is `a8289173c29da3d9d5bf7a9dae81c83b8905d797` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD). NOTE: the handoff/next-task refresh from this cycle is uncommitted; the next agent's `git status --porcelain` will show the four handoff/next-task files as modified until the harness checkpoints them.
-- Drift delta accounted for: HEAD moved `dd3cc426152e1a3a108232f32beb51ec364622ee` -> `a8289173c29da3d9d5bf7a9dae81c83b8905d797`; exactly one commit in between — `a8289173...` (`chore(kilo): checkpoint agent session`) touching only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; no injection-artifact path and no research/state substantive edit in this delta. The next session's drift delta will be the single checkpoint commit that captures this refresh.
+- HEAD is `5d1e71c70c3c10290d5183b9c0be49db1a640604` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD). NOTE: the handoff/next-task refresh from this cycle is uncommitted; the next agent's `git status --porcelain` will show the four handoff/next-task files as modified until the harness checkpoints them.
+- Drift delta accounted for: HEAD moved `a8289173c29da3d9d5bf7a9dae81c83b8905d797` -> `5d1e71c70c3c10290d5183b9c0be49db1a640604`; exactly one commit in between — `5d1e71c7...` (`chore(kilo): checkpoint agent session`) touching only `research_state/agent_handoff.md` and `research_state/next_agent_task.md`; no injection-artifact path and no research/state substantive edit in this delta. The next session's drift delta will be the single checkpoint commit that captures this refresh.
 - **Mirror sync:** both pairs byte-identical after this cycle's re-sync (`diff -q` rc=0 both). Re-copy mirrors after every refresh and verify rc=0 both — do not trust a prior "rc=0" claim without re-checking.
-- Stewardship cycle re-run complete (re-verified 2026-11-27T03:25:30Z): `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding/authorization file digest `43c5b11a...`; `authorized_code_hash` field `2efd3b18...` with `authorized_code_hash_status` `RETAINED_AS_VALUE_OF_RECORD` (value of record `13172b2e...`).
+- Stewardship cycle re-run complete (re-verified 2026-11-27T03:27:46Z): `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding/authorization file digest `43c5b11a...`; `authorized_code_hash` field `2efd3b18...` with `authorized_code_hash_status` `RETAINED_AS_VALUE_OF_RECORD` (value of record `13172b2e...`).
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total). NOTE: pytest 9.2.0 / numpy 2.5.5 / requests 2.31.0 are present in the user site; if a future runner lacks them, `pip install pytest numpy requests` into the user site is required before the suite will run (does not modify repo files).
 - Spec verifier `scripts/verify_research_v6_spec.py` exits 1, `ok:false`, 2 failures — known code-hash constraint exception, NOT remediated (recorded hashed-set canonical digest `3e8e4169...` vs recomputed `8cd17522...`; recorded authorized ordered code hash != value of record `13172b2e...`).
 - BRAIN-001 RESOLVED_VERIFIED — real historical market data path complete (`tests/test_data_fetcher.py` 17 passed; `research/data_manifest.json` shows `provenance_ok: true`, `data_min_history_ok: true`; fail-closed on missing/invalid/synthetic data).
@@ -18,7 +18,7 @@ Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must b
 
 ## Next substantive task
 
-The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (001–005) are complete and verified. There is no research work authorized at this time:
+The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (001–005) are complete and verified. **There is no research work authorized at this time:**
 
 - Holdout/confirmatory evaluation is date-gated until `2027-01-20T02:00:00Z` — do NOT start.
 - Do NOT consume `v6-selection-20261022`.
@@ -26,7 +26,7 @@ The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (00
 - Do NOT delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Do NOT make substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 
-Your job: confirm the stewardship cycle is complete (HEAD `a8289173c29da3d9d5bf7a9dae81c83b8905d797`, mirrors rc=0 both pairs, acceptance tests green — install pytest/numpy/requests first if missing), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
+**Your job:** confirm the stewardship cycle is complete (HEAD `5d1e71c70c3c10290d5183b9c0be49db1a640604`, mirrors rc=0 both pairs, acceptance tests green — install pytest/numpy/requests first if missing), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
 
 ## Start here
 
