@@ -2,12 +2,12 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-27T20:18:51Z @ `26eb2709014aea1b1ffa6aa82534071ee16a0d72`)
+## Current state (verified at stewardship cycle completion, 2026-11-27T20:19:29Z @ `29cf2f2e37057b6ba4e8c428d7b4762d4b78727a`)
 
-- HEAD is `26eb2709014aea1b1ffa6aa82534071ee16a0d72` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD). The prior cycle's refresh was committed as `f25dcf47a` and then checkpointed as `26eb27090` "chore(kilo): checkpoint agent session"; this cycle's handoff/next-task refresh will be committed as the next `chore(kilo): checkpoint agent session`.
-- Drift delta accounted for: HEAD moved `f25dcf47affbd45ad0bc50dd5aeb2a0a657f31e4` -> `26eb2709014aea1b1ffa6aa82534071ee16a0d72`; the only commit beyond the last handoff is the checkpoint `26eb27090` (the prior cycle's handoff/next-task capture); `git diff --name-only f25dcf47affbd45ad0bc50dd5aeb2a0a657f31e4..HEAD` shows only the four handoff/next-task files — no injection-artifact path change and no research/state substantive edit. The next session's drift delta will be the single checkpoint commit that captures the next refresh.
+- HEAD is `29cf2f2e37057b6ba4e8c428d7b4762d4b78727a` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD). The prior cycle's refresh was committed as `f25dcf47a` and then checkpointed as `26eb27090` "chore(kilo): checkpoint agent session"; this cycle's handoff/next-task refresh will be committed as the next `chore(kilo): checkpoint agent session`.
+- Drift delta accounted for: HEAD moved `26eb2709014aea1b1ffa6aa82534071ee16a0d72` -> `29cf2f2e37057b6ba4e8c428d7b4762d4b78727a`; the only commit beyond the last handoff is the checkpoint `29cf2f2e3` (the prior cycle's handoff/next-task capture); `git diff --name-only 26eb2709014aea1b1ffa6aa82534071ee16a0d72..HEAD` shows only the four handoff/next-task files — no injection-artifact path change and no research/state substantive edit. The next session's drift delta will be the single checkpoint commit that captures the next refresh.
 - **Mirror sync:** both pairs were byte-identical at session start (`diff -q` rc=0 both, re-checked). Re-copy mirrors after every refresh and verify rc=0 both — do not trust a prior "rc=0" claim without re-checking.
-- Stewardship cycle re-run complete (re-verified 2026-11-27T20:18:51Z): `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding/authorization file digest `43c5b11a...`; `authorized_code_hash` field `2efd3b18...` with `authorized_code_hash_status` `RETAINED_AS_VALUE_OF_RECORD` (value of record `13172b2e...`).
+- Stewardship cycle re-run complete (re-verified 2026-11-27T20:19:29Z): `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding/authorization file digest `43c5b11a...`; `authorized_code_hash` field `2efd3b18...` with `authorized_code_hash_status` `RETAINED_AS_VALUE_OF_RECORD` (value of record `13172b2e...`).
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total). NOTE: if a future runner lacks pytest/numpy/requests, `pip install pytest numpy requests` into the user site is required before the suite will run (does not modify repo files).
 - Spec verifier `scripts/verify_research_v6_spec.py` exits 1, `ok:false`, 2 failures — known code-hash constraint exception, NOT remediated (recorded hashed-set canonical digest `3e8e4169...` vs recomputed `8cd17522...`; recorded authorized ordered code hash != value of record `13172b2e...`).
 - BRAIN-001 RESOLVED_VERIFIED — real historical market data path complete (`tests/test_data_fetcher.py` 17 passed; `research/data_manifest.json` shows `provenance_ok: true`, `data_min_history_ok: true`; fail-closed on missing/invalid/synthetic data).
@@ -26,7 +26,7 @@ The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (00
 - Do NOT delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Do NOT make substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 
-**Your job:** confirm the stewardship cycle is complete (HEAD `26eb2709014aea1b1ffa6aa82534071ee16a0d72`, mirrors rc=0 both pairs, acceptance tests green — install pytest/numpy/requests first if missing), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
+**Your job:** confirm the stewardship cycle is complete (HEAD `29cf2f2e37057b6ba4e8c428d7b4762d4b78727a`, mirrors rc=0 both pairs, acceptance tests green — install pytest/numpy/requests first if missing), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
 
 ## Start here
 
@@ -77,3 +77,5 @@ Complete when drift delta is accounted for (clean OR the exception + injection a
 - Do not delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Both `.kilo` mirrors must stay byte-identical to their `research_state/` originals.
 - `NO_PROMPT_CHANGE_JUSTIFIED`. Commit only when explicitly requested.
+
+(End of file - total 79 lines)
