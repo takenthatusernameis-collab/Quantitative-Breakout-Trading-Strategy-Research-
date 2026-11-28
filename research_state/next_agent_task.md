@@ -2,10 +2,10 @@
 
 Read `research_state/agent_handoff.md` first. Its `.kilo/handoff.md` twin must be byte-identical. The `research_state/` originals are the source of truth — the harness checkpoints them but does NOT auto-sync the `.kilo/` mirrors; re-copy mirrors after every handoff refresh and verify with `diff -q`.
 
-## Current state (verified at stewardship cycle completion, 2026-11-28T02:10:47Z @ `d66498311673049a5b44dfc9b49b9bd3a1232b3e`)
+## Current state (verified at stewardship cycle completion, 2026-11-28T02:10:47Z @ `6d564888a344f2109cec647569ed5fb7e95b6d49`)
 
-- HEAD is `d66498311673049a5b44dfc9b49b9bd3a1232b3e` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD). The prior cycle's refresh was checkpointed as `e6c5c2f40056cbd706ef0c783f3453f5d97e5f32`; this cycle's handoff/next-task refresh will be committed as the next `chore(kilo): checkpoint agent session`.
-- Drift delta accounted for: HEAD moved `e6c5c2f40056cbd706ef0c783f3453f5d97e5f32` -> `d66498311673049a5b44dfc9b49b9bd3a1232b3e`; the only commit beyond the last handoff is the checkpoint `d66498311`; `git diff --name-only e6c5c2f40056cbd706ef0c783f3453f5d97e5f32..HEAD` shows only the four handoff/next-task files — no injection-artifact path change and no research/state substantive edit.
+- HEAD is `6d564888a344f2109cec647569ed5fb7e95b6d49` (working tree clean at session start; `git status --porcelain` empty; `git ls-remote origin main` == HEAD). The prior cycle's refresh was checkpointed as `e6c5c2f40056cbd706ef0c783f3453f5d97e5f32`; this cycle's handoff/next-task refresh will be committed as the next `chore(kilo): checkpoint agent session`.
+- Drift delta accounted for: HEAD moved `e6c5c2f40056cbd706ef0c783f3453f5d97e5f32` -> `6d564888a344f2109cec647569ed5fb7e95b6d49`; the only commit beyond the last handoff is the checkpoint `d66498311`; `git diff --name-only e6c5c2f40056cbd706ef0c783f3453f5d97e5f32..HEAD` shows only the four handoff/next-task files — no injection-artifact path change and no research/state substantive edit.
 - **Mirror sync:** both pairs byte-identical at session start (`diff -q` rc=0 both). Re-copy mirrors after every refresh and verify rc=0 both — do not trust a prior "rc=0" claim without re-checking.
 - Stewardship cycle re-run complete (re-verified 2026-11-28T02:10:47Z): `scripts/verify_v6_selection_authorization_1.py` exits 0, ok:true, failures:[]; manifest hash `7031ee62...` recomputes; hashed-set digest `8cd17522...` and execution-path digest `37ba6eb3...` match source trees; binding/authorization file digest `43c5b11a...`; `authorized_code_hash` field `2efd3b18...` with `authorized_code_hash_status` `RETAINED_AS_VALUE_OF_RECORD` (value of record `13172b2e...`).
 - `tests/test_v6_campaign.py` 4 passed, exit 0; broader acceptance `tests/test_campaign_resume.py tests/test_holdout_isolation.py tests/test_data_fetcher.py` 36 passed, exit 0 (40 total). NOTE: if a future runner lacks pytest/numpy/requests, `pip install pytest numpy requests` into the user site is required before the suite will run (does not modify repo files).
@@ -26,7 +26,7 @@ The v6 selection authorization verifier P0 task is complete. All BRAIN tasks (00
 - Do NOT delete or edit the injected `</rfl:parameter>...` file without explicit user authorization.
 - Do NOT make substantive edits to frozen/protocol/binding/authorization/campaign-state artifacts without explicit authorization.
 
-**Your job:** confirm the stewardship cycle is complete (HEAD `d66498311673049a5b44dfc9b49b9bd3a1232b3e`, mirrors rc=0 both pairs, acceptance tests green — install pytest/numpy/requests first if missing), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
+**Your job:** confirm the stewardship cycle is complete (HEAD `6d564888a344f2109cec647569ed5fb7e95b6d49`, mirrors rc=0 both pairs, acceptance tests green — install pytest/numpy/requests first if missing), confirm `scripts/verify_v6_selection_authorization_1.py` exits 0, confirm BRAIN-001 RESOLVED_VERIFIED, and await the holdout date gate (2027-01-20T02:00:00Z) before any holdout/confirmatory work. Do not look for additional research work.
 
 ## Start here
 
